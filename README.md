@@ -1,4 +1,6 @@
-# TFLite 模型探索器
+# 模鏡｜TFLite 模型探索
+
+**Model Lens** — 看清結構，找到連接。
 
 以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
@@ -13,6 +15,17 @@ node scripts/serve.mjs
 ```
 
 開啟伺服器輸出的本機網址。正式部署只需要 `dist/` 的靜態檔案。不能直接以 `file://` 開啟，因為使用 JavaScript modules 和 Web Workers。
+
+## GitHub Pages
+
+原始碼保留在 `main`，網站靜態產物發布至 `gh-pages`。設定 GitHub Pages 的來源為 `gh-pages` 分支根目錄；`.nojekyll` 會保留所有靜態資源。專案網址的子路徑也能使用，程式不依賴網域根路徑。
+
+```powershell
+node scripts/build.mjs
+node scripts/publish-github-pages.mjs
+```
+
+發布腳本使用已設定的 GitHub `origin` 和 Git 認證，不修改來源工作樹，也不使用 force push。需要先將來源推送到自己的 GitHub repo。GitHub Pages 網站通常公開；私人 repo 能否啟用 Pages 取決於 GitHub 方案。模型仍由訪客瀏覽器本機處理。
 
 ## 功能
 
