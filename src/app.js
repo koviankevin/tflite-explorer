@@ -2,7 +2,7 @@ import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
 import { LORA_PATTERN } from './pattern-utils.js';
-import { loadPatterns, reusablePattern, savePattern } from './pattern-library.js';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
 const element = (tag, className, text) => { const node = document.createElement(tag); if (className) node.className = className; if (text !== undefined) node.textContent = text; return node; };
@@ -174,6 +174,7 @@ function setKind(nextKind, searchNow = true) {
     renderPattern(); if (model && searchNow) runSearch().catch(report);
 }
 function renderPattern() {
+    updatePatternExport();
     renderVisualPattern();
     const rows = operators.map((operator, index) => {
         const row = element('div', 'pattern-row');
@@ -212,7 +213,7 @@ async function runSearch() {
     showPage(result);
     if (structure && result.total) $('visual-pattern-editor').open = false;
     if (result.searchLimited) notice('搜尋已達計算上限，結果可能不完整；請指定 subgraph 或加入更明確的 operator 限制。');
-    status(`找到 ${result.total.toLocaleString()} 筆${kind === 'patterns' ? '路徑' : '結果'}${result.truncated ? '（已達 50,000 筆上限，請縮小範圍）' : ''}`);
+    status(`找到 ${result.total.toLocaleString()} 筆${kind === 'patterns' ? '路徑' : '結果'}${result.searchLimited ? '（已達計算上限，結果可能不完整）' : result.truncated ? '（已達 50,000 筆上限，請縮小範圍）' : ''}`);
 }
 function showPage(result) {
     page = result;
@@ -342,7 +343,61 @@ function report(error) { if (error.name !== 'AbortError') { $('target').setAttri
 function refreshPatternLibrary(selectedName = '') {
     $('saved-pattern').replaceChildren(new Option('選擇已儲存的 pattern…', ''), ...patternLibrary.map((pattern) => new Option(pattern.name, pattern.name)));
     $('saved-pattern').value = selectedName;
+    updatePatternExport();
 }
+function updatePatternExport() {
+    $('export-pattern').disabled = !patternLibrary.some((pattern) => pattern.name === $('saved-pattern').value);
+    $('export-patterns').disabled = !patternLibrary.length;
+}
+async function downloadPatterns(patterns) {
+    try { await host.export(patterns.length === 1 ? 'model-lens-pattern.json' : 'model-lens-patterns.json', new Blob([exportPatterns(patterns) + '\n'], { type: 'application/json' })); }
+    catch (error) { report(error); }
+}
+$('export-pattern').onclick = () => downloadPatterns(patternLibrary.filter((pattern) => pattern.name === $('saved-pattern').value));
+$('export-patterns').onclick = () => downloadPatterns(patternLibrary);
+let importGeneration = 0;
+function importError(error) {
+    $('import-preview').textContent = error.message;
+    $('import-preview').classList.add('invalid'); $('confirm-import').disabled = true;
+}
+function previewImport() {
+    try {
+        const plan = planPatternImport(patternLibrary, parsePatternFile($('import-json').value));
+        $('import-preview').textContent = `將新增 ${plan.added.length} 組 · 略過 ${plan.skipped} 組重複 · 自動改名 ${plan.renamed} 組` + (plan.added.length ? '\n' + plan.added.slice(0, 8).map((pattern) => `${pattern.name} · ${pattern.nodes.length} 節點 / ${pattern.edges.length} 連線`).join('\n') + (plan.added.length > 8 ? '\n…' : '') : '');
+        $('import-preview').classList.remove('invalid'); $('confirm-import').disabled = false;
+    } catch (error) { importError(error); }
+}
+$('open-import').onclick = () => {
+    ++importGeneration;
+    $('pattern-file').value = ''; $('import-json').value = ''; $('import-file-name').textContent = '';
+    $('import-preview').textContent = '尚未選擇檔案。'; $('import-preview').classList.remove('invalid'); $('confirm-import').disabled = true;
+    $('import-dialog').querySelector('details').open = false;
+    $('import-dialog').showModal();
+};
+for (const id of ['close-import', 'cancel-import']) $(id).onclick = () => { ++importGeneration; $('import-dialog').close(); };
+$('import-dialog').addEventListener('cancel', () => ++importGeneration);
+$('choose-pattern-file').onclick = () => { $('pattern-file').value = ''; $('pattern-file').click(); };
+$('pattern-file').onchange = async () => {
+    const selected = $('pattern-file').files[0]; if (!selected) return;
+    const generation = ++importGeneration;
+    $('confirm-import').disabled = true; $('import-file-name').textContent = selected.name;
+    try {
+        if (selected.size > PATTERN_FILE_LIMIT) throw new Error('Pattern 檔案不得超過 1 MiB。');
+        const text = await selected.text();
+        if (generation !== importGeneration) return;
+        $('import-json').value = text; previewImport();
+    } catch (error) { if (generation === importGeneration) importError(error); }
+};
+$('import-json').oninput = () => { ++importGeneration; previewImport(); };
+$('confirm-import').onclick = () => {
+    try {
+        const selectedName = $('saved-pattern').value;
+        const plan = importPatterns(localStorage, patternLibrary, $('import-json').value);
+        patternLibrary = plan.patterns; refreshPatternLibrary(selectedName);
+        ++importGeneration; $('import-dialog').close();
+        status(`已匯入 ${plan.added.length} 組 patterns · 略過 ${plan.skipped} 組 · 更名 ${plan.renamed} 組。從已儲存清單選擇即可套用。`);
+    } catch (error) { importError(error); }
+};
 function applyPattern(pattern) {
     graphNodes = pattern.nodes.map((node) => ({ ...node }));
     graphEdges = pattern.edges.map((edge) => ({ ...edge }));
@@ -419,6 +474,7 @@ $('save-capture').onclick = async () => {
     finally { refreshPickedNodes(); }
 };
 $('saved-pattern').onchange = () => {
+    updatePatternExport();
     const pattern = patternLibrary.find((item) => item.name === $('saved-pattern').value);
     if (pattern) { applyPattern(pattern); if (model) runSearch().catch(report); }
 };

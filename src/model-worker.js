@@ -1,6 +1,6 @@
 import { parseModel, search, findPatterns, snapshot, serialize } from './model-engine.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
-import { operatorKey } from './pattern-utils.js';
+import { operatorKey, operatorIndex } from './pattern-utils.js';
 let index;
 let results = [];
 let generation = 0;
@@ -14,14 +14,14 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const response = await fetch(new URL('../vendor/netron/tflite-metadata.json', import.meta.url));
             if (!response.ok) throw new Error('無法載入 operator 定義。');
             index = await parseModel((offset, length) => new Uint8Array(reader.readAsArrayBuffer(file.slice(offset, offset + length))), file.size, await response.json(), (stage) => postMessage({ stage }));
-            send(id, { format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((e) => e.graph.nodes.map((n) => n.type.name)))].sort() });
+            send(id, { format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'search') {
             generation++;
             results = search(index, args.kind, args.query, args.scope);
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0 });
         } else if (action === 'pattern' || action === 'subgraphPattern') {
             const current = ++generation;
-            const available = [...new Set(index.graphs.flatMap((g) => g.graph.nodes.map((n) => n.type.name)))];
+            const available = [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))];
             const spec = action === 'subgraphPattern' ? args.structure ? prepareGraphPattern(args.structure.nodes, args.structure.edges) : parseGraphPattern(args.text, available) : null;
             if (spec) spec.induced = Boolean(args.structure?.induced ?? args.induced);
             if (spec && args.structure) spec.label = `分支子圖 · ${spec.nodes.length} 節點 · ${spec.edges.length} 連線`;

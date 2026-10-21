@@ -3,7 +3,7 @@ import { BinaryReader } from '../vendor/netron/flatbuffers.js';
 import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
-import { operatorKey } from './pattern-utils.js';
+import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
 
 // Preserve the original Netron parser, but represent inline weights using the
@@ -82,7 +82,9 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
             const operators = [...linked].map((i) => graph.nodes[i].type.name).join(' ');
             records.push({ kind: 'tensors', graph: graphIndex, id: value.identifier, label: value.name.split('\n')[0] || `Tensor #${value.identifier}`, dtype: value.type?.dataType, shape: value.type?.shape?.dimensions || [], operator: operators, text: `${value.name} ${operators} ${operatorKey(operators)}`.toLowerCase() });
         }
-        return { graph, tensors, producers, consumers, next, previous, records };
+        const entry = { graph, tensors, producers, consumers, next, previous, records };
+        operatorIndex(entry);
+        return entry;
     });
     return { model, graphs, stats: { ...stream.stats, fileBytes: length, parseMs: performance.now() - start } };
 }
@@ -100,20 +102,33 @@ export async function findPatterns(index, operators, scope = 'all', cancelled = 
     const results = [];
     const limit = 50000;
     let steps = 0;
+    let yieldAt = 0;
     for (let g = 0; g < index.graphs.length; g++) {
         if (scope !== 'all' && g !== Number(scope)) continue;
         const { graph, next } = index.graphs[g];
-        const keys = graph.nodes.map((node) => operatorKey(node.type.name));
+        const { keys, byType } = operatorIndex(index.graphs[g]);
+        if (pattern.length > graph.nodes.length || pattern.some((type) => !byType.has(type))) continue;
         const stack = [];
         for (let n = graph.nodes.length - 1; n >= 0; n--) if (keys[n] === pattern[0]) stack.push([n]);
         while (stack.length) {
-            if (++steps % 2000 === 0) { await new Promise((resolve) => setTimeout(resolve, 0)); if (cancelled()) return null; }
+            if (++steps > 2000000) return { items: results, truncated: true, searchLimited: true };
+            if (steps % 2000 === 0) {
+                if (performance.now() >= yieldAt) { await new Promise((resolve) => setTimeout(resolve, 0)); yieldAt = performance.now() + 8; }
+                if (cancelled()) return null;
+            }
             const path = stack.pop();
             if (path.length === pattern.length) {
                 results.push({ kind: 'patterns', graph: g, path, label: path.map((n) => graph.nodes[n].type.name).join(' → '), id: path.map((n) => graph.nodes[n].identifier).join(' → ') });
                 if (results.length === limit) return { items: results, truncated: true };
             } else {
-                for (const n of [...next[path.at(-1)]].reverse()) if (!path.includes(n) && keys[n] === pattern[path.length]) stack.push([...path, n]);
+                for (const n of [...next[path.at(-1)]].reverse()) {
+                    if (++steps > 2000000) return { items: results, truncated: true, searchLimited: true };
+                    if (steps % 2000 === 0) {
+                        if (performance.now() >= yieldAt) { await new Promise((resolve) => setTimeout(resolve, 0)); yieldAt = performance.now() + 8; }
+                        if (cancelled()) return null;
+                    }
+                    if (!path.includes(n) && keys[n] === pattern[path.length]) stack.push([...path, n]);
+                }
             }
         }
     }
