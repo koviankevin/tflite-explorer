@@ -1,4 +1,6 @@
 import { parseModel, search, findPatterns, snapshot, serialize } from './model-engine.js';
+import { parseGraphPattern, prepareGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
+import { operatorKey } from './pattern-utils.js';
 let index;
 let results = [];
 let generation = 0;
@@ -17,12 +19,16 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             generation++;
             results = search(index, args.kind, args.query, args.scope);
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0 });
-        } else if (action === 'pattern') {
+        } else if (action === 'pattern' || action === 'subgraphPattern') {
             const current = ++generation;
-            const result = await findPatterns(index, args.operators, args.scope, () => generation !== current);
+            const available = [...new Set(index.graphs.flatMap((g) => g.graph.nodes.map((n) => n.type.name)))];
+            const spec = action === 'subgraphPattern' ? args.structure ? prepareGraphPattern(args.structure.nodes, args.structure.edges) : parseGraphPattern(args.text, available) : null;
+            if (spec && args.structure) spec.label = `分支子圖 · ${spec.nodes.length} 節點 · ${spec.edges.length} 連線`;
+            const result = spec ? await findSubgraphPatterns(index, spec, args.scope, () => generation !== current) : await findPatterns(index, args.operators, args.scope, () => generation !== current);
             if (!result) { send(id, { cancelled: true }); return; }
             results = result.items;
-            send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated });
+            const decodedNodes = spec?.nodes.map((node) => ({ alias: node.alias, type: available.find((type) => operatorKey(type) === node.type) || node.type, present: available.some((type) => operatorKey(type) === node.type) }));
+            send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated, searchLimited: result.searchLimited, decodedNodes });
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'select') {

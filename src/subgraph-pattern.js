@@ -1,0 +1,123 @@
+import { operatorKey } from './pattern-utils.js';
+export { LORA_PATTERN } from './pattern-utils.js';
+
+const aliases = new Map([['FC', 'FULLYCONNECTED'], ['BMM', 'BATCHMATMUL']]);
+const canonical = (value) => aliases.get(operatorKey(value)) || operatorKey(value);
+
+export function parseGraphPattern(text, available = []) {
+    const nodes = new Map();
+    const edges = new Map();
+    const paths = [];
+    const known = new Set(available.map(canonical));
+    const lines = text.split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith('//'));
+    if (!lines.length) throw new Error('請輸入至少一條連接路徑。');
+    if (lines.length > 16) throw new Error('一組子圖最多 16 條路徑。');
+    for (const line of lines) {
+        const path = line.split(/\s*(?:->|→)\s*/).map((part) => {
+            const match = part.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*([A-Za-z_][A-Za-z0-9_]*))?$/);
+            if (!match) throw new Error(`無法解析「${part}」。請使用 Mul0 -> FC -> Add0，或 m:Mul -> f:FullyConnected。`);
+            const [, alias, explicit] = match;
+            let type;
+            if (explicit) type = canonical(explicit);
+            else if (nodes.has(alias)) type = nodes.get(alias).type;
+            else type = known.has(canonical(alias)) ? canonical(alias) : canonical(alias.replace(/\d+$/, ''));
+            const existing = nodes.get(alias);
+            if (existing && existing.type !== type) throw new Error(`別名 ${alias} 被指定為不同 operator。`);
+            nodes.set(alias, { alias, type });
+            return alias;
+        });
+        if (path.length < 2) throw new Error('每條路徑至少需要兩個節點，以 -> 連接。');
+        for (let i = 0; i + 1 < path.length; i++) {
+            if (path[i] === path[i + 1]) throw new Error('同一個節點不能直接連回自己。');
+            const edge = { from: path[i], to: path[i + 1] };
+            edges.set(`${edge.from}:${edge.to}`, edge);
+        }
+        paths.push(path);
+    }
+    return prepareGraphPattern([...nodes.values()], [...edges.values()], paths);
+}
+
+export function prepareGraphPattern(nodeList, edgeList, paths = null) {
+    if (!Array.isArray(nodeList) || !nodeList.length || !Array.isArray(edgeList)) throw new Error('請先加入 operator 節點與連線。');
+    const nodes = new Map();
+    for (const node of nodeList) {
+        if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(node.alias) || !operatorKey(node.type)) throw new Error('節點定義無效。');
+        if (nodes.has(node.alias)) throw new Error('節點編號不可重複。');
+        nodes.set(node.alias, { alias: node.alias, type: operatorKey(node.type) });
+    }
+    const edges = new Map();
+    for (const edge of edgeList) {
+        if (!nodes.has(edge.from) || !nodes.has(edge.to) || edge.from === edge.to) throw new Error('連線起點或終點無效。');
+        edges.set(`${edge.from}:${edge.to}`, { from: edge.from, to: edge.to });
+    }
+    if (nodes.size > 32 || edges.size > 64) throw new Error('一組子圖最多 32 個節點、64 條連線。');
+    const incoming = new Map([...nodes.keys()].map((alias) => [alias, []]));
+    const outgoing = new Map([...nodes.keys()].map((alias) => [alias, []]));
+    for (const { from, to } of edges.values()) { incoming.get(to).push(from); outgoing.get(from).push(to); }
+    const reached = new Set();
+    const stack = [nodes.keys().next().value];
+    while (stack.length) { const alias = stack.pop(); if (reached.has(alias)) continue; reached.add(alias); stack.push(...incoming.get(alias), ...outgoing.get(alias)); }
+    if (reached.size !== nodes.size) throw new Error('各路徑需共用節點，組成同一個連通子圖；請重複使用相同別名。');
+    const counts = new Map([...incoming].map(([alias, parents]) => [alias, parents.length]));
+    const queue = [...nodes.keys()].filter((alias) => counts.get(alias) === 0);
+    let visited = 0;
+    while (queue.length) {
+        const alias = queue.shift(); visited++;
+        for (const child of outgoing.get(alias)) { counts.set(child, counts.get(child) - 1); if (counts.get(child) === 0) queue.push(child); }
+    }
+    if (visited !== nodes.size) throw new Error('本版支援分支與匯合，但不支援循環 pattern。');
+    return { nodes: [...nodes.values()], edges: [...edges.values()], paths: paths || [...edges.values()].map((edge) => [edge.from, edge.to]), incoming, outgoing };
+}
+
+export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled = () => false) {
+    const results = [];
+    let steps = 0;
+    let limited = false;
+    for (let g = 0; g < index.graphs.length; g++) {
+        if (scope !== 'all' && g !== Number(scope)) continue;
+        const entry = index.graphs[g];
+        const byType = new Map();
+        entry.graph.nodes.forEach((node, n) => { const key = operatorKey(node.type.name); if (!byType.has(key)) byType.set(key, []); byType.get(key).push(n); });
+        if (spec.nodes.some((node) => !byType.has(node.type))) continue;
+        const mapping = new Map();
+        const used = new Set();
+        const search = async () => {
+            if (cancelled() || limited) return;
+            if (mapping.size === spec.nodes.length) {
+                const path = spec.nodes.map((node) => mapping.get(node.alias));
+                const ids = spec.nodes.map((node) => `${node.alias} #${entry.graph.nodes[mapping.get(node.alias)].identifier}`);
+                results.push({ kind: 'patterns', patternType: 'graph', graph: g, path, connections: spec.edges.map(({ from, to }) => [mapping.get(from), mapping.get(to)]), label: spec.label || spec.paths.map((line) => line.join(' → ')).join(' / ') || `子圖 · ${spec.nodes.length} 個 operators`, id: ids.join(' · ') });
+                if (results.length >= 50000) limited = true;
+                return;
+            }
+            let chosen;
+            let candidates;
+            for (const node of spec.nodes) {
+                if (mapping.has(node.alias)) continue;
+                const constraints = [];
+                for (const from of spec.incoming.get(node.alias)) if (mapping.has(from)) constraints.push(entry.next[mapping.get(from)]);
+                for (const to of spec.outgoing.get(node.alias)) if (mapping.has(to)) constraints.push(entry.previous[mapping.get(to)]);
+                const typed = byType.get(node.type);
+                const base = constraints.length ? [...constraints.reduce((a, b) => a.size <= b.size ? a : b)] : typed;
+                const possible = base.filter((n) => !used.has(n) && operatorKey(entry.graph.nodes[n].type.name) === node.type && constraints.every((set) => set.has(n)));
+                if (!possible.length) return;
+                if (!candidates || possible.length < candidates.length) { chosen = node; candidates = possible; }
+            }
+            for (const candidate of candidates) {
+                if (++steps % 1000 === 0) {
+                    await new Promise((resolve) => setTimeout(resolve, 0));
+                    if (cancelled()) return;
+                }
+                if (steps > 2000000) { limited = true; return; }
+                mapping.set(chosen.alias, candidate); used.add(candidate);
+                await search();
+                used.delete(candidate); mapping.delete(chosen.alias);
+                if (limited || cancelled()) return;
+            }
+        };
+        await search();
+        if (cancelled()) return null;
+        if (limited) break;
+    }
+    return { items: results, truncated: limited, searchLimited: steps > 2000000 };
+}

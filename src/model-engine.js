@@ -3,8 +3,8 @@ import { BinaryReader } from '../vendor/netron/flatbuffers.js';
 import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
-
-export const operatorKey = (name) => String(name).replace(/[^a-z0-9]/gi, '').toUpperCase();
+import { operatorKey } from './pattern-utils.js';
+export { operatorKey } from './pattern-utils.js';
 
 // Preserve the original Netron parser, but represent inline weights using the
 // external-buffer range path it already supports. No weight payload is copied.

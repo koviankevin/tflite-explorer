@@ -331,7 +331,15 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
     <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
     <div id="pattern-editor" hidden>
       <div class="control-label">Operator 連接模式 <button id="reset-pattern" class="text-button">重設範例</button></div>
+      <label for="pattern-mode" class="sr-only">Pattern 類型</label><select id="pattern-mode"><option value="linear">連續路徑</option><option value="graph">分支／匯合（LoRA）</option></select>
       <div id="pattern-rows"></div>
+      <div id="graph-pattern-editor" hidden>
+        <div class="control-label"><label for="graph-input-mode">建立方式</label><select id="graph-input-mode"><option value="visual">選單建立</option><option value="text">進階文字</option></select><button id="lora-preset" class="text-button">LoRA 範本</button></div>
+        <details id="visual-pattern-editor" open><summary>編輯節點與連線</summary><div class="visual-scroll"><div class="control-label">Operator 節點 <button id="add-graph-node" class="text-button">＋ 節點</button></div><div id="graph-node-rows"></div><div class="control-label">Tensor 連線 <button id="add-graph-edge" class="text-button">＋ 連線</button></div><div id="graph-edge-rows"></div></div></details>
+        <div id="text-pattern-editor" hidden><label for="graph-pattern" class="sr-only">子圖連接路徑</label><textarea id="graph-pattern" rows="4" spellcheck="false">Mul0 -> FC -> Add0
+Mul0 -> BMM0 -> BMM1 -> Add0</textarea><p class="hint">比對 operator 類型與連線，不比對 layer 名稱。Mul0 是查詢別名，相同別名代表同一個節點。FC = FullyConnected，BMM = BatchMatMul；也可用 m:Mul 指定類型。</p><output id="pattern-decoded" class="hint" aria-live="polite"></output></div>
+        <p class="hint">選 operator，再選連線的起點和終點。節點編號自動產生；不需輸入模型 layer 名稱。</p>
+      </div>
       <div class="pattern-actions"><button id="add-operator" class="quiet" disabled>＋ 加入 operator</button><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
       <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p>
     </div>
@@ -341,7 +349,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
   <div id="pagination" class="pagination" hidden><button id="previous-page" class="quiet">上一頁</button><span id="page-label"></span><button id="next-page" class="quiet">下一頁</button></div>
   <section id="tensor-summary" class="tensor-summary" hidden aria-label="選取的 tensor 資料"></section>
-  <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron · MIT ↗</a></div>
+  <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="LICENSE" target="_blank" rel="noopener">MIT 授權 ↗</a><a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron ↗</a></div>
 </aside>
 <div class="graph-bar">
   <div class="graph-location"><span class="eyebrow">02 / GRAPH</span><label for="graph-select" class="sr-only">目前 subgraph</label><select id="graph-select" disabled><option>模型圖</option></select><span id="graph-caption">選取結果以查看連接</span></div>
@@ -349,7 +357,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 </div>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
-  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建立索引，模型圖依選取範圍繪製。</small></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建立索引，模型圖依選取範圍繪製。</small></div>
 </main>
 <div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
 <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>
