@@ -1,4 +1,4 @@
-import { operatorKey } from './pattern-utils.js';
+import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { LORA_PATTERN } from './pattern-utils.js';
 
 const aliases = new Map([['FC', 'FULLYCONNECTED'], ['BMM', 'BATCHMATMUL']]);
@@ -39,6 +39,7 @@ export function parseGraphPattern(text, available = []) {
 
 export function prepareGraphPattern(nodeList, edgeList, paths = null) {
     if (!Array.isArray(nodeList) || !nodeList.length || !Array.isArray(edgeList)) throw new Error('請先加入 operator 節點與連線。');
+    if (nodeList.length > 32 || edgeList.length > 64) throw new Error('一組子圖最多 32 個節點、64 條連線。');
     const nodes = new Map();
     for (const node of nodeList) {
         if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(node.alias) || !operatorKey(node.type)) throw new Error('節點定義無效。');
@@ -86,12 +87,13 @@ export function captureGraphPattern(entry, selected) {
 export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled = () => false) {
     const results = [];
     let steps = 0;
+    let checks = 0;
+    let yieldAt = 0;
     let limited = false;
     for (let g = 0; g < index.graphs.length; g++) {
         if (scope !== 'all' && g !== Number(scope)) continue;
         const entry = index.graphs[g];
-        const byType = new Map();
-        entry.graph.nodes.forEach((node, n) => { const key = operatorKey(node.type.name); if (!byType.has(key)) byType.set(key, []); byType.get(key).push(n); });
+        const { keys, byType } = operatorIndex(entry);
         if (spec.nodes.some((node) => !byType.has(node.type))) continue;
         const mapping = new Map();
         const used = new Set();
@@ -116,15 +118,33 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
                 const constraints = [];
                 for (const from of spec.incoming.get(node.alias)) if (mapping.has(from)) constraints.push(entry.next[mapping.get(from)]);
                 for (const to of spec.outgoing.get(node.alias)) if (mapping.has(to)) constraints.push(entry.previous[mapping.get(to)]);
+                // A connected pattern can always grow from its mapped frontier.
+                // Scanning all nodes for a disconnected alias at every depth
+                // makes even a simple chain quadratic in the model size.
+                if (mapping.size && !constraints.length) continue;
                 const typed = byType.get(node.type);
                 const base = constraints.length ? [...constraints.reduce((a, b) => a.size <= b.size ? a : b)] : typed;
-                const possible = base.filter((n) => !used.has(n) && operatorKey(entry.graph.nodes[n].type.name) === node.type && constraints.every((set) => set.has(n)));
+                const possible = [];
+                for (const n of base) {
+                    if (++checks % 2000 === 0) {
+                        if (performance.now() >= yieldAt) {
+                            await new Promise((resolve) => setTimeout(resolve, 0));
+                            yieldAt = performance.now() + 8;
+                        }
+                        if (cancelled()) return;
+                    }
+                    if (checks > 2000000) { limited = true; return; }
+                    if (!used.has(n) && keys[n] === node.type && constraints.every((set) => set.has(n))) possible.push(n);
+                }
                 if (!possible.length) return;
                 if (!candidates || possible.length < candidates.length) { chosen = node; candidates = possible; }
             }
             for (const candidate of candidates) {
                 if (++steps % 1000 === 0) {
-                    await new Promise((resolve) => setTimeout(resolve, 0));
+                    if (performance.now() >= yieldAt) {
+                        await new Promise((resolve) => setTimeout(resolve, 0));
+                        yieldAt = performance.now() + 8;
+                    }
                     if (cancelled()) return;
                 }
                 if (steps > 2000000) { limited = true; return; }
@@ -138,5 +158,5 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
         if (cancelled()) return null;
         if (limited) break;
     }
-    return { items: results, truncated: limited, searchLimited: steps > 2000000 };
+    return { items: results, truncated: limited, searchLimited: steps > 2000000 || checks > 2000000 };
 }

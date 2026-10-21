@@ -1,8 +1,14 @@
 import { prepareGraphPattern } from './subgraph-pattern.js';
+import { operatorKey } from './pattern-utils.js';
 
 export const PATTERN_LIBRARY_KEY = 'model-lens.patterns.v1';
+export const PATTERN_FILE_LIMIT = 1024 * 1024;
+const fileFormat = 'model-lens-patterns';
 
 export function reusablePattern(name, structure) {
+    if (!structure || !Array.isArray(structure.nodes) || !Array.isArray(structure.edges)) throw new Error('Pattern 缺少節點或連線。');
+    if (structure.nodes.some((node) => !node || typeof node.alias !== 'string' || node.alias.length > 80 || typeof node.type !== 'string' || node.type.length > 256)) throw new Error('Pattern 的節點編號或 operator 類型無效。');
+    if (structure.edges.some((edge) => !edge || typeof edge.from !== 'string' || typeof edge.to !== 'string')) throw new Error('Pattern 的連線無效。');
     const title = String(name || '').trim().slice(0, 80);
     if (!title) throw new Error('請輸入 pattern 名稱。');
     const spec = prepareGraphPattern(structure.nodes, structure.edges);
@@ -24,4 +30,58 @@ export function savePattern(storage, library, pattern) {
     if (next.length > 50) throw new Error('最多儲存 50 組 pattern。請使用既有名稱更新。');
     storage.setItem(PATTERN_LIBRARY_KEY, JSON.stringify(next));
     return next;
+}
+
+export function exportPatterns(patterns) {
+    if (!patterns.length || patterns.length > 50) throw new Error('請選擇 1 至 50 組已儲存的 patterns。');
+    return JSON.stringify({ format: fileFormat, version: 1, patterns: patterns.map((pattern) => reusablePattern(pattern.name, pattern)) }, null, 2);
+}
+
+export function parsePatternFile(text) {
+    if (new TextEncoder().encode(text).length > PATTERN_FILE_LIMIT) throw new Error('Pattern 檔案不得超過 1 MiB。');
+    let file;
+    try { file = JSON.parse(text.replace(/^\uFEFF/, '')); } catch { throw new Error('無法讀取 JSON，請選擇模鏡匯出的 pattern 檔案。'); }
+    if (file?.format !== fileFormat || file?.version !== 1) throw new Error('不支援此 pattern 檔案格式或版本。');
+    if (!Array.isArray(file.patterns) || !file.patterns.length || file.patterns.length > 50) throw new Error('檔案需包含 1 至 50 組 patterns。');
+    return file.patterns.map((pattern, i) => {
+        if (!pattern || typeof pattern.name !== 'string' || !pattern.name.trim() || pattern.name.length > 80 || (pattern.induced !== undefined && typeof pattern.induced !== 'boolean')) throw new Error(`第 ${i + 1} 組 pattern 的名稱或連線設定無效。`);
+        try { return reusablePattern(pattern.name, pattern); } catch (error) { throw new Error(`第 ${i + 1} 組 pattern：${error.message}`); }
+    });
+}
+
+function signature(pattern) {
+    return JSON.stringify({ nodes: pattern.nodes.map((node) => [node.alias, operatorKey(node.type)]).sort(), edges: pattern.edges.map((edge) => [edge.from, edge.to]).sort(), induced: pattern.induced });
+}
+
+export function planPatternImport(library, imported) {
+    const next = library.map((pattern) => reusablePattern(pattern.name, pattern));
+    let skipped = 0;
+    let renamed = 0;
+    const added = [];
+    for (const item of imported) {
+        let pattern = reusablePattern(item.name, item);
+        const existing = next.find((entry) => entry.name === pattern.name);
+        if (existing && signature(existing) === signature(pattern)) { skipped++; continue; }
+        if (existing) {
+            let suffix = 2;
+            let name;
+            let conflict;
+            do {
+                name = `${pattern.name.slice(0, 70)}（${suffix++}）`;
+                conflict = next.find((entry) => entry.name === name);
+                if (conflict && signature(conflict) === signature(pattern)) { skipped++; pattern = null; break; }
+            } while (conflict);
+            if (!pattern) continue;
+            pattern.name = name; renamed++;
+        }
+        next.push(pattern); added.push(pattern);
+    }
+    if (next.length > 50) throw new Error(`匯入後共有 ${next.length} 組，超過 50 組上限；請改匯出所選 pattern。`);
+    return { patterns: next, added, skipped, renamed };
+}
+
+export function importPatterns(storage, library, text) {
+    const plan = planPatternImport(library, parsePatternFile(text));
+    storage.setItem(PATTERN_LIBRARY_KEY, JSON.stringify(plan.patterns));
+    return plan;
 }
