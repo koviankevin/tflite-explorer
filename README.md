@@ -39,6 +39,9 @@ node scripts/publish-github-pages.mjs
 - 一條節點路徑列為一筆匹配；共享節點的路徑可分別出現。同一對節點之間多個相連 tensors 不重複計算路徑。
 - 點選 pattern 高亮節點及連線，可用上一筆／下一筆跨頁巡覽。
 - 分支／匯合模式支援多路徑、多出口的連通子圖；重複別名必須匹配同一節點，不同別名匹配不同節點。FC／BMM 分別對應 FullyConnected／BatchMatMul。
+- 圖上按「選取 pattern」，逐一點選 layers（再次點選取消，也可用 Tab／Enter／Space），輸入名稱後「儲存並搜尋」。自動擷取選取節點之間的全部直接連線，支援分支、匯合及多出口；至少兩個節點，且必須形成連通子圖。切換 subgraph 會清除該次選取，搜尋只作用於同一個 subgraph 內的節點。
+- Pattern 清單保存在目前瀏覽器、目前網站來源的 localStorage，最多 50 組；相同名稱會更新。可重新開啟網站後從 Pattern 分頁的「已儲存的 patterns」套用，也可用於其他模型。只儲存命名、operator 類型和連線，不儲存模型或 tensor 資料；GitHub Pages 與 Sites 的清單各自獨立。
+- 圖上擷取的 pattern 預設要求內部連線完全相同（可取消勾選），外部連線允許不同。名稱、編號、shape、dtype、權重與 operator 屬性不參與匹配；這是結構匹配，不代表運算語意相同。
 - Tensor 編號、shape、dtype、量化 scale／zero point／dimension，以及原 Netron 節點詳細資料與可用的權重預覽。
 - 量化參數超過 12 項時摘要呈現，完整參數可下載為 JSON。
 
@@ -51,6 +54,8 @@ TFLite 解析與搜尋在專用 worker 執行。自訂同步 range stream 使用
 單組 pattern 最多 32 個 operators，匹配結果最多 50,000 筆；達上限會提示縮小搜尋範圍。原始模型不寫入 localStorage／IndexedDB，不加入版本庫或部署包。
 
 分支模式預設使用選單：選擇 operator 建立節點，再以起點／終點選單連線，節點編號自動產生。LoRA 範本一鍵帶入五個節點與五條連線；刪除 Add 節點時相關連線會一併移除，可建立兩個出口的模式。搜尋成功後編輯區收合，點「編輯結構」可重新展開。
+
+編輯區超過側欄可用高度時在搜尋區內捲動，結果清單與底部授權列保留在視窗內，不隨展開內容被擠出。
 
 需要手動調整語法時，可切到「進階文字」，例如：
 

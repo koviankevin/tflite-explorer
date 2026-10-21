@@ -14,7 +14,7 @@ html = html.replace('<html lang="en">', '<html lang="zh-Hant">')
     .replaceAll('href="icon.png"', 'href="vendor/netron/icon.png"')
     .replace('<body class="welcome spinner">', `<body class="welcome">\n${await readFile('src/shell.html', 'utf8')}`);
 // App styles must follow the retained Netron inline stylesheet.
-html = html.replace('<link rel="stylesheet" href="src/app.css">', '').replace('</head>', '<link rel="stylesheet" href="src/app.css">\n</head>');
+html = html.replace('<link rel="stylesheet" href="src/app.css">', '').replace('</head>', '<link rel="stylesheet" href="src/app.css">\n<link rel="stylesheet" href="src/pattern-workspace.css">\n</head>');
 await writeFile('dist/index.html', html);
 await writeFile('dist/.nojekyll', '');
 const translations = new Map([
