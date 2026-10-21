@@ -1,0 +1,7 @@
+upstream/
+dist/
+*.tar.gz
+*.tflite
+node_modules/
+.sites/
+.openai/*.local.*
