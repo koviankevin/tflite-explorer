@@ -1,5 +1,6 @@
 // A small, valid FlatBuffer writer for deterministic TFLite integration fixtures.
-export function fixture({ graphCount = 2, weightBytes = 8, repeats = 1 } = {}) {
+import { tflite as schema } from '../vendor/netron/tflite-schema.js';
+export function fixture({ graphCount = 2, weightBytes = 8, repeats = 1, variant = 'chain', brokenJoin = false } = {}) {
     const bytes = Array(8).fill(0);
     const align = (n = 8) => { while (bytes.length % n) bytes.push(0); };
     const reserve = (size) => { const pos = bytes.length; bytes.push(...Array(size).fill(0)); return pos; };
@@ -14,12 +15,13 @@ export function fixture({ graphCount = 2, weightBytes = 8, repeats = 1 } = {}) {
     const vector = (values) => { align(4); const pos = reserve(4 + values.length * 4); write(pos, values.length); values.forEach((v, i) => write(pos + 4 + i * 4, v)); return pos; };
     const refs = (count) => { align(4); const pos = reserve(4 + count * 4); write(pos, count); return { pos, at: (i, target) => reference(pos + 4 + i * 4, target) }; };
     const model = table([true, true, true, true, true]); write(0, model.at(-1)); bytes.splice(4, 4, 84, 70, 76, 51); write(model[0], 3);
-    const codes = refs(4); reference(model[1], codes.pos);
-    [22, 39, 0, 114].forEach((code, i) => { const t = table([true, false, true, true]); codes.at(i, t.at(-1)); write(t[0], code, 1); write(t[2], 1); write(t[3], code); });
+    const codes = refs(7); reference(model[1], codes.pos);
+    const op = schema.BuiltinOperator;
+    [op.RESHAPE, op.TRANSPOSE, op.ADD, op.QUANTIZE, op.MUL, op.FULLY_CONNECTED, op.BATCH_MATMUL].forEach((code, i) => { const t = table([true, false, true, true]); codes.at(i, t.at(-1)); write(t[0], code, 1); write(t[2], 1); write(t[3], code); });
     const graphs = refs(graphCount); reference(model[2], graphs.pos);
     for (let g = 0; g < graphCount; g++) {
         const sg = table([true, true, true, true, true]); graphs.at(g, sg.at(-1));
-        const count = repeats * 3 + 4;
+        const count = variant === 'lora' ? brokenJoin ? 9 : 8 : repeats * 3 + 4;
         const tensors = refs(count); reference(sg[0], tensors.pos);
         for (let i = 0; i < count; i++) {
             const quantized = i === count - 2;
@@ -32,11 +34,15 @@ export function fixture({ graphCount = 2, weightBytes = 8, repeats = 1 } = {}) {
                 align(8); reserve(4); const zero = reserve(12); write(zero, 1); write(zero + 4, 3, 8); reference(q[3], zero); write(q[6], 1);
             }
         }
-        reference(sg[1], vector([0])); reference(sg[2], vector([repeats * 3]));
-        const ops = refs(repeats * 3 + 1); reference(sg[3], ops.pos);
-        for (let n = 0; n < repeats * 3 + 1; n++) {
-            const op = table([true, true, true]); ops.at(n, op.at(-1)); write(op[0], n === repeats * 3 ? 2 : n % 3 === 1 ? 1 : 0);
-            reference(op[1], vector(n === repeats * 3 ? [2, 0] : [n])); reference(op[2], vector([n + 1]));
+        const operations = variant === 'lora' ? [
+            [4, [0], [1]], [5, [1], [2]], [6, [1], [3]], [6, [3], [4]], [2, brokenJoin ? [2, 0] : [2, 4], [5]],
+            ...(brokenJoin ? [[2, [4, 0], [6]]] : [])
+        ] : Array.from({length: repeats * 3 + 1}, (_, n) => [n === repeats * 3 ? 2 : n % 3 === 1 ? 1 : 0, n === repeats * 3 ? [2, 0] : [n], [n + 1]]);
+        reference(sg[1], vector([0])); reference(sg[2], vector([variant === 'lora' ? 5 : repeats * 3]));
+        const ops = refs(operations.length); reference(sg[3], ops.pos);
+        for (let n = 0; n < operations.length; n++) {
+            const op = table([true, true, true]); ops.at(n, op.at(-1)); write(op[0], operations[n][0]);
+            reference(op[1], vector(operations[n][1])); reference(op[2], vector(operations[n][2]));
         }
         reference(sg[4], string(`測試圖 ${g}`));
     }

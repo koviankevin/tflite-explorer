@@ -2,6 +2,8 @@
 
 **Model Lens** — 看清結構，找到連接。
 
+[開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
+
 以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
 ## 使用與開發
@@ -9,7 +11,7 @@
 需要 Node.js 22 或更新版本；不需安裝 npm 套件。
 
 ```powershell
-node --test test/model.test.mjs test/hydrate.test.mjs
+node --test test/model.test.mjs test/hydrate.test.mjs test/subgraph.test.mjs
 node scripts/build.mjs
 node scripts/serve.mjs
 ```
@@ -36,6 +38,7 @@ node scripts/publish-github-pages.mjs
 - Pattern 僅比對 tensor 直接連接的 operator 序列，允許額外分支，不限制 shape／dtype／其他參數，也不把融合 activation 當成另一個實體 operator。
 - 一條節點路徑列為一筆匹配；共享節點的路徑可分別出現。同一對節點之間多個相連 tensors 不重複計算路徑。
 - 點選 pattern 高亮節點及連線，可用上一筆／下一筆跨頁巡覽。
+- 分支／匯合模式支援多路徑、多出口的連通子圖；重複別名必須匹配同一節點，不同別名匹配不同節點。FC／BMM 分別對應 FullyConnected／BatchMatMul。
 - Tensor 編號、shape、dtype、量化 scale／zero point／dimension，以及原 Netron 節點詳細資料與可用的權重預覽。
 - 量化參數超過 12 項時摘要呈現，完整參數可下載為 JSON。
 
@@ -46,6 +49,19 @@ TFLite 解析與搜尋在專用 worker 執行。自訂同步 range stream 使用
 檔案達 1 GiB，或模型超過 500 個 operators 時，預設只建立索引。點選結果才繪製一層鄰接範圍的局部圖（最多 100 個 operators）。Tensor 有大量 consumers 時先以最多 20 個相連 operators 為中心。完整圖可手動開啟；超過 1,500 個 operators 時會先顯示提示。
 
 單組 pattern 最多 32 個 operators，匹配結果最多 50,000 筆；達上限會提示縮小搜尋範圍。原始模型不寫入 localStorage／IndexedDB，不加入版本庫或部署包。
+
+分支模式預設使用選單：選擇 operator 建立節點，再以起點／終點選單連線，節點編號自動產生。LoRA 範本一鍵帶入五個節點與五條連線；刪除 Add 節點時相關連線會一併移除，可建立兩個出口的模式。搜尋成功後編輯區收合，點「編輯結構」可重新展開。
+
+需要手動調整語法時，可切到「進階文字」，例如：
+
+```text
+Mul0 -> FC -> Add0
+Mul0 -> BMM0 -> BMM1 -> Add0
+```
+
+這會要求兩條支線共用同一個 Mul0 和 Add0。Mul0／Add0 都是查詢別名，不是模型中的 layer 名稱或編號；匹配只依 operator 類型與連線。也能用 `m:Mul -> f:FullyConnected -> a:Add` 與 `m -> b0:BMM -> b1:BMM -> a` 明確指定別名及類型。介面顯示別名對應的實際類型，缺少該類型時會提示；不自動將 MatMul、BatchMatMul 和 custom operator 視為等價。拿掉兩條路徑末端的 Add0，就能搜尋具有 FC、BMM1 兩個出口的子圖。
+
+匹配依直接 tensor 連接，不限制輸入／輸出 port 順序，不要求出口是整個模型的 outputs，允許額外連線；不支援循環。最多 16 條路徑、32 個節點、64 條連線。計算超過 2,000,000 次候選展開會回傳目前結果並明確提示不完整。內建 LoRA 示範僅重現指定連線結構，不能據此認定實際模型具有 LoRA 語意或可執行推論。
 
 權重數值僅在使用者選取或展開時讀取；單一 tensor 超過 16 MiB 時不展開數值，但保留 metadata。完整圖仍可能很慢，worker 中的結構與索引也仍需要記憶體；本版沒有宣稱可以無限制開啟任何大小的模型。
 
@@ -62,6 +78,8 @@ TFLite 解析與搜尋在專用 worker 執行。自訂同步 range stream 使用
 內建示範模型為合成結構，不是訓練完成或可用於推論的模型。本工具不修改模型，也不執行推論。
 
 ## 上游來源及授權
+
+本專案採 [MIT 授權](LICENSE)。新增程式碼著作權為 `Copyright (c) 2026 koviankevin`，Netron 的著作權屬 Lutz Roeder；根目錄 LICENSE 同時保留兩者聲明。
 
 Netron: https://github.com/lutzroeder/netron
 
