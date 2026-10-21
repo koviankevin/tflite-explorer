@@ -1,5 +1,5 @@
 import { parseModel, search, findPatterns, snapshot, serialize } from './model-engine.js';
-import { parseGraphPattern, prepareGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
+import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey } from './pattern-utils.js';
 let index;
 let results = [];
@@ -23,12 +23,17 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const current = ++generation;
             const available = [...new Set(index.graphs.flatMap((g) => g.graph.nodes.map((n) => n.type.name)))];
             const spec = action === 'subgraphPattern' ? args.structure ? prepareGraphPattern(args.structure.nodes, args.structure.edges) : parseGraphPattern(args.text, available) : null;
+            if (spec) spec.induced = Boolean(args.structure?.induced ?? args.induced);
             if (spec && args.structure) spec.label = `分支子圖 · ${spec.nodes.length} 節點 · ${spec.edges.length} 連線`;
             const result = spec ? await findSubgraphPatterns(index, spec, args.scope, () => generation !== current) : await findPatterns(index, args.operators, args.scope, () => generation !== current);
             if (!result) { send(id, { cancelled: true }); return; }
             results = result.items;
             const decodedNodes = spec?.nodes.map((node) => ({ alias: node.alias, type: available.find((type) => operatorKey(type) === node.type) || node.type, present: available.some((type) => operatorKey(type) === node.type) }));
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated, searchLimited: result.searchLimited, decodedNodes });
+        } else if (action === 'capturePattern') {
+            const entry = index.graphs[args.graph];
+            if (!entry) throw new Error('找不到目前 subgraph。');
+            send(id, captureGraphPattern(entry, args.nodes));
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'select') {

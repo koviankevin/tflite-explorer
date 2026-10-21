@@ -69,6 +69,20 @@ export function prepareGraphPattern(nodeList, edgeList, paths = null) {
     return { nodes: [...nodes.values()], edges: [...edges.values()], paths: paths || [...edges.values()].map((edge) => [edge.from, edge.to]), incoming, outgoing };
 }
 
+// Extract only topology and operator types. Model names, tensor data and weights
+// never enter a reusable pattern or the browser's pattern library.
+export function captureGraphPattern(entry, selected) {
+    const indexes = [...new Set(selected)].sort((a, b) => a - b);
+    if (indexes.length < 2) throw new Error('請至少選取兩個相連的 layers。');
+    if (indexes.length > 32) throw new Error('一組 pattern 最多選取 32 個 layers。');
+    if (indexes.some((n) => !Number.isInteger(n) || !entry.graph.nodes[n])) throw new Error('選取的 layer 不在目前 subgraph。');
+    const aliases = new Map(indexes.map((n, i) => [n, `N${i + 1}`]));
+    const nodes = indexes.map((n) => ({ alias: aliases.get(n), type: entry.graph.nodes[n].type.name }));
+    const edges = indexes.flatMap((from) => [...entry.next[from]].filter((to) => aliases.has(to)).map((to) => ({ from: aliases.get(from), to: aliases.get(to) })));
+    prepareGraphPattern(nodes, edges);
+    return { nodes, edges, induced: true };
+}
+
 export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled = () => false) {
     const results = [];
     let steps = 0;
@@ -84,6 +98,11 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
         const search = async () => {
             if (cancelled() || limited) return;
             if (mapping.size === spec.nodes.length) {
+                if (spec.induced) {
+                    for (const from of spec.nodes) for (const to of spec.nodes) {
+                        if (entry.next[mapping.get(from.alias)].has(mapping.get(to.alias)) !== spec.outgoing.get(from.alias).includes(to.alias)) return;
+                    }
+                }
                 const path = spec.nodes.map((node) => mapping.get(node.alias));
                 const ids = spec.nodes.map((node) => `${node.alias} #${entry.graph.nodes[mapping.get(node.alias)].identifier}`);
                 results.push({ kind: 'patterns', patternType: 'graph', graph: g, path, connections: spec.edges.map(({ from, to }) => [mapping.get(from), mapping.get(to)]), label: spec.label || spec.paths.map((line) => line.join(' → ')).join(' / ') || `子圖 · ${spec.nodes.length} 個 operators`, id: ids.join(' · ') });
