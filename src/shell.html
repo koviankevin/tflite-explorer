@@ -1,0 +1,43 @@
+<header class="app-header">
+  <a class="brand" href="./" aria-label="模鏡首頁"><span class="brand-icon" aria-hidden="true">⌘</span><span><strong style="font-size:20px;letter-spacing:3px">模鏡</strong><small>MODEL LENS · TFLITE EXPLORER</small></span></a>
+  <div class="file-summary"><span id="file-name">尚未開啟模型</span><span id="file-stats">從模型結構，找到你要的連接。</span></div>
+  <span class="privacy"><i></i>本機處理</span>
+  <button id="cancel-load" class="quiet" hidden>取消載入</button>
+  <button id="close-model" class="quiet" hidden>關閉模型</button>
+  <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
+  <input id="model-file" type="file" accept=".tflite,.lite" hidden>
+</header>
+<aside class="explorer-panel" aria-label="模型搜尋">
+  <div class="panel-heading"><span>探索模型</span><span class="eyebrow">01 / EXPLORE</span></div>
+  <div class="tabs" role="tablist" aria-label="搜尋類別">
+    <button role="tab" aria-selected="true" data-kind="layers">Layers <span id="layer-count">—</span></button>
+    <button role="tab" aria-selected="false" data-kind="tensors">Tensors <span id="tensor-count">—</span></button>
+    <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
+  </div>
+  <div class="search-tools">
+    <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
+    <div id="pattern-editor" hidden>
+      <div class="control-label">Operator 連接模式 <button id="reset-pattern" class="text-button">重設範例</button></div>
+      <div id="pattern-rows"></div>
+      <div class="pattern-actions"><button id="add-operator" class="quiet" disabled>＋ 加入 operator</button><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
+      <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p>
+    </div>
+    <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="all">所有 subgraphs</option></select>
+  </div>
+  <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
+  <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
+  <div id="pagination" class="pagination" hidden><button id="previous-page" class="quiet">上一頁</button><span id="page-label"></span><button id="next-page" class="quiet">下一頁</button></div>
+  <section id="tensor-summary" class="tensor-summary" hidden aria-label="選取的 tensor 資料"></section>
+  <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron · MIT ↗</a></div>
+</aside>
+<div class="graph-bar">
+  <div class="graph-location"><span class="eyebrow">02 / GRAPH</span><label for="graph-select" class="sr-only">目前 subgraph</label><select id="graph-select" disabled><option>模型圖</option></select><span id="graph-caption">選取結果以查看連接</span></div>
+  <div class="graph-actions"><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button></div>
+</div>
+<main id="empty-state" class="empty-state">
+  <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建立索引，模型圖依選取範圍繪製。</small></div>
+</main>
+<div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
+<div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>
+<footer class="status-bar"><span id="status" role="status">準備就緒</span><span id="metrics">LOCAL FILE · NO UPLOAD</span></footer>
