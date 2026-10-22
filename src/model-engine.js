@@ -6,6 +6,7 @@ import { RangeStream } from './range-stream.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
 const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter((value) => value && typeof value === 'object' && value.identifier !== undefined) : [];
+export const CUSTOM_OPTIONS_PREVIEW_LIMIT = 64 * 1024;
 
 // Preserve the original Netron parser, but represent inline weights using the
 // external-buffer range path it already supports. No weight payload is copied.
@@ -51,7 +52,27 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
         reader[method] = function(position, offset, type) {
             const checked = { decode: (r, p, tag) => {
                 // Unions choose the concrete table inside their decode method.
-                const value = type.decode(r, p, tag);
+                let value;
+                if (type === schema.Operator) {
+                    const inline = Boolean(r.__offset(p, 14));
+                    const originalArray = r.array;
+                    let optionsRange = null;
+                    let deferred = false;
+                    r.array = function(position, offset, elementType) {
+                        if (position === p && offset === 14 && elementType === Uint8Array && inline) {
+                            const field = p + r.__offset(p, 14);
+                            const vector = field + r.int32(field);
+                            const size = r.uint32(vector);
+                            optionsRange = { offset: vector + 4, size };
+                            if (optionsRange.offset > length - size) throw new Error('Custom options 資料範圍超出檔案。');
+                            if (size > CUSTOM_OPTIONS_PREVIEW_LIMIT) { deferred = true; return new Uint8Array(); }
+                        }
+                        return originalArray.call(this, position, offset, elementType);
+                    };
+                    try { value = type.decode(r, p, tag); }
+                    finally { r.array = originalArray; }
+                    Object.assign(value, { customOptionsInline: inline, customOptionsRange: optionsRange, customOptionsDeferred: deferred });
+                } else value = type.decode(r, p, tag);
                 if (method === 'union' && tag && !value) exportUnsupportedReason = '模型包含未知 operator／量化 options；暫不能安全匯出子模型。';
                 if (value) checkTable(p, method === 'union' ? value.constructor : type);
                 return value;
@@ -77,6 +98,13 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
     finally { schema.Model.create = create; }
     progress('建立 Layers／Tensors 索引');
     checkTable(reader.root, schema.Model);
+    model.modules.forEach((graph, g) => graph.nodes.forEach((node) => {
+        const op = raw.subgraphs[g].operators[Number(node.identifier)];
+        if (op?.customOptionsDeferred || op?.large_custom_options_size) {
+            const bytes = op.customOptionsDeferred ? op.customOptionsRange.size : String(op.large_custom_options_size);
+            node.attributes.push({ name: 'custom_options 資料範圍', type: 'string', value: `${bytes} bytes；保留原始資料，未展開內容。切圖時由本機檔案搬移。` });
+        }
+    }));
     return { ...indexModel(model, (tensors, graphIndex) => {
         // Include even tensors not referenced by any operator or graph boundary.
         raw.subgraphs[graphIndex].tensors.forEach((tensor, index) => {

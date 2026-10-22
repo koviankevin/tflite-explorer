@@ -73,6 +73,13 @@ export class FlatbufferWriter {
             else throw new Error(`不支援的 TFLite 欄位：${name}.${field.key}`);
         }
         if (value.sourceRange) this.external.push({ offsetAt: at(6), sizeAt: at(8), ...value.sourceRange });
+        for (const range of value.externalRanges || []) {
+            const offset = fields.find((field) => field.key === range.offsetKey && field.kind === 'uint64_');
+            const size = fields.find((field) => field.key === range.sizeKey && field.kind === 'uint64_');
+            if (!offset || !size) throw new Error('外部資料範圍沒有對應的 offset／size 欄位。');
+            present(offset.slot); present(size.slot);
+            this.external.push({ offsetAt: at(offset.slot), sizeAt: at(size.slot), offset: range.offset, size: range.size });
+        }
         return pos;
     }
     finish(model, file) {
@@ -80,6 +87,7 @@ export class FlatbufferWriter {
         let offset = this.length;
         const parts = [];
         for (const range of this.external) {
+            if (!Number.isSafeInteger(range.offset) || !Number.isSafeInteger(range.size) || range.offset < 0 || range.size < 0 || range.offset > file.size - range.size) throw new Error('外部資料範圍超出來源檔案。');
             const padding = (16 - offset % 16) % 16;
             parts.push(new Uint8Array(padding), file.slice(range.offset, range.offset + range.size)); offset += padding;
             this.write(range.offsetAt, offset, 'setBigUint64'); this.write(range.sizeAt, range.size, 'setBigUint64'); offset += range.size;

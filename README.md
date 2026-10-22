@@ -16,11 +16,15 @@
 
 ## 匯出 TFLite 子模型
 
-在 TFLite 模型圖上按「選取 pattern」，選取 layers 後按「匯出 TFLite 子模型」；單一 layer 也能匯出。也可在 pattern 搜尋後點選一筆匹配，再按「匯出此匹配為 TFLite 子模型」。只輸出選取的 operators，保留原 options、所需權重、tensor shape／dtype、量化及 sparsity 資料，重新編排 tensor 編號；不修改來源檔。
+在 TFLite 模型圖上按「選取 pattern」，選取 layers 後按「匯出 TFLite 子模型」；單一 layer 也能匯出。也可在 pattern 搜尋後點選一筆匹配，再按「匯出此匹配為 TFLite 子模型」。只輸出選取的 operators，保留原 options、所需權重、tensor shape／dtype、量化及 sparsity 資料；不修改來源檔。只有 builtin op 的子模型會精簡 tensors／buffers 並重新編號；含 custom op 時採用下述保留編號模式。
 
 選取區域外產生的中間 tensor 成為子模型輸入，常數權重仍放在模型中；對外有 consumer、原本是 graph output 或未被區域內消耗的輸出成為子模型 outputs，因此可保留多個出口。執行時須提供邊界輸入的實際值。JSON pattern 僅保存結構，沒有權重及 options，不能單靠 JSON 匯出可執行模型；需在開啟的 TFLite 中選取實際匹配。
 
-第一版支援無狀態、無子圖呼叫的 builtin operators。Custom operators、控制流程、variable／resource／variant、外部檔案 tensor 和未知 schema 欄位／union 會拒絕匯出，避免產生遺漏資料的模型。原模型的 signatures、針對原輸入輸出的應用 metadata 與 debug metadata 不沿用，因為邊界和編號已改變。所需權重使用 TFLite buffer offset／size 存在同一個輸出檔，以來源 File.slice 和 Blob 組裝，避免在 JavaScript 完整複製權重；執行環境須支援此 TFLite buffer 格式。是否能在特定裝置執行仍取決於 runtime 支援的 operator、版本與輸入形狀。
+支援無狀態、無子圖呼叫的 builtin 與 custom operators，兩者可混合選取。Custom 的名稱、版本、`custom_options_format` 與 options bytes 原樣保留，不要求瀏覽器理解其私有內容。含 custom op 時保留該 subgraph 全部 tensor metadata、全模型 buffer 編號及全部 buffer 資料，避免 opaque options 內的 tensor／buffer 索引因精簡而失效；因此即使只切少量 layers，輸出檔仍可能接近原模型大小。內部 runtime metadata 也保留；描述原輸入輸出邊界的 `TFLITE_METADATA` 和原 signatures／debug index 不沿用。
+
+一般 inline custom options 保持原表示；超過 64 KiB 時只讀取位置與大小，顯示範圍摘要，匯出時改用 TFLite 的 external options 表示。原本的 `large_custom_options_offset／size` 也會重新定位；資料以 16-byte alignment 存在同一個輸出檔，從來源 File.slice／Blob 搬移。若原始檔同時有 inline 與 external options，保留 inline 優先的 runtime 行為。權重同樣使用 TFLite buffer offset／size，避免在 JavaScript 完整複製大型資料；執行環境須支援這些 TFLite buffer 格式。
+
+執行 custom 子模型仍需你們的 custom kernel／delegate。Opaque options 不進行語意改寫；若私有格式另含絕對檔案位置、operator／subgraph 編號、外部檔案或其他初始化依賴，仍需內部 adapter 驗證。控制流程、會修改 variable 的 operators、被選取的 variable／resource／variant tensor、需要外部資料檔的 tensor 和未知 schema 欄位／union 暫不匯出。是否能在特定裝置執行取決於原 runtime 與輸入／初始化條件。
 
 ## 使用與開發
 
@@ -102,6 +106,8 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite、文字 MLIR 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
 
 MLIR 測試涵蓋標準 arith、多 function、不註冊的通用 dialect、雙結果 SSA 及匯合、搜尋／擷取／局部圖和錯誤提示。TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
+
+Custom 切圖另涵蓋 inline／external options 逐 byte 相同、64 KiB 以上 inline options 延後讀取、3 GiB 虛擬檔案位置的 64-bit 搬移、兩種 options 同時存在時的優先順序、optional input `-1`、intermediates、原 tensor／buffer 編號、隱含 buffer 依賴與兩個出口。瀏覽器實際選檔、單獨選取 custom op、下載及重新開啟皆已驗證，下載檔再以 LiteRT 官方 Python schema 與 Interpreter 讀取核對。合成 custom kernel 未註冊，執行時預期回報 unresolved custom op；尚未驗證任何內部 custom runtime 的運算結果。
 
 內建示範模型為合成結構，不是訓練完成或可用於推論的模型。本工具不修改來源模型，也不執行推論；子模型匯出會建立新的檔案。
 
