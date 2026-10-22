@@ -97,6 +97,7 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
         if (spec.nodes.some((node) => !byType.has(node.type))) continue;
         const mapping = new Map();
         const used = new Set();
+        const seen = new Set();
         const search = async () => {
             if (cancelled() || limited) return;
             if (mapping.size === spec.nodes.length) {
@@ -106,8 +107,14 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
                     }
                 }
                 const path = spec.nodes.map((node) => mapping.get(node.alias));
+                const connections = spec.edges.map(({ from, to }) => [mapping.get(from), mapping.get(to)]);
+                // Symmetric aliases may describe the same physical match.
+                // Include edges so genuinely different paths remain distinct.
+                const signature = JSON.stringify([[...path].sort((a, b) => a - b), connections.map(([from, to]) => `${from}:${to}`).sort()]);
+                if (seen.has(signature)) return;
+                seen.add(signature);
                 const ids = spec.nodes.map((node) => `${node.alias} #${entry.graph.nodes[mapping.get(node.alias)].identifier}`);
-                results.push({ kind: 'patterns', patternType: 'graph', graph: g, path, connections: spec.edges.map(({ from, to }) => [mapping.get(from), mapping.get(to)]), label: spec.label || spec.paths.map((line) => line.join(' → ')).join(' / ') || `子圖 · ${spec.nodes.length} 個 operators`, id: ids.join(' · ') });
+                results.push({ kind: 'patterns', patternType: 'graph', graph: g, path, connections, label: spec.label || spec.paths.map((line) => line.join(' → ')).join(' / ') || `子圖 · ${spec.nodes.length} 個 operators`, id: ids.join(' · ') });
                 if (results.length >= 50000) limited = true;
                 return;
             }

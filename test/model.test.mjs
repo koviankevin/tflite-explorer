@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fixture } from './fixture.mjs';
-import { parseModel, search, findPatterns, snapshot } from '../src/model-engine.js';
+import { parseModel, search, findPatterns, snapshot, selectionSnapshot } from '../src/model-engine.js';
 import { RangeStream } from '../src/range-stream.js';
 const metadata = JSON.parse(await readFile(new URL('../vendor/netron/tflite-metadata.json', import.meta.url)));
 const open = async (options) => {
@@ -57,4 +57,25 @@ test('invalid files and range errors fail explicitly', async () => {
     assert.throws(() => stream.seek(5));
     assert.throws(() => stream.peek(5));
     await assert.rejects(parseModel(() => new Uint8Array(16), 16, metadata), /TFLite/);
+});
+
+test('result selection preserves full graph scope and can send only highlight metadata', async () => {
+    const { index } = await open({ graphCount: 2, repeats: 4 });
+    const item = (await findPatterns(index, ['Reshape', 'Transpose', 'Reshape'], '1')).items[0];
+    const full = selectionSnapshot(index, item, { full: true });
+    assert.equal(full.graphIndex, 1);
+    assert.equal(full.graph.nodes.length, 13);
+    assert.deepEqual(full.selected, [0, 1, 2]);
+    const metadata = selectionSnapshot(index, item, { full: true, metadataOnly: true });
+    assert.equal(metadata.graphIndex, 1);
+    assert.equal(metadata.full, true);
+    assert.equal(metadata.graph, undefined);
+    assert.equal(metadata.nodes, undefined);
+    assert.deepEqual(metadata.selected, full.selected);
+    assert.ok(selectionSnapshot(index, item).graph.nodes.length < full.graph.nodes.length);
+    const tensor = search(index, 'tensors', 'unused_weights', '1')[0];
+    const detail = selectionSnapshot(index, tensor, { full: true, metadataOnly: true });
+    assert.equal(detail.graph, undefined);
+    assert.equal(detail.detail.identifier, '15');
+    assert.deepEqual(detail.selected, []);
 });

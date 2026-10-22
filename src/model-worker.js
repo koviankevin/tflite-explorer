@@ -1,4 +1,4 @@
-import { parseModel, search, findPatterns, snapshot, serialize } from './model-engine.js';
+import { parseModel, search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 let index;
@@ -28,7 +28,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const available = [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))];
             const spec = action === 'subgraphPattern' ? args.structure ? prepareGraphPattern(args.structure.nodes, args.structure.edges) : parseGraphPattern(args.text, available) : null;
             if (spec) spec.induced = Boolean(args.structure?.induced ?? args.induced);
-            if (spec && args.structure) spec.label = `分支子圖 · ${spec.nodes.length} 節點 · ${spec.edges.length} 連線`;
+            if (spec && args.structure) spec.label = `連接結構 · ${spec.nodes.length} 節點 · ${spec.edges.length} 連線`;
             const result = spec ? await findSubgraphPatterns(index, spec, args.scope, () => generation !== current) : await findPatterns(index, args.operators, args.scope, () => generation !== current);
             if (!result) { send(id, { cancelled: true }); return; }
             results = result.items;
@@ -41,12 +41,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'select') {
-            const item = args.item;
-            const entry = index.graphs[item.graph];
-            let nodes = item.path || (item.kind === 'layers' ? [item.index] : [...new Set([entry.producers.get(item.id), ...(entry.consumers.get(item.id) || [])].filter((x) => x !== undefined))].slice(0, 20));
-            const detail = item.kind === 'tensors' ? serialize(entry.tensors.get(item.id)) : null;
-            if (!nodes.length) nodes = [];
-            send(id, { ...snapshot(index, item.graph, nodes, args.full), detail, item });
+            send(id, selectionSnapshot(index, args.item, args));
         } else if (action === 'graph') {
             send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }

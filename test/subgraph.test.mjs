@@ -86,3 +86,22 @@ test('pattern library survives reload and stores no model identifiers or tensors
     assert.equal(values.get(PATTERN_LIBRARY_KEY).includes('private.tflite'), false);
     assert.equal(savePattern(storage, loaded, { ...structure, name: '我的 LoRA' }).length, 1);
 });
+
+test('symmetric branch aliases produce one result per physical subgraph and edge set', async () => {
+    const make = (extra = false) => {
+        const next = [[1, 2], [3], [3], []].map((values) => new Set(values));
+        if (extra) { next[1].add(2); next[2].add(1); }
+        const previous = next.map(() => new Set());
+        next.forEach((targets, from) => targets.forEach((to) => previous[to].add(from)));
+        return { graph: { nodes: ['Mul', 'Add', 'Add', 'Mul'].map((name, i) => ({ type: { name }, identifier: String(i) })) }, next, previous };
+    };
+    const spec = parseGraphPattern('m:Mul -> a:Add -> out:Mul\nm -> b:Add -> out');
+    const result = await findSubgraphPatterns({ graphs: [make(), make()] }, spec);
+    assert.equal(result.items.length, 2);
+    assert.deepEqual(result.items.map((item) => item.graph), [0, 1]);
+    assert.equal(new Set(result.items[0].path).size, 4);
+    // Same layers with different matched edges are distinct structures.
+    const paths = await findSubgraphPatterns({ graphs: [make(true)] }, parseGraphPattern('m:Mul -> a:Add -> b:Add -> out:Mul'));
+    assert.equal(paths.items.length, 2);
+    assert.notDeepEqual(paths.items[0].connections, paths.items[1].connections);
+});
