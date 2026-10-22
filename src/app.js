@@ -14,6 +14,14 @@ host.view = async (view) => { host._view = view; };
 host.start = async () => host._view.show('welcome');
 host.event = () => {};
 host.exception = (error) => console.error(error);
+host.export = async (name, blob) => {
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url; link.download = name;
+    document.body.append(link); link.click(); link.remove();
+    // Keep file-backed/worker Blob URLs alive while the browser starts reading.
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+};
 host.asset = async (file) => {
     if (!/^[\w.-]+$/.test(file)) throw new Error('無效的資源名稱。');
     const response = await fetch(new URL(`../vendor/netron/${file}`, import.meta.url));
@@ -118,6 +126,7 @@ function reset() {
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1;
     pickedNodes.clear(); renderedNodes = []; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
+    $('export-match').hidden = true; $('export-match').disabled = true;
     view._sidebar.close(); view.target = null; view.model = null; view._path = [];
     $('target').replaceChildren(); view.show('welcome');
     $('target').setAttribute('aria-busy', 'false');
@@ -252,6 +261,8 @@ async function selectResult(index) {
     const item = page.items[index - page.offset];
     if (!item) return;
     activeIndex = index; selection = item; full = false;
+    $('export-match').hidden = model.sourceFormat !== 'tflite' || item.kind !== 'patterns';
+    $('export-match').disabled = false;
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
     currentGraph = item.graph; $('graph-select').value = String(currentGraph);
@@ -264,6 +275,7 @@ async function selectResult(index) {
 async function drawGraph(graph, whole = false) {
     if (!model) return;
     currentGraph = graph; full = whole; selection = null;
+    $('export-match').hidden = true;
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
@@ -409,6 +421,7 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
     $('save-capture').disabled = !model || pickedNodes.size < 2;
+    $('export-submodel').disabled = !model || model.sourceFormat !== 'tflite' || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {
@@ -419,6 +432,22 @@ function refreshPickedNodes() {
             for (const attribute of ['role', 'tabindex', 'aria-label', 'aria-pressed']) entry.element.removeAttribute(attribute);
         }
     }
+}
+$('export-submodel').onclick = () => downloadSubmodel(currentGraph, [...pickedNodes]);
+$('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
+async function downloadSubmodel(graph, nodes) {
+    const sourceFile = file;
+    $('export-submodel').disabled = true;
+    $('export-match').disabled = true;
+    try {
+        status('建立 TFLite 子模型，保留所需權重與參數…');
+        const result = await rpc('exportTflite', { graph, nodes });
+        if (file !== sourceFile) return;
+        await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.tflite`, result.blob);
+        notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。`);
+        status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
+    } catch (error) { report(error); }
+    finally { refreshPickedNodes(); $('export-match').disabled = !model || !selection; }
 }
 function setPickingPattern(enabled) {
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }

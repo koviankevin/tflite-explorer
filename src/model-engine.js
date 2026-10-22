@@ -5,6 +5,7 @@ import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
+const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter((value) => value && typeof value === 'object' && value.identifier !== undefined) : [];
 
 // Preserve the original Netron parser, but represent inline weights using the
 // external-buffer range path it already supports. No weight payload is copied.
@@ -28,6 +29,36 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
     const reader = BinaryReader.open(stream);
     if (!reader || reader.identifier !== 'TFL3') throw new Error('請選擇有效的 TFLite（TFL3）模型。');
     reader._size = 64 * 1024;
+    // Keep read-only inspection available for newer schemas, but never export
+    // data whose unknown fields/options would be silently dropped by our writer.
+    let exportUnsupportedReason = '';
+    const maxima = new Map();
+    const checkTable = (position, type) => {
+        if (!maxima.has(type)) {
+            const offsets = [...type.decode.toString().matchAll(/reader\.\w+\(position, (\d+)/g)].map((match) => Number(match[1]));
+            let max = Math.max(2, ...offsets);
+            if (/reader\.union\(position, /.test(type.decode.toString())) max = Math.max(max, ...[...type.decode.toString().matchAll(/reader\.union\(position, (\d+)/g)].map((m) => Number(m[1]) + 2));
+            // The lazy Buffer decoder uses __offset directly for inline data.
+            maxima.set(type, type === schema.Buffer ? 8 : max);
+        }
+        const vt = position - reader.int32(position);
+        for (let slot = maxima.get(type) + 2; slot < reader.uint16(vt); slot += 2) {
+            if (reader.uint16(vt + slot)) exportUnsupportedReason = '模型包含本版 schema 未支援的新欄位；可檢視，但暫不能安全匯出子模型。';
+        }
+    };
+    for (const method of ['table', 'tables', 'union']) {
+        const original = reader[method];
+        reader[method] = function(position, offset, type) {
+            const checked = { decode: (r, p, tag) => {
+                // Unions choose the concrete table inside their decode method.
+                const value = type.decode(r, p, tag);
+                if (method === 'union' && tag && !value) exportUnsupportedReason = '模型包含未知 operator／量化 options；暫不能安全匯出子模型。';
+                if (value) checkTable(p, method === 'union' ? value.constructor : type);
+                return value;
+            } };
+            return original.call(this, position, offset, checked);
+        };
+    }
     const types = new Map(metadata.map((item) => [item.name, item]));
     const context = {
         type: 'tflite.flatbuffers', value: reader, stream,
@@ -45,22 +76,8 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
     try { model = await new ModelFactory().open(context); }
     finally { schema.Model.create = create; }
     progress('建立 Layers／Tensors 索引');
-    const graphs = model.modules.map((graph, graphIndex) => {
-        const tensors = new Map();
-        const producers = new Map();
-        const consumers = new Map();
-        const visit = (argument) => {
-            for (const value of argument.value || []) if (value?.identifier !== undefined) tensors.set(value.identifier, value);
-        };
-        for (const arg of [...graph.inputs, ...graph.outputs]) visit(arg);
-        graph.nodes.forEach((node, index) => {
-            for (const argument of [...node.inputs, ...node.outputs]) visit(argument);
-            for (const arg of node.outputs) for (const value of arg.value) producers.set(value.identifier, index);
-            for (const arg of node.inputs) for (const value of arg.value) {
-                if (!consumers.has(value.identifier)) consumers.set(value.identifier, new Set());
-                consumers.get(value.identifier).add(index);
-            }
-        });
+    checkTable(reader.root, schema.Model);
+    return { ...indexModel(model, (tensors, graphIndex) => {
         // Include even tensors not referenced by any operator or graph boundary.
         raw.subgraphs[graphIndex].tensors.forEach((tensor, index) => {
             if (!tensors.has(String(index))) {
@@ -69,12 +86,34 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
                 tensors.set(String(index), new Value(index, tensor, initializer, '', ''));
             }
         });
-        const next = graph.nodes.map((node) => new Set(node.outputs.flatMap((arg) => arg.value.flatMap((v) => [...(consumers.get(v.identifier) || [])]))));
+    }), raw, exportUnsupportedReason, stats: { ...stream.stats, fileBytes: length, parseMs: performance.now() - start } };
+}
+
+// Parser adapters supply a shared graph shape; searching and slicing are format independent.
+export function indexModel(model, additionalTensors = () => {}) {
+    const graphs = model.modules.map((graph, graphIndex) => {
+        const tensors = new Map();
+        const producers = new Map();
+        const consumers = new Map();
+        const visit = (argument) => {
+            for (const value of argumentValues(argument)) tensors.set(value.identifier, value);
+        };
+        for (const arg of [...graph.inputs, ...graph.outputs]) visit(arg);
+        graph.nodes.forEach((node, index) => {
+            for (const argument of [...node.inputs, ...node.outputs]) visit(argument);
+            for (const arg of node.outputs) for (const value of argumentValues(arg)) producers.set(value.identifier, index);
+            for (const arg of node.inputs) for (const value of argumentValues(arg)) {
+                if (!consumers.has(value.identifier)) consumers.set(value.identifier, new Set());
+                consumers.get(value.identifier).add(index);
+            }
+        });
+        additionalTensors(tensors, graphIndex);
+        const next = graph.nodes.map((node) => new Set(node.outputs.flatMap((arg) => argumentValues(arg).flatMap((v) => [...(consumers.get(v.identifier) || [])]))));
         const previous = graph.nodes.map(() => new Set());
         next.forEach((targets, from) => targets.forEach((to) => previous[to].add(from)));
         const records = [];
         graph.nodes.forEach((node, index) => {
-            const names = [...node.inputs, ...node.outputs].flatMap((arg) => arg.value.map((value) => value.name.split('\n')[0])).join(' ');
+            const names = [...node.inputs, ...node.outputs].flatMap((arg) => argumentValues(arg).map((value) => value.name.split('\n')[0])).join(' ');
             records.push({ kind: 'layers', graph: graphIndex, index, id: node.identifier, label: node.name || node.type.name, operator: node.type.name, text: `${node.name} ${names} ${node.type.name} ${operatorKey(node.type.name)} ${node.identifier}`.toLowerCase() });
         });
         for (const value of tensors.values()) {
@@ -86,7 +125,7 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
         operatorIndex(entry);
         return entry;
     });
-    return { model, graphs, stats: { ...stream.stats, fileBytes: length, parseMs: performance.now() - start } };
+    return { model, graphs };
 }
 
 export function search(index, kind, query, scope = 'all') {
@@ -154,8 +193,8 @@ export function snapshot(index, graphIndex, selected, full = false) {
     const graph = { ...entry.graph, nodes: nodes.map((n) => entry.graph.nodes[n]) };
     // Boundary tensors preserve the context of the sliced graph.
     if (!full) {
-        const outputs = new Set(graph.nodes.flatMap((n) => n.outputs.flatMap((a) => a.value)));
-        const inputs = new Set(graph.nodes.flatMap((n) => n.inputs.flatMap((a) => a.value)));
+        const outputs = new Set(graph.nodes.flatMap((n) => n.outputs.flatMap(argumentValues)));
+        const inputs = new Set(graph.nodes.flatMap((n) => n.inputs.flatMap(argumentValues)));
         graph.inputs = [...inputs].filter((v) => !outputs.has(v) && !v.initializer).map((v) => ({ name: v.name.split('\n')[0] || `#${v.identifier}`, value: [v] }));
         graph.outputs = [...outputs].filter((v) => !inputs.has(v) || [...(entry.consumers.get(v.identifier) || [])].some((n) => !nodes.includes(n))).map((v) => ({ name: v.name.split('\n')[0] || `#${v.identifier}`, value: [v] }));
         graph.signatures = [];

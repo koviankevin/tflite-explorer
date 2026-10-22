@@ -5,7 +5,7 @@
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉模型</button>
   <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
-  <input id="model-file" type="file" accept=".tflite,.lite" hidden>
+  <input id="model-file" type="file" accept=".tflite,.lite,.mlir" hidden>
 </header>
 <aside class="explorer-panel" aria-label="模型搜尋">
   <div class="panel-heading"><span>探索模型</span><span class="eyebrow">01 / EXPLORE</span></div>
@@ -31,7 +31,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0</textarea><p class="hint">比對 operator 類型與
         <label class="exact-option"><input id="graph-induced" type="checkbox">選取節點之間的連線須完全相同</label>
       </div>
       <div class="pattern-actions"><button id="add-operator" class="quiet" disabled>＋ 加入 operator</button><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
-      <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p>
+      <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="all">所有 subgraphs</option></select>
   </div>
@@ -47,7 +47,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0</textarea><p class="hint">比對 operator 類型與
 </div>
 <section id="capture-toolbar" class="capture-toolbar" aria-label="從模型圖建立 pattern" hidden>
   <div><strong id="capture-count" aria-live="polite">已選取 0 個 layers</strong><span>點選 layer 可加入／取消；自動擷取選取節點之間的連線。</span></div>
-  <div class="capture-actions"><label for="capture-name" class="sr-only">Pattern 名稱</label><input id="capture-name" placeholder="Pattern 名稱" maxlength="80"><button id="save-capture" class="primary" disabled>儲存並搜尋</button><button id="clear-capture" class="quiet">清除選取</button><button id="cancel-capture" class="quiet">完成選取</button></div>
+  <div class="capture-actions"><label for="capture-name" class="sr-only">Pattern 名稱</label><input id="capture-name" placeholder="Pattern 名稱" maxlength="80"><button id="save-capture" class="primary" disabled>儲存並搜尋</button><button id="export-submodel" class="quiet" disabled>匯出 TFLite 子模型</button><button id="clear-capture" class="quiet">清除選取</button><button id="cancel-capture" class="quiet">完成選取</button></div>
 </section>
 <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title">
   <div class="import-heading"><h2 id="import-title">匯入 patterns</h2><button id="close-import" class="icon-button" aria-label="關閉匯入">×</button></div>
@@ -60,7 +60,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0</textarea><p class="hint">比對 operator 類型與
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
-  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建立索引，模型圖依選取範圍繪製。</small></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite / .mlir 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><small>也可以將檔案拖放至此處。<br>TFLite 大型模型先建索引；文字 MLIR 上限 64 MiB。<br>內部 dialect 可先使用通用語法。</small></div>
 </main>
 <div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
 <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>
