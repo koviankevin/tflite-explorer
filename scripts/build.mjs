@@ -5,6 +5,7 @@ await cp('vendor', 'dist/vendor', { recursive: true });
 await cp('src', 'dist/src', { recursive: true });
 let html = await readFile('vendor/netron/index.html', 'utf8');
 html = html.replace('<html lang="en">', '<html lang="zh-Hant">')
+    .replace('initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover', 'initial-scale=1.0, viewport-fit=cover')
     .replace('<title>Netron</title>', '<title>模鏡｜TFLite 模型探索</title>')
     .replace('Visualizer for neural network, deep learning and machine learning models.', '在本機搜尋 TFLite layers、tensors 與 operator 連接模式。')
     .replace("script-src 'self'; frame-src 'none'", "default-src 'self'; script-src 'self'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'")
@@ -14,7 +15,7 @@ html = html.replace('<html lang="en">', '<html lang="zh-Hant">')
     .replaceAll('href="icon.png"', 'href="vendor/netron/icon.png"')
     .replace('<body class="welcome spinner">', `<body class="welcome">\n${await readFile('src/shell.html', 'utf8')}`);
 // App styles must follow the retained Netron inline stylesheet.
-html = html.replace('<link rel="stylesheet" href="src/app.css">', '').replace('</head>', '<link rel="stylesheet" href="src/app.css">\n<link rel="stylesheet" href="src/pattern-workspace.css">\n</head>');
+html = html.replace('<link rel="stylesheet" href="src/app.css">', '').replace('</head>', '<link rel="stylesheet" href="src/app.css">\n<link rel="stylesheet" href="src/pattern-workspace.css">\n<link rel="stylesheet" href="src/mobile.css">\n</head>');
 await writeFile('dist/index.html', html);
 await writeFile('dist/.nojekyll', '');
 const translations = new Map([
