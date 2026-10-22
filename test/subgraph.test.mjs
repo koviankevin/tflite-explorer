@@ -105,3 +105,17 @@ test('symmetric branch aliases produce one result per physical subgraph and edge
     assert.equal(paths.items.length, 2);
     assert.notDeepEqual(paths.items[0].connections, paths.items[1].connections);
 });
+
+test('demo Reshape to Transpose matches are distinct per subgraph, with four in each', async () => {
+    const index = await open({ variant: 'chain', graphCount: 2, repeats: 4 });
+    const spec = parseGraphPattern('a:Reshape -> b:Transpose');
+    const all = (await findSubgraphPatterns(index, spec)).items;
+    assert.equal(all.length, 8);
+    for (const g of [0, 1]) {
+        const scoped = (await findSubgraphPatterns(index, spec, String(g))).items;
+        assert.equal(scoped.length, 4);
+        assert.deepEqual(scoped.map((item) => item.path), [[0, 1], [3, 4], [6, 7], [9, 10]]);
+        assert.ok(scoped.every((item) => item.graph === g));
+    }
+    assert.equal(new Set(all.map((item) => `${item.graph}:${item.path.join(',')}`)).size, 8);
+});

@@ -45,7 +45,7 @@ node scripts/publish-github-pages.mjs
 
 - 常駐 Layers／Tensors 清單；名稱不分大小寫、operator 類型搜尋，`#123` 或純數字精確比對編號。
 - TFLite 的 operator 本身可能沒有名稱，因此 Layers 的名稱搜尋也包含相連 tensor 名稱。
-- 預設搜尋所有 subgraphs；可縮小搜尋範圍。點選結果沿用目前的完整圖／局部圖模式，跨 subgraph 才切換圖形。同一張完整圖只更新節點與連線高亮，保留排版及縮放；結果在視野外時才平移定位。
+- 預設搜尋目前顯示的 subgraph，切換模型圖的 subgraph 時自動更新搜尋結果；也可明確指定子圖或選「所有 subgraphs」。每筆結果標示子圖編號，因為不同 subgraphs 的 layer／tensor 編號各自從頭計算。點選結果沿用目前的完整圖／局部圖模式，跨 subgraph 才切換圖形。同一張完整圖只更新節點與連線高亮，保留排版及縮放；結果在視野外時才平移定位。
 - 可編輯、增刪及調整順序的 operator pattern，預填 `Reshape → Transpose → Reshape`。
 - Pattern 僅比對 tensor 直接連接的 operator 序列，允許額外分支，不限制 shape／dtype／其他參數，也不把融合 activation 當成另一個實體 operator。
 - 同一 subgraph 內，相同實際 layers 與匹配連線只列一次，對稱分支交換查詢別名不會重複列出。共享節點但匹配連線不同的結構仍分別保留；不同 subgraphs 的結果也各自保留。同一對節點之間多個相連 tensors 不重複計算。
@@ -92,6 +92,8 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 自動化測試使用有效的合成 TFLite FlatBuffer，直接經過 Netron 解析器，涵蓋跨 subgraph 搜尋、額外分支、直接連線、孤立 tensor、量化參數、lazy 權重與局部圖大小上限。
 
 搜尋定位另驗證完整圖保留節點數與縮放、完整／局部切換、tensor 詳細資料及既有 version 1 pattern JSON 匯入。對稱分支測試確認交換別名只列一筆，但不同 subgraph 或不同匹配連線仍保留；瀏覽器也以四節點對稱分支的實際 TFLite 選檔驗證只出現一筆結果。390×844 展開結構編輯器時結果區保留 90px，沒有水平溢位或工具列重疊。
+
+內建一般範例含兩個結構相同的 subgraphs。以 `Reshape → Transpose` 驗證：目前子圖各有 4 筆，搜尋所有子圖則有 8 筆；切換目前子圖後清單會同步更新，所有子圖的結果可由子圖編號區分，不跨子圖合併真正不同的匹配。
 
 `node scripts/benchmark.mjs 1000` 可重現結構搜尋效能檢查。2026-10-22 本機單次觀測：3,001 layers、五節點結構、999 組匹配，修正前約 2,246 ms，修正後約 43 ms；6,001 layers、1,999 組匹配約 86 ms。後者文字搜尋平均約 1.7 ms，局部圖 DTO 約 1.2 ms。這些是 Node.js 的合成圖量測，不含瀏覽器 SVG 排版時間，也不代表真實模型的載入效能。回歸測試另以候選檢查次數驗證不再重複掃描無關節點，並驗證大量候選可以取消、密集圖會回報計算上限。
 
