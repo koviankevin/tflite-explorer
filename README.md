@@ -4,15 +4,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
-
-## MLIR 輸入
-
-可直接選擇文字 `.mlir`，沿用 Layers／Tensors 搜尋、局部圖、圖上選取及 pattern JSON 匯入／匯出。以 function／巢狀 region 分開索引，連線依 SSA values 建立，保留 operation 名稱、屬性及可解析的 shape／dtype。MLIR 沒有 TFLite 的 tensor 數字編號，清單使用 SSA 名稱；多結果名稱沿用 Netron 顯示方式，例如 `%0.1`。Operator 類型保留 dialect 前綴，不自動視為 TFLite operator 的等價運算。
-
-第一版支援 Netron 實驗性 parser 能解析的標準文字語法，以及自訂 dialect 的通用 operation 語法，例如 `"demo.split"(%arg0) : (tensor<1x4xf32>) -> (tensor<1x2xf32>, tensor<1x2xf32>)`。內部工具可先用 `--mlir-print-op-generic` 匯出文字；專用簡寫、特殊 type／attribute 或 dialect resource encoding 仍需在內部環境接入及驗證，尚未宣稱支援任何內部 dialect。
-
-文字 MLIR 上限 64 MiB，在 worker 內完整讀取和解析；大型 inline constants 目前沒有 TFLite 的 lazy range 處理。暫不接受 MLIR bytecode，也不從 MLIR 編譯 TFLite；後者需要對應 dialect 的 compiler lowering。
+以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 模型檔案。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
 ## 匯出 TFLite 子模型
 
@@ -105,9 +97,9 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
-瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite、文字 MLIR 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
+瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
 
-MLIR 測試涵蓋標準 arith、多 function、不註冊的通用 dialect、雙結果 SSA 及匯合、搜尋／擷取／局部圖和錯誤提示。TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
+TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
 
 Custom 切圖另涵蓋 inline／external options 逐 byte 相同、64 KiB 以上 inline options 延後讀取、3 GiB 虛擬檔案位置的 64-bit 搬移、兩種 options 同時存在時的優先順序、optional input `-1`、intermediates、原 tensor／buffer 編號、隱含 buffer 依賴與兩個出口。瀏覽器實際選檔、單獨選取 custom op、下載及重新開啟皆已驗證，下載檔再以 LiteRT 官方 Python schema 與 Interpreter 讀取核對。合成 custom kernel 未註冊，執行時預期回報 unresolved custom op；尚未驗證任何內部 custom runtime 的運算結果。
 

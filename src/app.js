@@ -143,6 +143,10 @@ function reset() {
     status('準備就緒');
 }
 async function openFile(nextFile) {
+    if (!/\.(tflite|lite)$/i.test(nextFile.name)) {
+        notice('目前僅支援 .tflite 或 .lite 模型檔案。');
+        return;
+    }
     reset(); file = nextFile;
     const thisFile = file;
     $('file-name').textContent = file.name; $('file-stats').textContent = `${size(file.size)} · 建立索引中`;
@@ -261,7 +265,7 @@ async function selectResult(index) {
     const item = page.items[index - page.offset];
     if (!item) return;
     activeIndex = index; selection = item; full = false;
-    $('export-match').hidden = model.sourceFormat !== 'tflite' || item.kind !== 'patterns';
+    $('export-match').hidden = item.kind !== 'patterns';
     $('export-match').disabled = false;
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
@@ -421,7 +425,7 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
     $('save-capture').disabled = !model || pickedNodes.size < 2;
-    $('export-submodel').disabled = !model || model.sourceFormat !== 'tflite' || !pickedNodes.size;
+    $('export-submodel').disabled = !model || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {

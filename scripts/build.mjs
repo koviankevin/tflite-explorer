@@ -1,8 +1,12 @@
-import { mkdir, readFile, writeFile, cp } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, cp, rm } from 'node:fs/promises';
+import { basename } from 'node:path';
 import { fixture } from '../test/fixture.mjs';
 await mkdir('dist', { recursive: true });
-await cp('vendor', 'dist/vendor', { recursive: true });
+// Retain the upstream snapshot, but do not publish the unused MLIR parser.
+await cp('vendor', 'dist/vendor', { recursive: true, filter: (path) => !['mlir.js', 'mlir-metadata.json'].includes(basename(path)) });
 await cp('src', 'dist/src', { recursive: true });
+// Also remove artifacts left by builds that supported MLIR.
+await Promise.all(['dist/src/mlir-engine.js', 'dist/vendor/netron/mlir.js', 'dist/vendor/netron/mlir-metadata.json'].map((path) => rm(path, { force: true })));
 let html = await readFile('vendor/netron/index.html', 'utf8');
 html = html.replace('<html lang="en">', '<html lang="zh-Hant">')
     .replace('initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover', 'initial-scale=1.0, viewport-fit=cover')

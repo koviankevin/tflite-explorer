@@ -2,7 +2,7 @@ import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { FlatbufferWriter } from './flatbuffer-writer.js';
 
 export function exportTflite(index, graphIndex, selected, file) {
-    if (!index.raw) throw new Error('TFLite 子模型匯出僅適用於 TFLite 來源；MLIR 需要內部 compiler lowering。');
+    if (!index.raw) throw new Error('缺少 TFLite 原始模型資料，請重新開啟模型後匯出。');
     if (index.exportUnsupportedReason) throw new Error(index.exportUnsupportedReason);
     const graph = index.raw.subgraphs[graphIndex];
     const nodes = [...new Set(selected)].sort((a, b) => a - b);

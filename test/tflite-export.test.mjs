@@ -66,7 +66,7 @@ test('cuts create boundary inputs, discard unused weights, and leave source inta
     assert.equal(extracted.raw.subgraphs.length,1);
     assert.equal(index.raw.subgraphs.length,2);
     assert.equal(index.raw.subgraphs[1].operators.length,4);
-    assert.throws(()=>exportTflite({},0,[0],new Blob()),/MLIR/);
+    assert.throws(()=>exportTflite({},0,[0],new Blob()),/缺少 TFLite 原始模型資料/);
     index.raw.subgraphs[0].operators[0].builtin_options={then_subgraph_index:0};
     assert.throws(()=>exportTflite(index,0,[0],new Blob([bytes])),/控制流程/);
 });
