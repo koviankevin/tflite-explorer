@@ -1,8 +1,8 @@
 /* Narrow screens use document flow so the desktop sidebars cannot overlap. */
 @media (max-width: 900px) {
-    html { height: auto; min-height: 100%; overflow: auto; touch-action: auto; }
+    html { width: auto; height: auto; min-height: 100%; overflow: auto; touch-action: auto; }
     body {
-        height: auto; min-height: 100dvh; overflow: visible; touch-action: auto;
+        width: auto; min-width: 0; height: auto; min-height: 100dvh; overflow: visible; touch-action: auto;
         display: grid; grid-template-columns: minmax(0, 1fr);
         grid-template-areas: "header" "welcome" "explorer" "graphbar" "capture" "graph" "details" "status";
     }
