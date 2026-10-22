@@ -1,0 +1,55 @@
+/* Keep selection strokes visible when the SVG viewport is zoomed out. */
+#target .graph-node.select > .node-border {
+    stroke: #a44700 !important;
+    stroke-width: 4px !important;
+    vector-effect: non-scaling-stroke;
+}
+#target .graph-node.select .node-item-type path { fill: #ffe08a !important; }
+#target .graph-node.select .node-item-type text { fill: #332200 !important; font-weight: 700; }
+#target .edge-path.select {
+    stroke: #a44700 !important;
+    stroke-width: 3px !important;
+    vector-effect: non-scaling-stroke;
+}
+#target #arrowhead-select { fill: #a44700 !important; }
+#target .select.node-argument > rect {
+    stroke: #a44700 !important;
+    stroke-width: 3px;
+    vector-effect: non-scaling-stroke;
+}
+#target .graph-node.pattern-picked > .node-border {
+    stroke: #18745d !important;
+    stroke-width: 4px !important;
+    vector-effect: non-scaling-stroke;
+}
+#target .graph-node.pattern-picked .node-item-type path { fill: #c8f0dc !important; }
+#target .graph-node.pattern-picked .node-item-type text { fill: #103d30 !important; font-weight: 700; }
+
+/* The app has a light workspace. Override every retained Netron dark surface
+   together with its foreground so OS theme cannot create mixed contrast. */
+.sidebar { color-scheme: light; }
+.sidebar .sidebar-title, .sidebar .sidebar-header, .sidebar .sidebar-section { color: var(--ink); }
+.sidebar .sidebar-item-value {
+    background-color: #f1f6f2;
+    border-color: var(--line);
+    color: var(--ink);
+}
+.sidebar .sidebar-item-value-content { background-color: #fff; border-color: var(--line); }
+.sidebar .sidebar-item-value-line-border { border-color: var(--line); }
+.sidebar .sidebar-item-selector {
+    background-color: #f1f6f2;
+    border-color: var(--line);
+    color: var(--ink);
+    background-image: linear-gradient(45deg, transparent 50%, #52655c 50%), linear-gradient(135deg, #52655c 50%, transparent 50%);
+}
+.sidebar .sidebar-item-value-expander, .sidebar .sidebar-item-value-button,
+.sidebar .sidebar-closebutton, .sidebar .sidebar-closebutton:hover { color: var(--accent); }
+.sidebar .sidebar-item-value-button svg use,
+.sidebar .sidebar-item-value-button:hover svg use { fill: currentColor; stroke: currentColor; }
+.sidebar .sidebar-item-value-expander:hover { color: var(--ink); }
+.sidebar .sidebar-documentation :is(h1, h2, p, tt, code, pre) { color: var(--ink); }
+.sidebar .sidebar-documentation :is(tt, code, pre) { background-color: #f1f6f2; }
+.sidebar .sidebar-documentation a { color: var(--accent); }
+.sidebar .sidebar-find-search { background-color: #fff; color: var(--ink); border-color: var(--line); }
+.sidebar .sidebar-find-content li { color: var(--ink); }
+.sidebar .sidebar-find-content li.focus { background-color: #e6eee2; color: var(--ink); }
