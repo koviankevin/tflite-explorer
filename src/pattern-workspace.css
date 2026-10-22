@@ -31,5 +31,6 @@
 .pattern-picking #target .graph-node{cursor:pointer}
 #target .graph-node.pattern-picked>.node-border{stroke:var(--accent)!important;stroke-width:3px!important;stroke-dasharray:5 2;filter:drop-shadow(0 0 3px #18745d55)}
 .pattern-picking #target .graph-node:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.result-subgraph{color:var(--accent);font-weight:650}
 @media(max-height:650px){.panel-heading{padding-top:10px;padding-bottom:8px}.tabs button{padding-top:8px;padding-bottom:8px}.search-tools{max-height:calc(100% - 225px);padding-top:10px;padding-bottom:10px}.panel-footer{padding-top:8px;padding-bottom:8px}}
 @media(max-width:900px){.graph-bar{padding:0 6px}.graph-actions{gap:0}.graph-actions button{padding-left:5px;padding-right:5px}.graph-location .eyebrow{display:none}.capture-toolbar{left:calc(var(--aside) + 8px);right:8px;padding:8px}.capture-actions input{width:110px}}

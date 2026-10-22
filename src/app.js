@@ -139,7 +139,7 @@ function reset() {
     $('cancel-load').hidden = true; $('close-model').hidden = true;
     $('file-name').textContent = '尚未開啟模型'; $('file-stats').textContent = '從模型結構，找到你要的連接。';
     $('layer-count').textContent = '—'; $('tensor-count').textContent = '—';
-    $('query').value = ''; $('query').disabled = true; $('scope').replaceChildren(new Option('所有 subgraphs', 'all')); $('scope').disabled = true;
+    $('query').value = ''; $('query').disabled = true; $('scope').replaceChildren(new Option('目前 subgraph', 'current'), new Option('所有 subgraphs', 'all')); $('scope').disabled = true;
     $('graph-select').replaceChildren(new Option('模型圖', '0')); $('tensor-summary').hidden = true;
     $('graph-caption').textContent = '選取結果以查看連接'; $('metrics').textContent = 'LOCAL FILE · NO UPLOAD';
     $('full-graph').textContent = '完整圖'; $('notice').hidden = true;
@@ -167,8 +167,8 @@ async function openFile(nextFile) {
         $('layer-count').textContent = layers.toLocaleString(); $('tensor-count').textContent = tensors.toLocaleString();
         $('file-stats').textContent = `${size(file.size)} · ${layers.toLocaleString()} layers · ${model.graphs.length} subgraphs`;
         $('metrics').textContent = `讀取總量 ${size(model.stats.bytesRead)} · 檔案 ${size(file.size)} · 解析 ${(model.stats.parseMs / 1000).toFixed(2)}s`;
-        $('scope').replaceChildren(new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`${g.name} · ${g.layers} layers`, String(g.index))));
-        $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(g.name, String(g.index))));
+        $('scope').replaceChildren(new Option('目前 subgraph（子圖 0）', 'current'), new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name} · ${g.layers} layers`, String(g.index))));
+        $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
         for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         renderPattern();
@@ -204,7 +204,8 @@ async function runSearch() {
     status(kind === 'patterns' ? '搜尋連接模式中…' : '搜尋中…');
     $('result-count').textContent = '搜尋中…';
     const structure = kind === 'patterns' && $('graph-input-mode').value === 'visual' ? { nodes: graphNodes.map((n) => ({...n})), edges: graphEdges.map((e) => ({...e})), induced: $('graph-induced').checked } : null;
-    const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope: $('scope').value } : { kind, query: $('query').value, scope: $('scope').value });
+    const scope = $('scope').value === 'current' ? String(currentGraph) : $('scope').value;
+    const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope } : { kind, query: $('query').value, scope });
     if (generation !== queryGeneration || result.cancelled) return;
     if (result.decodedNodes) {
         const missing = result.decodedNodes.filter((node) => !node.present);
@@ -226,7 +227,10 @@ function showPage(result) {
         top.append(element('span', 'result-index', item.patternType === 'graph' ? item.id : `#${item.id}`), element('span', 'result-title', item.label));
         const name = model.graphs[item.graph]?.name || `Subgraph ${item.graph}`;
         const info = kind === 'tensors' ? `${name} · ${item.dtype || '?'} [${item.shape.join(', ')}]` : `${name} · ${kind === 'layers' ? item.operator : `${item.path.length} 個 operators`}`;
-        button.append(top, element('span', 'result-subtitle', info));
+        const context = element('span', 'result-subtitle');
+        context.append(element('strong', 'result-subgraph', `子圖 ${item.graph}`), document.createTextNode(` · ${info}`));
+        button.append(top, context);
+        button.title = `子圖 ${item.graph} · ${info} · ${item.label}`;
         button.onclick = () => selectResult(result.offset + i).catch(report);
         if (result.offset + i === activeIndex) button.classList.add('active');
         return button;
@@ -245,6 +249,12 @@ async function changePage(offset) {
     const result = await rpc('page', { offset });
     if (generation === queryGeneration) showPage(result);
 }
+function setCurrentGraph(graph) {
+    currentGraph = graph;
+    $('graph-select').value = String(graph);
+    const option = $('scope').querySelector('option[value="current"]');
+    if (option) option.textContent = `目前 subgraph（子圖 ${graph}）`;
+}
 async function selectResult(index, { whole = full, forceDraw = false } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
@@ -257,7 +267,7 @@ async function selectResult(index, { whole = full, forceDraw = false } = {}) {
     $('export-match').disabled = false;
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
-    currentGraph = item.graph; $('graph-select').value = String(currentGraph);
+    setCurrentGraph(item.graph);
     const generationRender = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
     const metadataOnly = whole && !forceDraw && renderedGraph?.full && renderedGraph.index === item.graph;
@@ -267,7 +277,7 @@ async function selectResult(index, { whole = full, forceDraw = false } = {}) {
 }
 async function drawGraph(graph, whole = false) {
     if (!model) return;
-    currentGraph = graph; full = whole; selection = null;
+    setCurrentGraph(graph); full = whole; selection = null;
     $('export-match').hidden = true;
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
@@ -578,7 +588,12 @@ $('previous-page').onclick = () => changePage(Math.max(0, page.offset - 100)).ca
 $('next-page').onclick = () => changePage(page.offset + 100).catch(report);
 $('previous-result').onclick = () => selectResult(activeIndex <= 0 ? page.total - 1 : activeIndex - 1).catch(report);
 $('next-result').onclick = () => selectResult(activeIndex < 0 || activeIndex >= page.total - 1 ? 0 : activeIndex + 1).catch(report);
-$('graph-select').onchange = () => { currentGraph = Number($('graph-select').value); selection = null; drawGraph(currentGraph, full).catch(report); };
+$('graph-select').onchange = async () => {
+    try {
+        await drawGraph(Number($('graph-select').value), full);
+        if ($('scope').value === 'current') await runSearch();
+    } catch (error) { report(error); }
+};
 $('local-graph').onclick = () => selection ? selectResult(activeIndex, { whole: false }).catch(report) : drawGraph(currentGraph, false).catch(report);
 $('full-graph').onclick = () => {
     if (model.graphs[currentGraph].layers > 1500 && !fullConfirmed) { fullConfirmed = true; $('full-graph').textContent = '確認繪製完整圖'; notice(`這張圖有 ${model.graphs[currentGraph].layers.toLocaleString()} 個節點，完整繪製可能耗時。再次點擊「確認繪製完整圖」即可繼續。`); return; }

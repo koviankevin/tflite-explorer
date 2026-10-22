@@ -30,7 +30,7 @@
       <div class="pattern-actions"><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
       <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
-    <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="all">所有 subgraphs</option></select>
+    <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
