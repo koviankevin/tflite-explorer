@@ -227,7 +227,16 @@ export function snapshot(index, graphIndex, selected, full = false) {
         graph.outputs = [...outputs].filter((v) => !inputs.has(v) || [...(entry.consumers.get(v.identifier) || [])].some((n) => !nodes.includes(n))).map((v) => ({ name: v.name.split('\n')[0] || `#${v.identifier}`, value: [v] }));
         graph.signatures = [];
     }
-    return { graph: serialize(graph), nodes, selected, total: entry.graph.nodes.length, full };
+    return { graph: serialize(graph), graphIndex, nodes, selected, total: entry.graph.nodes.length, full };
+}
+
+export function selectionSnapshot(index, item, { full = false, metadataOnly = false } = {}) {
+    const entry = index.graphs[item.graph];
+    const selected = item.path || (item.kind === 'layers' ? [item.index] : [...new Set([entry.producers.get(item.id), ...(entry.consumers.get(item.id) || [])].filter((n) => n !== undefined))].slice(0, 20));
+    const detail = item.kind === 'tensors' ? serialize(entry.tensors.get(item.id)) : null;
+    // A rendered full graph needs no repeated graph/weight metadata transfer.
+    const graph = full && metadataOnly ? { graphIndex: item.graph, selected, total: entry.graph.nodes.length, full, metadataOnly: true } : snapshot(index, item.graph, selected, full);
+    return { ...graph, detail, item };
 }
 
 export function serialize(value, seen = new Map()) {
