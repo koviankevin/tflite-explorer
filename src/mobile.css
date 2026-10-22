@@ -1,0 +1,83 @@
+/* Narrow screens use document flow so the desktop sidebars cannot overlap. */
+@media (max-width: 900px) {
+    html { width: auto; height: auto; min-height: 100%; overflow: auto; touch-action: auto; }
+    body {
+        width: auto; min-width: 0; height: auto; min-height: 100dvh; overflow: visible; touch-action: auto;
+        display: grid; grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "header" "welcome" "explorer" "graphbar" "capture" "graph" "details" "status";
+    }
+    .app-header {
+        grid-area: header; position: relative; inset: auto; height: auto; min-height: 64px;
+        padding: 12px; gap: 8px; flex-wrap: wrap;
+    }
+    .brand { width: auto; margin-right: auto; }
+    .brand small, .privacy { display: none; }
+    .brand-icon { width: 30px; height: 30px; font-size: 22px; }
+    .app-header .quiet { font-size: 11px; padding: 7px; min-height: 36px; }
+    .app-header .primary { font-size: 12px; padding: 9px 12px; min-height: 36px; }
+    .file-summary { display: block; order: 1; flex: 1 0 100%; max-width: 100%; }
+    #file-name { max-width: 100%; }
+    #file-stats { overflow-wrap: anywhere; }
+    .explorer-panel {
+        grid-area: explorer; position: relative; inset: auto; width: 100%;
+        height: clamp(360px, 48dvh, 460px); border-right: 0; border-bottom: 1px solid var(--line);
+    }
+    .explorer-panel .panel-heading { padding: 12px; }
+    .tabs { margin: 0 12px; }
+    .search-tools { padding: 12px; max-height: calc(100% - 210px); }
+    .results { min-height: 90px; }
+    .search-box input, select, .pattern-row select, .capture-actions input { font-size: 16px; }
+    .search-box kbd { display: none; }
+    .panel-footer { padding: 8px 12px; flex-wrap: wrap; }
+    .panel-footer a { display: inline; }
+    .graph-bar {
+        grid-area: graphbar; position: relative; inset: auto; height: auto; min-width: 0;
+        min-height: 53px; padding: 8px; gap: 6px; flex-wrap: wrap; justify-content: flex-start;
+    }
+    .graph-location { display: flex; width: 100%; min-width: 0; gap: 8px; }
+    .graph-location .eyebrow { display: none; }
+    .graph-location select { flex: 1; max-width: none; width: 0; font-size: 14px; }
+    #graph-caption { display: block; white-space: normal; }
+    .graph-actions { width: 100%; min-width: 0; flex-wrap: wrap; gap: 2px; }
+    .graph-actions button { min-height: 36px; padding: 6px; }
+    .graph-actions .divider { margin: 0 3px; }
+    .capture-toolbar {
+        grid-area: capture; position: relative; inset: auto; margin: 8px;
+        min-width: 0; padding: 10px; box-shadow: none;
+    }
+    .capture-toolbar > div { min-width: 0; max-width: 100%; }
+    .capture-actions { width: 100%; }
+    .capture-actions input { width: 100%; flex: 1 0 100%; }
+    .capture-actions button { min-height: 36px; }
+    #target, body.details-open #target {
+        grid-area: graph; position: relative; inset: auto; min-width: 0;
+        width: 100% !important; height: clamp(340px, 60dvh, 600px) !important;
+        touch-action: none;
+    }
+    .empty-state {
+        grid-area: welcome; position: relative; inset: auto; min-width: 0;
+        min-height: calc(100dvh - 100px); padding: 24px 12px; gap: 0;
+    }
+    .welcome-grid { display: none; }
+    .welcome-copy { width: min(100%, 360px); padding: 12px; }
+    .welcome-copy h1 { font-size: 32px; }
+    .welcome-copy .primary { white-space: normal; }
+    body.welcome .explorer-panel, body.welcome .graph-bar, body.welcome #target,
+    body.welcome .file-summary { display: none; }
+    .sidebar {
+        grid-area: details; position: relative !important; inset: auto !important;
+        width: 100% !important; height: clamp(260px, 55dvh, 500px) !important;
+        border-left: 0 !important; border-top: 1px solid var(--line) !important;
+    }
+    body:not(.details-open) .sidebar { display: none !important; }
+    .status-bar {
+        grid-area: status; position: relative; inset: auto; height: auto; min-height: 30px;
+        min-width: 0; padding: 8px 12px;
+    }
+    .status-bar #status { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-bar #metrics { display: none; }
+    .loading-card { position: fixed; left: 50%; width: calc(100% - 32px); max-width: 360px; min-width: 0; padding: 24px; }
+    .notice { position: fixed; left: 8px; right: 8px; bottom: 12px; max-height: 40dvh; overflow: auto; overflow-wrap: anywhere; }
+    .notice #notice-action { position: static; display: block; font-size: 12px; margin-top: 8px; }
+    .import-dialog { position: fixed; width: calc(100% - 24px); max-width: 520px; padding: 16px; }
+}
