@@ -444,7 +444,8 @@ async function downloadSubmodel(graph, nodes) {
         const result = await rpc('exportTflite', { graph, nodes });
         if (file !== sourceFile) return;
         await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.tflite`, result.blob);
-        notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。`);
+        const customInfo = result.preservedIds ? ` 含 custom op：${result.customOperators.join('、')}。保留原始 tensor／buffer 編號及全部 ${result.retainedBuffers} 個 buffers，檔案可能較大；執行需原 custom runtime。` : '';
+        notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。${customInfo}`);
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
     } catch (error) { report(error); }
     finally { refreshPickedNodes(); $('export-match').disabled = !model || !selection; }
