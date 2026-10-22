@@ -1,0 +1,51 @@
+:root { --graph-font-size: 14px; }
+body { font-size: 15px !important; }
+.app-header .quiet, .app-header .primary, #file-stats, .privacy,
+.tabs button, .tabs button span, .quiet, .text-button,
+.result-index, .result-title, .result-subtitle, .result-heading,
+.control-label, .hint, .exact-option, .panel-footer, .panel-footer a,
+.library-actions button, #visual-pattern-editor summary,
+.graph-form-row select, .graph-node-id, #graph-input-mode,
+#graph-pattern, #pattern-decoded, .capture-toolbar strong,
+.capture-toolbar span, .capture-actions button, .tensor-summary,
+.tensor-summary h3, .tensor-summary .text-button, .notice,
+.import-dialog p, .import-dialog details, #import-preview, #import-file-name,
+.import-dialog textarea, .status-bar { font-size: 14px; }
+.panel-heading { font-size: 16px; }
+.graph-actions .quiet, .graph-location select, #graph-caption,
+.welcome-copy p, .welcome-copy small { font-size: 14px; }
+.result-title, .result-subtitle { line-height: 1.5; }
+.result-index { max-width: 125px; }
+.panel-footer { flex-wrap: wrap; padding: 8px 12px; }
+.search-box input { font-size: 16px; }
+.tensor-summary dl { grid-template-columns: 85px minmax(0, 1fr); }
+.sidebar { font-size: 14px; }
+.sidebar .sidebar-title { font-size: 16px !important; }
+.sidebar .sidebar-header, .sidebar .sidebar-section,
+.sidebar .sidebar-item-name, .sidebar .sidebar-item-value,
+.sidebar .sidebar-item-selector, .sidebar .sidebar-documentation,
+.sidebar .sidebar-documentation :is(code, pre, tt) { font-size: 14px; }
+.sidebar .sidebar-header { height: auto; }
+.sidebar .sidebar-item-name { min-width: 110px; max-width: 110px; }
+.sidebar .sidebar-item-value-list { margin-left: 120px; }
+.graph-location .eyebrow { display: none; }
+.graph-actions { flex-wrap: wrap; row-gap: 6px; }
+.graph-font-control { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 14px; }
+#graph-font-size { width: 78px; padding: 5px; font-size: 14px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--ink); }
+#target svg text { font-size: var(--graph-font-size) !important; }
+@media (min-width: 901px) and (max-width: 1400px) {
+    :root { --bar: 100px; }
+    .graph-bar { flex-wrap: wrap; align-content: center; gap: 8px; padding: 8px 12px; }
+    .graph-location, .graph-actions { width: 100%; min-width: 0; }
+    .graph-location select { flex: 1; min-width: 0; max-width: 300px; }
+    #graph-caption { display: block; }
+}
+@media (max-width: 900px) {
+    select, .graph-form-row select, #graph-input-mode, #graph-font-size { font-size: 16px; }
+    .graph-actions { gap: 4px; }
+    .graph-font-control { margin-left: 4px; }
+    .explorer-panel { height: clamp(420px, 55dvh, 520px); }
+    .search-tools { max-height: calc(100% - 250px); }
+    .sidebar .sidebar-item-name { min-width: 90px; max-width: 90px; }
+    .sidebar .sidebar-item-value-list { margin-left: 98px; }
+}
