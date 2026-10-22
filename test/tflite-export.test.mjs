@@ -1,0 +1,72 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { tflite as schema } from '../vendor/netron/tflite-schema.js';
+import { parseModel } from '../src/model-engine.js';
+import { exportTflite } from '../src/tflite-export.js';
+import { FlatbufferWriter, tableFields } from '../src/flatbuffer-writer.js';
+import { BinaryReader } from '../vendor/netron/flatbuffers.js';
+import { fixture } from './fixture.mjs';
+const metadata = JSON.parse(await readFile(new URL('../vendor/netron/tflite-metadata.json',import.meta.url)));
+const parse = (bytes) => parseModel((o,n)=>bytes.subarray(o,o+n),bytes.length,metadata);
+const model = (ops, tensors, buffers) => ({ version:3, operator_codes:[{deprecated_builtin_code:0,builtin_code:0,version:1}], subgraphs:[{name:'weighted graph',tensors,operators:ops,inputs:Int32Array.of(0),outputs:Int32Array.of(3)}], buffers, description:'export test' });
+const tensor = (name,buffer=0) => ({name,buffer,shape:Int32Array.of(2),type:0,is_variable:false,has_rank:true});
+const add = (inputs,output) => ({opcode_index:0,inputs:Int32Array.from(inputs),outputs:Int32Array.of(output),builtin_options:Object.assign(new schema.AddOptions(),{fused_activation_function:0,pot_scale_int16:true})});
+test('all pinned schema tables have complete writable field declarations', () => {
+    for (const [name,type] of Object.entries(schema)) if (typeof type==='function' && type.decode?.toString().includes(`new tflite.${name}()`)) {
+        if (name !== 'Buffer') assert.ok(Array.isArray(tableFields(name)),name);
+    }
+});
+test('submodel preserves only needed weights, options, quantization and two boundary outputs', async () => {
+    const weight = new Uint8Array(new Float32Array([2,3]).buffer);
+    const tensors = [tensor('input'),tensor('weight',1),tensor('sum'),tensor('out')];
+    tensors[1].quantization={scale:Float32Array.of(.25),zero_point:[3n],quantized_dimension:0};
+    const source = await new FlatbufferWriter().finish(model([add([0,1],2),add([2,1],3),add([2,0],3)],tensors,[{data:new Uint8Array(),offset:0n,size:0n},{data:weight,offset:0n,size:0n}]),new Blob()).arrayBuffer();
+    const bytes = new Uint8Array(source), index=await parse(bytes);
+    const result=exportTflite(index,0,[0,1],new Blob([bytes]));
+    const extracted=await parse(new Uint8Array(await result.blob.arrayBuffer()));
+    assert.equal(extracted.graphs[0].graph.nodes.length,2);
+    assert.equal(result.inputs.length,1);
+    assert.equal(result.outputs.length,2);
+    assert.deepEqual([...extracted.raw.subgraphs[0].outputs],[2,3]);
+    assert.deepEqual(extracted.raw.subgraphs[0].operators[0].builtin_options,index.raw.subgraphs[0].operators[0].builtin_options);
+    assert.equal(extracted.raw.subgraphs[0].tensors[1].quantization.scale[0],.25);
+    const buffer=extracted.raw.buffers[1];
+    const binary = new Uint8Array(await result.blob.arrayBuffer());
+    const reader = BinaryReader.open(binary);
+    const buffersAt = reader.root + reader.__offset(reader.root, 12);
+    const weightTable = reader.__indirect(reader.__vector(buffersAt) + 4);
+    assert.equal(reader.__offset(weightTable, 4), 0, 'external weights must not also have an empty inline data vector');
+    assert.deepEqual(new Uint8Array(await result.blob.slice(Number(buffer.offset),Number(buffer.offset+buffer.size)).arrayBuffer()),weight);
+});
+test('unknown union options and future schema fields remain inspectable but block export', async () => {
+    const tensors=[tensor('input'),tensor('weight'),tensor('sum'),tensor('out')];
+    const bytes = new Uint8Array(await new FlatbufferWriter().finish(model([add([0,1],2)],tensors,[{data:new Uint8Array(),offset:0n,size:0n}]),new Blob()).arrayBuffer());
+    const reader=BinaryReader.open(bytes);
+    const graph=reader.__indirect(reader.__vector(reader.root+reader.__offset(reader.root,8)));
+    const op=reader.__indirect(reader.__vector(graph+reader.__offset(graph,10)));
+    const unknown=bytes.slice(); unknown[op+reader.__offset(op,10)]=250;
+    const index=await parse(unknown);
+    assert.throws(()=>exportTflite(index,0,[0],new Blob([unknown])),/未知/);
+    const vt=reader.root-reader.int32(reader.root), length=reader.uint16(vt);
+    const future=new Uint8Array(bytes.length+length+4); future.set(bytes); future.set(bytes.subarray(vt,vt+length),bytes.length);
+    const view=new DataView(future.buffer);
+    view.setInt32(reader.root,reader.root-bytes.length,true);
+    view.setUint16(bytes.length,length+2,true); view.setUint16(bytes.length+length,8,true);
+    const futureIndex=await parse(future);
+    assert.throws(()=>exportTflite(futureIndex,0,[0],new Blob([future])),/新欄位/);
+});
+test('cuts create boundary inputs, discard unused weights, and leave source intact', async () => {
+    const f=fixture(); const bytes=new Uint8Array(f.totalBytes);bytes.set(f.data);
+    const index=await parse(bytes);
+    const result=exportTflite(index,1,[1,2],new Blob([bytes]));
+    const extracted=await parse(new Uint8Array(await result.blob.arrayBuffer()));
+    assert.equal(result.inputs[0].sourceId,1);
+    assert.equal(extracted.raw.buffers.length,1);
+    assert.equal(extracted.raw.subgraphs.length,1);
+    assert.equal(index.raw.subgraphs.length,2);
+    assert.equal(index.raw.subgraphs[1].operators.length,4);
+    assert.throws(()=>exportTflite({},0,[0],new Blob()),/MLIR/);
+    index.raw.subgraphs[0].operators[0].builtin_options={then_subgraph_index:0};
+    assert.throws(()=>exportTflite(index,0,[0],new Blob([bytes])),/控制流程/);
+});

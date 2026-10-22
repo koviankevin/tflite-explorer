@@ -14,7 +14,7 @@ export function parseGraphPattern(text, available = []) {
     if (lines.length > 16) throw new Error('一組子圖最多 16 條路徑。');
     for (const line of lines) {
         const path = line.split(/\s*(?:->|→)\s*/).map((part) => {
-            const match = part.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*([A-Za-z_][A-Za-z0-9_]*))?$/);
+            const match = part.trim().match(/^([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*([A-Za-z_][A-Za-z0-9_.]*))?$/);
             if (!match) throw new Error(`無法解析「${part}」。請使用 Mul0 -> FC -> Add0，或 m:Mul -> f:FullyConnected。`);
             const [, alias, explicit] = match;
             let type;

@@ -11,10 +11,21 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         if (action === 'open') {
             file = args.file;
             const reader = new FileReaderSync();
-            const response = await fetch(new URL('../vendor/netron/tflite-metadata.json', import.meta.url));
+            const mlir = /\.mlir$/i.test(file.name);
+            const response = await fetch(new URL(`../vendor/netron/${mlir ? 'mlir' : 'tflite'}-metadata.json`, import.meta.url));
             if (!response.ok) throw new Error('無法載入 operator 定義。');
-            index = await parseModel((offset, length) => new Uint8Array(reader.readAsArrayBuffer(file.slice(offset, offset + length))), file.size, await response.json(), (stage) => postMessage({ stage }));
-            send(id, { format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+            const progress = (stage) => postMessage({ stage });
+            if (mlir) {
+                const { parseMlir, MLIR_TEXT_LIMIT } = await import('./mlir-engine.js');
+                if (file.size > MLIR_TEXT_LIMIT) throw new Error('文字 MLIR 目前最多 64 MiB；請先在內部工具移除大型常數或拆分檔案。');
+                index = await parseMlir(new Uint8Array(reader.readAsArrayBuffer(file)), file.name, await response.text(), progress);
+            } else {
+                index = await parseModel((offset, length) => new Uint8Array(reader.readAsArrayBuffer(file.slice(offset, offset + length))), file.size, await response.json(), progress);
+            }
+            send(id, { format: index.model.format, sourceFormat: mlir ? 'mlir' : 'tflite', description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+        } else if (action === 'exportTflite') {
+            const { exportTflite } = await import('./tflite-export.js');
+            send(id, exportTflite(index, args.graph, args.nodes, file));
         } else if (action === 'search') {
             generation++;
             results = search(index, args.kind, args.query, args.scope);

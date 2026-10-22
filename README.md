@@ -4,7 +4,23 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+
+## MLIR 輸入
+
+可直接選擇文字 `.mlir`，沿用 Layers／Tensors 搜尋、局部圖、圖上選取及 pattern JSON 匯入／匯出。以 function／巢狀 region 分開索引，連線依 SSA values 建立，保留 operation 名稱、屬性及可解析的 shape／dtype。MLIR 沒有 TFLite 的 tensor 數字編號，清單使用 SSA 名稱；多結果名稱沿用 Netron 顯示方式，例如 `%0.1`。Operator 類型保留 dialect 前綴，不自動視為 TFLite operator 的等價運算。
+
+第一版支援 Netron 實驗性 parser 能解析的標準文字語法，以及自訂 dialect 的通用 operation 語法，例如 `"demo.split"(%arg0) : (tensor<1x4xf32>) -> (tensor<1x2xf32>, tensor<1x2xf32>)`。內部工具可先用 `--mlir-print-op-generic` 匯出文字；專用簡寫、特殊 type／attribute 或 dialect resource encoding 仍需在內部環境接入及驗證，尚未宣稱支援任何內部 dialect。
+
+文字 MLIR 上限 64 MiB，在 worker 內完整讀取和解析；大型 inline constants 目前沒有 TFLite 的 lazy range 處理。暫不接受 MLIR bytecode，也不從 MLIR 編譯 TFLite；後者需要對應 dialect 的 compiler lowering。
+
+## 匯出 TFLite 子模型
+
+在 TFLite 模型圖上按「選取 pattern」，選取 layers 後按「匯出 TFLite 子模型」；單一 layer 也能匯出。也可在 pattern 搜尋後點選一筆匹配，再按「匯出此匹配為 TFLite 子模型」。只輸出選取的 operators，保留原 options、所需權重、tensor shape／dtype、量化及 sparsity 資料，重新編排 tensor 編號；不修改來源檔。
+
+選取區域外產生的中間 tensor 成為子模型輸入，常數權重仍放在模型中；對外有 consumer、原本是 graph output 或未被區域內消耗的輸出成為子模型 outputs，因此可保留多個出口。執行時須提供邊界輸入的實際值。JSON pattern 僅保存結構，沒有權重及 options，不能單靠 JSON 匯出可執行模型；需在開啟的 TFLite 中選取實際匹配。
+
+第一版支援無狀態、無子圖呼叫的 builtin operators。Custom operators、控制流程、variable／resource／variant、外部檔案 tensor 和未知 schema 欄位／union 會拒絕匯出，避免產生遺漏資料的模型。原模型的 signatures、針對原輸入輸出的應用 metadata 與 debug metadata 不沿用，因為邊界和編號已改變。所需權重使用 TFLite buffer offset／size 存在同一個輸出檔，以來源 File.slice 和 Blob 組裝，避免在 JavaScript 完整複製權重；執行環境須支援此 TFLite buffer 格式。是否能在特定裝置執行仍取決於 runtime 支援的 operator、版本與輸入形狀。
 
 ## 使用與開發
 
@@ -83,9 +99,11 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
-瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測。瀏覽器擴充功能尚未開放本機選檔自動化，故 >1 GiB 的實體選檔仍需人工驗證。
+瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite、文字 MLIR 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
 
-內建示範模型為合成結構，不是訓練完成或可用於推論的模型。本工具不修改模型，也不執行推論。
+MLIR 測試涵蓋標準 arith、多 function、不註冊的通用 dialect、雙結果 SSA 及匯合、搜尋／擷取／局部圖和錯誤提示。TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
+
+內建示範模型為合成結構，不是訓練完成或可用於推論的模型。本工具不修改來源模型，也不執行推論；子模型匯出會建立新的檔案。
 
 ## 上游來源及授權
 
