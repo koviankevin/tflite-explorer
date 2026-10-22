@@ -5,6 +5,13 @@ import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
+const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
+const graphFontKey = 'model-lens.graph-font-size.v1';
+try {
+    const saved = localStorage.getItem(graphFontKey);
+    if (graphFontSizes.includes(saved)) $('graph-font-size').value = saved;
+} catch { /* The control still works when preference storage is unavailable. */ }
+document.documentElement.style.setProperty('--graph-font-size', `${$('graph-font-size').value}px`);
 const element = (tag, className, text) => { const node = document.createElement(tag); if (className) node.className = className; if (text !== undefined) node.textContent = text; return node; };
 const size = (bytes) => bytes >= 1073741824 ? `${(bytes / 1073741824).toFixed(2)} GiB` : `${(bytes / 1048576).toFixed(2)} MiB`;
 const formatValue = (value) => typeof value === 'bigint' ? String(value) : Array.isArray(value) || ArrayBuffer.isView(value) ? `[${Array.from(value).map(String).join(', ')}]` : String(value);
@@ -255,7 +262,7 @@ function setCurrentGraph(graph) {
     const option = $('scope').querySelector('option[value="current"]');
     if (option) option.textContent = `目前 subgraph（子圖 ${graph}）`;
 }
-async function selectResult(index, { whole = full, forceDraw = false } = {}) {
+async function selectResult(index, { whole = full, forceDraw = false, zoom } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
     if (index < page.offset || index >= page.offset + page.items.length) await changePage(Math.floor(index / 100) * 100);
@@ -273,9 +280,9 @@ async function selectResult(index, { whole = full, forceDraw = false } = {}) {
     const metadataOnly = whole && !forceDraw && renderedGraph?.full && renderedGraph.index === item.graph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const dto = await rpc('select', { item, full: whole, metadataOnly });
-    await queueDraw(dto, generationRender);
+    await queueDraw(dto, generationRender, zoom);
 }
-async function drawGraph(graph, whole = false) {
+async function drawGraph(graph, whole = false, zoom) {
     if (!model) return;
     setCurrentGraph(graph); full = whole; selection = null;
     $('export-match').hidden = true;
@@ -283,9 +290,9 @@ async function drawGraph(graph, whole = false) {
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
     const dto = await rpc('graph', { graph, full: whole });
-    await queueDraw(dto, generation);
+    await queueDraw(dto, generation, zoom);
 }
-async function queueDraw(dto, generation) {
+async function queueDraw(dto, generation, zoom) {
     renderQueue = renderQueue.catch(() => {}).then(async () => {
         if (generation !== renderGeneration || !model) return;
         const start = performance.now();
@@ -299,6 +306,7 @@ async function queueDraw(dto, generation) {
             renderedGraph = null;
             await view._updateTarget(currentModel, [{ target: graph, signature: null }]);
             if (generation !== renderGeneration) { renderedGraph = null; return; }
+            if (Number.isFinite(zoom) && view.target) view.target.zoom = zoom;
             renderedGraph = {
                 index: dto.graphIndex, full: dto.full, graph,
                 nodes: new Map(graph.nodes.map((node) => [node.identifier, node])),
@@ -603,6 +611,15 @@ $('full-graph').onclick = () => {
 $('zoom-in').onclick = () => { if (view.target) view.zoomIn(); };
 $('zoom-out').onclick = () => { if (view.target) view.zoomOut(); };
 $('zoom-reset').onclick = () => { if (view.target) view.resetZoom(); };
+$('graph-font-size').onchange = () => {
+    const value = $('graph-font-size').value;
+    if (!graphFontSizes.includes(value)) return;
+    document.documentElement.style.setProperty('--graph-font-size', `${value}px`);
+    try { localStorage.setItem(graphFontKey, value); } catch { /* Apply for this session. */ }
+    if (!model || !view.target) return;
+    const zoom = view.target.zoom;
+    (selection ? selectResult(activeIndex, { forceDraw: true, zoom }) : drawGraph(currentGraph, full, zoom)).catch(report);
+};
 $('direction').onclick = () => {
     if (!view.target) return;
     view.options.direction = view.options.direction === 'vertical' ? 'horizontal' : 'vertical';
