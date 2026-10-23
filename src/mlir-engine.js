@@ -6,7 +6,7 @@ export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
 const spelling = value => value === null || value === undefined ? '' : String(value);
 const argument = (name, value) => ({ name, value: [value] });
-const typeSpelling = type => {
+export const typeSpelling = type => {
     if (type && typeof type.dialect === 'string' && type.symbolData) {
         const data=spelling(type.symbolData);
         return `!${type.dialect}${data.startsWith('<') ? '' : '.'}${data}`;
@@ -53,10 +53,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
     const source = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
     const graphs = [];
     const exportGraphs = [];
-    let sourceInfo;
+    let sourceInfo, rootBlock;
     progress('解析 MLIR operations 與 SSA 資料流');
     const build = (root, info) => {
         sourceInfo = info;
+        rootBlock = root;
         const visitBlock = (block, path) => {
             const graph = { name: path, type: 'graph', inputs: [], outputs: [], nodes: [], metadata: [] };
             const values = new Map();
@@ -119,5 +120,5 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, graphs: exportGraphs, metadata }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
 }

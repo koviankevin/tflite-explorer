@@ -348,7 +348,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
       <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
-    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 分開檢視。可匯出 pattern JSON 或圈選的局部 MLIR；外部 SSA 值會成為子圖輸入。</p>
+    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 分開檢視。匯出前會在本機檢查語法與 SSA；不含 dialect 自訂語意。外部 SSA 值會成為子圖輸入。</p>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
@@ -372,6 +372,13 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <output id="import-preview" aria-live="polite">尚未選擇檔案。</output>
   <p class="hint">檔案最多 1 MiB、50 組 patterns。只在本機處理，不含模型與權重。</p>
   <div class="import-actions"><button id="cancel-import" class="quiet">取消</button><button id="confirm-import" class="primary" disabled>確認匯入</button></div>
+</dialog>
+<dialog id="validation-dialog" class="import-dialog" aria-labelledby="validation-title">
+  <div class="import-heading"><h2 id="validation-title">MLIR 匯出檢查未通過</h2><button id="close-validation" class="icon-button" aria-label="關閉檢查結果">×</button></div>
+  <p id="validation-stage"></p>
+  <ol id="validation-errors" class="validation-errors"></ol>
+  <p class="hint">檢查在本機背景執行，模型不會上傳。此檢查不取代 LLVM verifier 或公司 dialect 的自訂語意驗證。</p>
+  <div class="import-actions"><button id="dismiss-validation" class="primary">關閉並調整</button></div>
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>

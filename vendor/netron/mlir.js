@@ -64,7 +64,7 @@ mlir.ModelFactory = class {
                 sourceMgr.addNewSourceBuffer(buffer);
                 const state = new _.ParserState(sourceMgr, config);
                 // Model Lens retains source spans, not reconstructed display attributes.
-                if (context.buildMLIRModel) state.modelLensSource = { operations: new WeakMap(), types: new WeakMap(), attributes: new WeakMap(), uses: [], declarations: [], resources: [], symbols: [] };
+                if (context.buildMLIRModel) state.modelLensSource = { operations: new WeakMap(), types: new WeakMap(), attributes: new WeakMap(), definitions: new WeakMap(), generic: new WeakSet(), uses: [], declarations: [], resources: [], symbols: [] };
                 const parser = new _.TopLevelOperationParser(state);
                 const block = new _.Block();
                 parser.parse(block);
@@ -5040,6 +5040,7 @@ _.OperationParser = class extends _.Parser {
         let numExpectedResults = 0;
         if (this.getToken().is(_.Token.percent_identifier)) {
             const parseNextResult = () => {
+                const resultLoc = this.getToken().loc.copy();
                 const name = this.getTokenSpelling().str();
                 this.consumeToken(_.Token.percent_identifier);
                 let expectedSubResults = 1;
@@ -5054,7 +5055,7 @@ _.OperationParser = class extends _.Parser {
                     this.consumeToken(_.Token.integer);
                     expectedSubResults *= val;
                 }
-                resultIDs.push([name, expectedSubResults, null]);
+                resultIDs.push([name, expectedSubResults, resultLoc]);
                 numExpectedResults += expectedSubResults;
                 return true;
             };
@@ -5064,6 +5065,7 @@ _.OperationParser = class extends _.Parser {
         let op = null;
         // Reference Parser.cpp:1305: nameTok.is(Token::bare_identifier) || nameTok.isKeyword()
         const nameTok = this.getToken();
+        const modelLensGeneric = nameTok.is(_.Token.string);
         if (nameTok.is(_.Token.bare_identifier) || nameTok.isKeyword()) {
             op = this.parseCustomOperation(resultIDs);
         } else if (nameTok.is(_.Token.string)) {
@@ -5094,6 +5096,7 @@ _.OperationParser = class extends _.Parser {
             }
         }
         if (this.state.modelLensSource) this.state.modelLensSource.operations.set(op, [loc.position, this.state.modelLensSource.lastEnd]);
+        if (this.state.modelLensSource && modelLensGeneric) this.state.modelLensSource.generic.add(op);
         return op;
     }
 
@@ -5256,6 +5259,7 @@ _.OperationParser = class extends _.Parser {
     }
 
     addDefinition(useInfo, value) {
+        if (this.state.modelLensSource) this.state.modelLensSource.definitions.set(value, { name: useInfo.name, number: useInfo.number, type: value.type, position:useInfo.location?.position ?? value.modelLensPosition });
         const entries = this.getSSAValueEntry(useInfo.name);
         if (entries.length <= useInfo.number) {
             entries.length = useInfo.number + 1;
@@ -5310,7 +5314,7 @@ _.OperationParser = class extends _.Parser {
                 if (type && entry.value) {
                     entry.value.type = type;
                 }
-                if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value: entry.value });
+                if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value: entry.value, name: unresolvedOperand.name, number: unresolvedOperand.number, type });
                 return entry.value;
             }
             const value = new _.Value(unresolvedOperand.toString(), type);
@@ -5318,7 +5322,7 @@ _.OperationParser = class extends _.Parser {
                 entries.length = unresolvedOperand.number + 1;
             }
             entries[unresolvedOperand.number] = { value, loc: unresolvedOperand.location };
-            if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value });
+            if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value, name: unresolvedOperand.name, number: unresolvedOperand.number, type });
             return value;
         }
         // Handle literal operands (e.g., integer literals for buildable types)
@@ -5351,11 +5355,12 @@ _.OperationParser = class extends _.Parser {
             }
             if (this.consumeIf(_.Token.l_paren)) {
                 while (!this.consumeIf(_.Token.r_paren) && this.getToken().isNot(_.Token.caret_identifier)) {
+                    const argumentPosition = this.getToken().loc.position;
                     const value = this.getTokenSpelling().str();
                     this.consumeToken(_.Token.percent_identifier);
                     this.consumeToken(_.Token.colon);
                     const type = this.parseType();
-                    const arg = { value, type };
+                    const arg = { value, type, modelLensPosition:argumentPosition };
                     const loc = this.parseTrailingLocationSpecifier();
                     if (loc) {
                         arg.loc = loc;
