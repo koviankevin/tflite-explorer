@@ -1,11 +1,12 @@
-import { Host } from '../vendor/netron/browser.js?v=5adf63a25c141e98';
-import { View, Attachment } from '../vendor/netron/view.js?v=5adf63a25c141e98';
-import { hydrate } from './hydrate.js?v=5adf63a25c141e98';
-import { modelFormat } from './model-formats.js?v=5adf63a25c141e98';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=5adf63a25c141e98';
-import {rectangleSelection} from './rectangle-selection.js?v=5adf63a25c141e98';
-import { LORA_PATTERN } from './pattern-utils.js?v=5adf63a25c141e98';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=5adf63a25c141e98';
+import { Host } from '../vendor/netron/browser.js?v=505c5538ae9ba327';
+import { View, Attachment } from '../vendor/netron/view.js?v=505c5538ae9ba327';
+import { hydrate } from './hydrate.js?v=505c5538ae9ba327';
+import {overviewCanvas} from './overview-canvas.js?v=505c5538ae9ba327';
+import { modelFormat } from './model-formats.js?v=505c5538ae9ba327';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=505c5538ae9ba327';
+import {rectangleSelection} from './rectangle-selection.js?v=505c5538ae9ba327';
+import { LORA_PATTERN } from './pattern-utils.js?v=505c5538ae9ba327';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=505c5538ae9ba327';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -39,7 +40,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=5adf63a25c141e98`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=505c5538ae9ba327`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -90,6 +91,8 @@ let cfgPattern = null;
 const cfgSelections = new Map();
 let renderedNodes = [];
 let renderedGraph = null;
+let virtualOverview=null;
+function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
 function loraPreset() {
     cfgPattern=null;
@@ -134,7 +137,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=5adf63a25c141e98', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=505c5538ae9ba327', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -145,6 +148,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
@@ -166,6 +170,7 @@ function reset() {
     $('query').value = ''; $('query').disabled = true; $('scope').replaceChildren(new Option('目前 subgraph', 'current'), new Option('所有 subgraphs', 'all')); $('scope').disabled = true;
     $('graph-select').replaceChildren(new Option('模型圖', '0')); $('tensor-summary').hidden = true;
     $('graph-caption').textContent = '選取結果以查看連接'; $('metrics').textContent = 'LOCAL FILE · NO UPLOAD';
+    $('zoom-reset').textContent='100%';
     $('full-graph').textContent = '完整圖'; $('notice').hidden = true;
     for (const id of ['pick-pattern', 'graph-select', 'run-pattern', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction', 'previous-result', 'next-result']) $(id).disabled = true;
     showPage({ items: [], total: 0, offset: 0 });
@@ -356,17 +361,18 @@ function renderOverviewControls(dto) {
     $('match-blocks').hidden=true;
     // A broad pattern may have tens of thousands of overlapping matches. Keep
     // the dropdown bounded; all results remain available in the paginated list.
-    const choices=dto.overviewMatches.length>1500?dto.overviewMatches.filter(m=>m.foldable || m.index===activeIndex):dto.overviewMatches;
+    const choices=dto.overviewMatches.length>1500?dto.overviewMatches.filter(m=>m.foldable).slice(0,1000):dto.overviewMatches;
+    if(!choices.some(m=>m.index===activeIndex))choices.push(dto.overviewMatches[activeIndex]);
     $('overview-match').replaceChildren(...choices.map(overviewOption));
     $('toggle-overview-match').textContent=dto.overviewMatches[activeIndex]?.collapsed?'展開此匹配':'收合此匹配';
-    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個可見節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}搜尋清單分頁不影響總覽；未匹配的 OP 保留。需圈選時請返回匹配圖。`;
+    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個總覽節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.virtual?'Canvas 虛擬總覽只繪製視窗範圍；拖曳平移、滾輪縮放，「全圖」還原總覽。藍色虛線為控制流程。':''}${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}${dto.overviewMatches.length>1500?'下拉選單列前 1,000 組獨立匹配及目前選取；所有結果可從分頁清單定位。':''}未匹配的 OP 保留；需圈選時請返回匹配圖。`;
 }
 async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex>=0?activeIndex:0,zoom}={}) {
     if(!model || !patternSearchReady || pickingPattern)return;
     const query=queryGeneration,generation=++renderGeneration;
     $('target').setAttribute('aria-busy','true');refreshPatternFold();status('建立全模型 pattern 總覽…');
     try {
-        const dto=await rpc('patternOverview',{expanded:[...expanded],active,patternName:patternDisplayName()});
+        const dto=await rpc('patternOverview',{expanded:[...expanded],active,patternName:patternDisplayName(),font:Number($('graph-font-size').value),direction:view.options.direction});
         if(query!==queryGeneration || generation!==renderGeneration || dto.cancelled)return;
         overviewMode=true;overviewExpanded=new Set(expanded);activeIndex=dto.activeIndex;selection=dto.item;full=true;setCurrentGraph(dto.graphIndex);
         $('export-match').hidden=false;$('export-match').disabled=exportBusy || !canExportSubmodel();
@@ -382,6 +388,7 @@ function focusOverviewMatch(item,index) {
     }
     $('overview-match').value=String(index);$('toggle-overview-match').textContent=match.collapsed?'展開此匹配':'收合此匹配';
     document.querySelectorAll('[data-result-index]').forEach(b=>b.classList.toggle('active',Number(b.dataset.resultIndex)===index));
+    if(virtualOverview){virtualOverview.focus(match.nodes);refreshPatternFold();status(`已在全模型虛擬總覽定位匹配 #${index+1}，其餘節點依視窗載入。`);return;}
     const nodes=match.nodes.map(id=>renderedGraph.nodes.get(id)).filter(Boolean);
     const marked=new Set(match.nodes);for(const {node,element:el} of renderedNodes)if(renderedGraph.combined)el?.classList.toggle('cfg-match',marked.has(node.identifier));
     if(view.target)view.target.scrollTo(view.target.select(nodes,'explorer'));
@@ -427,7 +434,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph 
     $('target').setAttribute('aria-busy', 'true');
     refreshPatternFold();
     const collapsed=item.kind==='patterns' && patternCollapsed;
-    const metadataOnly = !collapsed && !renderedGraph?.folded && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
+    const metadataOnly = !collapsed && !renderedGraph?.folded && !renderedGraph?.virtual && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
     const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName });
@@ -450,7 +457,22 @@ async function queueDraw(dto, generation, zoom) {
     renderQueue = renderQueue.catch(() => {}).then(async () => {
         if (generation !== renderGeneration || !model) return;
         const start = performance.now();
+        if(dto.virtual){
+            const previousZoom=virtualOverview?.zoomValue;disposeVirtualOverview();view.target=null;view.show('default');view._sidebar.close();layerMarquee.cancel();
+            const graph=dto.graph;view.model={format:model.format,description:model.description,modules:[graph],metadata:[],attachment:new Attachment()};view._path=[{target:graph,signature:null}];renderedGraph={index:dto.graphIndex,full:true,graph,virtual:true,combined:dto.combined,overview:true,folded:dto.folded,overviewMatches:dto.overviewMatches,nodes:new Map(graph.nodes.map(n=>[n.identifier,n])),values:new Map()};
+            renderedNodes=graph.nodes.map(n=>({node:n,index:n.identifier}));
+            virtualOverview=overviewCanvas($('target'),dto.layout,{selected:dto.selected,activate:node=>activateOverviewNode(node).catch(report)});
+            if(previousZoom!==undefined || Number.isFinite(zoom))virtualOverview.focus(dto.selected,zoom ?? previousZoom);
+            // Netron's detail sidebar emits focus/select/activate events. Keep
+            // those events on the Canvas camera instead of a stale SVG target.
+            const controller=virtualOverview;
+            view.target={on(){},off(){},register(){},unregister(){},selection:new Set(),nodes:new Map(),get zoom(){return controller.zoomValue;},set zoom(value){controller.zoom(value/controller.zoomValue);},select(values){return values || [];},focus(){},blur(){},scrollTo(){},activate(value){view.showTensorProperties(value,'sidebar');return[];}};
+            $('empty-state').hidden=true;$('tensor-summary').hidden=true;renderOverviewControls(dto);$('graph-caption').textContent=`全模型虛擬總覽 · ${dto.nodes.length.toLocaleString()} 節點 · ${dto.collapsedCount.toLocaleString()} 個收合節點`;
+            $('zoom-reset').textContent='全圖';$('local-graph').style.background='';$('full-graph').style.background='#e6eee2';status(`全模型虛擬總覽 · ${dto.nodes.length.toLocaleString()} 節點 · 建立視窗 ${(performance.now()-start).toFixed(0)} ms`);return;
+        }
         if (!dto.metadataOnly) {
+            disposeVirtualOverview();
+            $('zoom-reset').textContent='100%';
             hydrate(dto, file);
             const graph = dto.graph;
             view.options.names = model.sourceFormat === 'mlir';
@@ -512,6 +534,14 @@ async function queueDraw(dto, generation, zoom) {
     });
     try { await renderQueue; }
     finally { if (generation === renderGeneration) { $('target').setAttribute('aria-busy', 'false'); refreshPatternFold(); } }
+}
+async function activateOverviewNode(node) {
+    if(node.diagramKind==='pattern'){await activatePatternNode(node);return;}
+    if(node.diagramKind!=='operator')return;
+    const controller=virtualOverview,generation=renderGeneration;
+    const detail=await rpc('overviewNode',{graph:node.sourceGraph,node:node.sourceNode});
+    if(!controller || controller!==virtualOverview || generation!==renderGeneration)return;
+    hydrate(detail,file);view.showNodeProperties(detail,'sidebar');
 }
 function tensorSummary(value) {
     if (!value?.type) { $('tensor-summary').hidden = true; return; }
@@ -891,6 +921,7 @@ $('graph-select').onchange = async () => {
         if(overviewMode && renderedGraph?.overview) {
             setCurrentGraph(graph);
             const nodes=renderedNodes.filter(e=>e.node.sourceGraph===graph || e.node.sourceGraphs?.includes(graph));
+            if(virtualOverview){virtualOverview.focus(nodes.map(e=>e.node.identifier));status(`已在全模型虛擬總覽定位 subgraph/block ${graph}。`);return;}
             view.target?.scrollTo(nodes.map(e=>e.element).filter(Boolean));status(`已在全模型圖定位 subgraph/block ${graph}。`);return;
         }
         if(renderedGraph?.combined && selection?.blocks?.some(b=>b.graph===graph)){focusMatchBlock(graph);return;}
@@ -908,9 +939,9 @@ $('full-graph').onclick = () => {
     $('full-graph').textContent = '完整圖'; fullConfirmed = false;
     (selection ? selectResult(activeIndex, { whole: true }) : drawGraph(currentGraph, true)).catch(report);
 };
-$('zoom-in').onclick = () => { if (view.target) view.zoomIn(); };
-$('zoom-out').onclick = () => { if (view.target) view.zoomOut(); };
-$('zoom-reset').onclick = () => { if (view.target) view.resetZoom(); };
+$('zoom-in').onclick = () => { if(virtualOverview)virtualOverview.zoom(1.5);else if (view.target) view.zoomIn(); };
+$('zoom-out').onclick = () => { if(virtualOverview)virtualOverview.zoom(1/1.5);else if (view.target) view.zoomOut(); };
+$('zoom-reset').onclick = () => { if(virtualOverview)virtualOverview.fit();else if (view.target) view.resetZoom(); };
 $('graph-font-size').onchange = () => {
     const value = $('graph-font-size').value;
     if (!graphFontSizes.includes(value)) return;
