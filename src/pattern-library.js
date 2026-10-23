@@ -1,7 +1,9 @@
 import { prepareGraphPattern } from './subgraph-pattern.js';
 import { operatorKey } from './pattern-utils.js';
+import {prepareMLIRPattern,CFG_PATTERN_MODE} from './mlir-pattern-spec.js';
 
-export const PATTERN_LIBRARY_KEY = 'model-lens.patterns.v1';
+export const PATTERN_LIBRARY_KEY = 'model-lens.patterns.v2';
+const legacyLibraryKey='model-lens.patterns.v1';
 export const PATTERN_FILE_LIMIT = 1024 * 1024;
 const fileFormat = 'model-lens-patterns';
 
@@ -11,13 +13,14 @@ export function reusablePattern(name, structure) {
     if (structure.edges.some((edge) => !edge || typeof edge.from !== 'string' || typeof edge.to !== 'string')) throw new Error('Pattern 的連線無效。');
     const title = String(name || '').trim().slice(0, 80);
     if (!title) throw new Error('請輸入 pattern 名稱。');
-    const spec = prepareGraphPattern(structure.nodes, structure.edges);
+    if(structure.mode!==undefined && structure.mode!==CFG_PATTERN_MODE)throw new Error('不支援此 pattern 搜尋模式。');
+    const spec = structure.mode===CFG_PATTERN_MODE ? prepareMLIRPattern(structure) : prepareGraphPattern(structure.nodes, structure.edges);
     const types = new Map(structure.nodes.map((node) => [node.alias, String(node.type).trim()]));
-    return { name: title, nodes: spec.nodes.map((node) => ({ alias: node.alias, type: types.get(node.alias) })), edges: spec.edges, induced: Boolean(structure.induced) };
+    return { name: title, ...(spec.mode ? {mode:spec.mode} : {}), nodes: spec.nodes.map((node) => spec.mode ? {...node} : ({ alias: node.alias, type: types.get(node.alias) })), edges: spec.edges, induced: Boolean(structure.induced) };
 }
 
 export function loadPatterns(storage) {
-    const value = JSON.parse(storage.getItem(PATTERN_LIBRARY_KEY) || '[]');
+    const value = JSON.parse(storage.getItem(PATTERN_LIBRARY_KEY) ?? storage.getItem(legacyLibraryKey) ?? '[]');
     if (!Array.isArray(value)) return [];
     return value.slice(0, 50).flatMap((item) => {
         try { return [reusablePattern(item.name, item)]; } catch { return []; }
@@ -34,22 +37,26 @@ export function savePattern(storage, library, pattern) {
 
 export function exportPatterns(patterns) {
     if (!patterns.length || patterns.length > 50) throw new Error('請選擇 1 至 50 組已儲存的 patterns。');
-    return JSON.stringify({ format: fileFormat, version: 1, patterns: patterns.map((pattern) => reusablePattern(pattern.name, pattern)) }, null, 2);
+    const text=JSON.stringify({ format: fileFormat, version: patterns.some(p=>p.mode===CFG_PATTERN_MODE) ? 2 : 1, patterns: patterns.map((pattern) => reusablePattern(pattern.name, pattern)) }, null, 2);
+    if(new TextEncoder().encode(text).length>PATTERN_FILE_LIMIT)throw new Error('Pattern 檔案超過 1 MiB，請改為匯出所選 pattern。');
+    return text;
 }
 
 export function parsePatternFile(text) {
     if (new TextEncoder().encode(text).length > PATTERN_FILE_LIMIT) throw new Error('Pattern 檔案不得超過 1 MiB。');
     let file;
     try { file = JSON.parse(text.replace(/^\uFEFF/, '')); } catch { throw new Error('無法讀取 JSON，請選擇模鏡匯出的 pattern 檔案。'); }
-    if (file?.format !== fileFormat || file?.version !== 1) throw new Error('不支援此 pattern 檔案格式或版本。');
+    if (file?.format !== fileFormat || ![1,2].includes(file?.version)) throw new Error('不支援此 pattern 檔案格式或版本。');
     if (!Array.isArray(file.patterns) || !file.patterns.length || file.patterns.length > 50) throw new Error('檔案需包含 1 至 50 組 patterns。');
     return file.patterns.map((pattern, i) => {
         if (!pattern || typeof pattern.name !== 'string' || !pattern.name.trim() || pattern.name.length > 80 || (pattern.induced !== undefined && typeof pattern.induced !== 'boolean')) throw new Error(`第 ${i + 1} 組 pattern 的名稱或連線設定無效。`);
+        if(file.version===1 && pattern.mode!==undefined)throw new Error('跨 block pattern 需要 version 2 檔案。');
         try { return reusablePattern(pattern.name, pattern); } catch (error) { throw new Error(`第 ${i + 1} 組 pattern：${error.message}`); }
     });
 }
 
 function signature(pattern) {
+    if(pattern.mode===CFG_PATTERN_MODE)return JSON.stringify({mode:pattern.mode,nodes:pattern.nodes.map(n=>JSON.stringify(n)).sort(),edges:pattern.edges.map(e=>JSON.stringify(e)).sort(),induced:pattern.induced});
     return JSON.stringify({ nodes: pattern.nodes.map((node) => [node.alias, operatorKey(node.type)]).sort(), edges: pattern.edges.map((edge) => [edge.from, edge.to]).sort(), induced: pattern.induced });
 }
 

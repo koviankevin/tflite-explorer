@@ -36,6 +36,12 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0 });
         } else if (action === 'pattern' || action === 'subgraphPattern') {
             const current = ++generation;
+            if(args.structure?.mode==='mlir-cfg') {
+                const {findMLIRPatterns}=await import('./mlir-pattern.js');
+                const result=await findMLIRPatterns(index,args.structure,args.scope,()=>generation!==current);
+                if(!result){send(id,{cancelled:true});return;}
+                results=result.items;send(id,{items:results.slice(0,100),total:results.length,offset:0,truncated:result.truncated,searchLimited:result.searchLimited});return;
+            }
             const available = [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))];
             const spec = action === 'subgraphPattern' ? args.structure ? prepareGraphPattern(args.structure.nodes, args.structure.edges) : parseGraphPattern(args.text, available) : null;
             if (spec) spec.induced = Boolean(args.structure?.induced ?? args.induced);
@@ -46,13 +52,18 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const decodedNodes = spec?.nodes.map((node) => ({ alias: node.alias, type: available.find((type) => operatorKey(type) === node.type) || node.type, present: available.some((type) => operatorKey(type) === node.type) }));
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated, searchLimited: result.searchLimited, decodedNodes });
         } else if (action === 'capturePattern') {
+            if(args.selections) {
+                const {captureMLIRPattern}=await import('./mlir-pattern.js');send(id,captureMLIRPattern(index,args.selections));return;
+            }
             const entry = index.graphs[args.graph];
             if (!entry) throw new Error('找不到目前 subgraph。');
             send(id, captureGraphPattern(entry, args.nodes));
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'select') {
-            send(id, selectionSnapshot(index, args.item, args));
+            if(args.item.mode==='mlir-cfg') {
+                const {mlirMatchSnapshot}=await import('./mlir-pattern.js');send(id,mlirMatchSnapshot(index,args.item,args));
+            } else send(id, selectionSnapshot(index, args.item, args));
         } else if (action === 'graph') {
             send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }

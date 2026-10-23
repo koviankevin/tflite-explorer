@@ -33,7 +33,7 @@ entry predecessor、branch operands 與 block arguments 的數量／型別、con
 
 圈選位於多 block function 時，匯出保留整個 enclosing `func.func`，包含
 所有 blocks、terminators、block arguments 和返回路徑。這是保留控制流程的
-function 擷取；pattern 搜尋仍以 block 為範圍。未知 branch／terminator 規則
+function 擷取；pattern 搜尋可選擇單 block 或同 region 的跨 block 模式。未知 branch／terminator 規則
 需透過 [dialect adapter](mlir-adapters.md) 擴充，否則明確拒絕匯出。
 Symbol dependencies 不自動擷取；完整 dialect ODS／private verifier 仍需在公司
 工具驗證。無法完整對應 operands 或 custom assembly 會拒絕匯出。

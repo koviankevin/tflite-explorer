@@ -45,7 +45,8 @@ parser implementation，回傳 `indexModel()` 可接受的 model，並保留
 
 每個 block 是一個 graph／搜尋範圍；巢狀 scope 路徑包含 owning op、region
 及 block。跨 scope 使用的值在該 graph 顯示為輸入，不推斷記憶體與控制
-相依；不跨 scope 搜尋 pattern。多輸出分組恢復為 `%result#N`。
+相依；一般 pattern 預設逐 block 搜尋，跨 block 模式在同一 region 比對 SSA 和
+successors，不跨 function／巢狀 region。多輸出分組恢復為 `%result#N`。
 
 執行 `node --test test/*.test.mjs`。新增 dialect 必須至少測完整 op 名稱、
 不同 namespace 的同名 op、SSA 多輸出、重複 SSA 名稱的不同 scopes、
@@ -139,3 +140,29 @@ interfaces 和 private verifiers 不在目前通用檢查範圍。
 新增 adapter 至少測 diamond／loop 的 argument routing、錯誤路由、isolation、
 region kind、SSA shadowing、diagnostics、匯出 round trip，並以公司的 compiler
 驗證同一份檔案。Custom assembly 仍須先由 compiler 轉為 generic 格式。
+
+## 跨 block pattern 接點
+
+`mlir-pattern.js` 僅在 Worker 按需載入，使用同一份 `operationSemantics` 和
+不可變 SSA uses 建立索引；公司分支只需提供正確的 `successorOperands`，不必
+另寫 matcher。四種邊是 `contains`、`ssa`、`argument` 和 `control`。Branch
+到 block argument 的綁定保留 successor 編號及 source result port，argument
+節點保留 slot，SSA 邊保留 operand／result ports；不將所有前驅資料流攤平成
+普通的 op → op 邊。這可區分不同 phi-like routing，並自然表達迴圈。
+
+Region 的 project 共用 source SSA／dominance 檢查 cache；圖儲存量隨原始
+operations、arguments、uses 和 successors 線性增加，不做 transitive closure。
+Pattern 另保存同 block 內被選 operators 的相對順序，無須建立 O(N²) 順序邊。
+Matcher 透過類型與帶 port 的鄰接索引成長，支援有向循環，保留取消與工作上限。
+結果以實際節點及有類型的匹配邊去重，分開列出不同 region／function 的匹配。
+
+主執行緒只載入 `mlir-pattern-spec.js` 做 JSON schema 驗證，不能因此載入 MLIR
+parser。Version 2 的 `mode:'mlir-cfg'` 節點包含 operator、block、argument；
+最多 32 operators、32 blocks、256 結構節點、512 邊。只輸出白名單欄位，沿用
+1 MiB／50 組 library 上限；匯出也檢查大小，以免產生無法匯入的檔案。
+Library 使用 v2 localStorage key，首次從舊 v1 key 讀取既有 patterns；只將之後
+的儲存寫入 v2，保留原 key，避免尚未重新整理的舊分頁覆蓋新版結構。
+
+新增 dialect 應以 `test/mlir-cross-block.test.mjs` 為範例，另測 branch operand
+groups、同一 successor 的不同出口、loop-carried arguments、名字改變後的匹配、
+錯誤路由拒絕、跨 function 拒絕、JSON round trip 及每個結果 block 的定位 DTO。

@@ -1,4 +1,5 @@
-import { mkdir, readFile, writeFile, cp } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, cp, readdir } from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import { fixture } from '../test/fixture.mjs';
 import { MLIR_BRANCH } from '../test/mlir-fixture.mjs';
 await mkdir('dist', { recursive: true });
@@ -36,4 +37,25 @@ await writeFile('dist/lora-demo.tflite', loraBuffer);
 await writeFile('dist/demo.mlir', MLIR_BRANCH+'\n');
 await cp('vendor/netron/LICENSE', 'dist/LICENSE-Netron.txt');
 await cp('LICENSE', 'dist/LICENSE');
-console.log('Built dist/: local file processing, worker parsing, search and Netron diagrams.');
+// Version the complete ESM graph, including Worker imports. A fresh HTML page
+// must never combine a new UI with ten-minute-old GitHub Pages script caches.
+const modules=[];
+async function collectModules(directory) {
+    for(const entry of await readdir(directory,{withFileTypes:true})) {
+        const path=`${directory}/${entry.name}`;
+        if(entry.isDirectory())await collectModules(path);
+        else if(entry.name.endsWith('.js'))modules.push(path);
+    }
+}
+await collectModules('dist/src');await collectModules('dist/vendor');modules.sort();
+const hash=createHash('sha256');
+for(const path of modules){hash.update(path);hash.update(await readFile(path));}
+const release=hash.digest('hex').slice(0,16);
+for(const path of modules) {
+    const text=await readFile(path,'utf8');
+    const stamped=text.replace(/(\b(?:from\s*|import\s*(?:\(\s*)?|new\s+URL\(\s*))(['"`])([^'"`\r\n]*\.js)\2/g,(all,prefix,quote,url)=>url.startsWith('.') ? `${prefix}${quote}${url}?v=${release}${quote}` : all);
+    if(stamped!==text)await writeFile(path,stamped);
+}
+html=html.replace(/((?:src|href)="(?:src|vendor)\/[^"?]+\.(?:js|css))"/g,`$1?v=${release}"`);
+await writeFile('dist/index.html',html);
+console.log(`Built dist/ release ${release}: local file processing, worker parsing, search and Netron diagrams.`);
