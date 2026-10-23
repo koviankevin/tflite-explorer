@@ -452,7 +452,11 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     const cfg=model?.graphs[currentGraph]?.cfgExport;
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers${cfg ? ` · 匯出會保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
-    if(model?.capabilities?.mlirExport) $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
+    if(model?.capabilities?.mlirExport) {
+        $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
+        const matched=model.graphs[selection?.graph]?.cfgExport;
+        $('export-match').textContent=matched ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
+    }
     $('save-capture').disabled = !model || pickedNodes.size < 2;
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
