@@ -147,4 +147,4 @@ Netron: https://github.com/lutzroeder/netron
 
 使用 Netron 9.3.2，固定來源 commit `0994fdd00d6668280b0b98a6f5323a736236208b`。完整 MIT 授權及原作者聲明保留於 `vendor/netron/LICENSE`，建置時另複製為 `dist/LICENSE-Netron.txt`。
 
-`vendor/netron` 保留上游 source；對上游僅新增 `Value`、`Tensor`、`Attachment` exports，供 adapter 使用。`scripts/build.mjs` 另對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。
+`vendor/netron` 保留上游 source，新增 `Value`、`Tensor`、`Attachment` exports 供 adapter 使用，並在 `dagre.js` 的連線排序條件補上邊界／終端節點檢查，避免局部迴圈有外部 SSA 輸入時讀取不存在的 incoming／outgoing edge。`scripts/build.mjs` 另對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。
