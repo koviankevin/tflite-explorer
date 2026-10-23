@@ -62,6 +62,7 @@ function validGraph(index,region,graph) {
             if(n.selected!==undefined && typeof n.selected!=='boolean')return false;
             if(!integer(n.actualOp,b.operations.length) || !integer(n.order) || !integer(n.inputs,1000000) || !integer(n.results,1000000))return false;
             const op=b.operations[n.actualOp],key=`${parent.block}:${n.actualOp}`;
+            if(n.returnOperands!==undefined && (n.type!=='func.return' || !Array.isArray(n.returnOperands) || n.returnOperands.length!==n.inputs || n.returnOperands.some(p=>!integer(p,index.mlir.ir.byOp.get(op).uses.length))))return false;
             if(typeof n.type!=='string' || n.type!==name(op) || operators.has(key) || n.results!==(op.results || []).length)return false;
             if(!op.successors?.length && name(op)!=='func.return' && n.inputs!==index.mlir.ir.byOp.get(op).uses.length)return false;
             operators.add(key);orders.get(n.parent).push(n);
@@ -88,7 +89,7 @@ function validGraph(index,region,graph) {
                 if(e.kind==='ssa') {
                     if(b.kind!=='operator' || q>=b.inputs)return false;
                     const parent=nodes[b.parent],op=region.blocks[parent.block].operations[b.actualOp];
-                    if(!op.successors?.length && name(op)!=='func.return' && index.mlir.ir.byOp.get(op).uses[q]?.value!==actualValues.get(`${e.from}:${p}`))return false;
+                    if((name(op)!=='func.return' && !op.successors?.length || b.returnOperands && actualValues.has(`${e.from}:${p}`)) && index.mlir.ir.byOp.get(op).uses[b.returnOperands?.[q] ?? q]?.value!==actualValues.get(`${e.from}:${p}`))return false;
                 } else {
                     if(b.kind!=='argument' || !integer(e.branch,nodes.length) || nodes[e.branch].kind!=='block')return false;
                     const from=region.blocks[nodes[e.branch].block],to=region.blocks[nodes[b.parent].block],successor=from.operations.at(-1)?.successors?.[q];
@@ -137,7 +138,8 @@ export async function attachSlicePattern(index,region,text,offset,bindings) {
         const b=region.blocks[original.nodes[n.parent].block];let mapped;
         if(n.kind==='operator'){mapped=bindings.operators.get(b.operations[n.actualOp]);if(mapped===undefined)continue;}
         else mapped=n.actualSlot===null?undefined:bindings.arguments.get(b.arguments[n.actualSlot]);
-        ids.set(i,nodes.length);nodes.push({...n,parent:ids.get(n.parent),...(n.kind==='operator'?{actualOp:mapped,selected:bindings.selected.has(b.operations[n.actualOp])}:{actualSlot:mapped ?? null})});
+        const returns=n.kind==='operator' && bindings.returnOperands?.get(b.operations[n.actualOp]);
+        ids.set(i,nodes.length);nodes.push({...n,parent:ids.get(n.parent),...(n.kind==='operator'?{actualOp:mapped,selected:bindings.selected.has(b.operations[n.actualOp]),...(returns?{returnOperands:returns}:{})}:{actualSlot:mapped ?? null})});
     }
     const edges=original.edges.filter(e=>ids.has(e.from) && ids.has(e.to) && (e.branch===undefined || ids.has(e.branch))).map(e=>({...e,from:ids.get(e.from),to:ids.get(e.to),...(e.branch===undefined?{}:{branch:ids.get(e.branch)})}));
     const graph={nodes,edges};

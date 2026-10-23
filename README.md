@@ -68,6 +68,8 @@ node scripts/serve.mjs
 
 局部 MLIR 重新開啟時預設為精簡圖，只顯示匯出時圈選的原始 OP。匯出器補上的輸入、輸出有效旗標、block arguments 與控制路由保留在 MLIR 內，圖面將其收起並直接連接原始 OP；分支、匯合與迴圈回跳仍可查看。點「展開輔助節點」可檢視完整 SSA 與控制流程，再點「收起輔助節點」返回。此顯示切換不改動模型、匯出或 pattern 比對。較舊的局部檔案沒有圈選標記，預設顯示可驗證的原始 OP；套用原先儲存的 pattern 後會只顯示該匹配的 OP，或可重新匯出以記錄精確圈選。
 
+反覆匯出相同選取時，會依有效的結構對照合併舊的自動入口路由，再建立一次匯出介面；原始 blocks 與明確圈選的輔助 OP 不會被合併。多出口 `func.return` 另保留原始資料輸出的 operand 對照，避免把出口編號、valid 旗標再包成資料輸出。對照失效的檔案不會套用入口整理；舊檔若無法可靠還原 return 的資料輸出，會提示從原模型重新匯出或改用完整 function。
+
 ```powershell
 node scripts/build.mjs
 node scripts/publish-github-pages.mjs
