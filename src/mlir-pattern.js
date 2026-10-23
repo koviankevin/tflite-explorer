@@ -1,10 +1,10 @@
-import {operationSemantics} from './mlir-dialects.js?v=e02b487a8535b042';
-import {typeSpelling} from './mlir-engine.js?v=e02b487a8535b042';
-import {validateMLIR} from './mlir-validate.js?v=e02b487a8535b042';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=e02b487a8535b042';
-import {selectionSnapshot} from './model-engine.js?v=e02b487a8535b042';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=e02b487a8535b042';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=e02b487a8535b042';
+import {operationSemantics} from './mlir-dialects.js?v=d95c73b383d96f3f';
+import {typeSpelling} from './mlir-engine.js?v=d95c73b383d96f3f';
+import {validateMLIR} from './mlir-validate.js?v=d95c73b383d96f3f';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=d95c73b383d96f3f';
+import {selectionSnapshot} from './model-engine.js?v=d95c73b383d96f3f';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=d95c73b383d96f3f';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=d95c73b383d96f3f';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -86,7 +86,8 @@ export function captureMLIRPattern(index,selections) {
     if(!project)throw new Error('跨 block 圈選必須位於同一個 region；不能跨 function 或巢狀 region。');
     const actual=build(index,project),original=sourceEntry(index,project);
     const included=original && new Set(original.nodes.filter(n=>n.kind==='operator').map(n=>`${n.graph}:${n.node}`));
-    const entry=original && [...requested].every(([g,set])=>[...set].every(n=>included.has(`${g}:${n}`)))?original:actual,selected=[];
+    if(original && ![...requested].every(([g,set])=>[...set].every(n=>included.has(`${g}:${n}`))))throw new Error('選取包含匯出器新增的介面節點；請只圈選原始 layers 建立 pattern。');
+    const entry=original || actual,selected=[];
     for(const [i,n] of entry.nodes.entries())if(requested.has(n.graph) && (n.kind!=='operator' || requested.get(n.graph).has(n.node)))selected.push(i);
     const aliases=new Map(selected.map((id,i)=>[id,`N${i+1}`])),orders=new Map();
     const nodes=selected.map(id=> {
@@ -111,6 +112,7 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
     for(const project of projects(index)) {
         if(scope!=='all' && !project.graphs.includes(Number(scope)))continue;
         const actual=build(index,project),original=sourceEntry(index,project);
+        const originalOps=original && new Set(original.nodes.filter(n=>n.kind==='operator').map(n=>`${n.graph}:${n.node}`));
         for(const entry of original?[original,actual]:[actual]) {
         const mapping=new Map(),used=new Set(),seen=new Set();
         const has=(a,b,e)=>entry.outgoing[a].get(edgeKey(e))?.has(b) || false;
@@ -148,6 +150,7 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
                 const typed=entry.byType.get(nodeKey(node)) || [],base=constraints.length ? constraints.reduce((a,b)=>a.size<=b.size ? a : b) : typed,possible=[];
                 for(const n of base) {
                     checks++;if(checks%1000===0 || checks>2000000)if(!await budget())return;
+                    if(entry===actual && original && node.kind==='operator' && !originalOps.has(`${entry.nodes[n].graph}:${entry.nodes[n].node}`))continue;
                     if(!used.has(n) && entry.keys[n]===nodeKey(node) && constraints.every(s=>s.has(n)) && spec.outgoing.get(node.alias).filter(e=>e.to===node.alias).every(e=>has(n,n,e)) && orderOK(node,n))possible.push(n);
                 }
                 if(!possible.length)return;

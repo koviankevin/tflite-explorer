@@ -1,7 +1,7 @@
-import { ModelFactory } from '../vendor/netron/mlir.js?v=e02b487a8535b042';
-import { Decoder } from '../vendor/netron/text.js?v=e02b487a8535b042';
-import { indexModel } from './model-engine.js?v=e02b487a8535b042';
-import { prepareMLIR, opName } from './mlir-ir.js?v=e02b487a8535b042';
+import { ModelFactory } from '../vendor/netron/mlir.js?v=d95c73b383d96f3f';
+import { Decoder } from '../vendor/netron/text.js?v=d95c73b383d96f3f';
+import { indexModel } from './model-engine.js?v=d95c73b383d96f3f';
+import { prepareMLIR, opName } from './mlir-ir.js?v=d95c73b383d96f3f';
 
 export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
@@ -135,7 +135,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
     progress('建立 MLIR 搜尋索引');
     const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
     if(source.includes('model_lens.slice_pattern')) {
-        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=e02b487a8535b042');
+        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=d95c73b383d96f3f');
         await prepareSlicePatterns(index);
     }
     index.stats.parseMs=performance.now()-start;

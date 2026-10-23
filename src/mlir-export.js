@@ -1,4 +1,4 @@
-import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=e02b487a8535b042';
+import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=d95c73b383d96f3f';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {
@@ -21,7 +21,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const { source, info, graphs, metadata } = index.mlir;
     if(!['auto','function','slice'].includes(scope))throw new Error('未知的 MLIR 匯出範圍。');
     if(scope==='slice' && (selections?.length>1 || graphs[graphIndex]?.cfgFunction)) {
-        const {exportMLIRSlice}=await import('./mlir-slice.js?v=e02b487a8535b042');
+        const {exportMLIRSlice}=await import('./mlir-slice.js?v=d95c73b383d96f3f');
         return exportMLIRSlice(index,selections || [{graph:graphIndex,nodes:nodeIndices}],{progress});
     }
     if(selections && (!Array.isArray(selections) || selections.some(s=>!s || !Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || functionFor(index,graphs[s.graph])!==functionFor(index,graphs[graphIndex]))))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
@@ -93,7 +93,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const intro=`// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}>`;
     const body=`${intro} ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  })`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=e02b487a8535b042');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=d95c73b383d96f3f');
     text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
     const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});

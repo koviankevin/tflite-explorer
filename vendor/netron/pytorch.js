@@ -1,9 +1,9 @@
 
 // Experimental
 
-import * as base from './base.js?v=e02b487a8535b042';
-import * as flatbuffers from './flatbuffers.js?v=e02b487a8535b042';
-import * as python from './python.js?v=e02b487a8535b042';
+import * as base from './base.js?v=d95c73b383d96f3f';
+import * as flatbuffers from './flatbuffers.js?v=d95c73b383d96f3f';
+import * as python from './python.js?v=d95c73b383d96f3f';
 
 const pytorch = {};
 const nnapi = {};
@@ -1663,7 +1663,7 @@ pytorch.Reader.ExportedProgram = class extends pytorch.Reader {
         for (const exported_program of exported_programs.values()) {
             if (exported_program.graph_module.graph.constants) {
                 // eslint-disable-next-line no-await-in-loop
-                const zip = await import('./zip.js?v=e02b487a8535b042');
+                const zip = await import('./zip.js?v=d95c73b383d96f3f');
                 const constants = exported_program.graph_module.graph.constants;
                 for (const key of Object.keys(constants)) {
                     const value = constants[key];
