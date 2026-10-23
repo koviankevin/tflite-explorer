@@ -1,10 +1,11 @@
-import { Host } from '../vendor/netron/browser.js?v=07c7e3ac1ebff9a0';
-import { View, Attachment } from '../vendor/netron/view.js?v=07c7e3ac1ebff9a0';
-import { hydrate } from './hydrate.js?v=07c7e3ac1ebff9a0';
-import { modelFormat } from './model-formats.js?v=07c7e3ac1ebff9a0';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=07c7e3ac1ebff9a0';
-import { LORA_PATTERN } from './pattern-utils.js?v=07c7e3ac1ebff9a0';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=07c7e3ac1ebff9a0';
+import { Host } from '../vendor/netron/browser.js?v=c42d6191e1af76aa';
+import { View, Attachment } from '../vendor/netron/view.js?v=c42d6191e1af76aa';
+import { hydrate } from './hydrate.js?v=c42d6191e1af76aa';
+import { modelFormat } from './model-formats.js?v=c42d6191e1af76aa';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=c42d6191e1af76aa';
+import {rectangleSelection} from './rectangle-selection.js?v=c42d6191e1af76aa';
+import { LORA_PATTERN } from './pattern-utils.js?v=c42d6191e1af76aa';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=c42d6191e1af76aa';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -38,7 +39,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=07c7e3ac1ebff9a0`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=c42d6191e1af76aa`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -130,7 +131,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=07c7e3ac1ebff9a0', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=c42d6191e1af76aa', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -371,6 +372,7 @@ async function queueDraw(dto, generation, zoom) {
             view._sidebar.close();
             // SVG text must be visible when Netron measures getBBox().
             view.show('default');
+            layerMarquee.cancel();
             renderedGraph = null;
             await view._updateTarget(currentModel, [{ target: graph, signature: null }]);
             if (generation !== renderGeneration) { renderedGraph = null; return; }
@@ -522,7 +524,7 @@ function refreshPickedNodes() {
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=renderedGraph?.combined?'直接點選不同 blocks 的 layers；綠色為本次選取。block／出口／argument 標記不會存入 pattern。':'點選 layer 可加入／取消；自動擷取選取節點之間的連線。';
+    $('capture-hint').textContent=renderedGraph?.combined?'拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。綠色為已選取；控制標記不會存入 pattern。':'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
     if(model?.capabilities?.mlirExport) {
         $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
@@ -594,6 +596,7 @@ function showValidation(validation) {
 }
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
 function setPickingPattern(enabled) {
+    layerMarquee.cancel();
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }
     if(enabled && renderedGraph?.combined)$('capture-cfg').checked=true;
     pickingPattern = enabled;
@@ -605,7 +608,7 @@ function setPickingPattern(enabled) {
     if (enabled) {
         view._sidebar.close(); $('tensor-summary').hidden = true;
         if (!$('capture-name').value.trim()) $('capture-name').value = `我的 pattern ${patternLibrary.length + 1}`;
-        status(renderedGraph?.combined?'直接點選不同 blocks 的 layers；再次點選取消，控制流程會自動擷取。':'點選模型圖中的 layers；再次點選即可取消。至少選取兩個相連節點。');
+        status('拖曳框選加入 layers，可跨 block；點選取消，Alt＋拖曳平移，Esc 取消正在拖曳的選框。');
     }
     refreshPickedNodes();
 }
@@ -636,6 +639,16 @@ function captureNodeEvent(event) {
     if(!location){status('這是控制流程顯示標記；請選取原始 operator layer。');return;}
     togglePickedNode(location);
 }
+const layerMarquee=rectangleSelection($('target'),{
+    enabled:()=>pickingPattern && $('target').getAttribute('aria-busy')!=='true',
+    candidates:()=>renderedNodes.map(entry=>({element:entry.element,location:layerLocation(entry,currentGraph)})).filter(c=>c.element && c.location),
+    commit:locations=>{
+        const across=$('capture-cfg').checked,selections=across?cfgSelections:new Map([[currentGraph,pickedNodes]]);
+        if(!updateLayerSelection(selections,locations)){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
+        if(across)syncCaptureGraph();refreshPickedNodes();
+        status(locations.length?`已加入框選範圍內 ${locations.length} 個 layers；重複的 layers 不會重複加入。`:'框選範圍內沒有可選取的 layers。');
+    }
+});
 $('target').addEventListener('click', captureNodeEvent, true);
 $('target').addEventListener('keydown', captureNodeEvent, true);
 $('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);

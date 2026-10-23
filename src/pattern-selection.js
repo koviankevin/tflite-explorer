@@ -29,3 +29,13 @@ export function updateLayerSelection(selections,locations,{toggle=false,limit=32
     }
     return true;
 }
+
+export function selectionRectangle(start,end,bounds) {
+    const x=p=>Math.max(bounds.left,Math.min(bounds.right,p.x)),y=p=>Math.max(bounds.top,Math.min(bounds.bottom,p.y));
+    return {left:Math.min(x(start),x(end)),right:Math.max(x(start),x(end)),top:Math.min(y(start),y(end)),bottom:Math.max(y(start),y(end))};
+}
+
+export function layersInRectangle(candidates,rectangle) {
+    if(rectangle.right<=rectangle.left || rectangle.bottom<=rectangle.top)return [];
+    return candidates.filter(({rect})=>rect.right>rectangle.left && rect.left<rectangle.right && rect.bottom>rectangle.top && rect.top<rectangle.bottom);
+}
