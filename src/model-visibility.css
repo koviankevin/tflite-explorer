@@ -1,3 +1,7 @@
+/* Netron measures text before selection. Keep the same weight in all states
+   so selected and pattern-picked labels still fit their measured frames. */
+#target .node-item-type text { font-weight: 700; }
+
 /* Keep selection strokes visible when the SVG viewport is zoomed out. */
 #target .graph-node.select > .node-border {
     stroke: #a44700 !important;
@@ -5,7 +9,7 @@
     vector-effect: non-scaling-stroke;
 }
 #target .graph-node.select .node-item-type path { fill: #ffe08a !important; }
-#target .graph-node.select .node-item-type text { fill: #332200 !important; font-weight: 700; }
+#target .graph-node.select .node-item-type text { fill: #332200 !important; }
 #target .edge-path.select {
     stroke: #a44700 !important;
     stroke-width: 3px !important;
@@ -23,7 +27,7 @@
     vector-effect: non-scaling-stroke;
 }
 #target .graph-node.pattern-picked .node-item-type path { fill: #c8f0dc !important; }
-#target .graph-node.pattern-picked .node-item-type text { fill: #103d30 !important; font-weight: 700; }
+#target .graph-node.pattern-picked .node-item-type text { fill: #103d30 !important; }
 
 /* The app has a light workspace. Override every retained Netron dark surface
    together with its foreground so OS theme cannot create mixed contrast. */
