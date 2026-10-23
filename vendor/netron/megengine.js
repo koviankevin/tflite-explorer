@@ -1,7 +1,7 @@
 
 // Experimental
 
-import * as flatbuffers from './flatbuffers.js?v=d03c348572c22d80';
+import * as flatbuffers from './flatbuffers.js?v=4aaf0f8018611760';
 
 const megengine = {};
 

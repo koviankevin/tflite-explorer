@@ -267,7 +267,7 @@ grapher.Graph = class {
             edges = message.edges;
             state.log = message.state.log;
         } else {
-            const dagre = await import('./dagre.js?v=d03c348572c22d80');
+            const dagre = await import('./dagre.js?v=4aaf0f8018611760');
             dagre.layout(nodes, edges, layout, state);
         }
         if (state.log) {

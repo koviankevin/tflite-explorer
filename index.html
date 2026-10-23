@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=d03c348572c22d80">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=4aaf0f8018611760">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=d03c348572c22d80"></script>
+<script type="module" src="src/app.js?v=4aaf0f8018611760"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,12 +308,12 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=d03c348572c22d80">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=d03c348572c22d80">
-<link rel="stylesheet" href="src/mobile.css?v=d03c348572c22d80">
-<link rel="stylesheet" href="src/model-visibility.css?v=d03c348572c22d80">
-<link rel="stylesheet" href="src/typography.css?v=d03c348572c22d80">
-<link rel="stylesheet" href="src/overview-canvas.css?v=d03c348572c22d80">
+<link rel="stylesheet" href="src/app.css?v=4aaf0f8018611760">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=4aaf0f8018611760">
+<link rel="stylesheet" href="src/mobile.css?v=4aaf0f8018611760">
+<link rel="stylesheet" href="src/model-visibility.css?v=4aaf0f8018611760">
+<link rel="stylesheet" href="src/typography.css?v=4aaf0f8018611760">
+<link rel="stylesheet" href="src/overview-canvas.css?v=4aaf0f8018611760">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -367,7 +367,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 </aside>
 <div class="graph-bar">
   <div class="graph-location"><span class="eyebrow">02 / GRAPH</span><label for="graph-select" class="sr-only">目前 subgraph</label><select id="graph-select" disabled><option>模型圖</option></select><span id="graph-caption">選取結果以查看連接</span></div>
-  <div class="graph-actions"><button id="fold-all-patterns" class="quiet" hidden>收合所有匹配</button><button id="toggle-pattern-fold" class="quiet" aria-expanded="true" hidden>收合 pattern</button><button id="pick-pattern" class="quiet" aria-pressed="false" disabled>選取 pattern</button><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button><label class="graph-font-control" for="graph-font-size">圖字<select id="graph-font-size" aria-label="模型圖字級"><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option><option value="24">24px</option><option value="28">28px</option><option value="32">32px</option></select></label></div>
+  <div class="graph-actions"><button id="toggle-slice-details" class="quiet" aria-expanded="false" hidden>展開輔助節點</button><button id="fold-all-patterns" class="quiet" hidden>收合所有匹配</button><button id="toggle-pattern-fold" class="quiet" aria-expanded="true" hidden>收合 pattern</button><button id="pick-pattern" class="quiet" aria-pressed="false" disabled>選取 pattern</button><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button><label class="graph-font-control" for="graph-font-size">圖字<select id="graph-font-size" aria-label="模型圖字級"><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option><option value="24">24px</option><option value="28">28px</option><option value="32">32px</option></select></label></div>
 </div>
 <section id="capture-toolbar" class="capture-toolbar" aria-label="從模型圖建立 pattern" hidden>
   <div><strong id="capture-count" aria-live="polite">已選取 0 個 layers</strong><span id="capture-hint">點選 layer 可加入／取消；自動擷取選取節點之間的連線。</span></div>

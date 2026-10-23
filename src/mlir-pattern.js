@@ -1,10 +1,11 @@
-import {operationSemantics} from './mlir-dialects.js?v=d03c348572c22d80';
-import {typeSpelling} from './mlir-engine.js?v=d03c348572c22d80';
-import {validateMLIR} from './mlir-validate.js?v=d03c348572c22d80';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=d03c348572c22d80';
-import {selectionSnapshot} from './model-engine.js?v=d03c348572c22d80';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=d03c348572c22d80';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=d03c348572c22d80';
+import {operationSemantics} from './mlir-dialects.js?v=4aaf0f8018611760';
+import {typeSpelling} from './mlir-engine.js?v=4aaf0f8018611760';
+import {validateMLIR} from './mlir-validate.js?v=4aaf0f8018611760';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=4aaf0f8018611760';
+import {selectionSnapshot} from './model-engine.js?v=4aaf0f8018611760';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=4aaf0f8018611760';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=4aaf0f8018611760';
+import {compactSliceSnapshot} from './mlir-slice-graph.js?v=4aaf0f8018611760';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -165,11 +166,31 @@ export function mlirMatchSnapshot(index,item,options={}) {
     if(!options.singleBlock) {
         const project=projects(index).find(p=>item.blocks.every(b=>p.graphs.includes(b.graph)));
         if(!project)throw new Error('匹配結果不屬於同一個 region。');
-        return combinedMLIRSnapshot(index,item,build(index,project),options);
+        const original=sourceEntry(index,project);
+        if(original && !options.sliceDetails)return compactSliceSnapshot(index,item,original,options);
+        if(original)return {...mlirSliceSnapshot(index,item.graph,{...options,sliceDetails:true}),item:{...item,connections:[]},selected:item.blocks.flatMap(b=>b.path.map(n=>`b${b.graph}:n${n}`))};
+        return {...combinedMLIRSnapshot(index,item,build(index,project),options),sliceView:!!original};
     }
     const selected=new Set(block.path),entry=index.graphs[block.graph];
     const connections=block.path.flatMap(from=>[...entry.next[from]].filter(to=>selected.has(to)).map(to=>[from,to]));
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);
+}
+
+// Older slices lack explicit capture markers; show their checked source OPs.
+// Once a saved pattern is selected, its exact selected OPs define the view.
+export function mlirSliceSnapshot(index,graph,{sliceDetails=false,...options}={}) {
+    if(!index?.mlir)return null;
+    const project=projects(index).find(p=>p.graphs.includes(graph)),entry=project && sourceEntry(index,project);
+    if(!entry)return null;
+    const marked=entry.nodes.some(n=>n.kind==='operator' && n.selected!==undefined);
+    const operators=entry.nodes.filter(n=>n.kind==='operator' && (!marked || n.selected));
+    const blocks=[...new Set(operators.map(n=>n.graph))].map(graph=>({graph,path:operators.filter(n=>n.graph===graph).map(n=>n.node)}));
+    if(!blocks.length)return null;
+    const item={kind:'slice',graph:blocks[0].graph,path:blocks[0].path,blocks};
+    if(!sliceDetails)return compactSliceSnapshot(index,item,entry,options);
+    const all={...item,blocks:project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,n)=>n)}))};
+    const dto=combinedMLIRSnapshot(index,all,build(index,project),{...options,full:true});
+    return {...dto,sliceView:true,selected:operators.map(n=>`b${n.graph}:n${n.node}`)};
 }
 
 export function mlirModelSnapshots(index,{lightweight=false}={}) {
