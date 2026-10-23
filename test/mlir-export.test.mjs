@@ -47,7 +47,7 @@ test('nested scope custom op keeps opaque types, attrs and dynamic input shape w
     assert.equal(result.inputs[0].type,'tensor<?x4xf32>');
     assert.equal(result.outputs[0].type,'!internal.value<packed>');
     assert.ok(source.includes('{config = #internal.layout<packed>}'));
-    assert.equal(reopened.graphs[0].tensors.get('%y').type.spelling,'!internal.value<packed>');
+    assert.equal(reopened.graphs[0].tensors.get('%nested_y').type.spelling,'!internal.value<packed>');
     assert.equal(search(reopened,'layers','other.custom').length,1);
 });
 
@@ -64,8 +64,8 @@ test('aliases, unicode strings and locations survive extraction without rewritin
     assert.equal(reopened.graphs[0].tensors.get('%y').type.dataType,'!internal.elem<foo,bar>');
 });
 
-test('export retains nested region bodies, local shadowing and implicit outer SSA captures', async () => {
-    const text = '%x = "acme.input"() : () -> tensor<2xf32>\n'+
+test('export retains nested region bodies, local arguments and implicit outer SSA captures', async () => {
+    const text = '%unused = "acme.input"() : () -> tensor<2xf32>\n'+
         '%outer = "acme.input"() : () -> tensor<2xf32>\n'+
         '%z = "acme.region"() ({\n'+
         '^bb0(%x: tensor<2xf32>):\n'+

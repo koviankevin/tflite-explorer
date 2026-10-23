@@ -41,11 +41,11 @@ test('MLIR functions and nested regions have separate SSA scopes, custom types a
     assert.ok(nested);
     assert.equal(nested.graph.nodes[0].type.name,'other.custom');
     assert.ok(nested.graph.nodes[0].attributes[0].value.includes('internal.layout'));
-    assert.ok(nested.tensors.get('%y').type.spelling.includes('internal.value'));
+    assert.ok(nested.tensors.get('%nested_y').type.spelling.includes('internal.value'));
     assert.equal(search(index,'layers','other.custom','all').length,2);
     assert.equal(search(index,'layers','other.custom',String(index.graphs.indexOf(nested))).length,1);
     assert.deepEqual(index.graphs[0].tensors.get('%x').type.shape.dimensions,['?',4]);
-    assert.notEqual(index.graphs[0].tensors.get('%x'),nested.tensors.get('%x'));
+    assert.notEqual(index.graphs[0].tensors.get('%x'),index.graphs[2].tensors.get('%x'));
 });
 
 test('MLIR adapter exposes dialect decoration without replacing canonical operator identity', async () => {

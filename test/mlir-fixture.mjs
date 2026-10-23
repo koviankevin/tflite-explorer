@@ -18,9 +18,9 @@ export const MLIR_SCOPES = `"builtin.module"() ({
   "func.func"() <{sym_name = "first", function_type = () -> ()}> ({
     %x = "acme.input"() : () -> tensor<?x4xf32>
     %y = "acme.region"(%x) ({
-    ^bb0(%x: tensor<?x4xf32>):
-      %y = "other.custom"(%x) {config = #internal.layout<packed>} : (tensor<?x4xf32>) -> !internal.value<packed>
-      "acme.yield"(%y) : (!internal.value<packed>) -> ()
+    ^bb0(%nested_x: tensor<?x4xf32>):
+      %nested_y = "other.custom"(%nested_x) {config = #internal.layout<packed>} : (tensor<?x4xf32>) -> !internal.value<packed>
+      "acme.yield"(%nested_y) : (!internal.value<packed>) -> ()
     }) : (tensor<?x4xf32>) -> tensor<?x4xf32>
     "func.return"() : () -> ()
   }) : () -> ()
