@@ -1,0 +1,3 @@
+#target.virtual-overview { overflow:hidden!important; }
+.overview-canvas { position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;outline-offset:-3px; }
+.overview-viewport-count { position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);padding:6px 10px;border:1px solid #cad8ce;border-radius:5px;background:#fffffff0;color:#294b38;font:12px/1.5 sans-serif;pointer-events:none; }

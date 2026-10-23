@@ -52,18 +52,18 @@ test('a 1.25 GiB TFLite with over 20,000 OPs contracts before the visible-node l
     assert.ok(dto.graph.nodes.length<1500);assert.ok(capsules(dto).length>600);assert.ok(dto.overlapCount>6000);
     assertConnections(plan,dto);
     const one=patternOverviewSnapshot(plan,{expanded:[0]});assert.equal(one.graph.nodes.length,dto.graph.nodes.length+31);
-    assert.throws(()=>patternOverviewSnapshot(plan,{expanded:result.items.map((_,i)=>i)}),/21,001.*1,500/);
+    const all=patternOverviewSnapshot(plan,{expanded:result.items.map((_,i)=>i)});assert.equal(all.virtual,true);assert.equal(all.graph.nodes.filter(n=>n.diagramKind==='operator').length,21001);assert.ok(all.layout.edges.length>20000);
     assert.equal(patternOverviewSnapshot(plan).graph.nodes.length,dto.graph.nodes.length);
 });
 
-test('hidden OP metadata is not serialized and an oversized visible view fails before reading metadata',async()=>{
+test('hidden OP metadata is not serialized and a virtual overview also avoids reading metadata',async()=>{
     const index=await tflite({graphCount:1,repeats:510}),items=(await findPatterns(index,['Reshape','Transpose','Reshape'])).items;
     let reads=0;
     const payload={get value(){reads++;return 'custom metadata';}};
     for(const n of index.graphs[0].graph.nodes.slice(0,-1))n.attributes=[payload];
     const plan=await preparePatternOverview(index,items);assert.equal(reads,0);
     patternOverviewSnapshot(plan);assert.equal(reads,0);
-    assert.throws(()=>patternOverviewSnapshot(plan,{expanded:items.map((_,i)=>i)}),/1,500/);assert.equal(reads,0);
+    assert.equal(patternOverviewSnapshot(plan,{expanded:items.map((_,i)=>i)}).virtual,true);assert.equal(reads,0);
     patternOverviewSnapshot(plan,{expanded:[0]});assert.equal(reads,1,'only visible metadata is serialized, with sharing preserved');
 });
 
@@ -134,9 +134,9 @@ test('whole MLIR model preserves external branches, backedges and SSA for each o
     for(const link of dto.links)if(!link.from.startsWith('pattern:') && !link.to.startsWith('pattern:'))assert.equal(link.from.split(':')[1],link.to.split(':')[1]);
 });
 
-test('expansion limits fail explicitly and preserve the prepared collapsed view',async()=>{
+test('expansion switches to a virtual overview and can return to the prepared SVG view',async()=>{
     const index=await tflite({graphCount:1,repeats:510}),items=(await findPatterns(index,['Reshape','Transpose','Reshape'])).items;
     const plan=await preparePatternOverview(index,items);assert.equal(capsules(patternOverviewSnapshot(plan)).length,510);
-    assert.throws(()=>patternOverviewSnapshot(plan,{expanded:items.map((_,i)=>i)}),/1,500/);
+    const expanded=patternOverviewSnapshot(plan,{expanded:items.map((_,i)=>i)});assert.equal(expanded.virtual,true);assert.equal(expanded.layout.nodes.length,1533);
     assert.equal(capsules(patternOverviewSnapshot(plan)).length,510);
 });

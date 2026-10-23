@@ -1,4 +1,5 @@
 import {serialize} from './model-engine.js';
+import {overviewLayout} from './overview-layout.js';
 
 const MAX_VISIBLE_NODES=1500;
 const outputs=node=>node.outputs.flatMap(a=>a.value);
@@ -65,7 +66,7 @@ export async function preparePatternOverview(index,items,{name='Pattern',cancell
     return {graph,matches,owners,total,combined:!!index.mlir};
 }
 
-export function patternOverviewSnapshot(prepared,{expanded=[],active=0}={}) {
+export function patternOverviewSnapshot(prepared,{expanded=[],active=0,font=18,direction='vertical'}={}) {
     const {graph,matches,owners}=prepared,open=new Set(expanded),capsules=new Map();
     for(const match of matches)if(match.foldable && !open.has(match.index)) {
         const sourceGraphs=[...new Set(match.nodes.map(n=>n.sourceGraph))];
@@ -73,7 +74,7 @@ export function patternOverviewSnapshot(prepared,{expanded=[],active=0}={}) {
     }
     const shown=node=>capsules.get(owners.get(node)) || node;
     const nodes=graph.nodes.filter(n=>shown(n)===n).concat([...capsules.values()]);
-    if(nodes.length>MAX_VISIBLE_NODES)throw new Error(`收合後仍有 ${nodes.length.toLocaleString()} 個可見節點，超過 1,500 個上限（原始 ${prepared.total.toLocaleString()} OP）；請收合更多匹配，或返回局部圖。`);
+    const virtual=nodes.length>MAX_VISIBLE_NODES;
     const producer=new Map();
     for(const node of graph.nodes)for(const value of outputs(node))producer.set(value,node);
     const inputKinds=new Map(),outputValues=new Map();
@@ -97,5 +98,16 @@ export function patternOverviewSnapshot(prepared,{expanded=[],active=0}={}) {
     }
     const list=matches.map(match=>({index:match.index,operatorCount:match.nodes.length,foldable:match.foldable,overlaps:match.overlaps,collapsed:capsules.has(match.index),nodes:[...new Set(match.nodes.map(n=>shown(n).identifier))]}));
     const current=matches[active] || matches[0],visible=list[current.index];
-    return {graph:serialize({...graph,nodes}),graphIndex:current.item.graph,nodes:nodes.map(n=>n.identifier),selected:visible.nodes,total:prepared.total,full:true,combined:prepared.combined,overview:true,folded:capsules.size>0,overviewMatches:list,collapsedCount:capsules.size,overlapCount:list.filter(m=>!m.foldable).length,links,item:{...current.item,connections:[]},activeIndex:current.index,focus:{}};
+    let display,layout;
+    if(virtual){
+        const light=nodes.map(n=>({identifier:n.identifier,name:n.name,type:{name:n.type?.name,identifier:n.type?.identifier},group:n.group,diagramKind:n.diagramKind,matchIndex:n.matchIndex,sourceGraph:n.sourceGraph,sourceNode:n.sourceNode,sourceGraphs:n.sourceGraphs}));
+        const consumers=new Map(),byId=new Map(nodes.map(n=>[n.identifier,n]));for(const n of nodes)for(const a of n.inputs)for(const v of a.value){if(!consumers.has(v))consumers.set(v,[]);consumers.get(v).push(n);}
+        for(const [kind,args] of [['input',graph.inputs],['output',graph.outputs]])for(const a of args)for(const value of a.value){
+            const adjacent=kind==='input'?consumers.get(value) || []:[byId.get(visibleOwner.get(value))].filter(Boolean);if(!adjacent.length)continue;
+            const identifier=`boundary:${kind}:${value.identifier}`,first=adjacent[0];light.push({identifier,name:`${kind==='input'?'輸入':'輸出'} · ${value.name}`,type:{name:kind==='input'?'Input':'Output'},group:first.group,sourceGraph:first.sourceGraph,diagramKind:'boundary'});
+            for(const n of adjacent)links.push({from:kind==='input'?identifier:n.identifier,to:kind==='input'?n.identifier:identifier,kind:'ssa',value:value.identifier});
+        }
+        display={name:graph.name,nodes:light,inputs:[],outputs:[],metadata:[]};layout=overviewLayout(light,links,{font:Number(font),direction});
+    }else display=serialize({...graph,nodes});
+    return {graph:display,layout,virtual,graphIndex:current.item.graph,nodes:display.nodes.map(n=>n.identifier),selected:visible.nodes,total:prepared.total,full:true,combined:prepared.combined,overview:true,folded:capsules.size>0,overviewMatches:list,collapsedCount:capsules.size,overlapCount:list.filter(m=>!m.foldable).length,links,item:{...current.item,connections:[]},activeIndex:current.index,focus:{}};
 }

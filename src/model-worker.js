@@ -1,4 +1,4 @@
-import { search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js';
+import { search, findPatterns, snapshot, selectionSnapshot, serialize } from './model-engine.js';
 import { openModelFile } from './model-adapters.js';
 import { mlirDialects } from './mlir-dialect-registry.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
@@ -70,6 +70,8 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const current=generation,prepared=overview || await preparePatternOverview(index,results,{name:args.patternName,cancelled:()=>current!==generation});
             if(!prepared || current!==generation){send(id,{cancelled:true});return;}
             overview=prepared;send(id,patternOverviewSnapshot(prepared,args));
+        } else if(action==='overviewNode') {
+            const node=index.graphs[args.graph]?.graph.nodes[args.node];if(!node)throw new Error('找不到原始 OP。');send(id,serialize(node));
         } else if (action === 'select') {
             if(args.item.mode==='mlir-cfg') {
                 const {mlirMatchSnapshot}=await import('./mlir-pattern.js');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
