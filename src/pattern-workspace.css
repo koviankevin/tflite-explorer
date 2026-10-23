@@ -34,6 +34,8 @@
 .match-blocks button{font-size:12px;white-space:normal;overflow-wrap:anywhere;text-align:left}
 .match-blocks button[aria-pressed=true]{background:#e0f0e7;box-shadow:inset 0 0 0 1px #8ab5a2}
 #capture-cfg-option{width:100%;font-size:12px}
+#mlir-export-option{margin-top:12px}
+#mlir-export-scope{width:100%}
 #capture-cfg-option label{display:inline-flex;align-items:center;gap:6px}
 .capture-blocks{display:flex;flex-wrap:wrap;gap:6px;max-height:85px;overflow:auto}
 .capture-blocks>div{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%}

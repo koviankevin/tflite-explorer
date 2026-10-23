@@ -11,12 +11,25 @@ const inside = (range, ranges) => ranges.some(([start,end])=>range[0]>=start && 
 
 // Slice the parsed source, never serialize the lossy display model. Only external
 // SSA uses are renamed, at parser-recorded locations (including nested regions).
-export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{}}={}) {
+export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{},scope='auto',selections}={}) {
     if (!index?.capabilities?.mlirExport || !index.mlir) throw new Error('目前模型不支援匯出 MLIR。');
     const { source, info, graphs, metadata } = index.mlir;
+    if(!['auto','function','slice'].includes(scope))throw new Error('未知的 MLIR 匯出範圍。');
+    if(scope==='slice' && (selections?.length>1 || graphs[graphIndex]?.cfgFunction)) {
+        const {exportMLIRSlice}=await import('./mlir-slice.js');
+        return exportMLIRSlice(index,selections || [{graph:graphIndex,nodes:nodeIndices}],{progress});
+    }
+    if(selections && (!Array.isArray(selections) || selections.some(s=>!Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || graphs[s.graph]?.cfgFunction!==graphs[graphIndex]?.cfgFunction)))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
     const graph = graphs[graphIndex];
     if (!graph) throw new Error('找不到目前 MLIR scope。');
     if (!Array.isArray(nodeIndices) || !nodeIndices.length || nodeIndices.length>32 || nodeIndices.some(i=>!Number.isInteger(i) || !graph.operations[i])) throw new Error('請選取 1～32 個同一 scope 的 layers。');
+    if(scope==='function' && !graph.cfgFunction) {
+        let owner=index.mlir.ir.byBlock.get(graph.block)?.owner;
+        while(owner && opName(owner.op)!=='func.func')owner=owner.parent;
+        if(!owner)throw new Error('此 scope 不在 func.func 內，請選擇局部選取。');
+        const blocks=index.mlir.ir.regions.filter(r=>r.owner?.context===owner.context).reduce((n,r)=>n+r.blocks.length,0);
+        return exportControlFlow(index,graphIndex,{...graph,cfgFunction:owner.op,cfgExport:{blocks,function:owner.op.getAttr('sym_name')?.value || 'function'}},progress);
+    }
     if (graph.cfgFunction) return exportControlFlow(index,graphIndex,graph,progress);
     let enclosing=index.mlir.ir.byBlock.get(graph.block);
     while(enclosing) {

@@ -127,7 +127,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
             }
         };
         visitBlock(root, identifier);
-        return { format: 'MLIR text', description: 'SSA 資料流依 region／block 分開顯示；多 block 匯出保留所在 function 的完整控制流程。', modules: graphs, metadata: [] };
+        return { format: 'MLIR text', description: 'SSA 資料流依 region／block 顯示；可匯出局部 SSA／控制流程，或保留完整 function。', modules: graphs, metadata: [] };
     };
     const model = await new ModelFactory().open({ type: 'mlir.text', identifier, asset: async () => metadata,
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });

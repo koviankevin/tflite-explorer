@@ -67,10 +67,25 @@ successors，不跨 function／巢狀 region。多輸出分組恢復為 `%result
 Parser 必須提供不可變的定義型別、每個 operand 使用型別及原文範圍；
 不可用被覆寫的 display `value.type` 代替。驗證失敗回傳 `MLIRValidationError`
 的結構化 diagnostics，worker 原樣交給介面呈現，成功後才建立 Blob。
-多 block function 匯出會自動擴大為整個 enclosing `func.func`，逐字保留全部
-blocks、successors、block arguments、returns、properties 與 attributes。介面
-在選取計數與匯出按鈕標明範圍。Symbol dependencies 和獨立 region terminator
-仍明確拒絕，不猜測外部 symbol 的定義。
+`exportMLIR(index,graph,nodes,{scope:'slice',selections})` 會透過 `mlir-slice.js`
+匯出同一 function 直接 body 的局部 CFG；`selections` 為 `{graph,nodes}[]`。
+介面預設 slice；程式介面預設 `scope:'auto'` 保持既有呼叫的行為（多 block
+保留 function，單 block 擷取 SSA 子圖）。明確指定 function 也支援單 block 函式。
+完整 function 模式逐字保留 enclosing `func.func`；局部模式移除未選取的資料運算，
+保留可達控制路徑並新增 entry block，依 worklist 裁掉未使用的 block arguments。
+SSA 外部值變成函式輸入，cyclic CFG 內必要的 producer 會遞迴保留，避免把每輪
+更新的條件／迴圈值凍結為一次性輸入。必要 producer 清單回傳在 `result.slice.added`。
+
+只有部分路徑執行的資料輸出使用 `(valid: i1,value)`；caller 須傳同型別 seed，
+未經定義路徑回傳 valid=false 與原 seed，經過定義的路徑保留最近一次值。
+有效性與資料皆透過額外 block arguments 傳遞，不產生 undef／poison。
+多 return 出口以第一個 i32 結果回傳原始出口編號。註解及回傳 metadata 記錄
+輸入來源、條件輸出及實際 result positions。SSA／CFG 重建後仍須通過相同驗證。
+此新介面可能改變嚴格跨 block pattern 的 block argument arity／slot；原 pattern
+需要相同介面時應選完整 function，否則在新模型重新圈選。未知 memory effects
+與原函式 ABI 不推斷。最多 4096 原始 blocks、128 資料輸出、131072 個條件值
+block 傳遞組合；無可達出口、跨 function、獨立 nested block 選取與 symbol
+dependencies 明確拒絕，不猜測可執行語意。
 規格參考 [MLIR Language Reference](https://mlir.llvm.org/docs/LangRef/#operations)。
 
 本機驗證與 compiler 驗證的範圍及重跑方式見 [MLIR 驗證說明](mlir-verification.md)。
@@ -122,6 +137,7 @@ export const companyDialect = {
 | `terminator` | 宣告 block 結束，後面不得有其他 operation |
 | `branch` | 分支操作，必須提供 `successorOperands` |
 | `successorOperands({op,uses,typeOf})` | 每個 successor 對應一組原始 SSA uses，順序與 `op.successors` 相同；失敗可 throw Error。核心檢查目標、entry predecessor、argument 數量與型別 |
+| `exportBranch({op,source,conditions,successors,attributes})` | 局部 CFG 匯出用；同步回傳單一 generic branch operation 文字。conditions 是未作 successor 傳值的 `{name,type}` 值；successors 為依原出口順序的 `{label,values:[{name,type}]}`，已包含裁剪後的傳值及輸出 slots。`attributes(op,omitNames)` 可取原始屬性文字。未提供時僅支援內建 cf branches，完整 function 模式不需此 hook |
 | `verify({op,uses,typeOf})` | 回傳 `{code,message}[]` 補充公司規則，不可回傳 Promise |
 
 `uses` 含原始名稱、結果編號、使用型別和 source range；`op` 是 parser 原始

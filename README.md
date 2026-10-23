@@ -12,7 +12,9 @@
 
 圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會在本機 Worker 檢查來源與子圖的語法／SSA；失敗時顯示行、欄與原因，停止下載。此結構檢查不取代 LLVM 或內部 dialect verifier，完整範圍見 [驗證說明](docs/mlir-verification.md)。下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
 
-單 block MLIR 切圖以同一 block 的 1～32 個 operations 為範圍；選到含 region 的 op 時保留其完整 region。多 block function 則自動匯出所在 `func.func` 的全部 blocks，保留分支、迴圈、block arguments、returns 和 custom op 原文；介面會標明擴大的匯出範圍。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly、bytecode 和大型 resource payload 不保證可讀；不支援時回報位置，不猜測接線。
+MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block 的資料流擷取 1～32 個 operations，選到含 region 的 op 時保留其完整 region。多 block 局部匯出移除未選取的一般資料運算，補足外部 SSA 輸入、輸出、控制路徑與必要的迴圈運算；custom op 原文、型別、properties、attributes 保留。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly、bytecode 和大型 resource payload 不保證可讀；不支援時回報位置，不猜測接線。
+
+局部 CFG 是新的 `@extracted` function：保留原有可達控制路徑並新增 entry block，裁掉未使用的 block arguments；迴圈內會變動的 SSA producer 不能凍結成輸入，會自動保留。條件輸出使用 `(valid: i1, value)`，並要求 caller 傳入同型別備援值；`valid=false` 時該值不代表已執行的輸出。多回傳出口另回傳原始出口編號。檔案註解列出輸入來源與結果位置，介面列出補入的運算。重建的 block arguments 可能改變嚴格跨 block pattern 的結構，必要時重新圈選；需要原始介面與完全相同結構時使用完整 function。局部模式目前支援同一 function 直接 body 的選取、最多 4096 blocks／128 資料輸出，不推斷未註冊 op 的 memory effects。
 
 ### 跨 block pattern
 
@@ -20,7 +22,7 @@
 
 點跨 block 結果會將相關 blocks 畫在同一張圖，以區塊框線區分範圍。藍色虛線顯示實際控制出口與迴圈回跳，實線顯示 SSA 和 block argument 傳值；出口與 argument 顯示節點是檢視用標記，不會寫入原始 IR 或匯出檔。點 block 按鈕直接在同圖定位並保留排版與縮放；「全部 blocks」重新縮放以檢視總覽。預設局部圖只含匹配 operators、必要 terminators、block arguments 與相關 blocks 之間的 successor；省略的資料來源標成邊界輸入，不會跨越省略 blocks 畫假連線。完整圖展開相關 blocks 的所有 operators，最多 1,500 operators、512 個控制出口。
 
-在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 32 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；多 block MLIR 匯出仍保留完整 function。
+在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 32 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；MLIR 匯出範圍可選局部選取或完整 function。
 
 選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 32 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
 

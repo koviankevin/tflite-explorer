@@ -29,7 +29,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, exportTflite(index, args.graph, args.nodes, file));
         } else if (action === 'exportMLIR') {
             const { exportMLIR } = await import('./mlir-export.js');
-            send(id, await exportMLIR(index, args.graph, args.nodes, {progress:stage=>postMessage({stage})}));
+            send(id, await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}));
         } else if (action === 'search') {
             generation++;
             results = search(index, args.kind, args.query, args.scope);

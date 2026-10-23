@@ -149,6 +149,7 @@ function reset() {
     full = false; fullConfirmed = false; currentGraph = 0;
     $('export-match').hidden = true; $('export-match').disabled = true;
     $('value-kind-label').textContent = 'Tensors'; $('mlir-info').hidden = true;
+    $('mlir-export-option').hidden=true;
     $('export-submodel').hidden = false;
     $('query').placeholder = '搜尋名稱、operator、#編號';
     view._sidebar.close(); view.target = null; view.model = null; view._path = [];
@@ -183,6 +184,7 @@ async function openFile(nextFile) {
         $('value-kind-label').textContent = model.sourceFormat === 'mlir' ? 'SSA Values' : 'Tensors';
         $('query').placeholder = model.sourceFormat === 'mlir' ? '搜尋 dialect.op、%SSA 名稱、#編號' : '搜尋名稱、operator、#編號';
         $('mlir-info').hidden = model.sourceFormat !== 'mlir';
+        $('mlir-export-option').hidden=model.sourceFormat!=='mlir';
         $('export-submodel').hidden = !canExportSubmodel();
         $('export-submodel').textContent = model.capabilities.mlirExport ? '匯出局部 MLIR' : '匯出 TFLite 子模型';
         $('export-match').textContent = model.capabilities.mlirExport ? '匯出此匹配為局部 MLIR ↓' : '匯出此匹配為 TFLite 子模型 ↓';
@@ -525,11 +527,12 @@ function refreshPickedNodes() {
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
     $('capture-hint').textContent=renderedGraph?.combined?'拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。綠色為已選取；控制標記不會存入 pattern。':'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
-    $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
+    const whole=$('mlir-export-scope').value==='function';
+    $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;
     if(model?.capabilities?.mlirExport) {
-        $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
+        $('export-submodel').textContent=cfg && whole ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
         const matched=model.graphs[selection?.graph]?.cfgExport;
-        $('export-match').textContent=matched ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
+        $('export-match').textContent=matched && whole ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     renderCaptureBlocks();
@@ -550,11 +553,12 @@ $('export-submodel').onclick = async () => {
     if(exportBusy)return;
     if(!$('capture-cfg').checked)return downloadSubmodel(currentGraph,[...pickedNodes]);
     const selections=captureSelections(),sourceFile=file;$('export-submodel').disabled=true;
-    try {await rpc('capturePattern',{selections});if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes);}catch(error){report(error);}finally{refreshPickedNodes();}
+    try {if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes,selections);}catch(error){report(error);}finally{refreshPickedNodes();}
 };
-$('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
+$('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path],selection.blocks?.map(b=>({graph:b.graph,nodes:[...b.path]}))); };
+$('mlir-export-scope').onchange=refreshPickedNodes;
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
-async function downloadSubmodel(graph, nodes) {
+async function downloadSubmodel(graph, nodes, selections) {
     if (!canExportSubmodel() || exportBusy) return;
     const sourceFile = file;
     const mlir = model.capabilities.mlirExport;
@@ -563,10 +567,17 @@ async function downloadSubmodel(graph, nodes) {
     $('export-match').disabled = true;
     try {
         status(mlir ? '擷取局部 MLIR，保留原始型別、屬性與 SSA 連線…' : '建立 TFLite 子模型，保留所需權重與參數…');
-        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes });
+        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
         if (file !== sourceFile) return;
         await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
         if (mlir) {
+            if(result.slice) {
+                const added=result.slice.added.length ? ` 補入迴圈必要運算：${[...new Set(result.slice.added)].join('、')}（${result.slice.added.length} 個）。` : '';
+                const conditional=result.slice.conditionalOutputs ? ` ${result.slice.conditionalOutputs} 個條件輸出以 (valid, value) 回傳；未執行時 valid=false，需提供同型別備援輸入。` : '';
+                notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解。`);
+                status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
+                return;
+            }
             notice(result.controlFlow ? `開始下載 @${result.controlFlow.function} 的完整控制流程 MLIR：${result.controlFlow.blocks} 個 blocks、${result.layers} layers。保留分支、迴圈、block arguments、returns 與 custom op 原文。` : `開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
             status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
             return;
