@@ -1,4 +1,4 @@
-import { parseMLIR } from './mlir-engine.js';
+import { assertValidMLIR, validateMLIRText } from './mlir-validate.js';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {
@@ -11,7 +11,7 @@ const inside = (range, ranges) => ranges.some(([start,end])=>range[0]>=start && 
 
 // Slice the parsed source, never serialize the lossy display model. Only external
 // SSA uses are renamed, at parser-recorded locations (including nested regions).
-export async function exportMLIR(index, graphIndex, nodeIndices) {
+export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{}}={}) {
     if (!index?.capabilities?.mlirExport || !index.mlir) throw new Error('目前模型不支援匯出 MLIR。');
     const { source, info, graphs, metadata } = index.mlir;
     const graph = graphs[graphIndex];
@@ -22,6 +22,8 @@ export async function exportMLIR(index, graphIndex, nodeIndices) {
     if (ranges.some(range=>!range)) throw new Error('缺少 MLIR 原始文字範圍，無法安全匯出。');
     if (selected.some(op=>op.successors?.length || /\.(yield|br|cond_br|switch)$/.test(opName(op)))) throw new Error('選取內容包含跨 block 分支或 region terminator；請只選取該 block 內的資料流 operations。');
     if (info.symbols.some(range=>inside(range,ranges))) throw new Error('選取內容含 symbol reference；目前無法一併擷取外部 symbol 定義。請先將呼叫內聯後再匯出。');
+    progress('在本機檢查來源 MLIR 的 SSA 定義、型別與 scope…');
+    assertValidMLIR(index,{graphIndex});
 
     const local = new Set();
     const walk = op => {
@@ -66,8 +68,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices) {
     const args = inputs.map(input=>`${input.argument}: ${input.type}`).join(', ');
     const terminator = returns.length ? '' : `\n    "func.return"(${outputs.map(output=>output.value).join(', ')}) : (${outputTypes}) -> ()`;
     const text = `// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}> ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  }) : () -> ()\n}) : () -> ()\n${resources}\n`;
-    // Catch missing source spans/aliases and malformed rewrites before download.
-    // This is a parser check; dialect-specific compiler verification is separate.
-    await parseMLIR(new TextEncoder().encode(text), { metadata, identifier: 'extracted.mlir' });
-    return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs };
+    progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
+    const validation=await validateMLIRText(text,{metadata});
+    return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };
 }

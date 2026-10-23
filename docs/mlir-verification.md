@@ -1,8 +1,36 @@
 # MLIR 匯出檔的編譯器驗證
 
 這份說明區分「網站能重新讀取」、「MLIR 通用結構有效」及「內部 dialect 語意有效」。
-三者不能互相替代。網站下載前目前只做 Netron parser 重讀；不會在瀏覽器
-執行 LLVM verifier，也不能用網站成功開啟取代下述 compiler 檢查。
+三者不能互相替代。網站匯出前會在本機 Worker 檢查來源與生成結果的語法／SSA；
+這是下述明確範圍的 JavaScript 結構檢查，不是在瀏覽器執行 LLVM verifier，
+也不能取代公司 dialect 的 compiler 檢查。
+
+## 網站匯出前的本機檢查
+
+`mlir-validate.js` 獨立走訪原始 region／block、SSA 宣告與使用紀錄。
+宣告型別與 operand 使用型別在 parser 階段分別保存，避免 Netron 覆寫
+`value.type` 後掩蓋衝突。來源以目前 graph 所屬 function context 檢查；
+另一個 function 的錯誤不會蓋掉目前範圍的診斷。
+
+檢查包括未定義／不可見的 SSA、結果編號、重定義與可見外層名稱衝突、
+型別一致性、單 block SSA dominance、已知 function isolation、entry arguments
+與 return signature。型別 aliases 以解析後的型別比較；未知 type／attribute
+仍保留 opaque 內容，不宣稱理解內部 dialect 語意。
+
+來源檢查先於切圖輸入轉換，避免將 `%missing` 誤當成合法的新 argument。
+生成的子圖會再次解析及檢查；只有兩階段均通過才建立可下載 Blob。
+失敗時回傳結構化 diagnostics，在頁面顯示來源／匯出階段、行、欄、operator、
+原因與原文片段。最多顯示前 20 項；診斷不會上傳或寫入遠端 log。
+
+目前遇到多 block region、無法完整對應的 operands、不可可靠還原的 forward
+references 或非支援的 custom assembly 會拒絕匯出。請先以公司 compiler
+輸出 generic／正規化 IR；此版本不猜測未知 dialect 的 region traits、
+跨 block dominance、memory effects、ODS 或 custom verifiers。
+這些限制與檢查範圍也會顯示在網站，通過狀態稱為「本機語法／SSA 檢查」。
+
+15 項本機驗證測試涵蓋正例、錯誤位置、匯出阻擋、scope 隔離與支援範圍。
+Compiler 負例同時呼叫本機檢查器，對照真正 LLVM/MLIR verifier 的結果。
+驗證只依賴隨網站提供的 JavaScript 與本機 File／Worker；沒有模型上傳端點。
 
 ## 2026-10-23 實測
 

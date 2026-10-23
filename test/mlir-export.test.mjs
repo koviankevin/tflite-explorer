@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { parseMLIR, MLIR_ATTRIBUTE_PREVIEW_LIMIT } from '../src/mlir-engine.js';
 import { exportMLIR } from '../src/mlir-export.js';
 import { search } from '../src/model-engine.js';
-import { MLIR_BRANCH, MLIR_SCOPES } from './mlir-fixture.mjs';
+import { MLIR_BRANCH, MLIR_SCOPES, MLIR_REPEATED_RETURN } from './mlir-fixture.mjs';
 const metadata = await readFile(new URL('../vendor/netron/mlir-metadata.json', import.meta.url), 'utf8');
 const parse = text => parseMLIR(new TextEncoder().encode(text), { metadata });
 const roundTrip = async (text,nodes,graph=0) => {
@@ -85,7 +85,7 @@ test('mixed grouped results and repeated return operands preserve exact SSA iden
     const {result,reopened}=await roundTrip(text,[0]);
     assert.deepEqual(result.outputs.map(v=>v.name),['%a#0','%a#1','%b']);
     assert.ok(reopened.graphs[0].tensors.has('%a#1'));
-    const repeated=await roundTrip('%x = "acme.input"() : () -> i32\n"func.return"(%x, %x) : (i32, i32) -> ()',[0,1]);
+    const repeated=await roundTrip(MLIR_REPEATED_RETURN,[0,1]);
     assert.deepEqual(repeated.result.outputs.map(v=>v.name),['%x','%x']);
     assert.ok(repeated.source.includes('function_type = () -> (i32, i32)'));
 });

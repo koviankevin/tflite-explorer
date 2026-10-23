@@ -61,10 +61,16 @@ parser implementation，回傳 `indexModel()` 可接受的 model，並保留
 一併帶入。輸入／輸出以 generic `func.func` 包裝；原有 `func.return`
 只有與全部輸出相容時才直接保留，其餘情況產生新的 return。
 
-下載前以相同 parser 重新解析；這只確認可讀性，不等於 LLVM／內部 dialect
-的語意驗證。目前不擷取 symbol dependencies 或跨 block 控制流程；遇到
+下載前由 `mlir-validate.js` 檢查來源 context 的 SSA，再重新解析及檢查
+生成的子圖；這是本機結構檢查，不等於 LLVM／內部 dialect 的語意驗證。
+Parser 必須提供不可變的定義型別、每個 operand 使用型別及原文範圍；
+不可用被覆寫的 display `value.type` 代替。驗證失敗回傳 `MLIRValidationError`
+的結構化 diagnostics，worker 原樣交給介面呈現，成功後才建立 Blob。
+目前不擷取 symbol dependencies 或跨 block 控制流程；遇到
 symbol references、successors 或獨立 yield／branch terminator 會明確拒絕。
 規格參考 [MLIR Language Reference](https://mlir.llvm.org/docs/LangRef/#operations)。
+
+本機驗證與 compiler 驗證的範圍及重跑方式見 [MLIR 驗證說明](mlir-verification.md)。
 
 詳細資料的單一 attribute 預覽最多 16 Ki 字元，避免大型 dense／string
 payload 傳入圖形面板；匯出仍擷取完整原文，不使用截短的預覽文字。

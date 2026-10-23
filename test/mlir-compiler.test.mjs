@@ -4,7 +4,8 @@ import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { parseMLIR } from '../src/mlir-engine.js';
 import { exportMLIR } from '../src/mlir-export.js';
-import { MLIR_BRANCH, MLIR_EXPORT_BRANCH, MLIR_SCOPES } from './mlir-fixture.mjs';
+import { validateMLIRText } from '../src/mlir-validate.js';
+import { MLIR_BRANCH, MLIR_EXPORT_BRANCH, MLIR_SCOPES, MLIR_REPEATED_RETURN } from './mlir-fixture.mjs';
 
 // This suite runs the real C++ parser/verifier, independently of Netron.
 // MLIR_OPT is an executable path; MLIR_OPT_COMMAND is a JSON argv array for
@@ -36,7 +37,7 @@ for (const [name,source,nodes,graph] of [
     ['custom op from a nested scope',MLIR_SCOPES,[0],1],
     ['nested region and captured values',MLIR_SCOPES,[1],0],
     ['mixed result groups','%a:2, %b = "acme.three"() : () -> (i32, i32, i32)\n%r = "acme.use"(%a#1, %b) : (i32, i32) -> i32',[0],0],
-    ['repeated return operands','%x = "acme.input"() : () -> i32\n"func.return"(%x, %x) : (i32, i32) -> ()',[0,1],0],
+    ['repeated return operands',MLIR_REPEATED_RETURN,[0,1],0],
     ['no result custom op','"acme.effect"() {enabled = true} : () -> ()',[0],0]
 ]) test(`real MLIR verifier accepts ${name} and preserves SSA topology`,options,async ()=>{
     const text=await extracted(source,nodes,graph);
@@ -60,7 +61,9 @@ for (const [name,mutate,diagnostic] of [
     },/dominat/i],
     ['function return signature mismatch',text=>text.replace('function_type = (tensor<2xf32>) -> (tensor<2xf32>)','function_type = (tensor<2xf32>) -> ()'),/return|result|operand/i]
 ]) test(`real MLIR verifier rejects ${name}`,options,async ()=>{
-    const result=compiler(mutate(await extracted(MLIR_BRANCH,[0,1,2,3])));
+    const broken=mutate(await extracted(MLIR_BRANCH,[0,1,2,3]));
+    await assert.rejects(validateMLIRText(broken,{metadata}),error=>error.name==='MLIRValidationError');
+    const result=compiler(broken);
     assert.notEqual(result.status,0,'Malformed input was accepted');
     assert.match(result.stderr,diagnostic);
 });

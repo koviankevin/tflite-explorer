@@ -28,7 +28,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, exportTflite(index, args.graph, args.nodes, file));
         } else if (action === 'exportMLIR') {
             const { exportMLIR } = await import('./mlir-export.js');
-            send(id, await exportMLIR(index, args.graph, args.nodes));
+            send(id, await exportMLIR(index, args.graph, args.nodes, {progress:stage=>postMessage({stage})}));
         } else if (action === 'search') {
             generation++;
             results = search(index, args.kind, args.query, args.scope);
@@ -55,5 +55,5 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'graph') {
             send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }
-    } catch (error) { postMessage({ id, error: error.message || String(error) }); }
+    } catch (error) { postMessage({ id, error: error.message || String(error), validation:error.validation }); }
 };

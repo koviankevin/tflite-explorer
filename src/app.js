@@ -6,6 +6,7 @@ import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
+let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
 try {
@@ -130,11 +131,12 @@ function createWorker() {
         const entry = pending.get(data.id);
         if (!entry) return;
         pending.delete(data.id);
-        if (data.error) entry.reject(new Error(data.error)); else entry.resolve(data.data);
+        if (data.error) entry.reject(Object.assign(new Error(data.error),{validation:data.validation})); else entry.resolve(data.data);
     };
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    exportBusy = false; $('validation-dialog').close();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1;
     pickedNodes.clear(); renderedNodes = []; renderedGraph = null; setPickingPattern(false);
@@ -278,7 +280,7 @@ async function selectResult(index, { whole = full, forceDraw = false, zoom } = {
     if (!item) return;
     activeIndex = index; selection = item; full = whole;
     $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
-    $('export-match').disabled = !canExportSubmodel();
+    $('export-match').disabled = exportBusy || !canExportSubmodel();
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
     setCurrentGraph(item.graph);
@@ -450,7 +452,7 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
     $('save-capture').disabled = !model || pickedNodes.size < 2;
-    $('export-submodel').disabled = !canExportSubmodel() || !pickedNodes.size;
+    $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {
@@ -466,9 +468,10 @@ $('export-submodel').onclick = () => downloadSubmodel(currentGraph, [...pickedNo
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes) {
-    if (!canExportSubmodel()) return;
+    if (!canExportSubmodel() || exportBusy) return;
     const sourceFile = file;
     const mlir = model.capabilities.mlirExport;
+    exportBusy = true;
     $('export-submodel').disabled = true;
     $('export-match').disabled = true;
     try {
@@ -478,15 +481,33 @@ async function downloadSubmodel(graph, nodes) {
         await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
         if (mlir) {
             notice(`開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
-            status(`局部 MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過重新解析檢查`);
+            status(`局部 MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA 檢查`);
             return;
         }
         const customInfo = result.preservedIds ? ` 含 custom op：${result.customOperators.join('、')}。保留原始 tensor／buffer 編號及全部 ${result.retainedBuffers} 個 buffers，檔案可能較大；執行需原 custom runtime。` : '';
         notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。${customInfo}`);
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
-    } catch (error) { report(error); }
-    finally { refreshPickedNodes(); $('export-match').disabled = !canExportSubmodel() || selection?.kind !== 'patterns'; }
+    } catch (error) {
+        if(file!==sourceFile) return;
+        if(error.validation) showValidation(error.validation);
+        else report(error);
+    }
+    finally { if(file===sourceFile) { exportBusy=false;refreshPickedNodes(); $('export-match').disabled = !canExportSubmodel() || selection?.kind !== 'patterns'; } }
 }
+function showValidation(validation) {
+    $('validation-stage').textContent = `${validation.stage}的檢查未通過，未下載檔案。請依下列位置修正後重新開啟。`;
+    $('validation-errors').replaceChildren(...validation.diagnostics.map(item=> {
+        const row=element('li');
+        const location=item.line ? `第 ${item.line} 行，第 ${item.column || 1} 欄` : '位置未提供';
+        row.append(element('strong','',`${location}${item.operator ? ' · '+item.operator : ''}`));
+        row.append(element('code','',item.code),element('p','',item.message));
+        if(item.excerpt) row.append(element('pre','',item.excerpt));
+        return row;
+    }));
+    $('validation-dialog').showModal();
+    status('MLIR 語法／SSA 檢查未通過，已停止匯出。');
+}
+for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
 function setPickingPattern(enabled) {
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }
     pickingPattern = enabled;
