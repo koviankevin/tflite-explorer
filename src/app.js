@@ -159,7 +159,7 @@ function reset() {
     status('準備就緒');
 }
 async function openFile(nextFile) {
-    try { modelFormat(nextFile.name); } catch (error) { notice(error.message); return; }
+    try { await viewReady; modelFormat(nextFile.name); } catch (error) { notice(error.message); return; }
     reset(); file = nextFile;
     const thisFile = file;
     $('file-name').textContent = file.name; $('file-stats').textContent = `${size(file.size)} · 建立索引中`;
@@ -658,5 +658,5 @@ document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }
 });
 new MutationObserver(() => document.body.classList.toggle('details-open', $('sidebar').style.opacity === '1')).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
-await view.start();
-reset(); renderPattern();
+const viewReady = view.start().then(() => { reset(); renderPattern(); });
+await viewReady;
