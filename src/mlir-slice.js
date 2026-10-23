@@ -1,7 +1,8 @@
-import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=4aaf0f8018611760';
-import {operationSemantics} from './mlir-dialects.js?v=4aaf0f8018611760';
-import {buildDominance,opName} from './mlir-ir.js?v=4aaf0f8018611760';
-import {typeSpelling} from './mlir-engine.js?v=4aaf0f8018611760';
+import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=6f69f7d6ff83cad0';
+import {operationSemantics} from './mlir-dialects.js?v=6f69f7d6ff83cad0';
+import {buildDominance,opName} from './mlir-ir.js?v=6f69f7d6ff83cad0';
+import {typeSpelling} from './mlir-engine.js?v=6f69f7d6ff83cad0';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=6f69f7d6ff83cad0';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
 // data dependencies into inputs, and retain cyclic producers that must change
@@ -21,6 +22,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const region=ir.byOp.get(func)?.op.regions?.[0],blocks=region?.blocks;
     if(!blocks?.length || func.regions.length!==1)throw new Error('局部匯出需要具有單一 body region 的 func.func。');
     const regionInfo=ir.byBlock.get(blocks[0]);
+    const projection=slicePatternGraph(index,regionInfo);
     if([...selected].some(op=>ir.byOp.get(op)?.region!==regionInfo))throw new Error('局部控制流程匯出目前需圈選 function body 的 layers；巢狀 region 請選取其上層 operation，或改用完整 function。');
     if(blocks.length>4096)throw new Error('局部控制流程匯出最多處理 4096 個 blocks；請先縮小 function。');
     progress('檢查來源的 SSA、dominance 與控制流程…');
@@ -50,7 +52,8 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     if(!exits.length)throw new Error('此 function 沒有可回傳的出口，無法建立局部匯出介面。');
     const dominance=buildDominance(blocks,successors),reachable=dominance.reachable;
     if([...selected].some(op=>!reachable.has(ir.byOp.get(op).block)))throw new Error('選取包含從 function entry 無法到達的 block，無法建立可執行的局部匯出。');
-    const liveBlocks=blocks.filter(b=>reachable.has(b)),liveExits=exits.filter(b=>reachable.has(b));
+    let liveBlocks=blocks.filter(b=>reachable.has(b));
+    const liveExits=exits.filter(b=>reachable.has(b));
     if(!liveExits.length)throw new Error('此 function 沒有從 entry 可到達的回傳出口；請改用完整 function。');
     const cyclic=cyclicBlocks(liveBlocks,successors),retained=new Set(),locals=new Set(),usesByOp=new Map(),neededArgs=new Set(),neededValues=new Set(),queue=[];
     const need=v=>{if(!neededValues.has(v)){neededValues.add(v);queue.push(v);}};
@@ -67,13 +70,32 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const selectedMembers=new Set(),walk=[...selected];
     while(walk.length){const op=walk.pop();selectedMembers.add(op);for(const r of op.regions || [])for(const b of r.blocks || [])for(const child of b.operations)walk.push(child);}
     const users=new Map();for(const row of ir.rows)for(const use of row.uses){if(!users.has(use.value))users.set(use.value,[]);users.get(use.value).push(row.op);}
+    const originalReturns=new Map();
+    for(const [i,n] of (projection?.nodes || []).entries())if(n.kind==='operator' && n.type==='func.return') {
+        const b=blocks[projection.nodes[n.parent].block],op=b.operations[n.actualOp],uses=ir.byOp.get(op).uses;
+        if(!selected.has(op))continue;
+        let logical=n.returnOperands?.map(port=>uses[port]);
+        if(!logical) {
+            logical=Array.from({length:n.inputs});
+            for(const e of projection.edges)if(e.to===i && e.kind==='ssa') {
+                const from=projection.nodes[e.from],block=blocks[projection.nodes[from.parent].block],[port,input]=e.port.split(':').map(Number);
+                const value=from.kind==='operator'?block.operations[from.actualOp].results[port]:from.actualSlot===null?null:block.arguments[from.actualSlot];
+                const use=value && uses.find(u=>u.value===value);if(use)logical[input]=use;
+            }
+            if(logical.some(u=>!u)) {
+                if(uses.length===n.inputs)logical=uses;
+                else throw new Error('此舊版局部 MLIR 缺少原始 return 的輸出對照；請從原模型重新匯出，或使用完整 function。');
+            }
+        }
+        originalReturns.set(op,logical);
+    }
     const outputs=[];
     for(const b of blocks)for(const op of b.operations)if(selected.has(op)) {
         const sem=operationSemantics(op,dialects);
         if(!sem.terminator) {
             keep(op);
             for(const v of op.results || [])if(!users.get(v)?.length || users.get(v).some(user=>!selectedMembers.has(user)))outputs.push({value:v,block:b});
-        } else if(opName(op)==='func.return')for(const use of ir.byOp.get(op).uses)outputs.push({value:use.value,block:b});
+        } else if(opName(op)==='func.return')for(const [returnPort,use] of (originalReturns.get(op) || ir.byOp.get(op).uses).entries())outputs.push({value:use.value,block:b,returnOp:op,returnPort});
     }
     if(outputs.length>128)throw new Error('局部匯出最多保留 128 個輸出。');
     for(const output of outputs)need(output.value);
@@ -90,12 +112,38 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
             for(const edge of incoming.get(def.block))if(reachable.has(edge.block))need(edge.uses[slot].value);
         } else if(cyclic.has(def.block))keep(def.row.op);
     }
+    // Rebuild the ABI once, rather than wrapping every previous ABI entry.
+    // Only a checked source projection can identify exporter-added blocks.
+    // Preserve all original blocks, selected helpers, computations and joins.
+    const removedEntries=new Set();
+    const originalBlocks=new Set(projection?.nodes.filter(n=>n.kind==='block').map(n=>blocks[n.block]));
+    let entryBlock=blocks[0];
+    if(projection)while(!originalBlocks.has(entryBlock)) {
+        const branch=branches.get(entryBlock),ops=entryBlock.operations;
+        if(!branch || opName(branch.op)!=='cf.br' || branch.targets.length!==1 || ops.some(op=>selected.has(op) || retained.has(op)) || ops.slice(0,-1).some(op=>opName(op)!=='arith.constant'))break;
+        const next=branch.targets[0];
+        if(next===entryBlock || removedEntries.has(next) || incoming.get(next).length!==1)break;
+        removedEntries.add(entryBlock);entryBlock=next;
+    }
+    liveBlocks=liveBlocks.filter(b=>!removedEntries.has(b));
+    const resolveRemoved=v=>{
+        const seen=new Set();
+        while(!seen.has(v)) {
+            seen.add(v);const def=ir.definitions.get(v);
+            if(def?.order!==-1 || !removedEntries.has(def.block) || def.block===blocks[0])break;
+            v=incoming.get(def.block)[0].uses[def.block.arguments.indexOf(v)].value;
+        }
+        return v;
+    };
     const ranges=[...retained,...liveBlocks.flatMap(b=>branches.has(b)?[branches.get(b).op]:[])].map(op=>info.operations.get(op));
     if(ranges.some(r=>!r))throw new Error('缺少選取 operation 的原文，無法安全匯出。');
     if(info.symbols.some(([a,b])=>ranges.some(([s,e])=>a>=s && b<=e)))throw new Error('局部匯出包含外部 symbol reference；請先內聯，或使用完整 function。');
     const external=[...neededValues].filter(v=>!locals.has(v) && (!neededArgs.has(v) || ir.definitions.get(v).block===blocks[0]));
     const names=new Map(external.map((v,i)=>[v,id(`input_${i}`)]));
-    const ref=v=>neededArgs.has(v)?name(v):names.get(v) || name(v);
+    for(const v of neededArgs)if(removedEntries.has(ir.definitions.get(v).block)) {
+        const resolved=resolveRemoved(v);if(names.has(resolved))names.set(v,names.get(resolved));
+    }
+    const ref=v=>removedEntries.has(ir.definitions.get(v)?.block)?names.get(resolveRemoved(v)) || name(v):neededArgs.has(v)?name(v):names.get(v) || name(v);
     const inputRef=v=>names.get(v) || ref(v);
     const inputs=external.map(v=>({name:name(v),argument:names.get(v),type:type(v),role:'boundary'}));
     outputs.forEach((o,i)=>{o.index=i;o.type=type(o.value);o.conditional=liveExits.some(exit=>!dominance.dominates(o.block,exit));});
@@ -130,7 +178,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     };
     const snippets=op=>{
         const range=info.operations.get(op),parts=[];let at=range[0];
-        for(const use of usesByOp.get(op).filter(u=>names.has(u.value) && !neededArgs.has(u.value)).sort((a,b)=>a.range[0]-b.range[0])) {parts.push(source.slice(at,use.range[0]),names.get(use.value));at=use.range[1];}
+        for(const use of usesByOp.get(op).filter(u=>names.has(u.value) && (!neededArgs.has(u.value) || removedEntries.has(ir.definitions.get(u.value)?.block))).sort((a,b)=>a.range[0]-b.range[0])) {parts.push(source.slice(at,use.range[0]),names.get(use.value));at=use.range[1];}
         parts.push(source.slice(at,range[1]));return parts.join('');
     };
     const multiExit=liveExits.length>1;
@@ -140,16 +188,20 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const lines=[`^${prefix.slice(1)}entry(${inputs.map(v=>`${v.argument}: ${v.type}`).join(', ')}):`];
     if(conditional.length)lines.push(`  ${id('false')} = "arith.constant"() <{value = false}> : () -> i1`,`  ${id('true')} = "arith.constant"() <{value = true}> : () -> i1`);
     if(multiExit)liveExits.forEach((_,i)=>lines.push(`  ${id(`exit_${i}`)} = "arith.constant"() <{value = ${i} : i32}> : () -> i32`));
-    const entryValues=[...argumentsOf(blocks[0]).map(v=>({name:inputRef(v),type:type(v)})),...conditional.flatMap(o=>[{name:id(`seed_${o.index}`),type:o.type},{name:id('false'),type:'i1'}])];
-    lines.push(`  "cf.br"(${entryValues.map(v=>v.name).join(', ')})[${label(blocks[0])}] : (${entryValues.map(v=>v.type).join(', ')}) -> ()`);
-    const bindings={selected,blocks:new Map(liveBlocks.map((b,i)=>[b,i+1])),operators:new Map(),arguments:new Map()};
+    const entryInput=v=>entryBlock===blocks[0]?v:incoming.get(entryBlock)[0].uses[entryBlock.arguments.indexOf(v)].value;
+    const entryValues=[...argumentsOf(entryBlock).map(v=>({name:inputRef(resolveRemoved(entryInput(v))),type:type(v)})),...conditional.flatMap(o=>[{name:id(`seed_${o.index}`),type:o.type},{name:id('false'),type:'i1'}])];
+    lines.push(`  "cf.br"(${entryValues.map(v=>v.name).join(', ')})[${label(entryBlock)}] : (${entryValues.map(v=>v.type).join(', ')}) -> ()`);
+    const bindings={selected,blocks:new Map(liveBlocks.map((b,i)=>[b,i+1])),operators:new Map(),arguments:new Map(),returnOperands:new Map()};
     for(const b of liveBlocks) {
         lines.push(`${label(b)}(${[...argumentsOf(b).map(v=>({name:name(v),type:type(v)})),...slots(b)].map(v=>`${v.name}: ${v.type}`).join(', ')}):`);
         argumentsOf(b).forEach((v,i)=>bindings.arguments.set(v,i));let position=0;
         for(const op of b.operations)if(retained.has(op)){bindings.operators.set(op,position++);lines.push('  '+snippets(op));}
         if(branches.has(b)){bindings.operators.set(branches.get(b).op,position);lines.push('  '+branch(b));}
         else {
-            if(selected.has(b.operations.at(-1)))bindings.operators.set(b.operations.at(-1),position);
+            if(selected.has(b.operations.at(-1))) {
+                const op=b.operations.at(-1);bindings.operators.set(op,position);
+                bindings.returnOperands.set(op,outputs.filter(o=>o.returnOp===op).sort((a,b)=>a.returnPort-b.returnPort).map(o=>o.results.at(-1)));
+            }
             const values=[...(multiExit?[id(`exit_${liveExits.indexOf(b)}`)]:[]),...outputs.flatMap(o=>o.conditional ? (o.block===b?[id('true'),ref(o.value)]:[id(`valid_${o.index}_${blockNumbers.get(b)}`),id(`value_${o.index}_${blockNumbers.get(b)}`)]) : [ref(o.value)])];
             lines.push(`  "func.return"(${values.join(', ')}) : (${resultTypes.join(', ')}) -> ()`);
         }
@@ -163,7 +215,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const intro=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}>`;
     const body=`${intro} ({\n${lines.join('\n')}\n})`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=4aaf0f8018611760');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=6f69f7d6ff83cad0');
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects});

@@ -1,4 +1,4 @@
-import {serialize} from './model-engine.js?v=4aaf0f8018611760';
+import {serialize} from './model-engine.js?v=6f69f7d6ff83cad0';
 
 // A display-only contraction of the checked source projection. Never follow a
 // hidden computation as if it were a wire, and never rewrite the source IR.

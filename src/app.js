@@ -1,12 +1,12 @@
-import { Host } from '../vendor/netron/browser.js?v=4aaf0f8018611760';
-import { View, Attachment } from '../vendor/netron/view.js?v=4aaf0f8018611760';
-import { hydrate } from './hydrate.js?v=4aaf0f8018611760';
-import {overviewCanvas} from './overview-canvas.js?v=4aaf0f8018611760';
-import { modelFormat } from './model-formats.js?v=4aaf0f8018611760';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=4aaf0f8018611760';
-import {rectangleSelection} from './rectangle-selection.js?v=4aaf0f8018611760';
-import { LORA_PATTERN } from './pattern-utils.js?v=4aaf0f8018611760';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=4aaf0f8018611760';
+import { Host } from '../vendor/netron/browser.js?v=6f69f7d6ff83cad0';
+import { View, Attachment } from '../vendor/netron/view.js?v=6f69f7d6ff83cad0';
+import { hydrate } from './hydrate.js?v=6f69f7d6ff83cad0';
+import {overviewCanvas} from './overview-canvas.js?v=6f69f7d6ff83cad0';
+import { modelFormat } from './model-formats.js?v=6f69f7d6ff83cad0';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=6f69f7d6ff83cad0';
+import {rectangleSelection} from './rectangle-selection.js?v=6f69f7d6ff83cad0';
+import { LORA_PATTERN } from './pattern-utils.js?v=6f69f7d6ff83cad0';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=6f69f7d6ff83cad0';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -40,7 +40,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=4aaf0f8018611760`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=6f69f7d6ff83cad0`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -148,7 +148,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=4aaf0f8018611760', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=6f69f7d6ff83cad0', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
