@@ -20,7 +20,7 @@
 
 ## 使用與開發
 
-需要 Node.js 22 或更新版本；不需安裝 npm 套件。
+需要 Node.js 22 或更新版本；一般建置與 Node.js 測試不需安裝 npm 套件。可選的 Chromium 大檔驗收另需 Playwright，操作見下方。
 
 ```powershell
 node --test test/model.test.mjs test/hydrate.test.mjs test/subgraph.test.mjs
@@ -107,7 +107,19 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
-瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
+瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的合成實體選檔已於 2026-10-23 完成 Chromium 驗收，詳見下節；真實使用者模型的效能仍待量測。
+
+### 可選的 >1 GiB Chromium 選檔驗收
+
+`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。沿用現有產生器，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
+
+2026-10-23 單次實測：Ubuntu 24.04.3 x64、Node.js 24.19.0、Playwright 1.56.1、headless Chromium 141.0.7390.37；cgroup 上限 8 GiB、CPU 配額 8 核，開始時可用記憶體約 4.4 GiB、暫存磁碟約 27 GiB。從自動選檔到索引與初始清單就緒約 **284 ms**，Worker 解析與索引約 **133 ms**；錯誤後重新載入約 **246 ms**。原生 FileReaderSync 共讀 **1,189,156 bytes（約 1.13 MiB）**，19 次、最大單次 **64 KiB**，與 worker range 統計相符。未發生大檔完整讀取、瀏覽器當機、頁面／Worker 未處理錯誤或模型上傳請求。
+
+100 ms 取樣的 Chromium 程序樹 RSS 約 **409 → 峰值 536 MiB**（增加約 127 MiB），主頁 JS heap 峰值約 5.3 MiB；頁面 50 ms 心跳最大間隔約 99 ms。RSS 含共享頁重複計算且可能漏掉短暫尖峰，並非精確的全瀏覽器 JS heap。讀取觀察器會在單次 >1 MiB 或累計 >8 MiB 時先拒絕，避免完整載入回歸造成記憶體耗盡；取消案例使用測試專用的 metadata 回應暫停點。受管主機另有 Chromium 關閉後程序回收逾時的限制，已記入報告。詳細重現方式、通過條件與量測邊界見 [大檔驗收說明](test/browser/README.md)，[實測 JSON](test/browser/results/2026-10-23-chromium.json) 保留樣本與讀取證據。
+
+同環境另跑 Node.js `scripts/inspect.mjs` 的合成實體檔讀取，解析與索引約 **150 ms**、讀取量同為 1.13 MiB。這是獨立的 Node.js 路徑，不包含 Chromium File API、Worker 啟動或畫面操作；既有 264 ms 也是另一次 Node.js 觀測，不能用兩次單次數據宣稱速度提升。以上皆為合成測試，仍缺少原始真實模型的改善幅度。
+
+### 其他既有驗證
 
 TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
 

@@ -1,0 +1,708 @@
+{
+  "status": "passed",
+  "startedAt": "2026-10-23T02:59:46.318Z",
+  "checks": [
+    "native file chooser, disk-backed >1 GiB File, worker index (6,002 operators), index-only UI",
+    "exact layer search and bounded local SVG graph",
+    "pattern search, both subgraphs, pagination and match highlighting",
+    "lazy weight tensor metadata inspection",
+    "submodel download from large source",
+    "cancel pending real worker open, worker termination and UI reset (metadata gate)",
+    "invalid >1 GiB file reports an error and resets controls",
+    "same-page large-file reload and search/graph recovery after cancellation and error",
+    "downloaded submodel reopens through File API",
+    "bounded native reads, heartbeat, no crash/page errors/uploads, sampled memory budget"
+  ],
+  "samples": [
+    {
+      "phase": "startup",
+      "elapsedMs": 589,
+      "rssBytes": 429195264,
+      "mainHeapBytes": 3269372
+    },
+    {
+      "phase": "initial-load",
+      "elapsedMs": 696,
+      "rssBytes": 452083712,
+      "mainHeapBytes": 3168240
+    },
+    {
+      "phase": "initial-load",
+      "elapsedMs": 806,
+      "rssBytes": 489783296,
+      "mainHeapBytes": 3176724
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 897,
+      "rssBytes": 507613184,
+      "mainHeapBytes": 3442512
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 998,
+      "rssBytes": 507781120,
+      "mainHeapBytes": 3442872
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1097,
+      "rssBytes": 508170240,
+      "mainHeapBytes": 3473164
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1196,
+      "rssBytes": 511660032,
+      "mainHeapBytes": 3616720
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1300,
+      "rssBytes": 519774208,
+      "mainHeapBytes": 3846552
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1395,
+      "rssBytes": 532590592,
+      "mainHeapBytes": 4016940
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1500,
+      "rssBytes": 534577152,
+      "mainHeapBytes": 4169112
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1596,
+      "rssBytes": 536346624,
+      "mainHeapBytes": 4390460
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1696,
+      "rssBytes": 540659712,
+      "mainHeapBytes": 4564156
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1798,
+      "rssBytes": 542773248,
+      "mainHeapBytes": 4864608
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 1916,
+      "rssBytes": 544808960,
+      "mainHeapBytes": 5129760
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 2001,
+      "rssBytes": 545128448,
+      "mainHeapBytes": 5130236
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 2100,
+      "rssBytes": 545333248,
+      "mainHeapBytes": 5168548
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 2201,
+      "rssBytes": 547053568,
+      "mainHeapBytes": 5311320
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 2302,
+      "rssBytes": 550817792,
+      "mainHeapBytes": 5450536
+    },
+    {
+      "phase": "interaction",
+      "elapsedMs": 2401,
+      "rssBytes": 546684928,
+      "mainHeapBytes": 5551508
+    },
+    {
+      "phase": "cancel",
+      "elapsedMs": 2503,
+      "rssBytes": 548876288,
+      "mainHeapBytes": 4317452
+    },
+    {
+      "phase": "invalid-file",
+      "elapsedMs": 2605,
+      "rssBytes": 549617664,
+      "mainHeapBytes": 4463924
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 2701,
+      "rssBytes": 549429248,
+      "mainHeapBytes": 4524076
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 2804,
+      "rssBytes": 553476096,
+      "mainHeapBytes": 4561984
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 2922,
+      "rssBytes": 558735360,
+      "mainHeapBytes": 4641416
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3002,
+      "rssBytes": 560390144,
+      "mainHeapBytes": 4711184
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3101,
+      "rssBytes": 560390144,
+      "mainHeapBytes": 4711544
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3201,
+      "rssBytes": 560918528,
+      "mainHeapBytes": 4797444
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3301,
+      "rssBytes": 562020352,
+      "mainHeapBytes": 4900380
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3405,
+      "rssBytes": 559591424,
+      "mainHeapBytes": 4984104
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3503,
+      "rssBytes": 559661056,
+      "mainHeapBytes": 5055328
+    },
+    {
+      "phase": "recovery",
+      "elapsedMs": 3591,
+      "rssBytes": 559636480,
+      "mainHeapBytes": 5055724
+    }
+  ],
+  "limitations": [
+    "Synthetic sparse zero weights, not a trained user model or cold-disk throughput benchmark.",
+    "File APIs are observed and guarded at 1 MiB per call / 8 MiB per realm; guards stop unsafe regressions before allocation.",
+    "RSS sums Chromium processes (shared pages may be counted more than once); sampled peaks can miss short spikes.",
+    "Cancellation uses a test-only metadata response gate; successful loads use native FileReaderSync without delay.",
+    "Browser.close process reaping timed out after protocol shutdown (host process wrapper)."
+  ],
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.55",
+    "osRelease": "PRETTY_NAME=\"Ubuntu 24.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.3 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo",
+    "arch": "x64",
+    "node": "v24.19.0",
+    "playwright": "1.56.1",
+    "cpus": 9,
+    "cpuQuota": "800000 100000",
+    "memoryLimit": "8589934592",
+    "memoryCurrent": "3820498944",
+    "availableMemoryBytes": 4769435648,
+    "tempFreeBytes": 29304557568,
+    "shm": "shm /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0",
+    "sourceCommit": "6fbe65cd5ecd53f6a358d81cebf76fecdcffb647",
+    "headless": true,
+    "chromium": "141.0.7390.37"
+  },
+  "fixture": {
+    "file": "<temporary>/synthetic-1_25GiB.tflite",
+    "bytes": 1343235364,
+    "payloadOffset": 1058084,
+    "layers": 6002,
+    "note": "Synthetic structure with sparse zero weight payload; no user model data.",
+    "allocatedBytes": 1060864
+  },
+  "initialLoadMs": 284.3595099999999,
+  "metrics": "讀取總量 1.13 MiB · 檔案 1.25 GiB · 解析 0.13s",
+  "recoveryLoadMs": 246.34779799999978,
+  "audit": {
+    "audit": {
+      "bytes": 0,
+      "calls": 0,
+      "maxRead": 0,
+      "violations": [],
+      "methods": {}
+    },
+    "workers": [
+      {
+        "url": "<loopback>/vendor/netron/worker.js",
+        "terminated": false
+      },
+      {
+        "url": "<loopback>/src/model-worker.js",
+        "terminated": true,
+        "audit": {
+          "bytes": 1189156,
+          "calls": 19,
+          "maxRead": 65536,
+          "violations": [],
+          "methods": {
+            "FileReaderSync.readAsArrayBuffer": 19
+          }
+        },
+        "stats": {
+          "bytesRead": 1189156,
+          "reads": 19,
+          "fileBytes": 1343235364,
+          "parseMs": 133
+        }
+      },
+      {
+        "url": "<loopback>/src/model-worker.js",
+        "terminated": true
+      },
+      {
+        "url": "<loopback>/src/model-worker.js",
+        "terminated": true,
+        "audit": {
+          "bytes": 65536,
+          "calls": 1,
+          "maxRead": 65536,
+          "violations": [],
+          "methods": {
+            "FileReaderSync.readAsArrayBuffer": 1
+          }
+        }
+      },
+      {
+        "url": "<loopback>/src/model-worker.js",
+        "terminated": true,
+        "audit": {
+          "bytes": 1189156,
+          "calls": 19,
+          "maxRead": 65536,
+          "violations": [],
+          "methods": {
+            "FileReaderSync.readAsArrayBuffer": 19
+          }
+        },
+        "stats": {
+          "bytesRead": 1189156,
+          "reads": 19,
+          "fileBytes": 1343235364,
+          "parseMs": 103.20000000298023
+        }
+      },
+      {
+        "url": "<loopback>/src/model-worker.js",
+        "terminated": false,
+        "audit": {
+          "bytes": 1440,
+          "calls": 1,
+          "maxRead": 1440,
+          "violations": [],
+          "methods": {
+            "FileReaderSync.readAsArrayBuffer": 1
+          }
+        },
+        "stats": {
+          "bytesRead": 1440,
+          "reads": 1,
+          "fileBytes": 1440,
+          "parseMs": 4.0999999940395355
+        }
+      }
+    ],
+    "ticks": 63,
+    "maxGapMs": 98.70000000298023
+  },
+  "network": [
+    {
+      "url": "<loopback>/",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/grapher.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/app.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/app.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-workspace.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/mobile.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-visibility.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/typography.css",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/browser.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/view.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/hydrate.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-library.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/grapher.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/worker.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/message.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/onnx.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/pytorch.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/mlnet.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/onnx-proto.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/onnx-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/onnx-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/pytorch-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/protobuf.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/python.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/dagre.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/text.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-engine.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/range-stream.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/tflite-export.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/flatbuffer-writer.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-engine.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/range-stream.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-engine.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/range-stream.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-engine.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/range-stream.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/model-engine.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/subgraph-pattern.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/pattern-utils.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/base.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flatbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/src/range-stream.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/flexbuffers.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/zip.js",
+      "method": "GET"
+    },
+    {
+      "url": "<loopback>/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    }
+  ],
+  "memory": {
+    "baselineRssBytes": 429195264,
+    "peakRssBytes": 562020352,
+    "peakMainHeapBytes": 5551508,
+    "sampleIntervalMs": 100,
+    "rssGrowthBudgetBytes": 805306368,
+    "rssGrowthBytes": 132825088
+  },
+  "errors": [],
+  "finishedAt": "2026-10-23T02:59:54.922Z",
+  "evidenceNote": "Executed against the base commit plus the acceptance changes in this PR. Temporary paths and ephemeral origin normalized; measurements unchanged."
+}
