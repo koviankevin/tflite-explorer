@@ -85,3 +85,12 @@ test('compiler print/parse and SSA renaming preserve the checked projection', {s
     const printed=await parse(opt.stdout);assert.equal(printed.mlir.slicePatterns.size,1);
     assert.equal((await findMLIRPatterns(printed,pattern)).items.length,1);
 });
+test('synthetic seed constants and entry operations never become original-layer pattern candidates',async()=>{
+    const constant=await parse('"func.func"() <{sym_name = "constant", function_type = (i32, i1, i32) -> i1}> ({\n^entry(%a: i32, %b: i1, %c: i32):\n%value = "arith.constant"() <{value = false}> : () -> i1\n"func.return"(%value) : (i1) -> ()\n}) : () -> ()');
+    const pattern=captureMLIRPattern(constant,[{graph:0,nodes:[0]}]);
+    const {reopened}=await slice(MLIR_CFG_DIAMOND,[{graph:1,nodes:[0]}]);
+    assert.equal(reopened.mlir.graphs[0].block.arguments.length,3);
+    assert.ok(reopened.graphs[0].graph.nodes.some(n=>n.type.name==='arith.constant'));
+    assert.equal((await findMLIRPatterns(reopened,pattern)).items.length,0);
+    assert.throws(()=>captureMLIRPattern(reopened,[{graph:0,nodes:[0]}]),/新增的介面節點/);
+});

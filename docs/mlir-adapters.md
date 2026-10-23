@@ -103,8 +103,10 @@ block 標籤或排版；MLIR compiler 原樣 print/parse 可沿用。這是自�
 只比對實際結構；原有 SSA／dominance 檢查仍先執行。若公司 pass 改變結構或移除
 這個屬性，需要從原模型重新匯出才能取得新的有效對照。
 
-Matcher 共用既有 typed adjacency 索引、取消及工作上限，同時支援原始結構與實際
-介面所建立的 patterns；按實際 operators 和 CFG 路徑去重，不重複列出同一匹配。
+Matcher 共用既有 typed adjacency 索引、取消及工作上限，同時支援以原始介面與
+已匯出介面的原始 layers 所建立的 patterns；兩種視圖皆限定在實際保留的來源
+operators，新增常數／entry branch／輸出 return 不能成為原始層候選或建立 pattern。
+按實際 operators 和 CFG 路徑去重，不重複列出同一匹配。
 來源結構命中標示「原始結構」，點選仍以實際 IR 的 blocks、ports、控制箭頭顯示。
 一般 MLIR 不改變嚴格規則；舊 pattern JSON schema／localStorage 不需升級。
 較早未帶對照的局部 MLIR 無法恢復已裁掉的 slots，需從原模型重新匯出一次。
