@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=5f68fef058053aa4">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=c4dfc5271e48ba6a">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=5f68fef058053aa4"></script>
+<script type="module" src="src/app.js?v=c4dfc5271e48ba6a"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,11 +308,11 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=5f68fef058053aa4">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=5f68fef058053aa4">
-<link rel="stylesheet" href="src/mobile.css?v=5f68fef058053aa4">
-<link rel="stylesheet" href="src/model-visibility.css?v=5f68fef058053aa4">
-<link rel="stylesheet" href="src/typography.css?v=5f68fef058053aa4">
+<link rel="stylesheet" href="src/app.css?v=c4dfc5271e48ba6a">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=c4dfc5271e48ba6a">
+<link rel="stylesheet" href="src/mobile.css?v=c4dfc5271e48ba6a">
+<link rel="stylesheet" href="src/model-visibility.css?v=c4dfc5271e48ba6a">
+<link rel="stylesheet" href="src/typography.css?v=c4dfc5271e48ba6a">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -349,7 +349,8 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
       <p id="pattern-match-hint" class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
-    <p id="mlir-info" class="hint" hidden>MLIR 跨 block 結果同圖顯示控制流程與 SSA，可直接選取不同 blocks 的 layers，建立包含分支、匯合與迴圈的 pattern；也可在單一 block 勾選「跨 block 保留選取」逐一加入。跨 block 搜尋以同一 region 為範圍，多 block MLIR 匯出保留完整 function。模型及搜尋全程在本機處理。</p>
+    <div id="mlir-export-option" hidden><label for="mlir-export-scope" class="control-label">MLIR 匯出範圍</label><select id="mlir-export-scope"><option value="slice">局部選取</option><option value="function">完整 function</option></select><p class="hint">局部匯出會重建輸入／輸出與 block arguments；原有嚴格跨 block pattern 可能需重新圈選。</p></div>
+    <p id="mlir-info" class="hint" hidden>MLIR 跨 block 結果同圖顯示控制流程與 SSA，可直接跨 block 圈選建立 pattern。局部匯出會補足 SSA 輸入、輸出與必要控制節點；也可切換為完整 function。模型及搜尋全程在本機處理。</p>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>

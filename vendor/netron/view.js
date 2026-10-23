@@ -1,6 +1,6 @@
 
-import * as base from './base.js?v=5f68fef058053aa4';
-import * as grapher from './grapher.js?v=5f68fef058053aa4';
+import * as base from './base.js?v=c4dfc5271e48ba6a';
+import * as grapher from './grapher.js?v=c4dfc5271e48ba6a';
 
 const view = {};
 const markdown = {};
@@ -34,7 +34,7 @@ view.View = class {
 
     async start() {
         try {
-            const zip = await import('./zip.js?v=5f68fef058053aa4');
+            const zip = await import('./zip.js?v=c4dfc5271e48ba6a');
             await zip.Archive.import();
             await this._host.view(this);
             const options = this._host.get('options') || {};
@@ -4329,7 +4329,7 @@ view.TensorView = class extends view.Expander {
                     case 'quint8': data_type = 'uint8'; break;
                     default: data_type = tensor.type.dataType; break;
                 }
-                const python = await import('./python.js?v=5f68fef058053aa4');
+                const python = await import('./python.js?v=c4dfc5271e48ba6a');
                 const execution = new python.Execution();
                 const io = execution.__import__('io');
                 const numpy = execution.register('numpy');
@@ -6803,7 +6803,7 @@ view.Context = class {
                                 if (stream.length < 0x7ffff000 &&
                                     (buffer.length < 8 || String.fromCharCode.apply(null, buffer.slice(0, 8)) !== '\x89HDF\r\n\x1A\n') &&
                                     (buffer.some((v) => v === 0x22 || v === 0x5b || v === 0x5d || v === 0x7b || v === 0x7d))) {
-                                    const json = await import('./json.js?v=5f68fef058053aa4');
+                                    const json = await import('./json.js?v=c4dfc5271e48ba6a');
                                     const reader = json.TextReader.open(stream);
                                     if (reader) {
                                         const obj = reader.read();
@@ -6820,7 +6820,7 @@ view.Context = class {
                                 const entries = await this.peek('gzip');
                                 if (entries && entries.size === 1) {
                                     const stream = entries.values().next().value;
-                                    const json = await import('./json.js?v=5f68fef058053aa4');
+                                    const json = await import('./json.js?v=c4dfc5271e48ba6a');
                                     const reader = json.TextReader.open(stream);
                                     if (reader) {
                                         const obj = reader.read();
@@ -6837,7 +6837,7 @@ view.Context = class {
                                 const buffer = stream.peek(Math.min(this.stream.length, 0x1000));
                                 const content = String.fromCharCode.apply(null, buffer);
                                 if (stream.length < 0x7ffff000 && content.indexOf('<') !== -1 && content.indexOf('</') !== -1) {
-                                    const xml = await import('./xml.js?v=5f68fef058053aa4');
+                                    const xml = await import('./xml.js?v=c4dfc5271e48ba6a');
                                     const reader = xml.TextReader.open(this._stream);
                                     if (reader) {
                                         const obj = reader.read();
@@ -6853,7 +6853,7 @@ view.Context = class {
                             let unpickler = null;
                             const types = new Set();
                             try {
-                                const zip = await import('./zip.js?v=5f68fef058053aa4');
+                                const zip = await import('./zip.js?v=c4dfc5271e48ba6a');
                                 const archive = zip.Archive.open(stream, 'zlib');
                                 const data = archive ? archive.entries.get('') : stream;
                                 let condition = false;
@@ -6879,7 +6879,7 @@ view.Context = class {
                                     }
                                 }
                                 if (condition) {
-                                    const python = await import('./python.js?v=5f68fef058053aa4');
+                                    const python = await import('./python.js?v=c4dfc5271e48ba6a');
                                     const execution = new python.Execution();
                                     execution.on('resolve', (sender, name) => types.add(name));
                                     const pickle = execution.__import__('pickle');
@@ -6923,7 +6923,7 @@ view.Context = class {
                             break;
                         }
                         case 'hdf5': {
-                            const hdf5 = await import('./hdf5.js?v=5f68fef058053aa4');
+                            const hdf5 = await import('./hdf5.js?v=c4dfc5271e48ba6a');
                             const file = hdf5.File.open(stream);
                             if (file) {
                                 try {
@@ -6942,7 +6942,7 @@ view.Context = class {
                             this._content.set('gzip', undefined);
                             let stream = this._stream;
                             try {
-                                const zip = await import('./zip.js?v=5f68fef058053aa4');
+                                const zip = await import('./zip.js?v=c4dfc5271e48ba6a');
                                 const archive = zip.Archive.open(this._stream, 'gzip');
                                 if (archive) {
                                     let entries = archive.entries;
@@ -6959,7 +6959,7 @@ view.Context = class {
                             }
                             let skipTar = false;
                             try {
-                                const zip = await import('./zip.js?v=5f68fef058053aa4');
+                                const zip = await import('./zip.js?v=c4dfc5271e48ba6a');
                                 const archive = zip.Archive.open(stream, 'zip');
                                 if (archive) {
                                     this._content.set('zip', archive.entries);
@@ -6970,7 +6970,7 @@ view.Context = class {
                             }
                             if (!skipTar) {
                                 try {
-                                    const tar = await import('./tar.js?v=5f68fef058053aa4');
+                                    const tar = await import('./tar.js?v=c4dfc5271e48ba6a');
                                     const archive = tar.Archive.open(stream);
                                     if (archive) {
                                         this._content.set('tar', archive.entries);
@@ -6983,7 +6983,7 @@ view.Context = class {
                         }
                         case 'flatbuffers.binary': {
                             try {
-                                const flatbuffers = await import('./flatbuffers.js?v=5f68fef058053aa4');
+                                const flatbuffers = await import('./flatbuffers.js?v=c4dfc5271e48ba6a');
                                 const reader = flatbuffers.BinaryReader.open(this._stream);
                                 if (reader) {
                                     this._content.set('flatbuffers.binary', reader);
@@ -6998,7 +6998,7 @@ view.Context = class {
                             const entries = await this.peek('zip');
                             if (entries instanceof Map && entries.size > 0 &&
                                 Array.from(entries.keys()).every((name) => name.endsWith('.npy'))) {
-                                const python = await import('./python.js?v=5f68fef058053aa4');
+                                const python = await import('./python.js?v=c4dfc5271e48ba6a');
                                 const execution = new python.Execution();
                                 const io = execution.__import__('io');
                                 const numpy = execution.__import__('numpy');
@@ -7028,7 +7028,7 @@ view.Context = class {
         if (!this._content.has(type)) {
             switch (type) {
                 case 'json': {
-                    const json = await import('./json.js?v=5f68fef058053aa4');
+                    const json = await import('./json.js?v=c4dfc5271e48ba6a');
                     const reader = json.TextReader.open(this._stream);
                     if (reader) {
                         const obj = reader.read();
@@ -7038,7 +7038,7 @@ view.Context = class {
                     throw new view.Error('Invalid JSON content.');
                 }
                 case 'bson': {
-                    const json = await import('./json.js?v=5f68fef058053aa4');
+                    const json = await import('./json.js?v=c4dfc5271e48ba6a');
                     const reader = json.BinaryReader.open(this._stream);
                     if (reader) {
                         return reader.read();
@@ -7046,7 +7046,7 @@ view.Context = class {
                     throw new view.Error('Invalid BSON content.');
                 }
                 case 'xml': {
-                    const xml = await import('./xml.js?v=5f68fef058053aa4');
+                    const xml = await import('./xml.js?v=c4dfc5271e48ba6a');
                     const reader = xml.TextReader.open(this._stream);
                     if (reader) {
                         return reader.read();
@@ -7054,7 +7054,7 @@ view.Context = class {
                     throw new view.Error(`Invalid XML content.`);
                 }
                 case 'flatbuffers.binary': {
-                    const flatbuffers = await import('./flatbuffers.js?v=5f68fef058053aa4');
+                    const flatbuffers = await import('./flatbuffers.js?v=c4dfc5271e48ba6a');
                     const reader = flatbuffers.BinaryReader.open(this._stream);
                     if (reader) {
                         this._content.set('flatbuffers.reader', reader);
@@ -7063,16 +7063,16 @@ view.Context = class {
                     throw new view.Error('Invalid FlatBuffers content.');
                 }
                 case 'flatbuffers.text': {
-                    const flatbuffers = await import('./flatbuffers.js?v=5f68fef058053aa4');
+                    const flatbuffers = await import('./flatbuffers.js?v=c4dfc5271e48ba6a');
                     const obj = await this.peek('json');
                     return flatbuffers.TextReader.open(obj);
                 }
                 case 'protobuf.binary': {
-                    const protobuf = await import('./protobuf.js?v=5f68fef058053aa4');
+                    const protobuf = await import('./protobuf.js?v=c4dfc5271e48ba6a');
                     return protobuf.BinaryReader.open(this._stream);
                 }
                 case 'protobuf.text': {
-                    const protobuf = await import('./protobuf.js?v=5f68fef058053aa4');
+                    const protobuf = await import('./protobuf.js?v=c4dfc5271e48ba6a');
                     return protobuf.TextReader.open(this._stream);
                 }
                 case 'binary.big-endian': {
@@ -7082,7 +7082,7 @@ view.Context = class {
                     return base.BinaryReader.open(this._stream);
                 }
                 case 'text': {
-                    const text = await import('./text.js?v=5f68fef058053aa4');
+                    const text = await import('./text.js?v=c4dfc5271e48ba6a');
                     if (typeof args[0] === 'number') {
                         const length = Math.min(this._stream.length, args[0]);
                         const buffer = this._stream.peek(length);
@@ -7091,7 +7091,7 @@ view.Context = class {
                     return text.Reader.open(this._stream);
                 }
                 case 'text.decoder': {
-                    const text = await import('./text.js?v=5f68fef058053aa4');
+                    const text = await import('./text.js?v=c4dfc5271e48ba6a');
                     return text.Decoder.open(this._stream);
                 }
                 default: {
@@ -7122,7 +7122,7 @@ view.Context = class {
                 } else if (Array.from(this._content.values()).some((obj) => obj !== undefined)) {
                     skip = true;
                 } else if (stream.length < 0x7ffff000) {
-                    const json = await import('./json.js?v=5f68fef058053aa4');
+                    const json = await import('./json.js?v=c4dfc5271e48ba6a');
                     if (json.TextReader.open(stream)) {
                         skip = true;
                     }
@@ -7131,25 +7131,25 @@ view.Context = class {
                     try {
                         switch (type) {
                             case 'pbtxt': {
-                                const protobuf = await import('./protobuf.js?v=5f68fef058053aa4');
+                                const protobuf = await import('./protobuf.js?v=c4dfc5271e48ba6a');
                                 const reader = protobuf.TextReader.open(stream);
                                 tags = reader ? reader.signature() : tags;
                                 break;
                             }
                             case 'pb': {
-                                const protobuf = await import('./protobuf.js?v=5f68fef058053aa4');
+                                const protobuf = await import('./protobuf.js?v=c4dfc5271e48ba6a');
                                 const reader = protobuf.BinaryReader.open(stream);
                                 tags = reader.signature();
                                 break;
                             }
                             case 'pb+': {
-                                const protobuf = await import('./protobuf.js?v=5f68fef058053aa4');
+                                const protobuf = await import('./protobuf.js?v=c4dfc5271e48ba6a');
                                 const reader = protobuf.BinaryReader.open(stream);
                                 tags = reader.decode();
                                 break;
                             }
                             case 'xml': {
-                                const xml = await import('./xml.js?v=5f68fef058053aa4');
+                                const xml = await import('./xml.js?v=c4dfc5271e48ba6a');
                                 const reader = xml.TextReader.open(stream);
                                 if (reader) {
                                     const document = reader.read(1);
@@ -7401,8 +7401,8 @@ view.ModelFactoryService = class {
     async _unsupported(context) {
         const identifier = context.identifier;
         const stream = context.stream;
-        const zip = await import('./zip.js?v=5f68fef058053aa4');
-        const tar = await import('./tar.js?v=5f68fef058053aa4');
+        const zip = await import('./zip.js?v=c4dfc5271e48ba6a');
+        const tar = await import('./tar.js?v=c4dfc5271e48ba6a');
         const callbacks = [
             (stream) => zip.Archive.open(stream, 'zip'),
             (stream) => tar.Archive.open(stream),
