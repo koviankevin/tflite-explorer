@@ -1,7 +1,7 @@
-import { ModelFactory } from '../vendor/netron/mlir.js?v=55e14943e19d8b84';
-import { Decoder } from '../vendor/netron/text.js?v=55e14943e19d8b84';
-import { indexModel } from './model-engine.js?v=55e14943e19d8b84';
-import { prepareMLIR, opName } from './mlir-ir.js?v=55e14943e19d8b84';
+import { ModelFactory } from '../vendor/netron/mlir.js?v=e02b487a8535b042';
+import { Decoder } from '../vendor/netron/text.js?v=e02b487a8535b042';
+import { indexModel } from './model-engine.js?v=e02b487a8535b042';
+import { prepareMLIR, opName } from './mlir-ir.js?v=e02b487a8535b042';
 
 export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
@@ -133,5 +133,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    if(source.includes('model_lens.slice_pattern')) {
+        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=e02b487a8535b042');
+        await prepareSlicePatterns(index);
+    }
+    index.stats.parseMs=performance.now()-start;
+    return index;
 }

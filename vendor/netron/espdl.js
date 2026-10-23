@@ -1,4 +1,4 @@
-import * as flatbuffers from './flatbuffers.js?v=55e14943e19d8b84';
+import * as flatbuffers from './flatbuffers.js?v=e02b487a8535b042';
 
 const espdl = {};
 
