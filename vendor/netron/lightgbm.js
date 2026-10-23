@@ -1,5 +1,5 @@
 
-import * as python from './python.js?v=625940cb85314a87';
+import * as python from './python.js?v=a98873cac07aed8c';
 
 const lightgbm = {};
 

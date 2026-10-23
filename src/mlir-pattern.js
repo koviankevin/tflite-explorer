@@ -1,10 +1,10 @@
-import {operationSemantics} from './mlir-dialects.js?v=625940cb85314a87';
-import {typeSpelling} from './mlir-engine.js?v=625940cb85314a87';
-import {validateMLIR} from './mlir-validate.js?v=625940cb85314a87';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=625940cb85314a87';
-import {selectionSnapshot} from './model-engine.js?v=625940cb85314a87';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=625940cb85314a87';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=625940cb85314a87';
+import {operationSemantics} from './mlir-dialects.js?v=a98873cac07aed8c';
+import {typeSpelling} from './mlir-engine.js?v=a98873cac07aed8c';
+import {validateMLIR} from './mlir-validate.js?v=a98873cac07aed8c';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=a98873cac07aed8c';
+import {selectionSnapshot} from './model-engine.js?v=a98873cac07aed8c';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=a98873cac07aed8c';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=a98873cac07aed8c';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -170,4 +170,12 @@ export function mlirMatchSnapshot(index,item,options={}) {
     const selected=new Set(block.path),entry=index.graphs[block.graph];
     const connections=block.path.flatMap(from=>[...entry.next[from]].filter(to=>selected.has(to)).map(to=>[from,to]));
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);
+}
+
+export function mlirModelSnapshots(index) {
+    return projects(index).map(project=>{
+        const blocks=project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,i)=>i)}));
+        const item={kind:'patterns',mode:CFG_PATTERN_MODE,graph:blocks[0].graph,path:blocks[0].path,blocks};
+        return combinedMLIRSnapshot(index,item,build(index,project),{full:true,maxOperators:20000,maxControlRoutes:20000});
+    });
 }

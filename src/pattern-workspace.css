@@ -47,3 +47,6 @@
 .result-subgraph{color:var(--accent);font-weight:650}
 @media(max-height:650px){.panel-heading{padding-top:10px;padding-bottom:8px}.tabs button{padding-top:8px;padding-bottom:8px}.search-tools{max-height:calc(100% - 225px);padding-top:10px;padding-bottom:10px}.panel-footer{padding-top:8px;padding-bottom:8px}}
 @media(max-width:900px){.graph-bar{padding:0 6px}.graph-actions{gap:0}.graph-actions button{padding-left:5px;padding-right:5px}.graph-location .eyebrow{display:none}.capture-toolbar{left:calc(var(--aside) + 8px);right:8px;padding:8px}.capture-actions input{width:110px}}
+#pattern-overview-controls select{width:100%;max-width:100%}
+#pattern-overview-controls>div{display:flex;flex-wrap:wrap;gap:4px}
+#pattern-overview-controls .hint{white-space:normal;overflow-wrap:anywhere}

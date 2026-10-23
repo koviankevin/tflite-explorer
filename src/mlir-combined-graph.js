@@ -1,9 +1,9 @@
-import {serialize} from './model-engine.js?v=625940cb85314a87';
+import {serialize} from './model-engine.js?v=a98873cac07aed8c';
 
 // Display projection only. The source AST, block-local indexes and export
 // selections remain unchanged. SSA identity comes from the validated region,
 // never from a printed name (which may be reused in other scopes).
-export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContext=false}={}) {
+export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContext=false,maxOperators=1500,maxControlRoutes=512}={}) {
     const graphs=new Set(item.blocks.map(b=>b.graph)),chosen=new Map(),nodes=[],values=new Map(),focus={},links=[];
     const arg=(name,value)=>({name,value:[value]});
     const group=g=>`block ${g}`;
@@ -32,7 +32,7 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContex
         for(const [n,op] of source.operations.entries())if(op.successors?.length)set.add(n);
         chosen.set(block.graph,set);total+=source.operations.length;
     }
-    if([...chosen.values()].reduce((n,s)=>n+s.size,0)>1500)throw new Error('相關 blocks 超過 1,500 個 operators；請使用局部圖或縮小 pattern。');
+    if([...chosen.values()].reduce((n,s)=>n+s.size,0)>maxOperators)throw new Error(`相關 blocks 超過 ${maxOperators.toLocaleString()} 個 operators；請使用局部圖或縮小 pattern。`);
     const headers=new Map(),argumentsById=new Map(),ops=new Map();
     for(const block of item.blocks) {
         const g=block.graph,source=index.mlir.graphs[g],display=index.graphs[g].graph;
@@ -55,7 +55,7 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContex
         if(!focus[g].length)focus[g].push(header.identifier);
     }
     const routes=new Map(),controls=entry.edges.filter(e=>e.kind==='control' && (boundaryContext ? graphs.has(entry.nodes[e.from].graph) || graphs.has(entry.nodes[e.to].graph) : graphs.has(entry.nodes[e.from].graph) && graphs.has(entry.nodes[e.to].graph)));
-    if(controls.length>512)throw new Error('此匹配的控制出口超過 512 個；請縮小 pattern。');
+    if(controls.length>maxControlRoutes)throw new Error(`此匹配的控制出口超過 ${maxControlRoutes.toLocaleString()} 個；請縮小 pattern。`);
     const boundary=g=>{
         if(!headers.has(g)) {
             const node=synthetic(`outside:b${g}`,`外部 block ${g} · ${index.graphs[g].graph.name.split('/').at(-1)}`,g,'boundary');

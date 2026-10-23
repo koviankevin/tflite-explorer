@@ -1,10 +1,12 @@
-import { search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js?v=625940cb85314a87';
-import { openModelFile } from './model-adapters.js?v=625940cb85314a87';
-import { mlirDialects } from './mlir-dialect-registry.js?v=625940cb85314a87';
-import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js?v=625940cb85314a87';
-import { operatorKey, operatorIndex } from './pattern-utils.js?v=625940cb85314a87';
-import {foldPatternSnapshot} from './pattern-fold.js?v=625940cb85314a87';
+import { search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js?v=a98873cac07aed8c';
+import { openModelFile } from './model-adapters.js?v=a98873cac07aed8c';
+import { mlirDialects } from './mlir-dialect-registry.js?v=a98873cac07aed8c';
+import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js?v=a98873cac07aed8c';
+import { operatorKey, operatorIndex } from './pattern-utils.js?v=a98873cac07aed8c';
+import {foldPatternSnapshot} from './pattern-fold.js?v=a98873cac07aed8c';
+import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js?v=a98873cac07aed8c';
 let index;
+let overview;
 let results = [];
 let generation = 0;
 let file;
@@ -12,6 +14,7 @@ const send = (id, data) => postMessage({ id, data });
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
+            overview=null;
             file = args.file;
             const reader = new FileReaderSync();
             const progress = (stage) => postMessage({ stage });
@@ -26,19 +29,21 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
-            const { exportTflite } = await import('./tflite-export.js?v=625940cb85314a87');
+            const { exportTflite } = await import('./tflite-export.js?v=a98873cac07aed8c');
             send(id, exportTflite(index, args.graph, args.nodes, file));
         } else if (action === 'exportMLIR') {
-            const { exportMLIR } = await import('./mlir-export.js?v=625940cb85314a87');
+            const { exportMLIR } = await import('./mlir-export.js?v=a98873cac07aed8c');
             send(id, await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}));
         } else if (action === 'search') {
+            overview=null;
             generation++;
             results = search(index, args.kind, args.query, args.scope);
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0 });
         } else if (action === 'pattern' || action === 'subgraphPattern') {
+            overview=null;
             const current = ++generation;
             if(args.structure?.mode==='mlir-cfg') {
-                const {findMLIRPatterns}=await import('./mlir-pattern.js?v=625940cb85314a87');
+                const {findMLIRPatterns}=await import('./mlir-pattern.js?v=a98873cac07aed8c');
                 const result=await findMLIRPatterns(index,args.structure,args.scope,()=>generation!==current);
                 if(!result){send(id,{cancelled:true});return;}
                 results=result.items;send(id,{items:results.slice(0,100),total:results.length,offset:0,truncated:result.truncated,searchLimited:result.searchLimited});return;
@@ -54,16 +59,20 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated, searchLimited: result.searchLimited, decodedNodes });
         } else if (action === 'capturePattern') {
             if(args.selections) {
-                const {captureMLIRPattern}=await import('./mlir-pattern.js?v=625940cb85314a87');send(id,captureMLIRPattern(index,args.selections));return;
+                const {captureMLIRPattern}=await import('./mlir-pattern.js?v=a98873cac07aed8c');send(id,captureMLIRPattern(index,args.selections));return;
             }
             const entry = index.graphs[args.graph];
             if (!entry) throw new Error('找不到目前 subgraph。');
             send(id, captureGraphPattern(entry, args.nodes));
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
+        } else if (action === 'patternOverview') {
+            const current=generation,prepared=overview || await preparePatternOverview(index,results,{name:args.patternName});
+            if(current!==generation){send(id,{cancelled:true});return;}
+            overview=prepared;send(id,patternOverviewSnapshot(prepared,args));
         } else if (action === 'select') {
             if(args.item.mode==='mlir-cfg') {
-                const {mlirMatchSnapshot}=await import('./mlir-pattern.js?v=625940cb85314a87');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
+                const {mlirMatchSnapshot}=await import('./mlir-pattern.js?v=a98873cac07aed8c');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
             } else {const dto=selectionSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);}
         } else if (action === 'graph') {
             send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });

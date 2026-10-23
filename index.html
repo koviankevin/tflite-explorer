@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=625940cb85314a87">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=a98873cac07aed8c">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=625940cb85314a87"></script>
+<script type="module" src="src/app.js?v=a98873cac07aed8c"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,11 +308,11 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=625940cb85314a87">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=625940cb85314a87">
-<link rel="stylesheet" href="src/mobile.css?v=625940cb85314a87">
-<link rel="stylesheet" href="src/model-visibility.css?v=625940cb85314a87">
-<link rel="stylesheet" href="src/typography.css?v=625940cb85314a87">
+<link rel="stylesheet" href="src/app.css?v=a98873cac07aed8c">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=a98873cac07aed8c">
+<link rel="stylesheet" href="src/mobile.css?v=a98873cac07aed8c">
+<link rel="stylesheet" href="src/model-visibility.css?v=a98873cac07aed8c">
+<link rel="stylesheet" href="src/typography.css?v=a98873cac07aed8c">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -355,13 +355,18 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
   <nav id="match-blocks" class="match-blocks" aria-label="匹配的 blocks" hidden></nav>
+  <nav id="pattern-overview-controls" class="match-blocks" aria-label="全模型 pattern 總覽" hidden>
+    <strong>全模型 pattern 總覽</strong><label for="overview-match">定位或展開個別匹配</label><select id="overview-match"></select>
+    <div><button id="toggle-overview-match" class="quiet">展開此匹配</button><button id="expand-overview-all" class="quiet">展開全部</button><button id="collapse-overview-all" class="quiet">收合全部</button></div>
+    <p id="overview-summary" class="hint" aria-live="polite"></p>
+  </nav>
   <div id="pagination" class="pagination" hidden><button id="previous-page" class="quiet">上一頁</button><span id="page-label"></span><button id="next-page" class="quiet">下一頁</button></div>
   <section id="tensor-summary" class="tensor-summary" hidden aria-label="選取的 tensor 資料"></section>
   <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="LICENSE" target="_blank" rel="noopener">MIT 授權 ↗</a><a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron ↗</a></div>
 </aside>
 <div class="graph-bar">
   <div class="graph-location"><span class="eyebrow">02 / GRAPH</span><label for="graph-select" class="sr-only">目前 subgraph</label><select id="graph-select" disabled><option>模型圖</option></select><span id="graph-caption">選取結果以查看連接</span></div>
-  <div class="graph-actions"><button id="toggle-pattern-fold" class="quiet" aria-expanded="true" hidden>收合 pattern</button><button id="pick-pattern" class="quiet" aria-pressed="false" disabled>選取 pattern</button><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button><label class="graph-font-control" for="graph-font-size">圖字<select id="graph-font-size" aria-label="模型圖字級"><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option><option value="24">24px</option><option value="28">28px</option><option value="32">32px</option></select></label></div>
+  <div class="graph-actions"><button id="fold-all-patterns" class="quiet" hidden>收合所有匹配</button><button id="toggle-pattern-fold" class="quiet" aria-expanded="true" hidden>收合 pattern</button><button id="pick-pattern" class="quiet" aria-pressed="false" disabled>選取 pattern</button><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button><label class="graph-font-control" for="graph-font-size">圖字<select id="graph-font-size" aria-label="模型圖字級"><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option><option value="24">24px</option><option value="28">28px</option><option value="32">32px</option></select></label></div>
 </div>
 <section id="capture-toolbar" class="capture-toolbar" aria-label="從模型圖建立 pattern" hidden>
   <div><strong id="capture-count" aria-live="polite">已選取 0 個 layers</strong><span id="capture-hint">點選 layer 可加入／取消；自動擷取選取節點之間的連線。</span></div>
