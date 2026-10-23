@@ -13,7 +13,7 @@
 另一個 function 的錯誤不會蓋掉目前範圍的診斷。
 
 檢查包括未定義／不可見的 SSA、結果編號、重定義與可見外層名稱衝突、
-型別一致性、單 block SSA dominance、已知 function isolation、entry arguments
+型別一致性、跨 block SSA dominance、已知 function isolation、entry arguments
 與 return signature。型別 aliases 以解析後的型別比較；未知 type／attribute
 仍保留 opaque 內容，不宣稱理解內部 dialect 語意。
 
@@ -22,17 +22,37 @@
 失敗時回傳結構化 diagnostics，在頁面顯示來源／匯出階段、行、欄、operator、
 原因與原文片段。最多顯示前 20 項；診斷不會上傳或寫入遠端 log。
 
-目前遇到多 block region、無法完整對應的 operands、不可可靠還原的 forward
-references 或非支援的 custom assembly 會拒絕匯出。請先以公司 compiler
-輸出 generic／正規化 IR；此版本不猜測未知 dialect 的 region traits、
-跨 block dominance、memory effects、ODS 或 custom verifiers。
-這些限制與檢查範圍也會顯示在網站，通過狀態稱為「本機語法／SSA 檢查」。
+Generic `cf.br`、`cf.cond_br`、`cf.switch` 支援多 block：檢查目標 block、禁止
+entry predecessor、branch operands 與 block arguments 的數量／型別、condition
+型別、operand segments、block labels 唯一和 terminator 位置。`mlir-ir.js`
+以 reverse postorder 計算 immediate dominators，建立 dominator tree 的區間
+索引，讓每個跨 block SSA dominance 查詢為 O(1)，儲存量隨 blocks／edges
+線性增加。支援 backedges、irreducible CFG、textual forward references 和
+巢狀 captures；同 block 仍檢查先定義後使用。不可達 blocks 依 LLVM 規則
+處理跨 block dominance，同 block 的先後順序仍需有效。
 
-15 項本機驗證測試涵蓋正例、錯誤位置、匯出阻擋、scope 隔離與支援範圍。
-Compiler 負例同時呼叫本機檢查器，對照真正 LLVM/MLIR verifier 的結果。
+圈選位於多 block function 時，匯出保留整個 enclosing `func.func`，包含
+所有 blocks、terminators、block arguments 和返回路徑。這是保留控制流程的
+function 擷取；pattern 搜尋仍以 block 為範圍。未知 branch／terminator 規則
+需透過 [dialect adapter](mlir-adapters.md) 擴充，否則明確拒絕匯出。
+Symbol dependencies 不自動擷取；完整 dialect ODS／private verifier 仍需在公司
+工具驗證。無法完整對應 operands 或 custom assembly 會拒絕匯出。
+
+本機測試以移除候選 dominator 後的路徑可達性，交叉核對循環及 irreducible
+圖的 dominance，並測試 15,000-block CFG，避免 stack overflow 或 B×B 儲存。
+Compiler 正負例同時呼叫本機檢查器，對照真正 LLVM/MLIR verifier 的結果。
 驗證只依賴隨網站提供的 JavaScript 與本機 File／Worker；沒有模型上傳端點。
 
 ## 2026-10-23 實測
+
+多 block 功能新增後：全套 124 項測試以 IREE verifier 執行，全數通過、0 略過；
+獨立 upstream LLVM 18.1.8 `mlir-opt` 的 34 項 compiler 正負例也全部通過。
+包含 diamond、loop、非文字順序的合法 dominance、switch 多出口，以及實際由
+瀏覽器下載的四 block custom-op function；正規化後比較資料流及 CFG successors。
+錯誤的 join 使用、branch 目標／arguments／condition、entry predecessor、
+duplicate blocks、terminator 位置及 loop use-before-def 在兩套檢查均被拒絕。
+
+以下是先前單 block 匯出功能的測試記錄：
 
 | 工具 | 檢查 | 結果 |
 | --- | --- | --- |

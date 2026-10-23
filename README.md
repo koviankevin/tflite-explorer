@@ -12,9 +12,9 @@
 
 圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會在本機 Worker 檢查來源與子圖的語法／SSA；失敗時顯示行、欄與原因，停止下載。此結構檢查不取代 LLVM 或內部 dialect verifier，完整範圍見 [驗證說明](docs/mlir-verification.md)。下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
 
-MLIR 切圖以同一 block 的 1～32 個 operations 為範圍；選到含 region 的 op 時保留其完整 region。跨 block 分支、獨立的 region terminator 或需外部 symbol 定義的選取會明確拒絕，不產生缺少相依內容的檔案。可保留已選取的 `func.return`，但必須涵蓋全部子圖輸出。匯出不轉換 TFLite、不跑推論，也不保證子圖執行等同原程式：memory effects、dialect verifier 和外部 runtime 仍由公司工具處理。只呈現各 block 的 SSA 資料流，尚不分析跨 block 控制流程、記憶體別名或 symbol call graph。任意 dialect 的自訂簡寫語法、bytecode 和大型 resource payload 不保證可讀；不支援時回報解析位置，不猜測接線。
+單 block MLIR 切圖以同一 block 的 1～32 個 operations 為範圍；選到含 region 的 op 時保留其完整 region。多 block function 則自動匯出所在 `func.func` 的全部 blocks，保留分支、迴圈、block arguments、returns 和 custom op 原文；介面會標明擴大的匯出範圍。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。Pattern 搜尋仍逐 block 進行。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly、bytecode 和大型 resource payload 不保證可讀；不支援時回報位置，不猜測接線。
 
-可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的顯示擴充、parser 替換位置與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
+可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的 region kind、isolation、successor operands、terminator 與自訂 verifier 可從 `src/mlir-dialect-registry.js` 接入，來源與匯出重驗共用同一 registry，無需修改搜尋器。顯示擴充、parser 替換位置、介面範例與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
 
 ## 匯出 TFLite 子模型
 

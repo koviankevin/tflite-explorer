@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { parseMLIR } from '../src/mlir-engine.js';
 import { exportMLIR } from '../src/mlir-export.js';
 import { validateMLIRText } from '../src/mlir-validate.js';
-import { MLIR_BRANCH, MLIR_EXPORT_BRANCH, MLIR_SCOPES, MLIR_REPEATED_RETURN } from './mlir-fixture.mjs';
+import { MLIR_BRANCH, MLIR_EXPORT_BRANCH, MLIR_SCOPES, MLIR_REPEATED_RETURN, MLIR_CFG_DIAMOND, MLIR_CFG_LOOP, MLIR_CFG_FORWARD, MLIR_CFG_SWITCH } from './mlir-fixture.mjs';
 
 // This suite runs the real C++ parser/verifier, independently of Netron.
 // MLIR_OPT is an executable path; MLIR_OPT_COMMAND is a JSON argv array for
@@ -22,14 +22,19 @@ const compiler = (text,allowUnknown=true) => {
     return result;
 };
 const extracted = async (source,nodes,graph=0) => (await exportMLIR(await parse(source),graph,nodes)).blob.text();
-const topology = index=>index.graphs.map(g=>({
+const topology = index=>index.graphs.map((g,i)=>({
     operators:g.graph.nodes.map(n=>n.type.name),
     edges:g.next.map(set=>[...set].sort((a,b)=>a-b)),
     inputs:g.graph.inputs.map(a=>a.value.map(v=>v.type.spelling)),
-    outputs:g.graph.outputs.map(a=>a.value.map(v=>v.type.spelling))
+    outputs:g.graph.outputs.map(a=>a.value.map(v=>v.type.spelling)),
+    successors:(index.mlir.graphs[i].block.operations.at(-1)?.successors || []).map(s=>index.mlir.ir.byBlock.get(index.mlir.graphs[i].block).blocks.findIndex(b=>b.name===(s.label || s.name)))
 }));
 
 for (const [name,source,nodes,graph] of [
+    ['CFG diamond and custom operations',MLIR_CFG_DIAMOND,[0],1],
+    ['CFG loop with carried block arguments',MLIR_CFG_LOOP,[0],1],
+    ['CFG non-textual dominance and forward references',MLIR_CFG_FORWARD,[0],1],
+    ['CFG switch and multiple return paths',MLIR_CFG_SWITCH,[0],2],
     ['branch and join',MLIR_BRANCH,[0,1,2,3],0],
     ['two boundary inputs and two outputs',MLIR_BRANCH,[1,2],0],
     ['all selected including func.return',MLIR_BRANCH,[0,1,2,3,4],0],
@@ -44,6 +49,25 @@ for (const [name,source,nodes,graph] of [
     const result=compiler(text);
     assert.equal(result.status,0,result.stderr);
     assert.deepEqual(topology(await parse(result.stdout)),topology(await parse(text)));
+});
+
+for(const [name,source,mutate] of [
+    ['sibling result used at join',MLIR_CFG_DIAMOND,t=>t.replace('"company.finish"(%merged)','"company.finish"(%left_value)')],
+    ['undefined successor',MLIR_CFG_DIAMOND,t=>t.replace('[^join]','[^missing]')],
+    ['branch operand arity',MLIR_CFG_DIAMOND,t=>t.replace('"cf.br"(%left_value)[^join] : (i32)','"cf.br"()[^join] : ()')],
+    ['branch operand type',MLIR_CFG_DIAMOND,t=>t.replace('^join(%merged: i32)','^join(%merged: i64)')],
+    ['condition type',MLIR_CFG_DIAMOND,t=>t.replace('function_type = (i1, i32)','function_type = (i32, i32)').replace('%cond: i1','%cond: i32').replace(': (i1) -> ()',': (i32) -> ()')],
+    ['entry predecessor',MLIR_CFG_DIAMOND,t=>t.replace('[^join]','[^entry]')],
+    ['duplicate block',MLIR_CFG_DIAMOND,t=>t.replace('^right:','^left:')],
+    ['operation after branch',MLIR_CFG_DIAMOND,t=>t.replace('^right:','"company.effect"() : () -> ()\n^right:')],
+    ['loop result used before definition',MLIR_CFG_LOOP,t=>t.replace('"company.step"(%iteration)','"company.step"(%next)')],
+    ['switch argument segments',MLIR_CFG_SWITCH,t=>t.replace('array<i32: 1, 1>','array<i32: 2, 0>')]
+]) test(`real MLIR verifier and local CFG checks reject ${name}`,options,async()=>{
+    const text=mutate(source);
+    await assert.rejects(validateMLIRText(text,{metadata}),error=>error.name==='MLIRValidationError');
+    const result=compiler(text);
+    assert.notEqual(result.status,0,result.stdout);
+    assert.ok(result.stderr);
 });
 
 for (const [name,mutate,diagnostic] of [

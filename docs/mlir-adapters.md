@@ -66,11 +66,76 @@ parser implementation，回傳 `indexModel()` 可接受的 model，並保留
 Parser 必須提供不可變的定義型別、每個 operand 使用型別及原文範圍；
 不可用被覆寫的 display `value.type` 代替。驗證失敗回傳 `MLIRValidationError`
 的結構化 diagnostics，worker 原樣交給介面呈現，成功後才建立 Blob。
-目前不擷取 symbol dependencies 或跨 block 控制流程；遇到
-symbol references、successors 或獨立 yield／branch terminator 會明確拒絕。
+多 block function 匯出會自動擴大為整個 enclosing `func.func`，逐字保留全部
+blocks、successors、block arguments、returns、properties 與 attributes。介面
+在選取計數與匯出按鈕標明範圍。Symbol dependencies 和獨立 region terminator
+仍明確拒絕，不猜測外部 symbol 的定義。
 規格參考 [MLIR Language Reference](https://mlir.llvm.org/docs/LangRef/#operations)。
 
 本機驗證與 compiler 驗證的範圍及重跑方式見 [MLIR 驗證說明](mlir-verification.md)。
 
 詳細資料的單一 attribute 預覽最多 16 Ki 字元，避免大型 dense／string
 payload 傳入圖形面板；匯出仍擷取完整原文，不使用截短的預覽文字。
+
+## 控制流程與 dialect 驗證介面
+
+公司版本在 `src/mlir-dialect-registry.js` 匯入本機 adapter。Worker 開檔、
+顯示、來源驗證、匯出結果重驗證都共用同一份 registry。`mlir-ir.js` 整理
+region 與 SSA identity；`mlir-dialects.js` 集中處理語意。搜尋與匯出器不需
+加入公司 op 名稱。模型檔不能載入 JavaScript，adapter 不經網路動態執行。
+
+```js
+// company-dialect.js — 僅放在公司版本
+export const companyDialect = {
+    namespace: 'company',
+    describeOperation({ name, attributes, scope }) { return []; },
+    operationSemantics({ name, op }) {
+        if (name === 'company.region') {
+            return { isolated: true, regionKind: 'ssacfg' };
+        }
+        if (name === 'company.br') {
+            return {
+                terminator: true,
+                branch: true,
+                successorOperands({ uses }) {
+                    if (op.successors.length !== 1) throw new Error('需要一個 successor');
+                    return [uses]; // 此例所有 operands 傳給唯一 successor
+                }
+            };
+        }
+        if (name === 'company.finish') return { terminator: true };
+        return {};
+    }
+};
+// mlir-dialect-registry.js
+// import { companyDialect } from './company-dialect.js';
+// export const mlirDialects = [companyDialect];
+```
+
+`operationSemantics` 是同步的 build-time hook，可回傳：
+
+| 欄位 | 契約 |
+| --- | --- |
+| `isolated` | true 禁止 region 擷取外層 SSA；op 本身的 operands 仍可使用外層值 |
+| `regionKind` | `ssacfg` 或 `graph`，也可為 `(regionIndex) => kind` |
+| `terminator` | 宣告 block 結束，後面不得有其他 operation |
+| `branch` | 分支操作，必須提供 `successorOperands` |
+| `successorOperands({op,uses,typeOf})` | 每個 successor 對應一組原始 SSA uses，順序與 `op.successors` 相同；失敗可 throw Error。核心檢查目標、entry predecessor、argument 數量與型別 |
+| `verify({op,uses,typeOf})` | 回傳 `{code,message}[]` 補充公司規則，不可回傳 Promise |
+
+`uses` 含原始名稱、結果編號、使用型別和 source range；`op` 是 parser 原始
+operation，可讀取 `getAttr()`、`regions`、`successors`。不要用顯示 attributes
+預覽或被覆寫的 tensor 型別實作驗證。每個 namespace 註冊一個 adapter，集中
+dispatch op 名稱。Adapter 規則錯誤時應拒絕匯出，不能猜測成功。
+
+內建規則包含 `builtin.module`、`func.func`／`func.return`、generic
+`cf.br`／`cf.cond_br`／`cf.switch`。未知 branch 即使能畫圖，也會要求 adapter，
+因為 successor 名稱不足以知道 operands 如何傳到每個 block arguments。
+未知多 block region 依 MLIR 規則檢查 SSA dominance；單 block 未註冊 region
+採保守 SSA 順序檢查，公司 op 若為 graph region 應明確宣告 `regionKind:'graph'`。
+Graph region 不允許多 blocks。完整 ODS 規則、memory effects、region branch
+interfaces 和 private verifiers 不在目前通用檢查範圍。
+
+新增 adapter 至少測 diamond／loop 的 argument routing、錯誤路由、isolation、
+region kind、SSA shadowing、diagnostics、匯出 round trip，並以公司的 compiler
+驗證同一份檔案。Custom assembly 仍須先由 compiler 轉為 generic 格式。

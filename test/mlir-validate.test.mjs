@@ -71,11 +71,11 @@ test('errors in another function do not suppress or block the selected function 
     assert.equal(exported.validation.passed,true);
 });
 
-test('multi-block regions fail explicitly instead of claiming dominance verification',async()=>{
+test('multi-block regions require a registered custom terminator rule',async()=>{
     const text='"acme.region"() ({\n^bb0:\n"cf.br"() [^bb1] : () -> ()\n^bb1:\n"acme.yield"() : () -> ()\n}) : () -> ()';
     const index=await parse(text);
-    assert.ok(codes(validateMLIR(index)).includes('CFG_UNSUPPORTED'));
-    await assert.rejects(exportMLIR(index,0,[0]),error=>error.validation?.diagnostics.some(item=>item.code==='CFG_UNSUPPORTED'));
+    assert.ok(codes(validateMLIR(index)).includes('CFG_TERMINATOR_UNSUPPORTED'));
+    await assert.rejects(exportMLIR(index,0,[0]),error=>error.validation?.diagnostics.some(item=>item.code==='CFG_TERMINATOR_UNSUPPORTED'));
 });
 
 test('verification runs on both source and generated text, and reports progress before download',async()=>{
