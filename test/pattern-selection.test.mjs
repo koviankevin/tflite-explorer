@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {layerLocation,updateLayerSelection} from '../src/pattern-selection.js';
+import {layerLocation,updateLayerSelection,selectionRectangle,layersInRectangle} from '../src/pattern-selection.js';
 import {parseMLIR} from '../src/mlir-engine.js';
 import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot} from '../src/mlir-pattern.js';
 import {exportPatterns,parsePatternFile} from '../src/pattern-library.js';
@@ -44,4 +44,20 @@ test('ordinary TFLite and single-block MLIR nodes retain their local selection i
     assert.deepEqual(layerLocation({node:{identifier:'12'},index:12},3),{graph:3,node:12});
     assert.equal(layerLocation({node:{identifier:'bad'},index:NaN},0),null);
     assert.equal(layerLocation({node:{diagramKind:'operator',sourceGraph:1},index:'b1:n0'},0),null);
+});
+
+test('rectangle selection works in every drag direction and clips to the visible graph viewport',()=>{
+    const bounds={left:100,top:150,right:700,bottom:600},expected={left:120,top:180,right:650,bottom:580};
+    for(const [start,end] of [[{x:120,y:180},{x:650,y:580}],[{x:650,y:580},{x:120,y:180}],[{x:120,y:580},{x:650,y:180}],[{x:650,y:180},{x:120,y:580}]])assert.deepEqual(selectionRectangle(start,end,bounds),expected);
+    assert.deepEqual(selectionRectangle({x:120,y:180},{x:1000,y:10},bounds),{left:120,top:150,right:700,bottom:180});
+    const nodes=[{location:{graph:0,node:0},rect:{left:110,top:170,right:160,bottom:200}},{location:{graph:1,node:0},rect:{left:620,top:550,right:690,bottom:610}},{location:{graph:2,node:0},rect:{left:650,top:180,right:680,bottom:210}}];
+    assert.deepEqual(layersInRectangle(nodes,expected).map(c=>c.location),[{graph:0,node:0},{graph:1,node:0}],'overlap selects across blocks; mere boundary contact does not');
+    assert.deepEqual(layersInRectangle(nodes,{left:120,right:120,top:180,bottom:580}),[]);
+});
+
+test('rectangle-selected layers are added once and never replace an existing block selection',()=>{
+    const selected=new Map([[4,new Set([9])]]),candidates=[{location:{graph:0,node:0},rect:{left:10,top:10,right:30,bottom:30}},{location:{graph:1,node:0},rect:{left:40,top:40,right:70,bottom:60}}];
+    const hits=layersInRectangle(candidates,{left:0,top:0,right:100,bottom:100}).map(c=>c.location);
+    updateLayerSelection(selected,hits);updateLayerSelection(selected,hits);
+    assert.deepEqual([...selected],[[4,new Set([9])],[0,new Set([0])],[1,new Set([0])]]);
 });

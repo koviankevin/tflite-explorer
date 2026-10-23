@@ -22,6 +22,8 @@
 
 在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 32 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；多 block MLIR 匯出仍保留完整 function。
 
+選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 32 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
+
 跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱、型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
 
 搜尋與 source SSA／dominance 檢查全在 Worker 執行；未知 branch 需 dialect adapter，無效 CFG 不會猜測接線。搜尋可取消，最多 50,000 筆、2,000,000 次候選／完整比對檢查，達限時顯示結果可能不完整。跨 block JSON 使用 version 2，保留結構節點與有類型的連線；version 1 的單 block patterns 仍可匯入。檔案不含模型／SSA 名稱、權重或原始 IR。
