@@ -63,11 +63,13 @@ mlir.ModelFactory = class {
                 const buffer = new _.MemoryBuffer(decoder, context.identifier);
                 sourceMgr.addNewSourceBuffer(buffer);
                 const state = new _.ParserState(sourceMgr, config);
+                // Model Lens retains source spans, not reconstructed display attributes.
+                if (context.buildMLIRModel) state.modelLensSource = { operations: new WeakMap(), types: new WeakMap(), attributes: new WeakMap(), uses: [], declarations: [], resources: [], symbols: [] };
                 const parser = new _.TopLevelOperationParser(state);
                 const block = new _.Block();
                 parser.parse(block);
                 // Model Lens adapter keeps each region/block in its own search scope.
-                if (context.buildMLIRModel) return context.buildMLIRModel(block);
+                if (context.buildMLIRModel) return context.buildMLIRModel(block, state.modelLensSource);
                 const model = new mlir.Model(config, 'MLIR', '', block, state.attributeAliasDefinitions);
                 return model;
             }
@@ -1036,6 +1038,7 @@ _.Operation = class {
         this.operands = state.operands;
         this.regions = state.regions;
         this.propertiesAttr = state.propertiesAttr;
+        this.successors = state.successors;
         this.loc = state.location;
         this.results = [];
         if (Array.isArray(state.types)) {
@@ -2827,6 +2830,7 @@ _.Lexer = class {
         token.kind = kind;
         token.spelling.value = value;
         token.spelling.position = this._position;
+        token.end = this._currentPosition;
         return token;
     }
 };
@@ -3429,10 +3433,10 @@ _.Parser = class {
     }
 
     parseType() {
-        if (this.getToken().is(_.Token.l_paren)) {
-            return this.parseFunctionType();
-        }
-        return this.parseNonFunctionType();
+        const start = this.getToken().loc.position;
+        const type = this.getToken().is(_.Token.l_paren) ? this.parseFunctionType() : this.parseNonFunctionType();
+        if (this.state.modelLensSource && type) this.state.modelLensSource.types.set(type, [start, this.state.modelLensSource.lastEnd]);
+        return type;
     }
 
     parseOptionalType() {
@@ -3627,7 +3631,7 @@ _.Parser = class {
         if (this.getToken().is(_.Token.l_paren)) {
             return this.parseTypeListParens();
         }
-        const type = this.parseNonFunctionType();
+        const type = this.parseType();
         if (type) {
             return [type];
         }
@@ -3725,6 +3729,13 @@ _.Parser = class {
     }
 
     parseAttribute(type = null) {
+        const start = this.getToken().loc.position;
+        const attr = this.parseAttributeValue(type);
+        if (this.state.modelLensSource && attr && typeof attr === 'object') this.state.modelLensSource.attributes.set(attr, [start, this.state.modelLensSource.lastEnd]);
+        return attr;
+    }
+
+    parseAttributeValue(type = null) {
         switch (this.getToken().kind) {
             case _.Token.kw_affine_map: {
                 this.consumeToken(_.Token.kw_affine_map);
@@ -4336,6 +4347,7 @@ _.Parser = class {
                     continue;
             }
         } while (nestedPunctuation.length > 0);
+        if (this.state.modelLensSource) this.state.modelLensSource.lastEnd = decoder.position;
         this.resetToken(decoder.position);
         return chars.join('');
     }
@@ -4360,6 +4372,10 @@ _.Parser = class {
     consumeToken(kind) {
         if (kind !== undefined && this.state.curToken.kind !== kind) {
             this.emitError(`ConsumeToken: Expected '${kind}'`);
+        }
+        if (this.state.modelLensSource) {
+            this.state.modelLensSource.lastEnd = this.state.curToken.end;
+            if (this.state.curToken.kind === _.Token.at_identifier) this.state.modelLensSource.symbols.push([this.state.curToken.loc.position, this.state.curToken.end]);
         }
         this.state.curToken = this.state.lex.lexToken();
     }
@@ -4458,6 +4474,7 @@ _.TopLevelOperationParser = class extends _.Parser {
     }
 
     parseAttributeAliasDef() {
+        const start = this.getToken().loc.position;
         const aliasName = this.getToken().getSpelling().str();
         this.consumeToken(_.Token.hash_identifier);
         this.parseToken(_.Token.equal, "Expected '=' in attribute alias definition");
@@ -4469,9 +4486,11 @@ _.TopLevelOperationParser = class extends _.Parser {
             attr = this.parseAttribute();
         }
         this.state.attributeAliasDefinitions.set(aliasName, attr);
+        if (this.state.modelLensSource) this.state.modelLensSource.declarations.push([start, this.state.modelLensSource.lastEnd]);
     }
 
     parseTypeAliasDef() {
+        const start = this.getToken().loc.position;
         const aliasName = this.getTokenSpelling().str();
         this.consumeToken(_.Token.exclamation_identifier);
         this.parseToken(_.Token.equal, "Expected '=' in type alias definition");
@@ -4481,9 +4500,11 @@ _.TopLevelOperationParser = class extends _.Parser {
         }
         const type = this.parseType();
         this.state.typeAliasDefinitions.set(aliasName, type);
+        if (this.state.modelLensSource) this.state.modelLensSource.declarations.push([start, this.state.modelLensSource.lastEnd]);
     }
 
     parseFileMetadataDictionary() {
+        const start = this.getToken().loc.position;
         this.consumeToken(_.Token.file_metadata_begin);
         this.parseCommaSeparatedListUntil(_.Token.file_metadata_end, () => {
             const keyLoc = this.getToken().loc;
@@ -4501,6 +4522,7 @@ _.TopLevelOperationParser = class extends _.Parser {
             }
         });
         this.state.dialectResources.clear();
+        if (this.state.modelLensSource) this.state.modelLensSource.resources.push([start, this.state.modelLensSource.lastEnd]);
     }
 };
 
@@ -5067,9 +5089,11 @@ _.OperationParser = class extends _.Parser {
                 }
                 // Visualization-specific addition to store the name for display
                 result.name = subRes === 0 ? resIt[0] : `${resIt[0]}.${subRes}`;
+                if (this.state.modelLensSource) result.modelLensSSAName = resIt[1] > 1 ? `${resIt[0]}#${subRes}` : resIt[0];
                 this.addDefinition(new _.UnresolvedOperand(resIt[2], resIt[0], subRes), result);
             }
         }
+        if (this.state.modelLensSource) this.state.modelLensSource.operations.set(op, [loc.position, this.state.modelLensSource.lastEnd]);
         return op;
     }
 
@@ -5255,6 +5279,7 @@ _.OperationParser = class extends _.Parser {
     }
 
     parseSSAUse(allowResultNumber = true) {
+        const start = this.getToken().loc.position;
         const name = this.getTokenSpelling().str();
         this.parseToken(_.Token.percent_identifier, "Expected SSA operand");
         let number = 0;
@@ -5269,7 +5294,9 @@ _.OperationParser = class extends _.Parser {
                 this.emitError(`Invalid SSA value result number '${value}'`);
             }
         }
-        return new _.UnresolvedOperand(null, name, number);
+        const operand = new _.UnresolvedOperand(null, name, number);
+        if (this.state.modelLensSource) operand.sourceRange = [start, this.state.modelLensSource.lastEnd];
+        return operand;
     }
 
     resolveSSAUse(unresolvedOperand, type) {
@@ -5283,6 +5310,7 @@ _.OperationParser = class extends _.Parser {
                 if (type && entry.value) {
                     entry.value.type = type;
                 }
+                if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value: entry.value });
                 return entry.value;
             }
             const value = new _.Value(unresolvedOperand.toString(), type);
@@ -5290,6 +5318,7 @@ _.OperationParser = class extends _.Parser {
                 entries.length = unresolvedOperand.number + 1;
             }
             entries[unresolvedOperand.number] = { value, loc: unresolvedOperand.location };
+            if (this.state.modelLensSource && unresolvedOperand.sourceRange) this.state.modelLensSource.uses.push({ range: unresolvedOperand.sourceRange, value });
             return value;
         }
         // Handle literal operands (e.g., integer literals for buildable types)
@@ -5332,6 +5361,7 @@ _.OperationParser = class extends _.Parser {
                         arg.loc = loc;
                     }
                     block.arguments.push(arg);
+                    if (this.state.modelLensSource) this.addDefinition({ name: value, number: 0, location: null }, arg);
                     this.consumeIf(_.Token.comma);
                 }
             }
@@ -5406,6 +5436,7 @@ _.OperationParser = class extends _.Parser {
                         arg.loc = loc;
                     }
                     nextBlock.arguments.push(arg);
+                    if (this.state.modelLensSource) this.addDefinition({ name: value, number: 0, location: null }, arg);
                     this.consumeIf(_.Token.comma);
                 }
             }

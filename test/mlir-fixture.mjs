@@ -9,6 +9,11 @@ export const MLIR_BRANCH = `"builtin.module"() ({
   }) : () -> ()
 }) : () -> ()`;
 
+export const MLIR_EXPORT_BRANCH = '!T = tensor<2x!internal.elem<foo,bar>>\n#cfg = #internal.layout<packed>\n'+
+    MLIR_BRANCH.replaceAll('tensor<2xf32>', '!T').replace('{tag = "custom op"}',
+        '<{count = 9223372036854775807 : i64}> {tag = "中文😀 custom %input", config = #cfg, data = dense<[1.0, 2.0]> : tensor<2xf32>}')+
+    '\n#loc = loc("fixture.mlir":7:3)';
+
 export const MLIR_SCOPES = `"builtin.module"() ({
   "func.func"() <{sym_name = "first", function_type = () -> ()}> ({
     %x = "acme.input"() : () -> tensor<?x4xf32>

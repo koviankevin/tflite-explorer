@@ -14,6 +14,7 @@ const typeSpelling = type => {
     return type?.elementType ? text.replace(spelling(type.elementType),typeSpelling(type.elementType)) : text;
 };
 const ssaName = value => {
+    if (value.modelLensSSAName) return value.modelLensSSAName;
     const siblings = value.owner?.results;
     if (siblings?.length > 1 && siblings.every((item,i)=>item.name === siblings[0].name+(i ? `.${i}` : ''))) return `${siblings[0].name}#${value.resultNumber}`;
     return value.name || value.value;
@@ -50,8 +51,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
     const start = performance.now();
     const source = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
     const graphs = [];
+    const exportGraphs = [];
+    let sourceInfo;
     progress('解析 MLIR operations 與 SSA 資料流');
-    const build = root => {
+    const build = (root, info) => {
+        sourceInfo = info;
         const visitBlock = (block, path) => {
             const graph = { name: path, type: 'graph', inputs: [], outputs: [], nodes: [], metadata: [] };
             const values = new Map();
@@ -61,6 +65,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                 return values.get(name);
             };
             const operations = block.operations || [];
+            const exportOperations = [];
             for (const arg of block.arguments || []) { const name=ssaName(arg); graph.inputs.push(argument(name, value(name, arg.type))); }
             const containers = [];
             for (const op of operations) {
@@ -73,7 +78,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                 for (const operand of op.operands || []) { const name=ssaName(operand); node.inputs.push(argument(name, value(name, operand.type))); }
                 for (const result of op.results || []) { const name=ssaName(result); node.outputs.push(argument(name, value(name, result.type))); }
                 if (/\.(return|yield)$/.test(name)) graph.outputs.push(...node.inputs);
-                for (const [key, attr] of op.getAttrDictionary()) node.attributes.push({ name: key, type: 'string', value: spelling(attr) });
+                for (const [key, attr] of op.getAttrDictionary()) {
+                    const range = info.attributes.get(attr);
+                    const raw = range ? source.slice(...range) : spelling(attr);
+                    node.attributes.push({ name: key, type: 'string', value: raw.startsWith('"') && typeof attr.value === 'string' ? attr.value : raw });
+                }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });
                 node.metadata.push({ name: 'scope', value: path, type: 'string' });
                 for (const dialect of dialects) if (name.startsWith(`${dialect.namespace}.`)) {
@@ -81,6 +90,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                     if (extra) node.attributes.push(...extra);
                 }
                 graph.nodes.push(node);
+                exportOperations.push(op);
                 if (op.regions?.length) containers.push({ op, path: `${path}/#${id} ${name}` });
             }
             if (graph.nodes.length || (block.arguments || []).length) {
@@ -92,6 +102,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                     if (produced.has(name) && !used.has(name)) graph.outputs.push(argument(name, v));
                 }
                 graphs.push(graph);
+                exportGraphs.push({ block, operations: exportOperations });
             }
             for (const { op, path: owner } of containers) for (let r=0; r<(op.regions || []).length; r++) {
                 const blocks = op.regions[r].blocks || [];
@@ -105,5 +116,5 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, graphs: exportGraphs, metadata }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
 }

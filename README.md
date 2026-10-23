@@ -10,7 +10,9 @@
 
 讀取文字 `.mlir`（UTF-8，最多 64 MiB），優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。
 
-圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。MLIR 不顯示 TFLite 子模型匯出按鈕，worker 也拒絕此操作；本版不匯出局部 `.mlir`、不轉換 TFLite、不跑推論。只呈現各 block 的 SSA 資料流，尚不分析跨 block 控制流程、記憶體別名或 symbol call graph。任意 dialect 的自訂簡寫語法、bytecode 和大型 resource payload 不保證可讀；不支援時回報解析位置，不猜測接線。
+圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會自動重新解析，下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
+
+MLIR 切圖以同一 block 的 1～32 個 operations 為範圍；選到含 region 的 op 時保留其完整 region。跨 block 分支、獨立的 region terminator 或需外部 symbol 定義的選取會明確拒絕，不產生缺少相依內容的檔案。可保留已選取的 `func.return`，但必須涵蓋全部子圖輸出。匯出不轉換 TFLite、不跑推論，也不保證子圖執行等同原程式：memory effects、dialect verifier 和外部 runtime 仍由公司工具處理。只呈現各 block 的 SSA 資料流，尚不分析跨 block 控制流程、記憶體別名或 symbol call graph。任意 dialect 的自訂簡寫語法、bytecode 和大型 resource payload 不保證可讀；不支援時回報解析位置，不猜測接線。
 
 可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的顯示擴充、parser 替換位置與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
 

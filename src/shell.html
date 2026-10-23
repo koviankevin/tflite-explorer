@@ -31,7 +31,7 @@
       <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
-    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 分開檢視。可圈選及匯出 pattern JSON；暫不匯出局部 MLIR 或 TFLite。</p>
+    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 分開檢視。可匯出 pattern JSON 或圈選的局部 MLIR；外部 SSA 值會成為子圖輸入。</p>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
