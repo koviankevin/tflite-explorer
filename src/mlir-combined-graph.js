@@ -1,9 +1,9 @@
-import {serialize} from './model-engine.js?v=6e7883d91ddec2ad';
+import {serialize} from './model-engine.js?v=625940cb85314a87';
 
 // Display projection only. The source AST, block-local indexes and export
 // selections remain unchanged. SSA identity comes from the validated region,
 // never from a printed name (which may be reused in other scopes).
-export function combinedMLIRSnapshot(index,item,entry,{full=false}={}) {
+export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContext=false}={}) {
     const graphs=new Set(item.blocks.map(b=>b.graph)),chosen=new Map(),nodes=[],values=new Map(),focus={},links=[];
     const arg=(name,value)=>({name,value:[value]});
     const group=g=>`block ${g}`;
@@ -46,7 +46,7 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false}={}) {
         }
         for(const n of [...chosen.get(g)].sort((a,b)=>a-b)) {
             const op=source.operations[n],original=display.nodes[n],row=index.mlir.ir.byOp.get(op);
-            const node={...serialize(original),identifier:`b${g}:n${n}`,group:group(g),sourceGraph:g,sourceNode:n,diagramKind:'operator',inputs:[],outputs:[]};
+            const node={...serialize(original),identifier:`b${g}:n${n}`,group:group(g),sourceGraph:g,sourceNode:n,diagramKind:'operator',controlTerminator:!!op.successors?.length,inputs:[],outputs:[]};
             for(const [i,use] of row.uses.entries())node.inputs.push(arg(original.inputs[i]?.name || 'operand',rawValue(use.value,original.inputs[i]?.value[0])));
             for(const [i,value] of (op.results || []).entries())node.outputs.push(arg(original.outputs[i]?.name || 'result',rawValue(value,original.outputs[i]?.value[0])));
             nodes.push(node);ops.set(entry.opIds.get(op),node);focus[g].push(node.identifier);
@@ -54,21 +54,30 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false}={}) {
         }
         if(!focus[g].length)focus[g].push(header.identifier);
     }
-    const routes=new Map(),controls=entry.edges.filter(e=>e.kind==='control' && graphs.has(entry.nodes[e.from].graph) && graphs.has(entry.nodes[e.to].graph));
+    const routes=new Map(),controls=entry.edges.filter(e=>e.kind==='control' && (boundaryContext ? graphs.has(entry.nodes[e.from].graph) || graphs.has(entry.nodes[e.to].graph) : graphs.has(entry.nodes[e.from].graph) && graphs.has(entry.nodes[e.to].graph)));
     if(controls.length>512)throw new Error('此匹配的控制出口超過 512 個；請縮小 pattern。');
+    const boundary=g=>{
+        if(!headers.has(g)) {
+            const node=synthetic(`outside:b${g}`,`外部 block ${g} · ${index.graphs[g].graph.name.split('/').at(-1)}`,g,'boundary');
+            node.description='未展開的外部 block；控制流程及各出口的 SSA 傳值依實際 IR 保留。';
+            nodes.push(node);headers.set(g,node);
+        }
+        return headers.get(g);
+    };
     for(const edge of controls) {
         const from=entry.nodes[edge.from].graph,to=entry.nodes[edge.to].graph,s=Number(edge.port);
-        const source=index.mlir.graphs[from],term=source.operations.find(op=>op.successors?.length),op=ops.get(entry.opIds.get(term));
+        const source=index.mlir.graphs[from],term=source.operations.find(op=>op.successors?.length),op=graphs.has(from)?ops.get(entry.opIds.get(term)):boundary(from);
         if(!op)throw new Error('找不到控制流程的來源 terminator。');
         const route=synthetic(`route:${from}:${s}`,`出口 ${s} → block ${to}`,from,'route');
+        route.targetGraph=to;
         route.description='此節點表示實際 successor 邊及其 block argument 傳值，不是原始 MLIR operator。';
         nodes.push(route);routes.set(`${from}:${s}`,route);
         connect(op,route,token(`branch:${from}:${s}`,`block ${from} · 出口 ${s}`),true);
-        connect(route,headers.get(to),token(`control:${from}:${s}`,`控制 ${from} → ${to} · 出口 ${s}`),true);
+        connect(route,boundary(to),token(`control:${from}:${s}`,`控制 ${from} → ${to} · 出口 ${s}`),true);
     }
     const rawValues=new Map([...entry.values].map(([raw,loc])=>[`${loc.id}:${loc.port}`,raw]));
     for(const edge of entry.edges)if(edge.kind==='argument') {
-        const target=argumentsById.get(edge.to),[port,s]=edge.port.split(':').map(Number),source=entry.nodes[edge.from];
+        const destination=entry.nodes[edge.to],target=argumentsById.get(edge.to) || (boundaryContext && !graphs.has(destination.graph) && headers.get(destination.graph)),[port,s]=edge.port.split(':').map(Number),source=entry.nodes[edge.from];
         if(!target)continue;
         {
             const from=edge.branch,raw=rawValues.get(`${edge.from}:${port}`),route=routes.get(`${from}:${s}`);
@@ -76,14 +85,24 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false}={}) {
             const template=source.kind==='operator'?index.graphs[source.graph].graph.nodes[source.node].outputs[port]?.value[0]:index.graphs[source.graph].graph.inputs[source.slot]?.value[0];
             const input=rawValue(raw,template);
             if(!route.inputs.some(a=>a.value[0]===input))route.inputs.push(arg(input.name,input));
-            const binding=token(`binding:${from}:${s}:${edge.to}`,`${input.name} → ${target.outputs[0].value[0].name} · 出口 ${s}`);
-            binding.type=serialize(target.outputs[0].value[0].type);
+            const targetValue=target.diagramKind==='boundary'?index.graphs[destination.graph].graph.inputs[destination.slot].value[0]:target.outputs[0].value[0];
+            const binding=token(`binding:${from}:${s}:${edge.to}`,`${input.name} → ${targetValue.name} · 出口 ${s}`);
+            binding.type=serialize(targetValue.type);
             connect(route,target,binding);
         }
+    }
+    if(boundaryContext)for(const [raw,value] of values) {
+        const location=entry.values.get(raw),source=location && entry.nodes[location.id],header=source && headers.get(source.graph);
+        if(header?.diagramKind==='boundary' && !header.outputs.some(a=>a.value.includes(value)))header.outputs.push(arg(value.name,value));
     }
     const produced=new Set(nodes.flatMap(n=>n.outputs.flatMap(a=>a.value))),inputs=new Map();
     for(const node of nodes)for(const a of node.inputs)for(const value of a.value)if(!produced.has(value))inputs.set(value.identifier,arg(`邊界輸入 · ${value.name}`,value));
     const selected=item.blocks.flatMap(b=>b.path.map(n=>`b${b.graph}:n${n}`));
-    const graph={name:`跨 block 匹配 · ${graphs.size} blocks`,groups:true,nodes,inputs:[...inputs.values()],outputs:[],metadata:[]};
+    const outputs=[],externalUses=new Set(entry.edges.filter(e=>e.kind==='ssa' && !ops.has(e.to)).map(e=>`${e.from}:${e.port.split(':')[0]}`));
+    if(boundaryContext)for(const [raw,value] of values) {
+        const location=entry.values.get(raw),owner=location && (ops.get(location.id) || argumentsById.get(location.id));
+        if(owner && externalUses.has(`${location.id}:${location.port}`))outputs.push(arg(`邊界輸出 · ${value.name}`,value));
+    }
+    const graph={name:`跨 block 匹配 · ${graphs.size} blocks`,groups:true,nodes,inputs:[...inputs.values()],outputs,metadata:[]};
     return {graph:serialize(graph),graphIndex:item.graph,nodes:nodes.map(n=>n.identifier),selected,total,full,combined:true,focus,links,item:{...item,connections:[]}};
 }

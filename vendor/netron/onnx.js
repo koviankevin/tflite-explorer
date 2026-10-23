@@ -1,5 +1,5 @@
 
-import * as protobuf from './protobuf.js?v=6e7883d91ddec2ad';
+import * as protobuf from './protobuf.js?v=625940cb85314a87';
 
 const onnx = {};
 
