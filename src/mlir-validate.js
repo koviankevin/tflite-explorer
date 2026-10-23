@@ -1,6 +1,6 @@
-import { parseMLIR, typeSpelling } from './mlir-engine.js?v=c4dfc5271e48ba6a';
-import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js?v=c4dfc5271e48ba6a';
-import { operationSemantics } from './mlir-dialects.js?v=c4dfc5271e48ba6a';
+import { parseMLIR, typeSpelling } from './mlir-engine.js?v=55e14943e19d8b84';
+import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js?v=55e14943e19d8b84';
+import { operationSemantics } from './mlir-dialects.js?v=55e14943e19d8b84';
 
 export const MLIR_VALIDATION_SCOPE = '本機語法／SSA／dominance 檢查；不含 dialect 自訂語意與完整 LLVM verifier';
 const refOf = (name,number=0) => number ? `${name}#${number}` : name;
