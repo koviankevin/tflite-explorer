@@ -1,4 +1,5 @@
-export const operatorKey = (name) => String(name).includes('.') ? String(name).toUpperCase() : String(name).replace(/[^a-z0-9]/gi, '').toUpperCase();
+// Qualified MLIR operation names are identities, including their namespace/case.
+export const operatorKey = (name) => String(name).includes('.') ? String(name) : String(name).replace(/[^a-z0-9]/gi, '').toUpperCase();
 export const LORA_PATTERN = 'Mul0 -> FC -> Add0\nMul0 -> BMM0 -> BMM1 -> Add0';
 // Reuse normalized operator types across searches on the same immutable graph.
 export function operatorIndex(entry) {

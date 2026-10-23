@@ -2,12 +2,12 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="在本機搜尋 TFLite layers、tensors 與 operator 連接模式。" />
+<meta name="description" content="在本機搜尋 TFLite、MLIR operations、SSA values 與連接模式。" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
-<title>模鏡｜TFLite 模型探索</title>
+<title>模鏡｜TFLite・MLIR 模型探索</title>
 <link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
@@ -322,13 +322,13 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉模型</button>
   <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
-  <input id="model-file" type="file" accept=".tflite,.lite" hidden>
+  <input id="model-file" type="file" accept=".tflite,.lite,.mlir" hidden>
 </header>
 <aside class="explorer-panel" aria-label="模型搜尋">
   <div class="panel-heading"><span>探索模型</span><span class="eyebrow">01 / EXPLORE</span></div>
   <div class="tabs" role="tablist" aria-label="搜尋類別">
     <button role="tab" aria-selected="true" data-kind="layers">Layers <span id="layer-count">—</span></button>
-    <button role="tab" aria-selected="false" data-kind="tensors">Tensors <span id="tensor-count">—</span></button>
+    <button role="tab" aria-selected="false" data-kind="tensors"><span id="value-kind-label">Tensors</span> <span id="tensor-count">—</span></button>
     <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
   </div>
   <div class="search-tools">
@@ -348,6 +348,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
       <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
+    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 分開檢視。可圈選及匯出 pattern JSON；暫不匯出局部 MLIR 或 TFLite。</p>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
@@ -374,7 +375,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
-  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite、檢視 tensor，<br>或在模型圖中找出特定的 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建索引，再依需求繪製局部圖。</small></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR，<br>搜尋資料流、圈選及尋找 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite／.mlir 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><button id="open-mlir-demo" class="text-button">試用 MLIR 分支示範 →</button><small>也可以將檔案拖放至此處。<br>TFLite 大型模型先建索引；文字 MLIR 基礎版最多 64 MiB。</small></div>
 </main>
 <div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
 <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>
