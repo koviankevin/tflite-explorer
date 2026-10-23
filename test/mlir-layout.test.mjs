@@ -2,7 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {parseMLIR} from '../src/mlir-engine.js';
-import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot} from '../src/mlir-pattern.js';
+import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot,mlirSliceSnapshot} from '../src/mlir-pattern.js';
+import {exportMLIR} from '../src/mlir-export.js';
 import {layout} from '../vendor/netron/dagre.js';
 import {MLIR_CFG_LOOP} from './mlir-fixture.mjs';
 import {foldPatternSnapshot} from '../src/pattern-fold.js';
@@ -34,6 +35,19 @@ function layoutProjection(graph,{font=14,direction='TB'}={}) {
     layout(nodes,edges,{nodesep:20,ranksep:20,rankdir:direction},{});
     return {nodes,edges};
 }
+
+test('compact single-OP loops retain finite layouts at both font extremes and orientations',async()=>{
+    const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
+    const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
+    const original=await parse(MLIR_CFG_LOOP),exported=await exportMLIR(original,1,[0],{scope:'slice'});
+    const reopened=await parse(await exported.blob.text()),dto=mlirSliceSnapshot(reopened,0);
+    assert.equal(dto.graph.nodes.length,1);
+    for(const font of [14,32])for(const direction of ['TB','LR']) {
+        const placed=layoutProjection(dto.graph,{font,direction});
+        assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+        assert.ok(placed.edges.every(e=>e.points?.length>=2));
+    }
+});
 
 test('a captured custom op in a loop lays out with its external condition and loop-carried SSA',async()=>{
     const index=await parseMLIR(new TextEncoder().encode(MLIR_CFG_LOOP),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});

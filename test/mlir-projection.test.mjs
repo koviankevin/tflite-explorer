@@ -41,7 +41,8 @@ test('existing branch/join/loop pattern keeps exact original ports and excludes 
     assert.equal(matches.items[0].sourceProjection,true);assert.equal(matches.items[0].operatorCount,5);
     assert.deepEqual(captureMLIRPattern(reopened,selections(matches.items[0])),pattern);
     const dto=mlirMatchSnapshot(reopened,matches.items[0]);
-    assert.equal(dto.selected.length,5);assert.ok(dto.links.some(e=>e.from==='route:5:0' && e.to==='b5'));
+    assert.equal(dto.selected.length,5);assert.ok(dto.links.some(e=>e.from==='b5:n0' && e.to==='b5:n0' && e.kind==='control'));
+    assert.ok(mlirMatchSnapshot(reopened,matches.items[0],{sliceDetails:true}).links.some(e=>e.from==='route:5:0' && e.to==='b5'));
     assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='operator' && dto.selected.includes(n.identifier)).some(n=>n.type.name==='arith.constant'),false);
 });
 test('pruned unused original arguments and their branch bindings remain available to old patterns without phantom operators',async()=>{

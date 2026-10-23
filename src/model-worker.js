@@ -26,7 +26,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                     return response.text();
                 }, progress, dialects:mlirDialects
             });
-            send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+            send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
@@ -73,11 +73,18 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if(action==='overviewNode') {
             const node=index.graphs[args.graph]?.graph.nodes[args.node];if(!node)throw new Error('找不到原始 OP。');send(id,serialize(node));
         } else if (action === 'select') {
+            if(index.mlir && args.item.kind==='layers') {
+                const {mlirSliceSnapshot}=await import('./mlir-pattern.js'),dto=mlirSliceSnapshot(index,args.item.graph,args);
+                const selected=`b${args.item.graph}:n${args.item.index}`;
+                if(dto?.nodes.includes(selected)){send(id,{...dto,selected:[selected]});return;}
+            }
             if(args.item.mode==='mlir-cfg') {
                 const {mlirMatchSnapshot}=await import('./mlir-pattern.js');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
             } else {const dto=selectionSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);}
         } else if (action === 'graph') {
-            send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
+            const {mlirSliceSnapshot}=await import('./mlir-pattern.js');
+            const slice=mlirSliceSnapshot(index,args.graph,args);
+            send(id, slice || { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }
     } catch (error) { postMessage({ id, error: error.message || String(error), validation:error.validation }); }
 };

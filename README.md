@@ -66,6 +66,8 @@ node scripts/serve.mjs
 
 原始碼保留在 `main`，網站靜態產物發布至 `gh-pages`。設定 GitHub Pages 的來源為 `gh-pages` 分支根目錄；`.nojekyll` 會保留所有靜態資源。專案網址的子路徑也能使用，程式不依賴網域根路徑。
 
+局部 MLIR 重新開啟時預設為精簡圖，只顯示匯出時圈選的原始 OP。匯出器補上的輸入、輸出有效旗標、block arguments 與控制路由保留在 MLIR 內，圖面將其收起並直接連接原始 OP；分支、匯合與迴圈回跳仍可查看。點「展開輔助節點」可檢視完整 SSA 與控制流程，再點「收起輔助節點」返回。此顯示切換不改動模型、匯出或 pattern 比對。較舊的局部檔案沒有圈選標記，預設顯示可驗證的原始 OP；套用原先儲存的 pattern 後會只顯示該匹配的 OP，或可重新匯出以記錄精確圈選。
+
 ```powershell
 node scripts/build.mjs
 node scripts/publish-github-pages.mjs

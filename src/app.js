@@ -59,7 +59,17 @@ view.options.weights = false;
 view.options.mousewheel = 'zoom';
 view.error = async (error) => { notice(error.message || String(error)); view.show(null); };
 const originalNodeProperties = view.showNodeProperties.bind(view);
-view.showNodeProperties = (node, source) => { if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;} $('tensor-summary').hidden = true; originalNodeProperties(node, source); };
+view.showNodeProperties = (node, source) => {
+    if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;}
+    $('tensor-summary').hidden = true;
+    if(renderedGraph?.compactSlice && Number.isInteger(node.sourceGraph) && Number.isInteger(node.sourceNode)) {
+        const generation=renderGeneration;
+        rpc('overviewNode',{graph:node.sourceGraph,node:node.sourceNode}).then(original=>{
+            if(generation===renderGeneration){hydrate(original,file);originalNodeProperties(original,source);}
+        }).catch(report);return;
+    }
+    originalNodeProperties(node, source);
+};
 const originalTensorProperties = view.showTensorProperties.bind(view);
 const originalConnectionProperties = view.showConnectionProperties.bind(view);
 view.showTensorProperties = (argument, source) => {
@@ -91,6 +101,7 @@ let cfgPattern = null;
 const cfgSelections = new Map();
 let renderedNodes = [];
 let renderedGraph = null;
+let sliceDetails=false;
 let virtualOverview=null;
 function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
@@ -148,6 +159,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();
     ++queryGeneration; ++renderGeneration;
@@ -208,7 +220,10 @@ async function openFile(nextFile) {
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         renderPattern();
         await runSearch();
-        if (file.size < 1024 * 1024 * 1024 && layers <= 500 && model.graphs.length) await drawGraph(0, true);
+        if (model.graphs.length && (model.sliceView || (file.size < 1024 * 1024 * 1024 && layers <= 500))) {
+            await drawGraph(0, true);
+            if(currentGraph!==0 && $('scope').value==='current')await runSearch();
+        }
         else {
             view.show(null);
             $('graph-caption').textContent = '索引已就緒 · 選取結果以繪製局部圖';
@@ -312,7 +327,7 @@ function focusMatchBlock(graph) {
     if(!renderedGraph?.combined || !view.target)return;
     if(graph!==undefined){setCurrentGraph(graph);if(pickingPattern)syncCaptureGraph();}
     for(const {node,element:el} of renderedNodes)el?.classList.toggle('cfg-focused',graph!==undefined && node.sourceGraph===graph);
-    renderMatchBlocks(selection);
+    if(selection?.blocks)renderMatchBlocks(selection);
     if(pickingPattern)refreshPickedNodes();
     const ids=graph===undefined?Object.values(renderedGraph.focus).flat():renderedGraph.focus[graph] || [];
     if(graph===undefined)fitCombinedGraph();
@@ -341,6 +356,11 @@ function decorateCombinedGraph(dto) {
     }
 }
 function refreshPatternFold() {
+    const sliceButton=$('toggle-slice-details');
+    sliceButton.hidden=!renderedGraph?.sliceView || overviewMode;
+    sliceButton.textContent=sliceDetails?'收起輔助節點':'展開輔助節點';
+    sliceButton.setAttribute('aria-expanded',String(sliceDetails));
+    sliceButton.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
     const button=$('toggle-pattern-fold');button.hidden=overviewMode || selection?.kind!=='patterns';
     button.textContent=patternCollapsed?'展開 pattern':'收合 pattern';
     button.setAttribute('aria-expanded',String(!patternCollapsed));
@@ -413,6 +433,10 @@ async function togglePatternFold(collapsed=!patternCollapsed) {
     await selectResult(activeIndex,{forceDraw:true});
 }
 $('toggle-pattern-fold').onclick=()=>togglePatternFold().catch(report);
+$('toggle-slice-details').onclick=()=>{
+    sliceDetails=!sliceDetails;
+    (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full)).catch(report);
+};
 async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
@@ -437,7 +461,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph 
     const metadataOnly = !collapsed && !renderedGraph?.folded && !renderedGraph?.virtual && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
-    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName });
+    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails });
     await queueDraw(dto, generationRender, zoom);
 }
 async function drawGraph(graph, whole = false, zoom) {
@@ -450,7 +474,7 @@ async function drawGraph(graph, whole = false, zoom) {
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
-    const dto = await rpc('graph', { graph, full: whole });
+    const dto = await rpc('graph', { graph, full: whole, sliceDetails });
     await queueDraw(dto, generation, zoom);
 }
 async function queueDraw(dto, generation, zoom) {
@@ -489,6 +513,7 @@ async function queueDraw(dto, generation, zoom) {
             else if(dto.combined || dto.overview)fitCombinedGraph();
             renderedGraph = {
                 index: dto.graphIndex, full: dto.full, graph, combined: dto.combined, focus: dto.focus, folded:dto.folded,
+                sliceView:dto.sliceView,compactSlice:dto.compactSlice,
                 overview:dto.overview,overviewMatches:dto.overviewMatches,
                 nodes: new Map(graph.nodes.map((node) => [node.identifier, node])),
                 values: new Map([...graph.inputs, ...graph.outputs, ...graph.nodes.flatMap((node) => [...node.inputs, ...node.outputs])].flatMap((arg) => arg.value).map((value) => [value.identifier, value]))
@@ -504,10 +529,11 @@ async function queueDraw(dto, generation, zoom) {
         }
         if (!renderedGraph || renderedGraph.index !== dto.graphIndex) return;
         const graph = renderedGraph.graph;
+        if(dto.sliceView && !selection)setCurrentGraph(dto.graphIndex);
         refreshPickedNodes();
         renderOverviewControls(dto);
         $('empty-state').hidden = true;
-        $('graph-caption').textContent = dto.overview?`全模型 · ${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點${dto.overlapCount?` · ${dto.overlapCount} 組重疊`:''}`:dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
+        $('graph-caption').textContent = dto.compactSlice?`精簡圖 · ${dto.item.blocks.length} blocks · ${graph.nodes.length} 個原始 OP · 輔助節點已收起`:dto.overview?`全模型 · ${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點${dto.overlapCount?` · ${dto.overlapCount} 組重疊`:''}`:dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
         const selected = dto.selected.map((index) => renderedGraph.nodes.get(String(index))).filter(Boolean);
         if (dto.detail) {
             dto.detail = renderedGraph.values.get(dto.detail.identifier) || hydrate(dto.detail, file);
@@ -946,8 +972,9 @@ $('graph-select').onchange = async () => {
         if ($('scope').value === 'current') await runSearch();
     } catch (error) { report(error); }
 };
-$('local-graph').onclick = () => {overviewMode=false;$('pattern-overview-controls').hidden=true;(selection ? selectResult(activeIndex, { whole: false }) : drawGraph(currentGraph, false)).catch(report);};
+$('local-graph').onclick = () => {if(renderedGraph?.sliceView)sliceDetails=false;overviewMode=false;$('pattern-overview-controls').hidden=true;(selection ? selectResult(activeIndex, { whole: false,forceDraw:true }) : drawGraph(currentGraph, false)).catch(report);};
 $('full-graph').onclick = () => {
+    if(renderedGraph?.sliceView)sliceDetails=true;
     if(overviewMode){drawPatternOverview({expanded:new Set(renderedGraph.overviewMatches.filter(m=>m.foldable).map(m=>m.index))}).catch(report);return;}
     const layerCount=selection?.blocks?selection.blocks.reduce((n,b)=>n+model.graphs[b.graph].layers,0):model.graphs[currentGraph].layers;
     if(selection?.blocks && layerCount>1500){notice('相關 blocks 超過 1,500 個 operators；請使用局部圖或縮小 pattern。');return;}

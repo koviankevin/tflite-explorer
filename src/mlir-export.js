@@ -94,7 +94,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const body=`${intro} ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  })`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
     const {attachSlicePattern}=await import('./mlir-pattern-projection.js');
-    text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
+    text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{selected:new Set(selected),blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
     const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});
     return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };

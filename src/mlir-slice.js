@@ -142,7 +142,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     if(multiExit)liveExits.forEach((_,i)=>lines.push(`  ${id(`exit_${i}`)} = "arith.constant"() <{value = ${i} : i32}> : () -> i32`));
     const entryValues=[...argumentsOf(blocks[0]).map(v=>({name:inputRef(v),type:type(v)})),...conditional.flatMap(o=>[{name:id(`seed_${o.index}`),type:o.type},{name:id('false'),type:'i1'}])];
     lines.push(`  "cf.br"(${entryValues.map(v=>v.name).join(', ')})[${label(blocks[0])}] : (${entryValues.map(v=>v.type).join(', ')}) -> ()`);
-    const bindings={blocks:new Map(liveBlocks.map((b,i)=>[b,i+1])),operators:new Map(),arguments:new Map()};
+    const bindings={selected,blocks:new Map(liveBlocks.map((b,i)=>[b,i+1])),operators:new Map(),arguments:new Map()};
     for(const b of liveBlocks) {
         lines.push(`${label(b)}(${[...argumentsOf(b).map(v=>({name:name(v),type:type(v)})),...slots(b)].map(v=>`${v.name}: ${v.type}`).join(', ')}):`);
         argumentsOf(b).forEach((v,i)=>bindings.arguments.set(v,i));let position=0;
