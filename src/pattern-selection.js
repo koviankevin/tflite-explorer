@@ -12,7 +12,7 @@ export function layerLocation(entry,graph) {
 
 // Apply a multi-block selection atomically; a bulk add over the limit leaves
 // every existing selection intact. Keep Set identities for block-local views.
-export function updateLayerSelection(selections,locations,{toggle=false,limit=32}={}) {
+export function updateLayerSelection(selections,locations,{toggle=false,limit=32,scopeForGraph}={}) {
     const changes=new Map();let count=[...selections.values()].reduce((n,s)=>n+s.size,0);
     for(const location of locations) {
         if(!location || !Number.isInteger(location.graph) || location.graph<0 || !Number.isInteger(location.node) || location.node<0)throw new Error('選取的 layer 位置無效。');
@@ -23,6 +23,12 @@ export function updateLayerSelection(selections,locations,{toggle=false,limit=32
         count+=Number(next)-Number(selected);return {...location,selected:next};
     });
     if(count>limit)return false;
+    if(scopeForGraph) {
+        const counts=new Map([...selections].map(([graph,nodes])=>[graph,nodes.size]));
+        for(const update of updates)counts.set(update.graph,(counts.get(update.graph)||0)+Number(update.selected)-Number(selections.get(update.graph)?.has(update.node)||false));
+        const scopes=new Set([...counts].filter(([,n])=>n>0).map(([graph])=>scopeForGraph(graph)));
+        if(scopes.has(undefined) || scopes.size>1)throw new Error('選取必須位於同一個 function／region 或 TFLite subgraph；已保留原選取，請縮小選框或清除後重選。');
+    }
     for(const {graph,node,selected} of updates) {
         if(!selections.has(graph))selections.set(graph,new Set());
         if(selected)selections.get(graph).add(node);else selections.get(graph).delete(node);

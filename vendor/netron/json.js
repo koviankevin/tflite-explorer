@@ -1,5 +1,5 @@
 
-import * as text from './text.js?v=505c5538ae9ba327';
+import * as text from './text.js?v=d03c348572c22d80';
 
 const json = {};
 const bson = {};

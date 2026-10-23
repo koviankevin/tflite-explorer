@@ -1,12 +1,12 @@
-import { Host } from '../vendor/netron/browser.js?v=505c5538ae9ba327';
-import { View, Attachment } from '../vendor/netron/view.js?v=505c5538ae9ba327';
-import { hydrate } from './hydrate.js?v=505c5538ae9ba327';
-import {overviewCanvas} from './overview-canvas.js?v=505c5538ae9ba327';
-import { modelFormat } from './model-formats.js?v=505c5538ae9ba327';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=505c5538ae9ba327';
-import {rectangleSelection} from './rectangle-selection.js?v=505c5538ae9ba327';
-import { LORA_PATTERN } from './pattern-utils.js?v=505c5538ae9ba327';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=505c5538ae9ba327';
+import { Host } from '../vendor/netron/browser.js?v=d03c348572c22d80';
+import { View, Attachment } from '../vendor/netron/view.js?v=d03c348572c22d80';
+import { hydrate } from './hydrate.js?v=d03c348572c22d80';
+import {overviewCanvas} from './overview-canvas.js?v=d03c348572c22d80';
+import { modelFormat } from './model-formats.js?v=d03c348572c22d80';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=d03c348572c22d80';
+import {rectangleSelection} from './rectangle-selection.js?v=d03c348572c22d80';
+import { LORA_PATTERN } from './pattern-utils.js?v=d03c348572c22d80';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=d03c348572c22d80';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -40,7 +40,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=505c5538ae9ba327`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=d03c348572c22d80`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -137,7 +137,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=505c5538ae9ba327', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=d03c348572c22d80', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -346,7 +346,7 @@ function refreshPatternFold() {
     button.setAttribute('aria-expanded',String(!patternCollapsed));
     button.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
     button.title=pickingPattern?'完成圈選後即可收合':'保留對外資料與控制連線；點收合節點可展開';
-    $('pick-pattern').disabled=!model || !!renderedGraph?.folded || !!renderedGraph?.overview;
+    $('pick-pattern').disabled=!model || $('target').getAttribute('aria-busy')==='true' || (!virtualOverview && (!!renderedGraph?.folded || !!renderedGraph?.overview));
     $('fold-all-patterns').hidden=!patternSearchReady || kind!=='patterns' || !page.total;
     $('fold-all-patterns').textContent=overviewMode?'返回匹配圖':'收合所有匹配';
     $('fold-all-patterns').disabled=button.disabled;
@@ -365,10 +365,10 @@ function renderOverviewControls(dto) {
     if(!choices.some(m=>m.index===activeIndex))choices.push(dto.overviewMatches[activeIndex]);
     $('overview-match').replaceChildren(...choices.map(overviewOption));
     $('toggle-overview-match').textContent=dto.overviewMatches[activeIndex]?.collapsed?'展開此匹配':'收合此匹配';
-    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個總覽節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.virtual?'Canvas 虛擬總覽只繪製視窗範圍；拖曳平移、滾輪縮放，「全圖」還原總覽。藍色虛線為控制流程。':''}${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}${dto.overviewMatches.length>1500?'下拉選單列前 1,000 組獨立匹配及目前選取；所有結果可從分頁清單定位。':''}未匹配的 OP 保留；需圈選時請返回匹配圖。`;
+    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個總覽節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.virtual?'Canvas 虛擬總覽只繪製視窗範圍；拖曳平移、滾輪縮放，「全圖」還原總覽。選取 pattern 可跨 block 框選已展開的原始 OP，Alt＋拖曳平移；收合節點點開後再選。藍色虛線為控制流程。':''}${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}${dto.overviewMatches.length>1500?'下拉選單列前 1,000 組獨立匹配及目前選取；所有結果可從分頁清單定位。':''}未匹配的 OP 保留。${dto.virtual?'':'需圈選時請返回匹配圖。'}`;
 }
 async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex>=0?activeIndex:0,zoom}={}) {
-    if(!model || !patternSearchReady || pickingPattern)return;
+    if(!model || !patternSearchReady || (pickingPattern && !virtualOverview))return;
     const query=queryGeneration,generation=++renderGeneration;
     $('target').setAttribute('aria-busy','true');refreshPatternFold();status('建立全模型 pattern 總覽…');
     try {
@@ -388,7 +388,7 @@ function focusOverviewMatch(item,index) {
     }
     $('overview-match').value=String(index);$('toggle-overview-match').textContent=match.collapsed?'展開此匹配':'收合此匹配';
     document.querySelectorAll('[data-result-index]').forEach(b=>b.classList.toggle('active',Number(b.dataset.resultIndex)===index));
-    if(virtualOverview){virtualOverview.focus(match.nodes);refreshPatternFold();status(`已在全模型虛擬總覽定位匹配 #${index+1}，其餘節點依視窗載入。`);return;}
+    if(virtualOverview){virtualOverview.focus(match.nodes);if(pickingPattern){if($('capture-cfg').checked)syncCaptureGraph();refreshPickedNodes();}refreshPatternFold();status(`已在全模型虛擬總覽定位匹配 #${index+1}，其餘節點依視窗載入。`);return;}
     const nodes=match.nodes.map(id=>renderedGraph.nodes.get(id)).filter(Boolean);
     const marked=new Set(match.nodes);for(const {node,element:el} of renderedNodes)if(renderedGraph.combined)el?.classList.toggle('cfg-match',marked.has(node.identifier));
     if(view.target)view.target.scrollTo(view.target.select(nodes,'explorer'));
@@ -461,13 +461,14 @@ async function queueDraw(dto, generation, zoom) {
             const previousZoom=virtualOverview?.zoomValue;disposeVirtualOverview();view.target=null;view.show('default');view._sidebar.close();layerMarquee.cancel();
             const graph=dto.graph;view.model={format:model.format,description:model.description,modules:[graph],metadata:[],attachment:new Attachment()};view._path=[{target:graph,signature:null}];renderedGraph={index:dto.graphIndex,full:true,graph,virtual:true,combined:dto.combined,overview:true,folded:dto.folded,overviewMatches:dto.overviewMatches,nodes:new Map(graph.nodes.map(n=>[n.identifier,n])),values:new Map()};
             renderedNodes=graph.nodes.map(n=>({node:n,index:n.identifier}));
-            virtualOverview=overviewCanvas($('target'),dto.layout,{selected:dto.selected,activate:node=>activateOverviewNode(node).catch(report)});
+            renderedGraph.captureScopes=new Map();for(const n of graph.nodes)for(const g of n.sourceGraphs || [n.sourceGraph])if(Number.isInteger(g))renderedGraph.captureScopes.set(g,n.group?.split('/')[0]);
+            virtualOverview=overviewCanvas($('target'),dto.layout,{selected:dto.selected,activate:node=>activateOverviewNode(node).catch(report),capture:commitCanvasLayers});
             if(previousZoom!==undefined || Number.isFinite(zoom))virtualOverview.focus(dto.selected,zoom ?? previousZoom);
             // Netron's detail sidebar emits focus/select/activate events. Keep
             // those events on the Canvas camera instead of a stale SVG target.
             const controller=virtualOverview;
             view.target={on(){},off(){},register(){},unregister(){},selection:new Set(),nodes:new Map(),get zoom(){return controller.zoomValue;},set zoom(value){controller.zoom(value/controller.zoomValue);},select(values){return values || [];},focus(){},blur(){},scrollTo(){},activate(value){view.showTensorProperties(value,'sidebar');return[];}};
-            $('empty-state').hidden=true;$('tensor-summary').hidden=true;renderOverviewControls(dto);$('graph-caption').textContent=`全模型虛擬總覽 · ${dto.nodes.length.toLocaleString()} 節點 · ${dto.collapsedCount.toLocaleString()} 個收合節點`;
+            $('empty-state').hidden=true;$('tensor-summary').hidden=true;renderOverviewControls(dto);refreshPickedNodes();$('graph-caption').textContent=`全模型虛擬總覽 · ${dto.nodes.length.toLocaleString()} 節點 · ${dto.collapsedCount.toLocaleString()} 個收合節點`;
             $('zoom-reset').textContent='全圖';$('local-graph').style.background='';$('full-graph').style.background='#e6eee2';status(`全模型虛擬總覽 · ${dto.nodes.length.toLocaleString()} 節點 · 建立視窗 ${(performance.now()-start).toFixed(0)} ms`);return;
         }
         if (!dto.metadataOnly) {
@@ -537,6 +538,7 @@ async function queueDraw(dto, generation, zoom) {
 }
 async function activateOverviewNode(node) {
     if(node.diagramKind==='pattern'){await activatePatternNode(node);return;}
+    if(pickingPattern){if(node.diagramKind==='operator')commitCanvasLayers([node],{toggle:true});else status('這是控制流程／邊界顯示標記，未加入 pattern；請選取原始 OP。');return;}
     if(node.diagramKind!=='operator')return;
     const controller=virtualOverview,generation=renderGeneration;
     const detail=await rpc('overviewNode',{graph:node.sourceGraph,node:node.sourceNode});
@@ -637,12 +639,13 @@ function applyPattern(pattern) {
 }
 function refreshPickedNodes() {
     document.body.classList.toggle('pattern-picking',pickingPattern);
-    const cfg=model?.graphs[currentGraph]?.cfgExport;
+    const cfg=model?.graphs[($('capture-cfg').checked?captureSelections()[0]?.graph:undefined) ?? currentGraph]?.cfgExport;
     const across=$('capture-cfg').checked,count=across ? [...cfgSelections.values()].reduce((n,set)=>n+set.size,0) : pickedNodes.size;
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=renderedGraph?.combined?'拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。綠色為已選取；控制標記不會存入 pattern。':'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?'拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。綠色為已選取；控制標記不會存入 pattern。':'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;
     if(model?.capabilities?.mlirExport) {
@@ -653,6 +656,7 @@ function refreshPickedNodes() {
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
+    if(virtualOverview)virtualOverview.setPicking(pickingPattern,pickingPattern?renderedNodes.filter(entry=>{const loc=layerLocation(entry,currentGraph);return loc && (across?cfgSelections.get(loc.graph)?.has(loc.node):pickedGraph===loc.graph && pickedNodes.has(loc.node));}).map(entry=>entry.node.identifier):[]);
     for (const entry of renderedNodes) if (entry.element) {
         const location=layerLocation(entry,currentGraph),picked=location && (across?cfgSelections.get(location.graph)?.has(location.node):pickedNodes.has(location.node));
         entry.element.classList.toggle('pattern-picked',!!(pickingPattern && picked));
@@ -733,7 +737,7 @@ function showValidation(validation) {
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
 function setPickingPattern(enabled) {
     layerMarquee.cancel();
-    if (enabled && (!renderedNodes.length || renderedGraph?.folded || renderedGraph?.overview || $('target').getAttribute('aria-busy') === 'true')) { notice('請先返回匹配圖並展開 pattern，等待模型圖繪製完成後再圈選。'); return; }
+    if (enabled && (!renderedNodes.length || (!virtualOverview && (renderedGraph?.folded || renderedGraph?.overview)) || $('target').getAttribute('aria-busy') === 'true')) { notice('請先等待模型圖繪製完成；SVG 收合總覽需返回匹配圖，Canvas 可直接框選。'); return; }
     if(enabled && renderedGraph?.combined)$('capture-cfg').checked=true;
     pickingPattern = enabled;
     if(enabled && $('capture-cfg').checked)syncCaptureGraph();
@@ -748,6 +752,16 @@ function setPickingPattern(enabled) {
     }
     refreshPickedNodes();
     refreshPatternFold();
+}
+function commitCanvasLayers(nodes,{toggle=false}={}) {
+    if(!pickingPattern || $('target').getAttribute('aria-busy')==='true')return;
+    const locations=nodes.map(node=>layerLocation({node,index:node.identifier},currentGraph)).filter(Boolean),across=$('capture-cfg').checked;
+    const selections=across?cfgSelections:new Map([[pickedGraph,pickedNodes]]);
+    try {
+        if(!updateLayerSelection(selections,locations,{toggle,scopeForGraph:g=>model.sourceFormat==='mlir'?renderedGraph.captureScopes.get(g):g})){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
+        if(locations.length){setCurrentGraph(locations[0].graph);if(across)syncCaptureGraph();else{pickedGraph=currentGraph;pickedNodes=selections.get(currentGraph);}}
+        refreshPickedNodes();status(locations.length?`${toggle?'已切換':'已加入框選範圍內'} ${locations.length} 個原始 layers；跨 block 選取會保留，重複 layers 不重複加入。`:'範圍內沒有可選取的原始 OP；收合節點及控制標記未加入。');
+    }catch(error){report(error);}
 }
 function syncCaptureGraph() {
     if(!cfgSelections.has(currentGraph))cfgSelections.set(currentGraph,pickedGraph===currentGraph?pickedNodes:new Set());
@@ -777,7 +791,7 @@ function captureNodeEvent(event) {
     togglePickedNode(location);
 }
 const layerMarquee=rectangleSelection($('target'),{
-    enabled:()=>pickingPattern && $('target').getAttribute('aria-busy')!=='true',
+    enabled:()=>pickingPattern && !virtualOverview && $('target').getAttribute('aria-busy')!=='true',
     candidates:()=>renderedNodes.map(entry=>({element:entry.element,location:layerLocation(entry,currentGraph)})).filter(c=>c.element && c.location),
     commit:locations=>{
         const across=$('capture-cfg').checked,selections=across?cfgSelections:new Map([[currentGraph,pickedNodes]]);
@@ -797,7 +811,7 @@ function renderCaptureBlocks() {
     $('add-capture-block').hidden=!$('capture-cfg').checked;
     $('capture-blocks').replaceChildren(...captureSelections().map(block=>{
         const row=element('div'),button=element('button','text-button',`block ${block.graph} · ${model?.graphs[block.graph]?.name.split('/').at(-1)} · ${block.nodes.length} layers`);
-        button.onclick=()=>renderedGraph?.combined?focusMatchBlock(block.graph):drawGraph(block.graph,full).catch(report);
+        button.onclick=()=>{if(virtualOverview){setCurrentGraph(block.graph);syncCaptureGraph();virtualOverview.focus(renderedNodes.filter(e=>e.node.sourceGraph===block.graph).map(e=>e.node.identifier));refreshPickedNodes();}else if(renderedGraph?.combined)focusMatchBlock(block.graph);else drawGraph(block.graph,full).catch(report);};
         const remove=element('button','icon-button','×');remove.setAttribute('aria-label',`移除 block ${block.graph} 的選取`);
         remove.onclick=()=>{cfgSelections.get(block.graph)?.clear();refreshPickedNodes();};row.append(button,remove);return row;
     }));
@@ -810,6 +824,7 @@ $('add-capture-block').onclick=()=>{
     for(let n=0;n<layers;n++)pickedNodes.add(n);cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();
 };
 function addVisibleLayers(graph) {
+    if(virtualOverview){commitCanvasLayers(virtualOverview.visibleLayers().filter(node=>graph===undefined || node.sourceGraph===graph));return;}
     const locations=renderedNodes.map(entry=>layerLocation(entry,currentGraph)).filter(location=>location && (graph===undefined || location.graph===graph));
     if(!updateLayerSelection(cfgSelections,locations)){notice('加入可見 layers 會超過 32 個 operators；請改為點選需要的 layers。');return;}
     syncCaptureGraph();refreshPickedNodes();
@@ -819,6 +834,7 @@ $('save-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation = renderGeneration;
     const graph = currentGraph;
+    const fromCanvas=!!virtualOverview;
     $('save-capture').disabled = true;
     try {
         const structure = await rpc('capturePattern', $('capture-cfg').checked ? {selections:captureSelections()} : { graph, nodes: [...pickedNodes] });
@@ -830,7 +846,7 @@ $('save-capture').onclick = async () => {
         refreshPatternLibrary(stored ? pattern.name : '');
         applyPattern(pattern); setPickingPattern(false);
         await runSearch();
-        if (page.total) await selectResult(0);
+        if (page.total) {if(fromCanvas)await drawPatternOverview({active:0});else await selectResult(0);}
         if (stored) status(`已儲存「${pattern.name}」· ${pattern.nodes.length} 節點 · ${pattern.edges.length} 連線 · 找到 ${page.total} 筆匹配`);
     } catch (error) { report(error); }
     finally { refreshPickedNodes(); }
@@ -921,7 +937,7 @@ $('graph-select').onchange = async () => {
         if(overviewMode && renderedGraph?.overview) {
             setCurrentGraph(graph);
             const nodes=renderedNodes.filter(e=>e.node.sourceGraph===graph || e.node.sourceGraphs?.includes(graph));
-            if(virtualOverview){virtualOverview.focus(nodes.map(e=>e.node.identifier));status(`已在全模型虛擬總覽定位 subgraph/block ${graph}。`);return;}
+            if(virtualOverview){virtualOverview.focus(nodes.map(e=>e.node.identifier));if(pickingPattern){if($('capture-cfg').checked)syncCaptureGraph();refreshPickedNodes();}status(`已在全模型虛擬總覽定位 subgraph/block ${graph}。`);return;}
             view.target?.scrollTo(nodes.map(e=>e.element).filter(Boolean));status(`已在全模型圖定位 subgraph/block ${graph}。`);return;
         }
         if(renderedGraph?.combined && selection?.blocks?.some(b=>b.graph===graph)){focusMatchBlock(graph);return;}

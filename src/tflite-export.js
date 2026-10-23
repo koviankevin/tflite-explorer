@@ -1,5 +1,5 @@
-import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=505c5538ae9ba327';
-import { FlatbufferWriter } from './flatbuffer-writer.js?v=505c5538ae9ba327';
+import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=d03c348572c22d80';
+import { FlatbufferWriter } from './flatbuffer-writer.js?v=d03c348572c22d80';
 
 export function exportTflite(index, graphIndex, selected, file) {
     if (!index.raw) throw new Error('缺少 TFLite 原始模型資料，請重新開啟模型後匯出。');
