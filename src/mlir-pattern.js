@@ -1,10 +1,10 @@
-import {operationSemantics} from './mlir-dialects.js?v=a98873cac07aed8c';
-import {typeSpelling} from './mlir-engine.js?v=a98873cac07aed8c';
-import {validateMLIR} from './mlir-validate.js?v=a98873cac07aed8c';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=a98873cac07aed8c';
-import {selectionSnapshot} from './model-engine.js?v=a98873cac07aed8c';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=a98873cac07aed8c';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=a98873cac07aed8c';
+import {operationSemantics} from './mlir-dialects.js?v=5adf63a25c141e98';
+import {typeSpelling} from './mlir-engine.js?v=5adf63a25c141e98';
+import {validateMLIR} from './mlir-validate.js?v=5adf63a25c141e98';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=5adf63a25c141e98';
+import {selectionSnapshot} from './model-engine.js?v=5adf63a25c141e98';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=5adf63a25c141e98';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=5adf63a25c141e98';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -172,10 +172,10 @@ export function mlirMatchSnapshot(index,item,options={}) {
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);
 }
 
-export function mlirModelSnapshots(index) {
+export function mlirModelSnapshots(index,{lightweight=false}={}) {
     return projects(index).map(project=>{
         const blocks=project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,i)=>i)}));
         const item={kind:'patterns',mode:CFG_PATTERN_MODE,graph:blocks[0].graph,path:blocks[0].path,blocks};
-        return combinedMLIRSnapshot(index,item,build(index,project),{full:true,maxOperators:20000,maxControlRoutes:20000});
+        return combinedMLIRSnapshot(index,item,build(index,project),{full:true,maxOperators:Infinity,maxControlRoutes:Infinity,lightweight});
     });
 }

@@ -1,6 +1,6 @@
 
-import * as flatbuffers from './flatbuffers.js?v=a98873cac07aed8c';
-import * as text from './text.js?v=a98873cac07aed8c';
+import * as flatbuffers from './flatbuffers.js?v=5adf63a25c141e98';
+import * as text from './text.js?v=5adf63a25c141e98';
 
 const dlc = {};
 

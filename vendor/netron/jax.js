@@ -1,6 +1,6 @@
 
-import * as base from './base.js?v=a98873cac07aed8c';
-import * as flatbuffers from './flatbuffers.js?v=a98873cac07aed8c';
+import * as base from './base.js?v=5adf63a25c141e98';
+import * as flatbuffers from './flatbuffers.js?v=5adf63a25c141e98';
 
 const jax = {};
 
@@ -27,7 +27,7 @@ jax.ModelFactory = class {
             const buffer = new Uint8Array(mlir_module.buffer, mlir_module.byteOffset, mlir_module.byteLength);
             const stream = new base.BinaryStream(buffer);
             const content = context.context('module.mlirbc', stream);
-            const mlir = await import('./mlir.js?v=a98873cac07aed8c');
+            const mlir = await import('./mlir.js?v=5adf63a25c141e98');
             const factory = new mlir.ModelFactory();
             const type = await factory.match(content);
             if (type) {

@@ -1,9 +1,9 @@
-import {serialize} from './model-engine.js?v=a98873cac07aed8c';
+import {serialize} from './model-engine.js?v=5adf63a25c141e98';
 
 // Display projection only. The source AST, block-local indexes and export
 // selections remain unchanged. SSA identity comes from the validated region,
 // never from a printed name (which may be reused in other scopes).
-export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContext=false,maxOperators=1500,maxControlRoutes=512}={}) {
+export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContext=false,maxOperators=1500,maxControlRoutes=512,lightweight=false}={}) {
     const graphs=new Set(item.blocks.map(b=>b.graph)),chosen=new Map(),nodes=[],values=new Map(),focus={},links=[];
     const arg=(name,value)=>({name,value:[value]});
     const group=g=>`block ${g}`;
@@ -20,7 +20,7 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContex
             const loc=entry.values.get(raw),owner=loc && entry.nodes[loc.id];
             const id=loc?`ssa:${loc.id}:${loc.port}`:`external:${values.size}`;
             const name=template?.name || raw?.modelLensSSAName || raw?.name || '?';
-            values.set(raw,{...serialize(template || {}),identifier:id,name:`${owner?`b${owner.graph}`:'外部'}:${name}`,initializer:null});
+            values.set(raw,{...(lightweight?template:serialize(template || {})),identifier:id,name:`${owner?`b${owner.graph}`:'外部'}:${name}`,initializer:null});
         }
         return values.get(raw);
     };
@@ -46,7 +46,7 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContex
         }
         for(const n of [...chosen.get(g)].sort((a,b)=>a-b)) {
             const op=source.operations[n],original=display.nodes[n],row=index.mlir.ir.byOp.get(op);
-            const node={...serialize(original),identifier:`b${g}:n${n}`,group:group(g),sourceGraph:g,sourceNode:n,diagramKind:'operator',controlTerminator:!!op.successors?.length,inputs:[],outputs:[]};
+            const node={...(lightweight?original:serialize(original)),identifier:`b${g}:n${n}`,group:group(g),sourceGraph:g,sourceNode:n,diagramKind:'operator',controlTerminator:!!op.successors?.length,inputs:[],outputs:[]};
             for(const [i,use] of row.uses.entries())node.inputs.push(arg(original.inputs[i]?.name || 'operand',rawValue(use.value,original.inputs[i]?.value[0])));
             for(const [i,value] of (op.results || []).entries())node.outputs.push(arg(original.outputs[i]?.name || 'result',rawValue(value,original.outputs[i]?.value[0])));
             nodes.push(node);ops.set(entry.opIds.get(op),node);focus[g].push(node.identifier);
@@ -104,5 +104,5 @@ export function combinedMLIRSnapshot(index,item,entry,{full=false,boundaryContex
         if(owner && externalUses.has(`${location.id}:${location.port}`))outputs.push(arg(`邊界輸出 · ${value.name}`,value));
     }
     const graph={name:`跨 block 匹配 · ${graphs.size} blocks`,groups:true,nodes,inputs:[...inputs.values()],outputs,metadata:[]};
-    return {graph:serialize(graph),graphIndex:item.graph,nodes:nodes.map(n=>n.identifier),selected,total,full,combined:true,focus,links,item:{...item,connections:[]}};
+    return {graph:lightweight?graph:serialize(graph),graphIndex:item.graph,nodes:nodes.map(n=>n.identifier),selected,total,full,combined:true,focus,links,item:{...item,connections:[]}};
 }

@@ -1,4 +1,4 @@
-import {operatorKey} from './pattern-utils.js?v=a98873cac07aed8c';
+import {operatorKey} from './pattern-utils.js?v=5adf63a25c141e98';
 export const CFG_PATTERN_MODE='mlir-cfg';
 const kinds=new Set(['operator','block','argument']);
 const edgeKinds=new Set(['contains','ssa','argument','control']);

@@ -1,5 +1,5 @@
 
-import * as base from './base.js?v=a98873cac07aed8c';
+import * as base from './base.js?v=5adf63a25c141e98';
 
 const ncnn = {};
 const pnnx = {};
