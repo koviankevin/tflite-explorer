@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { parseMLIR } from '../src/mlir-engine.js';
+import { parseMLIR, MLIR_ATTRIBUTE_PREVIEW_LIMIT } from '../src/mlir-engine.js';
 import { exportMLIR } from '../src/mlir-export.js';
 import { search } from '../src/model-engine.js';
 import { MLIR_BRANCH, MLIR_SCOPES } from './mlir-fixture.mjs';
@@ -108,4 +108,13 @@ test('unsafe selections report concrete errors rather than downloading incomplet
     await assert.rejects(exportMLIR(scopes,1,[0,1]),/terminator/);
     const symbols=await parse('%r = "acme.call"() {callee = @outside} : () -> tensor<2xf32>');
     await assert.rejects(exportMLIR(symbols,0,[0]),/symbol reference/);
+});
+
+test('large attribute previews are bounded while exported attributes remain complete', async () => {
+    const payload='abcdef'.repeat(6000);
+    const {source,reopened}=await roundTrip(`%x = "acme.payload"() {data = "${payload}"} : () -> tensor<2xf32>`,[0]);
+    assert.ok(source.includes(`data = "${payload}"`));
+    const preview=reopened.graphs[0].graph.nodes[0].attributes[0].value;
+    assert.ok(preview.length < MLIR_ATTRIBUTE_PREVIEW_LIMIT+100);
+    assert.ok(preview.endsWith('匯出保留完整原文）'));
 });

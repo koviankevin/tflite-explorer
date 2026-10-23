@@ -65,3 +65,6 @@ parser implementation，回傳 `indexModel()` 可接受的 model，並保留
 的語意驗證。目前不擷取 symbol dependencies 或跨 block 控制流程；遇到
 symbol references、successors 或獨立 yield／branch terminator 會明確拒絕。
 規格參考 [MLIR Language Reference](https://mlir.llvm.org/docs/LangRef/#operations)。
+
+詳細資料的單一 attribute 預覽最多 16 Ki 字元，避免大型 dense／string
+payload 傳入圖形面板；匯出仍擷取完整原文，不使用截短的預覽文字。

@@ -3,6 +3,7 @@ import { Decoder } from '../vendor/netron/text.js';
 import { indexModel } from './model-engine.js';
 
 export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
+export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
 const spelling = value => value === null || value === undefined ? '' : String(value);
 const argument = (name, value) => ({ name, value: [value] });
 const typeSpelling = type => {
@@ -80,8 +81,10 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                 if (/\.(return|yield)$/.test(name)) graph.outputs.push(...node.inputs);
                 for (const [key, attr] of op.getAttrDictionary()) {
                     const range = info.attributes.get(attr);
-                    const raw = range ? source.slice(...range) : spelling(attr);
-                    node.attributes.push({ name: key, type: 'string', value: raw.startsWith('"') && typeof attr.value === 'string' ? attr.value : raw });
+                    const length = range ? range[1]-range[0] : 0;
+                    const raw = range ? source.slice(range[0],Math.min(range[1],range[0]+MLIR_ATTRIBUTE_PREVIEW_LIMIT)) : spelling(attr);
+                    const display = raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw;
+                    node.attributes.push({ name: key, type: 'string', value: length>MLIR_ATTRIBUTE_PREVIEW_LIMIT ? `${display}…（屬性預覽已截短；匯出保留完整原文）` : display });
                 }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });
                 node.metadata.push({ name: 'scope', value: path, type: 'string' });
