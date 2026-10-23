@@ -111,6 +111,8 @@ test('single-block cross-block selection payload still uses the existing local S
     assert.ok(!result.slice);assert.equal(result.layers,1);assert.ok(!text.includes('"acme.split"'));
     const full=await exportMLIR(await parse(MLIR_BRANCH),0,[1],{scope:'function'});
     assert.ok((await full.blob.text()).includes('"acme.split"'));assert.equal(full.controlFlow.blocks,1);
+    const multiple=await parse(MLIR_BRANCH+'\n'+MLIR_BRANCH.replace('"main"','"second"'));
+    await assert.rejects(exportMLIR(multiple,0,[1],{scope:'function',selections:[{graph:0,nodes:[1]},{graph:1,nodes:[1]}]}),/同一個 function/);
 });
 test('slice rejects invalid source dominance, cross-function selection, symbol dependencies and unsupported branch serializers',async()=>{
     const broken=await parse(MLIR_CFG_DIAMOND.replace('"company.custom"(%input)','"company.custom"(%merged)'));

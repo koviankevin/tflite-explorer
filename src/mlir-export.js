@@ -8,6 +8,11 @@ const valueName = value => {
     return value.name || value.value;
 };
 const inside = (range, ranges) => ranges.some(([start,end])=>range[0]>=start && range[1]<=end);
+const functionFor = (index,graph) => {
+    let row=index.mlir.ir.byBlock.get(graph?.block)?.owner;
+    while(row && opName(row.op)!=='func.func')row=row.parent;
+    return row?.op;
+};
 
 // Slice the parsed source, never serialize the lossy display model. Only external
 // SSA uses are renamed, at parser-recorded locations (including nested regions).
@@ -19,13 +24,12 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
         const {exportMLIRSlice}=await import('./mlir-slice.js');
         return exportMLIRSlice(index,selections || [{graph:graphIndex,nodes:nodeIndices}],{progress});
     }
-    if(selections && (!Array.isArray(selections) || selections.some(s=>!Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || graphs[s.graph]?.cfgFunction!==graphs[graphIndex]?.cfgFunction)))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
+    if(selections && (!Array.isArray(selections) || selections.some(s=>!s || !Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || functionFor(index,graphs[s.graph])!==functionFor(index,graphs[graphIndex]))))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
     const graph = graphs[graphIndex];
     if (!graph) throw new Error('找不到目前 MLIR scope。');
     if (!Array.isArray(nodeIndices) || !nodeIndices.length || nodeIndices.length>32 || nodeIndices.some(i=>!Number.isInteger(i) || !graph.operations[i])) throw new Error('請選取 1～32 個同一 scope 的 layers。');
     if(scope==='function' && !graph.cfgFunction) {
-        let owner=index.mlir.ir.byBlock.get(graph.block)?.owner;
-        while(owner && opName(owner.op)!=='func.func')owner=owner.parent;
+        const owner=index.mlir.ir.byOp.get(functionFor(index,graph));
         if(!owner)throw new Error('此 scope 不在 func.func 內，請選擇局部選取。');
         const blocks=index.mlir.ir.regions.filter(r=>r.owner?.context===owner.context).reduce((n,r)=>n+r.blocks.length,0);
         return exportControlFlow(index,graphIndex,{...graph,cfgFunction:owner.op,cfgExport:{blocks,function:owner.op.getAttr('sym_name')?.value || 'function'}},progress);
