@@ -311,8 +311,10 @@ function decorateCombinedGraph(dto) {
     if(!dto.combined)return;
     const marker=$('target').querySelector('#arrowhead')?.cloneNode(true);
     if(marker){marker.id='cfg-control-arrow';$('target').querySelector('defs')?.append(marker);}
+    const matched=new Set(dto.selected.map(String));
     for(const {node,element:el} of renderedNodes) {
         el?.setAttribute('data-block',String(node.sourceGraph));
+        el?.classList.toggle('cfg-match',matched.has(node.identifier));
         if(node.diagramKind!=='operator')el?.classList.add('cfg-context');
     }
     for(const link of dto.links || [])if(link.kind==='control') {
