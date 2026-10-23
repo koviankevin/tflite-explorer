@@ -71,6 +71,11 @@
 #target .cfg-focused > .node-border { stroke: #146aaf !important; stroke-width: 5px !important; vector-effect: non-scaling-stroke; }
 #target.cfg-combined .graph-node.pattern-picked > .node-border { stroke: #18745d !important; stroke-width: 4px !important; vector-effect: non-scaling-stroke; }
 .pattern-picking #target.cfg-combined .cfg-context { cursor: default; }
+#target .pattern-capsule { cursor: pointer; }
+#target .pattern-capsule .node-item-type path { fill: #d9f0e6 !important; }
+#target .pattern-capsule .node-item-type text { fill: #104f3e !important; }
+#target .pattern-capsule > .node-border { stroke: #18745d !important; stroke-width: 3px !important; vector-effect: non-scaling-stroke; }
+#target .pattern-capsule:focus-visible > .node-border { stroke: #146aaf !important; stroke-width: 5px !important; }
 .pattern-picking #target { cursor: crosshair; }
 .layer-selection-box { position: fixed; z-index: 20; pointer-events: none; border: 2px solid #18745d; background: #18745d18; box-sizing: border-box; }
 .layer-selection-box span { position: absolute; top: 3px; left: 3px; padding: 3px 6px; border-radius: 3px; background: #fff; color: #103d30; font: 12px/1.4 system-ui, sans-serif; white-space: nowrap; }

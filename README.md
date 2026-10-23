@@ -18,6 +18,8 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 ### 跨 block pattern
 
+點選搜尋結果後，可用圖上方「收合 pattern」將目前匹配收成一個節點；點節點或按 Enter／Space 重新展開。支援 TFLite 與 MLIR。收合僅改變顯示，搜尋結果、圈選來源及匯出仍使用原始 OP；需先展開才能圈選。MLIR 一併收起相關 block 標頭、內部 arguments、控制標記與必要 terminators，保留各個對外 SSA、分支出口及傳值。跨越 pattern 邊界的迴圈仍顯示去向與回跳；完全位於內部的迴圈在展開後查看。圖上以「外部 block」標示未展開的相鄰控制範圍，不會將省略的 OP 當成匹配內容。
+
 在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 32 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。
 
 點跨 block 結果會將相關 blocks 畫在同一張圖，以區塊框線區分範圍。藍色虛線顯示實際控制出口與迴圈回跳，實線顯示 SSA 和 block argument 傳值；出口與 argument 顯示節點是檢視用標記，不會寫入原始 IR 或匯出檔。點 block 按鈕直接在同圖定位並保留排版與縮放；「全部 blocks」重新縮放以檢視總覽。預設局部圖只含匹配 operators、必要 terminators、block arguments 與相關 blocks 之間的 successor；省略的資料來源標成邊界輸入，不會跨越省略 blocks 畫假連線。完整圖展開相關 blocks 的所有 operators，最多 1,500 operators、512 個控制出口。

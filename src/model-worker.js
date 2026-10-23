@@ -3,6 +3,7 @@ import { openModelFile } from './model-adapters.js';
 import { mlirDialects } from './mlir-dialect-registry.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
+import {foldPatternSnapshot} from './pattern-fold.js';
 let index;
 let results = [];
 let generation = 0;
@@ -62,8 +63,8 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'select') {
             if(args.item.mode==='mlir-cfg') {
-                const {mlirMatchSnapshot}=await import('./mlir-pattern.js');send(id,mlirMatchSnapshot(index,args.item,args));
-            } else send(id, selectionSnapshot(index, args.item, args));
+                const {mlirMatchSnapshot}=await import('./mlir-pattern.js');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
+            } else {const dto=selectionSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);}
         } else if (action === 'graph') {
             send(id, { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }

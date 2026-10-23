@@ -7,6 +7,7 @@ import {exportMLIR} from '../src/mlir-export.js';
 import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot} from '../src/mlir-pattern.js';
 import {MLIR_CFG_DIAMOND,MLIR_CFG_LOOP,MLIR_BRANCH} from './mlir-fixture.mjs';
 import {exportPatterns,parsePatternFile} from '../src/pattern-library.js';
+import {validateMLIR} from '../src/mlir-validate.js';
 const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
 const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
 const selections=item=>item.blocks.map(b=>({graph:b.graph,nodes:b.path}));
@@ -100,4 +101,64 @@ test('added ABI arguments cannot enable a new match that is absent from the orig
     const plain=await parse(plainText),abiPattern=captureMLIRPattern(plain,[{graph:5,nodes:[0]}]);
     assert.equal((await findMLIRPatterns(plain,abiPattern)).items.length,1);
     assert.equal((await findMLIRPatterns(reopened,abiPattern)).items.length,0,'do not union added ABI structure with source matching');
+});
+
+const changedConnections=[
+    ['swapped branch destinations',s=>s.replace('[^left, ^right]','[^right, ^left]'),s=>s.replace('[^ml_slice_b1, ^ml_slice_b2]','[^ml_slice_b2, ^ml_slice_b1]')],
+    ['a different merge input',s=>s.replace('"cf.br"(%left_value)','"cf.br"(%input)'),s=>s.replace('"cf.br"(%left_value,','"cf.br"(%input,')],
+    ['a removed loop backedge',s=>s.replace('[^loop, ^exit]','[^exit, ^exit]'),s=>s.replace(/^.*"cf\.cond_br".*\[\^ml_slice_b4, \^ml_slice_b5\].*$/m,line=>line.replace('(%cond, %next,','(%cond,').replace('[^ml_slice_b4, ^ml_slice_b5]','[^ml_slice_b5, ^ml_slice_b5]').replace('array<i32: 1, 5, 4>','array<i32: 1, 4, 4>').replace(': (i1, i32,',': (i1,'))],
+    ['a different loop-carried value',s=>s.replace('(%cond, %next, %next)','(%cond, %iteration, %next)'),s=>s.replace('"cf.cond_br"(%cond, %next,','"cf.cond_br"(%cond, %iteration,')]
+];
+async function checkedCount(index,pattern,expected) {
+    assert.deepEqual(validateMLIR(index).diagnostics,[]);
+    const result=await findMLIRPatterns(index,pattern);
+    assert.equal(result.items.length,expected);
+    const signatures=result.items.map(item=>JSON.stringify(item.blocks.map(b=>[b.graph,[...b.path].sort((a,b)=>a-b)]).sort((a,b)=>a[0]-b[0])));
+    assert.equal(new Set(signatures).size,expected,'each physical occurrence must be returned exactly once');
+    if(process.env.MLIR_OPT) {
+        const opt=spawnSync(process.env.MLIR_OPT,['--allow-unregistered-dialect','--mlir-print-op-generic'],{input:index.mlir.source,encoding:'utf8',windowsHide:true,timeout:30000,maxBuffer:8*1024*1024});
+        if(opt.error)throw opt.error;assert.equal(opt.status,0,opt.stderr);
+        assert.equal((await findMLIRPatterns(await parse(opt.stdout),pattern)).items.length,expected);
+    }
+    return result;
+}
+for(const [label,mutate,mutateExport] of changedConnections)test(`portable mixed pattern rejects ${label} before and after a newly sealed slice`,async()=>{
+    const original=await parse(mixed);
+    const [pattern]=parsePatternFile(exportPatterns([{name:'saved before slicing',...captureMLIRPattern(original,mixedSelection)}]));
+    await checkedCount(original,pattern,1);
+    const changed=mutate(mixed);assert.notEqual(changed,mixed);
+    const changedIndex=await parse(changed);await checkedCount(changedIndex,pattern,0);
+    const fresh=await slice(changedIndex,mixedSelection);
+    assert.equal(fresh.reopened.mlir.slicePatterns.size,1,'negative must have valid new provenance, not merely an invalid annotation');
+    await checkedCount(fresh.reopened,pattern,0);
+    const good=await slice(original,mixedSelection),stale=mutateExport(good.text);assert.ok(stale!==good.text,'exported body mutation must change the IR');
+    const staleIndex=await parse(stale);assert.equal(staleIndex.mlir.slicePatterns.size,0);
+    await checkedCount(staleIndex,pattern,0);
+});
+
+test('two mixed occurrences and four connected near-misses retain exact counts across portable import, slicing and compiler printing',async()=>{
+    const original=await parse(mixed);
+    const [pattern]=parsePatternFile(exportPatterns([{name:'old mixed structure',...captureMLIRPattern(original,mixedSelection)}]));
+    const copies=[mixed,mixed,...changedConnections.map(([,mutate])=>mutate(mixed))].map((source,i)=>source.replace('sym_name = "diamond"',`sym_name = "case_${i}"`));
+    const combined=await parse(copies.join('\n'));await checkedCount(combined,pattern,2);
+    const parts=[];
+    for(const [i,source] of copies.entries()) {
+        const part=await slice(source,mixedSelection);await checkedCount(part.reopened,pattern,i<2?1:0);
+        parts.push(part.text.replace('sym_name = "extracted"',`sym_name = "slice_${i}"`));
+    }
+    const reopened=await parse(parts.join('\n'));
+    assert.equal(reopened.mlir.slicePatterns.size,6);
+    const result=await checkedCount(reopened,pattern,2);
+    assert.ok(result.items.every(item=>item.sourceProjection && item.operatorCount===5 && item.blocks.length===5));
+    for(const item of result.items)for(const block of item.blocks)assert.equal((await findMLIRPatterns(reopened,pattern,String(block.graph))).items.length,1);
+    const again=[];
+    for(const item of result.items)again.push((await slice(reopened,selections(item))).text);
+    await checkedCount(await parse(again.join('\n')),pattern,2);
+});
+
+test('identical branch operator types do not duplicate a physical mixed loop occurrence after slicing',async()=>{
+    const original=await parse(mixed.replaceAll('company.custom_long_name_with_attributes','company.custom'));
+    const [pattern]=parsePatternFile(exportPatterns([{name:'symmetric branch types',...captureMLIRPattern(original,mixedSelection)}]));
+    await checkedCount(original,pattern,1);
+    await checkedCount((await slice(original,mixedSelection)).reopened,pattern,1);
 });

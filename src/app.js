@@ -58,7 +58,7 @@ view.options.weights = false;
 view.options.mousewheel = 'zoom';
 view.error = async (error) => { notice(error.message || String(error)); view.show(null); };
 const originalNodeProperties = view.showNodeProperties.bind(view);
-view.showNodeProperties = (node, source) => { $('tensor-summary').hidden = true; originalNodeProperties(node, source); };
+view.showNodeProperties = (node, source) => { if(node.diagramKind==='pattern'){togglePatternFold(false).catch(report);return;} $('tensor-summary').hidden = true; originalNodeProperties(node, source); };
 const originalTensorProperties = view.showTensorProperties.bind(view);
 const originalConnectionProperties = view.showConnectionProperties.bind(view);
 view.showTensorProperties = (argument, source) => {
@@ -109,6 +109,7 @@ let activeIndex = -1;
 let selection;
 let currentGraph = 0;
 let full = false;
+let patternCollapsed = false;
 let queryGeneration = 0;
 let renderGeneration = 0;
 let renderQueue = Promise.resolve();
@@ -144,7 +145,7 @@ function createWorker() {
 function reset() {
     exportBusy = false; $('validation-dialog').close();
     ++queryGeneration; ++renderGeneration;
-    stopWorker(); model = null; file = null; selection = null; activeIndex = -1;
+    stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     pickedNodes.clear(); cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
     $('export-match').hidden = true; $('export-match').disabled = true;
@@ -230,6 +231,7 @@ async function runSearch() {
     const generation = ++queryGeneration;
     activeIndex = -1;
     selection = null;
+    refreshPatternFold();
     $('match-blocks').hidden=true;
     $('export-match').hidden = true;
     status(kind === 'patterns' ? '搜尋連接模式中…' : '搜尋中…');
@@ -328,6 +330,20 @@ function decorateCombinedGraph(dto) {
         edge?.element?.classList.add('cfg-control');edge?.labelElement?.classList.add('cfg-control-label');
     }
 }
+function refreshPatternFold() {
+    const button=$('toggle-pattern-fold');button.hidden=selection?.kind!=='patterns';
+    button.textContent=patternCollapsed?'展開 pattern':'收合 pattern';
+    button.setAttribute('aria-expanded',String(!patternCollapsed));
+    button.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
+    button.title=pickingPattern?'完成圈選後即可收合':'保留對外資料與控制連線；點收合節點可展開';
+    $('pick-pattern').disabled=!model || !!renderedGraph?.folded;
+}
+async function togglePatternFold(collapsed=!patternCollapsed) {
+    if(selection?.kind!=='patterns' || pickingPattern)return;
+    patternCollapsed=collapsed;
+    await selectResult(activeIndex,{forceDraw:true});
+}
+$('toggle-pattern-fold').onclick=()=>togglePatternFold().catch(report);
 async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
@@ -346,14 +362,18 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph 
     setCurrentGraph(targetGraph); renderMatchBlocks(item);
     const generationRender = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
-    const metadataOnly = !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
+    refreshPatternFold();
+    const collapsed=item.kind==='patterns' && patternCollapsed;
+    const metadataOnly = !collapsed && !renderedGraph?.folded && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
-    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph });
+    const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
+    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName });
     await queueDraw(dto, generationRender, zoom);
 }
 async function drawGraph(graph, whole = false, zoom) {
     if (!model) return;
     setCurrentGraph(graph); full = whole; selection = null;
+    refreshPatternFold();
     $('match-blocks').hidden=true;
     $('export-match').hidden = true;
     const generation = ++renderGeneration;
@@ -381,7 +401,7 @@ async function queueDraw(dto, generation, zoom) {
             if (Number.isFinite(zoom) && view.target) view.target.zoom = zoom;
             else if(dto.combined)fitCombinedGraph();
             renderedGraph = {
-                index: dto.graphIndex, full: dto.full, graph, combined: dto.combined, focus: dto.focus,
+                index: dto.graphIndex, full: dto.full, graph, combined: dto.combined, focus: dto.focus, folded:dto.folded,
                 nodes: new Map(graph.nodes.map((node) => [node.identifier, node])),
                 values: new Map([...graph.inputs, ...graph.outputs, ...graph.nodes.flatMap((node) => [...node.inputs, ...node.outputs])].flatMap((arg) => arg.value).map((value) => [value.identifier, value]))
             };
@@ -398,13 +418,13 @@ async function queueDraw(dto, generation, zoom) {
         const graph = renderedGraph.graph;
         refreshPickedNodes();
         $('empty-state').hidden = true;
-        $('graph-caption').textContent = dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
+        $('graph-caption').textContent = dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
         const selected = dto.selected.map((index) => renderedGraph.nodes.get(String(index))).filter(Boolean);
         if (dto.detail) {
             dto.detail = renderedGraph.values.get(dto.detail.identifier) || hydrate(dto.detail, file);
             tensorSummary(dto.detail); view.showTensorProperties(dto.detail, 'sidebar');
         }
-        else if (selected.length === 1) { $('tensor-summary').hidden = true; view.showNodeProperties(selected[0], 'sidebar'); }
+        else if (selected.length === 1 && !dto.folded) { $('tensor-summary').hidden = true; view.showNodeProperties(selected[0], 'sidebar'); }
         else { $('tensor-summary').hidden = true; view._sidebar.close(); }
         if (view.target) {
             const values = dto.detail ? [dto.detail] : selected;
@@ -425,7 +445,7 @@ async function queueDraw(dto, generation, zoom) {
         $('local-graph').style.background = dto.full ? '' : '#e6eee2'; $('full-graph').style.background = dto.full ? '#e6eee2' : '';
     });
     try { await renderQueue; }
-    finally { if (generation === renderGeneration) $('target').setAttribute('aria-busy', 'false'); }
+    finally { if (generation === renderGeneration) { $('target').setAttribute('aria-busy', 'false'); refreshPatternFold(); } }
 }
 function tensorSummary(value) {
     if (!value?.type) { $('tensor-summary').hidden = true; return; }
@@ -547,6 +567,15 @@ function refreshPickedNodes() {
         } else {
             for (const attribute of ['role', 'tabindex', 'aria-label', 'aria-pressed']) entry.element.removeAttribute(attribute);
         }
+        if(entry.node.diagramKind==='pattern') {
+            entry.element.classList.add('pattern-capsule');entry.element.setAttribute('role','button');entry.element.setAttribute('tabindex','0');
+            entry.element.setAttribute('aria-expanded','false');entry.element.setAttribute('aria-label',`展開 pattern：${entry.node.name}`);
+            if(!entry.element.dataset.foldActivation) {
+                entry.element.dataset.foldActivation='true';
+                entry.element.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();togglePatternFold(false).catch(report);},true);
+            }
+            entry.element.onkeydown=event=>{if(event.key==='Enter' || event.key===' '){event.preventDefault();event.stopPropagation();togglePatternFold(false).catch(report);}};
+        }
     }
 }
 $('export-submodel').onclick = async () => {
@@ -608,7 +637,7 @@ function showValidation(validation) {
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
 function setPickingPattern(enabled) {
     layerMarquee.cancel();
-    if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }
+    if (enabled && (!renderedNodes.length || renderedGraph?.folded || $('target').getAttribute('aria-busy') === 'true')) { notice('請先展開 pattern，等待模型圖繪製完成後再圈選。'); return; }
     if(enabled && renderedGraph?.combined)$('capture-cfg').checked=true;
     pickingPattern = enabled;
     if(enabled && $('capture-cfg').checked)syncCaptureGraph();
@@ -622,6 +651,7 @@ function setPickingPattern(enabled) {
         status('拖曳框選加入 layers，可跨 block；點選取消，Alt＋拖曳平移，Esc 取消正在拖曳的選框。');
     }
     refreshPickedNodes();
+    refreshPatternFold();
 }
 function syncCaptureGraph() {
     if(!cfgSelections.has(currentGraph))cfgSelections.set(currentGraph,pickedGraph===currentGraph?pickedNodes:new Set());
