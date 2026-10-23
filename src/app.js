@@ -574,7 +574,7 @@ async function downloadSubmodel(graph, nodes, selections) {
             if(result.slice) {
                 const added=result.slice.added.length ? ` 補入迴圈必要運算：${[...new Set(result.slice.added)].join('、')}（${result.slice.added.length} 個）。` : '';
                 const conditional=result.slice.conditionalOutputs ? ` ${result.slice.conditionalOutputs} 個條件輸出以 (valid, value) 回傳；未執行時 valid=false，需提供同型別備援輸入。` : '';
-                notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解。`);
+                notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解，並保留既有 pattern 所需的結構對照。`);
                 status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
                 return;
             }

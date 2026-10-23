@@ -142,11 +142,14 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     if(multiExit)liveExits.forEach((_,i)=>lines.push(`  ${id(`exit_${i}`)} = "arith.constant"() <{value = ${i} : i32}> : () -> i32`));
     const entryValues=[...argumentsOf(blocks[0]).map(v=>({name:inputRef(v),type:type(v)})),...conditional.flatMap(o=>[{name:id(`seed_${o.index}`),type:o.type},{name:id('false'),type:'i1'}])];
     lines.push(`  "cf.br"(${entryValues.map(v=>v.name).join(', ')})[${label(blocks[0])}] : (${entryValues.map(v=>v.type).join(', ')}) -> ()`);
+    const bindings={blocks:new Map(liveBlocks.map((b,i)=>[b,i+1])),operators:new Map(),arguments:new Map()};
     for(const b of liveBlocks) {
         lines.push(`${label(b)}(${[...argumentsOf(b).map(v=>({name:name(v),type:type(v)})),...slots(b)].map(v=>`${v.name}: ${v.type}`).join(', ')}):`);
-        for(const op of b.operations)if(retained.has(op))lines.push('  '+snippets(op));
-        if(branches.has(b))lines.push('  '+branch(b));
+        argumentsOf(b).forEach((v,i)=>bindings.arguments.set(v,i));let position=0;
+        for(const op of b.operations)if(retained.has(op)){bindings.operators.set(op,position++);lines.push('  '+snippets(op));}
+        if(branches.has(b)){bindings.operators.set(branches.get(b).op,position);lines.push('  '+branch(b));}
         else {
+            if(selected.has(b.operations.at(-1)))bindings.operators.set(b.operations.at(-1),position);
             const values=[...(multiExit?[id(`exit_${liveExits.indexOf(b)}`)]:[]),...outputs.flatMap(o=>o.conditional ? (o.block===b?[id('true'),ref(o.value)]:[id(`valid_${o.index}_${blockNumbers.get(b)}`),id(`value_${o.index}_${blockNumbers.get(b)}`)]) : [ref(o.value)])];
             lines.push(`  "func.return"(${values.join(', ')}) : (${resultTypes.join(', ')}) -> ()`);
         }
@@ -157,7 +160,11 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
         ...(multiExit?['// result 0: original exit ordinal (0-based)']:[]),
         ...outputs.map(o=>`// output ${o.index}: results [${o.results.join(', ')}] = ${JSON.stringify(name(o.value))}${o.conditional?' = (valid: i1, value); false means the supplied seed is inactive.':''}`),
         ...liveBlocks.map(b=>`// block ${label(b)} = ${JSON.stringify(b.name || 'entry')}`)];
-    const text=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}> ({\n${lines.join('\n')}\n}) : () -> ()\n}) : () -> ()\n${resources}\n`;
+    const intro=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}>`;
+    const body=`${intro} ({\n${lines.join('\n')}\n})`;
+    let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js');
+    text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects});
     return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};

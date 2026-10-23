@@ -133,5 +133,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    if(source.includes('model_lens.slice_pattern')) {
+        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js');
+        await prepareSlicePatterns(index);
+    }
+    index.stats.parseMs=performance.now()-start;
+    return index;
 }

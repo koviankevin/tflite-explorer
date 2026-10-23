@@ -81,11 +81,33 @@ SSA 外部值變成函式輸入，cyclic CFG 內必要的 producer 會遞迴保�
 有效性與資料皆透過額外 block arguments 傳遞，不產生 undef／poison。
 多 return 出口以第一個 i32 結果回傳原始出口編號。註解及回傳 metadata 記錄
 輸入來源、條件輸出及實際 result positions。SSA／CFG 重建後仍須通過相同驗證。
-此新介面可能改變嚴格跨 block pattern 的 block argument arity／slot；原 pattern
-需要相同介面時應選完整 function，否則在新模型重新圈選。未知 memory effects
+新版局部檔案帶有原始結構對照，既有跨 block pattern 可沿用；原始函式介面需要
+完全相同時使用完整 function。未知 memory effects
 與原函式 ABI 不推斷。最多 4096 原始 blocks、128 資料輸出、131072 個條件值
 block 傳遞組合；無可達出口、跨 function、獨立 nested block 選取與 symbol
 dependencies 明確拒絕，不猜測可執行語意。
+
+### 匯出後的 pattern 相容性
+
+`mlir-pattern-projection.js` 在 `func.func` 的 discardable string attribute
+`model_lens.slice_pattern` 保存 version 1 結構對照，最多 2 MiB。內容只有已保留
+operator 的真實位置、原始相對順序、block／argument arity／slot 與帶 ports 的
+SSA／argument／CFG 邊，不含來源模型、權重或被刪除運算的候選節點。被裁掉但屬於
+原 block 介面的 arguments 可作邏輯比對節點；額外 entry、seed、valid、return
+介面不會混入原始圖。單 block 擷取與再次局部匯出也會保留／攤平同一份來源結構。
+
+解析器一次驗證 schema、真實 op 類型／位置／順序、普通資料 op 的 SSA ports、
+真實 CFG 出口與 SHA-256 結構摘要。摘要綁定實際 body 和對照，不依 SSA 名稱、
+block 標籤或排版；MLIR compiler 原樣 print/parse 可沿用。這是自包含資料完整性
+檢查，並非來源身分或歷史的數位簽章，不執行模型提供的程式碼。摘要或對照失效時
+只比對實際結構；原有 SSA／dominance 檢查仍先執行。若公司 pass 改變結構或移除
+這個屬性，需要從原模型重新匯出才能取得新的有效對照。
+
+Matcher 共用既有 typed adjacency 索引、取消及工作上限，同時支援原始結構與實際
+介面所建立的 patterns；按實際 operators 和 CFG 路徑去重，不重複列出同一匹配。
+來源結構命中標示「原始結構」，點選仍以實際 IR 的 blocks、ports、控制箭頭顯示。
+一般 MLIR 不改變嚴格規則；舊 pattern JSON schema／localStorage 不需升級。
+較早未帶對照的局部 MLIR 無法恢復已裁掉的 slots，需從原模型重新匯出一次。
 規格參考 [MLIR Language Reference](https://mlir.llvm.org/docs/LangRef/#operations)。
 
 本機驗證與 compiler 驗證的範圍及重跑方式見 [MLIR 驗證說明](mlir-verification.md)。

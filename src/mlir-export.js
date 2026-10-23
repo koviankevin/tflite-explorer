@@ -90,7 +90,11 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const outputTypes = outputs.map(output=>output.type).join(', ');
     const args = inputs.map(input=>`${input.argument}: ${input.type}`).join(', ');
     const terminator = returns.length ? '' : `\n    "func.return"(${outputs.map(output=>output.value).join(', ')}) : (${outputTypes}) -> ()`;
-    const text = `// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}> ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  }) : () -> ()\n}) : () -> ()\n${resources}\n`;
+    const intro=`// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}>`;
+    const body=`${intro} ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  })`;
+    let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js');
+    text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
     const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});
     return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };

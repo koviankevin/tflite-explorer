@@ -14,7 +14,7 @@
 
 MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block 的資料流擷取 1～32 個 operations，選到含 region 的 op 時保留其完整 region。多 block 局部匯出移除未選取的一般資料運算，補足外部 SSA 輸入、輸出、控制路徑與必要的迴圈運算；custom op 原文、型別、properties、attributes 保留。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly、bytecode 和大型 resource payload 不保證可讀；不支援時回報位置，不猜測接線。
 
-局部 CFG 是新的 `@extracted` function：保留原有可達控制路徑並新增 entry block，裁掉未使用的 block arguments；迴圈內會變動的 SSA producer 不能凍結成輸入，會自動保留。條件輸出使用 `(valid: i1, value)`，並要求 caller 傳入同型別備援值；`valid=false` 時該值不代表已執行的輸出。多回傳出口另回傳原始出口編號。檔案註解列出輸入來源與結果位置，介面列出補入的運算。重建的 block arguments 可能改變嚴格跨 block pattern 的結構，必要時重新圈選；需要原始介面與完全相同結構時使用完整 function。局部模式目前支援同一 function 直接 body 的選取、最多 4096 blocks／128 資料輸出，不推斷未註冊 op 的 memory effects。
+局部 CFG 是新的 `@extracted` function：保留原有可達控制路徑並新增 entry block，裁掉未使用的 block arguments；迴圈內會變動的 SSA producer 不能凍結成輸入，會自動保留。條件輸出使用 `(valid: i1, value)`，並要求 caller 傳入同型別備援值；`valid=false` 時該值不代表已執行的輸出。多回傳出口另回傳原始出口編號。檔案註解列出輸入來源與結果位置，介面列出補入的運算。新版局部 MLIR 保留原始 pattern 結構對照，既有 pattern 可沿用，新增的 entry、輸出傳值與備援介面不參與原始結構比對；結果仍定位到實際存在的 layers。較早的局部檔案需從原模型重新匯出一次，原有 pattern JSON 不需修改。需要原始函式介面時使用完整 function。局部模式目前支援同一 function 直接 body 的選取、最多 4096 blocks／128 資料輸出，不推斷未註冊 op 的 memory effects。
 
 ### 跨 block pattern
 

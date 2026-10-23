@@ -4,6 +4,7 @@ import {validateMLIR} from './mlir-validate.js';
 import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js';
 import {selectionSnapshot} from './model-engine.js';
 import {combinedMLIRSnapshot} from './mlir-combined-graph.js';
+import {slicePatternGraph} from './mlir-pattern-projection.js';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -54,6 +55,23 @@ function build(index,project) {
     return project.entry={nodes,edges,outgoing,incoming,keys,byType,blockIds,opIds,values};
 }
 
+function sourceEntry(index,project) {
+    if(project.sourceEntry!==undefined)return project.sourceEntry;
+    const graph=slicePatternGraph(index,project.region);if(!graph)return project.sourceEntry=null;
+    const nodes=graph.nodes.map(n=>{
+        const parent=n.kind==='block'?n:graph.nodes[n.parent],block=project.region.blocks[parent.block],location={graph:project.graphsByBlock.get(block),block};
+        if(n.kind==='block')return {...n,type:'block',...location};
+        if(n.kind==='argument')return {...n,type:'argument',...location};
+        return {...n,...project.opLocations.get(block.operations[n.actualOp]),...location};
+    });
+    if(nodes.some(n=>n.graph===undefined || (n.kind==='operator' && n.node===undefined)))return project.sourceEntry=null;
+    const edges=graph.edges.map(e=>({...e,...(e.branch===undefined?{}:{branch:nodes[e.branch].graph})}));
+    const outgoing=nodes.map(()=>new Map()),incoming=nodes.map(()=>new Map()),keys=nodes.map(nodeKey),byType=new Map();
+    for(const [n,key] of keys.entries()){if(!byType.has(key))byType.set(key,[]);byType.get(key).push(n);}
+    for(const e of edges)for(const [map,n,other] of [[outgoing,e.from,e.to],[incoming,e.to,e.from]]){const key=edgeKey(e);if(!map[n].has(key))map[n].set(key,new Set());map[n].get(key).add(other);}
+    return project.sourceEntry={nodes,edges,outgoing,incoming,keys,byType};
+}
+
 export function captureMLIRPattern(index,selections) {
     if(!Array.isArray(selections) || !selections.length)throw new Error('請選取至少一個 operator。');
     const requested=new Map();let count=0;
@@ -66,7 +84,9 @@ export function captureMLIRPattern(index,selections) {
     if(!count || count>32 || requested.size>32)throw new Error('跨 block pattern 最多選取 32 個 operators、32 個 blocks。');
     const project=projects(index).find(p=>[...requested.keys()].every(g=>p.graphs.includes(g)));
     if(!project)throw new Error('跨 block 圈選必須位於同一個 region；不能跨 function 或巢狀 region。');
-    const entry=build(index,project),selected=[];
+    const actual=build(index,project),original=sourceEntry(index,project);
+    const included=original && new Set(original.nodes.filter(n=>n.kind==='operator').map(n=>`${n.graph}:${n.node}`));
+    const entry=original && [...requested].every(([g,set])=>[...set].every(n=>included.has(`${g}:${n}`)))?original:actual,selected=[];
     for(const [i,n] of entry.nodes.entries())if(requested.has(n.graph) && (n.kind!=='operator' || requested.get(n.graph).has(n.node)))selected.push(i);
     const aliases=new Map(selected.map((id,i)=>[id,`N${i+1}`])),orders=new Map();
     const nodes=selected.map(id=> {
@@ -82,7 +102,7 @@ export function captureMLIRPattern(index,selections) {
 }
 
 export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=>false) {
-    const spec=prepareMLIRPattern(structure),items=[];let checks=0,limited=false,yieldAt=0;
+    const spec=prepareMLIRPattern(structure),items=[],physicalMatches=new Set();let checks=0,limited=false,yieldAt=0;
     const budget=async()=>{
         if(checks>2000000){limited=true;return false;}
         if(checks%1000===0){if(performance.now()>=yieldAt){await new Promise(r=>setTimeout(r,0));yieldAt=performance.now()+8;}if(cancelled())return false;}
@@ -90,7 +110,9 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
     };
     for(const project of projects(index)) {
         if(scope!=='all' && !project.graphs.includes(Number(scope)))continue;
-        const entry=build(index,project),mapping=new Map(),used=new Set(),seen=new Set();
+        const actual=build(index,project),original=sourceEntry(index,project);
+        for(const entry of original?[original,actual]:[actual]) {
+        const mapping=new Map(),used=new Set(),seen=new Set();
         const has=(a,b,e)=>entry.outgoing[a].get(edgeKey(e))?.has(b) || false;
         const orderOK=(node,n)=> {
             if(node.kind!=='operator')return true;
@@ -111,7 +133,9 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
                 for(const graph of [...new Set(matched.map(n=>n.graph))].sort((a,b)=>a-b))blocks.push({graph,path:matched.filter(n=>n.graph===graph).map(n=>n.node).sort((a,b)=>a-b)});
                 const first=blocks[0];
                 const control=spec.edges.filter(e=>e.kind==='control').map(e=>({from:entry.nodes[mapping.get(e.from)].graph,to:entry.nodes[mapping.get(e.to)].graph,successor:Number(e.port)}));
-                items.push({kind:'patterns',patternType:'graph',mode:spec.mode,graph:first.graph,path:first.path,blocks,control,operatorCount:matched.length,label:`跨 block · ${blocks.length} blocks · ${matched.length} operators`,id:blocks.map(b=>`block ${b.graph}`).join(' · ')});
+                const physical=JSON.stringify([matched.map(n=>[n.graph,n.node]).sort((a,b)=>a[0]-b[0] || a[1]-b[1]),control.map(e=>[e.from,e.to,e.successor]).sort()]);
+                if(physicalMatches.has(physical))return;physicalMatches.add(physical);
+                items.push({kind:'patterns',patternType:'graph',mode:spec.mode,graph:first.graph,path:first.path,blocks,control,operatorCount:matched.length,...(entry===original?{sourceProjection:true}:{}),label:`跨 block · ${blocks.length} blocks · ${matched.length} operators${entry===original?' · 原始結構':''}`,id:blocks.map(b=>`block ${b.graph}`).join(' · ')});
                 if(items.length>=50000)limited=true;return;
             }
             let chosen,candidates;
@@ -132,6 +156,8 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
             for(const candidate of candidates || []) {mapping.set(chosen.alias,candidate);used.add(candidate);await search();used.delete(candidate);mapping.delete(chosen.alias);if(limited || cancelled())return;}
         };
         await search();if(cancelled())return null;if(limited)break;
+        }
+        if(limited)break;
     }
     return {items,truncated:limited,searchLimited:checks>2000000};
 }
