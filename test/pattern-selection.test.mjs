@@ -61,3 +61,14 @@ test('rectangle-selected layers are added once and never replace an existing blo
     updateLayerSelection(selected,hits);updateLayerSelection(selected,hits);
     assert.deepEqual([...selected],[[4,new Set([9])],[0,new Set([0])],[1,new Set([0])]]);
 });
+
+test('Canvas scope checks preserve selection atomically across regions and TFLite subgraphs',()=>{
+    const selected=new Map([[1,new Set([0])]]),first=selected.get(1),scopeForGraph=g=>g===1 || g===2?'function-a':g===3?'function-b':undefined;
+    assert.equal(updateLayerSelection(selected,[{graph:2,node:4}],{scopeForGraph}),true);
+    assert.throws(()=>updateLayerSelection(selected,[{graph:3,node:0}],{scopeForGraph}),/同一個 function/);
+    assert.deepEqual([...selected],[[1,new Set([0])],[2,new Set([4])]]);assert.equal(selected.get(1),first);
+    assert.throws(()=>updateLayerSelection(selected,[{graph:9,node:0}],{scopeForGraph}),/保留原選取/);assert.equal(selected.has(9),false);
+    assert.equal(updateLayerSelection(selected,[{graph:1,node:0},{graph:2,node:4},{graph:3,node:0}],{toggle:true,scopeForGraph}),true);
+    assert.deepEqual([...selected.get(3)],[0]);assert.equal(selected.get(1).size,0);assert.equal(selected.get(2).size,0);
+    const tf=new Map([[0,new Set([5])]]);assert.throws(()=>updateLayerSelection(tf,[{graph:1,node:8}],{scopeForGraph:g=>g}),/TFLite subgraph/);assert.deepEqual([...tf],[[0,new Set([5])]]);
+});
