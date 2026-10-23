@@ -4,7 +4,9 @@ import { mlirDialects } from './mlir-dialect-registry.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 import {foldPatternSnapshot} from './pattern-fold.js';
+import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
 let index;
+let overview;
 let results = [];
 let generation = 0;
 let file;
@@ -12,6 +14,7 @@ const send = (id, data) => postMessage({ id, data });
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
+            overview=null;
             file = args.file;
             const reader = new FileReaderSync();
             const progress = (stage) => postMessage({ stage });
@@ -32,10 +35,12 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const { exportMLIR } = await import('./mlir-export.js');
             send(id, await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}));
         } else if (action === 'search') {
+            overview=null;
             generation++;
             results = search(index, args.kind, args.query, args.scope);
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0 });
         } else if (action === 'pattern' || action === 'subgraphPattern') {
+            overview=null;
             const current = ++generation;
             if(args.structure?.mode==='mlir-cfg') {
                 const {findMLIRPatterns}=await import('./mlir-pattern.js');
@@ -61,6 +66,10 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, captureGraphPattern(entry, args.nodes));
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
+        } else if (action === 'patternOverview') {
+            const current=generation,prepared=overview || await preparePatternOverview(index,results,{name:args.patternName});
+            if(current!==generation){send(id,{cancelled:true});return;}
+            overview=prepared;send(id,patternOverviewSnapshot(prepared,args));
         } else if (action === 'select') {
             if(args.item.mode==='mlir-cfg') {
                 const {mlirMatchSnapshot}=await import('./mlir-pattern.js');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);

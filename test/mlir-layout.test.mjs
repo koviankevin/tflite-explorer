@@ -6,22 +6,26 @@ import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot} from '../src/mlir
 import {layout} from '../vendor/netron/dagre.js';
 import {MLIR_CFG_LOOP} from './mlir-fixture.mjs';
 import {foldPatternSnapshot} from '../src/pattern-fold.js';
+import {preparePatternOverview,patternOverviewSnapshot} from '../src/pattern-overview.js';
 
 // The same parent/edge contract sent by grapher.Graph.layout to the browser
 // Worker. Fixed nonzero label measurements isolate topology from DOM fonts.
 function layoutProjection(graph,{font=14,direction='TB'}={}) {
-    const nodes=[],edges=[],owners=new Map(),groups=new Set(),pairs=new Set();
+    const nodes=[],edges=[],owners=new Map(),groups=new Map(),pairs=new Set();
     for(const [i,arg] of graph.inputs.entries()) {
         const v=`input:${i}`;nodes.push({v,width:font*8,height:font*2});
         for(const value of arg.value)owners.set(value.name,v);
     }
     for(const node of graph.nodes) {
         const parent=graph.groups && node.group?`group:${node.group}`:undefined;
-        if(parent)groups.add(parent);
+        if(parent) {
+            const segments=node.group.split('/');
+            for(let i=1;i<=segments.length;i++)groups.set(`group:${segments.slice(0,i).join('/')}`,i>1?`group:${segments.slice(0,i-1).join('/')}`:undefined);
+        }
         nodes.push({v:node.identifier,width:font*8,height:font*2,parent});
         for(const a of node.outputs)for(const value of a.value)owners.set(value.name,node.identifier);
     }
-    nodes.push(...[...groups].map(v=>({v,width:0,height:0})));
+    nodes.push(...[...groups].map(([v,parent])=>({v,width:0,height:0,parent})));
     for(const node of graph.nodes)for(const value of [...node.inputs.flatMap(a=>a.value),...(node.controlDependencies || [])]) {
         const v=owners.get(value.name),w=node.identifier,key=`${v}>${w}`;
         if(v===undefined || pairs.has(key))continue;pairs.add(key);
@@ -76,6 +80,17 @@ test('folded loop with incoming and outgoing control/SSA lays out at both font e
             assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
             assert.ok(placed.edges.every(e=>e.points?.length>=2));
         }
+    }
+});
+
+test('whole-model independently folded and expanded loops retain finite nested-group layouts',async()=>{
+    const text=MLIR_CFG_LOOP+'\n'+MLIR_CFG_LOOP.replace('sym_name = "loop"','sym_name = "other"');
+    const index=await parseMLIR(new TextEncoder().encode(text),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});
+    const pattern=captureMLIRPattern(index,[{graph:1,nodes:[0]}]),items=(await findMLIRPatterns(index,pattern)).items,plan=await preparePatternOverview(index,items);
+    for(const expanded of [[],[0],[0,1]])for(const font of [14,32])for(const direction of ['TB','LR']) {
+        const placed=layoutProjection(patternOverviewSnapshot(plan,{expanded}).graph,{font,direction});
+        assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+        assert.ok(placed.edges.every(e=>e.points?.length>=2));
     }
 });
 
