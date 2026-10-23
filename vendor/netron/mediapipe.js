@@ -1,5 +1,5 @@
 
-import * as protobuf from './protobuf.js?v=2a50cbe3fe5d7ace';
+import * as protobuf from './protobuf.js?v=f1793d22ad5a7db2';
 
 const mediapipe = {};
 

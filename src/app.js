@@ -1,9 +1,9 @@
-import { Host } from '../vendor/netron/browser.js?v=2a50cbe3fe5d7ace';
-import { View, Attachment } from '../vendor/netron/view.js?v=2a50cbe3fe5d7ace';
-import { hydrate } from './hydrate.js?v=2a50cbe3fe5d7ace';
-import { modelFormat } from './model-formats.js?v=2a50cbe3fe5d7ace';
-import { LORA_PATTERN } from './pattern-utils.js?v=2a50cbe3fe5d7ace';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=2a50cbe3fe5d7ace';
+import { Host } from '../vendor/netron/browser.js?v=f1793d22ad5a7db2';
+import { View, Attachment } from '../vendor/netron/view.js?v=f1793d22ad5a7db2';
+import { hydrate } from './hydrate.js?v=f1793d22ad5a7db2';
+import { modelFormat } from './model-formats.js?v=f1793d22ad5a7db2';
+import { LORA_PATTERN } from './pattern-utils.js?v=f1793d22ad5a7db2';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=f1793d22ad5a7db2';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -37,7 +37,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=2a50cbe3fe5d7ace`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=f1793d22ad5a7db2`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -129,7 +129,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=2a50cbe3fe5d7ace', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=f1793d22ad5a7db2', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -311,8 +311,10 @@ function decorateCombinedGraph(dto) {
     if(!dto.combined)return;
     const marker=$('target').querySelector('#arrowhead')?.cloneNode(true);
     if(marker){marker.id='cfg-control-arrow';$('target').querySelector('defs')?.append(marker);}
+    const matched=new Set(dto.selected.map(String));
     for(const {node,element:el} of renderedNodes) {
         el?.setAttribute('data-block',String(node.sourceGraph));
+        el?.classList.toggle('cfg-match',matched.has(node.identifier));
         if(node.diagramKind!=='operator')el?.classList.add('cfg-context');
     }
     for(const link of dto.links || [])if(link.kind==='control') {

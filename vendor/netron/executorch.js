@@ -10,9 +10,9 @@ const ethosu = {};
 const openvino = {};
 const rockchip = {};
 
-import * as base from './base.js?v=2a50cbe3fe5d7ace';
-import * as python from './python.js?v=2a50cbe3fe5d7ace';
-import * as pytorch from './pytorch.js?v=2a50cbe3fe5d7ace';
+import * as base from './base.js?v=f1793d22ad5a7db2';
+import * as python from './python.js?v=f1793d22ad5a7db2';
+import * as pytorch from './pytorch.js?v=f1793d22ad5a7db2';
 
 executorch.ModelFactory = class {
 
@@ -500,7 +500,7 @@ xnnpack.Reader = class {
 
     async read() {
         this.reader.seek(this.flatbuffer.offset);
-        const flatbuffers = await import('./flatbuffers.js?v=2a50cbe3fe5d7ace');
+        const flatbuffers = await import('./flatbuffers.js?v=f1793d22ad5a7db2');
         const data = this.reader.read(this.flatbuffer.size);
         const reader = flatbuffers.BinaryReader.open(data);
         if (!executorch.schema.fb_xnnpack.XNNGraph.identifier(reader)) {
@@ -747,7 +747,7 @@ vulkan.Reader = class {
     async read() {
         this.reader.seek(this.flatbuffer.offset);
         const metadata = new vulkan.Metadata(this.target.execution);
-        const flatbuffers = await import('./flatbuffers.js?v=2a50cbe3fe5d7ace');
+        const flatbuffers = await import('./flatbuffers.js?v=f1793d22ad5a7db2');
         const data = this.reader.read(this.flatbuffer.size);
         const reader = flatbuffers.BinaryReader.open(data);
         if (!executorch.schema.vkgraph.VkGraph.identifier(reader)) {
@@ -981,7 +981,7 @@ coreml.Reader = class {
     }
 
     async factory() {
-        const coreml = await import('./coreml.js?v=2a50cbe3fe5d7ace');
+        const coreml = await import('./coreml.js?v=f1793d22ad5a7db2');
         return new coreml.ModelFactory();
     }
 

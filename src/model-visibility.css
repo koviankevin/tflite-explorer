@@ -3,13 +3,13 @@
 #target .node-item-type text { font-weight: 700; }
 
 /* Keep selection strokes visible when the SVG viewport is zoomed out. */
-#target .graph-node.select > .node-border {
+#target .graph-node.select > .node-border, #target .graph-node.cfg-match > .node-border {
     stroke: #a44700 !important;
     stroke-width: 4px !important;
     vector-effect: non-scaling-stroke;
 }
-#target .graph-node.select .node-item-type path { fill: #ffe08a !important; }
-#target .graph-node.select .node-item-type text { fill: #332200 !important; }
+#target .graph-node.select .node-item-type path, #target .graph-node.cfg-match .node-item-type path { fill: #ffe08a !important; }
+#target .graph-node.select .node-item-type text, #target .graph-node.cfg-match .node-item-type text { fill: #332200 !important; }
 #target .edge-path.select {
     stroke: #a44700 !important;
     stroke-width: 3px !important;

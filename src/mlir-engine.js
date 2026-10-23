@@ -1,7 +1,7 @@
-import { ModelFactory } from '../vendor/netron/mlir.js?v=2a50cbe3fe5d7ace';
-import { Decoder } from '../vendor/netron/text.js?v=2a50cbe3fe5d7ace';
-import { indexModel } from './model-engine.js?v=2a50cbe3fe5d7ace';
-import { prepareMLIR, opName } from './mlir-ir.js?v=2a50cbe3fe5d7ace';
+import { ModelFactory } from '../vendor/netron/mlir.js?v=f1793d22ad5a7db2';
+import { Decoder } from '../vendor/netron/text.js?v=f1793d22ad5a7db2';
+import { indexModel } from './model-engine.js?v=f1793d22ad5a7db2';
+import { prepareMLIR, opName } from './mlir-ir.js?v=f1793d22ad5a7db2';
 
 export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;

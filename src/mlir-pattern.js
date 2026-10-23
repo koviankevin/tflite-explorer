@@ -1,9 +1,9 @@
-import {operationSemantics} from './mlir-dialects.js?v=2a50cbe3fe5d7ace';
-import {typeSpelling} from './mlir-engine.js?v=2a50cbe3fe5d7ace';
-import {validateMLIR} from './mlir-validate.js?v=2a50cbe3fe5d7ace';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=2a50cbe3fe5d7ace';
-import {selectionSnapshot} from './model-engine.js?v=2a50cbe3fe5d7ace';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=2a50cbe3fe5d7ace';
+import {operationSemantics} from './mlir-dialects.js?v=f1793d22ad5a7db2';
+import {typeSpelling} from './mlir-engine.js?v=f1793d22ad5a7db2';
+import {validateMLIR} from './mlir-validate.js?v=f1793d22ad5a7db2';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=f1793d22ad5a7db2';
+import {selectionSnapshot} from './model-engine.js?v=f1793d22ad5a7db2';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=f1793d22ad5a7db2';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
