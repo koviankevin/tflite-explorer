@@ -173,7 +173,9 @@ async function openFile(nextFile) {
         $('value-kind-label').textContent = model.sourceFormat === 'mlir' ? 'SSA Values' : 'Tensors';
         $('query').placeholder = model.sourceFormat === 'mlir' ? '搜尋 dialect.op、%SSA 名稱、#編號' : '搜尋名稱、operator、#編號';
         $('mlir-info').hidden = model.sourceFormat !== 'mlir';
-        $('export-submodel').hidden = !model.capabilities.tfliteExport;
+        $('export-submodel').hidden = !canExportSubmodel();
+        $('export-submodel').textContent = model.capabilities.mlirExport ? '匯出局部 MLIR' : '匯出 TFLite 子模型';
+        $('export-match').textContent = model.capabilities.mlirExport ? '匯出此匹配為局部 MLIR ↓' : '匯出此匹配為 TFLite 子模型 ↓';
         const layers = model.graphs.reduce((n, g) => n + g.layers, 0);
         const tensors = model.graphs.reduce((n, g) => n + g.tensors, 0);
         $('layer-count').textContent = layers.toLocaleString(); $('tensor-count').textContent = tensors.toLocaleString();
@@ -275,8 +277,8 @@ async function selectResult(index, { whole = full, forceDraw = false, zoom } = {
     const item = page.items[index - page.offset];
     if (!item) return;
     activeIndex = index; selection = item; full = whole;
-    $('export-match').hidden = item.kind !== 'patterns' || !model.capabilities.tfliteExport;
-    $('export-match').disabled = !model.capabilities.tfliteExport;
+    $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
+    $('export-match').disabled = !canExportSubmodel();
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
     setCurrentGraph(item.graph);
@@ -448,7 +450,7 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
     $('save-capture').disabled = !model || pickedNodes.size < 2;
-    $('export-submodel').disabled = !model?.capabilities?.tfliteExport || !pickedNodes.size;
+    $('export-submodel').disabled = !canExportSubmodel() || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {
@@ -462,21 +464,28 @@ function refreshPickedNodes() {
 }
 $('export-submodel').onclick = () => downloadSubmodel(currentGraph, [...pickedNodes]);
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
+function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes) {
-    if (!model?.capabilities?.tfliteExport) return;
+    if (!canExportSubmodel()) return;
     const sourceFile = file;
+    const mlir = model.capabilities.mlirExport;
     $('export-submodel').disabled = true;
     $('export-match').disabled = true;
     try {
-        status('建立 TFLite 子模型，保留所需權重與參數…');
-        const result = await rpc('exportTflite', { graph, nodes });
+        status(mlir ? '擷取局部 MLIR，保留原始型別、屬性與 SSA 連線…' : '建立 TFLite 子模型，保留所需權重與參數…');
+        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes });
         if (file !== sourceFile) return;
-        await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.tflite`, result.blob);
+        await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
+        if (mlir) {
+            notice(`開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
+            status(`局部 MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過重新解析檢查`);
+            return;
+        }
         const customInfo = result.preservedIds ? ` 含 custom op：${result.customOperators.join('、')}。保留原始 tensor／buffer 編號及全部 ${result.retainedBuffers} 個 buffers，檔案可能較大；執行需原 custom runtime。` : '';
         notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。${customInfo}`);
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
     } catch (error) { report(error); }
-    finally { refreshPickedNodes(); $('export-match').disabled = !model?.capabilities?.tfliteExport || !selection; }
+    finally { refreshPickedNodes(); $('export-match').disabled = !canExportSubmodel() || selection?.kind !== 'patterns'; }
 }
 function setPickingPattern(enabled) {
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }

@@ -23,9 +23,12 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             });
             send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'exportTflite') {
-            if (!index?.capabilities?.tfliteExport) throw new Error('MLIR 基礎版支援圈選與 pattern JSON；尚不支援匯出局部 MLIR 或轉換 TFLite。');
+            if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
             send(id, exportTflite(index, args.graph, args.nodes, file));
+        } else if (action === 'exportMLIR') {
+            const { exportMLIR } = await import('./mlir-export.js');
+            send(id, await exportMLIR(index, args.graph, args.nodes));
         } else if (action === 'search') {
             generation++;
             results = search(index, args.kind, args.query, args.scope);
