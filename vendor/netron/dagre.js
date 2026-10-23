@@ -1369,13 +1369,14 @@ dagre.layout = (nodes, edges, layout, state) => {
                 bestCC = cc;
             }
         }
-        // Reduce crossings
+        // Reduce crossings. Boundary/terminal nodes in partial compound graphs
+        // may end a chain; only reorder chains whose required edges exist.
         const calcDir = (idx0, idx1) => (idx0 < idx1) ? 1 : 2;
         for (let i = 4; i < best.length; i += 2) {
             const layer = best[i];
             for (let j = 0; j < layer.length; ++j) {
                 const node = g.nodes.get(layer[j]);
-                if (node.in && node.in.length === 2) {
+                if (node.in && node.in.length === 2 && node.in.every((edge) => edge.vNode.in.length === 1)) {
                     let n0 = node.in[0].vNode.in[0].vNode;
                     let n1 = node.in[1].vNode.in[0].vNode;
                     const indexes = [];
@@ -1392,6 +1393,8 @@ dagre.layout = (nodes, edges, layout, state) => {
                             || n1.in.length !== 1
                             || n0.out.length !== 1
                             || n1.out.length !== 1
+                            || n0.in[0].vNode.in.length !== 1
+                            || n1.in[0].vNode.in.length !== 1
                         ) {
                             if (dirTotal === 3) {
                                 const topDir = dir;
@@ -1437,6 +1440,9 @@ dagre.layout = (nodes, edges, layout, state) => {
                     for (let k = 0; k < node0.out.length - 1; ++k) {
                         const node1d = node0.out[k].wNode;
                         const node2d = node0.out[k + 1].wNode;
+                        if (node1d.out.length !== 1 || node2d.out.length !== 1) {
+                            continue;
+                        }
                         const node1 = node1d.out[0].wNode;
                         const node2 = node2d.out[0].wNode;
                         if ((layer1.indexOf(node1d.v) < layer1.indexOf(node2d.v)) ^ (layer2.indexOf(node1.v) < layer2.indexOf(node2.v))) {
@@ -1447,7 +1453,7 @@ dagre.layout = (nodes, edges, layout, state) => {
             }
             for (let j = 0; j < layer2.length; ++j) {
                 const node0 = g.nodes.get(layer2[j]);
-                if (node0.in && node0.in.length >= 2) {
+                if (node0.in && node0.in.length >= 2 && node0.in.every((edge) => edge.vNode.in.length === 1)) {
                     if (node0.in.length === 2) {
                         const node1d = node0.in[0].vNode;
                         const node2d = node0.in[1].vNode;
@@ -1530,7 +1536,7 @@ dagre.layout = (nodes, edges, layout, state) => {
                                     const node1d = node1.out[0].wNode;
                                     index0 = layer3.indexOf(node0d.v);
                                     index1 = layer3.indexOf(node1d.v);
-                                    if (index0 + 1 === index1 && node0d.out[0].wNode === node1d.out[0].wNode) {
+                                    if (index0 + 1 === index1 && node0d.out.length > 0 && node1d.out.length > 0 && node0d.out[0].wNode === node1d.out[0].wNode) {
                                         exchange(layer1, node0u, node1u);
                                         exchange(layer2, node0, node1);
                                         exchange(layer3, node0d, node1d);

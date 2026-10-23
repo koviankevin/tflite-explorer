@@ -1,6 +1,6 @@
 
-import * as flatbuffers from './flatbuffers.js?v=c42d6191e1af76aa';
-import * as python from './python.js?v=c42d6191e1af76aa';
+import * as flatbuffers from './flatbuffers.js?v=5f68fef058053aa4';
+import * as python from './python.js?v=5f68fef058053aa4';
 
 const catboost = {};
 

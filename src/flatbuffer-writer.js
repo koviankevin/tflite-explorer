@@ -1,4 +1,4 @@
-import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=c42d6191e1af76aa';
+import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=5f68fef058053aa4';
 
 // The pinned generated decoder is the schema authority. Interpret its field
 // declarations, never execute generated source or infer field types from values.

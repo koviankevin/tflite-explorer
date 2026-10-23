@@ -1,5 +1,5 @@
 
-import * as text from './text.js?v=c42d6191e1af76aa';
+import * as text from './text.js?v=5f68fef058053aa4';
 
 const protobuf = {};
 

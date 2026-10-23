@@ -1,11 +1,11 @@
-import { Host } from '../vendor/netron/browser.js?v=c42d6191e1af76aa';
-import { View, Attachment } from '../vendor/netron/view.js?v=c42d6191e1af76aa';
-import { hydrate } from './hydrate.js?v=c42d6191e1af76aa';
-import { modelFormat } from './model-formats.js?v=c42d6191e1af76aa';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=c42d6191e1af76aa';
-import {rectangleSelection} from './rectangle-selection.js?v=c42d6191e1af76aa';
-import { LORA_PATTERN } from './pattern-utils.js?v=c42d6191e1af76aa';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=c42d6191e1af76aa';
+import { Host } from '../vendor/netron/browser.js?v=5f68fef058053aa4';
+import { View, Attachment } from '../vendor/netron/view.js?v=5f68fef058053aa4';
+import { hydrate } from './hydrate.js?v=5f68fef058053aa4';
+import { modelFormat } from './model-formats.js?v=5f68fef058053aa4';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=5f68fef058053aa4';
+import {rectangleSelection} from './rectangle-selection.js?v=5f68fef058053aa4';
+import { LORA_PATTERN } from './pattern-utils.js?v=5f68fef058053aa4';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=5f68fef058053aa4';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -39,7 +39,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=c42d6191e1af76aa`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=5f68fef058053aa4`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -131,7 +131,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=c42d6191e1af76aa', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=5f68fef058053aa4', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
