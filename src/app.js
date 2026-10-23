@@ -102,6 +102,7 @@ const cfgSelections = new Map();
 let renderedNodes = [];
 let renderedGraph = null;
 let sliceDetails=false;
+let sliceExpanded=new Set();
 let virtualOverview=null;
 function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
@@ -159,6 +160,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    sliceExpanded.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();
@@ -354,6 +356,39 @@ function decorateCombinedGraph(dto) {
         const edge=from && to?view.target.edge(from.name,to.name)?.label:null;
         edge?.element?.classList.add('cfg-control');edge?.labelElement?.classList.add('cfg-control-label');
     }
+    for(const action of dto.sliceEdgeActions || []) {
+        const from=view.target._table.get(renderedGraph.nodes.get(action.from)),to=view.target._table.get(renderedGraph.nodes.get(action.to));
+        const edge=from && to?view.target.edge(from.name,to.name)?.label:null;if(!edge)continue;
+        const connections=action.keys.map(key=>dto.sliceConnections.find(c=>c.key===key)),expanded=connections.some(c=>c.expanded);
+        const label=`${expanded?'收起':'展開'}連線路徑：${connections.map(c=>c.label).join('；')}`;
+        const activate=event=>{
+            if(event.type==='keydown' && !['Enter',' '].includes(event.key))return;
+            event.preventDefault();event.stopImmediatePropagation();
+            if(pickingPattern || $('target').getAttribute('aria-busy')==='true')return;
+            const key=action.keys.findLast(k=>sliceExpanded.has(k)) || action.keys[0];
+            const next=new Set(sliceExpanded);if(next.has(key))next.delete(key);else next.add(key);
+            changeSliceExpansion(next).catch(report);
+        };
+        for(const el of [edge.element,edge.hitTest,edge.labelElement].filter(Boolean)) {
+            el.dataset.sliceFrom=action.from;el.dataset.sliceTo=action.to;el.classList.add('slice-connection');el.setAttribute('aria-label',label);el.addEventListener('click',activate,true);
+        }
+        if(edge.hitTest){edge.hitTest.classList.add('slice-connection-hit');edge.hitTest.setAttribute('role','button');edge.hitTest.setAttribute('tabindex','0');edge.hitTest.setAttribute('aria-expanded',String(expanded));edge.hitTest.addEventListener('keydown',activate,true);}
+    }
+}
+async function changeSliceExpansion(next) {
+    const previous=sliceExpanded;sliceExpanded=next;
+    try {await (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full));}
+    catch(error){sliceExpanded=previous;throw error;}
+}
+function renderSliceConnections(dto) {
+    const nav=$('slice-connection-controls'),connections=dto.compactSlice && !dto.folded && !dto.overview ? dto.sliceConnections || [] : [];
+    sliceExpanded=new Set(connections.filter(c=>c.expanded).map(c=>c.key));nav.hidden=!sliceExpanded.size;
+    nav.replaceChildren(element('strong','',`局部展開 · ${sliceExpanded.size} 段路徑`));
+    for(const c of connections.filter(c=>c.expanded)) {
+        const button=element('button','quiet',`收起：${c.label}`);button.title=c.label;
+        button.onclick=()=>{const next=new Set(sliceExpanded);next.delete(c.key);changeSliceExpansion(next).catch(report);};nav.append(button);
+    }
+    const all=element('button','quiet','收起全部路徑');all.onclick=()=>changeSliceExpansion(new Set()).catch(report);nav.append(all);
 }
 function refreshPatternFold() {
     const sliceButton=$('toggle-slice-details');
@@ -361,6 +396,7 @@ function refreshPatternFold() {
     sliceButton.textContent=sliceDetails?'收起輔助節點':'展開輔助節點';
     sliceButton.setAttribute('aria-expanded',String(sliceDetails));
     sliceButton.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
+    for(const button of $('slice-connection-controls').querySelectorAll('button'))button.disabled=sliceButton.disabled;
     const button=$('toggle-pattern-fold');button.hidden=overviewMode || selection?.kind!=='patterns';
     button.textContent=patternCollapsed?'展開 pattern':'收合 pattern';
     button.setAttribute('aria-expanded',String(!patternCollapsed));
@@ -378,6 +414,7 @@ function overviewOption(m) {return new Option(`匹配 #${m.index+1} · ${m.opera
 function renderOverviewControls(dto) {
     $('pattern-overview-controls').hidden=!dto.overview;
     if(!dto.overview)return;
+    $('slice-connection-controls').hidden=true;
     $('match-blocks').hidden=true;
     // A broad pattern may have tens of thousands of overlapping matches. Keep
     // the dropdown bounded; all results remain available in the paginated list.
@@ -430,11 +467,13 @@ $('collapse-overview-all').onclick=()=>drawPatternOverview({expanded:new Set()})
 async function togglePatternFold(collapsed=!patternCollapsed) {
     if(selection?.kind!=='patterns' || pickingPattern)return;
     patternCollapsed=collapsed;
+    if(collapsed)sliceExpanded.clear();
     await selectResult(activeIndex,{forceDraw:true});
 }
 $('toggle-pattern-fold').onclick=()=>togglePatternFold().catch(report);
 $('toggle-slice-details').onclick=()=>{
     sliceDetails=!sliceDetails;
+    if(!sliceDetails)sliceExpanded.clear();
     (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full)).catch(report);
 };
 async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph } = {}) {
@@ -461,7 +500,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph 
     const metadataOnly = !collapsed && !renderedGraph?.folded && !renderedGraph?.virtual && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
-    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails });
+    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails, expandedConnections:[...sliceExpanded] });
     await queueDraw(dto, generationRender, zoom);
 }
 async function drawGraph(graph, whole = false, zoom) {
@@ -474,7 +513,7 @@ async function drawGraph(graph, whole = false, zoom) {
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
-    const dto = await rpc('graph', { graph, full: whole, sliceDetails });
+    const dto = await rpc('graph', { graph, full: whole, sliceDetails, expandedConnections:[...sliceExpanded] });
     await queueDraw(dto, generation, zoom);
 }
 async function queueDraw(dto, generation, zoom) {
@@ -529,11 +568,12 @@ async function queueDraw(dto, generation, zoom) {
         }
         if (!renderedGraph || renderedGraph.index !== dto.graphIndex) return;
         const graph = renderedGraph.graph;
+        renderSliceConnections(dto);
         if(dto.sliceView && !selection)setCurrentGraph(dto.graphIndex);
         refreshPickedNodes();
         renderOverviewControls(dto);
         $('empty-state').hidden = true;
-        $('graph-caption').textContent = dto.compactSlice?`精簡圖 · ${dto.item.blocks.length} blocks · ${graph.nodes.length} 個原始 OP · 輔助節點已收起`:dto.overview?`全模型 · ${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點${dto.overlapCount?` · ${dto.overlapCount} 組重疊`:''}`:dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
+        $('graph-caption').textContent = dto.compactSlice?`精簡圖 · ${dto.item.blocks.length} blocks · ${dto.total} 個原始 OP · ${dto.sliceHelperCount?`局部展開 ${dto.sliceHelperCount} 個輔助節點`:"輔助節點已收起 · 點連線展開"}`:dto.overview?`全模型 · ${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點${dto.overlapCount?` · ${dto.overlapCount} 組重疊`:''}`:dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
         const selected = dto.selected.map((index) => renderedGraph.nodes.get(String(index))).filter(Boolean);
         if (dto.detail) {
             dto.detail = renderedGraph.values.get(dto.detail.identifier) || hydrate(dto.detail, file);
@@ -557,6 +597,7 @@ async function queueDraw(dto, generation, zoom) {
         }
         if (pickingPattern) view._sidebar.close();
         status(`${model.graphs[currentGraph].name} · ${dto.full ? '完整圖' : '局部圖'} ${graph.nodes.length} 個節點 · ${dto.metadataOnly ? '定位' : '繪圖'} ${(performance.now() - start).toFixed(0)} ms${dto.detail && !dto.selected.length ? ' · 此 tensor 沒有相連的 operator' : ''}`);
+        if(dto.sliceDirectConnection)status('這段是原始 OP 之間的直接連線，沒有隱藏的輔助節點。');
         $('local-graph').style.background = dto.full ? '' : '#e6eee2'; $('full-graph').style.background = dto.full ? '#e6eee2' : '';
     });
     try { await renderQueue; }
@@ -796,7 +837,7 @@ function syncCaptureGraph() {
 function togglePickedNode(location) {
     if($('capture-cfg').checked) {
         if(!updateLayerSelection(cfgSelections,[location],{toggle:true})){notice('一組 pattern 最多選取 32 個 layers。');return;}
-        if(renderedGraph?.combined){setCurrentGraph(location.graph);renderMatchBlocks(selection);}
+        if(renderedGraph?.combined){setCurrentGraph(location.graph);if(selection?.blocks)renderMatchBlocks(selection);}
         syncCaptureGraph();refreshPickedNodes();return;
     }
     const index=location.node;
