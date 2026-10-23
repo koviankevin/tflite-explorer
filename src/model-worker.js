@@ -1,5 +1,6 @@
 import { search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js';
 import { openModelFile } from './model-adapters.js';
+import { mlirDialects } from './mlir-dialect-registry.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 let index;
@@ -19,9 +20,9 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                     const response = await fetch(new URL(`../vendor/netron/${format}-metadata.json`, import.meta.url));
                     if (!response.ok) throw new Error('無法載入 operator 定義。');
                     return response.text();
-                }, progress
+                }, progress, dialects:mlirDialects
             });
-            send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+            send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');

@@ -5431,11 +5431,12 @@ _.OperationParser = class extends _.Parser {
             }
             if (this.consumeIf(_.Token.l_paren)) {
                 while (!this.consumeIf(_.Token.r_paren)) {
+                    const argumentPosition = this.getToken().loc.position;
                     const value = this.getTokenSpelling().str();
                     this.consumeToken(_.Token.percent_identifier);
                     this.consumeToken(_.Token.colon);
                     const type = this.parseType();
-                    const arg = { value, type };
+                    const arg = { value, type, modelLensPosition:argumentPosition };
                     const loc = this.parseTrailingLocationSpecifier();
                     if (loc) {
                         arg.loc = loc;

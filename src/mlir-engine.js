@@ -1,6 +1,7 @@
 import { ModelFactory } from '../vendor/netron/mlir.js';
 import { Decoder } from '../vendor/netron/text.js';
 import { indexModel } from './model-engine.js';
+import { prepareMLIR, opName } from './mlir-ir.js';
 
 export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
@@ -53,11 +54,19 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
     const source = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
     const graphs = [];
     const exportGraphs = [];
-    let sourceInfo, rootBlock;
+    let sourceInfo, rootBlock, ir;
     progress('解析 MLIR operations 與 SSA 資料流');
     const build = (root, info) => {
         sourceInfo = info;
         rootBlock = root;
+        ir = prepareMLIR(root,info,dialects);
+        const cfgContexts=new Set(),contextBlocks=new Map();
+        for(const region of ir.regions) {
+            const context=region.owner?.context;
+            if(!context) continue;
+            contextBlocks.set(context,(contextBlocks.get(context) || 0)+region.blocks.length);
+            if(region.blocks.length>1) cfgContexts.add(context);
+        }
         const visitBlock = (block, path) => {
             const graph = { name: path, type: 'graph', inputs: [], outputs: [], nodes: [], metadata: [] };
             const values = new Map();
@@ -89,6 +98,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                 }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });
                 node.metadata.push({ name: 'scope', value: path, type: 'string' });
+                if (op.successors?.length) node.metadata.push({ name: 'successors', value: op.successors.map(s=>s.label || s.name).join('、'), type: 'string' });
                 for (const dialect of dialects) if (name.startsWith(`${dialect.namespace}.`)) {
                     const extra = dialect.describeOperation?.({ name, attributes: node.attributes, scope: path });
                     if (extra) node.attributes.push(...extra);
@@ -106,7 +116,10 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                     if (produced.has(name) && !used.has(name)) graph.outputs.push(argument(name, v));
                 }
                 graphs.push(graph);
-                exportGraphs.push({ block, operations: exportOperations });
+                let row=ir.byBlock.get(block)?.owner, func;
+                while(row) { if(opName(row.op)==='func.func') {func=row;break;}row=row.parent; }
+                const cfgExport=func && cfgContexts.has(func.context) ? {blocks:contextBlocks.get(func.context), function:func.op.getAttr('sym_name')?.value || 'function'} : null;
+                exportGraphs.push({ block, operations: exportOperations, cfgFunction:cfgExport ? func.op : null, cfgExport });
             }
             for (const { op, path: owner } of containers) for (let r=0; r<(op.regions || []).length; r++) {
                 const blocks = op.regions[r].blocks || [];
@@ -114,11 +127,11 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
             }
         };
         visitBlock(root, identifier);
-        return { format: 'MLIR text', description: 'SSA 資料流依 region／block 分開顯示；不推斷記憶體或控制流程相依。', modules: graphs, metadata: [] };
+        return { format: 'MLIR text', description: 'SSA 資料流依 region／block 分開顯示；多 block 匯出保留所在 function 的完整控制流程。', modules: graphs, metadata: [] };
     };
     const model = await new ModelFactory().open({ type: 'mlir.text', identifier, asset: async () => metadata,
         read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    return { ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
 }

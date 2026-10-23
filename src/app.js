@@ -450,7 +450,9 @@ function applyPattern(pattern) {
     updateGraphInputMode(); setKind('patterns', false);
 }
 function refreshPickedNodes() {
-    $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
+    const cfg=model?.graphs[currentGraph]?.cfgExport;
+    $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers${cfg ? ` · 匯出會保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
+    if(model?.capabilities?.mlirExport) $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
     $('save-capture').disabled = !model || pickedNodes.size < 2;
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
@@ -480,8 +482,8 @@ async function downloadSubmodel(graph, nodes) {
         if (file !== sourceFile) return;
         await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
         if (mlir) {
-            notice(`開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
-            status(`局部 MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA 檢查`);
+            notice(result.controlFlow ? `開始下載 @${result.controlFlow.function} 的完整控制流程 MLIR：${result.controlFlow.blocks} 個 blocks、${result.layers} layers。保留分支、迴圈、block arguments、returns 與 custom op 原文。` : `開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
+            status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
             return;
         }
         const customInfo = result.preservedIds ? ` 含 custom op：${result.customOperators.join('、')}。保留原始 tensor／buffer 編號及全部 ${result.retainedBuffers} 個 buffers，檔案可能較大；執行需原 custom runtime。` : '';

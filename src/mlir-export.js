@@ -17,6 +17,12 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const graph = graphs[graphIndex];
     if (!graph) throw new Error('找不到目前 MLIR scope。');
     if (!Array.isArray(nodeIndices) || !nodeIndices.length || nodeIndices.length>32 || nodeIndices.some(i=>!Number.isInteger(i) || !graph.operations[i])) throw new Error('請選取 1～32 個同一 scope 的 layers。');
+    if (graph.cfgFunction) return exportControlFlow(index,graphIndex,graph,progress);
+    let enclosing=index.mlir.ir.byBlock.get(graph.block);
+    while(enclosing) {
+        if(enclosing.blocks.length>1) throw new Error('此多 block region 不在 func.func 內；請回到上層 scope，選取擁有此 region 的 operation，才能保留完整控制流程。');
+        enclosing=enclosing.parent;
+    }
     const selected = [...new Set(nodeIndices)].sort((a,b)=>a-b).map(i=>graph.operations[i]);
     const ranges = selected.map(op=>info.operations.get(op));
     if (ranges.some(range=>!range)) throw new Error('缺少 MLIR 原始文字範圍，無法安全匯出。');
@@ -69,6 +75,27 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const terminator = returns.length ? '' : `\n    "func.return"(${outputs.map(output=>output.value).join(', ')}) : (${outputTypes}) -> ()`;
     const text = `// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}> ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  }) : () -> ()\n}) : () -> ()\n${resources}\n`;
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
-    const validation=await validateMLIRText(text,{metadata});
+    const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});
     return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };
+}
+
+// Cutting a branch or a phi-like block argument independently changes program
+// semantics. Preserve the entire enclosing function, verbatim, instead.
+async function exportControlFlow(index,graphIndex,graph,progress) {
+    const {source,info,metadata,dialects,ir}=index.mlir,op=graph.cfgFunction;
+    const range=info.operations.get(op);
+    if(!range) throw new Error('缺少 function 原文範圍，無法保留控制流程。');
+    progress('在本機檢查來源 MLIR 的 CFG、SSA 與 dominance…');
+    assertValidMLIR(index,{graphIndex});
+    if(info.symbols.some(span=>inside(span,[range]))) throw new Error('Function 含 symbol reference；尚未擷取外部 symbol dependencies，已停止匯出。');
+    const aliases=info.declarations.map(span=>source.slice(...span)).join('\n');
+    const resources=info.resources.map(span=>source.slice(...span)).join('\n');
+    const text=`// Model Lens CFG export: complete enclosing function; branches and block arguments preserved.\n${aliases}\n"builtin.module"() ({\n${source.slice(...range)}\n}) : () -> ()\n${resources}\n`;
+    progress('在本機重新檢查匯出 MLIR 的 CFG、SSA 與 dominance…');
+    const validation=await validateMLIRText(text,{metadata,dialects});
+    const attr=op.getAttr('function_type'),signature=attr?.value || attr?.type;
+    const inputs=(op.regions[0].blocks[0].arguments || []).map(value=>({name:valueName(value)}));
+    const outputs=(signature?.results || []).map((type,i)=>({name:`result ${i}`}));
+    const context=ir.byOp.get(op).context,layers=ir.rows.filter(row=>row.context===context && row.op!==op).length;
+    return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
 }
