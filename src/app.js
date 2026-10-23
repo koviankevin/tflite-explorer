@@ -349,13 +349,17 @@ function refreshPatternFold() {
 }
 function patternDisplayName() {const option=$('saved-pattern').selectedOptions[0];return option?.value?option.textContent:'Pattern';}
 function activatePatternNode(node) {return Number.isInteger(node.matchIndex)?toggleOverviewOccurrence(node.matchIndex):togglePatternFold(false);}
+function overviewOption(m) {return new Option(`匹配 #${m.index+1} · ${m.operatorCount} OP · ${!m.foldable?'重疊，未另建節點':m.collapsed?'收合':'展開'}`,String(m.index),false,m.index===activeIndex);}
 function renderOverviewControls(dto) {
     $('pattern-overview-controls').hidden=!dto.overview;
     if(!dto.overview)return;
     $('match-blocks').hidden=true;
-    $('overview-match').replaceChildren(...dto.overviewMatches.map(m=>new Option(`匹配 #${m.index+1} · ${m.operatorCount} OP · ${!m.foldable?'重疊，未另建節點':m.collapsed?'收合':'展開'}`,String(m.index),false,m.index===activeIndex)));
+    // A broad pattern may have tens of thousands of overlapping matches. Keep
+    // the dropdown bounded; all results remain available in the paginated list.
+    const choices=dto.overviewMatches.length>1500?dto.overviewMatches.filter(m=>m.foldable || m.index===activeIndex):dto.overviewMatches;
+    $('overview-match').replaceChildren(...choices.map(overviewOption));
     $('toggle-overview-match').textContent=dto.overviewMatches[activeIndex]?.collapsed?'展開此匹配':'收合此匹配';
-    $('overview-summary').textContent=`${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從清單定位。`:''}搜尋清單分頁不影響總覽；未匹配的 OP 保留。需圈選時請返回匹配圖。`;
+    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個可見節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}搜尋清單分頁不影響總覽；未匹配的 OP 保留。需圈選時請返回匹配圖。`;
 }
 async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex>=0?activeIndex:0,zoom}={}) {
     if(!model || !patternSearchReady || pickingPattern)return;
@@ -372,6 +376,10 @@ async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex
 function focusOverviewMatch(item,index) {
     const match=renderedGraph.overviewMatches.find(m=>m.index===index);if(!match)return;
     activeIndex=index;selection=item;setCurrentGraph(item.graph);
+    if(![...$('overview-match').options].some(option=>option.value===String(index))) {
+        for(const option of [...$('overview-match').options])if(option.dataset.temporary)option.remove();
+        const option=overviewOption(match);option.dataset.temporary='true';$('overview-match').add(option);
+    }
     $('overview-match').value=String(index);$('toggle-overview-match').textContent=match.collapsed?'展開此匹配':'收合此匹配';
     document.querySelectorAll('[data-result-index]').forEach(b=>b.classList.toggle('active',Number(b.dataset.resultIndex)===index));
     const nodes=match.nodes.map(id=>renderedGraph.nodes.get(id)).filter(Boolean);

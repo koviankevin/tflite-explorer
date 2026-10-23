@@ -172,10 +172,10 @@ export function mlirMatchSnapshot(index,item,options={}) {
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);
 }
 
-export function mlirModelSnapshots(index) {
+export function mlirModelSnapshots(index,{lightweight=false}={}) {
     return projects(index).map(project=>{
         const blocks=project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,i)=>i)}));
         const item={kind:'patterns',mode:CFG_PATTERN_MODE,graph:blocks[0].graph,path:blocks[0].path,blocks};
-        return combinedMLIRSnapshot(index,item,build(index,project),{full:true,maxOperators:20000,maxControlRoutes:20000});
+        return combinedMLIRSnapshot(index,item,build(index,project),{full:true,maxOperators:Infinity,maxControlRoutes:Infinity,lightweight});
     });
 }

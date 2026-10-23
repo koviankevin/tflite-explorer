@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {preparePatternOverview,patternOverviewSnapshot} from '../src/pattern-overview.js';
-import {parseModel,indexModel,findPatterns} from '../src/model-engine.js';
+import {parseModel,indexModel,findPatterns,serialize} from '../src/model-engine.js';
 import {parseMLIR} from '../src/mlir-engine.js';
 import {captureMLIRPattern,findMLIRPatterns} from '../src/mlir-pattern.js';
 import {fixture} from './fixture.mjs';
@@ -22,11 +22,12 @@ function assertConnections(plan,dto) {
         const from=owner.get(v);if(!from)continue;
         const a=shown.get(from) || from.identifier,b=shown.get(n) || n.identifier;
         if(a===b)continue;
-        assert.ok(visible.get(a).outputs.some(a=>a.value.includes(v)),v.name);
-        assert.ok((kind==='control'?visible.get(b).controlDependencies:visible.get(b).inputs.flatMap(a=>a.value)).includes(v),v.name);
+        const output=visible.get(a).outputs.flatMap(a=>a.value).find(value=>value.identifier===v.identifier);
+        assert.ok(output,v.name);
+        assert.ok((kind==='control'?visible.get(b).controlDependencies:visible.get(b).inputs.flatMap(a=>a.value)).includes(output),'visible endpoints must share the same value object');
         assert.ok(dto.links.some(e=>e.from===a && e.to===b && e.kind===kind && e.value===v.identifier));
     }
-    assert.deepEqual(dto.graph.inputs,plan.graph.inputs);assert.deepEqual(dto.graph.outputs,plan.graph.outputs);
+    assert.deepEqual(dto.graph.inputs,serialize(plan.graph.inputs));assert.deepEqual(dto.graph.outputs,serialize(plan.graph.outputs));
 }
 
 test('whole TFLite model folds every occurrence across subgraphs and expands exactly one without changing source/results',async()=>{
@@ -35,11 +36,52 @@ test('whole TFLite model folds every occurrence across subgraphs and expands exa
     assert.equal(capsules(folded).length,8);assert.equal(folded.overlapCount,0);assertConnections(plan,folded);
     const expanded=patternOverviewSnapshot(plan,{expanded:[2],active:2});
     assert.equal(capsules(expanded).length,7);assert.equal(expanded.overviewMatches[2].collapsed,false);
-    for(const n of plan.matches[2].nodes)assert.ok(expanded.graph.nodes.includes(n));
+    for(const n of plan.matches[2].nodes)assert.ok(expanded.graph.nodes.some(visible=>visible.identifier===n.identifier));
     assertConnections(plan,expanded);assert.equal(capsules(patternOverviewSnapshot(plan)).length,8);
     assert.equal(JSON.stringify(index.model),source);assert.equal((await findPatterns(index,['Reshape','Transpose','Reshape'])).items.length,8);
     const names=plan.graph.nodes.flatMap(n=>n.outputs.flatMap(a=>a.value.map(v=>v.name)));
     assert.equal(new Set(names).size,names.length,'subgraph tensor numbers must stay distinct');
+});
+
+test('a 1.25 GiB TFLite with over 20,000 OPs contracts before the visible-node limit, including thousands of overlapping results',async()=>{
+    const index=await tflite({graphCount:1,repeats:7000,weightBytes:1342177280});
+    const result=await findPatterns(index,Array.from({length:32},(_,i)=>i%3===1?'Transpose':'Reshape'));
+    assert.equal(result.truncated,false);assert.ok(result.items.length>1500);
+    const plan=await preparePatternOverview(index,result.items),dto=patternOverviewSnapshot(plan);
+    assert.equal(dto.total,21001);assert.equal(dto.overviewMatches.length,result.items.length);
+    assert.ok(dto.graph.nodes.length<1500);assert.ok(capsules(dto).length>600);assert.ok(dto.overlapCount>6000);
+    assertConnections(plan,dto);
+    const one=patternOverviewSnapshot(plan,{expanded:[0]});assert.equal(one.graph.nodes.length,dto.graph.nodes.length+31);
+    assert.throws(()=>patternOverviewSnapshot(plan,{expanded:result.items.map((_,i)=>i)}),/21,001.*1,500/);
+    assert.equal(patternOverviewSnapshot(plan).graph.nodes.length,dto.graph.nodes.length);
+});
+
+test('hidden OP metadata is not serialized and an oversized visible view fails before reading metadata',async()=>{
+    const index=await tflite({graphCount:1,repeats:510}),items=(await findPatterns(index,['Reshape','Transpose','Reshape'])).items;
+    let reads=0;
+    const payload={get value(){reads++;return 'custom metadata';}};
+    for(const n of index.graphs[0].graph.nodes.slice(0,-1))n.attributes=[payload];
+    const plan=await preparePatternOverview(index,items);assert.equal(reads,0);
+    patternOverviewSnapshot(plan);assert.equal(reads,0);
+    assert.throws(()=>patternOverviewSnapshot(plan,{expanded:items.map((_,i)=>i)}),/1,500/);assert.equal(reads,0);
+    patternOverviewSnapshot(plan,{expanded:[0]});assert.equal(reads,1,'only visible metadata is serialized, with sharing preserved');
+});
+
+test('large overview preparation can be cancelled before stale results are returned',async()=>{
+    const index=await tflite({graphCount:1,repeats:7000}),items=(await findPatterns(index,['Reshape','Transpose','Reshape'])).items;
+    assert.equal(await preparePatternOverview(index,items,{cancelled:()=>true}),null);
+});
+
+test('MLIR over 20,000 OPs uses the same post-contraction limit without losing SSA',async()=>{
+    const count=20032,ops=Array.from({length:count},(_,i)=>`%v${i} = "company.custom"(%${i?`v${i-1}`:'input'}) {tag = "long_custom_operation"} : (i32) -> i32`).join('\n');
+    const text=`"func.func"() <{sym_name = "large", function_type = (i32) -> i32}> ({\n^entry(%input: i32):\n${ops}\n"func.return"(%v${count-1}) : (i32) -> ()\n}) : () -> ()`;
+    const index=await parseMLIR(new TextEncoder().encode(text),{metadata});
+    const items=Array.from({length:count/32},(_,i)=>({kind:'patterns',graph:0,path:Array.from({length:32},(_,n)=>i*32+n),blocks:[{graph:0,path:Array.from({length:32},(_,n)=>i*32+n)}]}));
+    const plan=await preparePatternOverview(index,items),dto=patternOverviewSnapshot(plan);
+    assert.equal(dto.total,count+1);assert.equal(capsules(dto).length,626);assert.ok(dto.graph.nodes.length<1500);
+    assertConnections(plan,dto);
+    const expanded=patternOverviewSnapshot(plan,{expanded:[0]});assertConnections(plan,expanded);
+    assert.equal(expanded.graph.nodes.filter(n=>n.type.name==='company.custom').length,32);
 });
 
 test('overview uses all results beyond the first 100 and preserves unmatched subgraph contents',async()=>{

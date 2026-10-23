@@ -67,8 +67,8 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'page') {
             send(id, { items: results.slice(args.offset, args.offset + 100), total: results.length, offset: args.offset });
         } else if (action === 'patternOverview') {
-            const current=generation,prepared=overview || await preparePatternOverview(index,results,{name:args.patternName});
-            if(current!==generation){send(id,{cancelled:true});return;}
+            const current=generation,prepared=overview || await preparePatternOverview(index,results,{name:args.patternName,cancelled:()=>current!==generation});
+            if(!prepared || current!==generation){send(id,{cancelled:true});return;}
             overview=prepared;send(id,patternOverviewSnapshot(prepared,args));
         } else if (action === 'select') {
             if(args.item.mode==='mlir-cfg') {
