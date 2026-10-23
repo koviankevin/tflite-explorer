@@ -57,3 +57,15 @@
 .sidebar .sidebar-find-search { background-color: #fff; color: var(--ink); border-color: var(--line); }
 .sidebar .sidebar-find-content li { color: var(--ink); }
 .sidebar .sidebar-find-content li.focus { background-color: #e6eee2; color: var(--ink); }
+
+/* Control flow stays distinguishable from SSA at every zoom and OS theme. */
+#target.cfg-combined .cluster rect { fill: #e7eff6; fill-opacity: .22; stroke: #66849a; stroke-opacity: .7; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+#target.cfg-combined .edge-path:not(.cfg-control) { stroke: #52665c; stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
+#target.cfg-combined .edge-label { fill: #3c5148; }
+#target.cfg-combined #arrowhead { fill: #52665c; }
+#target.cfg-combined .cfg-control { stroke: #146aaf !important; stroke-width: 2.5px !important; stroke-dasharray: 7 4; marker-end: url("#cfg-control-arrow") !important; vector-effect: non-scaling-stroke; }
+#target #cfg-control-arrow { fill: #146aaf; }
+#target .cfg-control-label { fill: #125e9d !important; font-weight: 600; }
+#target .cfg-context .node-item-type path { fill: #e2edf7 !important; }
+#target .cfg-context .node-item-type text { fill: #183d5d !important; }
+#target .cfg-focused > .node-border { stroke: #146aaf !important; stroke-width: 5px !important; vector-effect: non-scaling-stroke; }

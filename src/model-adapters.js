@@ -1,9 +1,9 @@
-import { parseModel } from './model-engine.js?v=6385cb68b392252d';
-import { modelFormat } from './model-formats.js?v=6385cb68b392252d';
-export { modelFormat } from './model-formats.js?v=6385cb68b392252d';
+import { parseModel } from './model-engine.js?v=2a50cbe3fe5d7ace';
+import { modelFormat } from './model-formats.js?v=2a50cbe3fe5d7ace';
+export { modelFormat } from './model-formats.js?v=2a50cbe3fe5d7ace';
 export async function openModelFile(file, { readAt, readMetadata, progress = () => {}, dialects = [] }) {
     if (modelFormat(file.name) === 'mlir') {
-        const { parseMLIR, MLIR_TEXT_LIMIT } = await import('./mlir-engine.js?v=6385cb68b392252d');
+        const { parseMLIR, MLIR_TEXT_LIMIT } = await import('./mlir-engine.js?v=2a50cbe3fe5d7ace');
         if (file.size > MLIR_TEXT_LIMIT) throw new Error('文字 MLIR 基礎版最多 64 MiB；請先縮小 IR dump。');
         return parseMLIR(new Uint8Array(await file.arrayBuffer()), { identifier: file.name, metadata: await readMetadata('mlir'), dialects, progress });
     }
