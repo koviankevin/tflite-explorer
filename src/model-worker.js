@@ -1,4 +1,5 @@
-import { parseModel, search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js';
+import { search, findPatterns, snapshot, selectionSnapshot } from './model-engine.js';
+import { openModelFile } from './model-adapters.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 let index;
@@ -11,12 +12,18 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         if (action === 'open') {
             file = args.file;
             const reader = new FileReaderSync();
-            const response = await fetch(new URL('../vendor/netron/tflite-metadata.json', import.meta.url));
-            if (!response.ok) throw new Error('無法載入 operator 定義。');
             const progress = (stage) => postMessage({ stage });
-            index = await parseModel((offset, length) => new Uint8Array(reader.readAsArrayBuffer(file.slice(offset, offset + length))), file.size, await response.json(), progress);
-            send(id, { format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+            index = await openModelFile(file, {
+                readAt: (offset, length) => new Uint8Array(reader.readAsArrayBuffer(file.slice(offset, offset + length))),
+                readMetadata: async format => {
+                    const response = await fetch(new URL(`../vendor/netron/${format}-metadata.json`, import.meta.url));
+                    if (!response.ok) throw new Error('無法載入 operator 定義。');
+                    return response.text();
+                }, progress
+            });
+            send(id, { sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'exportTflite') {
+            if (!index?.capabilities?.tfliteExport) throw new Error('MLIR 基礎版支援圈選與 pattern JSON；尚不支援匯出局部 MLIR 或轉換 TFLite。');
             const { exportTflite } = await import('./tflite-export.js');
             send(id, exportTflite(index, args.graph, args.nodes, file));
         } else if (action === 'search') {

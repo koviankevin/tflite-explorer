@@ -1,6 +1,7 @@
 import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
+import { modelFormat } from './model-formats.js';
 import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
@@ -139,6 +140,9 @@ function reset() {
     pickedNodes.clear(); renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
     $('export-match').hidden = true; $('export-match').disabled = true;
+    $('value-kind-label').textContent = 'Tensors'; $('mlir-info').hidden = true;
+    $('export-submodel').hidden = false;
+    $('query').placeholder = '搜尋名稱、operator、#編號';
     view._sidebar.close(); view.target = null; view.model = null; view._path = [];
     $('target').replaceChildren(); view.show('welcome');
     $('target').setAttribute('aria-busy', 'false');
@@ -155,10 +159,7 @@ function reset() {
     status('準備就緒');
 }
 async function openFile(nextFile) {
-    if (!/\.(tflite|lite)$/i.test(nextFile.name)) {
-        notice('目前僅支援 .tflite 或 .lite 模型檔案。');
-        return;
-    }
+    try { modelFormat(nextFile.name); } catch (error) { notice(error.message); return; }
     reset(); file = nextFile;
     const thisFile = file;
     $('file-name').textContent = file.name; $('file-stats').textContent = `${size(file.size)} · 建立索引中`;
@@ -169,10 +170,14 @@ async function openFile(nextFile) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
+        $('value-kind-label').textContent = model.sourceFormat === 'mlir' ? 'SSA Values' : 'Tensors';
+        $('query').placeholder = model.sourceFormat === 'mlir' ? '搜尋 dialect.op、%SSA 名稱、#編號' : '搜尋名稱、operator、#編號';
+        $('mlir-info').hidden = model.sourceFormat !== 'mlir';
+        $('export-submodel').hidden = !model.capabilities.tfliteExport;
         const layers = model.graphs.reduce((n, g) => n + g.layers, 0);
         const tensors = model.graphs.reduce((n, g) => n + g.tensors, 0);
         $('layer-count').textContent = layers.toLocaleString(); $('tensor-count').textContent = tensors.toLocaleString();
-        $('file-stats').textContent = `${size(file.size)} · ${layers.toLocaleString()} layers · ${model.graphs.length} subgraphs`;
+        $('file-stats').textContent = `${model.format} · ${size(file.size)} · ${layers.toLocaleString()} layers · ${model.graphs.length} ${model.sourceFormat === 'mlir' ? 'scopes' : 'subgraphs'}`;
         $('metrics').textContent = `讀取總量 ${size(model.stats.bytesRead)} · 檔案 ${size(file.size)} · 解析 ${(model.stats.parseMs / 1000).toFixed(2)}s`;
         $('scope').replaceChildren(new Option('目前 subgraph（子圖 0）', 'current'), new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name} · ${g.layers} layers`, String(g.index))));
         $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
@@ -231,7 +236,7 @@ function showPage(result) {
         const button = element('button', 'result-item');
         button.title = item.label; button.dataset.resultIndex = String(result.offset + i);
         const top = element('div', 'result-top');
-        top.append(element('span', 'result-index', item.patternType === 'graph' ? item.id : `#${item.id}`), element('span', 'result-title', item.label));
+        top.append(element('span', 'result-index', item.patternType === 'graph' || (model.sourceFormat === 'mlir' && item.kind === 'tensors') ? item.id : `#${item.id}`), element('span', 'result-title', item.label));
         const name = model.graphs[item.graph]?.name || `Subgraph ${item.graph}`;
         const info = kind === 'tensors' ? `${name} · ${item.dtype || '?'} [${item.shape.join(', ')}]` : `${name} · ${kind === 'layers' ? item.operator : `${item.path.length} 個 operators`}`;
         const context = element('span', 'result-subtitle');
@@ -270,8 +275,8 @@ async function selectResult(index, { whole = full, forceDraw = false, zoom } = {
     const item = page.items[index - page.offset];
     if (!item) return;
     activeIndex = index; selection = item; full = whole;
-    $('export-match').hidden = item.kind !== 'patterns';
-    $('export-match').disabled = false;
+    $('export-match').hidden = item.kind !== 'patterns' || !model.capabilities.tfliteExport;
+    $('export-match').disabled = !model.capabilities.tfliteExport;
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
     setCurrentGraph(item.graph);
@@ -299,6 +304,7 @@ async function queueDraw(dto, generation, zoom) {
         if (!dto.metadataOnly) {
             hydrate(dto, file);
             const graph = dto.graph;
+            view.options.names = model.sourceFormat === 'mlir';
             const currentModel = { format: model.format, description: model.description, modules: [graph], metadata: [], attachment: new Attachment() };
             view._sidebar.close();
             // SVG text must be visible when Netron measures getBBox().
@@ -354,7 +360,8 @@ function tensorSummary(value) {
     const section = $('tensor-summary');
     const dl = element('dl');
     const add = (label, text) => { dl.append(element('dt', '', label), element('dd', '', text)); };
-    add('Tensor 編號', `#${value.identifier}`); add('Shape', `[${value.type.shape?.dimensions?.join(', ') || ''}]`); add('Dtype', value.type.dataType);
+    add(model.sourceFormat === 'mlir' ? 'SSA 名稱' : 'Tensor 編號', model.sourceFormat === 'mlir' ? value.identifier : `#${value.identifier}`); add('Shape', `[${value.type.shape?.dimensions?.join(', ') || ''}]`); add('Dtype', value.type.dataType);
+    if (value.type.spelling) add('MLIR type', value.type.spelling);
     const q = value.quantization;
     if (q) for (const [label, key] of [['Scale', 'scale'], ['Zero point', 'offset'], ['維度', 'dimension'], ['Min', 'min'], ['Max', 'max']]) {
         if (q[key] !== undefined && (!(Array.isArray(q[key]) || ArrayBuffer.isView(q[key])) || q[key].length)) {
@@ -441,7 +448,7 @@ function applyPattern(pattern) {
 function refreshPickedNodes() {
     $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers`;
     $('save-capture').disabled = !model || pickedNodes.size < 2;
-    $('export-submodel').disabled = !model || !pickedNodes.size;
+    $('export-submodel').disabled = !model?.capabilities?.tfliteExport || !pickedNodes.size;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {
@@ -456,6 +463,7 @@ function refreshPickedNodes() {
 $('export-submodel').onclick = () => downloadSubmodel(currentGraph, [...pickedNodes]);
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
 async function downloadSubmodel(graph, nodes) {
+    if (!model?.capabilities?.tfliteExport) return;
     const sourceFile = file;
     $('export-submodel').disabled = true;
     $('export-match').disabled = true;
@@ -468,7 +476,7 @@ async function downloadSubmodel(graph, nodes) {
         notice(`開始下載 ${result.layers} layers；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。範圍外的中間 tensor 是新輸入；需提供對應數值。${customInfo}`);
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
     } catch (error) { report(error); }
-    finally { refreshPickedNodes(); $('export-match').disabled = !model || !selection; }
+    finally { refreshPickedNodes(); $('export-match').disabled = !model?.capabilities?.tfliteExport || !selection; }
 }
 function setPickingPattern(enabled) {
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }
@@ -533,6 +541,13 @@ refreshPatternLibrary();
 for (const id of ['open-model', 'welcome-open']) $(id).onclick = () => { $('model-file').value = ''; $('model-file').click(); };
 $('model-file').onchange = () => { if ($('model-file').files[0]) openFile($('model-file').files[0]); };
 $('open-demo').onclick = async () => { try { const r = await fetch('./demo.tflite'); if (!r.ok) throw new Error('無法讀取示範模型。'); await openFile(new File([await r.blob()], '示範模型.tflite')); } catch (error) { report(error); } };
+$('open-mlir-demo').onclick = async () => {
+    try {
+        const r = await fetch('./demo.mlir'); if (!r.ok) throw new Error('無法讀取 MLIR 示範。');
+        setKind('layers', false);
+        await openFile(new File([await r.blob()], '示範分支.mlir'));
+    } catch (error) { report(error); }
+};
 $('open-lora-demo').onclick = async () => {
     try {
         const r = await fetch('./lora-demo.tflite'); if (!r.ok) throw new Error('無法讀取 LoRA 結構示範。');

@@ -66,6 +66,8 @@ mlir.ModelFactory = class {
                 const parser = new _.TopLevelOperationParser(state);
                 const block = new _.Block();
                 parser.parse(block);
+                // Model Lens adapter keeps each region/block in its own search scope.
+                if (context.buildMLIRModel) return context.buildMLIRModel(block);
                 const model = new mlir.Model(config, 'MLIR', '', block, state.attributeAliasDefinitions);
                 return model;
             }

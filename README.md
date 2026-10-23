@@ -1,10 +1,18 @@
-# 模鏡｜TFLite 模型探索
+# 模鏡｜TFLite・MLIR 模型探索
 
 **Model Lens** — 看清結構，找到連接。
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 模型檔案。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+
+## MLIR 基礎版
+
+讀取文字 `.mlir`（UTF-8，最多 64 MiB），優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。
+
+圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。MLIR 不顯示 TFLite 子模型匯出按鈕，worker 也拒絕此操作；本版不匯出局部 `.mlir`、不轉換 TFLite、不跑推論。只呈現各 block 的 SSA 資料流，尚不分析跨 block 控制流程、記憶體別名或 symbol call graph。任意 dialect 的自訂簡寫語法、bytecode 和大型 resource payload 不保證可讀；不支援時回報解析位置，不猜測接線。
+
+可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的顯示擴充、parser 替換位置與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
 
 ## 匯出 TFLite 子模型
 
