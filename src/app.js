@@ -1,9 +1,10 @@
-import { Host } from '../vendor/netron/browser.js?v=f1793d22ad5a7db2';
-import { View, Attachment } from '../vendor/netron/view.js?v=f1793d22ad5a7db2';
-import { hydrate } from './hydrate.js?v=f1793d22ad5a7db2';
-import { modelFormat } from './model-formats.js?v=f1793d22ad5a7db2';
-import { LORA_PATTERN } from './pattern-utils.js?v=f1793d22ad5a7db2';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=f1793d22ad5a7db2';
+import { Host } from '../vendor/netron/browser.js?v=07c7e3ac1ebff9a0';
+import { View, Attachment } from '../vendor/netron/view.js?v=07c7e3ac1ebff9a0';
+import { hydrate } from './hydrate.js?v=07c7e3ac1ebff9a0';
+import { modelFormat } from './model-formats.js?v=07c7e3ac1ebff9a0';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=07c7e3ac1ebff9a0';
+import { LORA_PATTERN } from './pattern-utils.js?v=07c7e3ac1ebff9a0';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=07c7e3ac1ebff9a0';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -37,7 +38,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=f1793d22ad5a7db2`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=07c7e3ac1ebff9a0`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -129,7 +130,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=f1793d22ad5a7db2', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=07c7e3ac1ebff9a0', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -285,7 +286,7 @@ function setCurrentGraph(graph) {
 function renderMatchBlocks(item) {
     const nav=$('match-blocks');nav.hidden=!item.blocks;
     if(!item.blocks)return;
-    nav.replaceChildren(element('strong','',`同圖總覽 · ${item.blocks.length} blocks`),element('span','match-control','藍色虛線：控制流程／出口與回跳；實線：SSA／block argument 傳值。點 block 在同圖定位；圈選時開啟目前 block。'),...item.blocks.map(block=>{
+    nav.replaceChildren(element('strong','',`同圖總覽 · ${item.blocks.length} blocks`),element('span','match-control','藍色虛線：控制流程／出口與回跳；實線：SSA／block argument 傳值。點 block 在同圖定位；可直接跨 block 選取 layers 建立 pattern。'),...item.blocks.map(block=>{
         const button=element('button','quiet',`block ${block.graph} · ${model.graphs[block.graph].name.split('/').at(-1)} · ${block.path.length} layers`);
         button.title=model.graphs[block.graph].name;button.setAttribute('aria-pressed',String(block.graph===currentGraph));
         button.onclick=()=>selectResult(activeIndex,{blockGraph:block.graph}).catch(report);return button;
@@ -294,9 +295,10 @@ function renderMatchBlocks(item) {
 }
 function focusMatchBlock(graph) {
     if(!renderedGraph?.combined || !view.target)return;
-    if(graph!==undefined)setCurrentGraph(graph);
+    if(graph!==undefined){setCurrentGraph(graph);if(pickingPattern)syncCaptureGraph();}
     for(const {node,element:el} of renderedNodes)el?.classList.toggle('cfg-focused',graph!==undefined && node.sourceGraph===graph);
     renderMatchBlocks(selection);
+    if(pickingPattern)refreshPickedNodes();
     const ids=graph===undefined?Object.values(renderedGraph.focus).flat():renderedGraph.focus[graph] || [];
     if(graph===undefined)fitCombinedGraph();
     view.target.scrollTo(ids.map(id=>view.target._table.get(renderedGraph.nodes.get(id))?.element).filter(Boolean));
@@ -517,6 +519,10 @@ function refreshPickedNodes() {
     document.body.classList.toggle('pattern-picking',pickingPattern);
     const cfg=model?.graphs[currentGraph]?.cfgExport;
     const across=$('capture-cfg').checked,count=across ? [...cfgSelections.values()].reduce((n,set)=>n+set.size,0) : pickedNodes.size;
+    $('capture-cfg').disabled=!!renderedGraph?.combined;
+    $('add-visible-layers').hidden=!renderedGraph?.combined;
+    $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
+    $('capture-hint').textContent=renderedGraph?.combined?'直接點選不同 blocks 的 layers；綠色為本次選取。block／出口／argument 標記不會存入 pattern。':'點選 layer 可加入／取消；自動擷取選取節點之間的連線。';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
     if(model?.capabilities?.mlirExport) {
         $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
@@ -527,11 +533,12 @@ function refreshPickedNodes() {
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
     for (const entry of renderedNodes) if (entry.element) {
-        entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
-        if (pickingPattern) {
+        const location=layerLocation(entry,currentGraph),picked=location && (across?cfgSelections.get(location.graph)?.has(location.node):pickedNodes.has(location.node));
+        entry.element.classList.toggle('pattern-picked',!!(pickingPattern && picked));
+        if (pickingPattern && location) {
             entry.element.setAttribute('role', 'button'); entry.element.setAttribute('tabindex', '0');
-            entry.element.setAttribute('aria-label', `選取 layer #${entry.node.identifier} ${entry.node.type.name}`);
-            entry.element.setAttribute('aria-pressed', String(pickedNodes.has(entry.index)));
+            entry.element.setAttribute('aria-label', `${across?`block ${location.graph} · `:''}選取 layer #${location.node} ${entry.node.type.name}`);
+            entry.element.setAttribute('aria-pressed', String(!!picked));
         } else {
             for (const attribute of ['role', 'tabindex', 'aria-label', 'aria-pressed']) entry.element.removeAttribute(attribute);
         }
@@ -588,19 +595,31 @@ function showValidation(validation) {
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
 function setPickingPattern(enabled) {
     if (enabled && (!renderedNodes.length || $('target').getAttribute('aria-busy') === 'true')) { notice('請先選取搜尋結果，等待局部圖繪製完成後，再選取 pattern。'); return; }
+    if(enabled && renderedGraph?.combined)$('capture-cfg').checked=true;
     pickingPattern = enabled;
-    if (enabled && pickedGraph !== currentGraph) { pickedNodes.clear(); pickedGraph = currentGraph; }
+    if(enabled && $('capture-cfg').checked)syncCaptureGraph();
+    else if (enabled && pickedGraph !== currentGraph) { pickedNodes.clear(); pickedGraph = currentGraph; }
     $('capture-toolbar').hidden = !enabled;
     $('pick-pattern').setAttribute('aria-pressed', String(enabled));
     document.body.classList.toggle('pattern-picking', enabled);
     if (enabled) {
         view._sidebar.close(); $('tensor-summary').hidden = true;
         if (!$('capture-name').value.trim()) $('capture-name').value = `我的 pattern ${patternLibrary.length + 1}`;
-        status('點選模型圖中的 layers；再次點選即可取消。至少選取兩個相連節點。');
+        status(renderedGraph?.combined?'直接點選不同 blocks 的 layers；再次點選取消，控制流程會自動擷取。':'點選模型圖中的 layers；再次點選即可取消。至少選取兩個相連節點。');
     }
     refreshPickedNodes();
 }
-function togglePickedNode(index) {
+function syncCaptureGraph() {
+    if(!cfgSelections.has(currentGraph))cfgSelections.set(currentGraph,pickedGraph===currentGraph?pickedNodes:new Set());
+    pickedNodes=cfgSelections.get(currentGraph);pickedGraph=currentGraph;
+}
+function togglePickedNode(location) {
+    if($('capture-cfg').checked) {
+        if(!updateLayerSelection(cfgSelections,[location],{toggle:true})){notice('一組 pattern 最多選取 32 個 layers。');return;}
+        if(renderedGraph?.combined){setCurrentGraph(location.graph);renderMatchBlocks(selection);}
+        syncCaptureGraph();refreshPickedNodes();return;
+    }
+    const index=location.node;
     const count=$('capture-cfg').checked ? captureSelections().reduce((n,b)=>n+b.nodes.length,0) : pickedNodes.size;
     if (!pickedNodes.has(index) && count >= 32) { notice('一組 pattern 最多選取 32 個 layers。'); return; }
     if (pickedNodes.has(index)) pickedNodes.delete(index); else pickedNodes.add(index);
@@ -613,16 +632,13 @@ function captureNodeEvent(event) {
     if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
     event.preventDefault(); event.stopImmediatePropagation();
     if ($('target').getAttribute('aria-busy') === 'true') return;
-    togglePickedNode(Number(node.dataset.modelNode));
+    const entry=renderedNodes.find(entry=>String(entry.index)===node.dataset.modelNode),location=entry && layerLocation(entry,currentGraph);
+    if(!location){status('這是控制流程顯示標記；請選取原始 operator layer。');return;}
+    togglePickedNode(location);
 }
 $('target').addEventListener('click', captureNodeEvent, true);
 $('target').addEventListener('keydown', captureNodeEvent, true);
-$('pick-pattern').onclick = async () => {
-    try {
-        if(renderedGraph?.combined && !pickingPattern){await drawGraph(currentGraph,false);$('capture-cfg').checked=true;cfgSelections.set(currentGraph,pickedNodes);}
-        setPickingPattern(!pickingPattern);
-    } catch(error){report(error);}
-};
+$('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);
 $('cancel-capture').onclick = () => setPickingPattern(false);
 $('clear-capture').onclick = () => { pickedNodes.clear();cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
 function captureSelections() {return [...cfgSelections].filter(([,set])=>set.size).map(([graph,set])=>({graph,nodes:[...set]}));}
@@ -631,17 +647,24 @@ function renderCaptureBlocks() {
     $('add-capture-block').hidden=!$('capture-cfg').checked;
     $('capture-blocks').replaceChildren(...captureSelections().map(block=>{
         const row=element('div'),button=element('button','text-button',`block ${block.graph} · ${model?.graphs[block.graph]?.name.split('/').at(-1)} · ${block.nodes.length} layers`);
-        button.onclick=()=>drawGraph(block.graph,full).catch(report);
+        button.onclick=()=>renderedGraph?.combined?focusMatchBlock(block.graph):drawGraph(block.graph,full).catch(report);
         const remove=element('button','icon-button','×');remove.setAttribute('aria-label',`移除 block ${block.graph} 的選取`);
         remove.onclick=()=>{cfgSelections.get(block.graph)?.clear();refreshPickedNodes();};row.append(button,remove);return row;
     }));
 }
 $('capture-cfg').onchange=()=>{cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();};
 $('add-capture-block').onclick=()=>{
+    if(renderedGraph?.combined){addVisibleLayers(currentGraph);return;}
     const total=captureSelections().reduce((n,b)=>n+b.nodes.length,0),layers=model?.graphs[currentGraph]?.layers || 0;
     if(total+layers-pickedNodes.size>32){notice('加入整個 block 會超過 32 個 operators；請改為點選需要的 layers。');return;}
     for(let n=0;n<layers;n++)pickedNodes.add(n);cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();
 };
+function addVisibleLayers(graph) {
+    const locations=renderedNodes.map(entry=>layerLocation(entry,currentGraph)).filter(location=>location && (graph===undefined || location.graph===graph));
+    if(!updateLayerSelection(cfgSelections,locations)){notice('加入可見 layers 會超過 32 個 operators；請改為點選需要的 layers。');return;}
+    syncCaptureGraph();refreshPickedNodes();
+}
+$('add-visible-layers').onclick=()=>addVisibleLayers();
 $('save-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation = renderGeneration;
@@ -745,6 +768,7 @@ $('next-result').onclick = () => selectResult(activeIndex < 0 || activeIndex >= 
 $('graph-select').onchange = async () => {
     try {
         const graph=Number($('graph-select').value);
+        if(renderedGraph?.combined && selection?.blocks?.some(b=>b.graph===graph)){focusMatchBlock(graph);return;}
         if(!pickingPattern && selection?.blocks?.some(b=>b.graph===graph)){await selectResult(activeIndex,{blockGraph:graph});return;}
         await drawGraph(graph, full);
         if ($('scope').value === 'current') await runSearch();

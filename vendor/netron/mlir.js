@@ -1,8 +1,8 @@
 
 // Experimental
 
-import * as base from './base.js?v=f1793d22ad5a7db2';
-import * as text from './text.js?v=f1793d22ad5a7db2';
+import * as base from './base.js?v=07c7e3ac1ebff9a0';
+import * as text from './text.js?v=07c7e3ac1ebff9a0';
 
 const mlir = {};
 const _ = {};
