@@ -1,8 +1,9 @@
-import {serialize} from './model-engine.js?v=6f69f7d6ff83cad0';
+import {serialize} from './model-engine.js?v=8d3e652a31c04671';
+import {connectionSliceView} from './mlir-connection-view.js?v=8d3e652a31c04671';
 
 // A display-only contraction of the checked source projection. Never follow a
 // hidden computation as if it were a wire, and never rewrite the source IR.
-export function compactSliceSnapshot(index,item,entry,{maxOperators=1500}={}) {
+export function compactSliceSnapshot(index,item,entry,{maxOperators=1500,...options}={}) {
     const wanted=new Set(item.blocks.flatMap(b=>b.path.map(n=>`${b.graph}:${n}`)));
     const chosen=new Map(),nodes=[],links=[],focus={},byBlock=new Map();
     for(const [id,n] of entry.nodes.entries())if(n.kind==='operator' && wanted.has(`${n.graph}:${n.node}`)) {
@@ -21,7 +22,7 @@ export function compactSliceSnapshot(index,item,entry,{maxOperators=1500}={}) {
         from.outputs.push(arg(label,value));
         if(kind==='control'){to.controlDependencies ||= [];to.controlDependencies.push(value);}
         else to.inputs.push(arg(label,value));
-        links.push({from:from.identifier,to:to.identifier,kind,port:key});
+        links.push({from:from.identifier,to:to.identifier,kind,port:key,value:value.identifier});
     };
     const incoming=new Map(),controls=new Map();
     for(const e of entry.edges) {
@@ -55,5 +56,5 @@ export function compactSliceSnapshot(index,item,entry,{maxOperators=1500}={}) {
         }
     }
     const graph={name:'局部 MLIR · 原始 OP',groups:true,nodes,inputs:[],outputs:[],metadata:[]};
-    return {graph:serialize(graph),graphIndex:item.graph,nodes:nodes.map(n=>n.identifier),selected:[...wanted].map(key=>{const [g,n]=key.split(':');return `b${g}:n${n}`;}).filter(id=>nodes.some(n=>n.identifier===id)),total:nodes.length,full:false,combined:true,sliceView:true,compactSlice:true,focus,links,item:{...item,connections:[]}};
+    return connectionSliceView({graph:serialize(graph),graphIndex:item.graph,nodes:nodes.map(n=>n.identifier),selected:[...wanted].map(key=>{const [g,n]=key.split(':');return `b${g}:n${n}`;}).filter(id=>nodes.some(n=>n.identifier===id)),total:nodes.length,full:false,combined:true,sliceView:true,compactSlice:true,focus,links,item:{...item,connections:[]}},{...options});
 }

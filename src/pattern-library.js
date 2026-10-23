@@ -1,6 +1,6 @@
-import { prepareGraphPattern } from './subgraph-pattern.js?v=6f69f7d6ff83cad0';
-import { operatorKey } from './pattern-utils.js?v=6f69f7d6ff83cad0';
-import {prepareMLIRPattern,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=6f69f7d6ff83cad0';
+import { prepareGraphPattern } from './subgraph-pattern.js?v=8d3e652a31c04671';
+import { operatorKey } from './pattern-utils.js?v=8d3e652a31c04671';
+import {prepareMLIRPattern,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=8d3e652a31c04671';
 
 export const PATTERN_LIBRARY_KEY = 'model-lens.patterns.v2';
 const legacyLibraryKey='model-lens.patterns.v1';

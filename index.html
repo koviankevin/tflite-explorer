@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=6f69f7d6ff83cad0">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=8d3e652a31c04671">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=6f69f7d6ff83cad0"></script>
+<script type="module" src="src/app.js?v=8d3e652a31c04671"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,12 +308,12 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=6f69f7d6ff83cad0">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=6f69f7d6ff83cad0">
-<link rel="stylesheet" href="src/mobile.css?v=6f69f7d6ff83cad0">
-<link rel="stylesheet" href="src/model-visibility.css?v=6f69f7d6ff83cad0">
-<link rel="stylesheet" href="src/typography.css?v=6f69f7d6ff83cad0">
-<link rel="stylesheet" href="src/overview-canvas.css?v=6f69f7d6ff83cad0">
+<link rel="stylesheet" href="src/app.css?v=8d3e652a31c04671">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=8d3e652a31c04671">
+<link rel="stylesheet" href="src/mobile.css?v=8d3e652a31c04671">
+<link rel="stylesheet" href="src/model-visibility.css?v=8d3e652a31c04671">
+<link rel="stylesheet" href="src/typography.css?v=8d3e652a31c04671">
+<link rel="stylesheet" href="src/overview-canvas.css?v=8d3e652a31c04671">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -356,6 +356,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
   <nav id="match-blocks" class="match-blocks" aria-label="匹配的 blocks" hidden></nav>
+  <nav id="slice-connection-controls" class="match-blocks" aria-label="局部展開的連線路徑" hidden></nav>
   <nav id="pattern-overview-controls" class="match-blocks" aria-label="全模型 pattern 總覽" hidden>
     <strong>全模型 pattern 總覽</strong><label for="overview-match">定位或展開個別匹配</label><select id="overview-match"></select>
     <div><button id="toggle-overview-match" class="quiet">展開此匹配</button><button id="expand-overview-all" class="quiet">展開全部</button><button id="collapse-overview-all" class="quiet">收合全部</button></div>

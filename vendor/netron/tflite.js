@@ -1,7 +1,7 @@
 
-import * as flatbuffers from './flatbuffers.js?v=6f69f7d6ff83cad0';
-import * as flexbuffers from './flexbuffers.js?v=6f69f7d6ff83cad0';
-import * as zip from './zip.js?v=6f69f7d6ff83cad0';
+import * as flatbuffers from './flatbuffers.js?v=8d3e652a31c04671';
+import * as flexbuffers from './flexbuffers.js?v=8d3e652a31c04671';
+import * as zip from './zip.js?v=8d3e652a31c04671';
 
 const tflite = {};
 

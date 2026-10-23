@@ -1,11 +1,11 @@
-import {operationSemantics} from './mlir-dialects.js?v=6f69f7d6ff83cad0';
-import {typeSpelling} from './mlir-engine.js?v=6f69f7d6ff83cad0';
-import {validateMLIR} from './mlir-validate.js?v=6f69f7d6ff83cad0';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=6f69f7d6ff83cad0';
-import {selectionSnapshot} from './model-engine.js?v=6f69f7d6ff83cad0';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=6f69f7d6ff83cad0';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=6f69f7d6ff83cad0';
-import {compactSliceSnapshot} from './mlir-slice-graph.js?v=6f69f7d6ff83cad0';
+import {operationSemantics} from './mlir-dialects.js?v=8d3e652a31c04671';
+import {typeSpelling} from './mlir-engine.js?v=8d3e652a31c04671';
+import {validateMLIR} from './mlir-validate.js?v=8d3e652a31c04671';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=8d3e652a31c04671';
+import {selectionSnapshot} from './model-engine.js?v=8d3e652a31c04671';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=8d3e652a31c04671';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=8d3e652a31c04671';
+import {compactSliceSnapshot} from './mlir-slice-graph.js?v=8d3e652a31c04671';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -160,6 +160,15 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
     return {items,truncated:limited,searchLimited:checks>2000000};
 }
 
+function sliceDetail(index,project) {
+    if(!project.sliceDetail) {
+        const blocks=project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,n)=>n)}));
+        const item={kind:'slice',graph:blocks[0].graph,path:blocks[0].path,blocks};
+        project.sliceDetail=combinedMLIRSnapshot(index,item,build(index,project),{full:true,lightweight:true,maxOperators:Infinity,maxControlRoutes:Infinity});
+    }
+    return project.sliceDetail;
+}
+
 export function mlirMatchSnapshot(index,item,options={}) {
     const block=item.blocks.find(b=>b.graph===(options.blockGraph ?? item.graph));
     if(!block)throw new Error('此 block 不在匹配結果中。');
@@ -167,7 +176,7 @@ export function mlirMatchSnapshot(index,item,options={}) {
         const project=projects(index).find(p=>item.blocks.every(b=>p.graphs.includes(b.graph)));
         if(!project)throw new Error('匹配結果不屬於同一個 region。');
         const original=sourceEntry(index,project);
-        if(original && !options.sliceDetails)return compactSliceSnapshot(index,item,original,options);
+        if(original && !options.sliceDetails)return compactSliceSnapshot(index,item,original,{...options,detail:()=>sliceDetail(index,project)});
         if(original)return {...mlirSliceSnapshot(index,item.graph,{...options,sliceDetails:true}),item:{...item,connections:[]},selected:item.blocks.flatMap(b=>b.path.map(n=>`b${b.graph}:n${n}`))};
         return {...combinedMLIRSnapshot(index,item,build(index,project),options),sliceView:!!original};
     }
@@ -187,7 +196,7 @@ export function mlirSliceSnapshot(index,graph,{sliceDetails=false,...options}={}
     const blocks=[...new Set(operators.map(n=>n.graph))].map(graph=>({graph,path:operators.filter(n=>n.graph===graph).map(n=>n.node)}));
     if(!blocks.length)return null;
     const item={kind:'slice',graph:blocks[0].graph,path:blocks[0].path,blocks};
-    if(!sliceDetails)return compactSliceSnapshot(index,item,entry,options);
+    if(!sliceDetails)return compactSliceSnapshot(index,item,entry,{...options,detail:()=>sliceDetail(index,project)});
     const all={...item,blocks:project.graphs.map(graph=>({graph,path:index.mlir.graphs[graph].operations.map((_,n)=>n)}))};
     const dto=combinedMLIRSnapshot(index,all,build(index,project),{...options,full:true});
     return {...dto,sliceView:true,selected:operators.map(n=>`b${n.graph}:n${n.node}`)};
