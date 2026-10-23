@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=6385cb68b392252d">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js"></script>
+<script type="module" src="src/app.js?v=6385cb68b392252d"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,11 +308,11 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css">
-<link rel="stylesheet" href="src/pattern-workspace.css">
-<link rel="stylesheet" href="src/mobile.css">
-<link rel="stylesheet" href="src/model-visibility.css">
-<link rel="stylesheet" href="src/typography.css">
+<link rel="stylesheet" href="src/app.css?v=6385cb68b392252d">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=6385cb68b392252d">
+<link rel="stylesheet" href="src/mobile.css?v=6385cb68b392252d">
+<link rel="stylesheet" href="src/model-visibility.css?v=6385cb68b392252d">
+<link rel="stylesheet" href="src/typography.css?v=6385cb68b392252d">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -344,14 +344,16 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
         <p class="hint">選 operator，再選連線的起點和終點。節點編號自動產生；不需輸入模型 layer 名稱。</p>
         <label class="exact-option"><input id="graph-induced" type="checkbox">選取節點之間的連線須完全相同</label>
       </div>
+      <p id="cfg-pattern-summary" class="hint" hidden></p>
       <div class="pattern-actions"><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
-      <p class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
+      <p id="pattern-match-hint" class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>
     <label for="scope" class="sr-only">搜尋 subgraph 範圍</label><select id="scope" disabled><option value="current">目前 subgraph</option><option value="all">所有 subgraphs</option></select>
-    <p id="mlir-info" class="hint" hidden>MLIR 依 region／block 檢視與搜尋。多 block 匯出會保留所在 function 的完整控制流程；單 block 匯出圈選的局部圖。下載前在本機檢查語法、SSA、branch arguments 與 dominance；不含未接入的 dialect 自訂語意。</p>
+    <p id="mlir-info" class="hint" hidden>MLIR 可在圈選時開啟「跨 block 保留選取」，切換 blocks 加入 layers，建立包含分支、匯合與迴圈的 pattern。跨 block 搜尋以同一 region 為範圍，結果可逐 block 定位；多 block MLIR 匯出仍保留完整 function。模型及搜尋全程在本機處理。</p>
   </div>
   <div class="result-heading"><span id="result-count" aria-live="polite">等待開啟模型</span><div><button id="previous-result" class="icon-button" title="上一筆結果" aria-label="上一筆結果" disabled>↑</button><button id="next-result" class="icon-button" title="下一筆結果" aria-label="下一筆結果" disabled>↓</button></div></div>
   <div id="results" class="results" role="region" aria-label="搜尋結果"><div class="list-empty"><span>⌕</span><p>開啟模型後，從這裡開始探索。</p><small>搜尋清單會保留在模型圖旁。</small></div></div>
+  <nav id="match-blocks" class="match-blocks" aria-label="匹配的 blocks" hidden></nav>
   <div id="pagination" class="pagination" hidden><button id="previous-page" class="quiet">上一頁</button><span id="page-label"></span><button id="next-page" class="quiet">下一頁</button></div>
   <section id="tensor-summary" class="tensor-summary" hidden aria-label="選取的 tensor 資料"></section>
   <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="LICENSE" target="_blank" rel="noopener">MIT 授權 ↗</a><a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron ↗</a></div>
@@ -362,6 +364,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 </div>
 <section id="capture-toolbar" class="capture-toolbar" aria-label="從模型圖建立 pattern" hidden>
   <div><strong id="capture-count" aria-live="polite">已選取 0 個 layers</strong><span>點選 layer 可加入／取消；自動擷取選取節點之間的連線。</span></div>
+  <div id="capture-cfg-option" hidden><label><input id="capture-cfg" type="checkbox">跨 block 保留選取</label><button id="add-capture-block" class="quiet">加入目前 block 全部 layers</button><div id="capture-blocks" class="capture-blocks"></div></div>
   <div class="capture-actions"><label for="capture-name" class="sr-only">Pattern 名稱</label><input id="capture-name" placeholder="Pattern 名稱" maxlength="80"><button id="save-capture" class="primary" disabled>儲存並搜尋</button><button id="export-submodel" class="quiet" disabled>匯出 TFLite 子模型</button><button id="clear-capture" class="quiet">清除選取</button><button id="cancel-capture" class="quiet">完成選取</button></div>
 </section>
 <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title">

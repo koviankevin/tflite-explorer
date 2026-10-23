@@ -1,7 +1,7 @@
 
 // Experimental
 
-import * as python from './python.js';
+import * as python from './python.js?v=6385cb68b392252d';
 
 const numpy = {};
 

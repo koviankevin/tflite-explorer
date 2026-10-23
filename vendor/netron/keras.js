@@ -1,6 +1,6 @@
 
-import * as json from './json.js';
-import * as python from './python.js';
+import * as json from './json.js?v=6385cb68b392252d';
+import * as python from './python.js?v=6385cb68b392252d';
 
 const keras = {};
 const tfjs = {};

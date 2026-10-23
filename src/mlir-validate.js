@@ -1,6 +1,6 @@
-import { parseMLIR, typeSpelling } from './mlir-engine.js';
-import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js';
-import { operationSemantics } from './mlir-dialects.js';
+import { parseMLIR, typeSpelling } from './mlir-engine.js?v=6385cb68b392252d';
+import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js?v=6385cb68b392252d';
+import { operationSemantics } from './mlir-dialects.js?v=6385cb68b392252d';
 
 export const MLIR_VALIDATION_SCOPE = '本機語法／SSA／dominance 檢查；不含 dialect 自訂語意與完整 LLVM verifier';
 const refOf = (name,number=0) => number ? `${name}#${number}` : name;
@@ -19,7 +19,7 @@ export function validateMLIR(index,{graphIndex}={}) {
     const data=index.mlir;
     if (!data?.root || !data.info.definitions) throw new MLIRValidationError([{code:'VALIDATION_UNAVAILABLE',message:'缺少原始 SSA 定義，無法完整檢查。'}]);
     if (!data.validationCache) data.validationCache=new Map();
-    const key=graphIndex ?? 'all';
+    const key=graphIndex===undefined ? 'all' : `context:${data.ir.byBlock.get(data.graphs[graphIndex]?.block)?.owner?.context || 0}`;
     if(!data.validationCache.has(key)) data.validationCache.set(key,inspect(data,graphIndex===undefined ? undefined : data.graphs[graphIndex]?.block));
     return {scope:MLIR_VALIDATION_SCOPE,diagnostics:data.validationCache.get(key)};
 }

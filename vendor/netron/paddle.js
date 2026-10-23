@@ -1,8 +1,8 @@
 
-import * as base from './base.js';
-import * as flatbuffers from './flatbuffers.js';
-import * as protobuf from './protobuf.js';
-import * as python from './python.js';
+import * as base from './base.js?v=6385cb68b392252d';
+import * as flatbuffers from './flatbuffers.js?v=6385cb68b392252d';
+import * as protobuf from './protobuf.js?v=6385cb68b392252d';
+import * as python from './python.js?v=6385cb68b392252d';
 
 const paddle = {};
 

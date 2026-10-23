@@ -1,4 +1,4 @@
-import { assertValidMLIR, validateMLIRText } from './mlir-validate.js';
+import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=6385cb68b392252d';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {

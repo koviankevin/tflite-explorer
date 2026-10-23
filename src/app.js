@@ -1,9 +1,9 @@
-import { Host } from '../vendor/netron/browser.js';
-import { View, Attachment } from '../vendor/netron/view.js';
-import { hydrate } from './hydrate.js';
-import { modelFormat } from './model-formats.js';
-import { LORA_PATTERN } from './pattern-utils.js';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
+import { Host } from '../vendor/netron/browser.js?v=6385cb68b392252d';
+import { View, Attachment } from '../vendor/netron/view.js?v=6385cb68b392252d';
+import { hydrate } from './hydrate.js?v=6385cb68b392252d';
+import { modelFormat } from './model-formats.js?v=6385cb68b392252d';
+import { LORA_PATTERN } from './pattern-utils.js?v=6385cb68b392252d';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=6385cb68b392252d';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -37,7 +37,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=6385cb68b392252d`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -84,15 +84,19 @@ let patternLibrary = [];
 let pickingPattern = false;
 let pickedGraph = 0;
 let pickedNodes = new Set();
+let cfgPattern = null;
+const cfgSelections = new Map();
 let renderedNodes = [];
 let renderedGraph = null;
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
 function loraPreset() {
+    cfgPattern=null;
     graphNodes = ['Mul', 'FullyConnected', 'BatchMatMul', 'BatchMatMul', 'Add'].map((type, i) => ({ alias: `N${i + 1}`, type }));
     graphEdges = [[1, 2], [1, 3], [3, 4], [2, 5], [4, 5]].map(([from, to]) => ({ from: `N${from}`, to: `N${to}` }));
     graphNodeNumber = 5;
 }
 function chainPreset() {
+    cfgPattern=null;
     graphNodes = ['Reshape', 'Transpose', 'Reshape'].map((type, i) => ({ alias: `N${i + 1}`, type }));
     graphEdges = [{ from: 'N1', to: 'N2' }, { from: 'N2', to: 'N3' }];
     graphNodeNumber = 3;
@@ -125,7 +129,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=6385cb68b392252d', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -139,7 +143,7 @@ function reset() {
     exportBusy = false; $('validation-dialog').close();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1;
-    pickedNodes.clear(); renderedNodes = []; renderedGraph = null; setPickingPattern(false);
+    pickedNodes.clear(); cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
     $('export-match').hidden = true; $('export-match').disabled = true;
     $('value-kind-label').textContent = 'Tensors'; $('mlir-info').hidden = true;
@@ -172,6 +176,8 @@ async function openFile(nextFile) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
+        if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
+        $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
         $('value-kind-label').textContent = model.sourceFormat === 'mlir' ? 'SSA Values' : 'Tensors';
         $('query').placeholder = model.sourceFormat === 'mlir' ? '搜尋 dialect.op、%SSA 名稱、#編號' : '搜尋名稱、operator、#編號';
         $('mlir-info').hidden = model.sourceFormat !== 'mlir';
@@ -209,17 +215,22 @@ function setKind(nextKind, searchNow = true) {
 }
 function renderPattern() {
     updatePatternExport();
-    renderVisualPattern();
+    $('graph-pattern-editor').hidden=Boolean(cfgPattern);
+    $('cfg-pattern-summary').hidden=!cfgPattern;
+    $('pattern-match-hint').textContent=cfgPattern ? '依 SSA ports 與控制流程匹配，包含分支、匯合及迴圈；不比對 block／SSA 名稱。' : '依 tensor 直接連接的順序匹配，允許分支；不限制參數。';
+    if(cfgPattern) $('cfg-pattern-summary').textContent=`跨 block pattern · ${cfgPattern.nodes.filter(n=>n.kind==='block').length} blocks · ${cfgPattern.nodes.filter(n=>n.kind==='operator').length} operators。比對 SSA ports、block arguments、successor 順序及迴圈；目前範圍會搜尋所在的完整 region。重新圈選可建立另一組。`;
+    else renderVisualPattern();
 }
 async function runSearch() {
     if (!model) return;
     const generation = ++queryGeneration;
     activeIndex = -1;
     selection = null;
+    $('match-blocks').hidden=true;
     $('export-match').hidden = true;
     status(kind === 'patterns' ? '搜尋連接模式中…' : '搜尋中…');
     $('result-count').textContent = '搜尋中…';
-    const structure = kind === 'patterns' && $('graph-input-mode').value === 'visual' ? { nodes: graphNodes.map((n) => ({...n})), edges: graphEdges.map((e) => ({...e})), induced: $('graph-induced').checked } : null;
+    const structure = kind==='patterns' && cfgPattern ? cfgPattern : kind === 'patterns' && $('graph-input-mode').value === 'visual' ? { nodes: graphNodes.map((n) => ({...n})), edges: graphEdges.map((e) => ({...e})), induced: $('graph-induced').checked } : null;
     const scope = $('scope').value === 'current' ? String(currentGraph) : $('scope').value;
     const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope } : { kind, query: $('query').value, scope });
     if (generation !== queryGeneration || result.cancelled) return;
@@ -242,7 +253,7 @@ function showPage(result) {
         const top = element('div', 'result-top');
         top.append(element('span', 'result-index', item.patternType === 'graph' || (model.sourceFormat === 'mlir' && item.kind === 'tensors') ? item.id : `#${item.id}`), element('span', 'result-title', item.label));
         const name = model.graphs[item.graph]?.name || `Subgraph ${item.graph}`;
-        const info = kind === 'tensors' ? `${name} · ${item.dtype || '?'} [${item.shape.join(', ')}]` : `${name} · ${kind === 'layers' ? item.operator : `${item.path.length} 個 operators`}`;
+        const info = kind === 'tensors' ? `${name} · ${item.dtype || '?'} [${item.shape.join(', ')}]` : `${name} · ${kind === 'layers' ? item.operator : `${item.operatorCount || item.path.length} 個 operators`}`;
         const context = element('span', 'result-subtitle');
         context.append(element('strong', 'result-subgraph', `子圖 ${item.graph}`), document.createTextNode(` · ${info}`));
         button.append(top, context);
@@ -271,29 +282,40 @@ function setCurrentGraph(graph) {
     const option = $('scope').querySelector('option[value="current"]');
     if (option) option.textContent = `目前 subgraph（子圖 ${graph}）`;
 }
-async function selectResult(index, { whole = full, forceDraw = false, zoom } = {}) {
+function renderMatchBlocks(item) {
+    const nav=$('match-blocks');nav.hidden=!item.blocks;
+    if(!item.blocks)return;
+    nav.replaceChildren(element('strong','',`相關 blocks · ${item.blocks.length}`),element('span','match-control',`控制流程：${(item.control || []).map(e=>`${e.from} → ${e.to}（出口 ${e.successor}）`).join(' · ')}`),...item.blocks.map(block=>{
+        const button=element('button','quiet',`block ${block.graph} · ${model.graphs[block.graph].name.split('/').at(-1)} · ${block.path.length} layers`);
+        button.title=model.graphs[block.graph].name;button.setAttribute('aria-pressed',String(block.graph===currentGraph));
+        button.onclick=()=>selectResult(activeIndex,{blockGraph:block.graph}).catch(report);return button;
+    }));
+}
+async function selectResult(index, { whole = full, forceDraw = false, zoom, blockGraph } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
     if (index < page.offset || index >= page.offset + page.items.length) await changePage(Math.floor(index / 100) * 100);
     if (generation !== queryGeneration) return;
     const item = page.items[index - page.offset];
     if (!item) return;
+    const targetGraph=blockGraph ?? (item===selection && item.blocks?.some(b=>b.graph===currentGraph) ? currentGraph : item.graph);
     activeIndex = index; selection = item; full = whole;
     $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
     $('export-match').disabled = exportBusy || !canExportSubmodel();
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
     document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
-    setCurrentGraph(item.graph);
+    setCurrentGraph(targetGraph); renderMatchBlocks(item);
     const generationRender = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
-    const metadataOnly = whole && !forceDraw && renderedGraph?.full && renderedGraph.index === item.graph;
+    const metadataOnly = whole && !forceDraw && renderedGraph?.full && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
-    const dto = await rpc('select', { item, full: whole, metadataOnly });
+    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph });
     await queueDraw(dto, generationRender, zoom);
 }
 async function drawGraph(graph, whole = false, zoom) {
     if (!model) return;
     setCurrentGraph(graph); full = whole; selection = null;
+    $('match-blocks').hidden=true;
     $('export-match').hidden = true;
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
@@ -322,7 +344,11 @@ async function queueDraw(dto, generation, zoom) {
                 nodes: new Map(graph.nodes.map((node) => [node.identifier, node])),
                 values: new Map([...graph.inputs, ...graph.outputs, ...graph.nodes.flatMap((node) => [...node.inputs, ...node.outputs])].flatMap((arg) => arg.value).map((value) => [value.identifier, value]))
             };
-            if (pickedGraph !== currentGraph) { pickedNodes.clear(); pickedGraph = currentGraph; }
+            if (pickedGraph !== currentGraph) {
+                if($('capture-cfg').checked) {cfgSelections.set(pickedGraph,pickedNodes);pickedNodes=cfgSelections.get(currentGraph) || new Set();cfgSelections.set(currentGraph,pickedNodes);}
+                else pickedNodes=new Set();
+                pickedGraph = currentGraph;
+            }
             renderedNodes = graph.nodes.map((node, i) => ({ node, index: dto.nodes[i], element: view.target?._table.get(node)?.element }));
             for (const entry of renderedNodes) if (entry.element) entry.element.dataset.modelNode = String(entry.index);
         }
@@ -442,6 +468,8 @@ $('confirm-import').onclick = () => {
     } catch (error) { importError(error); }
 };
 function applyPattern(pattern) {
+    cfgPattern=pattern.mode==='mlir-cfg' ? {...pattern} : null;
+    if(cfgPattern) {setKind('patterns',false);return;}
     graphNodes = pattern.nodes.map((node) => ({ ...node }));
     graphEdges = pattern.edges.map((edge) => ({ ...edge }));
     graphNodeNumber = Math.max(0, ...graphNodes.map((node) => Number(node.alias.replace(/^N/, '')) || 0));
@@ -450,15 +478,18 @@ function applyPattern(pattern) {
     updateGraphInputMode(); setKind('patterns', false);
 }
 function refreshPickedNodes() {
+    document.body.classList.toggle('pattern-picking',pickingPattern);
     const cfg=model?.graphs[currentGraph]?.cfgExport;
-    $('capture-count').textContent = `已選取 ${pickedNodes.size} 個 layers${cfg ? ` · 匯出會保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
+    const across=$('capture-cfg').checked,count=across ? [...cfgSelections.values()].reduce((n,set)=>n+set.size,0) : pickedNodes.size;
+    $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ''}`;
     if(model?.capabilities?.mlirExport) {
         $('export-submodel').textContent=cfg ? '匯出完整控制流程 MLIR' : '匯出局部 MLIR';
         const matched=model.graphs[selection?.graph]?.cfgExport;
         $('export-match').textContent=matched ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
     }
-    $('save-capture').disabled = !model || pickedNodes.size < 2;
-    $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !pickedNodes.size;
+    $('save-capture').disabled = !model || count < (across ? 1 : 2);
+    renderCaptureBlocks();
+    $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
     for (const entry of renderedNodes) if (entry.element) {
         entry.element.classList.toggle('pattern-picked', pickingPattern && pickedNodes.has(entry.index));
         if (pickingPattern) {
@@ -470,7 +501,12 @@ function refreshPickedNodes() {
         }
     }
 }
-$('export-submodel').onclick = () => downloadSubmodel(currentGraph, [...pickedNodes]);
+$('export-submodel').onclick = async () => {
+    if(exportBusy)return;
+    if(!$('capture-cfg').checked)return downloadSubmodel(currentGraph,[...pickedNodes]);
+    const selections=captureSelections(),sourceFile=file;$('export-submodel').disabled=true;
+    try {await rpc('capturePattern',{selections});if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes);}catch(error){report(error);}finally{refreshPickedNodes();}
+};
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path]); };
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes) {
@@ -529,7 +565,8 @@ function setPickingPattern(enabled) {
     refreshPickedNodes();
 }
 function togglePickedNode(index) {
-    if (!pickedNodes.has(index) && pickedNodes.size >= 32) { notice('一組 pattern 最多選取 32 個 layers。'); return; }
+    const count=$('capture-cfg').checked ? captureSelections().reduce((n,b)=>n+b.nodes.length,0) : pickedNodes.size;
+    if (!pickedNodes.has(index) && count >= 32) { notice('一組 pattern 最多選取 32 個 layers。'); return; }
     if (pickedNodes.has(index)) pickedNodes.delete(index); else pickedNodes.add(index);
     refreshPickedNodes();
 }
@@ -546,14 +583,31 @@ $('target').addEventListener('click', captureNodeEvent, true);
 $('target').addEventListener('keydown', captureNodeEvent, true);
 $('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);
 $('cancel-capture').onclick = () => setPickingPattern(false);
-$('clear-capture').onclick = () => { pickedNodes.clear(); refreshPickedNodes(); };
+$('clear-capture').onclick = () => { pickedNodes.clear();cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
+function captureSelections() {return [...cfgSelections].filter(([,set])=>set.size).map(([graph,set])=>({graph,nodes:[...set]}));}
+function renderCaptureBlocks() {
+    $('capture-blocks').hidden=!$('capture-cfg').checked;
+    $('add-capture-block').hidden=!$('capture-cfg').checked;
+    $('capture-blocks').replaceChildren(...captureSelections().map(block=>{
+        const row=element('div'),button=element('button','text-button',`block ${block.graph} · ${model?.graphs[block.graph]?.name.split('/').at(-1)} · ${block.nodes.length} layers`);
+        button.onclick=()=>drawGraph(block.graph,full).catch(report);
+        const remove=element('button','icon-button','×');remove.setAttribute('aria-label',`移除 block ${block.graph} 的選取`);
+        remove.onclick=()=>{cfgSelections.get(block.graph)?.clear();refreshPickedNodes();};row.append(button,remove);return row;
+    }));
+}
+$('capture-cfg').onchange=()=>{cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();};
+$('add-capture-block').onclick=()=>{
+    const total=captureSelections().reduce((n,b)=>n+b.nodes.length,0),layers=model?.graphs[currentGraph]?.layers || 0;
+    if(total+layers-pickedNodes.size>32){notice('加入整個 block 會超過 32 個 operators；請改為點選需要的 layers。');return;}
+    for(let n=0;n<layers;n++)pickedNodes.add(n);cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();
+};
 $('save-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation = renderGeneration;
     const graph = currentGraph;
     $('save-capture').disabled = true;
     try {
-        const structure = await rpc('capturePattern', { graph, nodes: [...pickedNodes] });
+        const structure = await rpc('capturePattern', $('capture-cfg').checked ? {selections:captureSelections()} : { graph, nodes: [...pickedNodes] });
         if (!pickingPattern || generation !== renderGeneration || graph !== currentGraph) return;
         const pattern = reusablePattern($('capture-name').value, structure);
         let stored = true;
@@ -649,7 +703,9 @@ $('previous-result').onclick = () => selectResult(activeIndex <= 0 ? page.total 
 $('next-result').onclick = () => selectResult(activeIndex < 0 || activeIndex >= page.total - 1 ? 0 : activeIndex + 1).catch(report);
 $('graph-select').onchange = async () => {
     try {
-        await drawGraph(Number($('graph-select').value), full);
+        const graph=Number($('graph-select').value);
+        if(!pickingPattern && selection?.blocks?.some(b=>b.graph===graph)){await selectResult(activeIndex,{blockGraph:graph});return;}
+        await drawGraph(graph, full);
         if ($('scope').value === 'current') await runSearch();
     } catch (error) { report(error); }
 };
@@ -685,5 +741,6 @@ document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }
 });
 new MutationObserver(() => document.body.classList.toggle('details-open', $('sidebar').style.opacity === '1')).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
+new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
