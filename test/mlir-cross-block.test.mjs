@@ -18,13 +18,61 @@ for(const [name,text,blocks,operators] of [['diamond',MLIR_CFG_DIAMOND,4,7],['lo
     assert.equal(result.items.length,1);const item=result.items[0];
     assert.equal(item.blocks.length,blocks);assert.equal(item.operatorCount,operators);
     for(const block of item.blocks) {
-        const dto=mlirMatchSnapshot(index,item,{blockGraph:block.graph,full:true});
+        const dto=mlirMatchSnapshot(index,item,{blockGraph:block.graph,full:true,singleBlock:true});
         assert.equal(dto.graphIndex,block.graph);assert.deepEqual(dto.selected,block.path);
         assert.equal(dto.graph.nodes.length,index.graphs[block.graph].graph.nodes.length);
-        const metadataOnly=mlirMatchSnapshot(index,item,{blockGraph:block.graph,full:true,metadataOnly:true});
+        const metadataOnly=mlirMatchSnapshot(index,item,{blockGraph:block.graph,full:true,metadataOnly:true,singleBlock:true});
         assert.equal(metadataOnly.metadataOnly,true);assert.equal(metadataOnly.graph,undefined);
     }
     assert.throws(()=>mlirMatchSnapshot(index,item,{blockGraph:99}),/不在匹配/);
+    const before=JSON.stringify(index.graphs.map(g=>g.graph)),dto=mlirMatchSnapshot(index,item);
+    assert.equal(dto.combined,true);assert.equal(dto.selected.length,operators);
+    assert.equal(new Set(dto.graph.nodes.map(n=>n.identifier)).size,dto.graph.nodes.length);
+    assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='block').length,blocks);
+    assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='operator').length,operators);
+    assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='route').length,item.control.length);
+    assert.ok(dto.links.some(e=>e.kind==='control'));
+    for(const route of dto.graph.nodes.filter(n=>n.diagramKind==='route')) {
+        assert.equal(dto.links.filter(e=>e.kind==='control' && e.from===route.identifier).length,1);
+        assert.equal(dto.links.filter(e=>e.kind==='control' && e.to===route.identifier).length,1);
+    }
+    const produced=new Set(dto.graph.nodes.flatMap(n=>n.outputs.flatMap(a=>a.value.map(v=>v.identifier))));
+    const boundary=new Set(dto.graph.inputs.flatMap(a=>a.value.map(v=>v.identifier)));
+    for(const node of dto.graph.nodes)for(const a of node.inputs)for(const v of a.value)assert.ok(produced.has(v.identifier) || boundary.has(v.identifier));
+    assert.equal(JSON.stringify(index.graphs.map(g=>g.graph)),before,'display projection must not change source graphs');
+    assert.deepEqual(mlirMatchSnapshot(index,item,{blockGraph:blocks-1}).graph,dto.graph,'focus must not change the combined graph');
+});
+
+test('combined loop graph keeps distinct argument SSA, route bindings and the actual backedge',async()=>{
+    const index=await parse(MLIR_CFG_LOOP),pattern=captureMLIRPattern(index,whole(index)),item=(await findMLIRPatterns(index,pattern)).items[0],dto=mlirMatchSnapshot(index,item);
+    const back=dto.links.find(e=>e.from==='route:1:0' && e.to==='b1');assert.equal(back.kind,'control');
+    const argument=dto.graph.nodes.find(n=>n.identifier==='b1:a0');
+    assert.equal(argument.inputs.length,2,'initial and loop-carried values merge at the argument');
+    assert.equal(new Set(argument.inputs.map(a=>a.value[0].identifier)).size,2);
+    const step=dto.graph.nodes.find(n=>n.name==='company.step');
+    assert.equal(step.inputs[0].value[0].identifier,argument.outputs[0].value[0].identifier);
+    assert.notEqual(step.outputs[0].value[0].identifier,argument.outputs[0].value[0].identifier);
+});
+
+test('partial combined graph includes real terminators and marks omitted data producers as boundaries',async()=>{
+    const index=await parse(MLIR_CFG_DIAMOND),item={mode:'mlir-cfg',kind:'patterns',graph:1,path:[0],blocks:[{graph:1,path:[0]},{graph:3,path:[0]}]};
+    const dto=mlirMatchSnapshot(index,item);
+    assert.ok(dto.graph.nodes.some(n=>n.name==='cf.br' && n.sourceGraph===1));
+    assert.ok(dto.graph.inputs.length>0);
+    assert.equal(dto.graph.nodes.some(n=>n.sourceGraph===2),false,'do not invent shortcuts through omitted blocks');
+    assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='route').length,1);
+    assert.ok(mlirMatchSnapshot(index,item,{full:true}).graph.nodes.length>dto.graph.nodes.length);
+});
+
+test('shared dominating branch operands retain their exact predecessor route in the combined diagram',async()=>{
+    const text=MLIR_CFG_DIAMOND.replace('"cf.br"(%left_value)','"cf.br"(%input)').replace('"cf.br"(%right_value)','"cf.br"(%input)');
+    const index=await parse(text),item={mode:'mlir-cfg',kind:'patterns',graph:0,path:[0],blocks:whole(index).map(b=>({graph:b.graph,path:b.nodes}))};
+    const dto=mlirMatchSnapshot(index,item),merged=dto.graph.nodes.find(n=>n.identifier==='b3:a0');
+    assert.equal(merged.inputs.length,2);
+    for(const g of [1,2]) {
+        const bindings=dto.graph.nodes.find(n=>n.identifier===`route:${g}:0`).outputs.filter(a=>a.value[0].type?.dataType!=='control');
+        assert.equal(bindings.length,1);assert.ok(merged.inputs.some(a=>a.value[0]===bindings[0].value[0]));
+    }
 });
 
 test('portable cross-block patterns ignore model names, labels, SSA identifiers and attributes',async()=>{

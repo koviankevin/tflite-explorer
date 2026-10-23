@@ -3,6 +3,7 @@ import {typeSpelling} from './mlir-engine.js';
 import {validateMLIR} from './mlir-validate.js';
 import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js';
 import {selectionSnapshot} from './model-engine.js';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -43,14 +44,14 @@ function build(index,project) {
             const sem=operationSemantics(op,dialects),groups=sem.successorOperands({op,uses:row.uses,typeOf:typeSpelling});
             for(const [s,successor] of op.successors.entries()) {
                 const target=labels.get(successor.label || successor.name);edge(blockIds.get(block),blockIds.get(target),'control',s);
-                for(const [a,use] of groups[s].entries()) {const value=values.get(use.value),argument=values.get(target.arguments[a]);if(value && argument)edge(value.id,argument.id,'argument',`${value.port}:${s}`);}
+                for(const [a,use] of groups[s].entries()) {const value=values.get(use.value),argument=values.get(target.arguments[a]);if(value && argument){edge(value.id,argument.id,'argument',`${value.port}:${s}`);edges.at(-1).branch=graphsByBlock.get(block);}}
             }
         }
     }
     const outgoing=nodes.map(()=>new Map()),incoming=nodes.map(()=>new Map()),keys=nodes.map(nodeKey),byType=new Map();
     for(const [n,key] of keys.entries()){if(!byType.has(key))byType.set(key,[]);byType.get(key).push(n);}
     for(const e of edges)for(const [map,n,other] of [[outgoing,e.from,e.to],[incoming,e.to,e.from]]) {const key=edgeKey(e);if(!map[n].has(key))map[n].set(key,new Set());map[n].get(key).add(other);}
-    return project.entry={nodes,edges,outgoing,incoming,keys,byType,blockIds,opIds};
+    return project.entry={nodes,edges,outgoing,incoming,keys,byType,blockIds,opIds,values};
 }
 
 export function captureMLIRPattern(index,selections) {
@@ -75,7 +76,7 @@ export function captureMLIRPattern(index,selections) {
         if(n.kind==='operator'){base.order=orders.get(n.graph) || 0;orders.set(n.graph,base.order+1);}
         return base;
     });
-    const edges=entry.edges.filter(e=>aliases.has(e.from) && aliases.has(e.to)).map(e=>({...e,from:aliases.get(e.from),to:aliases.get(e.to)}));
+    const edges=entry.edges.filter(e=>aliases.has(e.from) && aliases.has(e.to)).map(e=>({from:aliases.get(e.from),to:aliases.get(e.to),kind:e.kind,...(e.port!==undefined?{port:e.port}:{})}));
     const spec=prepareMLIRPattern({mode:CFG_PATTERN_MODE,nodes,edges,induced:true});
     return {mode:spec.mode,nodes:spec.nodes,edges:spec.edges,induced:spec.induced};
 }
@@ -138,6 +139,11 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
 export function mlirMatchSnapshot(index,item,options={}) {
     const block=item.blocks.find(b=>b.graph===(options.blockGraph ?? item.graph));
     if(!block)throw new Error('此 block 不在匹配結果中。');
+    if(!options.singleBlock) {
+        const project=projects(index).find(p=>item.blocks.every(b=>p.graphs.includes(b.graph)));
+        if(!project)throw new Error('匹配結果不屬於同一個 region。');
+        return combinedMLIRSnapshot(index,item,build(index,project),options);
+    }
     const selected=new Set(block.path),entry=index.graphs[block.graph];
     const connections=block.path.flatMap(from=>[...entry.next[from]].filter(to=>selected.has(to)).map(to=>[from,to]));
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);

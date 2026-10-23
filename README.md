@@ -16,7 +16,9 @@
 
 ### 跨 block pattern
 
-在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 32 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。點結果後，「相關 blocks」列出控制流程及各 block 定位按鈕，逐一高亮匹配 layers；完整／局部圖與字級切換保留目前定位的 block。
+在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 32 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。
+
+點跨 block 結果會將相關 blocks 畫在同一張圖，以區塊框線區分範圍。藍色虛線顯示實際控制出口與迴圈回跳，實線顯示 SSA 和 block argument 傳值；出口與 argument 顯示節點是檢視用標記，不會寫入原始 IR 或匯出檔。點 block 按鈕直接在同圖定位並保留排版與縮放；「全部 blocks」重新縮放以檢視總覽。預設局部圖只含匹配 operators、必要 terminators、block arguments 與相關 blocks 之間的 successor；省略的資料來源標成邊界輸入，不會跨越省略 blocks 畫假連線。完整圖展開相關 blocks 的所有 operators，最多 1,500 operators、512 個控制出口。從總覽按「選取 pattern」會開啟目前 block，繼續使用跨 block 保留選取流程。匯出仍以原始匹配為準，多 block MLIR 保留完整 function。
 
 跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱、型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
 

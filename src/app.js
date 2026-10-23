@@ -285,19 +285,51 @@ function setCurrentGraph(graph) {
 function renderMatchBlocks(item) {
     const nav=$('match-blocks');nav.hidden=!item.blocks;
     if(!item.blocks)return;
-    nav.replaceChildren(element('strong','',`相關 blocks · ${item.blocks.length}`),element('span','match-control',`控制流程：${(item.control || []).map(e=>`${e.from} → ${e.to}（出口 ${e.successor}）`).join(' · ')}`),...item.blocks.map(block=>{
+    nav.replaceChildren(element('strong','',`同圖總覽 · ${item.blocks.length} blocks`),element('span','match-control','藍色虛線：控制流程／出口與回跳；實線：SSA／block argument 傳值。點 block 在同圖定位；圈選時開啟目前 block。'),...item.blocks.map(block=>{
         const button=element('button','quiet',`block ${block.graph} · ${model.graphs[block.graph].name.split('/').at(-1)} · ${block.path.length} layers`);
         button.title=model.graphs[block.graph].name;button.setAttribute('aria-pressed',String(block.graph===currentGraph));
         button.onclick=()=>selectResult(activeIndex,{blockGraph:block.graph}).catch(report);return button;
     }));
+    const overview=element('button','quiet','全部 blocks');overview.onclick=()=>focusMatchBlock();nav.append(overview);
 }
-async function selectResult(index, { whole = full, forceDraw = false, zoom, blockGraph } = {}) {
+function focusMatchBlock(graph) {
+    if(!renderedGraph?.combined || !view.target)return;
+    if(graph!==undefined)setCurrentGraph(graph);
+    for(const {node,element:el} of renderedNodes)el?.classList.toggle('cfg-focused',graph!==undefined && node.sourceGraph===graph);
+    renderMatchBlocks(selection);
+    const ids=graph===undefined?Object.values(renderedGraph.focus).flat():renderedGraph.focus[graph] || [];
+    if(graph===undefined)fitCombinedGraph();
+    view.target.scrollTo(ids.map(id=>view.target._table.get(renderedGraph.nodes.get(id))?.element).filter(Boolean));
+    status(graph===undefined?'同圖顯示所有相關 blocks。':`已在同圖定位 block ${graph}，保留排版與縮放。`);
+}
+function fitCombinedGraph() {
+    const target=$('target');
+    if(view.target)view.target.zoom=Math.min(1,(target.clientWidth-32)/view.target._width,(target.clientHeight-32)/view.target._height);
+}
+function decorateCombinedGraph(dto) {
+    $('target').classList.toggle('cfg-combined',!!dto.combined);
+    if(!dto.combined)return;
+    const marker=$('target').querySelector('#arrowhead')?.cloneNode(true);
+    if(marker){marker.id='cfg-control-arrow';$('target').querySelector('defs')?.append(marker);}
+    for(const {node,element:el} of renderedNodes) {
+        el?.setAttribute('data-block',String(node.sourceGraph));
+        if(node.diagramKind!=='operator')el?.classList.add('cfg-context');
+    }
+    for(const link of dto.links || [])if(link.kind==='control') {
+        const from=view.target._table.get(renderedGraph.nodes.get(link.from)),to=view.target._table.get(renderedGraph.nodes.get(link.to));
+        const edge=from && to?view.target.edge(from.name,to.name)?.label:null;
+        edge?.element?.classList.add('cfg-control');edge?.labelElement?.classList.add('cfg-control-label');
+    }
+}
+async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
     if (index < page.offset || index >= page.offset + page.items.length) await changePage(Math.floor(index / 100) * 100);
     if (generation !== queryGeneration) return;
     const item = page.items[index - page.offset];
     if (!item) return;
+    whole ??= item.blocks && !selection?.blocks ? false : full;
+    if(item===selection && blockGraph!==undefined && renderedGraph?.combined && !forceDraw && whole===full){focusMatchBlock(blockGraph);return;}
     const targetGraph=blockGraph ?? (item===selection && item.blocks?.some(b=>b.graph===currentGraph) ? currentGraph : item.graph);
     activeIndex = index; selection = item; full = whole;
     $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
@@ -307,7 +339,7 @@ async function selectResult(index, { whole = full, forceDraw = false, zoom, bloc
     setCurrentGraph(targetGraph); renderMatchBlocks(item);
     const generationRender = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
-    const metadataOnly = whole && !forceDraw && renderedGraph?.full && renderedGraph.index === targetGraph;
+    const metadataOnly = !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph });
     await queueDraw(dto, generationRender, zoom);
@@ -339,8 +371,9 @@ async function queueDraw(dto, generation, zoom) {
             await view._updateTarget(currentModel, [{ target: graph, signature: null }]);
             if (generation !== renderGeneration) { renderedGraph = null; return; }
             if (Number.isFinite(zoom) && view.target) view.target.zoom = zoom;
+            else if(dto.combined)fitCombinedGraph();
             renderedGraph = {
-                index: dto.graphIndex, full: dto.full, graph,
+                index: dto.graphIndex, full: dto.full, graph, combined: dto.combined, focus: dto.focus,
                 nodes: new Map(graph.nodes.map((node) => [node.identifier, node])),
                 values: new Map([...graph.inputs, ...graph.outputs, ...graph.nodes.flatMap((node) => [...node.inputs, ...node.outputs])].flatMap((arg) => arg.value).map((value) => [value.identifier, value]))
             };
@@ -351,12 +384,13 @@ async function queueDraw(dto, generation, zoom) {
             }
             renderedNodes = graph.nodes.map((node, i) => ({ node, index: dto.nodes[i], element: view.target?._table.get(node)?.element }));
             for (const entry of renderedNodes) if (entry.element) entry.element.dataset.modelNode = String(entry.index);
+            decorateCombinedGraph(dto);
         }
         if (!renderedGraph || renderedGraph.index !== dto.graphIndex) return;
         const graph = renderedGraph.graph;
         refreshPickedNodes();
         $('empty-state').hidden = true;
-        $('graph-caption').textContent = `${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
+        $('graph-caption').textContent = dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
         const selected = dto.selected.map((index) => renderedGraph.nodes.get(String(index))).filter(Boolean);
         if (dto.detail) {
             dto.detail = renderedGraph.values.get(dto.detail.identifier) || hydrate(dto.detail, file);
@@ -581,7 +615,12 @@ function captureNodeEvent(event) {
 }
 $('target').addEventListener('click', captureNodeEvent, true);
 $('target').addEventListener('keydown', captureNodeEvent, true);
-$('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);
+$('pick-pattern').onclick = async () => {
+    try {
+        if(renderedGraph?.combined && !pickingPattern){await drawGraph(currentGraph,false);$('capture-cfg').checked=true;cfgSelections.set(currentGraph,pickedNodes);}
+        setPickingPattern(!pickingPattern);
+    } catch(error){report(error);}
+};
 $('cancel-capture').onclick = () => setPickingPattern(false);
 $('clear-capture').onclick = () => { pickedNodes.clear();cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
 function captureSelections() {return [...cfgSelections].filter(([,set])=>set.size).map(([graph,set])=>({graph,nodes:[...set]}));}
@@ -711,7 +750,9 @@ $('graph-select').onchange = async () => {
 };
 $('local-graph').onclick = () => selection ? selectResult(activeIndex, { whole: false }).catch(report) : drawGraph(currentGraph, false).catch(report);
 $('full-graph').onclick = () => {
-    if (model.graphs[currentGraph].layers > 1500 && !fullConfirmed) { fullConfirmed = true; $('full-graph').textContent = '確認繪製完整圖'; notice(`這張圖有 ${model.graphs[currentGraph].layers.toLocaleString()} 個節點，完整繪製可能耗時。再次點擊「確認繪製完整圖」即可繼續。`); return; }
+    const layerCount=selection?.blocks?selection.blocks.reduce((n,b)=>n+model.graphs[b.graph].layers,0):model.graphs[currentGraph].layers;
+    if(selection?.blocks && layerCount>1500){notice('相關 blocks 超過 1,500 個 operators；請使用局部圖或縮小 pattern。');return;}
+    if (layerCount > 1500 && !fullConfirmed) { fullConfirmed = true; $('full-graph').textContent = '確認繪製完整圖'; notice(`這張圖有 ${layerCount.toLocaleString()} 個節點，完整繪製可能耗時。再次點擊「確認繪製完整圖」即可繼續。`); return; }
     $('full-graph').textContent = '完整圖'; fullConfirmed = false;
     (selection ? selectResult(activeIndex, { whole: true }) : drawGraph(currentGraph, true)).catch(report);
 };

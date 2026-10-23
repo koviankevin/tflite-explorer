@@ -39,17 +39,17 @@ await cp('vendor/netron/LICENSE', 'dist/LICENSE-Netron.txt');
 await cp('LICENSE', 'dist/LICENSE');
 // Version the complete ESM graph, including Worker imports. A fresh HTML page
 // must never combine a new UI with ten-minute-old GitHub Pages script caches.
-const modules=[];
+const modules=[],assets=[];
 async function collectModules(directory) {
     for(const entry of await readdir(directory,{withFileTypes:true})) {
         const path=`${directory}/${entry.name}`;
         if(entry.isDirectory())await collectModules(path);
-        else if(entry.name.endsWith('.js'))modules.push(path);
+        else {if(entry.name.endsWith('.js'))modules.push(path);if(/\.(js|css)$/.test(entry.name))assets.push(path);}
     }
 }
-await collectModules('dist/src');await collectModules('dist/vendor');modules.sort();
+await collectModules('dist/src');await collectModules('dist/vendor');modules.sort();assets.sort();
 const hash=createHash('sha256');
-for(const path of modules){hash.update(path);hash.update(await readFile(path));}
+for(const path of assets){hash.update(path);hash.update(await readFile(path));}
 const release=hash.digest('hex').slice(0,16);
 for(const path of modules) {
     const text=await readFile(path,'utf8');
