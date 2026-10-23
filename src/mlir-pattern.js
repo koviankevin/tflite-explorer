@@ -103,7 +103,7 @@ export function captureMLIRPattern(index,selections) {
 }
 
 export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=>false) {
-    const spec=prepareMLIRPattern(structure),items=[],physicalMatches=new Set();let checks=0,limited=false,yieldAt=0;
+    const spec=prepareMLIRPattern(structure),items=[];let checks=0,limited=false,yieldAt=0;
     const budget=async()=>{
         if(checks>2000000){limited=true;return false;}
         if(checks%1000===0){if(performance.now()>=yieldAt){await new Promise(r=>setTimeout(r,0));yieldAt=performance.now()+8;}if(cancelled())return false;}
@@ -112,8 +112,7 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
     for(const project of projects(index)) {
         if(scope!=='all' && !project.graphs.includes(Number(scope)))continue;
         const actual=build(index,project),original=sourceEntry(index,project);
-        const originalOps=original && new Set(original.nodes.filter(n=>n.kind==='operator').map(n=>`${n.graph}:${n.node}`));
-        for(const entry of original?[original,actual]:[actual]) {
+        const entry=original || actual;
         const mapping=new Map(),used=new Set(),seen=new Set();
         const has=(a,b,e)=>entry.outgoing[a].get(edgeKey(e))?.has(b) || false;
         const orderOK=(node,n)=> {
@@ -135,8 +134,6 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
                 for(const graph of [...new Set(matched.map(n=>n.graph))].sort((a,b)=>a-b))blocks.push({graph,path:matched.filter(n=>n.graph===graph).map(n=>n.node).sort((a,b)=>a-b)});
                 const first=blocks[0];
                 const control=spec.edges.filter(e=>e.kind==='control').map(e=>({from:entry.nodes[mapping.get(e.from)].graph,to:entry.nodes[mapping.get(e.to)].graph,successor:Number(e.port)}));
-                const physical=JSON.stringify([matched.map(n=>[n.graph,n.node]).sort((a,b)=>a[0]-b[0] || a[1]-b[1]),control.map(e=>[e.from,e.to,e.successor]).sort()]);
-                if(physicalMatches.has(physical))return;physicalMatches.add(physical);
                 items.push({kind:'patterns',patternType:'graph',mode:spec.mode,graph:first.graph,path:first.path,blocks,control,operatorCount:matched.length,...(entry===original?{sourceProjection:true}:{}),label:`跨 block · ${blocks.length} blocks · ${matched.length} operators${entry===original?' · 原始結構':''}`,id:blocks.map(b=>`block ${b.graph}`).join(' · ')});
                 if(items.length>=50000)limited=true;return;
             }
@@ -150,7 +147,6 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
                 const typed=entry.byType.get(nodeKey(node)) || [],base=constraints.length ? constraints.reduce((a,b)=>a.size<=b.size ? a : b) : typed,possible=[];
                 for(const n of base) {
                     checks++;if(checks%1000===0 || checks>2000000)if(!await budget())return;
-                    if(entry===actual && original && node.kind==='operator' && !originalOps.has(`${entry.nodes[n].graph}:${entry.nodes[n].node}`))continue;
                     if(!used.has(n) && entry.keys[n]===nodeKey(node) && constraints.every(s=>s.has(n)) && spec.outgoing.get(node.alias).filter(e=>e.to===node.alias).every(e=>has(n,n,e)) && orderOK(node,n))possible.push(n);
                 }
                 if(!possible.length)return;
@@ -159,8 +155,6 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
             for(const candidate of candidates || []) {mapping.set(chosen.alias,candidate);used.add(candidate);await search();used.delete(candidate);mapping.delete(chosen.alias);if(limited || cancelled())return;}
         };
         await search();if(cancelled())return null;if(limited)break;
-        }
-        if(limited)break;
     }
     return {items,truncated:limited,searchLimited:checks>2000000};
 }

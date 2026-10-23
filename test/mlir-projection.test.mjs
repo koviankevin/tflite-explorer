@@ -50,7 +50,7 @@ test('pruned unused original arguments and their branch bindings remain availabl
     const all=captureMLIRPattern(original,original.graphs.map((g,graph)=>({graph,nodes:g.graph.nodes.map((_,n)=>n)})));
     assert.equal((await findMLIRPatterns(reopened,all)).items.length,0,'deleted company.finish must not be a candidate');
 });
-test('matching both actual and source views does not duplicate the same physical loop match',async()=>{
+test('an unchanged loop interface still produces only one physical match through its source projection',async()=>{
     const original=await parse(MLIR_CFG_LOOP),selected=[{graph:1,nodes:[0]}],pattern=captureMLIRPattern(original,selected);
     const {reopened}=await slice(original,selected);
     assert.equal((await findMLIRPatterns(reopened,pattern)).items.length,1);
@@ -93,4 +93,11 @@ test('synthetic seed constants and entry operations never become original-layer 
     assert.ok(reopened.graphs[0].graph.nodes.some(n=>n.type.name==='arith.constant'));
     assert.equal((await findMLIRPatterns(reopened,pattern)).items.length,0);
     assert.throws(()=>captureMLIRPattern(reopened,[{graph:0,nodes:[0]}]),/新增的介面節點/);
+});
+test('added ABI arguments cannot enable a new match that is absent from the original source structure',async()=>{
+    const {text,reopened}=await slice(mixed,mixedSelection);
+    const plainText=text.replace(/\s+\{model_lens\.slice_pattern = "(?:\\.|[^"\\])*"\}/,'');assert.notEqual(plainText,text);
+    const plain=await parse(plainText),abiPattern=captureMLIRPattern(plain,[{graph:5,nodes:[0]}]);
+    assert.equal((await findMLIRPatterns(plain,abiPattern)).items.length,1);
+    assert.equal((await findMLIRPatterns(reopened,abiPattern)).items.length,0,'do not union added ABI structure with source matching');
 });
