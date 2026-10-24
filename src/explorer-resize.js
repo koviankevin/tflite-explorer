@@ -51,5 +51,5 @@ export function explorerResize(handle) {
     handle.addEventListener('keydown',keyboard);handle.addEventListener('dblclick',reset);
     win.addEventListener('blur',finish);win.addEventListener('resize',resize);
     const observer=new win.ResizeObserver(measureBar);observer.observe(bar);render();
-    return ()=>{finish();observer.disconnect();win.cancelAnimationFrame(barFrame);win.removeEventListener('blur',finish);win.removeEventListener('resize',resize);handle.removeEventListener('pointerdown',start);handle.removeEventListener('pointermove',move);for(const type of ['pointerup','pointercancel','lostpointercapture'])handle.removeEventListener(type,finish);handle.removeEventListener('keydown',keyboard);handle.removeEventListener('dblclick',reset);};
+    return {setWidth(value){finish();preferred=Math.max(minimum,Math.min(maximum,value));render();store();},dispose(){finish();observer.disconnect();win.cancelAnimationFrame(barFrame);win.removeEventListener('blur',finish);win.removeEventListener('resize',resize);handle.removeEventListener('pointerdown',start);handle.removeEventListener('pointermove',move);for(const type of ['pointerup','pointercancel','lostpointercapture'])handle.removeEventListener(type,finish);handle.removeEventListener('keydown',keyboard);handle.removeEventListener('dblclick',reset);}};
 }

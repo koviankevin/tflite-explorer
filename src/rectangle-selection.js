@@ -1,4 +1,4 @@
-import {selectionRectangle,layersInRectangle} from './pattern-selection.js?v=86e355fd4333df19';
+import {selectionRectangle,layersInRectangle} from './pattern-selection.js?v=6c76cced0e0a8fe9';
 
 // Capture pointer gestures before Netron's panning listener. Geometry is read
 // once on pointerdown in viewport coordinates, so SVG zoom/scroll and block

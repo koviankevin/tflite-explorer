@@ -1,5 +1,5 @@
-import {spatialIndex,OverviewCamera} from './overview-layout.js?v=86e355fd4333df19';
-import {selectionRectangle} from './pattern-selection.js?v=86e355fd4333df19';
+import {spatialIndex,OverviewCamera} from './overview-layout.js?v=6c76cced0e0a8fe9';
+import {selectionRectangle} from './pattern-selection.js?v=6c76cced0e0a8fe9';
 
 // Only this adapter owns Canvas, pointer gestures, spatial queries and camera
 // state. The model and export selections remain in the existing model Worker.
@@ -55,6 +55,8 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
     accessible.addEventListener('focusout',schedule);
     const controller={
         get zoomValue(){return camera.zoom;},
+        snapshot(){const center=camera.world(camera.width/2,camera.height/2);return {kind:'canvas',zoom:camera.zoom,x:center.x,y:center.y};},
+        restore(state){cancel();camera.zoom=state.zoom;camera.x=camera.width/2-state.x*camera.zoom;camera.y=camera.height/2-state.y*camera.zoom;schedule();},
         select(ids){picked=new Set(ids || []);schedule();},
         focus(ids,zoom){cancel();const selected=ids.map(id=>nodes.get(id)).filter(Boolean);picked=new Set(ids);camera.focus(selected,zoom);schedule();},
         zoom(factor){cancel();camera.zoomAt(factor);schedule();},

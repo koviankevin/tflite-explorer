@@ -15,6 +15,10 @@
     <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
   </div>
   <div class="search-tools">
+    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button></div>
+    <input id="workspace-file" type="file" accept=".json" hidden>
+    <p id="workspace-hint" class="hint" hidden></p>
+    <button id="choose-workspace-model" class="quiet" hidden>選取模型以恢復</button>
     <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
     <div id="pattern-editor" hidden>
       <label for="saved-pattern" class="control-label">已儲存的 patterns <span>此瀏覽器</span></label><select id="saved-pattern"><option value="">選擇已儲存的 pattern…</option></select>
@@ -28,6 +32,15 @@
         <label class="exact-option"><input id="graph-induced" type="checkbox">選取節點之間的連線須完全相同</label>
       </div>
       <p id="cfg-pattern-summary" class="hint" hidden></p>
+      <details id="condition-editor"><summary id="condition-summary">條件篩選 · 0 個</summary><div class="condition-fields">
+        <label>指定 OP<select id="condition-node" aria-label="條件指定 OP"></select></label>
+        <label>條件<select id="condition-kind"><option value="shape">Shape</option><option value="dtype">Dtype</option><option value="attribute">Attribute</option></select></label>
+        <div id="condition-tensor" class="condition-tensor"><label>方向<select id="condition-side"><option value="output">輸出</option><option value="input">輸入</option></select></label><label>Port（從 0 起算）<input id="condition-port" type="number" min="0" max="65535" step="1" value="0"></label></div>
+        <label id="condition-attribute" hidden>Attribute 名稱<input id="condition-attribute-name" maxlength="256"></label>
+        <label>值<input id="condition-value" maxlength="2048" placeholder="1, *, 128；[] 為 scalar"></label><button id="add-condition" class="quiet">加入條件</button>
+        <p class="hint">所有條件都需符合。Shape 的 * 代表任意維度，? 代表動態維度；dtype／attribute 值依詳細資料填寫。只讀 metadata，不讀取權重。</p>
+        <div id="condition-list"></div><label>Pattern 名稱<input id="condition-pattern-name" maxlength="80" placeholder="我的條件 pattern"></label><button id="save-edited-pattern" class="text-button">儲存目前 pattern 與條件</button>
+      </div></details>
       <div class="pattern-actions"><button id="run-pattern" class="primary" disabled>尋找模式</button></div>
       <p id="pattern-match-hint" class="hint">依 tensor 直接連接的順序匹配，允許分支；不限制參數。</p><button id="export-match" class="text-button" hidden disabled>匯出此匹配為 TFLite 子模型 ↓</button>
     </div>

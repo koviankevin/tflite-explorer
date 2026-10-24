@@ -1,0 +1,10 @@
+.workspace-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#condition-editor{margin-top:10px;border:1px solid var(--line);border-radius:5px}
+#condition-editor summary{cursor:pointer;padding:8px;color:var(--accent)}
+.condition-fields{padding:10px;max-height:340px;overflow:auto;display:grid;gap:8px}
+.condition-fields label{display:grid;gap:4px;color:var(--muted);min-width:0}
+.condition-fields input,.condition-fields select{width:100%;min-width:0;box-sizing:border-box;border:1px solid var(--line);border-radius:4px;padding:7px;background:#fff;color:var(--ink)}
+.condition-tensor{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}
+.condition-row{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:7px 0;overflow-wrap:anywhere}
+.condition-row span{flex:1;min-width:0}.condition-row button{flex-shrink:0}
+#workspace-hint{overflow-wrap:anywhere;padding:8px;background:#eef4ea}

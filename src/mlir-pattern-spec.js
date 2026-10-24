@@ -1,4 +1,5 @@
-import {operatorKey} from './pattern-utils.js?v=86e355fd4333df19';
+import {operatorKey} from './pattern-utils.js?v=6c76cced0e0a8fe9';
+import {normalizeConditions} from './pattern-conditions.js?v=6c76cced0e0a8fe9';
 export const CFG_PATTERN_MODE='mlir-cfg';
 const kinds=new Set(['operator','block','argument']);
 const edgeKinds=new Set(['contains','ssa','argument','control']);
@@ -16,11 +17,13 @@ export function prepareMLIRPattern(structure) {
         let node={alias:n.alias,kind:n.kind,type:n.kind};
         if(n.kind==='operator') {
             if(typeof n.type!=='string' || !n.type.includes('.') || n.type.length>256 || !integer(n.order))throw new Error('跨 block operator 類型或順序無效。');
-            node={...node,type:n.type,order:n.order};
+            const conditions=normalizeConditions(n.conditions);
+            node={...node,type:n.type,order:n.order,...(conditions.length?{conditions}:{})};
         } else if(n.kind==='block') {
+            if(n.conditions!==undefined)throw new Error('條件只能指定在 operator。');
             if(!integer(n.arity))throw new Error('Block arguments 數量無效。');
             node.arity=n.arity;
-        } else {if(!integer(n.slot))throw new Error('Block argument 編號無效。');node.slot=n.slot;}
+        } else {if(n.conditions!==undefined)throw new Error('條件只能指定在 operator。');if(!integer(n.slot))throw new Error('Block argument 編號無效。');node.slot=n.slot;}
         aliases.set(node.alias,node);return node;
     });
     if(!nodes.some(n=>n.kind==='operator') || nodes.filter(n=>n.kind==='operator').length>32 || !nodes.some(n=>n.kind==='block') || nodes.filter(n=>n.kind==='block').length>32)throw new Error('跨 block pattern 需包含 1～32 個 operators、1～32 個 blocks。');

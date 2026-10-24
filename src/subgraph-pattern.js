@@ -1,5 +1,6 @@
-import { operatorKey, operatorIndex } from './pattern-utils.js?v=86e355fd4333df19';
-export { LORA_PATTERN } from './pattern-utils.js?v=86e355fd4333df19';
+import { operatorKey, operatorIndex } from './pattern-utils.js?v=6c76cced0e0a8fe9';
+import {normalizeConditions,conditionMatcher} from './pattern-conditions.js?v=6c76cced0e0a8fe9';
+export { LORA_PATTERN } from './pattern-utils.js?v=6c76cced0e0a8fe9';
 
 const aliases = new Map([['FC', 'FULLYCONNECTED'], ['BMM', 'BATCHMATMUL']]);
 const canonical = (value) => aliases.get(operatorKey(value)) || operatorKey(value);
@@ -44,7 +45,8 @@ export function prepareGraphPattern(nodeList, edgeList, paths = null) {
     for (const node of nodeList) {
         if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(node.alias) || !operatorKey(node.type)) throw new Error('節點定義無效。');
         if (nodes.has(node.alias)) throw new Error('節點編號不可重複。');
-        nodes.set(node.alias, { alias: node.alias, type: operatorKey(node.type) });
+        const conditions=normalizeConditions(node.conditions);
+        nodes.set(node.alias, { alias: node.alias, type: operatorKey(node.type),...(conditions.length?{conditions}:{}) });
     }
     const edges = new Map();
     for (const edge of edgeList) {
@@ -85,6 +87,7 @@ export function captureGraphPattern(entry, selected) {
 }
 
 export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled = () => false) {
+    const matches=conditionMatcher();
     const results = [];
     let steps = 0;
     let checks = 0;
@@ -141,7 +144,7 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
                         if (cancelled()) return;
                     }
                     if (checks > 2000000) { limited = true; return; }
-                    if (!used.has(n) && keys[n] === node.type && constraints.every((set) => set.has(n))) possible.push(n);
+                    if (!used.has(n) && keys[n] === node.type && constraints.every((set) => set.has(n)) && matches(entry.graph.nodes[n],node)) possible.push(n);
                 }
                 if (!possible.length) return;
                 if (!candidates || possible.length < candidates.length) { chosen = node; candidates = possible; }

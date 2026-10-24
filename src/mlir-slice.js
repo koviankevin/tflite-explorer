@@ -1,8 +1,8 @@
-import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=86e355fd4333df19';
-import {operationSemantics} from './mlir-dialects.js?v=86e355fd4333df19';
-import {buildDominance,opName} from './mlir-ir.js?v=86e355fd4333df19';
-import {typeSpelling} from './mlir-engine.js?v=86e355fd4333df19';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=86e355fd4333df19';
+import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=6c76cced0e0a8fe9';
+import {operationSemantics} from './mlir-dialects.js?v=6c76cced0e0a8fe9';
+import {buildDominance,opName} from './mlir-ir.js?v=6c76cced0e0a8fe9';
+import {typeSpelling} from './mlir-engine.js?v=6c76cced0e0a8fe9';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=6c76cced0e0a8fe9';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
 // data dependencies into inputs, and retain cyclic producers that must change
@@ -215,7 +215,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const intro=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}>`;
     const body=`${intro} ({\n${lines.join('\n')}\n})`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=86e355fd4333df19');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=6c76cced0e0a8fe9');
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects});
