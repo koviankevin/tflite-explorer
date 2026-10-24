@@ -1,12 +1,13 @@
-import { Host } from '../vendor/netron/browser.js?v=8d3e652a31c04671';
-import { View, Attachment } from '../vendor/netron/view.js?v=8d3e652a31c04671';
-import { hydrate } from './hydrate.js?v=8d3e652a31c04671';
-import {overviewCanvas} from './overview-canvas.js?v=8d3e652a31c04671';
-import { modelFormat } from './model-formats.js?v=8d3e652a31c04671';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=8d3e652a31c04671';
-import {rectangleSelection} from './rectangle-selection.js?v=8d3e652a31c04671';
-import { LORA_PATTERN } from './pattern-utils.js?v=8d3e652a31c04671';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=8d3e652a31c04671';
+import { Host } from '../vendor/netron/browser.js?v=48cf132f532c0b5d';
+import { View, Attachment } from '../vendor/netron/view.js?v=48cf132f532c0b5d';
+import { hydrate } from './hydrate.js?v=48cf132f532c0b5d';
+import {overviewCanvas} from './overview-canvas.js?v=48cf132f532c0b5d';
+import { modelFormat } from './model-formats.js?v=48cf132f532c0b5d';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=48cf132f532c0b5d';
+import {rectangleSelection} from './rectangle-selection.js?v=48cf132f532c0b5d';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=48cf132f532c0b5d';
+import { LORA_PATTERN } from './pattern-utils.js?v=48cf132f532c0b5d';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=48cf132f532c0b5d';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -40,7 +41,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=8d3e652a31c04671`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=48cf132f532c0b5d`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -149,7 +150,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=8d3e652a31c04671', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=48cf132f532c0b5d', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -367,7 +368,7 @@ function decorateCombinedGraph(dto) {
             if(pickingPattern || $('target').getAttribute('aria-busy')==='true')return;
             const key=action.keys.findLast(k=>sliceExpanded.has(k)) || action.keys[0];
             const next=new Set(sliceExpanded);if(next.has(key))next.delete(key);else next.add(key);
-            changeSliceExpansion(next).catch(report);
+            changeSliceExpansion(next,{key,segment:action,point:event.type==='click'?{x:event.clientX,y:event.clientY}:undefined}).catch(report);
         };
         for(const el of [edge.element,edge.hitTest,edge.labelElement].filter(Boolean)) {
             el.dataset.sliceFrom=action.from;el.dataset.sliceTo=action.to;el.classList.add('slice-connection');el.setAttribute('aria-label',label);el.addEventListener('click',activate,true);
@@ -375,9 +376,13 @@ function decorateCombinedGraph(dto) {
         if(edge.hitTest){edge.hitTest.classList.add('slice-connection-hit');edge.hitTest.setAttribute('role','button');edge.hitTest.setAttribute('tabindex','0');edge.hitTest.setAttribute('aria-expanded',String(expanded));edge.hitTest.addEventListener('keydown',activate,true);}
     }
 }
-async function changeSliceExpansion(next) {
+function viewportEntries(){return renderedNodes.map(e=>({id:e.node.identifier,element:e.element}));}
+async function changeSliceExpansion(next,{key,segment,point}={}) {
+    const connection=key?.split('>') || [],preferred=[...new Set([segment?.from,segment?.to,...connection].filter(Boolean))];
+    const entries=viewportEntries().filter(e=>preferred.length || renderedGraph.nodes.get(e.id)?.diagramKind==='operator');
+    const viewport=captureViewport($('target'),view.target?.zoom,entries,{preferred,point});
     const previous=sliceExpanded;sliceExpanded=next;
-    try {await (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full));}
+    try {await (selection?selectResult(activeIndex,{forceDraw:true,viewport}):drawGraph(currentGraph,full,undefined,viewport));}
     catch(error){sliceExpanded=previous;throw error;}
 }
 function renderSliceConnections(dto) {
@@ -386,7 +391,7 @@ function renderSliceConnections(dto) {
     nav.replaceChildren(element('strong','',`局部展開 · ${sliceExpanded.size} 段路徑`));
     for(const c of connections.filter(c=>c.expanded)) {
         const button=element('button','quiet',`收起：${c.label}`);button.title=c.label;
-        button.onclick=()=>{const next=new Set(sliceExpanded);next.delete(c.key);changeSliceExpansion(next).catch(report);};nav.append(button);
+        button.onclick=()=>{const next=new Set(sliceExpanded);next.delete(c.key);changeSliceExpansion(next,{key:c.key}).catch(report);};nav.append(button);
     }
     const all=element('button','quiet','收起全部路徑');all.onclick=()=>changeSliceExpansion(new Set()).catch(report);nav.append(all);
 }
@@ -476,7 +481,7 @@ $('toggle-slice-details').onclick=()=>{
     if(!sliceDetails)sliceExpanded.clear();
     (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full)).catch(report);
 };
-async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph } = {}) {
+async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,viewport } = {}) {
     if (!model || !page.total) return;
     const generation = queryGeneration;
     if (index < page.offset || index >= page.offset + page.items.length) await changePage(Math.floor(index / 100) * 100);
@@ -501,9 +506,9 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph 
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
     const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails, expandedConnections:[...sliceExpanded] });
-    await queueDraw(dto, generationRender, zoom);
+    await queueDraw(dto, generationRender, zoom,viewport);
 }
-async function drawGraph(graph, whole = false, zoom) {
+async function drawGraph(graph, whole = false, zoom,viewport) {
     if (!model) return;
     setCurrentGraph(graph); full = whole; selection = null;
     overviewMode=false;$('pattern-overview-controls').hidden=true;
@@ -514,9 +519,9 @@ async function drawGraph(graph, whole = false, zoom) {
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
     const dto = await rpc('graph', { graph, full: whole, sliceDetails, expandedConnections:[...sliceExpanded] });
-    await queueDraw(dto, generation, zoom);
+    await queueDraw(dto, generation, zoom,viewport);
 }
-async function queueDraw(dto, generation, zoom) {
+async function queueDraw(dto, generation, zoom,viewport) {
     renderQueue = renderQueue.catch(() => {}).then(async () => {
         if (generation !== renderGeneration || !model) return;
         const start = performance.now();
@@ -549,7 +554,7 @@ async function queueDraw(dto, generation, zoom) {
             await view._updateTarget(currentModel, [{ target: graph, signature: null }]);
             if (generation !== renderGeneration) { renderedGraph = null; return; }
             if (Number.isFinite(zoom) && view.target) view.target.zoom = zoom;
-            else if(dto.combined || dto.overview)fitCombinedGraph();
+            else if(!viewport && (dto.combined || dto.overview))fitCombinedGraph();
             renderedGraph = {
                 index: dto.graphIndex, full: dto.full, graph, combined: dto.combined, focus: dto.focus, folded:dto.folded,
                 sliceView:dto.sliceView,compactSlice:dto.compactSlice,
@@ -593,8 +598,9 @@ async function queueDraw(dto, generation, zoom) {
                 const edge = from && to ? view.target.edge(from.name, to.name)?.label : null;
                 if (edge) { elements.push(...edge.select()); view.target._selection.add(edge); }
             }
-            view.target.scrollTo(elements);
+            if(!viewport)view.target.scrollTo(elements);
         }
+        if(viewport)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),viewport);
         if (pickingPattern) view._sidebar.close();
         status(`${model.graphs[currentGraph].name} · ${dto.full ? '完整圖' : '局部圖'} ${graph.nodes.length} 個節點 · ${dto.metadataOnly ? '定位' : '繪圖'} ${(performance.now() - start).toFixed(0)} ms${dto.detail && !dto.selected.length ? ' · 此 tensor 沒有相連的 operator' : ''}`);
         if(dto.sliceDirectConnection)status('這段是原始 OP 之間的直接連線，沒有隱藏的輔助節點。');
