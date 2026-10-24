@@ -1,13 +1,13 @@
-import { Host } from '../vendor/netron/browser.js?v=b650d0c157721586';
-import { View, Attachment } from '../vendor/netron/view.js?v=b650d0c157721586';
-import { hydrate } from './hydrate.js?v=b650d0c157721586';
-import {overviewCanvas} from './overview-canvas.js?v=b650d0c157721586';
-import { modelFormat } from './model-formats.js?v=b650d0c157721586';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=b650d0c157721586';
-import {rectangleSelection} from './rectangle-selection.js?v=b650d0c157721586';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=b650d0c157721586';
-import { LORA_PATTERN } from './pattern-utils.js?v=b650d0c157721586';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=b650d0c157721586';
+import { Host } from '../vendor/netron/browser.js?v=abb7373d4d24faa2';
+import { View, Attachment } from '../vendor/netron/view.js?v=abb7373d4d24faa2';
+import { hydrate } from './hydrate.js?v=abb7373d4d24faa2';
+import {overviewCanvas} from './overview-canvas.js?v=abb7373d4d24faa2';
+import { modelFormat } from './model-formats.js?v=abb7373d4d24faa2';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=abb7373d4d24faa2';
+import {rectangleSelection} from './rectangle-selection.js?v=abb7373d4d24faa2';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=abb7373d4d24faa2';
+import { LORA_PATTERN } from './pattern-utils.js?v=abb7373d4d24faa2';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=abb7373d4d24faa2';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -41,7 +41,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=b650d0c157721586`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=abb7373d4d24faa2`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -151,7 +151,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=b650d0c157721586', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=abb7373d4d24faa2', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -169,7 +169,7 @@ function reset() {
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
-    pickedNodes.clear(); cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
+    pickedNodes=new Set();pickedGraph=0;cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
     $('export-match').hidden = true; $('export-match').disabled = true;
     $('value-kind-label').textContent = 'Tensors'; $('mlir-info').hidden = true;
@@ -580,7 +580,10 @@ async function queueDraw(dto, generation, zoom,viewport) {
                 values: new Map([...graph.inputs, ...graph.outputs, ...graph.nodes.flatMap((node) => [...node.inputs, ...node.outputs])].flatMap((arg) => arg.value).map((value) => [value.identifier, value]))
             };
             if (pickedGraph !== currentGraph) {
-                if($('capture-cfg').checked) {cfgSelections.set(pickedGraph,pickedNodes);pickedNodes=cfgSelections.get(currentGraph) || new Set();cfgSelections.set(currentGraph,pickedNodes);}
+                // Cross-block changes already update cfgSelections directly.
+                // Never flush a stale local buffer under its previous graph:
+                // after Clear/reflow that can alias two blocks to the same Set.
+                if($('capture-cfg').checked) {pickedNodes=cfgSelections.get(currentGraph) || new Set();cfgSelections.set(currentGraph,pickedNodes);}
                 else pickedNodes=new Set();
                 pickedGraph = currentGraph;
             }
@@ -894,7 +897,7 @@ $('target').addEventListener('click', captureNodeEvent, true);
 $('target').addEventListener('keydown', captureNodeEvent, true);
 $('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);
 $('cancel-capture').onclick = () => setPickingPattern(false);
-$('clear-capture').onclick = () => { pickedNodes.clear();cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
+$('clear-capture').onclick = () => { pickedNodes=new Set();pickedGraph=currentGraph;cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
 function captureSelections() {return [...cfgSelections].filter(([,set])=>set.size).map(([graph,set])=>({graph,nodes:[...set]}));}
 function renderCaptureBlocks() {
     $('capture-blocks').hidden=!$('capture-cfg').checked;

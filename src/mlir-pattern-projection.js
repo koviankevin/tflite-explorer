@@ -1,10 +1,13 @@
-import {operationSemantics} from './mlir-dialects.js?v=b650d0c157721586';
-import {typeSpelling} from './mlir-engine.js?v=b650d0c157721586';
+import {operationSemantics} from './mlir-dialects.js?v=abb7373d4d24faa2';
+import {typeSpelling} from './mlir-engine.js?v=abb7373d4d24faa2';
 
 // Portable data, never hooks or source code. Bind a source pattern graph to
 // real operators in the exported IR; synthetic ABI nodes stay in the real IR.
 export const SLICE_PATTERN_ATTRIBUTE='model_lens.slice_pattern';
-export const SLICE_PATTERN_LIMIT=2*1024*1024;
+// Large cyclic slices retain their producers. Their checked source mapping can
+// exceed 2 MiB around 20k OPs even when only a few OPs are displayed. Keep a
+// finite mapping budget within the parser's separate 64 MiB file limit.
+export const SLICE_PATTERN_LIMIT=8*1024*1024;
 const integer=(n,max=200000)=>Number.isSafeInteger(n) && n>=0 && n<max;
 const name=op=>op.name.getStringRef();
 
@@ -127,7 +130,7 @@ export function slicePatternGraph(index,region) {return index.mlir.slicePatterns
 // Flatten an existing projection when re-exporting, so seeds/entry nodes never
 // accumulate as part of the original pattern graph.
 export async function attachSlicePattern(index,region,text,offset,bindings) {
-    const {parseMLIR}=await import('./mlir-engine.js?v=b650d0c157721586');
+    const {parseMLIR}=await import('./mlir-engine.js?v=abb7373d4d24faa2');
     const candidate=await parseMLIR(new TextEncoder().encode(text),{metadata:index.mlir.metadata,dialects:index.mlir.dialects});
     const target=candidate.mlir.ir.regions.find(r=>r.owner && name(r.owner.op)==='func.func');
     const original=slicePatternGraph(index,region) || actualGraph(index,region),nodes=[],ids=new Map();
@@ -145,6 +148,6 @@ export async function attachSlicePattern(index,region,text,offset,bindings) {
     const graph={nodes,edges};
     if(!validGraph(candidate,target,graph))throw new Error('匯出結構對照無法對應實際 MLIR，已停止下載。');
     const value=JSON.stringify({version:1,graph,seal:await seal(actualGraph(candidate,target),graph)});
-    if(value.length>SLICE_PATTERN_LIMIT)throw new Error('Pattern 結構對照超過 2 MiB；請縮小選取範圍，或改用完整 function 匯出。');
+    if(value.length>SLICE_PATTERN_LIMIT)throw new Error('Pattern 結構對照超過 8 MiB；請縮小選取範圍，或改用完整 function 匯出。');
     return text.slice(0,offset)+` {${SLICE_PATTERN_ATTRIBUTE} = ${JSON.stringify(value)}}`+text.slice(offset);
 }
