@@ -14,6 +14,8 @@
 
 桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
 
+14 吋筆電常見的可用畫面另有調整：901～1600px 寬時，「尋找模式」固定在結果列，不隨結構／條件編輯器捲走；左欄暫時限制在畫面的 35% 內。開啟右側詳情會再調整左欄，於至少 1280px 的畫面保留 600px 模型圖；關閉詳情或回到大視窗時恢復可用範圍內的偏好寬度。字級維持 14px，模型圖可選至 32px。已驗證包含瀏覽器工具列占用的 1280×600、1366×640，以及 1280×720、1366×768、1536×864；詳細紀錄見 [筆電版面驗證](docs/laptop-layout-verification.md)。
+
 ## MLIR 基礎版
 
 讀取文字 `.mlir`（UTF-8，最多 64 MiB），優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。
