@@ -1,13 +1,13 @@
-import { Host } from '../vendor/netron/browser.js?v=94d4e194395f65fd';
-import { View, Attachment } from '../vendor/netron/view.js?v=94d4e194395f65fd';
-import { hydrate } from './hydrate.js?v=94d4e194395f65fd';
-import {overviewCanvas} from './overview-canvas.js?v=94d4e194395f65fd';
-import { modelFormat } from './model-formats.js?v=94d4e194395f65fd';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=94d4e194395f65fd';
-import {rectangleSelection} from './rectangle-selection.js?v=94d4e194395f65fd';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=94d4e194395f65fd';
-import { LORA_PATTERN } from './pattern-utils.js?v=94d4e194395f65fd';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=94d4e194395f65fd';
+import { Host } from '../vendor/netron/browser.js?v=b89837c38697a28b';
+import { View, Attachment } from '../vendor/netron/view.js?v=b89837c38697a28b';
+import { hydrate } from './hydrate.js?v=b89837c38697a28b';
+import {overviewCanvas} from './overview-canvas.js?v=b89837c38697a28b';
+import { modelFormat } from './model-formats.js?v=b89837c38697a28b';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=b89837c38697a28b';
+import {rectangleSelection} from './rectangle-selection.js?v=b89837c38697a28b';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=b89837c38697a28b';
+import { LORA_PATTERN } from './pattern-utils.js?v=b89837c38697a28b';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=b89837c38697a28b';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -41,7 +41,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=94d4e194395f65fd`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=b89837c38697a28b`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -150,7 +150,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=94d4e194395f65fd', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=b89837c38697a28b', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);

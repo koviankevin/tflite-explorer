@@ -8,7 +8,8 @@ export function captureViewport(container,zoom,entries,{preferred=[],point}={}) 
         const r=e.element.getBoundingClientRect(),x=r.left+r.width/2-rect.left,y=r.top+r.height/2-rect.top;
         return {id:e.id,x,y,distance:Math.hypot(x-focus.x,y-focus.y)};
     }).filter(e=>Number.isFinite(e.x+e.y)).sort((a,b)=>a.distance-b.distance);
-    return {zoom,candidates,scrollLeft:container.scrollLeft,scrollTop:container.scrollTop};
+    const page=container.ownerDocument?.scrollingElement;
+    return {zoom,candidates,scrollLeft:container.scrollLeft,scrollTop:container.scrollTop,page:page?{left:page.scrollLeft,top:page.scrollTop}:null};
 }
 
 export function restoreViewport(container,graph,canvas,entries,snapshot) {
@@ -23,6 +24,7 @@ export function restoreViewport(container,graph,canvas,entries,snapshot) {
     // Netron's minimum fit zoom varies with layout; retain the exact camera
     // scale even when the newly collapsed graph fits inside the viewport.
     graph._zoom=zoom;canvas.style.width=`${graph._width*zoom}px`;canvas.style.height=`${graph._height*zoom}px`;
+    if(snapshot.page)container.ownerDocument.scrollingElement.scrollTo({...snapshot.page,behavior:'instant'});
     const nodes=new Map(entries.filter(e=>e.element).map(e=>[e.id,e.element]));
     const anchor=snapshot.candidates.find(e=>nodes.has(e.id)),bounds=container.getBoundingClientRect();
     let left=snapshot.scrollLeft,top=snapshot.scrollTop;

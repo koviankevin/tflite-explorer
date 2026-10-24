@@ -1,6 +1,6 @@
 
-import * as flatbuffers from './flatbuffers.js?v=94d4e194395f65fd';
-import * as protobuf from './protobuf.js?v=94d4e194395f65fd';
+import * as flatbuffers from './flatbuffers.js?v=b89837c38697a28b';
+import * as protobuf from './protobuf.js?v=b89837c38697a28b';
 
 const litertlm = {};
 
