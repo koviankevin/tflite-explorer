@@ -4,6 +4,9 @@ import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
+import {conditionEditor} from './pattern-condition-editor.js';
+import {parseGraphPattern} from './subgraph-pattern.js';
+import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
 import {layerLocation,updateLayerSelection} from './pattern-selection.js';
 import {rectangleSelection} from './rectangle-selection.js';
 import {captureViewport,restoreViewport} from './svg-viewport.js';
@@ -11,7 +14,7 @@ import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
-explorerResize($('explorer-resize'));
+const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
@@ -101,6 +104,8 @@ let pickingPattern = false;
 let pickedGraph = 0;
 let pickedNodes = new Set();
 let cfgPattern = null;
+const conditionsByAlias=new Map();
+let pendingWorkspace=null,workspaceBusy=false,workspaceImport=0;
 const cfgSelections = new Map();
 let renderedNodes = [];
 let renderedGraph = null;
@@ -111,18 +116,32 @@ let virtualOverview=null;
 function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
 function loraPreset() {
+    conditionsByAlias.clear();
+    $('condition-pattern-name').value='';
     cfgPattern=null;
     graphNodes = ['Mul', 'FullyConnected', 'BatchMatMul', 'BatchMatMul', 'Add'].map((type, i) => ({ alias: `N${i + 1}`, type }));
     graphEdges = [[1, 2], [1, 3], [3, 4], [2, 5], [4, 5]].map(([from, to]) => ({ from: `N${from}`, to: `N${to}` }));
     graphNodeNumber = 5;
 }
 function chainPreset() {
+    conditionsByAlias.clear();
+    $('condition-pattern-name').value='';
     cfgPattern=null;
     graphNodes = ['Reshape', 'Transpose', 'Reshape'].map((type, i) => ({ alias: `N${i + 1}`, type }));
     graphEdges = [{ from: 'N1', to: 'N2' }, { from: 'N2', to: 'N3' }];
     graphNodeNumber = 3;
 }
 chainPreset();
+function conditionNodes() {
+    if(cfgPattern)return cfgPattern.nodes.filter(n=>n.kind==='operator');
+    if($('graph-input-mode').value==='text') {try{return parseGraphPattern($('graph-pattern').value,model?.operators || []).nodes;}catch{return [];}}
+    return graphNodes;
+}
+function currentPattern() {
+    const structure=cfgPattern || ($('graph-input-mode').value==='visual'?{nodes:graphNodes,edges:graphEdges,induced:$('graph-induced').checked}:parseGraphPattern($('graph-pattern').value,model?.operators || []));
+    return {...structure,induced:cfgPattern?cfgPattern.induced:$('graph-induced').checked,nodes:structure.nodes.map(n=>{const {conditions,...base}=n;const rules=conditionsByAlias.get(n.alias);return {...base,...(rules?.length?{conditions:rules}:{})};})};
+}
+const conditionUI=conditionEditor({getNodes:conditionNodes,getRules:alias=>conditionsByAlias.get(alias),setRules:(alias,rules)=>{conditionsByAlias.set(alias,rules);status('條件已變更，按「尋找模式」套用。');},error:report});
 let page = { items: [], total: 0, offset: 0 };
 let activeIndex = -1;
 let selection;
@@ -164,6 +183,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
@@ -224,7 +244,13 @@ async function openFile(nextFile) {
         $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
         for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
         $('cancel-load').hidden = true; $('close-model').hidden = false;
+        $('save-workspace').disabled=false;
         renderPattern();
+        if(pendingWorkspace) {
+            const workspace=pendingWorkspace;pendingWorkspace=null;
+            try {await restoreWorkspace(workspace);return;}
+            catch(error){if(file!==thisFile)return;notice(error.message);$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;}
+        }
         await runSearch();
         if (model.graphs.length && (model.sliceView || (file.size < 1024 * 1024 * 1024 && layers <= 500))) {
             await drawGraph(0, true);
@@ -250,10 +276,11 @@ function setKind(nextKind, searchNow = true) {
     renderPattern(); if (model && searchNow) runSearch().catch(report);
 }
 function renderPattern() {
+    conditionUI.render();
     updatePatternExport();
     $('graph-pattern-editor').hidden=Boolean(cfgPattern);
     $('cfg-pattern-summary').hidden=!cfgPattern;
-    $('pattern-match-hint').textContent=cfgPattern ? '依 SSA ports 與控制流程匹配，包含分支、匯合及迴圈；不比對 block／SSA 名稱。' : '依 tensor 直接連接的順序匹配，允許分支；不限制參數。';
+    $('pattern-match-hint').textContent=cfgPattern ? '依 SSA ports 與控制流程匹配，包含分支、匯合及迴圈；不比對 block／SSA 名稱。指定的條件需全部符合。' : '依 tensor 直接連接的順序匹配，允許分支；指定的條件需全部符合，未加條件的 OP 不限制參數。';
     if(cfgPattern) $('cfg-pattern-summary').textContent=`跨 block pattern · ${cfgPattern.nodes.filter(n=>n.kind==='block').length} blocks · ${cfgPattern.nodes.filter(n=>n.kind==='operator').length} operators。比對 SSA ports、block arguments、successor 順序及迴圈；目前範圍會搜尋所在的完整 region。重新圈選可建立另一組。`;
     else renderVisualPattern();
 }
@@ -268,7 +295,7 @@ async function runSearch() {
     $('export-match').hidden = true;
     status(kind === 'patterns' ? '搜尋連接模式中…' : '搜尋中…');
     $('result-count').textContent = '搜尋中…';
-    const structure = kind==='patterns' && cfgPattern ? cfgPattern : kind === 'patterns' && $('graph-input-mode').value === 'visual' ? { nodes: graphNodes.map((n) => ({...n})), edges: graphEdges.map((e) => ({...e})), induced: $('graph-induced').checked } : null;
+    const structure = kind==='patterns' ? currentPattern() : null;
     const scope = $('scope').value === 'current' ? String(currentGraph) : $('scope').value;
     const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope } : { kind, query: $('query').value, scope });
     if (generation !== queryGeneration || result.cancelled) return;
@@ -395,7 +422,7 @@ async function changeSliceExpansion(next,{key,segment,point,page}={}) {
 function renderSliceConnections(dto) {
     const nav=$('slice-connection-controls'),connections=dto.compactSlice && !dto.folded && !dto.overview ? dto.sliceConnections || [] : [];
     sliceExpanded=new Set(connections.filter(c=>c.expanded).map(c=>c.key));nav.hidden=!sliceExpanded.size;
-    slicePages=new Map(connections.filter(c=>c.expanded).map(c=>[c.key,c.page]));
+    slicePages=new Map(connections.filter(c=>c.expanded).map(c=>[c.key,c.pending?(slicePages.get(c.key) ?? c.page):c.page]));
     nav.replaceChildren(element('strong','',`局部展開 · ${sliceExpanded.size} 段路徑`));
     for(const c of connections.filter(c=>c.expanded)) {
         if(c.pending) {
@@ -725,6 +752,8 @@ $('confirm-import').onclick = () => {
     } catch (error) { importError(error); }
 };
 function applyPattern(pattern) {
+    conditionsByAlias.clear();for(const node of pattern.nodes)if(node.conditions?.length)conditionsByAlias.set(node.alias,node.conditions);
+    $('condition-pattern-name').value=pattern.name || '';
     cfgPattern=pattern.mode==='mlir-cfg' ? {...pattern} : null;
     if(cfgPattern) {setKind('patterns',false);return;}
     graphNodes = pattern.nodes.map((node) => ({ ...node }));
@@ -980,6 +1009,7 @@ $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
 $('reset-pattern').onclick = () => { chainPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-input-mode').value = 'visual'; $('graph-pattern').value = 'N1:Reshape -> N2:Transpose -> N3:Reshape'; updateGraphInputMode(); renderPattern(); if (model) runSearch().catch(report); };
 function renderVisualPattern() {
+    conditionUI.render();
     const nodes = graphNodes.map((node) => {
         const row = element('div', 'graph-form-row'); row.append(element('span', 'graph-node-id', node.alias));
         const select = element('select'); select.setAttribute('aria-label', `節點 ${node.alias} 的 operator`);
@@ -1012,6 +1042,7 @@ function updateGraphInputMode() {
     const visual = $('graph-input-mode').value === 'visual';
     $('visual-pattern-editor').hidden = !visual; $('text-pattern-editor').hidden = visual;
     if (visual) { $('visual-pattern-editor').open = true; renderVisualPattern(); }
+    conditionUI.render();
 }
 $('graph-input-mode').onchange = () => {
     if ($('graph-input-mode').value === 'text' && graphNodes.every((n) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(n.type))) {
@@ -1023,7 +1054,7 @@ $('graph-input-mode').onchange = () => {
 $('lora-preset').onclick = () => { loraPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-pattern').value = LORA_PATTERN; $('visual-pattern-editor').open = true; renderVisualPattern(); };
 $('add-graph-node').onclick = () => { if (graphNodes.length >= 32) { notice('一組子圖最多 32 個節點。'); return; } graphNodes.push({alias:`N${++graphNodeNumber}`,type:model?.operators[0] || 'Mul'}); renderVisualPattern(); };
 $('add-graph-edge').onclick = () => { if (graphNodes.length < 2) { notice('請先加入至少兩個節點。'); return; } if (graphEdges.length >= 64) { notice('一組子圖最多 64 條連線。'); return; } graphEdges.push({from:graphNodes[0].alias,to:graphNodes.at(-1).alias}); renderVisualPattern(); };
-$('graph-pattern').oninput = () => { $('pattern-decoded').textContent = '規則已變更，請按「尋找模式」重新解讀與搜尋。'; $('pattern-decoded').classList.remove('missing'); };
+$('graph-pattern').oninput = () => { conditionUI.render();$('pattern-decoded').textContent = '規則已變更，請按「尋找模式」重新解讀與搜尋。'; $('pattern-decoded').classList.remove('missing'); };
 $('previous-page').onclick = () => changePage(Math.max(0, page.offset - 100)).catch(report);
 $('next-page').onclick = () => changePage(page.offset + 100).catch(report);
 $('previous-result').onclick = () => selectResult(activeIndex <= 0 ? page.total - 1 : activeIndex - 1).catch(report);
@@ -1078,6 +1109,105 @@ document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }
 });
+$('save-edited-pattern').onclick=async()=>{
+    try {
+        const pattern=reusablePattern($('condition-pattern-name').value || '我的條件 pattern',currentPattern());
+        patternLibrary=savePattern(localStorage,patternLibrary,pattern);refreshPatternLibrary(pattern.name);applyPattern(pattern);
+        if(model)await runSearch();status(`已儲存「${pattern.name}」及條件。`);
+    }catch(error){report(error);}
+};
+function workspaceCamera() {
+    if(virtualOverview)return virtualOverview.snapshot();
+    if(!renderedGraph || !view.target)return null;
+    const snapshot=captureViewport($('target'),view.target.zoom,viewportEntries());
+    if(!snapshot)return null;
+    return {...snapshot,kind:'svg',page:snapshot.page || null,candidates:snapshot.candidates.slice(0,8).map(({id,x,y})=>({id,x,y}))};
+}
+function workspaceState() {
+    const across=$('capture-cfg').checked;
+    return {kind,query:$('query').value,scope:$('scope').value,graph:currentGraph,
+        pattern:currentPattern(),patternText:$('graph-pattern').value,patternMode:$('graph-input-mode').value,patternName:$('condition-pattern-name').value || $('saved-pattern').value,
+        view:!renderedGraph?'none':overviewMode?'overview':selection?'result':'graph',activeIndex,resultKey:resultKey(selection),full,collapsed:patternCollapsed,
+        overviewExpanded:[...overviewExpanded],sliceDetails,expanded:[...sliceExpanded],pages:[...slicePages],
+        picking:pickingPattern,across,captureName:$('capture-name').value,selections:across?captureSelections():pickedNodes.size && pickedGraph===currentGraph?[{graph:currentGraph,nodes:[...pickedNodes]}]:[],
+        font:$('graph-font-size').value,direction:view.options.direction,sidebarWidth:Number($('explorer-resize').getAttribute('aria-valuenow')),exportScope:$('mlir-export-scope').value,camera:workspaceCamera()};
+}
+$('save-workspace').onclick=async()=>{
+    if(!model || workspaceBusy)return;
+    if(exportBusy || pending.size || $('target').getAttribute('aria-busy')==='true'){notice('請等待搜尋、繪圖或匯出完成後再儲存。');return;}
+    const source=file,query=queryGeneration,render=renderGeneration;
+    workspaceBusy=true;$('save-workspace').disabled=true;
+    try {
+        const state=workspaceState();
+        status('建立工作階段結構指紋（不讀取權重）…');
+        const identity=await rpc('workspaceIdentity');
+        if(source!==file || query!==queryGeneration || render!==renderGeneration)throw new Error('畫面已變更，請再次儲存工作階段。');
+        const text=exportWorkspace({format:'model-lens-workspace',version:1,identity,state});
+        let stored=true;try{localStorage.setItem(WORKSPACE_KEY,text);$('last-workspace').disabled=false;}catch{stored=false;}
+        await host.export(`${source.name.replace(/\.[^.]+$/,'')}-workspace.json`,new Blob([text+'\n'],{type:'application/json'}));
+        status(`工作階段下載已啟動${stored?'，也已記住此瀏覽器的上次儲存':''}。檔案不含模型或權重。`);
+    }catch(error){report(error);}finally{workspaceBusy=false;$('save-workspace').disabled=!model;}
+};
+async function restoreWorkspace(workspace) {
+    const source=file,identity=await rpc('workspaceIdentity');
+    if(source!==file)throw new DOMException('已取消','AbortError');
+    checkWorkspace(workspace,identity,model.graphs);
+    const s=workspace.state;
+    setPickingPattern(false);applyPattern(s.pattern);refreshPatternLibrary(patternLibrary.some(p=>p.name===s.patternName)?s.patternName:'');
+    $('condition-pattern-name').value=s.patternName;$('graph-pattern').value=s.patternText;$('graph-input-mode').value=s.patternMode;updateGraphInputMode();
+    $('graph-font-size').value=s.font;document.documentElement.style.setProperty('--graph-font-size',`${s.font}px`);view.options.direction=s.direction;explorer.setWidth(s.sidebarWidth);
+    $('mlir-export-scope').value=s.exportScope;$('query').value=s.query;$('scope').value=s.scope;setCurrentGraph(s.graph);setKind(s.kind,false);
+    const expectedQuery=queryGeneration+1;
+    const current=()=>{if(source!==file || queryGeneration!==expectedQuery)throw new DOMException('已取消','AbortError');};
+    await runSearch();current();
+    sliceDetails=s.sliceDetails;sliceExpanded=new Set(s.expanded);slicePages=new Map(s.pages);patternCollapsed=s.collapsed;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    current();
+    let exact=true,limited=false;
+    if((s.view==='result' || s.view==='overview') && s.activeIndex>=0 && s.activeIndex<page.total) {
+        await changePage(Math.floor(s.activeIndex/100)*100);
+        current();
+        exact=sameResultKey(s.resultKey,page.items[s.activeIndex-page.offset]);
+        if(exact) {
+            if(s.view==='overview')await drawPatternOverview({expanded:new Set(s.overviewExpanded),active:s.activeIndex});
+            else {
+                const item=page.items[s.activeIndex-page.offset],layers=item.blocks?item.blocks.reduce((n,b)=>n+model.graphs[b.graph].layers,0):model.graphs[s.graph].layers;
+                limited=s.full && layers>1500;
+                await selectResult(s.activeIndex,{whole:s.full && !limited,forceDraw:true,blockGraph:s.graph});
+            }
+        }
+    }else if(s.view==='result' || s.view==='overview')exact=false;
+    if(s.view==='graph' || (!exact && s.view!=='none')){limited=s.full && model.graphs[s.graph].layers>1500;await drawGraph(s.graph,s.full && !limited);}
+    current();
+    $('capture-cfg').checked=s.across;cfgSelections.clear();for(const b of s.selections)cfgSelections.set(b.graph,new Set(b.nodes));
+    pickedGraph=s.graph;pickedNodes=cfgSelections.get(s.graph) || new Set();$('capture-name').value=s.captureName;
+    setPickingPattern(s.picking);refreshPickedNodes();
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    current();
+    if(exact && s.camera?.kind==='canvas' && virtualOverview)virtualOverview.restore(s.camera);
+    else if(exact && s.camera?.kind==='svg' && !virtualOverview && view.target)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),s.camera);
+    if(!renderedGraph){view.show('default');$('graph-caption').textContent='索引已就緒 · 選取結果以繪製局部圖';}
+    $('workspace-hint').hidden=true;
+    $('choose-workspace-model').hidden=true;
+    status(exact?'已恢復工作階段：搜尋、選取、收合與圖形位置。':'已恢復搜尋與選取；儲存時的搜尋結果不符，已顯示目前 subgraph。');
+    if(limited)notice('搜尋與選取已恢復；超過 1,500 個 OP 的 SVG 完整圖先以局部圖開啟，可手動確認繪製或使用 Canvas 總覽。');
+    else if([...$('slice-connection-controls').querySelectorAll('button')].some(b=>b.textContent.startsWith('繼續分析')))notice('已保留路徑展開與目標分段；新開模型的路徑快取需重建，請按「繼續分析」逐步完成。');
+}
+function queueWorkspace(workspace,chooseNow=true) {
+    pendingWorkspace=workspace;
+    $('workspace-hint').textContent=`請重新選取「${workspace.identity.name}」。將核對檔案大小與結構指紋；不讀取權重內容。`;$('workspace-hint').hidden=false;
+    $('choose-workspace-model').hidden=false;
+    if(chooseNow){$('model-file').value='';$('model-file').click();}
+}
+$('choose-workspace-model').onclick=()=>{$('model-file').value='';$('model-file').click();};
+$('open-workspace').onclick=()=>{$('workspace-file').value='';$('workspace-file').click();};
+$('workspace-file').onchange=async()=>{
+    const selected=$('workspace-file').files[0],generation=++workspaceImport;if(!selected)return;
+    try{if(selected.size>WORKSPACE_LIMIT)throw new Error('工作階段檔案不得超過 2 MiB。');const workspace=parseWorkspace(await selected.text());if(generation===workspaceImport)queueWorkspace(workspace,false);}catch(error){report(error);}
+};
+$('last-workspace').onclick=()=>{try{queueWorkspace(parseWorkspace(localStorage.getItem(WORKSPACE_KEY) || ''));}catch(error){report(error);}};
+$('model-file').addEventListener('cancel',()=>{if(pendingWorkspace){pendingWorkspace=null;$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;status('已取消恢復工作階段。');}});
+try{$('last-workspace').disabled=!localStorage.getItem(WORKSPACE_KEY);}catch{/* File import remains available. */}
 new MutationObserver(() => document.body.classList.toggle('details-open', $('sidebar').style.opacity === '1')).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });

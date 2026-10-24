@@ -19,6 +19,7 @@ html = html.replace('<html lang="en">', '<html lang="zh-Hant">')
 // App styles must follow the retained Netron inline stylesheet.
 html = html.replace('<link rel="stylesheet" href="src/app.css">', '').replace('</head>', '<link rel="stylesheet" href="src/app.css">\n<link rel="stylesheet" href="src/pattern-workspace.css">\n<link rel="stylesheet" href="src/mobile.css">\n<link rel="stylesheet" href="src/model-visibility.css">\n<link rel="stylesheet" href="src/typography.css">\n<link rel="stylesheet" href="src/overview-canvas.css">\n</head>');
 html=html.replace('</head>','<link rel="stylesheet" href="src/explorer-resize.css">\n</head>');
+html=html.replace('</head>','<link rel="stylesheet" href="src/workspace.css">\n</head>');
 await writeFile('dist/index.html', html);
 await writeFile('dist/.nojekyll', '');
 const translations = new Map([

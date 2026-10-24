@@ -7,6 +7,7 @@ import {combinedMLIRSnapshot} from './mlir-combined-graph.js';
 import {slicePatternGraph} from './mlir-pattern-projection.js';
 import {compactSliceSnapshot} from './mlir-slice-graph.js';
 import {createConnectionIndex} from './mlir-connection-index.js';
+import {conditionMatcher} from './pattern-conditions.js';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');
@@ -105,6 +106,7 @@ export function captureMLIRPattern(index,selections) {
 }
 
 export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=>false) {
+    const matches=conditionMatcher();
     const spec=prepareMLIRPattern(structure),items=[];let checks=0,limited=false,yieldAt=0;
     const budget=async()=>{
         if(checks>2000000){limited=true;return false;}
@@ -149,7 +151,7 @@ export async function findMLIRPatterns(index,structure,scope='all',cancelled=()=
                 const typed=entry.byType.get(nodeKey(node)) || [],base=constraints.length ? constraints.reduce((a,b)=>a.size<=b.size ? a : b) : typed,possible=[];
                 for(const n of base) {
                     checks++;if(checks%1000===0 || checks>2000000)if(!await budget())return;
-                    if(!used.has(n) && entry.keys[n]===nodeKey(node) && constraints.every(s=>s.has(n)) && spec.outgoing.get(node.alias).filter(e=>e.to===node.alias).every(e=>has(n,n,e)) && orderOK(node,n))possible.push(n);
+                    if(!used.has(n) && entry.keys[n]===nodeKey(node) && constraints.every(s=>s.has(n)) && spec.outgoing.get(node.alias).filter(e=>e.to===node.alias).every(e=>has(n,n,e)) && orderOK(node,n) && (node.kind!=='operator' || matches(index.graphs[entry.nodes[n].graph].graph.nodes[entry.nodes[n].node],node)))possible.push(n);
                 }
                 if(!possible.length)return;
                 if(!candidates || possible.length<candidates.length){chosen=node;candidates=possible;}

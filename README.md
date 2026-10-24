@@ -6,6 +6,10 @@
 
 以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
+## Pattern 條件與工作階段
+
+可指定 pattern 中各 OP 的 shape、dtype 與 attributes 條件，條件隨 version 3 pattern JSON 保存，仍可匯入舊版。搜尋欄可下載工作階段 JSON，或恢復此瀏覽器上次儲存；重新選取本機模型並核對結構後，還原搜尋、選取、收合、字級與 SVG／Canvas 縮放位置。檔案不含模型與權重，不自動儲存每一步。操作方式與限制見 [條件與工作階段說明](docs/conditions-workspace.md)。
+
 ## 搜尋工作區寬度
 
 桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
@@ -36,7 +40,7 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 32 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
 
-跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱、型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
+跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱；未加條件時不比對型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
 
 搜尋與 source SSA／dominance 檢查全在 Worker 執行；未知 branch 需 dialect adapter，無效 CFG 不會猜測接線。搜尋可取消，最多 50,000 筆、2,000,000 次候選／完整比對檢查，達限時顯示結果可能不完整。跨 block JSON 使用 version 2，保留結構節點與有類型的連線；version 1 的單 block patterns 仍可匯入。檔案不含模型／SSA 名稱、權重或原始 IR。
 
@@ -151,7 +155,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
-瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
+瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。2026-10-24 已用實體、非 sparse 的 1.25 GiB 權重／21,005 OP 合成 TFLite 在 Edge 實際選檔，完成六輪子模型下載、關閉及重開；權重完整雜湊、custom options 與 pattern 核對通過。每輪關閉並待下載 URL 撤銷後，model worker 為零，頁面記憶體約 9–10 MiB，未觀察到下載負載持續累積。這是有限次數的合成模型驗證；實際使用者模型的改善幅度仍待量測。
 
 TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
 

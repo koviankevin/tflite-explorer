@@ -10,10 +10,12 @@ let overview;
 let results = [];
 let generation = 0;
 let file;
+let identity;
 const send = (id, data) => postMessage({ id, data });
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
+            identity=null;
             overview=null;
             file = args.file;
             const reader = new FileReaderSync();
@@ -27,6 +29,9 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 }, progress, dialects:mlirDialects
             });
             send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+        } else if (action === 'workspaceIdentity') {
+            const {workspaceIdentity}=await import('./workspace.js');
+            identity ||= await workspaceIdentity(index,file);send(id,identity);
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
