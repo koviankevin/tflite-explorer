@@ -1,7 +1,7 @@
 
 // Experimental
 
-import * as python from './python.js?v=48cf132f532c0b5d';
+import * as python from './python.js?v=94d4e194395f65fd';
 
 const flax = {};
 
