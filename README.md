@@ -56,7 +56,7 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 ## 使用與開發
 
-需要 Node.js 22 或更新版本；不需安裝 npm 套件。
+需要 Node.js 22 或更新版本；一般建置與 Node.js 測試不需安裝 npm 套件。可選的 Chromium 大檔驗收另需 Playwright，操作見下方。
 
 ```powershell
 node --test test/model.test.mjs test/hydrate.test.mjs test/subgraph.test.mjs
@@ -147,11 +147,25 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 `node scripts/benchmark.mjs 1000` 可重現結構搜尋效能檢查。2026-10-22 本機單次觀測：3,001 layers、五節點結構、999 組匹配，修正前約 2,246 ms，修正後約 43 ms；6,001 layers、1,999 組匹配約 86 ms。後者文字搜尋平均約 1.7 ms，局部圖 DTO 約 1.2 ms。這些是 Node.js 的合成圖量測，不含瀏覽器 SVG 排版時間，也不代表真實模型的載入效能。回歸測試另以候選檢查次數驗證不再重複掃描無關節點，並驗證大量候選可以取消、密集圖會回報計算上限。
 
-1.25 GiB 的合成權重測試使用虛擬 range reader，確認初始讀取量小於 8 MiB、最大單次讀取不超過 1 MiB，不會實際分配整塊合成權重。另以暫存資料夾的實體 1.25 GiB／6,002 operators 合成檔驗證 Node.js range reader，單次觀測讀取總量約 1.13 MiB、解析及建立索引約 264 ms。這些是記憶體／I/O 行為測試，不代表任何真實大型模型的載入時間。`node test/make-large-fixture.mjs` 可產生實體合成檔，供人工選檔測試；`node scripts/inspect.mjs <完整模型路徑>` 可在本機量測結構解析與搜尋。
+1.25 GiB 的合成權重測試使用虛擬 range reader，確認初始讀取量小於 8 MiB、最大單次讀取不超過 1 MiB，不會實際分配整塊合成權重。另以暫存資料夾的實體 1.25 GiB／6,002 operators 合成檔驗證 Node.js range reader，單次觀測讀取總量約 1.13 MiB、解析及建立索引約 264 ms。這些是記憶體／I/O 行為測試，不代表任何真實大型模型的載入時間。`node test/make-large-fixture.mjs` 目前預設產生單子圖／21,001 operators 的實體合成檔，供人工選檔測試；`node scripts/inspect.mjs <完整模型路徑>` 可在本機量測結構解析與搜尋。
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
-瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的實體選檔尚未完成瀏覽器驗證。
+瀏覽器已驗證小模型、6,002 operators 的合成模型、搜尋結果分頁、2,000 組 pattern 的局部圖與高亮、跨 subgraph、tensor 量化資料，以及圖方向切換。2026-10-22 另以實際檔案選擇器驗證 TFLite 與 JSON 匯入；JSON 單筆／全部實際下載、重複略過、無效檔案拒絕及重新整理後保存皆通過。1280×720、1024×600 展開五節點編輯器時，結果區分別保留 98／90 px、底部列沒有被擠出、頁面沒有水平溢位。實際超過 1 GiB 的使用者模型尚未提供，因此原始慢速案例的改善幅度尚未量測；>1 GiB 的合成實體選檔已於 2026-10-23 完成 Chromium 驗收，詳見下節；真實使用者模型的效能仍待量測。
+
+### 可選的 >1 GiB Chromium 選檔驗收
+
+`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
+
+2026-10-24 已整合至 main `ec31522`（保留新版 MLIR、圖形瀏覽與 resize 功能），本機 Chromium **11 組檢查通過**，含 TFLite 大檔流程及小型 MLIR 格式切換／搜尋／繪圖。初次選檔約 **294 ms**，原生讀取量仍為 **1,189,156 bytes**；Node.js **199 通過、0 失敗、35 條件式跳過**。這是本機整合快照結果，GitHub 手動 workflow 尚待執行，不能視為 CI 成功。環境、衝突處理、受測樹與限制見 [整合驗證紀錄](docs/large-browser-integration-2026-10-24.md)、[本機 JSON](test/browser/results/2026-10-24-chromium.json)。
+
+以下為 **舊基準 `6fbe65c`** 的歷史證據，不能代替最新 main 的驗證。2026-10-23 單次實測：Ubuntu 24.04.3 x64、Node.js 24.19.0、Playwright 1.56.1、headless Chromium 141.0.7390.37；cgroup 上限 8 GiB、CPU 配額 8 核，開始時可用記憶體約 4.4 GiB、暫存磁碟約 27 GiB。從自動選檔到索引與初始清單就緒約 **284 ms**，Worker 解析與索引約 **133 ms**；錯誤後重新載入約 **246 ms**。原生 FileReaderSync 共讀 **1,189,156 bytes（約 1.13 MiB）**，19 次、最大單次 **64 KiB**，與 worker range 統計相符。未發生大檔完整讀取、瀏覽器當機、頁面／Worker 未處理錯誤或模型上傳請求。
+
+100 ms 取樣的 Chromium 程序樹 RSS 約 **409 → 峰值 536 MiB**（增加約 127 MiB），主頁 JS heap 峰值約 5.3 MiB；頁面 50 ms 心跳最大間隔約 99 ms。RSS 含共享頁重複計算且可能漏掉短暫尖峰，並非精確的全瀏覽器 JS heap。讀取觀察器會在單次 >1 MiB 或累計 >8 MiB 時先拒絕，避免完整載入回歸造成記憶體耗盡；取消案例使用測試專用的 metadata 回應暫停點。受管主機另有 Chromium 關閉後程序回收逾時的限制，已記入報告。詳細重現方式、通過條件與量測邊界見 [大檔驗收說明](test/browser/README.md)，[實測 JSON](test/browser/results/2026-10-23-chromium.json) 保留樣本與讀取證據。
+
+同環境另跑 Node.js `scripts/inspect.mjs` 的合成實體檔讀取，解析與索引約 **150 ms**、讀取量同為 1.13 MiB。這是獨立的 Node.js 路徑，不包含 Chromium File API、Worker 啟動或畫面操作；既有 264 ms 也是另一次 Node.js 觀測，不能用兩次單次數據宣稱速度提升。以上皆為合成測試，仍缺少原始真實模型的改善幅度。
+
+### 其他既有驗證
 
 TFLite 子模型測試核對 options、量化、必要權重 bytes、兩個出口、邊界輸入與未知 schema 拒絕。另以 Google LiteRT 2.3.0 CPU Interpreter 實際執行含常數權重的原模型、兩層子模型、由中間 tensor 輸入的單層子模型及完整重新匯出模型，結果符合預期；從瀏覽器實際下載的兩層子模型也執行得到 `[5, 8]`。這是匯出檔的開發驗證，網站本身仍不執行推論。下載使用延後釋放的 Blob URL，避免瀏覽器尚未開始讀取即被撤銷。
 
