@@ -46,3 +46,15 @@
 - 手動大檔 run [40081492570](https://github.com/koviankevin/tflite-explorer/actions/runs/40081492570) **失敗於環境安裝**：`npx playwright install --with-deps chromium` 明確回報 `Playwright does not support chromium on ubuntu26.04-x64`。驗收步驟未執行，沒有測試 JSON；artifact 上傳亦因此失敗。
 - 失敗訊息已直接定位 OS／固定 Playwright 相容性；不對產品程式碼做猜測性修改，也不需要效能壓測或額外 instrumentation。唯一環境變更為獨立大型工作由 `ubuntu-latest` 固定至已在本機驗證的 `ubuntu-24.04`；PR Node 工作與 Pages 保持原樣。
 - 修正後仍須新開手動 run；重跑舊 run 會沿用舊 workflow，不能驗證這項修改。測試結果以新的 run 狀態與 artifact 為準。
+
+## GitHub 最終實測（與本機分開）
+
+- runner 修正 PR [#2](https://github.com/koviankevin/tflite-explorer/pull/2) 的 Node／build 驗證 [40081631217](https://github.com/koviankevin/tflite-explorer/actions/runs/40081631217) 已成功並合併。
+- main 新手動 run [40081739220](https://github.com/koviankevin/tflite-explorer/actions/runs/40081739220) **成功**，受測提交 `4c78ce9bb6468cd3f79a2ba77815e613d0737e72`，tree `bdaca2894d9efd45b26597d3aab3bc5ba008567c`；報告 `sourceKind=github-actions`、`sourceDirty=false`。這是獨立 CI 證據，取代上文撰寫時的待驗證狀態。
+- 環境：Ubuntu 24.04.5 x64、Linux 6.17.0-1022-azure、Node.js 22.23.3、Playwright 1.56.1、headless Chromium 141.0.7390.37，4 CPU；開始可用記憶體 15,448,567,808 bytes、暫存磁碟 90,842,185,728 bytes。
+- **11 組驗收全部通過**，實際原生 File 為 1,343,235,364 bytes；範圍與上文本機驗收一致，含取消／Worker 終止、無效檔恢復、子模型重開及小型 MLIR 搜尋／繪圖。
+- 首次選檔至清單 **331.05 ms**、Worker 解析／索引 **121.30 ms**、恢復 **234.02 ms**。每次大檔載入原生讀取 **1,189,156 bytes／19 次／最大 64 KiB**。
+- Chromium RSS 100 ms 取樣 **511,660,032 → 672,591,872 bytes**，增加 **160,931,840 bytes**，低於 768 MiB 門檻；無 crash、pageerror、Worker error 或上傳。
+- Artifact `large-file-chromium-report` **12555132633** 已上傳，ZIP SHA-256 `83e5e03ff43bd15a9106d0c114cedd85e4917a89214c7fa11b2911038d9e25e7`；14 天保留，預定 2026-11-07 17:23（台北）到期。下載後已核對 SHA-256、JSON status／受測 SHA，並把原始 JSON 保存於 `test/browser/results/2026-10-24-github-chromium.json`，不受 Actions artifact 到期影響。
+- GitHub 報告同樣記錄 Chromium 協定關閉後程序回收超過 5 秒；報告沿用舊字串中的 `host process wrapper` 歸因，**CI 上的真正原因尚未獨立確認**，僅視為 driver 清理限制。11 組 UI／讀取檢查已先完成；不以此宣稱清理完全無問題。真實模型、非 Chromium 大檔、完整 MLIR 瀏覽器與獨立編譯器驗證仍未完成。
+- 此次最後提交僅保存 CI 原始 JSON 與更新文件；沒有修改已通過驗證的產品／測試程式或部署流程。

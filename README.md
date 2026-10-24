@@ -157,7 +157,9 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 `npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
 
-2026-10-24 已整合至 main `ec31522`（保留新版 MLIR、圖形瀏覽與 resize 功能），本機 Chromium **11 組檢查通過**，含 TFLite 大檔流程及小型 MLIR 格式切換／搜尋／繪圖。初次選檔約 **294 ms**，原生讀取量仍為 **1,189,156 bytes**；Node.js **199 通過、0 失敗、35 條件式跳過**。這是本機整合快照結果，GitHub 手動 workflow 尚待執行，不能視為 CI 成功。環境、衝突處理、受測樹與限制見 [整合驗證紀錄](docs/large-browser-integration-2026-10-24.md)、[本機 JSON](test/browser/results/2026-10-24-chromium.json)。
+2026-10-24 已整合至 main `ec31522`（保留新版 MLIR、圖形瀏覽與 resize 功能），本機 Chromium **11 組檢查通過**，含 TFLite 大檔流程及小型 MLIR 格式切換／搜尋／繪圖。初次選檔約 **294 ms**，原生讀取量仍為 **1,189,156 bytes**；Node.js **199 通過、0 失敗、35 條件式跳過**。上述為本機整合快照結果；另有獨立的 GitHub Actions 證據如下。環境、衝突處理、受測樹與限制見 [整合驗證紀錄](docs/large-browser-integration-2026-10-24.md)、[本機 JSON](test/browser/results/2026-10-24-chromium.json)。
+
+合併後 GitHub 手動 run [40081739220](https://github.com/koviankevin/tflite-explorer/actions/runs/40081739220) 已於 2026-10-24 成功：Ubuntu 24.04.5、Node.js 22.23.3、Playwright 1.56.1、Chromium 141.0.7390.37，11 組驗收通過，首次選檔約 **331 ms**、原生讀取 **1,189,156 bytes**，JSON artifact 上傳成功。完整報告另存 [GitHub CI JSON](test/browser/results/2026-10-24-github-chromium.json)，受測提交 `4c78ce9`；與本機報告分開。PR Node／build 驗證亦已成功。首次使用 `ubuntu-latest` 的手動 run 因 Ubuntu 26.04 不支援固定 Playwright 而停在安裝階段，已由 PR #2 固定至 `ubuntu-24.04`；第一次失敗仍保留紀錄。大型驗收仍僅手動啟動，不變更 Pages 部署。
 
 以下為 **舊基準 `6fbe65c`** 的歷史證據，不能代替最新 main 的驗證。2026-10-23 單次實測：Ubuntu 24.04.3 x64、Node.js 24.19.0、Playwright 1.56.1、headless Chromium 141.0.7390.37；cgroup 上限 8 GiB、CPU 配額 8 核，開始時可用記憶體約 4.4 GiB、暫存磁碟約 27 GiB。從自動選檔到索引與初始清單就緒約 **284 ms**，Worker 解析與索引約 **133 ms**；錯誤後重新載入約 **246 ms**。原生 FileReaderSync 共讀 **1,189,156 bytes（約 1.13 MiB）**，19 次、最大單次 **64 KiB**，與 worker range 統計相符。未發生大檔完整讀取、瀏覽器當機、頁面／Worker 未處理錯誤或模型上傳請求。
 
