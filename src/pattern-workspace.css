@@ -51,6 +51,8 @@
 #pattern-overview-controls>div{display:flex;flex-wrap:wrap;gap:4px}
 #pattern-overview-controls .hint{white-space:normal;overflow-wrap:anywhere}
 #slice-connection-controls button{max-width:100%;overflow-wrap:anywhere}
+.slice-page-controls{display:flex;flex-wrap:wrap;gap:4px;min-width:0;max-width:100%}
+.slice-page-controls span{flex-basis:100%;overflow-wrap:anywhere;font-size:13px}
 /* Sidebar redraws must not choose a new browser scroll anchor on mobile. */
 html{overflow-anchor:none}
 #target .slice-connection{cursor:pointer}
