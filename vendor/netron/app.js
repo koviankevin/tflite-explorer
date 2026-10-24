@@ -1,5 +1,5 @@
 
-import * as base from './base.js?v=6c76cced0e0a8fe9';
+import * as base from './base.js?v=d408969f7e3cd305';
 import * as electron from 'electron';
 import * as fs from 'fs';
 import * as os from 'os';

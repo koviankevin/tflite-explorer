@@ -1,17 +1,17 @@
-import { Host } from '../vendor/netron/browser.js?v=6c76cced0e0a8fe9';
-import { View, Attachment } from '../vendor/netron/view.js?v=6c76cced0e0a8fe9';
-import { hydrate } from './hydrate.js?v=6c76cced0e0a8fe9';
-import {overviewCanvas} from './overview-canvas.js?v=6c76cced0e0a8fe9';
-import { modelFormat } from './model-formats.js?v=6c76cced0e0a8fe9';
-import {explorerResize} from './explorer-resize.js?v=6c76cced0e0a8fe9';
-import {conditionEditor} from './pattern-condition-editor.js?v=6c76cced0e0a8fe9';
-import {parseGraphPattern} from './subgraph-pattern.js?v=6c76cced0e0a8fe9';
-import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=6c76cced0e0a8fe9';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=6c76cced0e0a8fe9';
-import {rectangleSelection} from './rectangle-selection.js?v=6c76cced0e0a8fe9';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=6c76cced0e0a8fe9';
-import { LORA_PATTERN } from './pattern-utils.js?v=6c76cced0e0a8fe9';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=6c76cced0e0a8fe9';
+import { Host } from '../vendor/netron/browser.js?v=d408969f7e3cd305';
+import { View, Attachment } from '../vendor/netron/view.js?v=d408969f7e3cd305';
+import { hydrate } from './hydrate.js?v=d408969f7e3cd305';
+import {overviewCanvas} from './overview-canvas.js?v=d408969f7e3cd305';
+import { modelFormat } from './model-formats.js?v=d408969f7e3cd305';
+import {explorerResize} from './explorer-resize.js?v=d408969f7e3cd305';
+import {conditionEditor} from './pattern-condition-editor.js?v=d408969f7e3cd305';
+import {parseGraphPattern} from './subgraph-pattern.js?v=d408969f7e3cd305';
+import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=d408969f7e3cd305';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=d408969f7e3cd305';
+import {rectangleSelection} from './rectangle-selection.js?v=d408969f7e3cd305';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=d408969f7e3cd305';
+import { LORA_PATTERN } from './pattern-utils.js?v=d408969f7e3cd305';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=d408969f7e3cd305';
 
 const $ = (id) => document.getElementById(id);
 const explorer=explorerResize($('explorer-resize'));
@@ -46,7 +46,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=6c76cced0e0a8fe9`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=d408969f7e3cd305`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -65,8 +65,10 @@ view.options.weights = false;
 view.options.mousewheel = 'zoom';
 view.error = async (error) => { notice(error.message || String(error)); view.show(null); };
 const originalNodeProperties = view.showNodeProperties.bind(view);
+let detailNode=null;
 view.showNodeProperties = (node, source) => {
     if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;}
+    detailNode=node;
     $('tensor-summary').hidden = true;
     if(renderedGraph?.compactSlice && Number.isInteger(node.sourceGraph) && Number.isInteger(node.sourceNode)) {
         const generation=renderGeneration;
@@ -172,7 +174,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=6c76cced0e0a8fe9', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=d408969f7e3cd305', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -183,6 +185,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    detailNode=null;
     $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
@@ -210,7 +213,7 @@ function reset() {
     $('graph-caption').textContent = '選取結果以查看連接'; $('metrics').textContent = 'LOCAL FILE · NO UPLOAD';
     $('zoom-reset').textContent='100%';
     $('full-graph').textContent = '完整圖'; $('notice').hidden = true;
-    for (const id of ['pick-pattern', 'graph-select', 'run-pattern', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction', 'previous-result', 'next-result']) $(id).disabled = true;
+    for (const id of ['pick-pattern', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction', 'previous-result', 'next-result']) $(id).disabled = true;
     showPage({ items: [], total: 0, offset: 0 });
     status('準備就緒');
 }
@@ -242,7 +245,7 @@ async function openFile(nextFile) {
         $('metrics').textContent = `讀取總量 ${size(model.stats.bytesRead)} · 檔案 ${size(file.size)} · 解析 ${(model.stats.parseMs / 1000).toFixed(2)}s`;
         $('scope').replaceChildren(new Option('目前 subgraph（子圖 0）', 'current'), new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name} · ${g.layers} layers`, String(g.index))));
         $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
-        for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
+        for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         $('save-workspace').disabled=false;
         renderPattern();
@@ -271,6 +274,7 @@ async function openFile(nextFile) {
 }
 function setKind(nextKind, searchNow = true) {
     kind = nextKind;
+    $('run-pattern-laptop').hidden=kind!=='patterns';
     document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-selected', String(button.dataset.kind === kind)));
     $('text-search').hidden = kind === 'patterns'; $('pattern-editor').hidden = kind !== 'patterns';
     renderPattern(); if (model && searchNow) runSearch().catch(report);
@@ -1007,6 +1011,7 @@ document.querySelectorAll('[data-kind]').forEach((button) => button.onclick = ()
 $('query').oninput = () => { clearTimeout(timer); timer = setTimeout(() => runSearch().catch(report), 180); };
 $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
+$('run-pattern-laptop').onclick=$('run-pattern').onclick;
 $('reset-pattern').onclick = () => { chainPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-input-mode').value = 'visual'; $('graph-pattern').value = 'N1:Reshape -> N2:Transpose -> N3:Reshape'; updateGraphInputMode(); renderPattern(); if (model) runSearch().catch(report); };
 function renderVisualPattern() {
     conditionUI.render();
@@ -1208,7 +1213,14 @@ $('workspace-file').onchange=async()=>{
 $('last-workspace').onclick=()=>{try{queueWorkspace(parseWorkspace(localStorage.getItem(WORKSPACE_KEY) || ''));}catch(error){report(error);}};
 $('model-file').addEventListener('cancel',()=>{if(pendingWorkspace){pendingWorkspace=null;$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;status('已取消恢復工作階段。');}});
 try{$('last-workspace').disabled=!localStorage.getItem(WORKSPACE_KEY);}catch{/* File import remains available. */}
-new MutationObserver(() => document.body.classList.toggle('details-open', $('sidebar').style.opacity === '1')).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
+new MutationObserver(() => {
+    const open=$('sidebar').style.opacity==='1',opening=open&&!document.body.classList.contains('details-open');
+    document.body.classList.toggle('details-open',open);
+    if(opening && innerWidth>900 && innerWidth<=1600 && detailNode && !virtualOverview) {
+        const node=detailNode,generation=renderGeneration;
+        requestAnimationFrame(()=>{if(generation!==renderGeneration || !document.body.classList.contains('details-open'))return;const entry=renderedNodes.find(e=>e.node===node || e.node.identifier===node.identifier);if(entry?.element)view.target?.scrollTo([entry.element]);});
+    }
+}).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;

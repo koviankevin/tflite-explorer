@@ -1,5 +1,5 @@
-import {operationSemantics} from './mlir-dialects.js?v=6c76cced0e0a8fe9';
-import {typeSpelling} from './mlir-engine.js?v=6c76cced0e0a8fe9';
+import {operationSemantics} from './mlir-dialects.js?v=d408969f7e3cd305';
+import {typeSpelling} from './mlir-engine.js?v=d408969f7e3cd305';
 
 // Portable data, never hooks or source code. Bind a source pattern graph to
 // real operators in the exported IR; synthetic ABI nodes stay in the real IR.
@@ -130,7 +130,7 @@ export function slicePatternGraph(index,region) {return index.mlir.slicePatterns
 // Flatten an existing projection when re-exporting, so seeds/entry nodes never
 // accumulate as part of the original pattern graph.
 export async function attachSlicePattern(index,region,text,offset,bindings) {
-    const {parseMLIR}=await import('./mlir-engine.js?v=6c76cced0e0a8fe9');
+    const {parseMLIR}=await import('./mlir-engine.js?v=d408969f7e3cd305');
     const candidate=await parseMLIR(new TextEncoder().encode(text),{metadata:index.mlir.metadata,dialects:index.mlir.dialects});
     const target=candidate.mlir.ir.regions.find(r=>r.owner && name(r.owner.op)==='func.func');
     const original=slicePatternGraph(index,region) || actualGraph(index,region),nodes=[],ids=new Map();

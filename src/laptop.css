@@ -1,0 +1,20 @@
+#run-pattern-laptop{display:none}
+@media(min-width:901px) and (max-width:1600px){
+    .app-header{padding:0 18px;gap:12px}
+    .brand{width:220px;min-width:185px}
+    .file-summary{flex:1;min-width:0;max-width:none}
+    .panel-heading{padding:14px 20px}
+    /* Focus scrolls editors/results, never the whole fixed explorer. */
+    .explorer-panel{overflow:clip}
+    .tabs button{padding:12px 10px}
+    .search-tools{padding:12px 16px;max-height:calc(100% - 260px)}
+    .result-heading{padding:8px 16px;gap:8px;min-height:44px}
+    .result-heading>div{display:flex;align-items:center;gap:4px;flex-shrink:0}
+    #run-pattern-laptop{display:inline-flex;align-items:center;min-height:32px;padding:4px 8px}
+    #run-pattern{display:none}
+    .capture-toolbar{padding:10px 12px;gap:8px}
+    .capture-toolbar>div{min-width:0;max-width:100%}
+    .status-bar{gap:16px}
+    #status{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #metrics{max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
