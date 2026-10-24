@@ -6,6 +6,10 @@
 
 以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
+## 搜尋工作區寬度
+
+桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
+
 ## MLIR 基礎版
 
 讀取文字 `.mlir`（UTF-8，最多 64 MiB），優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。

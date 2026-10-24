@@ -3,6 +3,7 @@ import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
 import { modelFormat } from './model-formats.js';
+import {explorerResize} from './explorer-resize.js';
 import {layerLocation,updateLayerSelection} from './pattern-selection.js';
 import {rectangleSelection} from './rectangle-selection.js';
 import {captureViewport,restoreViewport} from './svg-viewport.js';
@@ -10,6 +11,7 @@ import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
+explorerResize($('explorer-resize'));
 let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
@@ -229,7 +231,9 @@ async function openFile(nextFile) {
             if(currentGraph!==0 && $('scope').value==='current')await runSearch();
         }
         else {
-            view.show(null);
+            // The explorer has a model even before Netron receives a graph.
+            // Its automatic page choice would hide mobile search as "welcome".
+            view.show('default');
             $('graph-caption').textContent = '索引已就緒 · 選取結果以繪製局部圖';
             status('索引已就緒。請搜尋或選取 layer／tensor，模型圖依需求繪製。');
         }

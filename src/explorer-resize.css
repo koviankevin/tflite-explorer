@@ -1,0 +1,20 @@
+.explorer-resize {
+    position:absolute;left:calc(var(--aside) - 5px);top:var(--head);bottom:var(--foot);
+    width:10px;z-index:9;cursor:col-resize;touch-action:none;
+}
+.explorer-resize::after {
+    content:"";position:absolute;top:calc(50% - 22px);left:3px;width:4px;height:44px;
+    border-left:1px solid #93afa2;border-right:1px solid #93afa2;border-radius:2px;
+}
+.explorer-resize:hover,.explorer-resize:focus-visible,.resizing-explorer .explorer-resize { background:#18745d20; }
+.explorer-resize:focus-visible { outline:2px solid var(--accent);outline-offset:-2px; }
+.resizing-explorer,.resizing-explorer * { cursor:col-resize!important;user-select:none!important; }
+@media (min-width:901px) {
+    .graph-bar { height:auto;min-height:53px;flex-wrap:wrap;align-content:center;padding:8px 12px;gap:8px; }
+    .graph-location { flex:1 1 230px;min-width:0; }
+    .graph-actions { flex:1 1 auto;min-width:0;max-width:100%;justify-content:flex-end; }
+    .compact-graph-bar .graph-location,.compact-graph-bar .graph-actions { width:100%;flex-basis:100%; }
+    .compact-graph-bar .graph-location select { flex:1;max-width:300px;min-width:0; }
+    .compact-graph-bar #graph-caption { overflow:hidden;text-overflow:ellipsis; }
+}
+@media (max-width:900px) { .explorer-resize { display:none; } }
