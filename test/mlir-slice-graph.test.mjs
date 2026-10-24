@@ -5,7 +5,7 @@ import {parseMLIR} from '../src/mlir-engine.js';
 import {exportMLIR} from '../src/mlir-export.js';
 import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot,mlirSliceSnapshot} from '../src/mlir-pattern.js';
 import {validateMLIR} from '../src/mlir-validate.js';
-import {layerLocation} from '../src/pattern-selection.js';
+import {layerLocation,updateLayerSelection} from '../src/pattern-selection.js';
 import {MLIR_CFG_DIAMOND,MLIR_CFG_LOOP} from './mlir-fixture.mjs';
 const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
 const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
@@ -87,4 +87,21 @@ test('expanded loop routes preserve the backedge and phi SSA without expanding t
         assert.equal(dto.selected.length,6);assert.equal(dto.graph.nodes.filter(n=>n.diagramKind==='operator').length,6);
         assert.ok(dto.sliceEdgeActions.some(a=>a.keys.includes(key) && a.from==='route:5:0'));
     }
+});
+test('committed cross-block selections survive path redraws and can be extended, captured and exported',async()=>{
+    const {index}=await exported(await parse(mixed),selection),selected=new Map();
+    const select=(dto,ids)=>updateLayerSelection(selected,dto.graph.nodes.filter(n=>ids.includes(n.identifier)).map(node=>layerLocation({node,index:node.identifier},0)).filter(Boolean));
+    select(mlirSliceSnapshot(index,0),['b1:n0','b2:n0']);
+    const first=selected.get(1),left='b2:n0>b4:n0',loop='b5:n1>b5:n0';
+    for(const expandedConnections of [[left],[left,loop],[loop],[]]) {
+        const dto=mlirSliceSnapshot(index,0,{expandedConnections});
+        assert.equal(selected.get(1),first);assert.deepEqual([...selected.get(1)],[0]);assert.deepEqual([...selected.get(2)],[0]);
+        assert.ok(dto.graph.nodes.filter(n=>n.sliceHelper).every(node=>layerLocation({node,index:node.identifier},0)===null));
+    }
+    select(mlirSliceSnapshot(index,0,{expandedConnections:[loop]}),['b3:n0','b4:n0','b5:n0','b5:n1']);
+    const chosen=[...selected].map(([graph,nodes])=>({graph,nodes:[...nodes]}));
+    assert.equal(chosen.reduce((n,b)=>n+b.nodes.length,0),6);
+    const pattern=captureMLIRPattern(index,chosen);assert.equal((await findMLIRPatterns(index,pattern)).items.length,1);
+    const again=await exported(index,chosen);assert.deepEqual(validateMLIR(again.index).diagnostics,[]);
+    assert.equal((await findMLIRPatterns(again.index,pattern)).items.length,1);assert.equal(mlirSliceSnapshot(again.index,0).graph.nodes.length,6);
 });
