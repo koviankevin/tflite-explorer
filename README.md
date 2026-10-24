@@ -1,10 +1,46 @@
-# 模鏡｜TFLite 模型探索
+# 模鏡｜TFLite・MLIR 模型探索
 
 **Model Lens** — 看清結構，找到連接。
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-以 Netron 的 TFLite 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 模型檔案。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
+
+## 搜尋工作區寬度
+
+桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
+
+## MLIR 基礎版
+
+讀取文字 `.mlir`（UTF-8，最多 64 MiB），優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。
+
+圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會在本機 Worker 檢查來源與子圖的語法／SSA；失敗時顯示行、欄與原因，停止下載。此結構檢查不取代 LLVM 或內部 dialect verifier，完整範圍見 [驗證說明](docs/mlir-verification.md)。下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
+
+MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block 的資料流擷取 1～32 個 operations，選到含 region 的 op 時保留其完整 region。多 block 局部匯出移除未選取的一般資料運算，補足外部 SSA 輸入、輸出、控制路徑與必要的迴圈運算；custom op 原文、型別、properties、attributes 保留。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly、bytecode 和大型 resource payload 不保證可讀；不支援時回報位置，不猜測接線。
+
+局部 CFG 是新的 `@extracted` function：保留原有可達控制路徑並新增 entry block，裁掉未使用的 block arguments；迴圈內會變動的 SSA producer 不能凍結成輸入，會自動保留。條件輸出使用 `(valid: i1, value)`，並要求 caller 傳入同型別備援值；`valid=false` 時該值不代表已執行的輸出。多回傳出口另回傳原始出口編號。檔案註解列出輸入來源與結果位置，介面列出補入的運算。新版局部 MLIR 保留原始 pattern 結構對照，既有 pattern 可沿用，新增的 entry、輸出傳值與備援介面不參與原始結構比對；結果仍定位到實際存在的 layers。較早的局部檔案需從原模型重新匯出一次，原有 pattern JSON 不需修改。需要原始函式介面時使用完整 function。局部模式目前支援同一 function 直接 body 的選取、最多 4096 blocks／128 資料輸出，不推斷未註冊 op 的 memory effects。
+
+### 跨 block pattern
+
+搜尋後按「收合所有匹配」可在全模型圖中，將本次搜尋的每個不重疊匹配各自收為節點，包含所有搜尋分頁、functions／subgraphs；未匹配的 OP 保留。點任一節點或按 Enter 可單獨展開，其他匹配保持收合；總覽清單可定位、重新收合某一組或全部展開／收合。不同搜尋結果共用 OP 時，依搜尋順序保留第一個不衝突匹配，後續衝突結果明確標示「重疊，未另建節點」，仍可定位，避免複製 OP 或改變接線。SSA／tensor、分支出口及跨越收合節點的迴圈沿原值接回，functions／subgraphs 不交叉接線。總覽僅改變顯示，匯出仍使用目前匹配的原始選取；Canvas 總覽可直接圈選已展開的原始 OP。總覽先在 Worker 建立連線投影並規劃收合，不以原始 OP 數或匹配筆數阻擋。收合／展開後在 1,500 個節點以內沿用 Netron SVG；超過時自動切換 Canvas 虛擬總覽，背景建立全圖座標，依視窗查詢節點及連線，拖曳／縮放時只重畫可見範圍及少量預載邊界。兩端在畫面外但穿過視窗的連線也會保留；全圖縮小時省略文字，放大再顯示名稱，並以固定畫面線寬標出目前匹配。大型總覽使用分層概略排版，迴圈以強連通元件安排；不同 functions／subgraphs 分區。Canvas 只傳送名稱、型別、原始位置與連線，點 OP 才取得原始詳細資料，權重仍按需在本機讀取。
+
+虛擬總覽可拖曳平移、滾輪／＋− 縮放，按「全圖」或 Home 還原全圖；方向鍵平移，Enter 開啟選取節點。搜尋可直接定位畫面外的匹配，單組展開／全部展開後仍使用同樣視窗機制；字級及圖方向變更會重算座標。總覽下拉選單在結果超過 1,500 筆時列前 1,000 組獨立匹配及目前選取，其餘仍可透過分頁搜尋清單定位。詳情、pattern 儲存與模型匯出使用原始 OP。Canvas 總覽按「選取 pattern」可直接跨 blocks 框選，滑鼠拖曳加入相交的原始 OP、點選切換、Alt＋拖曳平移；縮放與平移後以反向座標轉換查詢空間索引。框選範圍限於實際畫布，不會加入視窗外預載節點、收合節點或控制標記；收合節點可在選取模式中點開再選。未完成的框選在 Escape、滾輪、重畫、捲動、失焦、縮放或 resize 時取消。選取跨 block 保留，最多 32 個原始 OP，須在同一 function／region 或 TFLite subgraph，超限／跨範圍時保留原選取並提示。可加入視窗內的 layers、從選取的 block 清單定位，或匯出所選子模型。儲存並搜尋後留在全模型總覽，字級和方向重畫仍保留原始選取；SVG 收合總覽請返回匹配圖再圈選。搜尋本身的 50,000 筆與工作量保護仍適用。虛擬繪圖降低畫面繪製負擔，但全圖索引與座標仍需要與節點／連線數成比例的記憶體，實際容量取決於瀏覽器和模型結構。
+
+點選搜尋結果後，可用圖上方「收合 pattern」將目前匹配收成一個節點；點節點或按 Enter／Space 重新展開。支援 TFLite 與 MLIR。收合僅改變顯示，搜尋結果、圈選來源及匯出仍使用原始 OP；需先展開才能圈選。MLIR 一併收起相關 block 標頭、內部 arguments、控制標記與必要 terminators，保留各個對外 SSA、分支出口及傳值。跨越 pattern 邊界的迴圈仍顯示去向與回跳；完全位於內部的迴圈在展開後查看。圖上以「外部 block」標示未展開的相鄰控制範圍，不會將省略的 OP 當成匹配內容。
+
+在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 32 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。
+
+點跨 block 結果會將相關 blocks 畫在同一張圖，以區塊框線區分範圍。藍色虛線顯示實際控制出口與迴圈回跳，實線顯示 SSA 和 block argument 傳值；出口與 argument 顯示節點是檢視用標記，不會寫入原始 IR 或匯出檔。點 block 按鈕直接在同圖定位並保留排版與縮放；「全部 blocks」重新縮放以檢視總覽。預設局部圖只含匹配 operators、必要 terminators、block arguments 與相關 blocks 之間的 successor；省略的資料來源標成邊界輸入，不會跨越省略 blocks 畫假連線。完整圖展開相關 blocks 的所有 operators，最多 1,500 operators、512 個控制出口。
+
+在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 32 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；MLIR 匯出範圍可選局部選取或完整 function。
+
+選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 32 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
+
+跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱、型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
+
+搜尋與 source SSA／dominance 檢查全在 Worker 執行；未知 branch 需 dialect adapter，無效 CFG 不會猜測接線。搜尋可取消，最多 50,000 筆、2,000,000 次候選／完整比對檢查，達限時顯示結果可能不完整。跨 block JSON 使用 version 2，保留結構節點與有類型的連線；version 1 的單 block patterns 仍可匯入。檔案不含模型／SSA 名稱、權重或原始 IR。
+
+可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的 region kind、isolation、successor operands、terminator 與自訂 verifier 可從 `src/mlir-dialect-registry.js` 接入，來源與匯出重驗共用同一 registry，無需修改搜尋器。顯示擴充、parser 替換位置、介面範例與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
 
 ## 匯出 TFLite 子模型
 
@@ -34,6 +70,10 @@ node scripts/serve.mjs
 
 原始碼保留在 `main`，網站靜態產物發布至 `gh-pages`。設定 GitHub Pages 的來源為 `gh-pages` 分支根目錄；`.nojekyll` 會保留所有靜態資源。專案網址的子路徑也能使用，程式不依賴網域根路徑。
 
+局部 MLIR 重新開啟時預設為精簡圖，只顯示匯出時圈選的原始 OP。匯出器補上的輸入、輸出有效旗標、block arguments 與控制路由保留在 MLIR 內，圖面將其收起並直接連接原始 OP；分支、匯合與迴圈回跳仍可查看。點精簡圖的連線可只展開該段隱藏的 SSA、block arguments 與控制路由，其餘支線保持收起；再點展開的連線可收起，也可從側欄逐段收起或「收起全部路徑」。共享的輔助節點只顯示一次，仍被其他展開路徑使用時會保留。展開／收起會保留目前縮放，並以該段仍存在的節點維持畫面位置；若端點原本在畫面外，會定位到畫面邊緣附近。選取 pattern 模式中也可點連線展開／收起，或用側欄收起路徑；已選的原始 layers 會保留，可繼續跨 block 框選，再儲存 pattern 或匯出 MLIR。展開的輔助節點不參與圈選 pattern。點「展開輔助節點」可檢視完整 SSA 與控制流程，再點「收起輔助節點」返回。此顯示切換不改動模型、匯出或 pattern 比對。較舊的局部檔案沒有圈選標記，預設顯示可驗證的原始 OP；套用原先儲存的 pattern 後會只顯示該匹配的 OP，或可重新匯出以記錄精確圈選。
+
+反覆匯出相同選取時，會依有效的結構對照合併舊的自動入口路由，再建立一次匯出介面；原始 blocks 與明確圈選的輔助 OP 不會被合併。多出口 `func.return` 另保留原始資料輸出的 operand 對照，避免把出口編號、valid 旗標再包成資料輸出。對照失效的檔案不會套用入口整理；舊檔若無法可靠還原 return 的資料輸出，會提示從原模型重新匯出或改用完整 function。
+
 ```powershell
 node scripts/build.mjs
 node scripts/publish-github-pages.mjs
@@ -59,6 +99,10 @@ node scripts/publish-github-pages.mjs
 - 介面內文 15px，清單、詳細資料與操作說明 14px，主要標題 16px。模型圖文字預設 14px，工具列「圖字」可獨立選擇 14–32px，偏好只存在目前瀏覽器。調整圖字會重新排版以容納文字，保留目前縮放、完整／局部圖模式、搜尋選取與手動擷取選取；文字仍隨模型縮放，可在縮小時提高圖字大小。
 - 搜尋選取使用亮黃色填滿與 4px 外框，匹配連線加粗為 3px；手動擷取選取使用綠色填滿與虛線外框。外框與連線採 non-scaling stroke，縮小模型時不隨之變細。詳細資料面板的底色與文字成對設定，系統使用深色主題時也維持一致的淺底深字。
 - 量化參數超過 12 項時摘要呈現，完整參數可下載為 JSON。
+
+局部連線展開使用本機路徑快取，每段預設最多 96 個實際輔助節點；長路徑可在側欄用「上一段／下一段」逐段查看。不同段落重疊一個節點以保持銜接，未顯示的部分以「已收起 N 個節點」保留邊界連線。多條路徑同時開啟時會分配額度，畫面最多 512 個輔助節點（含收合標記）、最多同時 16 段路徑。切段沿用原始 layers 選取與縮放，並以仍存在的鄰近節點維持定位。輔助節點與收合標記不會混入 pattern 或 MLIR 匯出。
+
+路徑分析每次最多執行 50,000 個遍歷工作單位；尚未完成時保持精簡連線並顯示「繼續分析」，點選後接續，不會將不完整路徑當成完成結果。每個 region 快取最多 16 個路徑計畫，模型最多快取 4 個連線索引；另以拓樸及邊數控制閒置快取，使用中的大型索引／路徑可超過該回收目標，關閉模型後釋放。此上限限制額外畫圖資料，仍需保留原始模型及解析索引。
 
 ## 大型模型的處理方式
 
@@ -103,7 +147,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 `node scripts/benchmark.mjs 1000` 可重現結構搜尋效能檢查。2026-10-22 本機單次觀測：3,001 layers、五節點結構、999 組匹配，修正前約 2,246 ms，修正後約 43 ms；6,001 layers、1,999 組匹配約 86 ms。後者文字搜尋平均約 1.7 ms，局部圖 DTO 約 1.2 ms。這些是 Node.js 的合成圖量測，不含瀏覽器 SVG 排版時間，也不代表真實模型的載入效能。回歸測試另以候選檢查次數驗證不再重複掃描無關節點，並驗證大量候選可以取消、密集圖會回報計算上限。
 
-1.25 GiB 的合成權重測試使用虛擬 range reader，確認初始讀取量小於 8 MiB、最大單次讀取不超過 1 MiB，不會實際分配整塊合成權重。另以暫存資料夾的實體 1.25 GiB／6,002 operators 合成檔驗證 Node.js range reader，單次觀測讀取總量約 1.13 MiB、解析及建立索引約 264 ms。這些是記憶體／I/O 行為測試，不代表任何真實大型模型的載入時間。`node test/make-large-fixture.mjs` 可產生實體合成檔，供人工選檔測試；`node scripts/inspect.mjs <完整模型路徑>` 可在本機量測結構解析與搜尋。
+1.25 GiB 的合成權重測試使用虛擬 range reader，確認初始讀取量小於 8 MiB、最大單次讀取不超過 1 MiB，不會實際分配整塊合成權重。另以暫存資料夾的實體 1.25 GiB／6,002 operators 合成檔驗證 Node.js range reader，單次觀測讀取總量約 1.13 MiB、解析及建立索引約 264 ms。這些是記憶體／I/O 行為測試，不代表任何真實大型模型的載入時間。`node test/make-large-fixture.mjs` 目前預設產生單子圖／21,001 operators 的實體合成檔，供人工選檔測試；`node scripts/inspect.mjs <完整模型路徑>` 可在本機量測結構解析與搜尋。
 
 另以 TensorFlow 官方 MobileNet V1 量化模型（31 operators／89 tensors）對照未修改的 Netron，核對 operator、輸入輸出、shape、dtype、量化參數、屬性與權重 bytes 相同；此公開測試檔保留在暫存資料夾，未加入專案或部署包。
 
@@ -111,9 +155,11 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 ### 可選的 >1 GiB Chromium 選檔驗收
 
-`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。沿用現有產生器，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
+`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
 
-2026-10-23 單次實測：Ubuntu 24.04.3 x64、Node.js 24.19.0、Playwright 1.56.1、headless Chromium 141.0.7390.37；cgroup 上限 8 GiB、CPU 配額 8 核，開始時可用記憶體約 4.4 GiB、暫存磁碟約 27 GiB。從自動選檔到索引與初始清單就緒約 **284 ms**，Worker 解析與索引約 **133 ms**；錯誤後重新載入約 **246 ms**。原生 FileReaderSync 共讀 **1,189,156 bytes（約 1.13 MiB）**，19 次、最大單次 **64 KiB**，與 worker range 統計相符。未發生大檔完整讀取、瀏覽器當機、頁面／Worker 未處理錯誤或模型上傳請求。
+2026-10-24 已整合至 main `ec31522`（保留新版 MLIR、圖形瀏覽與 resize 功能），本機 Chromium **11 組檢查通過**，含 TFLite 大檔流程及小型 MLIR 格式切換／搜尋／繪圖。初次選檔約 **294 ms**，原生讀取量仍為 **1,189,156 bytes**；Node.js **199 通過、0 失敗、35 條件式跳過**。這是本機整合快照結果，GitHub 手動 workflow 尚待執行，不能視為 CI 成功。環境、衝突處理、受測樹與限制見 [整合驗證紀錄](docs/large-browser-integration-2026-10-24.md)、[本機 JSON](test/browser/results/2026-10-24-chromium.json)。
+
+以下為 **舊基準 `6fbe65c`** 的歷史證據，不能代替最新 main 的驗證。2026-10-23 單次實測：Ubuntu 24.04.3 x64、Node.js 24.19.0、Playwright 1.56.1、headless Chromium 141.0.7390.37；cgroup 上限 8 GiB、CPU 配額 8 核，開始時可用記憶體約 4.4 GiB、暫存磁碟約 27 GiB。從自動選檔到索引與初始清單就緒約 **284 ms**，Worker 解析與索引約 **133 ms**；錯誤後重新載入約 **246 ms**。原生 FileReaderSync 共讀 **1,189,156 bytes（約 1.13 MiB）**，19 次、最大單次 **64 KiB**，與 worker range 統計相符。未發生大檔完整讀取、瀏覽器當機、頁面／Worker 未處理錯誤或模型上傳請求。
 
 100 ms 取樣的 Chromium 程序樹 RSS 約 **409 → 峰值 536 MiB**（增加約 127 MiB），主頁 JS heap 峰值約 5.3 MiB；頁面 50 ms 心跳最大間隔約 99 ms。RSS 含共享頁重複計算且可能漏掉短暫尖峰，並非精確的全瀏覽器 JS heap。讀取觀察器會在單次 >1 MiB 或累計 >8 MiB 時先拒絕，避免完整載入回歸造成記憶體耗盡；取消案例使用測試專用的 metadata 回應暫停點。受管主機另有 Chromium 關閉後程序回收逾時的限制，已記入報告。詳細重現方式、通過條件與量測邊界見 [大檔驗收說明](test/browser/README.md)，[實測 JSON](test/browser/results/2026-10-23-chromium.json) 保留樣本與讀取證據。
 
@@ -135,4 +181,4 @@ Netron: https://github.com/lutzroeder/netron
 
 使用 Netron 9.3.2，固定來源 commit `0994fdd00d6668280b0b98a6f5323a736236208b`。完整 MIT 授權及原作者聲明保留於 `vendor/netron/LICENSE`，建置時另複製為 `dist/LICENSE-Netron.txt`。
 
-`vendor/netron` 保留上游 source；對上游僅新增 `Value`、`Tensor`、`Attachment` exports，供 adapter 使用。`scripts/build.mjs` 另對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。
+`vendor/netron` 保留上游 source，新增 `Value`、`Tensor`、`Attachment` exports 供 adapter 使用，並在 `dagre.js` 的連線排序條件補上邊界／終端節點檢查，避免局部迴圈有外部 SSA 輸入時讀取不存在的 incoming／outgoing edge。`scripts/build.mjs` 另對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。

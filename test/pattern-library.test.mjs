@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { exportPatterns, parsePatternFile, importPatterns, planPatternImport, loadPatterns, PATTERN_LIBRARY_KEY, PATTERN_FILE_LIMIT } from '../src/pattern-library.js';
+import { exportPatterns, parsePatternFile, importPatterns, planPatternImport, loadPatterns, savePattern, PATTERN_LIBRARY_KEY, PATTERN_FILE_LIMIT } from '../src/pattern-library.js';
 
 const pattern = (name = 'LoRA 範例') => ({ name, nodes: ['Mul', 'FullyConnected', 'BatchMatMul', 'BatchMatMul', 'Add'].map((type, n) => ({ alias: `N${n + 1}`, type })), edges: [[1, 2], [1, 3], [3, 4], [2, 5], [4, 5]].map(([from, to]) => ({ from: `N${from}`, to: `N${to}` })), induced: true });
 const memoryStorage = () => { const values = new Map(); return { getItem: (key) => values.get(key), setItem: (key, value) => values.set(key, value) }; };
@@ -50,4 +50,15 @@ test('storage write failure leaves the caller library unchanged', () => {
     const library = [pattern('既有')];
     assert.throws(() => importPatterns({ setItem() { throw new Error('quota'); } }, library, exportPatterns([pattern('新增')])));
     assert.deepEqual(library, [pattern('既有')]);
+});
+
+test('library upgrade reads legacy patterns and preserves the old storage independently',()=>{
+    const storage=memoryStorage(),legacy=[pattern('舊 pattern')],raw=JSON.stringify(legacy);
+    storage.setItem('model-lens.patterns.v1',raw);
+    assert.deepEqual(loadPatterns(storage),legacy);
+    const upgraded=savePattern(storage,loadPatterns(storage),pattern('新 pattern'));
+    assert.deepEqual(loadPatterns(storage),upgraded);
+    assert.equal(storage.getItem('model-lens.patterns.v1'),raw);
+    storage.setItem('model-lens.patterns.v1','[]');
+    assert.deepEqual(loadPatterns(storage),upgraded);
 });

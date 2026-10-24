@@ -89,11 +89,15 @@ try {
         playwright: JSON.parse(await readFile(new URL('../../node_modules/playwright/package.json', import.meta.url))).version,
         cpus: os.cpus().length, cpuQuota: await optionalRead('/sys/fs/cgroup/cpu.max'), memoryLimit, memoryCurrent,
         availableMemoryBytes: available, tempFreeBytes: disk.bavail * disk.bsize, shm: await optionalRead('/proc/mounts').then((s) => s?.split('\n').find((line) => line.includes(' /dev/shm '))),
-        sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), headless: true };
+        sourceCommit: process.env.GITHUB_SHA || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+        sourceKind: process.env.GITHUB_ACTIONS === 'true' ? 'github-actions' : 'local-integration-snapshot',
+        integrationBaseCommit: process.env.LARGE_FILE_BASE_COMMIT || null,
+        sourceTree: execFileSync('git', ['write-tree'], { encoding: 'utf8' }).trim(),
+        sourceDirty: Boolean(execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim()), headless: true };
     assert.ok(available >= 3 * 1024 ** 3, 'Need at least 3 GiB available memory');
     assert.ok(disk.bavail * disk.bsize >= 4 * 1024 ** 3, 'Need at least 4 GiB free temp disk (including non-sparse filesystems)');
     temporary = await mkdtemp(path.join(os.tmpdir(), 'model-lens-browser-'));
-    report.fixture = makeLargeFixture(path.join(temporary, 'synthetic-1_25GiB.tflite'));
+    report.fixture = makeLargeFixture(path.join(temporary, 'synthetic-1_25GiB.tflite'), { graphCount: 2, repeats: 1000 });
     const fixtureStat = await stat(report.fixture.file);
     report.fixture.allocatedBytes = fixtureStat.blocks * 512;
     assert.ok(report.fixture.bytes > 1024 ** 3);
@@ -124,7 +128,7 @@ try {
         }
         await route.continue();
     });
-    await context.route('**/src/model-worker.js', async (route) => {
+    await context.route('**/src/model-worker.js*', async (route) => {
         const response = await route.fetch();
         await route.fulfill({ response, body: `(${installReadAudit.toString()})(true);\n${await response.text()}` });
     });
@@ -247,7 +251,7 @@ try {
     await context.route('**/tflite-metadata.json', gateHandler);
     await selectFile(report.fixture.file);
     await Promise.race([entered, new Promise((_, reject) => { const timer = setTimeout(() => reject(new Error('Cancel gate not reached')), 10000); timer.unref(); })]);
-    const cancelledWorker = page.workers().find((w) => w.url().endsWith('/model-worker.js'));
+    const cancelledWorker = page.workers().find((w) => new URL(w.url()).pathname.endsWith('/model-worker.js'));
     assert.ok(cancelledWorker);
     const closed = Promise.race([once(cancelledWorker, 'close'), new Promise((_, reject) => { const timer = setTimeout(() => reject(new Error('Worker did not terminate')), 10000); timer.unref(); })]);
     await page.locator('#cancel-load').click();
@@ -276,6 +280,18 @@ try {
     await selectFile(exported);
     await waitFor(() => document.querySelector('#layer-count').textContent === '1' && document.querySelector('#loading-card').hidden);
     check('downloaded submodel reopens through File API');
+    // Check format switching on the integrated UI, without claiming full MLIR
+    // browser coverage or using the TFLite performance numbers for MLIR.
+    phase = 'mlir-smoke';
+    await selectFile(path.resolve('dist/demo.mlir'));
+    await waitFor(() => document.querySelector('#loading-card').hidden && !document.querySelector('#mlir-info').hidden && document.querySelectorAll('#target .node').length > 0);
+    assert.equal(await page.locator('#value-kind-label').textContent(), 'SSA Values');
+    assert.equal(await page.locator('#export-submodel').textContent(), '匯出局部 MLIR');
+    await page.locator('#query').fill('#0');
+    await waitFor(() => document.querySelector('#result-count').textContent === '1 筆結果');
+    await page.locator('.result-item').click();
+    await waitFor(() => document.querySelector('#target').getAttribute('aria-busy') === 'false');
+    check('MLIR format switch, indexed search and rendered graph smoke after large TFLite');
     await sample();
     clearInterval(sampleTimer); sampleTimer = null; await samplePending;
     report.audit = await readPage(() => globalThis.__largeFileAcceptance);

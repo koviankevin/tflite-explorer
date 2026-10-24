@@ -1,0 +1,126 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {parseMLIR} from '../src/mlir-engine.js';
+import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot,mlirSliceSnapshot} from '../src/mlir-pattern.js';
+import {exportMLIR} from '../src/mlir-export.js';
+import {layout} from '../vendor/netron/dagre.js';
+import {MLIR_CFG_LOOP,MLIR_CFG_DIAMOND} from './mlir-fixture.mjs';
+import {foldPatternSnapshot} from '../src/pattern-fold.js';
+import {preparePatternOverview,patternOverviewSnapshot} from '../src/pattern-overview.js';
+
+// The same parent/edge contract sent by grapher.Graph.layout to the browser
+// Worker. Fixed nonzero label measurements isolate topology from DOM fonts.
+function layoutProjection(graph,{font=14,direction='TB'}={}) {
+    const nodes=[],edges=[],owners=new Map(),groups=new Map(),pairs=new Set();
+    for(const [i,arg] of graph.inputs.entries()) {
+        const v=`input:${i}`;nodes.push({v,width:font*8,height:font*2});
+        for(const value of arg.value)owners.set(value.name,v);
+    }
+    for(const node of graph.nodes) {
+        const parent=graph.groups && node.group?`group:${node.group}`:undefined;
+        if(parent) {
+            const segments=node.group.split('/');
+            for(let i=1;i<=segments.length;i++)groups.set(`group:${segments.slice(0,i).join('/')}`,i>1?`group:${segments.slice(0,i-1).join('/')}`:undefined);
+        }
+        nodes.push({v:node.identifier,width:font*8,height:font*2,parent});
+        for(const a of node.outputs)for(const value of a.value)owners.set(value.name,node.identifier);
+    }
+    nodes.push(...[...groups].map(([v,parent])=>({v,width:0,height:0,parent})));
+    for(const node of graph.nodes)for(const value of [...node.inputs.flatMap(a=>a.value),...(node.controlDependencies || [])]) {
+        const v=owners.get(value.name),w=node.identifier,key=`${v}>${w}`;
+        if(v===undefined || pairs.has(key))continue;pairs.add(key);
+        edges.push({v,w,minlen:1,weight:1,width:font*8,height:font,labeloffset:10,labelpos:'r'});
+    }
+    layout(nodes,edges,{nodesep:20,ranksep:20,rankdir:direction},{});
+    return {nodes,edges};
+}
+
+test('compact single-OP loops retain finite layouts at both font extremes and orientations',async()=>{
+    const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
+    const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
+    const original=await parse(MLIR_CFG_LOOP),exported=await exportMLIR(original,1,[0],{scope:'slice'});
+    const reopened=await parse(await exported.blob.text()),dto=mlirSliceSnapshot(reopened,0);
+    assert.equal(dto.graph.nodes.length,1);
+    for(const font of [14,32])for(const direction of ['TB','LR']) {
+        const placed=layoutProjection(dto.graph,{font,direction});
+        assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+        assert.ok(placed.edges.every(e=>e.points?.length>=2));
+    }
+});
+test('locally expanded loop and merge paths lay out at 14px and 32px in both directions',async()=>{
+    const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
+    const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
+    for(const [source,selections] of [[MLIR_CFG_LOOP,[{graph:1,nodes:[0]}]],[MLIR_CFG_DIAMOND,[{graph:0,nodes:[0]},{graph:1,nodes:[0]},{graph:2,nodes:[0]},{graph:3,nodes:[0]}]]]) {
+        const index=await parse(source),result=await exportMLIR(index,selections[0].graph,selections[0].nodes,{scope:'slice',selections}),reopened=await parse(await result.blob.text());
+        const base=mlirSliceSnapshot(reopened,0);
+        for(const expandedConnections of [base.sliceConnections.map(c=>c.key),...base.sliceConnections.map(c=>[c.key])]) {
+            const dto=mlirSliceSnapshot(reopened,0,{expandedConnections});
+            for(const font of [14,32])for(const direction of ['TB','LR']) {
+                const placed=layoutProjection(dto.graph,{font,direction});
+                assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+                assert.ok(placed.edges.every(e=>e.points?.length>=2));
+            }
+        }
+    }
+});
+
+test('a captured custom op in a loop lays out with its external condition and loop-carried SSA',async()=>{
+    const index=await parseMLIR(new TextEncoder().encode(MLIR_CFG_LOOP),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});
+    const pattern=captureMLIRPattern(index,[{graph:1,nodes:[0]}]),result=await findMLIRPatterns(index,pattern);
+    assert.equal(result.items.length,1);
+    const dto=mlirMatchSnapshot(index,result.items[0]);
+    assert.ok(dto.graph.inputs.length,'loop condition is an external SSA boundary');
+    assert.ok(dto.links.some(e=>e.from==='route:1:0' && e.to==='b1'),'retain actual self-loop control');
+    for(const font of [14,32])for(const direction of ['TB','LR']) {
+        const placed=layoutProjection(dto.graph,{font,direction});
+        assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+        assert.ok(placed.edges.every(e=>e.points?.length>=2));
+    }
+});
+
+test('all connected loop operator selections retain finite compound layouts',async()=>{
+    const index=await parseMLIR(new TextEncoder().encode(MLIR_CFG_LOOP),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});
+    const locations=index.graphs.flatMap((g,graph)=>g.graph.nodes.map((_,node)=>({graph,node})));let checked=0;
+    for(let mask=1;mask<(1<<locations.length);mask++) {
+        const selections=[];
+        for(const [i,loc] of locations.entries())if(mask&(1<<i)){let b=selections.find(b=>b.graph===loc.graph);if(!b){b={graph:loc.graph,nodes:[]};selections.push(b);}b.nodes.push(loc.node);}
+        let pattern;
+        try{pattern=captureMLIRPattern(index,selections);}catch(e){if(/連成同一組/.test(e.message))continue;throw e;}
+        const result=await findMLIRPatterns(index,pattern);assert.ok(result.items.length);
+        for(const item of result.items)for(const font of [14,32])for(const direction of ['TB','LR']) {
+            let placed;
+            assert.doesNotThrow(()=>{placed=layoutProjection(mlirMatchSnapshot(index,item).graph,{font,direction});},JSON.stringify({selections,font,direction}));
+            assert.ok(placed.nodes.every(n=>Number.isFinite(n.x)&&Number.isFinite(n.y)));checked++;
+        }
+    }
+    assert.ok(checked>=20);
+});
+
+test('folded loop with incoming and outgoing control/SSA lays out at both font extremes and directions',async()=>{
+    const cyclic=MLIR_CFG_LOOP.replace('  "cf.cond_br"(%condition, %next, %next)[^loop, ^exit]',`  "cf.br"(%next)[^latch] : (i32) -> ()
+^latch(%carried: i32):
+  "cf.cond_br"(%condition, %carried, %carried)[^loop, ^exit]`);
+    for(const source of [MLIR_CFG_LOOP,cyclic]) {
+        const index=await parseMLIR(new TextEncoder().encode(source),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});
+        const pattern=captureMLIRPattern(index,[{graph:1,nodes:[0]}]),item=(await findMLIRPatterns(index,pattern)).items[0];
+        const dto=foldPatternSnapshot(mlirMatchSnapshot(index,item,{boundaryContext:true}));
+        for(const font of [14,32])for(const direction of ['TB','LR']) {
+            const placed=layoutProjection(dto.graph,{font,direction});
+            assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+            assert.ok(placed.edges.every(e=>e.points?.length>=2));
+        }
+    }
+});
+
+test('whole-model independently folded and expanded loops retain finite nested-group layouts',async()=>{
+    const text=MLIR_CFG_LOOP+'\n'+MLIR_CFG_LOOP.replace('sym_name = "loop"','sym_name = "other"');
+    const index=await parseMLIR(new TextEncoder().encode(text),{metadata:await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8')});
+    const pattern=captureMLIRPattern(index,[{graph:1,nodes:[0]}]),items=(await findMLIRPatterns(index,pattern)).items,plan=await preparePatternOverview(index,items);
+    for(const expanded of [[],[0],[0,1]])for(const font of [14,32])for(const direction of ['TB','LR']) {
+        const placed=layoutProjection(patternOverviewSnapshot(plan,{expanded}).graph,{font,direction});
+        assert.ok(placed.nodes.every(n=>Number.isFinite(n.x) && Number.isFinite(n.y)));
+        assert.ok(placed.edges.every(e=>e.points?.length>=2));
+    }
+});
+

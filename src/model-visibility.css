@@ -1,11 +1,15 @@
+/* Netron measures text before selection. Keep the same weight in all states
+   so selected and pattern-picked labels still fit their measured frames. */
+#target .node-item-type text { font-weight: 700; }
+
 /* Keep selection strokes visible when the SVG viewport is zoomed out. */
-#target .graph-node.select > .node-border {
+#target .graph-node.select > .node-border, #target .graph-node.cfg-match > .node-border {
     stroke: #a44700 !important;
     stroke-width: 4px !important;
     vector-effect: non-scaling-stroke;
 }
-#target .graph-node.select .node-item-type path { fill: #ffe08a !important; }
-#target .graph-node.select .node-item-type text { fill: #332200 !important; font-weight: 700; }
+#target .graph-node.select .node-item-type path, #target .graph-node.cfg-match .node-item-type path { fill: #ffe08a !important; }
+#target .graph-node.select .node-item-type text, #target .graph-node.cfg-match .node-item-type text { fill: #332200 !important; }
 #target .edge-path.select {
     stroke: #a44700 !important;
     stroke-width: 3px !important;
@@ -23,7 +27,7 @@
     vector-effect: non-scaling-stroke;
 }
 #target .graph-node.pattern-picked .node-item-type path { fill: #c8f0dc !important; }
-#target .graph-node.pattern-picked .node-item-type text { fill: #103d30 !important; font-weight: 700; }
+#target .graph-node.pattern-picked .node-item-type text { fill: #103d30 !important; }
 
 /* The app has a light workspace. Override every retained Netron dark surface
    together with its foreground so OS theme cannot create mixed contrast. */
@@ -53,3 +57,28 @@
 .sidebar .sidebar-find-search { background-color: #fff; color: var(--ink); border-color: var(--line); }
 .sidebar .sidebar-find-content li { color: var(--ink); }
 .sidebar .sidebar-find-content li.focus { background-color: #e6eee2; color: var(--ink); }
+
+/* Control flow stays distinguishable from SSA at every zoom and OS theme. */
+#target.cfg-combined .cluster rect { fill: #e7eff6; fill-opacity: .22; stroke: #66849a; stroke-opacity: .7; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+#target.cfg-combined .edge-path:not(.cfg-control) { stroke: #52665c; stroke-width: 1.4px; vector-effect: non-scaling-stroke; }
+#target.cfg-combined .edge-label { fill: #3c5148; }
+#target.cfg-combined #arrowhead { fill: #52665c; }
+#target.cfg-combined .cfg-control { stroke: #146aaf !important; stroke-width: 2.5px !important; stroke-dasharray: 7 4; marker-end: url("#cfg-control-arrow") !important; vector-effect: non-scaling-stroke; }
+#target #cfg-control-arrow { fill: #146aaf; }
+#target .cfg-control-label { fill: #125e9d !important; font-weight: 600; }
+#target .cfg-context .node-item-type path { fill: #e2edf7 !important; }
+#target .cfg-context .node-item-type text { fill: #183d5d !important; }
+#target .cfg-focused > .node-border { stroke: #146aaf !important; stroke-width: 5px !important; vector-effect: non-scaling-stroke; }
+#target.cfg-combined .graph-node.pattern-picked > .node-border { stroke: #18745d !important; stroke-width: 4px !important; vector-effect: non-scaling-stroke; }
+.pattern-picking #target.cfg-combined .cfg-context { cursor: default; }
+#target .pattern-capsule { cursor: pointer; }
+#target .pattern-capsule .node-item-type path { fill: #d9f0e6 !important; }
+#target .pattern-capsule .node-item-type text { fill: #104f3e !important; }
+#target .pattern-capsule > .node-border { stroke: #18745d !important; stroke-width: 3px !important; vector-effect: non-scaling-stroke; }
+#target .pattern-capsule:focus-visible > .node-border { stroke: #146aaf !important; stroke-width: 5px !important; }
+.pattern-picking #target { cursor: crosshair; }
+.layer-selection-box { position: fixed; z-index: 20; pointer-events: none; border: 2px solid #18745d; background: #18745d18; box-sizing: border-box; }
+.layer-selection-box span { position: absolute; top: 3px; left: 3px; padding: 3px 6px; border-radius: 3px; background: #fff; color: #103d30; font: 12px/1.4 system-ui, sans-serif; white-space: nowrap; }
+#target .graph-node.marquee-hit > .node-border { stroke: #18745d !important; stroke-width: 4px !important; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+#target .graph-node.marquee-hit .node-item-type path { fill: #c8f0dc !important; }
+#target .graph-node.marquee-hit .node-item-type text { fill: #103d30 !important; }

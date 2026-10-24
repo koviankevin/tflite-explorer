@@ -28,9 +28,32 @@
 .capture-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
 .capture-actions input{min-width:100px;width:145px;border:1px solid var(--line);border-radius:4px;padding:8px;color:var(--ink)}
 .capture-actions button{font-size:11px;padding:8px}
+.match-blocks{flex:0 0 auto;max-height:116px;overflow:auto;padding:8px 12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:5px}
+.match-blocks strong{width:100%;font-size:12px;color:var(--accent)}
+.match-control{width:100%;font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.match-blocks button{font-size:12px;white-space:normal;overflow-wrap:anywhere;text-align:left}
+.match-blocks button[aria-pressed=true]{background:#e0f0e7;box-shadow:inset 0 0 0 1px #8ab5a2}
+#capture-cfg-option{width:100%;font-size:12px}
+#mlir-export-option{margin-top:12px}
+#mlir-export-scope{width:100%}
+#capture-cfg-option label{display:inline-flex;align-items:center;gap:6px}
+.capture-blocks{display:flex;flex-wrap:wrap;gap:6px;max-height:85px;overflow:auto}
+.capture-blocks>div{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%}
+.capture-blocks button{white-space:normal;overflow-wrap:anywhere}
+@media(min-width:901px){body.pattern-picking #target{top:calc(var(--head) + var(--bar) + var(--capture-space,160px))!important;height:calc(100% - var(--head) - var(--bar) - var(--foot) - var(--capture-space,160px))!important}}
 .pattern-picking #target .graph-node{cursor:pointer}
 #target .graph-node.pattern-picked>.node-border{stroke:var(--accent)!important;stroke-width:3px!important;stroke-dasharray:5 2;filter:drop-shadow(0 0 3px #18745d55)}
 .pattern-picking #target .graph-node:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .result-subgraph{color:var(--accent);font-weight:650}
 @media(max-height:650px){.panel-heading{padding-top:10px;padding-bottom:8px}.tabs button{padding-top:8px;padding-bottom:8px}.search-tools{max-height:calc(100% - 225px);padding-top:10px;padding-bottom:10px}.panel-footer{padding-top:8px;padding-bottom:8px}}
 @media(max-width:900px){.graph-bar{padding:0 6px}.graph-actions{gap:0}.graph-actions button{padding-left:5px;padding-right:5px}.graph-location .eyebrow{display:none}.capture-toolbar{left:calc(var(--aside) + 8px);right:8px;padding:8px}.capture-actions input{width:110px}}
+#pattern-overview-controls select{width:100%;max-width:100%}
+#pattern-overview-controls>div{display:flex;flex-wrap:wrap;gap:4px}
+#pattern-overview-controls .hint{white-space:normal;overflow-wrap:anywhere}
+#slice-connection-controls button{max-width:100%;overflow-wrap:anywhere}
+.slice-page-controls{display:flex;flex-wrap:wrap;gap:4px;min-width:0;max-width:100%}
+.slice-page-controls span{flex-basis:100%;overflow-wrap:anywhere;font-size:13px}
+/* Sidebar redraws must not choose a new browser scroll anchor on mobile. */
+html{overflow-anchor:none}
+#target .slice-connection{cursor:pointer}
+#target .slice-connection-hit:focus-visible{stroke:var(--accent);stroke-opacity:.35;outline:none}
