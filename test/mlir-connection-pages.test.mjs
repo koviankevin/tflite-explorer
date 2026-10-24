@@ -7,6 +7,7 @@ import {mlirSliceSnapshot,captureMLIRPattern,findMLIRPatterns} from '../src/mlir
 import {validateMLIR} from '../src/mlir-validate.js';
 import {layerLocation,updateLayerSelection} from '../src/pattern-selection.js';
 import {MLIR_CFG_LOOP} from './mlir-fixture.mjs';
+import {SLICE_PATTERN_ATTRIBUTE,SLICE_PATTERN_LIMIT} from '../src/mlir-pattern-projection.js';
 const metadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
 const parse=text=>parseMLIR(new TextEncoder().encode(text),{metadata});
 async function fixture(count) {
@@ -54,4 +55,16 @@ test('small work budgets resume discovery without displaying an incomplete corri
     assert.equal(covered.size,c.helpers,'every helper appears on a page');
     assert.equal(mlirSliceSnapshot(index,0,{expandedConnections:[key],connectionPages:{[key]:1e9},pageSize:4}).sliceConnections[0].page,c.pages-1);
     assert.deepEqual(mlirSliceSnapshot(index,0).graph,base.graph);
+});
+test('a cyclic slice above 20,000 OPs exports and reopens its checked mapping beyond the old 2 MiB cap',async()=>{
+    const index=await fixture(21000),base=mlirSliceSnapshot(index,0);
+    assert.ok(index.graphs.reduce((n,g)=>n+g.graph.nodes.length,0)>20000);
+    const annotation=index.mlir.ir.regions.map(r=>r.owner?.op.getAttr(SLICE_PATTERN_ATTRIBUTE)?.value).find(v=>typeof v==='string');
+    assert.ok(annotation.length>2*1024*1024 && annotation.length<=SLICE_PATTERN_LIMIT);
+    assert.equal(base.nodes.length,1,'the sealed mapping is recognized instead of falling back to a huge full graph');
+    assert.deepEqual(validateMLIR(index).diagnostics,[]);
+    const chosen=base.item.blocks.map(b=>({graph:b.graph,nodes:b.path})),pattern=captureMLIRPattern(index,chosen);
+    const result=await exportMLIR(index,chosen[0].graph,chosen[0].nodes,{scope:'slice',selections:chosen});
+    const reopened=await parse(await result.blob.text());assert.equal(mlirSliceSnapshot(reopened,0).nodes.length,1);
+    assert.equal((await findMLIRPatterns(reopened,pattern)).items.length,1);
 });

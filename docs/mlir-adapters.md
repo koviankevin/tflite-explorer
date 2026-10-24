@@ -90,7 +90,7 @@ dependencies 明確拒絕，不猜測可執行語意。
 ### 匯出後的 pattern 相容性
 
 `mlir-pattern-projection.js` 在 `func.func` 的 discardable string attribute
-`model_lens.slice_pattern` 保存 version 1 結構對照，最多 2 MiB。內容只有已保留
+`model_lens.slice_pattern` 保存 version 1 結構對照，最多 8 MiB。內容只有已保留
 operator 的真實位置、原始相對順序、block／argument arity／slot 與帶 ports 的
 SSA／argument／CFG 邊，不含來源模型、權重或被刪除運算的候選節點。被裁掉但屬於
 原 block 介面的 arguments 可作邏輯比對節點；額外 entry、seed、valid、return
