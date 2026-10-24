@@ -20,12 +20,18 @@ npm run test:large-browser
 
 ## 實際覆蓋
 
+2026-10-25 新增條件／工作階段驗收，最新本機結果 **18 項通過**，受測提交 `754f7cad8accf7a104673606f710c1de0995ea94`。來源、數據及限制見 [本次紀錄](../../docs/large-browser-conditions-workspace-2026-10-25.md)。新版繼續使用相同 1,343,235,364 bytes fixture，並額外產生同大小、單一 tensor dtype 改變的稀疏模型，驗證結構指紋拒絕。`large-workspace.mjs` 僅由此手動 runner 呼叫。
+
 | 操作 | 通過條件 |
 | --- | --- |
 | 檔案選取 | 點「開啟模型」捕捉 Chromium FileChooser，再以磁碟路徑 `setFiles`；瀏覽器收到正確長度的原生 File，不在 Node.js 建立巨型 Buffer，也不使用記憶體假檔。未操作桌面 OS 對話框。 |
 | 索引 | 真正 module Worker／FileReaderSync／File.slice 解析出 6,002 operators，初始不繪製整張圖。 |
 | 局部圖 | 搜尋 layer #1500，等待 SVG 完成，節點數為 1–100。 |
 | 搜尋 | 精確編號、兩個 subgraphs 的 2,000 組 pattern、100 筆分頁、匹配局部圖及權重 tensor metadata。 |
+| Metadata 條件 | N2 output #0 的 shape `[1,*]` AND dtype `float32` 得 2,000 筆；衝突 dtype、shape、不存在的 port、attribute 各得 0 筆，移除後重搜恢復；不額外讀檔。 |
+| Pattern library | UI 儲存條件、v3 JSON 實際下載／選檔匯入與重複判斷；清除目前條件後重新套用、重新整理後獨立讀取 library。 |
+| JSON／SVG 工作階段 | 第 101 筆匹配 `[300,301,302]`、兩個 OP 選取、條件、字級、方向、左欄寬度、SVG zoom 與錨點；下載 JSON 後選檔恢復及重新整理後「恢復上次儲存」，錨點誤差 <3px。 |
+| 拒絕錯模 | 相同 byte length、相同 OP 數但 tensor dtype 改變的有效大檔被指紋拒絕，未套用舊選取；隨後原模型可恢復。 |
 | 取消 | 僅此案例暫停 metadata HTTP 回應，使載入穩定處於進行中；點擊「取消載入」，確認真正 Worker close、控制項重設。這不代表已測量同步解析途中的最長取消延遲。 |
 | 錯誤與恢復 | 另選同樣 >1 GiB 的無效檔，確認錯誤及重設；同頁重新選入原大檔，索引、搜尋及局部圖恢復，沒有舊載入狀態覆蓋新模型。 |
 | 子模型匯出 | 大檔中選一個 builtin operator 實際下載，重新選入下載檔確認一層模型可開啟。其餘匯出語意仍由既有 Node.js 測試覆蓋。 |
@@ -37,7 +43,7 @@ npm run test:large-browser
 
 - Worker 模組由測試路由加上 FileReader／Blob 觀察器，讀取仍呼叫原生 API。主頁也觀察 FileReader、Blob.arrayBuffer／text／stream／bytes；超過預算會先拒絕，避免回歸直接配置完整權重。成功案例沒有檔案 I/O 模擬或延遲。這是帶保護的驗收，沒有刻意放行 1.25 GiB 完整配置。
 - `initialLoadMs`／`recoveryLoadMs` 從自動點擊開檔開始，包含 Playwright FileChooser 指定路徑、Worker 啟動、metadata 載入、解析、索引與第一頁清單。`worker.stats.parseMs` 僅是 Worker 解析與索引，不是同一指標。
-- 100 ms 取樣 Chromium 程序樹 RSS（含 Worker）及主頁 JS heap。Linux 使用此測試專屬啟動標記與 host `/proc` 的 PPid 找程序樹，避免 CDP 的 namespace PID 導致誤讀零值。找不到程序或 RSS 為零視為失敗。RSS 可能重複計算共享頁，取樣也可能漏掉極短尖峰；主頁 heap 不代表 Worker 的 heap。
+- 100 ms 取樣 Chromium 程序樹 RSS（含 Worker）及主頁 JS heap。Linux 使用此測試專屬啟動標記與 host `/proc` 的 PPid 找程序樹，避免 CDP 的 namespace PID 導致誤讀零值。找不到程序或 RSS 為零視為失敗。RSS 可能重複計算共享頁，取樣也可能漏掉極短尖峰；主頁 heap 不代表 Worker 的 heap。重新整理前的 I/O／Worker／心跳觀察保存在 `auditHistory`，最終跨所有 realms 檢查預算及被替換 Worker 的終止狀態。
 - 非 Linux 保留 heap 觀察並明確記錄 RSS 驗證不可用；不能聲稱已完成同等的記憶體驗收。768 MiB 是此合成案例的回歸門檻，不是所有模型的產品記憶體保證。
 - 本次受管執行環境在 CDP 關閉 Chromium 後，Playwright 的程序回收仍逾時。驗收報告記錄此限制；清理等待最多 5 秒，之後結束 driver。此處不把程序包裝器的回收逾時視為頁面當機或 UI 無回應。
 - 沒有使用者真實大型模型，仍不能推算原始慢速案例的改善幅度、長時間使用的洩漏率、非零權重的磁碟吞吐量，或 Firefox／WebKit 的大檔能力。
