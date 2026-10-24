@@ -38,3 +38,11 @@
 - 讀取觀察器在單次 >1 MiB／每 realm 累計 >8 MiB 時先拒絕；未放行巨型完整配置。取消透過 metadata 暫停點穩定重現，不代表量測同步解析最長取消延遲。
 - RSS 為 100 ms 取樣的程序樹加總，可能重複計算共享頁或漏掉短尖峰。受管主機仍有 Chromium 協定關閉後程序回收超過 5 秒的限制，已保存於 JSON。
 - MLIR 僅新增小型格式切換／搜尋／圖形煙霧測試；不宣稱完整 MLIR 瀏覽器驗收或獨立 `mlir-opt` 已通過。
+
+## GitHub 首次執行與環境修正
+
+- PR #1 驗證 run [40081360354](https://github.com/koviankevin/tflite-explorer/actions/runs/40081360354) 已成功：Ubuntu 26.04.1、Node.js 22.23.3；199 通過、0 失敗、35 跳過，建置 release `266e37f178714fa4`。
+- PR #1 已合併，main 為 `efec09502f7bd0c5318d7cc29db20f45ba960c17`。
+- 手動大檔 run [40081492570](https://github.com/koviankevin/tflite-explorer/actions/runs/40081492570) **失敗於環境安裝**：`npx playwright install --with-deps chromium` 明確回報 `Playwright does not support chromium on ubuntu26.04-x64`。驗收步驟未執行，沒有測試 JSON；artifact 上傳亦因此失敗。
+- 失敗訊息已直接定位 OS／固定 Playwright 相容性；不對產品程式碼做猜測性修改，也不需要效能壓測或額外 instrumentation。唯一環境變更為獨立大型工作由 `ubuntu-latest` 固定至已在本機驗證的 `ubuntu-24.04`；PR Node 工作與 Pages 保持原樣。
+- 修正後仍須新開手動 run；重跑舊 run 會沿用舊 workflow，不能驗證這項修改。測試結果以新的 run 狀態與 artifact 為準。
