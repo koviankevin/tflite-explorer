@@ -104,6 +104,7 @@ let renderedNodes = [];
 let renderedGraph = null;
 let sliceDetails=false;
 let sliceExpanded=new Set();
+let slicePages=new Map();
 let virtualOverview=null;
 function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
@@ -161,7 +162,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
-    sliceExpanded.clear();$('slice-connection-controls').hidden=true;
+    sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();
@@ -377,19 +378,35 @@ function decorateCombinedGraph(dto) {
     }
 }
 function viewportEntries(){return renderedNodes.map(e=>({id:e.node.identifier,element:e.element}));}
-async function changeSliceExpansion(next,{key,segment,point}={}) {
+async function changeSliceExpansion(next,{key,segment,point,page}={}) {
     const connection=key?.split('>') || [],preferred=[...new Set([segment?.from,segment?.to,...connection].filter(Boolean))];
     const entries=viewportEntries().filter(e=>preferred.length || renderedGraph.nodes.get(e.id)?.diagramKind==='operator');
     const viewport=captureViewport($('target'),view.target?.zoom,entries,{preferred,point});
-    const previous=sliceExpanded;sliceExpanded=next;
+    const previous=sliceExpanded,previousPages=new Map(slicePages);sliceExpanded=next;
+    if(Number.isInteger(page))slicePages.set(key,page);
+    for(const key of slicePages.keys())if(!next.has(key))slicePages.delete(key);
     try {await (selection?selectResult(activeIndex,{forceDraw:true,viewport}):drawGraph(currentGraph,full,undefined,viewport));}
-    catch(error){sliceExpanded=previous;throw error;}
+    catch(error){sliceExpanded=previous;slicePages=previousPages;throw error;}
 }
 function renderSliceConnections(dto) {
     const nav=$('slice-connection-controls'),connections=dto.compactSlice && !dto.folded && !dto.overview ? dto.sliceConnections || [] : [];
     sliceExpanded=new Set(connections.filter(c=>c.expanded).map(c=>c.key));nav.hidden=!sliceExpanded.size;
+    slicePages=new Map(connections.filter(c=>c.expanded).map(c=>[c.key,c.page]));
     nav.replaceChildren(element('strong','',`局部展開 · ${sliceExpanded.size} 段路徑`));
     for(const c of connections.filter(c=>c.expanded)) {
+        if(c.pending) {
+            const more=element('button','quiet',`繼續分析：${c.label}`);more.dataset.connectionKey=c.key;
+            more.onclick=()=>changeSliceExpansion(new Set(sliceExpanded),{key:c.key}).catch(report);nav.append(more);
+        } else if(c.pages>1) {
+            const row=element('div','slice-page-controls');row.dataset.connectionKey=c.key;
+            row.append(element('span','',`${c.label} · 第 ${c.page+1} / ${c.pages} 段（本段 ${c.shown}／共 ${c.helpers} 個輔助節點）`));
+            for(const [label,offset] of [['上一段',-1],['下一段',1]]) {
+                const button=element('button','quiet',label),page=c.page+offset;
+                button.dataset.unavailable=String(page<0 || page>=c.pages);button.disabled=button.dataset.unavailable==='true';
+                button.onclick=()=>changeSliceExpansion(new Set(sliceExpanded),{key:c.key,page,segment:{from:offset>0?c.pageEnd:c.pageStart}}).catch(report);row.append(button);
+            }
+            nav.append(row);
+        }
         const button=element('button','quiet',`收起：${c.label}`);button.title=c.label;
         button.onclick=()=>{const next=new Set(sliceExpanded);next.delete(c.key);changeSliceExpansion(next,{key:c.key}).catch(report);};nav.append(button);
     }
@@ -401,7 +418,7 @@ function refreshPatternFold() {
     sliceButton.textContent=sliceDetails?'收起輔助節點':'展開輔助節點';
     sliceButton.setAttribute('aria-expanded',String(sliceDetails));
     sliceButton.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
-    for(const button of $('slice-connection-controls').querySelectorAll('button'))button.disabled=$('target').getAttribute('aria-busy')==='true';
+    for(const button of $('slice-connection-controls').querySelectorAll('button'))button.disabled=button.dataset.unavailable==='true' || $('target').getAttribute('aria-busy')==='true';
     const button=$('toggle-pattern-fold');button.hidden=overviewMode || selection?.kind!=='patterns';
     button.textContent=patternCollapsed?'展開 pattern':'收合 pattern';
     button.setAttribute('aria-expanded',String(!patternCollapsed));
@@ -472,13 +489,13 @@ $('collapse-overview-all').onclick=()=>drawPatternOverview({expanded:new Set()})
 async function togglePatternFold(collapsed=!patternCollapsed) {
     if(selection?.kind!=='patterns' || pickingPattern)return;
     patternCollapsed=collapsed;
-    if(collapsed)sliceExpanded.clear();
+    if(collapsed){sliceExpanded.clear();slicePages.clear();}
     await selectResult(activeIndex,{forceDraw:true});
 }
 $('toggle-pattern-fold').onclick=()=>togglePatternFold().catch(report);
 $('toggle-slice-details').onclick=()=>{
     sliceDetails=!sliceDetails;
-    if(!sliceDetails)sliceExpanded.clear();
+    if(!sliceDetails){sliceExpanded.clear();slicePages.clear();}
     (selection?selectResult(activeIndex,{forceDraw:true}):drawGraph(currentGraph,full)).catch(report);
 };
 async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,viewport } = {}) {
@@ -505,7 +522,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,
     const metadataOnly = !collapsed && !renderedGraph?.folded && !renderedGraph?.virtual && !item.blocks && whole && !forceDraw && renderedGraph?.full && !renderedGraph.combined && renderedGraph.index === targetGraph;
     status(metadataOnly ? '定位搜尋結果…' : whole ? '準備完整圖…' : '準備局部圖…');
     const patternName=$('saved-pattern').selectedOptions[0]?.value ? $('saved-pattern').selectedOptions[0].textContent : 'Pattern';
-    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails, expandedConnections:[...sliceExpanded] });
+    const dto = await rpc('select', { item, full: whole, metadataOnly, blockGraph:targetGraph, boundaryContext:true, collapsed, patternName, sliceDetails, expandedConnections:[...sliceExpanded], connectionPages:Object.fromEntries(slicePages) });
     await queueDraw(dto, generationRender, zoom,viewport);
 }
 async function drawGraph(graph, whole = false, zoom,viewport) {
@@ -518,7 +535,7 @@ async function drawGraph(graph, whole = false, zoom,viewport) {
     const generation = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
     status(whole ? '繪製完整圖…' : '繪製局部圖…');
-    const dto = await rpc('graph', { graph, full: whole, sliceDetails, expandedConnections:[...sliceExpanded] });
+    const dto = await rpc('graph', { graph, full: whole, sliceDetails, expandedConnections:[...sliceExpanded], connectionPages:Object.fromEntries(slicePages) });
     await queueDraw(dto, generation, zoom,viewport);
 }
 async function queueDraw(dto, generation, zoom,viewport) {
