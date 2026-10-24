@@ -1,15 +1,17 @@
-import { Host } from '../vendor/netron/browser.js?v=abb7373d4d24faa2';
-import { View, Attachment } from '../vendor/netron/view.js?v=abb7373d4d24faa2';
-import { hydrate } from './hydrate.js?v=abb7373d4d24faa2';
-import {overviewCanvas} from './overview-canvas.js?v=abb7373d4d24faa2';
-import { modelFormat } from './model-formats.js?v=abb7373d4d24faa2';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=abb7373d4d24faa2';
-import {rectangleSelection} from './rectangle-selection.js?v=abb7373d4d24faa2';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=abb7373d4d24faa2';
-import { LORA_PATTERN } from './pattern-utils.js?v=abb7373d4d24faa2';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=abb7373d4d24faa2';
+import { Host } from '../vendor/netron/browser.js?v=86e355fd4333df19';
+import { View, Attachment } from '../vendor/netron/view.js?v=86e355fd4333df19';
+import { hydrate } from './hydrate.js?v=86e355fd4333df19';
+import {overviewCanvas} from './overview-canvas.js?v=86e355fd4333df19';
+import { modelFormat } from './model-formats.js?v=86e355fd4333df19';
+import {explorerResize} from './explorer-resize.js?v=86e355fd4333df19';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=86e355fd4333df19';
+import {rectangleSelection} from './rectangle-selection.js?v=86e355fd4333df19';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=86e355fd4333df19';
+import { LORA_PATTERN } from './pattern-utils.js?v=86e355fd4333df19';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=86e355fd4333df19';
 
 const $ = (id) => document.getElementById(id);
+explorerResize($('explorer-resize'));
 let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
@@ -41,7 +43,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=abb7373d4d24faa2`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=86e355fd4333df19`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -151,7 +153,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=abb7373d4d24faa2', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=86e355fd4333df19', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -229,7 +231,9 @@ async function openFile(nextFile) {
             if(currentGraph!==0 && $('scope').value==='current')await runSearch();
         }
         else {
-            view.show(null);
+            // The explorer has a model even before Netron receives a graph.
+            // Its automatic page choice would hide mobile search as "welcome".
+            view.show('default');
             $('graph-caption').textContent = '索引已就緒 · 選取結果以繪製局部圖';
             status('索引已就緒。請搜尋或選取 layer／tensor，模型圖依需求繪製。');
         }

@@ -1,5 +1,5 @@
-import {spatialIndex,OverviewCamera} from './overview-layout.js?v=abb7373d4d24faa2';
-import {selectionRectangle} from './pattern-selection.js?v=abb7373d4d24faa2';
+import {spatialIndex,OverviewCamera} from './overview-layout.js?v=86e355fd4333df19';
+import {selectionRectangle} from './pattern-selection.js?v=86e355fd4333df19';
 
 // Only this adapter owns Canvas, pointer gestures, spatial queries and camera
 // state. The model and export selections remain in the existing model Worker.

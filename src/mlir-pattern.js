@@ -1,12 +1,12 @@
-import {operationSemantics} from './mlir-dialects.js?v=abb7373d4d24faa2';
-import {typeSpelling} from './mlir-engine.js?v=abb7373d4d24faa2';
-import {validateMLIR} from './mlir-validate.js?v=abb7373d4d24faa2';
-import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=abb7373d4d24faa2';
-import {selectionSnapshot} from './model-engine.js?v=abb7373d4d24faa2';
-import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=abb7373d4d24faa2';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=abb7373d4d24faa2';
-import {compactSliceSnapshot} from './mlir-slice-graph.js?v=abb7373d4d24faa2';
-import {createConnectionIndex} from './mlir-connection-index.js?v=abb7373d4d24faa2';
+import {operationSemantics} from './mlir-dialects.js?v=86e355fd4333df19';
+import {typeSpelling} from './mlir-engine.js?v=86e355fd4333df19';
+import {validateMLIR} from './mlir-validate.js?v=86e355fd4333df19';
+import {prepareMLIRPattern,nodeKey,edgeKey,CFG_PATTERN_MODE} from './mlir-pattern-spec.js?v=86e355fd4333df19';
+import {selectionSnapshot} from './model-engine.js?v=86e355fd4333df19';
+import {combinedMLIRSnapshot} from './mlir-combined-graph.js?v=86e355fd4333df19';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=86e355fd4333df19';
+import {compactSliceSnapshot} from './mlir-slice-graph.js?v=86e355fd4333df19';
+import {createConnectionIndex} from './mlir-connection-index.js?v=86e355fd4333df19';
 
 function projects(index) {
     if(!index?.mlir)throw new Error('跨 block pattern 僅適用於文字 MLIR。');

@@ -1,5 +1,5 @@
-import {serialize} from './model-engine.js?v=abb7373d4d24faa2';
-import {overviewLayout} from './overview-layout.js?v=abb7373d4d24faa2';
+import {serialize} from './model-engine.js?v=86e355fd4333df19';
+import {overviewLayout} from './overview-layout.js?v=86e355fd4333df19';
 
 const MAX_VISIBLE_NODES=1500;
 const outputs=node=>node.outputs.flatMap(a=>a.value);
@@ -12,7 +12,7 @@ export async function preparePatternOverview(index,items,{name='Pattern',cancell
     if(!items.length || items.some(item=>item.kind!=='patterns'))throw new Error('請先搜尋 pattern。');
     // Keep only a wiring projection here. Hidden OP attributes and initializers
     // must not be serialized before contraction has determined what is visible.
-    const parts=index.mlir ? (await import('./mlir-pattern.js?v=abb7373d4d24faa2')).mlirModelSnapshots(index,{lightweight:true}) : index.graphs.map((entry,g)=>({graph:entry.graph,graphIndex:g}));
+    const parts=index.mlir ? (await import('./mlir-pattern.js?v=86e355fd4333df19')).mlirModelSnapshots(index,{lightweight:true}) : index.graphs.map((entry,g)=>({graph:entry.graph,graphIndex:g}));
     const graph={name:'全模型 pattern 總覽',groups:true,nodes:[],inputs:[],outputs:[],metadata:[]},locations=new Map();
     let lastYield=performance.now();
     const checkpoint=async()=>{if(performance.now()-lastYield>12){await new Promise(resolve=>setTimeout(resolve,0));lastYield=performance.now();}return cancelled();};

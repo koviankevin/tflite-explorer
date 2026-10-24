@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=abb7373d4d24faa2">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=86e355fd4333df19">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=abb7373d4d24faa2"></script>
+<script type="module" src="src/app.js?v=86e355fd4333df19"></script>
 
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
@@ -308,12 +308,13 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=abb7373d4d24faa2">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=abb7373d4d24faa2">
-<link rel="stylesheet" href="src/mobile.css?v=abb7373d4d24faa2">
-<link rel="stylesheet" href="src/model-visibility.css?v=abb7373d4d24faa2">
-<link rel="stylesheet" href="src/typography.css?v=abb7373d4d24faa2">
-<link rel="stylesheet" href="src/overview-canvas.css?v=abb7373d4d24faa2">
+<link rel="stylesheet" href="src/app.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/mobile.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/model-visibility.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/typography.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/overview-canvas.css?v=86e355fd4333df19">
+<link rel="stylesheet" href="src/explorer-resize.css?v=86e355fd4333df19">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -325,7 +326,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
   <input id="model-file" type="file" accept=".tflite,.lite,.mlir" hidden>
 </header>
-<aside class="explorer-panel" aria-label="模型搜尋">
+<aside id="explorer-panel" class="explorer-panel" aria-label="模型搜尋">
   <div class="panel-heading"><span>探索模型</span><span class="eyebrow">01 / EXPLORE</span></div>
   <div class="tabs" role="tablist" aria-label="搜尋類別">
     <button role="tab" aria-selected="true" data-kind="layers">Layers <span id="layer-count">—</span></button>
@@ -366,6 +367,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <section id="tensor-summary" class="tensor-summary" hidden aria-label="選取的 tensor 資料"></section>
   <div class="panel-footer"><span class="local-mark">◉</span> 模型不會上傳至伺服器。<a href="LICENSE" target="_blank" rel="noopener">MIT 授權 ↗</a><a href="vendor/netron/LICENSE" target="_blank" rel="noopener">Netron ↗</a></div>
 </aside>
+<div id="explorer-resize" class="explorer-resize" role="separator" tabindex="0" aria-label="調整搜尋欄寬度" aria-controls="explorer-panel" aria-orientation="vertical" aria-valuemin="280" aria-valuemax="720" aria-valuenow="344" title="拖曳調整寬度；方向鍵微調，Home／End 調至最窄／最寬，Enter 或雙擊恢復預設"></div>
 <div class="graph-bar">
   <div class="graph-location"><span class="eyebrow">02 / GRAPH</span><label for="graph-select" class="sr-only">目前 subgraph</label><select id="graph-select" disabled><option>模型圖</option></select><span id="graph-caption">選取結果以查看連接</span></div>
   <div class="graph-actions"><button id="toggle-slice-details" class="quiet" aria-expanded="false" hidden>展開輔助節點</button><button id="fold-all-patterns" class="quiet" hidden>收合所有匹配</button><button id="toggle-pattern-fold" class="quiet" aria-expanded="true" hidden>收合 pattern</button><button id="pick-pattern" class="quiet" aria-pressed="false" disabled>選取 pattern</button><button id="local-graph" class="quiet" disabled>局部圖</button><button id="full-graph" class="quiet" disabled>完整圖</button><span class="divider"></span><button id="zoom-out" class="icon-button" aria-label="縮小" disabled>−</button><button id="zoom-reset" class="quiet" disabled>100%</button><button id="zoom-in" class="icon-button" aria-label="放大" disabled>＋</button><button id="direction" class="icon-button" title="切換水平／垂直" aria-label="切換圖方向" disabled>⇄</button><label class="graph-font-control" for="graph-font-size">圖字<select id="graph-font-size" aria-label="模型圖字級"><option value="14">14px</option><option value="16">16px</option><option value="18">18px</option><option value="20">20px</option><option value="24">24px</option><option value="28">28px</option><option value="32">32px</option></select></label></div>
