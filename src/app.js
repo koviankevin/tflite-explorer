@@ -496,7 +496,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,
     $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
     $('export-match').disabled = exportBusy || !canExportSubmodel();
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
-    document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
+    if(!viewport)document.querySelector(`[data-result-index="${index}"]`)?.scrollIntoView({ block: 'nearest' });
     setCurrentGraph(targetGraph); renderMatchBlocks(item);
     const generationRender = ++renderGeneration;
     $('target').setAttribute('aria-busy', 'true');
