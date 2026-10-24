@@ -1,13 +1,13 @@
-import { Host } from '../vendor/netron/browser.js?v=b89837c38697a28b';
-import { View, Attachment } from '../vendor/netron/view.js?v=b89837c38697a28b';
-import { hydrate } from './hydrate.js?v=b89837c38697a28b';
-import {overviewCanvas} from './overview-canvas.js?v=b89837c38697a28b';
-import { modelFormat } from './model-formats.js?v=b89837c38697a28b';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=b89837c38697a28b';
-import {rectangleSelection} from './rectangle-selection.js?v=b89837c38697a28b';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=b89837c38697a28b';
-import { LORA_PATTERN } from './pattern-utils.js?v=b89837c38697a28b';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=b89837c38697a28b';
+import { Host } from '../vendor/netron/browser.js?v=b4b99247fb8074f9';
+import { View, Attachment } from '../vendor/netron/view.js?v=b4b99247fb8074f9';
+import { hydrate } from './hydrate.js?v=b4b99247fb8074f9';
+import {overviewCanvas} from './overview-canvas.js?v=b4b99247fb8074f9';
+import { modelFormat } from './model-formats.js?v=b4b99247fb8074f9';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=b4b99247fb8074f9';
+import {rectangleSelection} from './rectangle-selection.js?v=b4b99247fb8074f9';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=b4b99247fb8074f9';
+import { LORA_PATTERN } from './pattern-utils.js?v=b4b99247fb8074f9';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=b4b99247fb8074f9';
 
 const $ = (id) => document.getElementById(id);
 let exportBusy = false;
@@ -41,7 +41,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=b89837c38697a28b`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=b4b99247fb8074f9`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -150,7 +150,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=b89837c38697a28b', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=b4b99247fb8074f9', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -365,7 +365,7 @@ function decorateCombinedGraph(dto) {
         const activate=event=>{
             if(event.type==='keydown' && !['Enter',' '].includes(event.key))return;
             event.preventDefault();event.stopImmediatePropagation();
-            if(pickingPattern || $('target').getAttribute('aria-busy')==='true')return;
+            if($('target').getAttribute('aria-busy')==='true')return;
             const key=action.keys.findLast(k=>sliceExpanded.has(k)) || action.keys[0];
             const next=new Set(sliceExpanded);if(next.has(key))next.delete(key);else next.add(key);
             changeSliceExpansion(next,{key,segment:action,point:event.type==='click'?{x:event.clientX,y:event.clientY}:undefined}).catch(report);
@@ -401,7 +401,7 @@ function refreshPatternFold() {
     sliceButton.textContent=sliceDetails?'收起輔助節點':'展開輔助節點';
     sliceButton.setAttribute('aria-expanded',String(sliceDetails));
     sliceButton.disabled=pickingPattern || $('target').getAttribute('aria-busy')==='true';
-    for(const button of $('slice-connection-controls').querySelectorAll('button'))button.disabled=sliceButton.disabled;
+    for(const button of $('slice-connection-controls').querySelectorAll('button'))button.disabled=$('target').getAttribute('aria-busy')==='true';
     const button=$('toggle-pattern-fold');button.hidden=overviewMode || selection?.kind!=='patterns';
     button.textContent=patternCollapsed?'展開 pattern':'收合 pattern';
     button.setAttribute('aria-expanded',String(!patternCollapsed));
@@ -717,7 +717,7 @@ function refreshPickedNodes() {
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?'拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。綠色為已選取；控制標記不會存入 pattern。':'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
     $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;

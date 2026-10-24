@@ -1,8 +1,8 @@
 
 // Experimental
 
-import * as base from './base.js?v=b89837c38697a28b';
-import * as protobuf from './protobuf.js?v=b89837c38697a28b';
+import * as base from './base.js?v=b4b99247fb8074f9';
+import * as protobuf from './protobuf.js?v=b4b99247fb8074f9';
 
 const om = {};
 const svp = {};
