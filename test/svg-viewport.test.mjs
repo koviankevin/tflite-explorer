@@ -47,3 +47,12 @@ test('sidebar collapse uses the nearest surviving visible OP and offscreen endpo
     assert.equal(r.top+r.height/2-b.top,container.clientHeight-48);
     assert.equal(captureViewport(container,NaN,[]),null);
 });
+test('mobile page scroll is restored before measuring the replacement graph landmark',()=>{
+    const {container,graph,canvas,node}=scene({width:375});
+    const page={scrollLeft:0,scrollTop:455,scrollTo({left,top,behavior}){assert.equal(behavior,'instant');this.scrollLeft=left;this.scrollTop=top;}};
+    container.ownerDocument={scrollingElement:page};
+    const snapshot=captureViewport(container,graph.zoom,[node('from',1500,900)]);
+    page.scrollTop=397;
+    restoreViewport(container,graph,canvas,[node('from',1200,500)],snapshot);
+    assert.equal(page.scrollTop,455);
+});
