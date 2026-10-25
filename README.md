@@ -20,7 +20,7 @@
 
 讀取 UTF-8 文字 `.mlir`，優先支援 generic operation 格式，包括未知 dialect 的 `"namespace.operation"(...)`、多輸出 `%result#0`／`%result#1`、attributes、自訂 type、動態 shape 與巢狀 region。以 `func.func` 及每個 region／block 分開建立搜尋範圍，保留階層路徑，不會將同名 SSA 值跨範圍接線。SSA Values 分頁可搜尋 `%name`，Layers 可搜尋完整 operator／dialect 名稱；原始型別、attributes、scope 與可用的 location 可在詳細資料查看。
 
-已移除整檔 64 MiB 上限。大型 MLIR 以 1 MiB 區塊在本機 Worker 掃描，超過 64 KiB 的 `dense<…>` literal 與檔案內 resource hex blob 留在原始 File；搜尋只建立結構索引，匯出以 File slices 接回完整原文，避免整檔字串、完整權重陣列或巨大 TextEncoder 複本。另限制**扣除這些 payload 後的結構文字最多 256 MiB**，不將權重大小算進此上限。大型屬性顯示延後讀取提示，不以預覽值匹配 attribute 條件。仍須完整掃描檔案，速度依磁碟及裝置而異；不保證任意大小、非標準大型屬性或外部權重檔可用。見 [大型 MLIR 與驗證](docs/mlir-large-files.md)。
+已移除整檔 64 MiB 上限。大型 MLIR 以 1 MiB 區塊在本機 Worker 掃描，超過 4 KiB 的 `dense<…>` literal 與檔案內 resource hex blob 留在原始 File；搜尋只建立結構索引，匯出以 File slices 接回完整原文，避免整檔字串、完整權重陣列或巨大 TextEncoder 複本。另限制**扣除這些 payload 後的結構文字最多 256 MiB**，不將權重大小算進此上限。大型屬性顯示延後讀取提示，不以預覽值匹配 attribute 條件。仍須完整掃描檔案，速度依磁碟及裝置而異；不保證任意大小、非標準大型屬性或外部權重檔可用。見 [大型 MLIR 與驗證](docs/mlir-large-files.md)。
 
 圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會在本機 Worker 檢查來源與子圖的語法／SSA；失敗時顯示行、欄與原因，停止下載。此結構檢查不取代 LLVM 或內部 dialect verifier，完整範圍見 [驗證說明](docs/mlir-verification.md)。下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
 

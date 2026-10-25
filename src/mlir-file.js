@@ -1,7 +1,7 @@
 // A File-backed structural view. Large dense literals/resource blobs never
 // become a single JavaScript string or an array of decoded weight values.
 export const MLIR_STRUCTURE_LIMIT = 256 * 1024 * 1024;
-export const MLIR_PAYLOAD_THRESHOLD = 64 * 1024;
+export const MLIR_PAYLOAD_THRESHOLD = 4 * 1024;
 const tokenPattern = /"0x01000000[0-9a-f]{32}[0-9a-f]{8}"/g;
 const structureError = () => new Error('MLIR 結構文字超過 256 MiB（不含延後讀取的 dense／resource 權重）；請拆分 function 或移除大型非權重屬性。');
 const whitespace = c => c===32 || c===9 || c===10 || c===13;
@@ -24,6 +24,7 @@ function typedHeader(bytes) {
 }
 
 export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,structureLimit=MLIR_STRUCTURE_LIMIT,payloadThreshold=MLIR_PAYLOAD_THRESHOLD}={}) {
+    const captureLimit=Math.max(payloadThreshold,64*1024);
     const pieces=[],payloads=[],nonce=crypto.randomUUID().replaceAll('-','');
     const utf8=new TextDecoder('utf-8',{fatal:true}),decoder=new TextDecoder('utf-8',{fatal:true});
     let retained=0,mode='code',word='',pending=false,previous=0,significant=0,tail='',resource=false,escape=false,candidate=null;
@@ -58,7 +59,7 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
             const c=bytes[i],at=offset+i;
             // Native scanning keeps multi-GB hex weights out of a per-byte JS
             // loop. Fall back for delimiters/escapes and malformed data.
-            if(candidate?.prefix.length>payloadThreshold && (candidate.kind==='resource' && candidate.hex || candidate.kind==='dense' && candidate.state==='string' && candidate.stringPrefix==='0x' && candidate.stringHex)) {
+            if(candidate?.prefix.length>captureLimit && (candidate.kind==='resource' && candidate.hex || candidate.kind==='dense' && candidate.state==='string' && candidate.stringPrefix==='0x' && candidate.stringHex)) {
                 let end=bytes.indexOf(34,i);if(end===-1)end=bytes.length;
                 if(end>i && !/[^0-9a-fA-F]/.test(ascii?chunkText.slice(i,end):new TextDecoder().decode(bytes.subarray(i,end)))) {
                     const count=end-i;originalColumn+=count;
@@ -66,7 +67,7 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
                     i=end-1;continue;
                 }
             }
-            if(ascii && candidate?.kind==='dense' && candidate.state==='code' && candidate.prefix.length>payloadThreshold) {
+            if(ascii && candidate?.kind==='dense' && candidate.state==='code' && candidate.prefix.length>captureLimit) {
                 special.lastIndex=i;const match=special.exec(chunkText),end=match?.index ?? bytes.length;
                 if(end>i) {
                     let at=i,next;while((next=chunkText.indexOf('\n',at))!==-1 && next<end){originalLine++;originalColumn=1;at=next+1;}
@@ -78,7 +79,7 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
             if(mode==='payload') {
                 const item=candidate;
                 if(item.kind==='resource') {
-                    if(c===34 && !item.escape) {if(item.prefix.length<=payloadThreshold)item.prefix.push(c);finish(at+1,originalLine,originalColumn);start=i+1;continue;}
+                    if(c===34 && !item.escape) {if(item.prefix.length<=captureLimit)item.prefix.push(c);finish(at+1,originalLine,originalColumn);start=i+1;continue;}
                     if(at>item.start+2 && !(c>=48 && c<=57 || c>=65 && c<=70 || c>=97 && c<=102))item.hex=false;
                     if(item.escape)item.escape=false;else if(c===92)item.escape=true;
                 } else if(item.state==='comment') {
@@ -100,11 +101,11 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
                     else if(c===62 && item.previous!==45 && --item.depth===0) {
                         if(item.brackets.length)throw new Error('MLIR dense 權重的括號未閉合。');
                         finish(at,line,column);start=i;previous=c;continue;
-                    } else if(c===91 || c===40)item.brackets.push(c);
+                    } else if(c===91 || c===40) {item.brackets.push(c);if(item.brackets.length>4096)throw new Error('MLIR dense 權重的巢狀深度超過 4096，已停止讀取。');}
                     else if(c===93 || c===41) {if(item.brackets.pop()!==(c===93?91:40))throw new Error('MLIR dense 權重的括號不成對。');}
                 }
                 item.previous=c;
-                if(item.prefix.length<=payloadThreshold)item.prefix.push(c);
+                if(item.prefix.length<=captureLimit)item.prefix.push(c);
                 continue;
             }
             if(mode==='comment'){if(c===10)mode='code';previous=c;continue;}

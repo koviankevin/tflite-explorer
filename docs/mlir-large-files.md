@@ -4,7 +4,8 @@
 
 ## 讀取與匯出
 
-- 每次掃描 1 MiB，檢查完整 UTF-8。超過 64 KiB 的 dense literal，以及檔案 metadata 內的 resource hex string，保留原始 File 的 byte ranges。
+- 每次掃描 1 MiB，檢查完整 UTF-8。超過 4 KiB 的 dense literal，以及檔案 metadata 內的 resource hex string，保留原始 File 的 byte ranges。
+- 4 KiB 門檻也涵蓋大量中型常數，避免數萬個各自未滿 64 KiB 的權重仍累積進結構上限；讀取每段時最多暫存 64 KiB 的型別標頭／前綴。Dense 括號巢狀深度另限制 4096。
 - 支援 literal-first 數值／hex dense、Netron 支援的 type-first dense 和內附 resource blobs。保留型別、shape、operator、properties、SSA 和控制流程；不解析公司 dialect 的語意。外部權重檔選取尚未實作。
 - compact source 中的臨時 token 只供結構 parser 使用。詳細資料以延後讀取提示替代，attribute 條件不會拿臨時值比對。Adapter 的 deferred attribute 有 `modelLensDeferred=true`、`value=null`，避免將 token 當作真實權重。
 - 結構文字最多 256 MiB，扣除延後 payload；另保留既有 OP 選取、pattern、block 和輸出數量限制。大量非權重文字或大量 operations 仍可能達到結構／裝置記憶體上限。
@@ -26,7 +27,10 @@
 | Edge 原生選檔（本機網站） | 18.84 秒；custom op 搜尋定位、跨 block 匹配及下載通過 |
 | 原生 Edge 下載的局部 MLIR | 2,684,362,324 bytes；重新解析、SSA／dominance、原 pattern 1 匹配、權重 hash 一致 |
 | MLIR、條件、工作階段相關 Node 測試 | 137 通過；35 個需額外原生 compiler／下載檔設定的案例先略過 |
+| 後續分段讀取／匯出／條件回歸 | 26 通過，含多份中型權重；SSA／projection 選測另 41 通過、1 compiler 案例當時略過 |
+| TFLite 解析、custom op、子模型匯出 | 16 通過 |
 | 原生 IREE `iree-opt`（LLVM 20.0.0git） | 33 compiler 正負例通過；實際下載檔案例未設定（1 略過）；同結構 scalar-splat fixture 另通過 |
+| 原生 compiler 的 projection print／parse／SSA rename | 1 通過，補足前列 projection 當時略過的案例 |
 
 大型 payload 本身沒有送入原生 compiler；上列 compiler 測試不代表公司 dialect 或 2.5 GiB 檔完整 LLVM verifier 已通過。公司實際產生的 MLIR 尚未提供，這是實體合成測試，非公司模型驗收。瀏覽器與 Node 數值會隨硬體、磁碟快取和並行工作變動。
 

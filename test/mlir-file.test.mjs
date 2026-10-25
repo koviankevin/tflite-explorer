@@ -108,3 +108,12 @@ test('multiple deferred payloads preserve same-line offsets and stable workspace
     assert.equal(validateMLIR(a).diagnostics.find(d=>d.code==='SSA_UNDEFINED').line,2);
     assert.equal(await mlirBlob(a.mlir.source,a.mlir.payloads).text(),text);
 });
+
+test('many medium-sized weights do not consume the structural budget',async()=>{
+    const text=Array.from({length:32},(_,i)=>`%w${i} = "acme.weights"() {value = dense<"0x${'5A'.repeat(4096)}"> : tensor<4096xi8>} : () -> tensor<4096xi8>`).join('\n');
+    const prepared=await readMLIRFile(file(text),{structureLimit:64*1024});
+    assert.equal(prepared.payloads.length,32);
+    assert.ok(prepared.stats.structureBytes<8192);
+    assert.equal(await mlirBlob(prepared.source,prepared.payloads).text(),text);
+    await assert.rejects(readMLIRFile(file('dense<'+'['.repeat(4097))),/巢狀深度/);
+});
