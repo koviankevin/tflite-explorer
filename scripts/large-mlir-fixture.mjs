@@ -4,6 +4,7 @@ import {open,statfs,mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 const directory=path.resolve(process.argv[2] || 'test-results/large-mlir');
+const started=performance.now();
 const hexMiB=Number(process.argv[3] || 2560);
 if(!Number.isSafeInteger(hexMiB) || hexMiB<1)throw new Error('Expected a positive integer number of MiB.');
 await mkdir(directory,{recursive:true});
@@ -44,7 +45,7 @@ try {
 } finally {await file.close();}
 const small=path.join(directory,'small-same-structure.mlir');
 await writeFile(small,head+'1'+tail,{flag:'wx'});
-const result={file:filename,bytes:Buffer.byteLength(head+'"0x"'+tail)+hexMiB*1024*1024,sha256:hash.digest('hex'),payloadSha256:payload.digest('hex'),payloadBytes:hexMiB*1024*1024+4,type,small};
+const result={file:filename,bytes:Buffer.byteLength(head+'"0x"'+tail)+hexMiB*1024*1024,sha256:hash.digest('hex'),payloadSha256:payload.digest('hex'),payloadBytes:hexMiB*1024*1024+4,type,small,totalMs:performance.now()-started,maxRSS:process.resourceUsage().maxRSS*1024};
 await writeFile(path.join(directory,'fixture.json'),JSON.stringify(result,null,2),{flag:'wx'});
 await event({operation_id:'generate',event:'created',path:filename,...result});await events.close();
 console.log(JSON.stringify(result));

@@ -1,0 +1,34 @@
+name: Optional 2.5 GiB MLIR Node acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: large-mlir-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  large-mlir:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Uses only Node built-ins and repository source; no npm/browser install.
+      - name: Generate, verify and audit physical 2.5 GiB MLIR
+        run: node scripts/accept-large-mlir.mjs "$RUNNER_TEMP/large-mlir"
+      - name: Save compact evidence (including failure reports)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: large-mlir-node-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/large-mlir/acceptance-report.json
+            ${{ runner.temp }}/large-mlir/fixture.json
+            ${{ runner.temp }}/large-mlir/node-report.json
+            ${{ runner.temp }}/large-mlir/plan.json
+            ${{ runner.temp }}/large-mlir/events.jsonl
+            ${{ runner.temp }}/large-mlir/branch-loop-pattern.json
+          if-no-files-found: error
+          retention-days: 14

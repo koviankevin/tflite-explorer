@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "startedAt": "2026-10-25T14:09:27.709Z",
+  "scope": "Node.js physical synthetic MLIR; no browser, native compiler or company-model acceptance",
+  "sourceCommit": "26fcee9902c55b8ba91c953f422417cfe97f0f45",
+  "workingTreeDirty": true,
+  "requested": {
+    "hexMiB": 2560,
+    "sourceBytes": 2684355495
+  },
+  "requirements": {
+    "diskBytes": 9126805504,
+    "memoryBytes": 2147483648
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.55",
+    "cpus": 9,
+    "osRelease": "PRETTY_NAME=\"Ubuntu 24.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.3 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+    "runner": null,
+    "image": null,
+    "imageVersion": null,
+    "repository": null,
+    "ref": null,
+    "workflowCommit": null,
+    "runId": null,
+    "runAttempt": null
+  },
+  "stages": [
+    {
+      "name": "large-mlir-fixture.mjs",
+      "startedAt": "2026-10-25T14:09:27.720Z",
+      "before": {
+        "diskBytes": 29402472448,
+        "memoryBytes": 5481656320,
+        "hostAvailable": 9618669568,
+        "hostTotal": 10451439616,
+        "cgroupLimit": 8589934592,
+        "cgroupCurrent": 3108278272,
+        "oomKills": 0
+      },
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 4963.2895610000005,
+      "after": {
+        "diskBytes": 26591477760,
+        "memoryBytes": 2584920064,
+        "hostAvailable": 9629573120,
+        "hostTotal": 10451439616,
+        "cgroupLimit": 8589934592,
+        "cgroupCurrent": 6005014528,
+        "oomKills": 0
+      },
+      "stderr": "",
+      "measurement": {
+        "maxRSS": 42860544,
+        "totalMs": 4887.555402
+      }
+    },
+    {
+      "name": "verify-large-mlir.mjs",
+      "startedAt": "2026-10-25T14:09:32.686Z",
+      "before": {
+        "diskBytes": 26591477760,
+        "memoryBytes": 2584674304,
+        "hostAvailable": 9629573120,
+        "hostTotal": 10451439616,
+        "cgroupLimit": 8589934592,
+        "cgroupCurrent": 6005260288,
+        "oomKills": 0
+      },
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 29430.573311,
+      "after": {
+        "diskBytes": 23758200832,
+        "memoryBytes": 226959360,
+        "hostAvailable": 9523224576,
+        "hostTotal": 10451439616,
+        "cgroupLimit": 8589934592,
+        "cgroupCurrent": 8362975232,
+        "oomKills": 0
+      },
+      "stderr": "",
+      "measurement": {
+        "maxRSS": 274395136,
+        "totalMs": 29274.788778000002
+      }
+    }
+  ],
+  "preflight": {
+    "diskBytes": 29402476544,
+    "memoryBytes": 5481652224,
+    "hostAvailable": 9618669568,
+    "hostTotal": 10451439616,
+    "cgroupLimit": 8589934592,
+    "cgroupCurrent": 3108282368,
+    "oomKills": 0
+  },
+  "fixture": {
+    "file": "/workspace/scratch/8091e9b8aa02/large-mlir-local-full/weights-2560MiB.mlir",
+    "bytes": 2684355495,
+    "sha256": "91f73e977e3d7787657a11cfa9b8369da58249faed0b63ebbd5187105402d3b4",
+    "payloadSha256": "bee4d7dfdad770188e021938c81fd7d8e41e4e899f2a0fca4da0250822f0f560",
+    "payloadBytes": 2684354564,
+    "type": "tensor<1342177280xi8>",
+    "small": "/workspace/scratch/8091e9b8aa02/large-mlir-local-full/small-same-structure.mlir",
+    "totalMs": 4887.555402,
+    "maxRSS": 42860544
+  },
+  "verification": {
+    "source": "/workspace/scratch/8091e9b8aa02/large-mlir-local-full/weights-2560MiB.mlir",
+    "sourceBytes": 2684355495,
+    "output": "/workspace/scratch/8091e9b8aa02/large-mlir-local-full/node-export.mlir",
+    "outputBytes": 2684362324,
+    "stats": {
+      "bytesRead": 2684355495,
+      "fileBytes": 2684355495,
+      "structureBytes": 983,
+      "deferredBytes": 2684354564,
+      "deferredPayloads": 1,
+      "parseMs": 9522.997269000001
+    },
+    "openMs": 9523.304943000001,
+    "totalMs": 29274.788778000002,
+    "patternMatches": 1,
+    "reopenedPatternMatches": 1,
+    "ssaDominance": true,
+    "payloadSha256": "bee4d7dfdad770188e021938c81fd7d8e41e4e899f2a0fca4da0250822f0f560",
+    "originalPayloadSha256": "bee4d7dfdad770188e021938c81fd7d8e41e4e899f2a0fca4da0250822f0f560",
+    "peakRSS": 274264064,
+    "peakHeap": 93712504,
+    "maxRSS": 274395136,
+    "node": "v24.22.1"
+  },
+  "files": {
+    "source": {
+      "bytes": 2684355495,
+      "sha256": "91f73e977e3d7787657a11cfa9b8369da58249faed0b63ebbd5187105402d3b4"
+    },
+    "output": {
+      "bytes": 2684362324,
+      "sha256": "e636ec892616af6ca17ea06a6a6306ac4ad2e957a2616e0f5eec2d33787bffe2"
+    }
+  },
+  "finishedAt": "2026-10-25T14:10:07.337Z",
+  "finalResources": {
+    "diskBytes": 23758200832,
+    "memoryBytes": 186920960,
+    "hostAvailable": 9510207488,
+    "hostTotal": 10451439616,
+    "cgroupLimit": 8589934592,
+    "cgroupCurrent": 8403013632,
+    "oomKills": 0
+  }
+}

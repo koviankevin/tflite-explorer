@@ -47,3 +47,41 @@ node scripts/verify-large-mlir.mjs C:\qa\large-mlir C:\Downloads\weights-2560MiB
 ```
 
 目錄會保存 `plan.json`、`events.jsonl`、fixture／Node 報告及可匯入的 pattern JSON。初次產檔及匯出使用排他建立，避免覆寫既有檔案。
+
+## 獨立手動 GitHub Actions 驗收
+
+`.github/workflows/large-mlir.yml` 提供 **Optional 2.5 GiB MLIR Node acceptance**，只有 `workflow_dispatch`，不由 PR、push 或正式部署觸發，也不重跑 TFLite Chromium 驗收。[GitHub 要求 workflow 先存在於預設分支](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)，因此首次需要合併 PR 才能 dispatch；之後可選擇要驗證的分支。一般 PR validation 成功不能當成本項成功。
+
+Ubuntu 24.04／Node 24 直接重用 `large-mlir-fixture.mjs` 與 `verify-large-mlir.mjs`，不安裝瀏覽器或 npm dependencies。可在 Linux 本機使用同一入口（目錄必須尚未存在）：
+
+```bash
+node scripts/accept-large-mlir.mjs test-results/large-mlir-run-001
+```
+
+入口固定產生 **2,684,355,495 bytes** 的實體檔，含 **2560 MiB hex 文字**（代表 1.25 GiB i8 權重），不能透過輸入縮小。沿用逐塊寫入及 fsync，並檢查分段讀取統計、延後權重區段、跨 block pattern、局部串流匯出、重新開啟、專案 SSA／dominance 檢查，以及重新開啟後的權重 SHA-256。另串流重算來源及輸出整檔 SHA-256；來源大小、來源整檔 hash 與權重 hash 必須與上列既有 fixture 一致。輸出整檔 hash 可隨匯出內容改變，不要求與來源相同。
+
+執行前要求 **8.5 GiB 可用磁碟**（沿用產生器的三倍 payload 空間，再留 1 GiB）及 **2 GiB 可用記憶體**。Linux 優先採 `/proc/meminfo` 的 MemAvailable，並在 cgroup v2 可見時扣除其已用量，取較低可用值。門檻是保守預檢，不是記憶體上限保證，也不會自動清除 runner 其他內容或改用小檔。
+
+`acceptance-report.json` 保存實際 checkout SHA、工作目錄狀態、GitHub run／attempt、runner image、OS／Node、前後可用資源、各階段時間、產生器與驗證器各自的 OS 最大 RSS、檔案大小、整檔與權重 hash 及失敗階段。最大 RSS 來自 Node `process.resourceUsage()`，不代表瀏覽器或整部 runner 的峰值；可用資源是階段邊界快照，非連續監測。
+
+| 報告狀態 | 意義 |
+| --- | --- |
+| `passed` | 完整固定大小 Node 合成檔驗收通過 |
+| `resource_insufficient` | 預檢不足，未開始產生模型；exit 2 |
+| `resource_exhausted` | ENOSPC／ENOMEM／Node OOM，或可見 cgroup OOM kill 計數增加；exit 2 |
+| `verification_failed` | 程式／檔案／hash／結構等驗證失敗；exit 1 |
+| `interrupted_unknown` | 收到 signal，但無足夠資源耗盡證據；exit 1，不能直接宣稱程式 bug 或 OOM |
+| `running` 或無最終報告 | runner／job 被取消、逾時或中斷，沒有完成驗收 |
+
+所有非成功狀態均讓 job 失敗；取消或 runner 消失時，`always()` 也無法保證 Artifact 上傳。正常成功或可捕捉失敗都只上傳明列的精簡 JSON／JSONL／pattern 報告，保留 14 天，不上傳數 GiB 來源與匯出檔。檔案隨 ephemeral runner 銷毀。
+
+### 驗證層級
+
+新增入口的 [2026-10-25 本機完整執行報告](results/large-mlir-node-2026-10-25.json) 為 `passed`：Ubuntu 24.04.3／Node v24.22.1，來源 2,684,355,495 bytes、局部匯出 2,684,362,324 bytes，權重 hash 與上列一致，驗證程序最大 RSS 274,395,136 bytes（約 261.7 MiB）。本次執行基於 `26fcee9` 加入本 PR 的未提交修改，報告如實標示 `workingTreeDirty: true`；它是本機證據，並非 GitHub runner 執行紀錄。
+
+| 層級 | 能支持的結論 |
+| --- | --- |
+| Node 本機合成檔 | 上列 2026-10-25 紀錄；本機執行新增入口的結果須另外標示來源 SHA／dirty 狀態 |
+| Edge 本機／正式網站實測 | 上列原生選檔、UI 搜尋、pattern 匯入、下載與重開紀錄；本工作流程沒有瀏覽器步驟 |
+| GitHub Actions 大型 MLIR | 只有對應 `large-mlir.yml` run 成功、且 Artifact 的固定大小報告為 `passed` 才算通過；PR validation 或 TFLite run 不算 |
+| 公司真實 MLIR／完整 LLVM verifier | 尚未驗證；合成檔與專案 SSA／dominance 檢查不能代替公司 dialect／原生 compiler 的完整驗證 |
