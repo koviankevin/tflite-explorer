@@ -1,0 +1,25 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> tflite-pattern-explorer@0.1.0 test:large-browser
+> node test/browser/large-file.mjs
+
+Built dist/ release bf8377cf14a2b41c: local file processing, worker parsing, search and Netron diagrams.
+PASS native file chooser, disk-backed >1 GiB File, worker index (6,002 operators), index-only UI
+PASS exact layer search and bounded local SVG graph
+PASS pattern search, both subgraphs, pagination and match highlighting
+PASS large File metadata shape/dtype AND search, exact count, pagination and bounded matching SVG
+PASS condition changes and explicit re-search reject dtype/shape/absent-port/attribute and recover matches without file reads
+PASS conditional pattern library save, version 3 JSON download/import and condition reapplication
+PASS downloaded workspace JSON reselects native large File and restores conditions, exact match, selections and SVG camera
+PASS page reload preserves conditional library and last-saved workspace; native model reselection restores SVG state
+PASS same-size valid large model with different structural fingerprint rejects saved selections
+PASS original large model restores correctly after a rejected workspace model
+PASS lazy weight tensor metadata inspection
+PASS submodel download from large source
+PASS cancel pending real worker open, worker termination and UI reset (metadata gate)
+PASS invalid >1 GiB file reports an error and resets controls
+PASS same-page large-file reload and search/graph recovery after cancellation and error
+PASS downloaded submodel reopens through File API
+PASS MLIR format switch, indexed search and rendered graph smoke after large TFLite
+PASS bounded native reads, heartbeat, no crash/page errors/uploads, sampled memory budget
+Report: /workspace/scratch/eaa2c5e07c47/tflite-explorer/test-results/large-file.json (passed)

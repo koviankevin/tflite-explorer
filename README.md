@@ -165,7 +165,9 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 ### 可選的 >1 GiB Chromium 選檔驗收
 
-`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
+`npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。另涵蓋 metadata 條件切換重搜、v3 pattern JSON、工作階段 JSON 與 SVG 選取／縮放恢復、重新整理後恢復，以及相同大小但 dtype 不同的模型拒絕。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
+
+2026-10-25（台北時間），以最新 main `36211521c418948d612d576fd2515af04512f469` 為基準擴充測試，實際受測提交 `754f7cad8accf7a104673606f710c1de0995ea94`、乾淨來源樹 `8e7a1e4ba2462e96c07f6902f784d697e1f5d219`，本機 Chromium **18 項通過**。首次選檔 **375 ms**；6 次大型模型開啟各原生讀取 **1,189,156 bytes**；條件搜尋與工作階段指紋／保存額外讀檔 **0 bytes**；RSS 增量 **227.94 MiB**，頁面最大心跳間隔 **124.9 ms**。這是本次新來源的本機實測，未宣稱已有對應 GitHub 大檔 run。詳見 [條件／工作階段大檔驗證](docs/large-browser-conditions-workspace-2026-10-25.md) 與 [完整 JSON](test/browser/results/conditions-workspace-2026-10-25.json)。以下舊提交證據維持各自適用範圍。
 
 2026-10-24 已整合至 main `ec31522`（保留新版 MLIR、圖形瀏覽與 resize 功能），本機 Chromium **11 組檢查通過**，含 TFLite 大檔流程及小型 MLIR 格式切換／搜尋／繪圖。初次選檔約 **294 ms**，原生讀取量仍為 **1,189,156 bytes**；Node.js **199 通過、0 失敗、35 條件式跳過**。上述為本機整合快照結果；另有獨立的 GitHub Actions 證據如下。環境、衝突處理、受測樹與限制見 [整合驗證紀錄](docs/large-browser-integration-2026-10-24.md)、[本機 JSON](test/browser/results/2026-10-24-chromium.json)。
 
