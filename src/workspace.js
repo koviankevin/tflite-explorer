@@ -1,4 +1,4 @@
-import {reusablePattern} from './pattern-library.js?v=d408969f7e3cd305';
+import {reusablePattern} from './pattern-library.js?v=5a90ceb2c2a6beb3';
 export const WORKSPACE_KEY='model-lens.workspace.v1';
 export const WORKSPACE_LIMIT=2*1024*1024;
 const integer=(n,max=10000000)=>Number.isSafeInteger(n) && n>=0 && n<=max;

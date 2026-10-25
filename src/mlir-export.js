@@ -1,4 +1,5 @@
-import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=d408969f7e3cd305';
+import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=5a90ceb2c2a6beb3';
+import { mlirBlob } from './mlir-file.js?v=5a90ceb2c2a6beb3';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {
@@ -21,7 +22,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const { source, info, graphs, metadata } = index.mlir;
     if(!['auto','function','slice'].includes(scope))throw new Error('未知的 MLIR 匯出範圍。');
     if(scope==='slice' && (selections?.length>1 || graphs[graphIndex]?.cfgFunction)) {
-        const {exportMLIRSlice}=await import('./mlir-slice.js?v=d408969f7e3cd305');
+        const {exportMLIRSlice}=await import('./mlir-slice.js?v=5a90ceb2c2a6beb3');
         return exportMLIRSlice(index,selections || [{graph:graphIndex,nodes:nodeIndices}],{progress});
     }
     if(selections && (!Array.isArray(selections) || selections.some(s=>!s || !Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || functionFor(index,graphs[s.graph])!==functionFor(index,graphs[graphIndex]))))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
@@ -93,11 +94,11 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const intro=`// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}>`;
     const body=`${intro} ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  })`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=d408969f7e3cd305');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=5a90ceb2c2a6beb3');
     text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{selected:new Set(selected),blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
-    const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});
-    return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };
+    const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects,payloads:index.mlir.payloads});
+    return { blob: mlirBlob(text,index.mlir.payloads), layers: selected.length, inputs, outputs, validation };
 }
 
 // Cutting a branch or a phi-like block argument independently changes program
@@ -113,10 +114,10 @@ async function exportControlFlow(index,graphIndex,graph,progress) {
     const resources=info.resources.map(span=>source.slice(...span)).join('\n');
     const text=`// Model Lens CFG export: complete enclosing function; branches and block arguments preserved.\n${aliases}\n"builtin.module"() ({\n${source.slice(...range)}\n}) : () -> ()\n${resources}\n`;
     progress('在本機重新檢查匯出 MLIR 的 CFG、SSA 與 dominance…');
-    const validation=await validateMLIRText(text,{metadata,dialects});
+    const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
     const attr=op.getAttr('function_type'),signature=attr?.value || attr?.type;
     const inputs=(op.regions[0].blocks[0].arguments || []).map(value=>({name:valueName(value)}));
     const outputs=(signature?.results || []).map((type,i)=>({name:`result ${i}`}));
     const context=ir.byOp.get(op).context,layers=ir.rows.filter(row=>row.context===context && row.op!==op).length;
-    return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
+    return {blob:mlirBlob(text,index.mlir.payloads),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
 }

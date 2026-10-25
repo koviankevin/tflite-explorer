@@ -1,6 +1,7 @@
-import { parseMLIR, typeSpelling } from './mlir-engine.js?v=d408969f7e3cd305';
-import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js?v=d408969f7e3cd305';
-import { operationSemantics } from './mlir-dialects.js?v=d408969f7e3cd305';
+import { parseMLIRSource, typeSpelling } from './mlir-engine.js?v=5a90ceb2c2a6beb3';
+import { opName as nameOf, ssaKey as keyOf, buildDominance } from './mlir-ir.js?v=5a90ceb2c2a6beb3';
+import { operationSemantics } from './mlir-dialects.js?v=5a90ceb2c2a6beb3';
+import {mlirLocation} from './mlir-file.js?v=5a90ceb2c2a6beb3';
 
 export const MLIR_VALIDATION_SCOPE = '本機語法／SSA／dominance 檢查；不含 dialect 自訂語意與完整 LLVM verifier';
 const refOf = (name,number=0) => number ? `${name}#${number}` : name;
@@ -21,18 +22,18 @@ export function validateMLIR(index,{graphIndex}={}) {
     if (!data.validationCache) data.validationCache=new Map();
     const key=graphIndex===undefined ? 'all' : `context:${data.ir.byBlock.get(data.graphs[graphIndex]?.block)?.owner?.context || 0}`;
     if(!data.validationCache.has(key)) data.validationCache.set(key,inspect(data,graphIndex===undefined ? undefined : data.graphs[graphIndex]?.block));
-    return {scope:MLIR_VALIDATION_SCOPE,diagnostics:data.validationCache.get(key)};
+    return {scope:MLIR_VALIDATION_SCOPE+(data.payloads?.length?'；大型權重保留原文，未逐值驗證':''),diagnostics:data.validationCache.get(key)};
 }
 
 export function assertValidMLIR(index,options={},stage='來源模型') {
     const result=validateMLIR(index,options);
     if (result.diagnostics.length) throw new MLIRValidationError(result.diagnostics,stage);
-    return {scope:result.scope,passed:true};
+    return {scope:result.scope,passed:true,deferredPayloads:index.mlir.payloads?.length || 0};
 }
 
 export async function validateMLIRText(text,options={}) {
     let candidate;
-    try {candidate=await parseMLIR(new TextEncoder().encode(text),{...options,identifier:'extracted.mlir'});}
+    try {candidate=await parseMLIRSource(text,{...options,identifier:'extracted.mlir'});}
     catch(error) {
         const location=/at (\d+):(\d+)/.exec(error.message);
         throw new MLIRValidationError([{code:'SYNTAX',message:error.message,line:Number(location?.[1]) || undefined,column:Number(location?.[2]) || undefined}],'匯出子圖');
@@ -40,7 +41,7 @@ export async function validateMLIRText(text,options={}) {
     return assertValidMLIR(candidate,{},'匯出子圖');
 }
 
-function inspect({source,info,ir,dialects},targetBlock) {
+function inspect({source,info,ir,dialects,locations},targetBlock) {
     const {rows,regions,definitions,byOp,byBlock,lookup}=ir;
     const lineStarts=[0],diagnostics=[],cfg=new Map();
     for(let i=0;i<source.length;i++) if(source[i]==='\n')lineStarts.push(i+1);
@@ -50,7 +51,7 @@ function inspect({source,info,ir,dialects},targetBlock) {
         if(diagnostics.length>=100) return;
         let lo=0,hi=lineStarts.length;
         while(lo<hi) {const mid=(lo+hi)>>>1;if(lineStarts[mid]<=position)lo=mid+1;else hi=mid;}
-        diagnostics.push({code,message:String(message).slice(0,1200),line:lo,column:position-lineStarts[lo-1]+1,operator:(nameOf(row?.op)||'').slice(0,240),context:row?.context || 0,excerpt:source.slice(lineStarts[lo-1],lineStarts[lo] || source.length).trimEnd().slice(0,240)});
+        diagnostics.push({code,message:String(message).slice(0,1200),...mlirLocation(locations,lo,position-lineStarts[lo-1]+1),operator:(nameOf(row?.op)||'').slice(0,240),context:row?.context || 0,excerpt:source.slice(lineStarts[lo-1],lineStarts[lo] || source.length).trimEnd().slice(0,240)});
     };
     // Build edges from terminators, never from data-flow lines in the viewer.
     for(const region of regions) {

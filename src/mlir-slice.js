@@ -1,8 +1,9 @@
-import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=d408969f7e3cd305';
-import {operationSemantics} from './mlir-dialects.js?v=d408969f7e3cd305';
-import {buildDominance,opName} from './mlir-ir.js?v=d408969f7e3cd305';
-import {typeSpelling} from './mlir-engine.js?v=d408969f7e3cd305';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=d408969f7e3cd305';
+import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=5a90ceb2c2a6beb3';
+import {operationSemantics} from './mlir-dialects.js?v=5a90ceb2c2a6beb3';
+import {buildDominance,opName} from './mlir-ir.js?v=5a90ceb2c2a6beb3';
+import {typeSpelling} from './mlir-engine.js?v=5a90ceb2c2a6beb3';
+import {mlirBlob} from './mlir-file.js?v=5a90ceb2c2a6beb3';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=5a90ceb2c2a6beb3';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
 // data dependencies into inputs, and retain cyclic producers that must change
@@ -215,11 +216,11 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const intro=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}>`;
     const body=`${intro} ({\n${lines.join('\n')}\n})`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=d408969f7e3cd305');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=5a90ceb2c2a6beb3');
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
-    const validation=await validateMLIRText(text,{metadata,dialects});
-    return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
+    const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
+    return {blob:mlirBlob(text,index.mlir.payloads),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
 }
 
 function cyclicBlocks(blocks,edges) {

@@ -1,11 +1,10 @@
-import { parseModel } from './model-engine.js?v=d408969f7e3cd305';
-import { modelFormat } from './model-formats.js?v=d408969f7e3cd305';
-export { modelFormat } from './model-formats.js?v=d408969f7e3cd305';
+import { parseModel } from './model-engine.js?v=5a90ceb2c2a6beb3';
+import { modelFormat } from './model-formats.js?v=5a90ceb2c2a6beb3';
+export { modelFormat } from './model-formats.js?v=5a90ceb2c2a6beb3';
 export async function openModelFile(file, { readAt, readMetadata, progress = () => {}, dialects = [] }) {
     if (modelFormat(file.name) === 'mlir') {
-        const { parseMLIR, MLIR_TEXT_LIMIT } = await import('./mlir-engine.js?v=d408969f7e3cd305');
-        if (file.size > MLIR_TEXT_LIMIT) throw new Error('文字 MLIR 基礎版最多 64 MiB；請先縮小 IR dump。');
-        return parseMLIR(new Uint8Array(await file.arrayBuffer()), { identifier: file.name, metadata: await readMetadata('mlir'), dialects, progress });
+        const { parseMLIRFile } = await import('./mlir-engine.js?v=5a90ceb2c2a6beb3');
+        return parseMLIRFile(file, { identifier: file.name, metadata: await readMetadata('mlir'), dialects, progress });
     }
     const index = await parseModel(readAt, file.size, JSON.parse(await readMetadata('tflite')), progress);
     return { ...index, sourceFormat: 'tflite', capabilities: { tfliteExport: true } };
