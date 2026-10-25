@@ -105,7 +105,8 @@ export async function parseMLIRSource(source, { identifier = 'model.mlir', metad
                     const range = info.attributes.get(attr);
                     const length = range ? range[1]-range[0] : 0;
                     const raw = range ? source.slice(range[0],Math.min(range[1],range[0]+MLIR_ATTRIBUTE_PREVIEW_LIMIT)) : spelling(attr);
-                    const display = deferredAttribute(raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw,payloadMap);
+                    let display = deferredAttribute(raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw,payloadMap);
+                    if(attr.modelLensDeferred && !display.includes('屬性預覽已截短'))display+='…（屬性預覽已截短；權重留在原始檔案；匯出保留完整原文）';
                     node.attributes.push({ name: key, type: 'string', value: length>MLIR_ATTRIBUTE_PREVIEW_LIMIT ? `${display}…（屬性預覽已截短；匯出保留完整原文）` : display });
                 }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });

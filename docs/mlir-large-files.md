@@ -31,6 +31,9 @@
 | TFLite 解析、custom op、子模型匯出 | 16 通過 |
 | 原生 IREE `iree-opt`（LLVM 20.0.0git） | 33 compiler 正負例通過；實際下載檔案例未設定（1 略過）；同結構 scalar-splat fixture 另通過 |
 | 原生 compiler 的 projection print／parse／SSA rename | 1 通過，補足前列 projection 當時略過的案例 |
+| 分段讀取最終補測（含共用 dense aliases） | 13 通過；aliases 不向 dialect hook 暴露臨時權重值 |
+
+GitHub 正式站亦完成原生 Edge 實際選檔、跨 block pattern JSON 匯入、唯一匹配定位、2.5 GiB 局部匯出與重開。在 1366×768、圖字 32px 下操作；重開後沿用舊 pattern 仍為 1 個匹配，精簡圖保留原來 5 個 OP。再次匯出的實體檔為 2,684,362,473 bytes，原始權重 hash 仍相同，SSA／dominance 檢查通過。最終版重開前一次下載檔為 18.06 秒；較忙時曾為 35.34 秒，因此不將單次時間視為速度保證。
 
 大型 payload 本身沒有送入原生 compiler；上列 compiler 測試不代表公司 dialect 或 2.5 GiB 檔完整 LLVM verifier 已通過。公司實際產生的 MLIR 尚未提供，這是實體合成測試，非公司模型驗收。瀏覽器與 Node 數值會隨硬體、磁碟快取和並行工作變動。
 

@@ -117,3 +117,15 @@ test('many medium-sized weights do not consume the structural budget',async()=>{
     assert.equal(await mlirBlob(prepared.source,prepared.payloads).text(),text);
     await assert.rejects(readMLIRFile(file('dense<'+'['.repeat(4097))),/巢狀深度/);
 });
+
+test('reused dense aliases expose deferred metadata and export original payloads',async()=>{
+    for(const literal of [dense,`dense<tensor<36000xi8>: [${'1, '.repeat(35999)}2]>`]) {
+        const text=`#weights = ${literal}\n%a = "acme.weights"() {value = #weights} : () -> i32\n%b = "acme.use"(%a) {value = #weights} : (i32) -> i32`;
+        const index=await parseMLIRFile(file(text),{metadata});
+        for(const op of index.mlir.graphs[0].operations){assert.equal(op.getAttr('value').modelLensDeferred,true);assert.equal(op.getAttr('value').value,null);}
+        assert.ok(index.graphs[0].graph.nodes.every(n=>n.attributes.some(a=>a.value.includes('權重留在原始檔案'))));
+        const result=await exportMLIR(index,0,[0,1]);
+        assert.ok((await result.blob.text()).includes(`#weights = ${literal}`));
+        assertValidMLIR(await parseMLIRFile(result.blob,{metadata}));
+    }
+});
