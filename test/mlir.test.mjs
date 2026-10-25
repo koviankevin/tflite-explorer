@@ -54,13 +54,12 @@ test('MLIR adapter exposes dialect decoration without replacing canonical operat
     assert.ok(index.graphs[0].graph.nodes[0].attributes.some(a=>a.name==='internal info'));
 });
 
-test('MLIR file dispatch rejects binary, malformed and oversized files explicitly', async () => {
+test('MLIR file dispatch rejects binary and malformed files explicitly', async () => {
     assert.equal(modelFormat('network.MLIR'),'mlir');
     assert.equal(modelFormat('network.lite'),'tflite');
     assert.throws(()=>modelFormat('network.txt'),/mlir/);
     await assert.rejects(parse('this is not valid MLIR'),/./);
     await assert.rejects(parseMLIR(Uint8Array.of(0x4d,0x4c,0xef,0x52)),/bytecode/);
-    await assert.rejects(openModelFile({name:'huge.mlir',size:65*1024*1024},{readMetadata:()=>metadata}),/64 MiB/);
     const file = new Blob([MLIR_BRANCH]); Object.defineProperty(file,'name',{value:'test.mlir'});
     const index = await openModelFile(file,{readMetadata:()=>metadata});
     assert.equal(index.sourceFormat,'mlir');

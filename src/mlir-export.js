@@ -1,4 +1,5 @@
 import { assertValidMLIR, validateMLIRText } from './mlir-validate.js';
+import { mlirBlob } from './mlir-file.js';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {
@@ -96,8 +97,8 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const {attachSlicePattern}=await import('./mlir-pattern-projection.js');
     text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{selected:new Set(selected),blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
-    const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects});
-    return { blob: new Blob([text], { type: 'text/plain;charset=utf-8' }), layers: selected.length, inputs, outputs, validation };
+    const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects,payloads:index.mlir.payloads});
+    return { blob: mlirBlob(text,index.mlir.payloads), layers: selected.length, inputs, outputs, validation };
 }
 
 // Cutting a branch or a phi-like block argument independently changes program
@@ -113,10 +114,10 @@ async function exportControlFlow(index,graphIndex,graph,progress) {
     const resources=info.resources.map(span=>source.slice(...span)).join('\n');
     const text=`// Model Lens CFG export: complete enclosing function; branches and block arguments preserved.\n${aliases}\n"builtin.module"() ({\n${source.slice(...range)}\n}) : () -> ()\n${resources}\n`;
     progress('在本機重新檢查匯出 MLIR 的 CFG、SSA 與 dominance…');
-    const validation=await validateMLIRText(text,{metadata,dialects});
+    const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
     const attr=op.getAttr('function_type'),signature=attr?.value || attr?.type;
     const inputs=(op.regions[0].blocks[0].arguments || []).map(value=>({name:valueName(value)}));
     const outputs=(signature?.results || []).map((type,i)=>({name:`result ${i}`}));
     const context=ir.byOp.get(op).context,layers=ir.rows.filter(row=>row.context===context && row.op!==op).length;
-    return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
+    return {blob:mlirBlob(text,index.mlir.payloads),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
 }

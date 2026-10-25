@@ -2,6 +2,7 @@ import {assertValidMLIR,validateMLIRText} from './mlir-validate.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {buildDominance,opName} from './mlir-ir.js';
 import {typeSpelling} from './mlir-engine.js';
+import {mlirBlob} from './mlir-file.js';
 import {slicePatternGraph} from './mlir-pattern-projection.js';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
@@ -218,8 +219,8 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const {attachSlicePattern}=await import('./mlir-pattern-projection.js');
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
-    const validation=await validateMLIRText(text,{metadata,dialects});
-    return {blob:new Blob([text],{type:'text/plain;charset=utf-8'}),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
+    const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
+    return {blob:mlirBlob(text,index.mlir.payloads),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
 }
 
 function cyclicBlocks(blocks,edges) {

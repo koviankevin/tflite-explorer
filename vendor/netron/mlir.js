@@ -6596,7 +6596,9 @@ _.TensorLiteralParser = class {
         if (numElements === 0) {
             return [];
         }
-        const maxSplatExpansion = 10000000;
+        // Model Lens uses the original attribute text for display/export. Do
+        // not allocate millions of values for a compact scalar splat.
+        const maxSplatExpansion = this._parser.state.modelLensSource ? 2048 : 10000000;
         const isSplat = this._shape.length === 0 && this._storage.length > 0;
         if (isSplat && numElements > 1) {
             if (numElements > maxSplatExpansion) {

@@ -6,7 +6,7 @@ import {typeSpelling} from './mlir-engine.js';
 export const SLICE_PATTERN_ATTRIBUTE='model_lens.slice_pattern';
 // Large cyclic slices retain their producers. Their checked source mapping can
 // exceed 2 MiB around 20k OPs even when only a few OPs are displayed. Keep a
-// finite mapping budget within the parser's separate 64 MiB file limit.
+// finite mapping budget within the parser's separate structural-text budget.
 export const SLICE_PATTERN_LIMIT=8*1024*1024;
 const integer=(n,max=200000)=>Number.isSafeInteger(n) && n>=0 && n<max;
 const name=op=>op.name.getStringRef();
@@ -130,8 +130,8 @@ export function slicePatternGraph(index,region) {return index.mlir.slicePatterns
 // Flatten an existing projection when re-exporting, so seeds/entry nodes never
 // accumulate as part of the original pattern graph.
 export async function attachSlicePattern(index,region,text,offset,bindings) {
-    const {parseMLIR}=await import('./mlir-engine.js');
-    const candidate=await parseMLIR(new TextEncoder().encode(text),{metadata:index.mlir.metadata,dialects:index.mlir.dialects});
+    const {parseMLIRSource}=await import('./mlir-engine.js');
+    const candidate=await parseMLIRSource(text,{metadata:index.mlir.metadata,dialects:index.mlir.dialects,payloads:index.mlir.payloads});
     const target=candidate.mlir.ir.regions.find(r=>r.owner && name(r.owner.op)==='func.func');
     const original=slicePatternGraph(index,region) || actualGraph(index,region),nodes=[],ids=new Map();
     for(const [i,n] of original.nodes.entries())if(n.kind==='block') {

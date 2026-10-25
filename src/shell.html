@@ -89,7 +89,7 @@
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
-  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR，<br>搜尋資料流、圈選及尋找 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite／.mlir 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><button id="open-mlir-demo" class="text-button">試用 MLIR 分支示範 →</button><small>也可以將檔案拖放至此處。<br>TFLite 大型模型先建索引；文字 MLIR 基礎版最多 64 MiB。</small></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR，<br>搜尋資料流、圈選及尋找 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite／.mlir 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><button id="open-mlir-demo" class="text-button">試用 MLIR 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建索引；MLIR 的大型 dense／resource 權重分段讀取。</small></div>
 </main>
 <div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
 <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>

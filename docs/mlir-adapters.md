@@ -12,6 +12,15 @@ generic block arguments 必須登記到 SSA scope，才能正確區別巢狀同�
 結果的原始 SSA 名稱需保留 grouped results 的 `#N`，包括混合結果群組。
 更新 Netron 時須保留這些接點並執行 MLIR 測試。
 
+大型檔先經 `mlir-file.js` 分段建立 compact source；`index.mlir.payloads`
+保留 File slices，匯出必須用 `mlirBlob()` 還原原文，不能直接下載 compact
+source 或將其送給 compiler。`parseMLIRFile(File, options)` 是檔案入口，
+`parseMLIRSource()` 僅供已處理的結構文字及匯出重驗。Dialect hook 遇到
+`attr.modelLensDeferred===true` 時，`attr.value` 為 null，不能將臨時 token
+解釋為權重；需要讀取完整權重的 verifier 應明確回報尚未驗證，或在公司
+工具完成檢查。小型 splat 也不會為大型 shape 展開完整陣列。
+參閱 [大型 MLIR](mlir-large-files.md) 的限制及驗證範圍。
+
 ## Generic operations 與顯示擴充
 
 未知 dialect 使用 generic operations 時不需預先列舉 op 名稱。

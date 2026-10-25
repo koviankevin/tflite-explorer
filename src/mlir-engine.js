@@ -2,8 +2,9 @@ import { ModelFactory } from '../vendor/netron/mlir.js';
 import { Decoder } from '../vendor/netron/text.js';
 import { indexModel } from './model-engine.js';
 import { prepareMLIR, opName } from './mlir-ir.js';
+import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js';
 
-export const MLIR_TEXT_LIMIT = 64 * 1024 * 1024;
+export const MLIR_TEXT_LIMIT = MLIR_STRUCTURE_LIMIT;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
 const spelling = value => value === null || value === undefined ? '' : String(value);
 const argument = (name, value) => ({ name, value: [value] });
@@ -47,11 +48,21 @@ function valueType(type) {
 
 // Internal builds may supply namespace-specific decorators/metadata. Generic
 // operation identity and SSA connections remain independent of display hooks.
-export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '[]', dialects = [], progress = () => {} } = {}) {
-    if (bytes.byteLength > MLIR_TEXT_LIMIT) throw new Error('文字 MLIR 基礎版最多 64 MiB；請先縮小 IR dump。');
-    if (bytes[0] === 0x4d && bytes[1] === 0x4c && bytes[2] === 0xef && bytes[3] === 0x52) throw new Error('目前支援文字 .mlir，尚不支援 MLIR bytecode。');
-    const start = performance.now();
-    const source = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+export async function parseMLIR(bytes, options = {}) {
+    return parseMLIRFile(new Blob([bytes]),options);
+}
+
+export async function parseMLIRFile(file, options={}) {
+    const start=performance.now();
+    const prepared=await readMLIRFile(file,options);
+    const index=await parseMLIRSource(prepared.source,{...options,identifier:options.identifier || file.name || 'model.mlir',payloads:prepared.payloads,locations:prepared.payloads,sourceStats:prepared.stats});
+    index.stats.parseMs=performance.now()-start;
+    return index;
+}
+
+export async function parseMLIRSource(source, { identifier = 'model.mlir', metadata = '[]', dialects = [], progress = () => {}, payloads = [], locations = [], sourceStats = {} } = {}) {
+    if(source.length>MLIR_STRUCTURE_LIMIT)throw new Error('MLIR 結構文字超過 256 MiB，請拆分 function。');
+    const start=performance.now(),payloadMap=new Map(payloads.map(p=>[p.token,p]));
     const graphs = [];
     const exportGraphs = [];
     let sourceInfo, rootBlock, ir;
@@ -59,6 +70,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
     const build = (root, info) => {
         sourceInfo = info;
         rootBlock = root;
+        prepareDeferredAttributes(root,info,source,payloads);
         ir = prepareMLIR(root,info,dialects);
         const cfgContexts=new Set(),contextBlocks=new Map();
         for(const region of ir.regions) {
@@ -93,7 +105,7 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
                     const range = info.attributes.get(attr);
                     const length = range ? range[1]-range[0] : 0;
                     const raw = range ? source.slice(range[0],Math.min(range[1],range[0]+MLIR_ATTRIBUTE_PREVIEW_LIMIT)) : spelling(attr);
-                    const display = raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw;
+                    const display = deferredAttribute(raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw,payloadMap);
                     node.attributes.push({ name: key, type: 'string', value: length>MLIR_ATTRIBUTE_PREVIEW_LIMIT ? `${display}…（屬性預覽已截短；匯出保留完整原文）` : display });
                 }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });
@@ -129,11 +141,13 @@ export async function parseMLIR(bytes, { identifier = 'model.mlir', metadata = '
         visitBlock(root, identifier);
         return { format: 'MLIR text', description: 'SSA 資料流依 region／block 顯示；可匯出局部 SSA／控制流程，或保留完整 function。', modules: graphs, metadata: [] };
     };
-    const model = await new ModelFactory().open({ type: 'mlir.text', identifier, asset: async () => metadata,
-        read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });
+    let model;
+    try {model = await new ModelFactory().open({ type: 'mlir.text', identifier, asset: async () => metadata,
+        read: async type => { if (type !== 'text.decoder') throw new Error(`不支援的 MLIR 讀取方式 ${type}`); return Decoder.open(source); }, buildMLIRModel: build });}
+    catch(error) {error.message=error.message.replace(/at (\d+):(\d+)/g,(match,line,column)=>{const p=mlirLocation(locations,Number(line),Number(column));return `at ${p.line}:${p.column}`;});throw error;}
     if (!graphs.length) throw new Error('MLIR 沒有可檢視的 operation／block。');
     progress('建立 MLIR 搜尋索引');
-    const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { bytesRead: bytes.byteLength, fileBytes: bytes.byteLength, parseMs: performance.now()-start } };
+    const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, payloads, locations, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { ...sourceStats, parseMs: performance.now()-start } };
     if(source.includes('model_lens.slice_pattern')) {
         const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js');
         await prepareSlicePatterns(index);

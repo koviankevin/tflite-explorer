@@ -243,6 +243,7 @@ async function openFile(nextFile) {
         $('layer-count').textContent = layers.toLocaleString(); $('tensor-count').textContent = tensors.toLocaleString();
         $('file-stats').textContent = `${model.format} · ${size(file.size)} · ${layers.toLocaleString()} layers · ${model.graphs.length} ${model.sourceFormat === 'mlir' ? 'scopes' : 'subgraphs'}`;
         $('metrics').textContent = `讀取總量 ${size(model.stats.bytesRead)} · 檔案 ${size(file.size)} · 解析 ${(model.stats.parseMs / 1000).toFixed(2)}s`;
+        if(model.stats.deferredPayloads) $('metrics').textContent+=` · 結構 ${model.stats.structureBytes.toLocaleString()} bytes · ${model.stats.deferredPayloads} 段權重 ${size(model.stats.deferredBytes)} 留在原始檔案`;
         $('scope').replaceChildren(new Option('目前 subgraph（子圖 0）', 'current'), new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name} · ${g.layers} layers`, String(g.index))));
         $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
         for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
@@ -830,15 +831,16 @@ async function downloadSubmodel(graph, nodes, selections) {
         if (file !== sourceFile) return;
         await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
         if (mlir) {
+            const checks=result.validation?.deferredPayloads ? '結構語法／SSA／dominance 已檢查；大型權重保留原文，未逐值驗證' : '已通過本機語法／SSA／dominance 檢查';
             if(result.slice) {
                 const added=result.slice.added.length ? ` 補入迴圈必要運算：${[...new Set(result.slice.added)].join('、')}（${result.slice.added.length} 個）。` : '';
                 const conditional=result.slice.conditionalOutputs ? ` ${result.slice.conditionalOutputs} 個條件輸出以 (valid, value) 回傳；未執行時 valid=false，需提供同型別備援輸入。` : '';
                 notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解，並保留既有 pattern 所需的結構對照。`);
-                status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
+                status(`MLIR 下載已啟動 · ${size(result.blob.size)} · ${checks}`);
                 return;
             }
             notice(result.controlFlow ? `開始下載 @${result.controlFlow.function} 的完整控制流程 MLIR：${result.controlFlow.blocks} 個 blocks、${result.layers} layers。保留分支、迴圈、block arguments、returns 與 custom op 原文。` : `開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
-            status(`MLIR 下載已啟動 · ${size(result.blob.size)} · 已通過本機語法／SSA／dominance 檢查`);
+            status(`MLIR 下載已啟動 · ${size(result.blob.size)} · ${checks}`);
             return;
         }
         const customInfo = result.preservedIds ? ` 含 custom op：${result.customOperators.join('、')}。保留原始 tensor／buffer 編號及全部 ${result.retainedBuffers} 個 buffers，檔案可能較大；執行需原 custom runtime。` : '';
