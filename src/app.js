@@ -1,17 +1,17 @@
-import { Host } from '../vendor/netron/browser.js?v=e2a859a5ec8c5af0';
-import { View, Attachment } from '../vendor/netron/view.js?v=e2a859a5ec8c5af0';
-import { hydrate } from './hydrate.js?v=e2a859a5ec8c5af0';
-import {overviewCanvas} from './overview-canvas.js?v=e2a859a5ec8c5af0';
-import { modelFormat } from './model-formats.js?v=e2a859a5ec8c5af0';
-import {explorerResize} from './explorer-resize.js?v=e2a859a5ec8c5af0';
-import {conditionEditor} from './pattern-condition-editor.js?v=e2a859a5ec8c5af0';
-import {parseGraphPattern} from './subgraph-pattern.js?v=e2a859a5ec8c5af0';
-import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=e2a859a5ec8c5af0';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=e2a859a5ec8c5af0';
-import {rectangleSelection} from './rectangle-selection.js?v=e2a859a5ec8c5af0';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=e2a859a5ec8c5af0';
-import { LORA_PATTERN } from './pattern-utils.js?v=e2a859a5ec8c5af0';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=e2a859a5ec8c5af0';
+import { Host } from '../vendor/netron/browser.js?v=bf6ab8c5b29c3043';
+import { View, Attachment } from '../vendor/netron/view.js?v=bf6ab8c5b29c3043';
+import { hydrate } from './hydrate.js?v=bf6ab8c5b29c3043';
+import {overviewCanvas} from './overview-canvas.js?v=bf6ab8c5b29c3043';
+import { modelFormat } from './model-formats.js?v=bf6ab8c5b29c3043';
+import {explorerResize} from './explorer-resize.js?v=bf6ab8c5b29c3043';
+import {conditionEditor} from './pattern-condition-editor.js?v=bf6ab8c5b29c3043';
+import {parseGraphPattern} from './subgraph-pattern.js?v=bf6ab8c5b29c3043';
+import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=bf6ab8c5b29c3043';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=bf6ab8c5b29c3043';
+import {rectangleSelection} from './rectangle-selection.js?v=bf6ab8c5b29c3043';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=bf6ab8c5b29c3043';
+import { LORA_PATTERN } from './pattern-utils.js?v=bf6ab8c5b29c3043';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=bf6ab8c5b29c3043';
 
 const $ = (id) => document.getElementById(id);
 const explorer=explorerResize($('explorer-resize'));
@@ -46,7 +46,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=e2a859a5ec8c5af0`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=bf6ab8c5b29c3043`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -174,7 +174,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=e2a859a5ec8c5af0', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=bf6ab8c5b29c3043', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);

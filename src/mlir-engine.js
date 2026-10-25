@@ -1,8 +1,8 @@
-import { ModelFactory } from '../vendor/netron/mlir.js?v=e2a859a5ec8c5af0';
-import { Decoder } from '../vendor/netron/text.js?v=e2a859a5ec8c5af0';
-import { indexModel } from './model-engine.js?v=e2a859a5ec8c5af0';
-import { prepareMLIR, opName } from './mlir-ir.js?v=e2a859a5ec8c5af0';
-import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js?v=e2a859a5ec8c5af0';
+import { ModelFactory } from '../vendor/netron/mlir.js?v=bf6ab8c5b29c3043';
+import { Decoder } from '../vendor/netron/text.js?v=bf6ab8c5b29c3043';
+import { indexModel } from './model-engine.js?v=bf6ab8c5b29c3043';
+import { prepareMLIR, opName } from './mlir-ir.js?v=bf6ab8c5b29c3043';
+import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js?v=bf6ab8c5b29c3043';
 
 export const MLIR_TEXT_LIMIT = MLIR_STRUCTURE_LIMIT;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
@@ -105,7 +105,8 @@ export async function parseMLIRSource(source, { identifier = 'model.mlir', metad
                     const range = info.attributes.get(attr);
                     const length = range ? range[1]-range[0] : 0;
                     const raw = range ? source.slice(range[0],Math.min(range[1],range[0]+MLIR_ATTRIBUTE_PREVIEW_LIMIT)) : spelling(attr);
-                    const display = deferredAttribute(raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw,payloadMap);
+                    let display = deferredAttribute(raw.startsWith('"') && typeof attr.value === 'string' ? attr.value.slice(0,MLIR_ATTRIBUTE_PREVIEW_LIMIT) : raw,payloadMap);
+                    if(attr.modelLensDeferred && !display.includes('屬性預覽已截短'))display+='…（屬性預覽已截短；權重留在原始檔案；匯出保留完整原文）';
                     node.attributes.push({ name: key, type: 'string', value: length>MLIR_ATTRIBUTE_PREVIEW_LIMIT ? `${display}…（屬性預覽已截短；匯出保留完整原文）` : display });
                 }
                 if (op.loc) node.metadata.push({ name: 'location', value: op.loc.printLocationInternal?.() || spelling(op.loc), type: 'string' });
@@ -149,7 +150,7 @@ export async function parseMLIRSource(source, { identifier = 'model.mlir', metad
     progress('建立 MLIR 搜尋索引');
     const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, payloads, locations, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { ...sourceStats, parseMs: performance.now()-start } };
     if(source.includes('model_lens.slice_pattern')) {
-        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=e2a859a5ec8c5af0');
+        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=bf6ab8c5b29c3043');
         await prepareSlicePatterns(index);
     }
     index.stats.parseMs=performance.now()-start;

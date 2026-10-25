@@ -162,6 +162,7 @@ export function prepareDeferredAttributes(root,info,source,payloads) {
     if(!payloads.length)return;
     const tokens=new Set(payloads.map(p=>p.token)),positions=[...source.matchAll(tokenPattern)].filter(m=>tokens.has(m[0])).map(m=>m.index);
     const resources=new Set(payloads.filter(p=>p.kind==='resource').map(p=>p.token.slice(11,-1)));
+    const dense=new Set(payloads.filter(p=>p.kind==='dense').map(p=>p.token.slice(3,-1)));
     const stack=[...(root.operations || [])];
     while(stack.length) {
         const op=stack.pop();
@@ -170,7 +171,11 @@ export function prepareDeferredAttributes(root,info,source,payloads) {
             const span=info.attributes.get(attr);let lo=0,hi=positions.length;
             if(span)while(lo<hi){const mid=(lo+hi)>>>1;if(positions[mid]<span[0])lo=mid+1;else hi=mid;}
             const blob=attr.rawHandle?.blob,resource=blob?.length===20 && resources.has(Array.from(blob,b=>b.toString(16).padStart(2,'0')).join(''));
-            if(resource || span && positions[lo]<span[1]) {
+            // A reused #attribute alias can replace the parser's recorded
+            // source range. Recognize its temporary value as well.
+            const value=attr.value,scalar=Array.isArray(value) && value.length===1?value[0]?.value:null;
+            const alias=value instanceof Uint8Array && value.length===24 && dense.has(Array.from(value,b=>b.toString(16).padStart(2,'0')).join('')) || typeof scalar==='string' && scalar.startsWith('0x') && dense.has(scalar.slice(2));
+            if(resource || alias || span && positions[lo]<span[1]) {
                 attr.modelLensDeferred=true;
                 Object.defineProperty(attr,'value',{value:null,writable:true,configurable:true});
                 if(resource)attr.rawHandle.blob=null;
