@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
 import { makeLargeFixture } from '../make-large-fixture.mjs';
 import { createStaticServer } from '../../scripts/serve.mjs';
+import { conditionsWorkspaceAcceptance } from './large-workspace.mjs';
 
 process.chdir(fileURLToPath(new URL('../../', import.meta.url)));
 const MiB = 1024 ** 2;
@@ -219,6 +220,9 @@ try {
     await page.locator('.result-item').first().click();
     await waitFor(() => /局部圖 \d+ 個節點/.test(document.querySelector('#status').textContent));
     check('pattern search, both subgraphs, pagination and match highlighting');
+    phase = 'conditions-workspace';
+    await conditionsWorkspaceAcceptance({ page, readPage, waitFor, report, temporary, check });
+    phase = 'interaction';
     await page.locator('[data-kind="tensors"]').click();
     await page.locator('#query').fill('unused_weights');
     await waitFor(() => document.querySelector('#result-count').textContent === '2 筆結果');
@@ -296,19 +300,24 @@ try {
     clearInterval(sampleTimer); sampleTimer = null; await samplePending;
     report.audit = await readPage(() => globalThis.__largeFileAcceptance);
     report.network = network;
-    const audits = [report.audit.audit, ...report.audit.workers.map((w) => w.audit).filter(Boolean)];
-    assert.ok(report.audit.workers.filter((w) => w.stats?.fileBytes > 1024 ** 3).length === 2);
+    const realms = [...(report.auditHistory || []), report.audit];
+    const workers = realms.flatMap((realm) => realm.workers);
+    const audits = realms.flatMap((realm) => [realm.audit, ...realm.workers.map((w) => w.audit).filter(Boolean)]);
+    assert.equal(workers.filter((w) => w.stats?.fileBytes > 1024 ** 3).length, 6);
     for (const audit of audits) {
         assert.deepEqual(audit.violations, []);
         assert.ok(audit.maxRead <= MiB && audit.bytes <= 8 * MiB);
     }
-    assert.ok(report.audit.workers.some((w) => w.audit?.methods['FileReaderSync.readAsArrayBuffer'] > 0));
-    for (const worker of report.audit.workers) {
+    assert.ok(workers.some((w) => w.audit?.methods['FileReaderSync.readAsArrayBuffer'] > 0));
+    for (const worker of workers) {
         assert.equal(worker.error, undefined, 'Unhandled worker error');
         if (worker.stats) assert.equal(worker.audit.bytes, worker.stats.bytesRead, 'Native File reads must agree with range-reader stats');
     }
-    assert.ok(report.audit.ticks >= 5);
-    assert.ok(report.audit.maxGapMs < 2000, `Page heartbeat stalled: ${report.audit.maxGapMs}ms`);
+    const modelWorkers = workers.filter(w => new URL(w.url).pathname.endsWith('/model-worker.js'));
+    assert.ok(modelWorkers.slice(0, -1).every(w => w.terminated), 'Every replaced model worker must terminate');
+    assert.equal(modelWorkers.at(-1).terminated, false, 'Current model worker remains live');
+    assert.ok(realms.reduce((n, realm) => n + realm.ticks, 0) >= 5);
+    for (const realm of realms) assert.ok(realm.maxGapMs < 2000, `Page heartbeat stalled: ${realm.maxGapMs}ms`);
     assert.deepEqual(errors, []);
     report.memory = { baselineRssBytes: report.samples[0].rssBytes, peakRssBytes: Math.max(...report.samples.map((s) => s.rssBytes)),
         peakMainHeapBytes: Math.max(...report.samples.map((s) => s.mainHeapBytes)), sampleIntervalMs: 100, rssGrowthBudgetBytes: 768 * MiB };

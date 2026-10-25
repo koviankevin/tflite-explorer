@@ -1,0 +1,36 @@
+{
+  "status": "failed",
+  "startedAt": "2026-10-24T19:58:32.399Z",
+  "checks": [],
+  "samples": [],
+  "limitations": [
+    "Synthetic sparse zero weights, not a trained user model or cold-disk throughput benchmark.",
+    "File APIs are observed and guarded at 1 MiB per call / 8 MiB per realm; guards stop unsafe regressions before allocation.",
+    "RSS sums Chromium processes (shared pages may be counted more than once); sampled peaks can miss short spikes.",
+    "Cancellation uses a test-only metadata response gate; successful loads use native FileReaderSync without delay."
+  ],
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.55",
+    "osRelease": "PRETTY_NAME=\"Ubuntu 24.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.3 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo",
+    "arch": "x64",
+    "node": "v24.22.1",
+    "playwright": "1.56.1",
+    "cpus": 9,
+    "cpuQuota": "800000 100000",
+    "memoryLimit": "8589934592",
+    "memoryCurrent": "6603812864",
+    "availableMemoryBytes": 1986121728,
+    "tempFreeBytes": 28654559232,
+    "shm": "shm /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0",
+    "sourceCommit": "f6cf88e0e2b384e4da401aba4c8cd37d3c8b3a99",
+    "sourceKind": "local-integration-snapshot",
+    "integrationBaseCommit": "36211521c418948d612d576fd2515af04512f469",
+    "sourceTree": "4656d8dfce8a1b6d642ab3c7a4da0b1f2440fa45",
+    "sourceDirty": true,
+    "headless": true
+  },
+  "error": "AssertionError [ERR_ASSERTION]: Need at least 3 GiB available memory\n    at file:///workspace/scratch/eaa2c5e07c47/tflite-explorer/test/browser/large-file.mjs:98:12",
+  "errors": [],
+  "finishedAt": "2026-10-24T19:58:32.469Z"
+}
