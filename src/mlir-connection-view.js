@@ -1,4 +1,4 @@
-import {serialize} from './model-engine.js?v=9b5c4d02768d6a08';
+import {serialize} from './model-engine.js?v=fc124b8183a7a475';
 
 const pair=(from,to)=>`${from}>${to}`;
 const edgeKey=e=>`${e.from}>${e.to}:${e.kind}:${e.value.identifier}`;

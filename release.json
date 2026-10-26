@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "0.2.0-preview.1",
+  "version": "0.2.0-preview.2",
   "distribution": "public",
   "extension": null,
   "source": {
-    "commit": "6cab83a555ad1ac2fffe64ace74f68c88dcc2632",
-    "tree": "db9d3bb0e79630341bae87b1ef4652a0666a6674",
-    "committedAt": "2026-10-27T01:28:00+08:00",
+    "commit": "440885dcc64f306a49035ff5e9d821d18984d697",
+    "tree": "5dd757b18e4492fba4b57ff9e94888f7bca1e58e",
+    "committedAt": "2026-10-27T02:05:28+08:00",
     "dirty": false
   },
-  "buildId": "9b5c4d02768d6a08"
+  "buildId": "fc124b8183a7a475"
 }

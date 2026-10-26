@@ -1,9 +1,9 @@
 
 // Experimental
 
-import * as base from './base.js?v=9b5c4d02768d6a08';
-import * as protobuf from './protobuf.js?v=9b5c4d02768d6a08';
-import * as zip from './zip.js?v=9b5c4d02768d6a08';
+import * as base from './base.js?v=fc124b8183a7a475';
+import * as protobuf from './protobuf.js?v=fc124b8183a7a475';
+import * as zip from './zip.js?v=fc124b8183a7a475';
 
 const tf = {};
 

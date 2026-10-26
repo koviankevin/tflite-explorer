@@ -185,12 +185,19 @@ export function prepareDeferredAttributes(root,info,source,payloads) {
     }
 }
 
-export function mlirBlob(text,payloads=[]) {
-    const byToken=new Map(payloads.map(p=>[p.token,p])),parts=[];let start=0;
+export function mlirBlob(text,payloads=[]) { return mlirArtifact(text,payloads).blob; }
+
+// Preserve byte offsets while composing file slices. Never read a deferred
+// weight, and count UTF-8 bytes rather than JS character offsets.
+export function mlirArtifact(text,payloads=[]) {
+    const byToken=new Map(payloads.map(p=>[p.token,p])),parts=[],ranges=[];let start=0,offset=0;
     for(const match of text.matchAll(tokenPattern)) {
         const payload=byToken.get(match[0]);if(!payload)continue;
-        parts.push(text.slice(start,match.index),payload.file.slice(payload.start,payload.end));start=match.index+match[0].length;
+        const prefix=new Blob([text.slice(start,match.index)]);
+        parts.push(prefix,payload.file.slice(payload.start,payload.end));offset+=prefix.size;
+        ranges.push({sourceOffset:payload.start,outputOffset:offset,bytes:payload.end-payload.start,kind:payload.kind || 'mlir-payload'});
+        offset+=payload.end-payload.start;start=match.index+match[0].length;
     }
     parts.push(text.slice(start));
-    return new Blob(parts,{type:'text/plain;charset=utf-8'});
+    return {blob:new Blob(parts,{type:'text/plain;charset=utf-8'}),ranges};
 }

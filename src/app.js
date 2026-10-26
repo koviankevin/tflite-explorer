@@ -1,20 +1,22 @@
-import { Host } from '../vendor/netron/browser.js?v=9b5c4d02768d6a08';
-import { View, Attachment } from '../vendor/netron/view.js?v=9b5c4d02768d6a08';
-import { hydrate } from './hydrate.js?v=9b5c4d02768d6a08';
-import {overviewCanvas} from './overview-canvas.js?v=9b5c4d02768d6a08';
-import { modelFormat } from './model-formats.js?v=9b5c4d02768d6a08';
-import {explorerResize} from './explorer-resize.js?v=9b5c4d02768d6a08';
-import {initReleaseInfo} from './release-info.js?v=9b5c4d02768d6a08';
-import {conditionEditor} from './pattern-condition-editor.js?v=9b5c4d02768d6a08';
-import {parseGraphPattern} from './subgraph-pattern.js?v=9b5c4d02768d6a08';
-import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=9b5c4d02768d6a08';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=9b5c4d02768d6a08';
-import {rectangleSelection} from './rectangle-selection.js?v=9b5c4d02768d6a08';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=9b5c4d02768d6a08';
-import { LORA_PATTERN } from './pattern-utils.js?v=9b5c4d02768d6a08';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=9b5c4d02768d6a08';
+import { Host } from '../vendor/netron/browser.js?v=fc124b8183a7a475';
+import { View, Attachment } from '../vendor/netron/view.js?v=fc124b8183a7a475';
+import { hydrate } from './hydrate.js?v=fc124b8183a7a475';
+import {overviewCanvas} from './overview-canvas.js?v=fc124b8183a7a475';
+import { modelFormat } from './model-formats.js?v=fc124b8183a7a475';
+import {explorerResize} from './explorer-resize.js?v=fc124b8183a7a475';
+import {initReleaseInfo} from './release-info.js?v=fc124b8183a7a475';
+import {exportReportUI} from './export-report-ui.js?v=fc124b8183a7a475';
+import {conditionEditor} from './pattern-condition-editor.js?v=fc124b8183a7a475';
+import {parseGraphPattern} from './subgraph-pattern.js?v=fc124b8183a7a475';
+import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=fc124b8183a7a475';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=fc124b8183a7a475';
+import {rectangleSelection} from './rectangle-selection.js?v=fc124b8183a7a475';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=fc124b8183a7a475';
+import { LORA_PATTERN } from './pattern-utils.js?v=fc124b8183a7a475';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=fc124b8183a7a475';
 
 const $ = (id) => document.getElementById(id);
+const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
@@ -47,7 +49,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=9b5c4d02768d6a08`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=fc124b8183a7a475`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -175,7 +177,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=9b5c4d02768d6a08', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=fc124b8183a7a475', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -191,7 +193,7 @@ function reset() {
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
-    exportBusy = false; $('validation-dialog').close();
+    exportBusy = false; $('validation-dialog').close();exportReports.clear();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
@@ -828,9 +830,12 @@ async function downloadSubmodel(graph, nodes, selections) {
     $('export-match').disabled = true;
     try {
         status(mlir ? '擷取局部 MLIR，保留原始型別、屬性與 SSA 連線…' : '建立 TFLite 子模型，保留所需權重與參數…');
-        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
+        const outputName=`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`;
+        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, outputName, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
         if (file !== sourceFile) return;
-        await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
+        await host.export(outputName, result.blob);
+        if(file!==sourceFile)return;
+        exportReports.set(result.report,outputName,result.reportError);
         if (mlir) {
             const checks=result.validation?.deferredPayloads ? '結構語法／SSA／dominance 已檢查；大型權重保留原文，未逐值驗證' : '已通過本機語法／SSA／dominance 檢查';
             if(result.slice) {

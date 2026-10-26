@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=fc124b8183a7a475">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=9b5c4d02768d6a08"></script>
+<script type="module" src="src/app.js?v=fc124b8183a7a475"></script>
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
 body { touch-action: none; overflow: hidden; width: 100%; height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "PingFang SC"; font-size: 12px; text-rendering: geometricPrecision; }
@@ -307,16 +307,16 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/mobile.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/model-visibility.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/typography.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/overview-canvas.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/explorer-resize.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/workspace.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/laptop.css?v=9b5c4d02768d6a08">
-<link rel="stylesheet" href="src/release.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/app.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/mobile.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/model-visibility.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/typography.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/overview-canvas.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/explorer-resize.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/workspace.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/laptop.css?v=fc124b8183a7a475">
+<link rel="stylesheet" href="src/release.css?v=fc124b8183a7a475">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -337,7 +337,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
     <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
   </div>
   <div class="search-tools">
-    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button></div>
+    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button></div>
     <input id="workspace-file" type="file" accept=".json" hidden>
     <p id="workspace-hint" class="hint" hidden></p>
     <button id="choose-workspace-model" class="quiet" hidden>選取模型以恢復</button>
@@ -408,6 +408,13 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <ol id="validation-errors" class="validation-errors"></ol>
   <p class="hint">檢查在本機背景執行，模型不會上傳。此檢查不取代 LLVM verifier 或公司 dialect 的自訂語意驗證。</p>
   <div class="import-actions"><button id="dismiss-validation" class="primary">關閉並調整</button></div>
+</dialog>
+<dialog id="export-report-dialog" aria-labelledby="export-report-title">
+  <div class="import-heading"><h2 id="export-report-title">最近匯出報告</h2><button id="close-export-report" class="icon-button" aria-label="關閉匯出報告">×</button></div>
+  <dl id="export-report-fields"></dl>
+  <ul id="export-report-checks"></ul>
+  <p class="hint">報告在本機產生，包含來源名稱、OP 與介面資訊，分享前請確認內容。報告未包含權重值，也不代表已通過公司 compiler／runtime 驗證。關閉模型後清除本次報告。</p>
+  <button id="download-export-report" class="quiet" disabled>下載完整報告 JSON</button>
 </dialog>
 <dialog id="release-dialog" aria-labelledby="release-title">
   <div class="import-heading"><h2 id="release-title">模鏡版本資訊</h2><button id="close-release-info" class="icon-button" aria-label="關閉版本資訊">×</button></div>

@@ -1,7 +1,7 @@
 
 // Experimental
 
-import * as python from './python.js?v=9b5c4d02768d6a08';
+import * as python from './python.js?v=fc124b8183a7a475';
 
 const xgboost = {};
 

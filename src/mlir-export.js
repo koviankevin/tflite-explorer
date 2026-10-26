@@ -1,5 +1,6 @@
-import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=9b5c4d02768d6a08';
-import { mlirBlob } from './mlir-file.js?v=9b5c4d02768d6a08';
+import { assertValidMLIR, validateMLIRText } from './mlir-validate.js?v=fc124b8183a7a475';
+import { mlirArtifact } from './mlir-file.js?v=fc124b8183a7a475';
+import { mlirProvenance } from './mlir-export-provenance.js?v=fc124b8183a7a475';
 
 const opName = op => op.name.getStringRef();
 const valueName = value => {
@@ -22,7 +23,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const { source, info, graphs, metadata } = index.mlir;
     if(!['auto','function','slice'].includes(scope))throw new Error('未知的 MLIR 匯出範圍。');
     if(scope==='slice' && (selections?.length>1 || graphs[graphIndex]?.cfgFunction)) {
-        const {exportMLIRSlice}=await import('./mlir-slice.js?v=9b5c4d02768d6a08');
+        const {exportMLIRSlice}=await import('./mlir-slice.js?v=fc124b8183a7a475');
         return exportMLIRSlice(index,selections || [{graph:graphIndex,nodes:nodeIndices}],{progress});
     }
     if(selections && (!Array.isArray(selections) || selections.some(s=>!s || !Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || functionFor(index,graphs[s.graph])!==functionFor(index,graphs[graphIndex]))))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
@@ -94,11 +95,13 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     const intro=`// Model Lens extracted SSA subgraph. External values are function arguments.\n${aliases}\n"builtin.module"() ({\n  "func.func"() <{sym_name = "extracted", function_type = (${inputTypes}) -> (${outputTypes})}>`;
     const body=`${intro} ({\n  ^bb0(${args}):\n    ${snippets.join('\n    ')}${terminator}\n  })`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=9b5c4d02768d6a08');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=fc124b8183a7a475');
     text=await attachSlicePattern(index,index.mlir.ir.byBlock.get(graph.block),text,body.length,{selected:new Set(selected),blocks:new Map([[graph.block,0]]),operators:new Map(selected.map((op,i)=>[op,i])),arguments:new Map((graph.block.arguments || []).filter(v=>names.has(v)).map(v=>[v,external.indexOf(v)]))});
     progress('在本機檢查匯出 MLIR 的語法與 SSA 連線…');
     const validation=await validateMLIRText(text,{metadata,dialects:index.mlir.dialects,payloads:index.mlir.payloads});
-    return { blob: mlirBlob(text,index.mlir.payloads), layers: selected.length, inputs, outputs, validation };
+    const {blob,ranges:byteRanges}=mlirArtifact(text,index.mlir.payloads);
+    const provenance=mlirProvenance(index,{mode:'ssa-slice',selected:new Set(selected),ranges:byteRanges,operators:new Map(selected.map((op,i)=>[op,{block:0,operation:i}])),generated:returns.length?[]:[{type:'func.return',role:'output-boundary',output:{block:0,operation:selected.length}}]});
+    return { blob, provenance, layers: selected.length, inputs, outputs, validation };
 }
 
 // Cutting a branch or a phi-like block argument independently changes program
@@ -116,8 +119,12 @@ async function exportControlFlow(index,graphIndex,graph,progress) {
     progress('在本機重新檢查匯出 MLIR 的 CFG、SSA 與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
     const attr=op.getAttr('function_type'),signature=attr?.value || attr?.type;
-    const inputs=(op.regions[0].blocks[0].arguments || []).map(value=>({name:valueName(value)}));
-    const outputs=(signature?.results || []).map((type,i)=>({name:`result ${i}`}));
+    const originalType=type=>{const span=info.types.get(type);return span?source.slice(...span):null;};
+    const inputs=(op.regions[0].blocks[0].arguments || []).map(value=>({name:valueName(value),argument:valueName(value),type:originalType(value.type)}));
+    const outputs=(signature?.results || []).map((type,i)=>({name:`result ${i}`,results:[i],type:originalType(type)}));
     const context=ir.byOp.get(op).context,layers=ir.rows.filter(row=>row.context===context && row.op!==op).length;
-    return {blob:mlirBlob(text,index.mlir.payloads),layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
+    const {blob,ranges}=mlirArtifact(text,index.mlir.payloads),operators=new Map();
+    if(layers<=50000)op.regions[0].blocks.forEach((block,b)=>block.operations.forEach((child,n)=>operators.set(child,{block:b,operation:n})));
+    const provenance=layers>50000?{mode:'function',ranges,error:'保留 OP 超過 50,000 個，模型仍可下載，但本次無法提供完整來源對照報告。'}:mlirProvenance(index,{mode:'function',operators,ranges});
+    return {blob,provenance,layers,inputs,outputs,validation,controlFlow:graph.cfgExport};
 }

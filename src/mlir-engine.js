@@ -1,8 +1,8 @@
-import { ModelFactory } from '../vendor/netron/mlir.js?v=9b5c4d02768d6a08';
-import { Decoder } from '../vendor/netron/text.js?v=9b5c4d02768d6a08';
-import { indexModel } from './model-engine.js?v=9b5c4d02768d6a08';
-import { prepareMLIR, opName } from './mlir-ir.js?v=9b5c4d02768d6a08';
-import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js?v=9b5c4d02768d6a08';
+import { ModelFactory } from '../vendor/netron/mlir.js?v=fc124b8183a7a475';
+import { Decoder } from '../vendor/netron/text.js?v=fc124b8183a7a475';
+import { indexModel } from './model-engine.js?v=fc124b8183a7a475';
+import { prepareMLIR, opName } from './mlir-ir.js?v=fc124b8183a7a475';
+import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js?v=fc124b8183a7a475';
 
 export const MLIR_TEXT_LIMIT = MLIR_STRUCTURE_LIMIT;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
@@ -150,7 +150,7 @@ export async function parseMLIRSource(source, { identifier = 'model.mlir', metad
     progress('建立 MLIR 搜尋索引');
     const index={ ...indexModel(model), sourceFormat: 'mlir', capabilities: { tfliteExport: false, mlirExport: true }, mlir: { source, payloads, locations, info: sourceInfo, root: rootBlock, graphs: exportGraphs, metadata, dialects, ir }, stats: { ...sourceStats, parseMs: performance.now()-start } };
     if(source.includes('model_lens.slice_pattern')) {
-        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=9b5c4d02768d6a08');
+        const {prepareSlicePatterns}=await import('./mlir-pattern-projection.js?v=fc124b8183a7a475');
         await prepareSlicePatterns(index);
     }
     index.stats.parseMs=performance.now()-start;
