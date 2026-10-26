@@ -1,6 +1,6 @@
 {
   "name": "tflite-pattern-explorer",
-  "version": "0.1.0",
+  "version": "0.2.0-preview.1",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -8,6 +8,8 @@
     "build": "node scripts/build.mjs",
     "test": "node --test test/*.test.mjs",
     "start": "node scripts/serve.mjs",
+    "package:release": "node scripts/package-release.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
     "benchmark": "node scripts/benchmark.mjs",
     "test:large-browser": "node test/browser/large-file.mjs"
   },

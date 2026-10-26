@@ -1,5 +1,7 @@
 # MLIR adapter 與內部 dialect 接入
 
+公司擴充請使用 [獨立 profile 與內網部署包](intranet-release.md)，不必修改核心 registry。既有手改 registry 的內網版本，需先把 adapters 移到內部擴充目錄，再更新公開核心。
+
 `model-formats.js` 僅辨識副檔名，前端不載入 parser。Worker 透過
 `openModelFile()` 接上 TFLite 或 MLIR；MLIR parser 使用動態 import。
 兩者回傳相同搜尋／繪圖索引，以及格式能力 `capabilities.tfliteExport`／`mlirExport`。

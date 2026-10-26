@@ -6,3 +6,6 @@ node_modules/
 .sites/
 .openai/*.local.*
 test-results/
+build/
+internal/
+.internal/

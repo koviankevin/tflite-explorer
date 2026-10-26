@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, existsSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {verifyArtifact,gitSource} from './lib/release-artifact.mjs';
 const source = process.cwd();
 const dist = path.resolve('dist');
 if (!existsSync(path.join(dist, 'index.html'))) throw new Error('Run node scripts/build.mjs first.');
@@ -13,6 +14,10 @@ const run = (args, options = {}) => {
 };
 const remote = run(['remote', 'get-url', 'origin']);
 if (!/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+(?:\.git)?$/.test(remote)) throw new Error('origin must be the intended GitHub HTTPS repository.');
+const current=gitSource();
+if(current.dirty)throw new Error('工作區尚有未提交修改；公開發布前請提交並重新建置。');
+const artifact=await verifyArtifact(dist,{publicOnly:true,expectedCommit:current.commit,requireClean:true});
+if(artifact.release.source.tree!==current.tree)throw new Error('建置的來源 tree 不符，已停止發布。');
 const directory = mkdtempSync(path.join(os.tmpdir(), 'model-lens-pages-'));
 try {
     const env = { ...process.env, GIT_INDEX_FILE: path.join(directory, 'index') };

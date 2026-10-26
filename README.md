@@ -2,6 +2,8 @@
 
 **Model Lens** — 看清結構，找到連接。
 
+公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。商品等級的完整驗收及尚未完成項目另列於 [工作清單](docs/product-readiness.md)。
+
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
 以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
@@ -64,7 +66,7 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 ## 使用與開發
 
-需要 Node.js 22 或更新版本；一般建置與 Node.js 測試不需安裝 npm 套件。可選的 Chromium 大檔驗收另需 Playwright，操作見下方。
+需要 Node.js 22 或更新版本及 Git checkout；建置本身不需安裝 npm 套件。部署封裝測試另外使用 Python 3 的標準 ZIP 讀取器。可選的 Chromium 大檔驗收另需 Playwright，操作見下方。
 
 ```powershell
 node --test test/model.test.mjs test/hydrate.test.mjs test/subgraph.test.mjs

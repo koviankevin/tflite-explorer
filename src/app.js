@@ -4,6 +4,7 @@ import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
+import {initReleaseInfo} from './release-info.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
@@ -1226,3 +1227,5 @@ new MutationObserver(() => {
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
+
+initReleaseInfo({exportFile:host.export});
