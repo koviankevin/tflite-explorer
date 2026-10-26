@@ -15,7 +15,8 @@ import {layerLocation,updateLayerSelection} from './pattern-selection.js';
 import {rectangleSelection} from './rectangle-selection.js';
 import {captureViewport,restoreViewport} from './svg-viewport.js';
 import { LORA_PATTERN } from './pattern-utils.js';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
+import { loadPatterns, reusablePattern, exportPatterns, parsePatternFile, planPatternImport, PATTERN_FILE_LIMIT } from './pattern-library.js';
+import {patternStore,PATTERN_CHANNEL} from './pattern-store.js';
 
 const $ = (id) => document.getElementById(id);
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
@@ -108,6 +109,9 @@ let graphNodes = [];
 let graphEdges = [];
 let graphNodeNumber = 5;
 let patternLibrary = [];
+let patternRevision=0,editorLibrary=[],captureLibrary=[],libraryReady,libraryChannel;
+try{libraryChannel=new BroadcastChannel(PATTERN_CHANNEL);}catch{/* Focus refresh also works without BroadcastChannel. */}
+const libraryStore=patternStore({notify:record=>libraryChannel?.postMessage({revision:record.revision})});
 let pickingPattern = false;
 let pickedGraph = 0;
 let pickedNodes = new Set();
@@ -717,6 +721,32 @@ function refreshPatternLibrary(selectedName = '') {
     $('saved-pattern').value = selectedName;
     updatePatternExport();
 }
+function acceptPatternLibrary(record) {
+    if(record.revision<patternRevision)return;
+    patternRevision=record.revision;patternLibrary=record.patterns;
+    refreshPatternLibrary($('saved-pattern').value);
+}
+async function refreshStoredPatterns({remote=false}={}) {
+    try {
+        const record=await libraryStore.load(),changed=record.revision>patternRevision;
+        acceptPatternLibrary(record);
+        if(changed && remote)$('pattern-library-status').textContent='另一分頁已更新清單；目前編輯與圈選保留。同名內容不同時會另存副本。';
+        return record;
+    }catch(error){$('pattern-library-status').textContent=error.message;throw error;}
+}
+if(libraryChannel)libraryChannel.onmessage=event=>{
+    if(Number.isSafeInteger(event.data?.revision) && event.data.revision>patternRevision)refreshStoredPatterns({remote:true}).catch(()=>{});
+};
+window.addEventListener('focus',()=>{if(libraryReady)refreshStoredPatterns({remote:true}).catch(()=>{});});
+window.addEventListener('storage',event=>{
+    if(['model-lens.patterns.v1','model-lens.patterns.v2','model-lens.patterns.v3'].includes(event.key))$('pattern-library-status').textContent='舊版分頁更新了舊清單；新版清單未覆蓋它。請從舊分頁匯出 JSON，再於此匯入合併。';
+});
+async function saveStoredPattern(pattern,base) {
+    await (libraryReady || refreshStoredPatterns()).catch(()=>refreshStoredPatterns());
+    const result=await libraryStore.save(pattern,base);acceptPatternLibrary(result.record);
+    $('pattern-library-status').textContent=result.conflict?`同名 pattern 已被其他分頁修改；已保留原項目，另存為「${result.pattern.name}」。`:`已保存「${result.pattern.name}」· 本機清單第 ${result.record.revision} 版`;
+    return result;
+}
 function updatePatternExport() {
     $('export-pattern').disabled = !patternLibrary.some((pattern) => pattern.name === $('saved-pattern').value);
     $('export-patterns').disabled = !patternLibrary.length;
@@ -761,16 +791,22 @@ $('pattern-file').onchange = async () => {
     } catch (error) { if (generation === importGeneration) importError(error); }
 };
 $('import-json').oninput = () => { ++importGeneration; previewImport(); };
-$('confirm-import').onclick = () => {
+$('confirm-import').onclick = async () => {
+    const generation=importGeneration,text=$('import-json').value;
+    $('confirm-import').disabled=true;
     try {
+        await (libraryReady || refreshStoredPatterns()).catch(()=>refreshStoredPatterns());
         const selectedName = $('saved-pattern').value;
-        const plan = importPatterns(localStorage, patternLibrary, $('import-json').value);
-        patternLibrary = plan.patterns; refreshPatternLibrary(selectedName);
-        ++importGeneration; $('import-dialog').close();
+        const plan = await libraryStore.import(text);
+        acceptPatternLibrary(plan.record);refreshPatternLibrary(selectedName);
+        if(generation===importGeneration){++importGeneration;$('import-dialog').close();}
+        $('pattern-library-status').textContent=`已合併匯入 · 本機清單第 ${plan.record.revision} 版`;
         status(`已匯入 ${plan.added.length} 組 patterns · 略過 ${plan.skipped} 組 · 更名 ${plan.renamed} 組。從已儲存清單選擇即可套用。`);
-    } catch (error) { importError(error); }
+    } catch (error) { if(generation===importGeneration)importError(error); }
 };
 function applyPattern(pattern) {
+    editorLibrary=patternLibrary.filter(p=>p.name!==pattern.name);
+    if(pattern.name)editorLibrary.push(pattern);
     conditionsByAlias.clear();for(const node of pattern.nodes)if(node.conditions?.length)conditionsByAlias.set(node.alias,node.conditions);
     $('condition-pattern-name').value=pattern.name || '';
     cfgPattern=pattern.mode==='mlir-cfg' ? {...pattern} : null;
@@ -888,6 +924,7 @@ function setPickingPattern(enabled) {
     layerMarquee.cancel();
     if (enabled && (!renderedNodes.length || (!virtualOverview && (renderedGraph?.folded || renderedGraph?.overview)) || $('target').getAttribute('aria-busy') === 'true')) { notice('請先等待模型圖繪製完成；SVG 收合總覽需返回匹配圖，Canvas 可直接框選。'); return; }
     if(enabled && renderedGraph?.combined)$('capture-cfg').checked=true;
+    if(enabled && !pickingPattern)captureLibrary=patternLibrary.slice();
     pickingPattern = enabled;
     if(enabled && $('capture-cfg').checked)syncCaptureGraph();
     else if (enabled && pickedGraph !== currentGraph) { pickedNodes.clear(); pickedGraph = currentGraph; }
@@ -988,10 +1025,11 @@ $('save-capture').onclick = async () => {
     try {
         const structure = await rpc('capturePattern', $('capture-cfg').checked ? {selections:captureSelections()} : { graph, nodes: [...pickedNodes] });
         if (!pickingPattern || generation !== renderGeneration || graph !== currentGraph) return;
-        const pattern = reusablePattern($('capture-name').value, structure);
+        let pattern = reusablePattern($('capture-name').value, structure);
         let stored = true;
-        try { patternLibrary = savePattern(localStorage, patternLibrary, pattern); }
-        catch { stored = false; notice('瀏覽器無法儲存 pattern（儲存空間、權限或數量限制）；已套用，可繼續搜尋。'); }
+        try { pattern=(await saveStoredPattern(pattern,captureLibrary)).pattern; }
+        catch (error) { stored = false; notice(`${error.message} 已保留目前結構，可繼續搜尋或下載工作階段備份。`); }
+        if(!pickingPattern || generation!==renderGeneration || graph!==currentGraph)return;
         refreshPatternLibrary(stored ? pattern.name : '');
         applyPattern(pattern); setPickingPattern(false);
         await runSearch();
@@ -1031,7 +1069,7 @@ $('query').oninput = () => { clearTimeout(timer); timer = setTimeout(() => runSe
 $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
 $('run-pattern-laptop').onclick=$('run-pattern').onclick;
-$('reset-pattern').onclick = () => { chainPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-input-mode').value = 'visual'; $('graph-pattern').value = 'N1:Reshape -> N2:Transpose -> N3:Reshape'; updateGraphInputMode(); renderPattern(); if (model) runSearch().catch(report); };
+$('reset-pattern').onclick = () => { editorLibrary=patternLibrary.slice();chainPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-input-mode').value = 'visual'; $('graph-pattern').value = 'N1:Reshape -> N2:Transpose -> N3:Reshape'; updateGraphInputMode(); renderPattern(); if (model) runSearch().catch(report); };
 function renderVisualPattern() {
     conditionUI.render();
     const nodes = graphNodes.map((node) => {
@@ -1075,7 +1113,7 @@ $('graph-input-mode').onchange = () => {
     }
     updateGraphInputMode();
 };
-$('lora-preset').onclick = () => { loraPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-pattern').value = LORA_PATTERN; $('visual-pattern-editor').open = true; renderVisualPattern(); };
+$('lora-preset').onclick = () => { editorLibrary=patternLibrary.slice();loraPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-pattern').value = LORA_PATTERN; $('visual-pattern-editor').open = true; renderVisualPattern(); };
 $('add-graph-node').onclick = () => { if (graphNodes.length >= 32) { notice('一組子圖最多 32 個節點。'); return; } graphNodes.push({alias:`N${++graphNodeNumber}`,type:model?.operators[0] || 'Mul'}); renderVisualPattern(); };
 $('add-graph-edge').onclick = () => { if (graphNodes.length < 2) { notice('請先加入至少兩個節點。'); return; } if (graphEdges.length >= 64) { notice('一組子圖最多 64 條連線。'); return; } graphEdges.push({from:graphNodes[0].alias,to:graphNodes.at(-1).alias}); renderVisualPattern(); };
 $('graph-pattern').oninput = () => { conditionUI.render();$('pattern-decoded').textContent = '規則已變更，請按「尋找模式」重新解讀與搜尋。'; $('pattern-decoded').classList.remove('missing'); };
@@ -1134,11 +1172,18 @@ document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }
 });
 $('save-edited-pattern').onclick=async()=>{
+    $('save-edited-pattern').disabled=true;
+    const sourceFile=file;
     try {
-        const pattern=reusablePattern($('condition-pattern-name').value || '我的條件 pattern',currentPattern());
-        patternLibrary=savePattern(localStorage,patternLibrary,pattern);refreshPatternLibrary(pattern.name);applyPattern(pattern);
+        const title=$('condition-pattern-name').value,structure=JSON.stringify(currentPattern());
+        const incoming=reusablePattern(title || '我的條件 pattern',JSON.parse(structure));
+        const {pattern}=await saveStoredPattern(incoming,editorLibrary);
+        let unchanged=false;
+        try{unchanged=structure===JSON.stringify(currentPattern()) && title===$('condition-pattern-name').value;}catch{/* An unfinished new edit is retained. */}
+        if(file!==sourceFile || !unchanged)return;
+        refreshPatternLibrary(pattern.name);applyPattern(pattern);
         if(model)await runSearch();status(`已儲存「${pattern.name}」及條件。`);
-    }catch(error){report(error);}
+    }catch(error){report(error);}finally{$('save-edited-pattern').disabled=false;}
 };
 function workspaceCamera() {
     if(virtualOverview)return virtualOverview.snapshot();
@@ -1275,6 +1320,8 @@ new MutationObserver(() => {
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
+libraryReady=refreshStoredPatterns();
+libraryReady.then(()=>{$('pattern-library-status').textContent=`本機清單第 ${patternRevision} 版 · 多分頁更新會合併，同名衝突另存副本`;}).catch(()=>{});
 sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,settle:settleWorkspace,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
     if(model&&sessions.identity&&draftModelKey(workspace.identity)===draftModelKey(sessions.identity))await sessions.resume(record);
     else {queuedDraft=record;queueWorkspace(workspace,false);}

@@ -28,6 +28,7 @@
     <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
     <div id="pattern-editor" hidden>
       <label for="saved-pattern" class="control-label">已儲存的 patterns <span>此瀏覽器</span></label><select id="saved-pattern"><option value="">選擇已儲存的 pattern…</option></select>
+      <output id="pattern-library-status" class="hint" aria-live="polite">正在讀取本機 pattern 清單…</output>
       <div class="library-actions"><button id="export-pattern" class="text-button" disabled>匯出所選</button><button id="export-patterns" class="text-button" disabled>匯出全部</button><button id="open-import" class="text-button">匯入 JSON</button></div>
       <div class="control-label">Operator 連接結構 <button id="reset-pattern" class="text-button">重設範例</button></div>
       <div id="graph-pattern-editor">

@@ -93,6 +93,8 @@ node scripts/publish-github-pages.mjs
 
 發布腳本使用已設定的 GitHub `origin` 和 Git 認證，不修改來源工作樹，也不使用 force push。需要先將來源推送到自己的 GitHub repo。GitHub Pages 網站通常公開；私人 repo 能否啟用 Pages 取決於 GitHub 方案。模型仍由訪客瀏覽器本機處理。
 
+Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保留，見 [保存說明](docs/pattern-library-recovery.md) 與 [驗收紀錄](docs/pattern-library-verification.md)。
+
 ## 功能
 
 - 常駐 Layers／Tensors 清單；名稱不分大小寫、operator 類型搜尋，`#123` 或純數字精確比對編號。

@@ -57,7 +57,7 @@ export function parsePatternFile(text) {
     });
 }
 
-function signature(pattern) {
+export function patternSignature(pattern) {
     if(pattern.mode===CFG_PATTERN_MODE)return JSON.stringify({mode:pattern.mode,nodes:pattern.nodes.map(n=>JSON.stringify(n)).sort(),edges:pattern.edges.map(e=>JSON.stringify(e)).sort(),induced:pattern.induced});
     return JSON.stringify({ nodes: pattern.nodes.map((node) => [node.alias, operatorKey(node.type),node.conditions || []]).sort(), edges: pattern.edges.map((edge) => [edge.from, edge.to]).sort(), induced: pattern.induced });
 }
@@ -70,7 +70,7 @@ export function planPatternImport(library, imported) {
     for (const item of imported) {
         let pattern = reusablePattern(item.name, item);
         const existing = next.find((entry) => entry.name === pattern.name);
-        if (existing && signature(existing) === signature(pattern)) { skipped++; continue; }
+        if (existing && patternSignature(existing) === patternSignature(pattern)) { skipped++; continue; }
         if (existing) {
             let suffix = 2;
             let name;
@@ -78,7 +78,7 @@ export function planPatternImport(library, imported) {
             do {
                 name = `${pattern.name.slice(0, 70)}（${suffix++}）`;
                 conflict = next.find((entry) => entry.name === name);
-                if (conflict && signature(conflict) === signature(pattern)) { skipped++; pattern = null; break; }
+                if (conflict && patternSignature(conflict) === patternSignature(pattern)) { skipped++; pattern = null; break; }
             } while (conflict);
             if (!pattern) continue;
             pattern.name = name; renamed++;

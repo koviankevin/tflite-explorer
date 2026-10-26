@@ -4,7 +4,7 @@ Pattern 分頁的「條件篩選」可指定 OP 別名、輸入／輸出方向�
 
 Shape 以逗號分隔，`1, *, 128` 的 `*` 代表該維度任意值，`?`（或輸入 `-1`）代表動態維度；維度數須相同，`[]` 代表 scalar。無法確認 rank 的 MLIR unranked tensor 不符合 shape 條件。Dtype 使用詳細資料的名稱，例如 TFLite `float32`、MLIR `f32`，忽略大小寫但不自行推斷不同名稱等價。不存在的 port／attribute、不支援的 attribute 值或截短預覽不會視為符合。每 OP 最多 16 個條件，attribute 值最多 2048 字元，不讀取 tensor initializer／權重。
 
-「儲存目前 pattern 與條件」將目前結構及條件存入此瀏覽器的 pattern 清單；可沿用既有 JSON 匯入／匯出。有條件時使用 version 3，仍可讀取 version 1／2；未加條件的舊 pattern 行為不變。條件可用於單 block／TFLite 連接結構與 MLIR 跨 block、分支、匯合、迴圈。新增或移除條件後按「尋找模式」重新搜尋。
+「儲存目前 pattern 與條件」將目前結構及條件存入此瀏覽器的 pattern 清單；可沿用既有 JSON 匯入／匯出。有條件時使用 version 3，仍可讀取 version 1／2；未加條件的舊 pattern 行為不變。條件可用於單 block／TFLite 連接結構與 MLIR 跨 block、分支、匯合、迴圈。新增或移除條件後按「尋找模式」重新搜尋。新版清單使用交易保存，多分頁的不同項目會合併，同名衝突保留副本，見 [Pattern 清單保存說明](pattern-library-recovery.md)。
 
 搜尋欄上方「儲存工作階段」會下載最多 2 MiB 的 JSON，並嘗試在此瀏覽器保留上次儲存。包含目前搜尋類別、字詞、範圍、pattern 及條件、目前匹配、選取 OP、跨 block 選取、完整／局部圖、pattern 收合／個別展開、輔助路徑與分段、字級、方向、左欄寬度，以及 SVG／Canvas 的縮放與位置。新版另支援本機自動草稿、未完成編輯與 Undo／Redo，見 [保存及復原說明](workspace-recovery.md)。不儲存模型、權重、整個 pattern library 或詳細資料側欄內容。
 
