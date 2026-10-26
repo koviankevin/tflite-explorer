@@ -4,7 +4,7 @@
 
 ## 測試
 
-- 工作階段／新 controller 最終 13 項通過：v1／v2、未完成文字及視覺結構、未提交條件欄位、未知新版本保護、損壞 head／上次成功版本、歷史數量／bytes 上限、Undo 後重新編輯、視角量化後仍可 Redo、儲存不可用、兩分頁 CAS／分叉、舊寫入不跨模型、關模時仍有寫入／搜尋中的最後快照，以及排版穩定後才建立操作快照。
+- 工作階段／新 controller 最終 14 項通過：v1／v2、未完成文字及視覺結構、未提交條件欄位、未知新版本保護、損壞 head／上次成功版本、歷史數量／bytes 上限、Undo 後重新編輯、視角量化後仍可 Redo、儲存不可用、兩分頁 CAS／分叉、舊寫入不跨模型、關模時仍有寫入／搜尋中的最後快照、排版穩定後才建立操作快照，以及 Undo 尚未完成時的保存順序。
 - 另執行 24 項條件清單及 SVG／Canvas 視角相關案例、40 項圈選／Canvas／MLIR 重複匯出及公開／內網封裝案例。重疊案例不加總成不同案例，後續僅對新修改補測 controller／UI。
 - Controller 的並行／失敗案例以可控制的儲存介面測試；真實 IndexedDB 與 BroadcastChannel 另由兩個實際瀏覽器分頁驗收，不把記憶體 adapter 當成真實資料庫驗證。
 
@@ -16,6 +16,7 @@
 4. 六 block MLIR 跨五個 blocks 選取五個 OP，下載約 13 KiB 草稿；重載、重新選模後，五個選取及 pattern 均恢復，匹配一次。再匯出局部 MLIR，使用 native IREE `iree-opt.exe --allow-unregistered-dialect` 檢查成功；實際重開子模型後原 pattern 仍匹配一次。這不是公司 dialect verifier 或 runtime 的語意驗證。
 5. 實際匯入 v1 工作階段 JSON，再選取其原模型，來源 OP 選取恢復。v1 localStorage key 未由新版覆寫；新版手動保存使用 v2 key，IDB 另使用獨立資料庫。
 6. 在獨立新來源開啟精簡跨 block 圖，選五個 blocks 後清除：一次 Ctrl Z 恢復五個，一次 Ctrl Shift Z 清除，再一次 Ctrl Z 恢復。建立快照及還原視角會等待排版穩定，避免自動 reflow 多記成一個使用者操作。
+7. Undo 後立刻開啟草稿／下載，再重新載入：保存會等待恢復操作完成，不把前一個清除狀態誤存成最後版本。
 
 1366×768 筆電、390×844 CSS viewport、32px 圖字已檢視。手機文件 client width 與 scrollWidth 同為 375px（含原生捲軸），草稿視窗可在畫面內操作，沒有橫向溢位。新 UI 包含草稿下載及移除前的明確確認；本輪未刪除既有使用者草稿，不以這次測試宣稱完整的資料生命週期驗收。
 

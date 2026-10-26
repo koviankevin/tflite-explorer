@@ -96,3 +96,14 @@ test('layout settles before checkpoints so a clear-selection action takes one Un
         await controller.flush();await controller.travel(1);assert.deepEqual(current.state.selections,[]);assert.equal(current.state.camera.scrollTop,40);
     }finally{controller.detach();}
 });
+test('a draft checkpoint requested during Undo waits for the restored selection instead of saving the old state',async()=>{
+    const store=memoryStore();let current=fixture(),release,entered;
+    current.state.selections=[{graph:0,nodes:[1]}];const applying=new Promise(resolve=>entered=resolve);
+    const controller=workspaceSession({store,owner:'tab',capture:()=>current,delay:60000,apply:async w=>{current=structuredClone(w);entered();await new Promise(resolve=>release=resolve);}});
+    try {
+        await controller.attach(identity);await controller.flush();current.state.selections=[];await controller.flush();
+        const undo=controller.travel(-1);await applying;let saved=false;const checkpoint=controller.flush({force:true}).then(()=>saved=true);
+        await Promise.resolve();assert.equal(saved,false);assert.deepEqual(readDraft([...store.records.values()][0]).workspace.state.selections,[]);
+        release();await undo;await checkpoint;assert.deepEqual(readDraft([...store.records.values()][0]).workspace.state.selections,[{graph:0,nodes:[1]}]);
+    }finally{controller.detach();}
+});
