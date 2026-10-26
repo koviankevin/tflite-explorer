@@ -1,4 +1,4 @@
-import {serialize} from './model-engine.js?v=4e44cfa55e34993c';
+import {serialize} from './model-engine.js?v=44c61533b3e74ddf';
 
 // Display projection only. The source AST, block-local indexes and export
 // selections remain unchanged. SSA identity comes from the validated region,

@@ -4,7 +4,7 @@ const require = async () => {
         const worker_threads = await import('worker_threads');
         return worker_threads.parentPort;
     }
-    import('./dagre.js?v=4e44cfa55e34993c');
+    import('./dagre.js?v=44c61533b3e74ddf');
     return self;
 };
 
@@ -14,7 +14,7 @@ require().then((self) => {
         switch (message.type) {
             case 'dagre.layout': {
                 try {
-                    const dagre = await import('./dagre.js?v=4e44cfa55e34993c');
+                    const dagre = await import('./dagre.js?v=44c61533b3e74ddf');
                     dagre.layout(message.nodes, message.edges, message.layout, message.state);
                     self.postMessage(message);
                 } catch (error) {

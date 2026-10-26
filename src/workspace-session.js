@@ -1,11 +1,11 @@
-import {exportWorkspace,parseWorkspace} from './workspace.js?v=4e44cfa55e34993c';
-import {WorkspaceHistory} from './workspace-history.js?v=4e44cfa55e34993c';
-import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=4e44cfa55e34993c';
+import {exportWorkspace,parseWorkspace} from './workspace.js?v=44c61533b3e74ddf';
+import {WorkspaceHistory} from './workspace-history.js?v=44c61533b3e74ddf';
+import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=44c61533b3e74ddf';
 const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join('');
 
 // The controller owns history, save ordering and optimistic concurrency. UI and
 // IndexedDB are adapters; model objects/File/Blob never enter this module.
-export function workspaceSession({store,capture,apply,ready=()=>true,changed=()=>{},enabled=true,owner=id(),delay=600}) {
+export function workspaceSession({store,capture,apply,ready=()=>true,settle=async()=>{},changed=()=>{},enabled=true,owner=id(),delay=600}) {
     const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
     const emit=()=>changed({message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing});
     const sample=(force=false)=>{if(!active || applying || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
@@ -19,6 +19,7 @@ export function workspaceSession({store,capture,apply,ready=()=>true,changed=()=
     async function flush({force=false}={}) {
         clearTimeout(timer);timer=null;const current=active;
         if(!current || applying)return;
+        if(!force){await settle();if(active!==current || applying)return;}
         if(!force&&!ready()){schedule();return;}
         try{sample(force);}catch(error){message=`草稿尚未儲存：${error.message}`;emit();return;}
         emit();
@@ -43,6 +44,7 @@ export function workspaceSession({store,capture,apply,ready=()=>true,changed=()=
             const token=++generation;clearTimeout(timer);history.clear();observed=null;active=null;
             let records=[],loadError;try{records=await store.list(identity);}catch(error){loadError=error;}
             if(token!==generation)return;
+            await settle();if(token!==generation)return;
             const found=resumed?records.find(r=>r.key===resumed.key):records[0];
             active={identity,key:found?.key || draftModelKey(identity)+(loadError?'~'+id():''),revision:resumed?.revision ?? found?.revision ?? 0,saved:resumed?exportWorkspace(readDraft(resumed).workspace):null,savedAt:resumed?.updatedAt,pending:!!found&&!resumed,conflict:!!resumed && found?.revision!==resumed.revision,storageError:loadError};
             sample();message=loadError?`無法讀取本機草稿：${loadError.message}；Undo／Redo 仍可使用，請手動下載備份。`:active.conflict?'草稿在恢復期間已由另一分頁更新；請恢復新版或另開草稿。':active.pending?'找到本機草稿。請恢復，或另開草稿以保留兩份。':'自動草稿已就緒。';emit();if(!active.pending&&!active.conflict&&!loadError)schedule();
@@ -79,6 +81,7 @@ export function workspaceSession({store,capture,apply,ready=()=>true,changed=()=
         },
         async travel(delta) {
             if(!active || applying)return;
+            const expected=active;await settle();if(active!==expected || applying)return;
             if(!ready()){message='請等待搜尋、繪圖或匯出完成後再復原／重做。';emit();return;}
             sample();const target=history.target(delta);if(!target)return;
             const current=active;applying=true;emit();

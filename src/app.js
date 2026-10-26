@@ -1,21 +1,21 @@
-import { Host } from '../vendor/netron/browser.js?v=4e44cfa55e34993c';
-import { View, Attachment } from '../vendor/netron/view.js?v=4e44cfa55e34993c';
-import { hydrate } from './hydrate.js?v=4e44cfa55e34993c';
-import {overviewCanvas} from './overview-canvas.js?v=4e44cfa55e34993c';
-import { modelFormat } from './model-formats.js?v=4e44cfa55e34993c';
-import {explorerResize} from './explorer-resize.js?v=4e44cfa55e34993c';
-import {initReleaseInfo} from './release-info.js?v=4e44cfa55e34993c';
-import {exportReportUI} from './export-report-ui.js?v=4e44cfa55e34993c';
-import {conditionEditor} from './pattern-condition-editor.js?v=4e44cfa55e34993c';
-import {parseGraphPattern} from './subgraph-pattern.js?v=4e44cfa55e34993c';
-import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=4e44cfa55e34993c';
-import {workspaceSessionUI} from './workspace-session-ui.js?v=4e44cfa55e34993c';
-import {draftModelKey} from './workspace-drafts.js?v=4e44cfa55e34993c';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=4e44cfa55e34993c';
-import {rectangleSelection} from './rectangle-selection.js?v=4e44cfa55e34993c';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=4e44cfa55e34993c';
-import { LORA_PATTERN } from './pattern-utils.js?v=4e44cfa55e34993c';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=4e44cfa55e34993c';
+import { Host } from '../vendor/netron/browser.js?v=44c61533b3e74ddf';
+import { View, Attachment } from '../vendor/netron/view.js?v=44c61533b3e74ddf';
+import { hydrate } from './hydrate.js?v=44c61533b3e74ddf';
+import {overviewCanvas} from './overview-canvas.js?v=44c61533b3e74ddf';
+import { modelFormat } from './model-formats.js?v=44c61533b3e74ddf';
+import {explorerResize} from './explorer-resize.js?v=44c61533b3e74ddf';
+import {initReleaseInfo} from './release-info.js?v=44c61533b3e74ddf';
+import {exportReportUI} from './export-report-ui.js?v=44c61533b3e74ddf';
+import {conditionEditor} from './pattern-condition-editor.js?v=44c61533b3e74ddf';
+import {parseGraphPattern} from './subgraph-pattern.js?v=44c61533b3e74ddf';
+import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=44c61533b3e74ddf';
+import {workspaceSessionUI} from './workspace-session-ui.js?v=44c61533b3e74ddf';
+import {draftModelKey} from './workspace-drafts.js?v=44c61533b3e74ddf';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=44c61533b3e74ddf';
+import {rectangleSelection} from './rectangle-selection.js?v=44c61533b3e74ddf';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=44c61533b3e74ddf';
+import { LORA_PATTERN } from './pattern-utils.js?v=44c61533b3e74ddf';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=44c61533b3e74ddf';
 
 const $ = (id) => document.getElementById(id);
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
@@ -52,7 +52,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=4e44cfa55e34993c`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=44c61533b3e74ddf`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -180,7 +180,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=4e44cfa55e34993c', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=44c61533b3e74ddf', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -1233,14 +1233,21 @@ function restoreDraftEditor(s) {
 }
 function captureSession(identity){return {format:'model-lens-workspace',version:2,identity,state:workspaceState({draft:true})};}
 function workspaceReady(){return !!model && !exportBusy && !workspaceBusy && !pending.size && $('target').getAttribute('aria-busy')!=='true' && $('loading-card').hidden;}
+const settleWorkspace=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 async function applySession(workspace) {
+    const source=file,query=queryGeneration,render=renderGeneration;
+    const currentView=()=>{if(file!==source || queryGeneration!==query || renderGeneration!==render)throw new DOMException('已取消','AbortError');};
     checkWorkspace(workspace,sessions.identity,model.graphs);
     const current=parseWorkspace(exportWorkspace(captureSession(sessions.identity))).state,s=workspace.state;
     const scene=value=>{const copy={...value};for(const key of ['selections','picking','captureName','camera'])delete copy[key];return JSON.stringify(copy);};
     if(scene(current)!==scene(s)){await restoreWorkspace(workspace);return;}
     cfgSelections.clear();for(const b of s.selections)cfgSelections.set(b.graph,new Set(b.nodes));pickedGraph=s.graph;pickedNodes=cfgSelections.get(s.graph) || new Set();$('capture-name').value=s.captureName;setPickingPattern(s.picking);refreshPickedNodes();
+    await settleWorkspace();
+    currentView();
     if(s.camera?.kind==='canvas' && virtualOverview)virtualOverview.restore(s.camera);
     else if(s.camera?.kind==='svg' && !virtualOverview && view.target)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),s.camera);
+    await settleWorkspace();
+    currentView();
 }
 function queueWorkspace(workspace,chooseNow=true) {
     pendingWorkspace=workspace;
@@ -1268,7 +1275,7 @@ new MutationObserver(() => {
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
-sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
+sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,settle:settleWorkspace,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
     if(model&&sessions.identity&&draftModelKey(workspace.identity)===draftModelKey(sessions.identity))await sessions.resume(record);
     else {queuedDraft=record;queueWorkspace(workspace,false);}
 }});

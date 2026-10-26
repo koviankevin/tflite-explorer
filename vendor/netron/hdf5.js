@@ -1,7 +1,7 @@
 
 // Experimental HDF5 reader
 
-import * as zip from './zip.js?v=4e44cfa55e34993c';
+import * as zip from './zip.js?v=44c61533b3e74ddf';
 
 const hdf5 = {};
 
