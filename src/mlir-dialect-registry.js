@@ -1,3 +1,4 @@
-// Company builds import their local adapters here. Never import from a model,
-// a user-supplied URL, or a remote service. All hooks execute inside the Worker.
-export const mlirDialects = [];
+// Internal builds replace the OUTPUT registry through --profile, not this file.
+// Models and remote URLs never supply executable adapters.
+import {validateDialectAdapters} from './mlir-dialect-contract.js?v=9b5c4d02768d6a08';
+export const mlirDialects = validateDialectAdapters([]);

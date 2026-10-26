@@ -8,14 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=bf6ab8c5b29c3043">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=9b5c4d02768d6a08">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=bf6ab8c5b29c3043"></script>
-
+<script type="module" src="src/app.js?v=9b5c4d02768d6a08"></script>
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
 body { touch-action: none; overflow: hidden; width: 100%; height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "PingFang SC"; font-size: 12px; text-rendering: geometricPrecision; }
@@ -308,21 +307,23 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/mobile.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/model-visibility.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/typography.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/overview-canvas.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/explorer-resize.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/workspace.css?v=bf6ab8c5b29c3043">
-<link rel="stylesheet" href="src/laptop.css?v=bf6ab8c5b29c3043">
+<link rel="stylesheet" href="src/app.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/mobile.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/model-visibility.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/typography.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/overview-canvas.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/explorer-resize.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/workspace.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/laptop.css?v=9b5c4d02768d6a08">
+<link rel="stylesheet" href="src/release.css?v=9b5c4d02768d6a08">
 </head>
 <body class="welcome">
 <header class="app-header">
   <a class="brand" href="./" aria-label="模鏡首頁"><span class="brand-icon" aria-hidden="true">⌘</span><span><strong style="font-size:20px;letter-spacing:3px">模鏡</strong><small>MODEL LENS · TFLITE EXPLORER</small></span></a>
   <div class="file-summary"><span id="file-name">尚未開啟模型</span><span id="file-stats">從模型結構，找到你要的連接。</span></div>
   <span class="privacy"><i></i>本機處理</span>
+  <button id="release-info-button" class="quiet" aria-haspopup="dialog">版本</button>
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉模型</button>
   <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
@@ -407,6 +408,12 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <ol id="validation-errors" class="validation-errors"></ol>
   <p class="hint">檢查在本機背景執行，模型不會上傳。此檢查不取代 LLVM verifier 或公司 dialect 的自訂語意驗證。</p>
   <div class="import-actions"><button id="dismiss-validation" class="primary">關閉並調整</button></div>
+</dialog>
+<dialog id="release-dialog" aria-labelledby="release-title">
+  <div class="import-heading"><h2 id="release-title">模鏡版本資訊</h2><button id="close-release-info" class="icon-button" aria-label="關閉版本資訊">×</button></div>
+  <dl id="release-fields"></dl>
+  <p class="hint">版本資訊只包含程式建置與擴充版本，不含模型、權重或搜尋內容。內網更新時可用來核對安裝的版本。</p>
+  <button id="download-release-info" class="quiet" disabled>下載版本資訊</button>
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-preview.1",
+  "distribution": "public",
+  "extension": null,
+  "source": {
+    "commit": "6cab83a555ad1ac2fffe64ace74f68c88dcc2632",
+    "tree": "db9d3bb0e79630341bae87b1ef4652a0666a6674",
+    "committedAt": "2026-10-27T01:28:00+08:00",
+    "dirty": false
+  },
+  "buildId": "9b5c4d02768d6a08"
+}

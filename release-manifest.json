@@ -1,0 +1,1188 @@
+{
+  "schemaVersion": 1,
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "6cab83a555ad1ac2fffe64ace74f68c88dcc2632",
+      "tree": "db9d3bb0e79630341bae87b1ef4652a0666a6674",
+      "committedAt": "2026-10-27T01:28:00+08:00",
+      "dirty": false
+    },
+    "buildId": "9b5c4d02768d6a08"
+  },
+  "files": [
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1103,
+      "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+    },
+    {
+      "path": "LICENSE-Netron.txt",
+      "bytes": 1062,
+      "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+    },
+    {
+      "path": "demo.mlir",
+      "bytes": 569,
+      "sha256": "c54fae02514521dc6fb761e8e9edce44c6fd5b94ebe6532f1c41f4fb202714eb"
+    },
+    {
+      "path": "demo.tflite",
+      "bytes": 6316,
+      "sha256": "b64be97b47b52e62163be2ee23e03dd7e4f7e31705aca1e3189265bda53cdcf4"
+    },
+    {
+      "path": "index.html",
+      "bytes": 68442,
+      "sha256": "2f4735fdd7525becb81d56fd8dd6c2be313d95be2892f4a4e0f7da27dcb6ef48"
+    },
+    {
+      "path": "lora-demo.tflite",
+      "bytes": 2068,
+      "sha256": "062938109177aeba94a4c408a8a2295b27036a06cfe52b91b707ac4a98be6ad8"
+    },
+    {
+      "path": "release.json",
+      "bytes": 339,
+      "sha256": "51c15d4da5ae54f0098bb0cd58af32f1287f707a5b31d3cf3519305c485003ea"
+    },
+    {
+      "path": "src/app.css",
+      "bytes": 13906,
+      "sha256": "51e899c557efd35d051daf4d1443b7d2c4fb958f943b23470ee1bee6feebb3b1"
+    },
+    {
+      "path": "src/app.js",
+      "bytes": 96501,
+      "sha256": "83931f1847d4bec16b6633780e3b83af2126137ac768634e61c018437343c586"
+    },
+    {
+      "path": "src/explorer-resize.css",
+      "bytes": 1290,
+      "sha256": "0a196fe38f3d562008f04cb4a77da2e94bd3f660070a93a5990a4396602a8d7b"
+    },
+    {
+      "path": "src/explorer-resize.js",
+      "bytes": 5125,
+      "sha256": "2ddc3160bf650ed78e030dda8e4f2ea3cbe56f0725e4c8c8bb859246ad358a6e"
+    },
+    {
+      "path": "src/flatbuffer-writer.js",
+      "bytes": 7119,
+      "sha256": "3025c596cb22f44e92833f514175c3929dcb6ef0c2eac8f7ee36a70482829e07"
+    },
+    {
+      "path": "src/hydrate.js",
+      "bytes": 2927,
+      "sha256": "38b9bdd93328d2caaeb8019b862807bfc1c55534f9e34d6d3929ed5b6cc562ed"
+    },
+    {
+      "path": "src/laptop.css",
+      "bytes": 1031,
+      "sha256": "2c290f6907b5c4d24d027c3a114cb206ab33c8229195881902fbed1c6a2c07c1"
+    },
+    {
+      "path": "src/mlir-combined-graph.js",
+      "bytes": 9052,
+      "sha256": "c69e4dc5331b857ae497da9b56c97b9879ba07182f5eb0b329e1435f8f8ba00f"
+    },
+    {
+      "path": "src/mlir-connection-index.js",
+      "bytes": 4174,
+      "sha256": "9e03fa05b491e0ccb7849a7c208451f9ac333c27a0f8d538034a3063fd89d501"
+    },
+    {
+      "path": "src/mlir-connection-view.js",
+      "bytes": 10893,
+      "sha256": "ac8bb38243a992f1594201da012fa341ec5aa4817cf9c683c02ba231eba3381c"
+    },
+    {
+      "path": "src/mlir-dialect-contract.js",
+      "bytes": 941,
+      "sha256": "b453abf75df063e71960911eb79e3559740f1bc0e2d8da0ae1a8d54626acd453"
+    },
+    {
+      "path": "src/mlir-dialect-registry.js",
+      "bytes": 285,
+      "sha256": "eacd13e748fc9f3f920836201e5c15c6b9f1db3f517494abe32c29bab3f975c7"
+    },
+    {
+      "path": "src/mlir-dialects.js",
+      "bytes": 2272,
+      "sha256": "c63abd1891ccb0866c95f81a8bee120e7de6cfe2e61210b6db4f0f085d18a919"
+    },
+    {
+      "path": "src/mlir-engine.js",
+      "bytes": 10790,
+      "sha256": "e6ea0744371bd34013f82023abc2fb9d8272605431a80dd3b9cc1ebf6949a57a"
+    },
+    {
+      "path": "src/mlir-export.js",
+      "bytes": 9773,
+      "sha256": "7ded4a825d82eb17c8eab6ce2ab27817a585c28031e287f2c659ce1ef842a52a"
+    },
+    {
+      "path": "src/mlir-file.js",
+      "bytes": 13568,
+      "sha256": "044fc9ff72516d061523242c40b85088aef5450b79de795552c1b7920a4904ff"
+    },
+    {
+      "path": "src/mlir-ir.js",
+      "bytes": 5243,
+      "sha256": "b70c8774ec7772ed3f4ffb37c0e2feadeae1e97dd50254eafc2d0052c395dc61"
+    },
+    {
+      "path": "src/mlir-pattern-projection.js",
+      "bytes": 11712,
+      "sha256": "46e9ca680b35e162be74a825f406d2e3923ca0048dc6ea6cd731adce9d488aa4"
+    },
+    {
+      "path": "src/mlir-pattern-spec.js",
+      "bytes": 5299,
+      "sha256": "aa2ed39f6c7a924efab5bb04723af1fe01b64e740fd3de5e2a346fbbe13763e4"
+    },
+    {
+      "path": "src/mlir-pattern.js",
+      "bytes": 16639,
+      "sha256": "9cce54d3a3a516e376aa60ae4fc7f522e034550fede0a88d53c72c4f7fd7bf6c"
+    },
+    {
+      "path": "src/mlir-slice-graph.js",
+      "bytes": 4629,
+      "sha256": "588d5c8c1ac4dfbb2659547cb90a5c4506970cd94109e17c2b3434e9a5989ae5"
+    },
+    {
+      "path": "src/mlir-slice.js",
+      "bytes": 20370,
+      "sha256": "9ebf938584ef36eed86b5658da99d1676757b096004dee04638354d5a18acf77"
+    },
+    {
+      "path": "src/mlir-validate.js",
+      "bytes": 10635,
+      "sha256": "a377627971d18c46f12b9dede13448b98d12c4ea8dcbe72f2f02dca59816924c"
+    },
+    {
+      "path": "src/mobile.css",
+      "bytes": 4608,
+      "sha256": "a9d09c0544de9fe397e1d1054a3e76e661f0067ef07c3eb03b608b79df410bf7"
+    },
+    {
+      "path": "src/model-adapters.js",
+      "bytes": 766,
+      "sha256": "eec358eb1d924d32606439c0605972d7d6a1f3ebd46ed587508361e323997305"
+    },
+    {
+      "path": "src/model-engine.js",
+      "bytes": 15500,
+      "sha256": "07c607d71157322ff67a2f149154037814e3d158481478805c838e91c9457212"
+    },
+    {
+      "path": "src/model-formats.js",
+      "bytes": 217,
+      "sha256": "cdedd1791aa06cd09735e1cdd748e7fb092549a44e6ab1e475334f342a700ab5"
+    },
+    {
+      "path": "src/model-visibility.css",
+      "bytes": 5569,
+      "sha256": "bd4468a630b45a30988beb93f7fceb9625ad68b5eb1952b247b0181a218a267b"
+    },
+    {
+      "path": "src/model-worker.js",
+      "bytes": 7672,
+      "sha256": "a7c9ea4bb6d4f5bbab118eea98553586ae6c5ab367249a8231c105843b11c8f3"
+    },
+    {
+      "path": "src/overview-canvas.css",
+      "bytes": 413,
+      "sha256": "2e1f588f164d8d3ad82204ce7395662bcec3d3b0aca2e9a00ed66dd5219ee848"
+    },
+    {
+      "path": "src/overview-canvas.js",
+      "bytes": 12331,
+      "sha256": "4653be267a9ab34283dd285eeb1b20a303ae47d8e590abfa781aa93e17a082f6"
+    },
+    {
+      "path": "src/overview-layout.js",
+      "bytes": 6805,
+      "sha256": "9fe7fa1dfa0af8b1a3e921cf7a5e290a787349bee4f2956243f2e32532c270bb"
+    },
+    {
+      "path": "src/pattern-condition-editor.js",
+      "bytes": 2543,
+      "sha256": "89d7e94be5002fde64fe2122342daf0d903e23a4aba24d88d55313817992c04d"
+    },
+    {
+      "path": "src/pattern-conditions.js",
+      "bytes": 4049,
+      "sha256": "9c92dfd8a43434e675e93ed27b4b71c071cd2200209e377bbcb5e12053d0c339"
+    },
+    {
+      "path": "src/pattern-fold.js",
+      "bytes": 3768,
+      "sha256": "74daac0d4d952be4a8e5faafe8492a097c9116ab9ad99e9e09678311fa4e2298"
+    },
+    {
+      "path": "src/pattern-library.js",
+      "bytes": 6480,
+      "sha256": "789968d8efaf6e8b20d86cbe7c51119875f1e6a5c49097d1da1b677c042b7db4"
+    },
+    {
+      "path": "src/pattern-overview.js",
+      "bytes": 10143,
+      "sha256": "c114e48ba2c575f85194c770ddb2a785e3f422cfb00f2f1fdda163cd87bf8411"
+    },
+    {
+      "path": "src/pattern-selection.js",
+      "bytes": 2921,
+      "sha256": "8730cc55401a808ccd8d5acfde09bae2fd45ec6aedcbab73aa511b98b0aee307"
+    },
+    {
+      "path": "src/pattern-utils.js",
+      "bytes": 901,
+      "sha256": "6e12505d57406098e1c28d043e2bf82352db99bbeba4d6a6a3ba6f0a1ab76031"
+    },
+    {
+      "path": "src/pattern-workspace.css",
+      "bytes": 5537,
+      "sha256": "95bc6368928152aa44c6dbfccb46ceae98138a854f6e406676b9cf43541c7927"
+    },
+    {
+      "path": "src/range-stream.js",
+      "bytes": 3032,
+      "sha256": "09f757b3a70e87033917335b2326e0ebf5fcf9645f74162b056bba0835697f90"
+    },
+    {
+      "path": "src/rectangle-selection.js",
+      "bytes": 4324,
+      "sha256": "cd37ab8161afe670c938530ba7d273f56713bb1dc69764274b44ce3019814f2a"
+    },
+    {
+      "path": "src/release-info.js",
+      "bytes": 2676,
+      "sha256": "3e331e8ab077739fdb123617e8df12752a858de131eacfa1569aa32503316c88"
+    },
+    {
+      "path": "src/release.css",
+      "bytes": 765,
+      "sha256": "55aaa45bebe0e333539de7484ea297a92f5797d6514abda7399e455ccb15a45a"
+    },
+    {
+      "path": "src/shell.html",
+      "bytes": 16153,
+      "sha256": "9c654e1b5d4b3202203c39ede499fc0825afae023925516fd2615aa43d19e392"
+    },
+    {
+      "path": "src/subgraph-pattern.js",
+      "bytes": 10669,
+      "sha256": "b971cd7449b265d85af9456e6989694fa394ff2334fc7344b352490b11dffd64"
+    },
+    {
+      "path": "src/svg-viewport.js",
+      "bytes": 2772,
+      "sha256": "8b0cdf4ca1e199a7bdb7ab66de29948155ed95149649590d24e8ad5fb931c9bf"
+    },
+    {
+      "path": "src/tflite-export.js",
+      "bytes": 8339,
+      "sha256": "42bbeed351f80fad4487f7c89d0beaf9b56edacb48e0b1433ebf3b5a4038b527"
+    },
+    {
+      "path": "src/typography.css",
+      "bytes": 2898,
+      "sha256": "beb90c463973736e3c20506636b6c20ce1a14fb1525d076aad7e2c5e1962a798"
+    },
+    {
+      "path": "src/workspace.css",
+      "bytes": 934,
+      "sha256": "4d50a904ca025a6c5af15be5a4d39c712f583d7984bfd0ca2bb9afeb6ac3d9cb"
+    },
+    {
+      "path": "src/workspace.js",
+      "bytes": 6926,
+      "sha256": "312b97d49b8539ce36c4a1f4ea7324f9726316dff61051d131f14891c9110762"
+    },
+    {
+      "path": "vendor/netron/LICENSE",
+      "bytes": 1062,
+      "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+    },
+    {
+      "path": "vendor/netron/acuity-metadata.json",
+      "bytes": 80281,
+      "sha256": "80491e5476a5c8ef8ebba28ad2ee6b69c6c494216f0a7ee92cfe1c3123fdaf82"
+    },
+    {
+      "path": "vendor/netron/acuity.js",
+      "bytes": 29591,
+      "sha256": "f43a0cd77f133842de24aa506636f079dba9e234ae60f24b0f492ffa4ff2d3ef"
+    },
+    {
+      "path": "vendor/netron/app.js",
+      "bytes": 38850,
+      "sha256": "bd6576ac01bdb9f6633054f7e46dc8952b18dc4bae5ecb7f38caeab2f8c6ede0"
+    },
+    {
+      "path": "vendor/netron/armnn-metadata.json",
+      "bytes": 11356,
+      "sha256": "5b71ccf816b23d335568b9cf134fb0dc786f9eba947e7d147fc108487345112e"
+    },
+    {
+      "path": "vendor/netron/armnn-schema.js",
+      "bytes": 125662,
+      "sha256": "ef6d82272718401948b63c684f383eeff6dc74b013c134592f5585ad2d80d5b6"
+    },
+    {
+      "path": "vendor/netron/armnn.js",
+      "bytes": 11454,
+      "sha256": "b036df51949c0c199abbf48a8e980751c10c4708ef4c49d2b83cab8ead0ca535"
+    },
+    {
+      "path": "vendor/netron/barracuda.js",
+      "bytes": 15440,
+      "sha256": "96aa0258fa40aa0047e9e0c74c8f36c25815c4a19657f122a3ba6c20e0662210"
+    },
+    {
+      "path": "vendor/netron/base.js",
+      "bytes": 58162,
+      "sha256": "6f5c1f49951bad7e9c31a9c25ee945d649ddf15d0f34537d98759cf2d09b5f8b"
+    },
+    {
+      "path": "vendor/netron/bigdl-metadata.json",
+      "bytes": 2017,
+      "sha256": "4d1b6484c68c78554e206ec2eec07971d79d6c64627ca11014640a8ea8a42013"
+    },
+    {
+      "path": "vendor/netron/bigdl-proto.js",
+      "bytes": 23686,
+      "sha256": "fbf3d1ec6e96f0451c8d6167b751c9ab9699833d02e912222fce77aacaae97ce"
+    },
+    {
+      "path": "vendor/netron/bigdl.js",
+      "bytes": 11288,
+      "sha256": "cff872406ca1e099419989254a0deb555c6bbe6b3c33c6ccc8557a07f14f8b57"
+    },
+    {
+      "path": "vendor/netron/browser.js",
+      "bytes": 34614,
+      "sha256": "19cf2907621e294cdef056becb27865c11747cefc947b3001cd4b2c963d4f9a0"
+    },
+    {
+      "path": "vendor/netron/caffe-metadata.json",
+      "bytes": 9505,
+      "sha256": "3df8dd1a4bf4343d02fd14594e5069f3153875b3bb21a455b09b3081f4ba97e9"
+    },
+    {
+      "path": "vendor/netron/caffe-proto.js",
+      "bytes": 182571,
+      "sha256": "0a816647e4df48aa9271fc16b5b39a3e878f9bf1be843f490274bcd9be533076"
+    },
+    {
+      "path": "vendor/netron/caffe.js",
+      "bytes": 23747,
+      "sha256": "5d27e72476df495bc3cd4ca4bdd334237a3349088bf32b6bc44a95610918cb7b"
+    },
+    {
+      "path": "vendor/netron/caffe2-metadata.json",
+      "bytes": 858145,
+      "sha256": "7e31512379e22ee8c824c8c719ac826939d7627f457a5f7cbf3cae3755d8c5f8"
+    },
+    {
+      "path": "vendor/netron/caffe2-proto.js",
+      "bytes": 59284,
+      "sha256": "34d42874327d13f7261d30e8db6f416772054d144a3bbf76dfa121b1a3cf29c7"
+    },
+    {
+      "path": "vendor/netron/caffe2.js",
+      "bytes": 20432,
+      "sha256": "d69dfedc3f894ceaaab789f12bbc13ea365f35d2249713a982ec83c16238dd4a"
+    },
+    {
+      "path": "vendor/netron/catboost-schema.js",
+      "bytes": 9163,
+      "sha256": "4f1830441ae0bc48c2c4b82d2336c1f83cc52032cebd5c798fb2c27a0b2b4d9f"
+    },
+    {
+      "path": "vendor/netron/catboost.js",
+      "bytes": 6650,
+      "sha256": "7c9c7774da5137669e203942574381d09afc1814f75211805ec16bc094af4974"
+    },
+    {
+      "path": "vendor/netron/circle-metadata.json",
+      "bytes": 37363,
+      "sha256": "bbd2bd57cf86ed37109a8b4b71f40ab3a0b64a94603523b364424c962f6ed2e8"
+    },
+    {
+      "path": "vendor/netron/circle-schema.js",
+      "bytes": 134619,
+      "sha256": "fc8f53ccfba3585554755c686f86309078cf067f9f1b7a72218dd1040c77ce8e"
+    },
+    {
+      "path": "vendor/netron/circle.js",
+      "bytes": 24353,
+      "sha256": "048f80a225b95dff82693956cacc0998cc73605a9f4cc68bc14d67e20f46e6a8"
+    },
+    {
+      "path": "vendor/netron/cntk-metadata.json",
+      "bytes": 14194,
+      "sha256": "82596dff8eea32ba734c4e374cedc84ae8eb84969f33413daa430e57ee2bfb94"
+    },
+    {
+      "path": "vendor/netron/cntk-proto.js",
+      "bytes": 11085,
+      "sha256": "53c3cd60677a73e2f73d07a645d4079d9fe4dc5796572cef3361e12ef7468b83"
+    },
+    {
+      "path": "vendor/netron/cntk.js",
+      "bytes": 42431,
+      "sha256": "866343d32db966e37ebe3b7c521adcb70788f5a820fe3dcad5657cccd2cf00b0"
+    },
+    {
+      "path": "vendor/netron/coreml-metadata.json",
+      "bytes": 16025,
+      "sha256": "6abc579e932b84fc2841f19e4ec0acbaaba2fa57f9197722c32f003af250ed16"
+    },
+    {
+      "path": "vendor/netron/coreml-proto.js",
+      "bytes": 681153,
+      "sha256": "1d51b78326e29a7f92690bc2c37fa4822492b4cb6dd0832ae1f4e3b70617b91b"
+    },
+    {
+      "path": "vendor/netron/coreml.js",
+      "bytes": 71553,
+      "sha256": "235112c5b0c5d076f1c1c78f37b54d303752cb6ec9a9f5bcd747674866ddb0b1"
+    },
+    {
+      "path": "vendor/netron/dagre.js",
+      "bytes": 105101,
+      "sha256": "062e18e2a2bf099a0a6d21824db4a99ea596407b9f615aa11bbccf7cdb186a13"
+    },
+    {
+      "path": "vendor/netron/darknet-metadata.json",
+      "bytes": 20540,
+      "sha256": "96e381a1b83d82dbd4dc5957c9cb1d3167feac4372974d72cdf658bab9d8dc87"
+    },
+    {
+      "path": "vendor/netron/darknet.js",
+      "bytes": 56490,
+      "sha256": "4a7f86c54585919ea577fd8b789bac0ef8a7dc70108b4d60c8e2682ef8c544c8"
+    },
+    {
+      "path": "vendor/netron/dl4j-metadata.json",
+      "bytes": 1131,
+      "sha256": "729bc9af025853ab0fe07beebe69569ef50ff5157dcf669cfdb0004803a26fe3"
+    },
+    {
+      "path": "vendor/netron/dl4j.js",
+      "bytes": 15419,
+      "sha256": "178e0a72d38e0ce3a6b4e5e248bdd1d63d5724284d67a173a8060397583e515b"
+    },
+    {
+      "path": "vendor/netron/dlc-metadata.json",
+      "bytes": 2344,
+      "sha256": "4f7c1ad8ff5cf99715428b70a04a7d4ed15e82c6df03716331642bd3630521f2"
+    },
+    {
+      "path": "vendor/netron/dlc-schema.js",
+      "bytes": 8456,
+      "sha256": "179dec14a97cb6545e8f1aea5b235f70cff2afb712c699da93e88a0bc002ab8c"
+    },
+    {
+      "path": "vendor/netron/dlc.js",
+      "bytes": 27397,
+      "sha256": "f6adcc6e3340f0c3d0f087f8c80e2cd3152c21ae4d77b0f61b6f67facb3bfc67"
+    },
+    {
+      "path": "vendor/netron/dnn-metadata.json",
+      "bytes": 1777,
+      "sha256": "e7ee3c0a145cb83250e5603afdce71398b3ae89dd78ec3d86ebcfb2f21ff77d1"
+    },
+    {
+      "path": "vendor/netron/dnn-proto.js",
+      "bytes": 10997,
+      "sha256": "de472bc360b1210471339aae2d7c1ae3f53ef06bdcb30d49194bfcd31954c94b"
+    },
+    {
+      "path": "vendor/netron/dnn.js",
+      "bytes": 8993,
+      "sha256": "49fded1abd5a958679fff8701a6ea296bd122532ef4df1f6cb8ef2d3daa5f559"
+    },
+    {
+      "path": "vendor/netron/dot.js",
+      "bytes": 22956,
+      "sha256": "80a0e53a51292acce0a8e318f278f747426fd5af1597cbb64ec2c01b2b4c40b0"
+    },
+    {
+      "path": "vendor/netron/espdl-metadata.json",
+      "bytes": 9024,
+      "sha256": "35b32307e52aadc0dd5a5f28f8f0622971170565e166f12a18b48c7f79207646"
+    },
+    {
+      "path": "vendor/netron/espdl-schema.js",
+      "bytes": 10415,
+      "sha256": "c6bd863a29bba22027128cdcd9a49f1c305a946baed61a60a1d49e52b5961d76"
+    },
+    {
+      "path": "vendor/netron/espdl.js",
+      "bytes": 14714,
+      "sha256": "9edded9cd60217ce286182c0d0ee0223e79b0939478d991196a8bf3d41d60927"
+    },
+    {
+      "path": "vendor/netron/espresso-metadata.json",
+      "bytes": 1294,
+      "sha256": "c138e96536cd620909dd192c8067be1730171c3fadcfdd4311e7ad43eda83c94"
+    },
+    {
+      "path": "vendor/netron/espresso.js",
+      "bytes": 17573,
+      "sha256": "97e2897d0e6b3312ad470ba0c5f9207ef4cf995ed6dfb5be59c4f6b099d25381"
+    },
+    {
+      "path": "vendor/netron/executorch-schema.js",
+      "bytes": 49109,
+      "sha256": "8acc35ffbebaa62ad1d9dcecad75f9373c9365182b9bf313b1f0b1c1ef09177e"
+    },
+    {
+      "path": "vendor/netron/executorch.js",
+      "bytes": 48517,
+      "sha256": "87f5664e77f469a9d87026672b8a08ffd30707e15b567f722167534afeeb93b5"
+    },
+    {
+      "path": "vendor/netron/favicon.ico",
+      "bytes": 34494,
+      "sha256": "a3786b234e0a55f22676b828f5472cd5fdbbb4c3d58c2889cc6a208de47ca478"
+    },
+    {
+      "path": "vendor/netron/flatbuffers.js",
+      "bytes": 16629,
+      "sha256": "7319461aa030e23ecd9e8153097ab08bf45e00fbaf4b4916969d6bc90be4ec2c"
+    },
+    {
+      "path": "vendor/netron/flax.js",
+      "bytes": 6245,
+      "sha256": "35dd399dc67c60f0f154711cbcd39bc2c8dfbf8fb8c5105605a69707d32333d1"
+    },
+    {
+      "path": "vendor/netron/flexbuffers.js",
+      "bytes": 7479,
+      "sha256": "db9873e55821c52d8e9d61626a1c8621f4667b0638158005d3bfe773808ff30d"
+    },
+    {
+      "path": "vendor/netron/flux-metadata.json",
+      "bytes": 3,
+      "sha256": "94aeb2d1f95b0496a43379e486d9aaa8fb6e26b3780f69fda4cfe4d0c3c34747"
+    },
+    {
+      "path": "vendor/netron/flux.js",
+      "bytes": 2178,
+      "sha256": "5217bbf12f2c335ab9f59960785a507c1a080706fc42ef1f54bc664c23abf99c"
+    },
+    {
+      "path": "vendor/netron/gguf-metadata.json",
+      "bytes": 210822,
+      "sha256": "8dc7503b78241551308a53a7650f15f3b0a635ad2480da728cab8b4b9b58421e"
+    },
+    {
+      "path": "vendor/netron/gguf.js",
+      "bytes": 65621,
+      "sha256": "3c142d4a8f0d8d7f585510061e6b4084fb95693c323f982a9f6dd32f50ab3fd7"
+    },
+    {
+      "path": "vendor/netron/grapher.css",
+      "bytes": 7221,
+      "sha256": "2c476b141d09096e5f750dc13553904a7b85b594221e4b8dc62cfddeec294d96"
+    },
+    {
+      "path": "vendor/netron/grapher.js",
+      "bytes": 36278,
+      "sha256": "abc442ee889b2b58a146df31e24382af0e8394e9da008105142e819a41d1b0b1"
+    },
+    {
+      "path": "vendor/netron/hailo-metadata.json",
+      "bytes": 29854,
+      "sha256": "98f18e3c40ec9a3c7f96eb8b2935703229b4404582ddc0d0b5ce59472387bfdf"
+    },
+    {
+      "path": "vendor/netron/hailo.js",
+      "bytes": 13944,
+      "sha256": "0f66f92688748c3fbea3cad6226358fc9da0697550e05fb1e6665b181790e955"
+    },
+    {
+      "path": "vendor/netron/hdf5.js",
+      "bytes": 65262,
+      "sha256": "a3f8cf24cbc43bb56e59d921e847cbc47c1d7113ffceb7038e9a468a078fbc03"
+    },
+    {
+      "path": "vendor/netron/hickle.js",
+      "bytes": 5076,
+      "sha256": "7ac3b11d61e603bbe4f84f86fef0949c87e3f547c957a38296732167b977469f"
+    },
+    {
+      "path": "vendor/netron/icon.png",
+      "bytes": 58106,
+      "sha256": "f0f657ed7ebeb0b060a27c904c67a55fad02ebad71dd8675dde20672e5d07077"
+    },
+    {
+      "path": "vendor/netron/imgdnn.js",
+      "bytes": 1035,
+      "sha256": "348f169bc15f5c8937cbd2fcee90b5820514936fc5ac3faa3afe54372abd7e40"
+    },
+    {
+      "path": "vendor/netron/index.html",
+      "bytes": 51314,
+      "sha256": "5f0554c5e5722662b97ebd4726f9d20a803db098e2aa8c7d06ebb32d7ba48703"
+    },
+    {
+      "path": "vendor/netron/index.js",
+      "bytes": 4747,
+      "sha256": "76c05055ee2042986d6e289728675c375b06ea38bc3c250287c75819f9c91b67"
+    },
+    {
+      "path": "vendor/netron/jax-schema.js",
+      "bytes": 8278,
+      "sha256": "0984774fbdef7e4d63ed8d7ee94e4fd78eea3dd870c9f460adfcf04a9548f69c"
+    },
+    {
+      "path": "vendor/netron/jax.js",
+      "bytes": 5008,
+      "sha256": "b13dd39b004b63bf57a56d214531aa0c20888c21ab2beb1cf9112e2252f0dc16"
+    },
+    {
+      "path": "vendor/netron/json.js",
+      "bytes": 19666,
+      "sha256": "9cf2fd865cef6a7ea32307afe2ea854af71087f7e89545d6eeffe2d13cb3952c"
+    },
+    {
+      "path": "vendor/netron/kann-metadata.json",
+      "bytes": 1531,
+      "sha256": "92d864e44d6fe2bc4b0990a23aef9e671ba6e9aceab140fcc96f43b2528e82f8"
+    },
+    {
+      "path": "vendor/netron/kann-schema.js",
+      "bytes": 3063,
+      "sha256": "83b5f20cda20f84820f57dcea09c775e1a47e53dec26a7b296f583fc8affcdf0"
+    },
+    {
+      "path": "vendor/netron/kann.js",
+      "bytes": 7282,
+      "sha256": "7cadb6750ab06250dee9923592e45a0af2e9767763c8e95c60096881db385f96"
+    },
+    {
+      "path": "vendor/netron/keras-metadata.json",
+      "bytes": 249728,
+      "sha256": "e2e11e16c6fea716aa10f87e6b797cd06e198151f70122344dea00e99d85b561"
+    },
+    {
+      "path": "vendor/netron/keras-proto.js",
+      "bytes": 6112,
+      "sha256": "e3bf7af910eb103a1dfdce29e436b239b5b244249cd31478296ed2bd0006567b"
+    },
+    {
+      "path": "vendor/netron/keras.js",
+      "bytes": 72862,
+      "sha256": "fc3999a1ead18943fb836f0fe48fd3928e74d6e8c7babfcd93055789e3d73d0f"
+    },
+    {
+      "path": "vendor/netron/kmodel.js",
+      "bytes": 100961,
+      "sha256": "7aee08e618b6ffaf78f574b7e73c4f31f68f4671c96b0c607bf62a259c5d5248"
+    },
+    {
+      "path": "vendor/netron/lasagne-metadata.json",
+      "bytes": 244,
+      "sha256": "500cb9aba0e78c95846affd5a3e1be3a7730bc756ecad3654d2b690c9f0c0765"
+    },
+    {
+      "path": "vendor/netron/lasagne.js",
+      "bytes": 6529,
+      "sha256": "eab6fa25b42390020a79b838db854c310908b4d54bab27ba4a775827a74be131"
+    },
+    {
+      "path": "vendor/netron/lightgbm.js",
+      "bytes": 5174,
+      "sha256": "c1d9ef69c6480f7ba81af2ad8619a88a896c33eae90ae0f8808372d6aea458ee"
+    },
+    {
+      "path": "vendor/netron/litertlm-proto.js",
+      "bytes": 40727,
+      "sha256": "8606781e232913a7e3db6043289d698bbbfe3b4435df5843b5f4aaf3f0fe8a6d"
+    },
+    {
+      "path": "vendor/netron/litertlm-schema.js",
+      "bytes": 6099,
+      "sha256": "3a7454ea84aa18cfc179be5edd9dd877b71f34e6511ec8883b18e9b9dede06bc"
+    },
+    {
+      "path": "vendor/netron/litertlm.js",
+      "bytes": 5885,
+      "sha256": "0197d34125ea3018bd089fefe3088b3a93ec69cb022a64d959c100d9e431a6ab"
+    },
+    {
+      "path": "vendor/netron/mediapipe.js",
+      "bytes": 10395,
+      "sha256": "50158841c5a2c91825d1607711aa03e8181d86a9dd252fce4c08286538feb33a"
+    },
+    {
+      "path": "vendor/netron/megengine-metadata.json",
+      "bytes": 91875,
+      "sha256": "a55b342d4c36febba13f073aff4291a6d54cb661ab6344254af1fb13e353c6cb"
+    },
+    {
+      "path": "vendor/netron/megengine-schema.js",
+      "bytes": 87357,
+      "sha256": "b10cbd29d770f3036a820ef73bb797e27499ff67c8ed770cb604f445c3d7750b"
+    },
+    {
+      "path": "vendor/netron/megengine.js",
+      "bytes": 30229,
+      "sha256": "fbc508605ce243b5bdae8226408932cbc2f81d3654c1bc362a2c3221fc194029"
+    },
+    {
+      "path": "vendor/netron/message.js",
+      "bytes": 5422,
+      "sha256": "bc1fb0e45ebe3b74b900e320ad0cbcdfd0d88f61a3f08e7a77818748500d837c"
+    },
+    {
+      "path": "vendor/netron/mindir-metadata.json",
+      "bytes": 4337,
+      "sha256": "3c641c26b3325defe5c98753f692d5803eee9d21628a01c6e59454f0c7493858"
+    },
+    {
+      "path": "vendor/netron/mindir-proto.js",
+      "bytes": 51145,
+      "sha256": "291f0b0d0c27d0ee0d99244986edb0702441ba79175b70e30172a69445da7404"
+    },
+    {
+      "path": "vendor/netron/mindir.js",
+      "bytes": 10621,
+      "sha256": "5e1621afd5fedc075b61aad9bf6cd124ffd5c36b79f7fdc27e57cf82f98e7cdb"
+    },
+    {
+      "path": "vendor/netron/mlir-metadata.json",
+      "bytes": 9269750,
+      "sha256": "15720499e8c74bb095b1afafe5f4fc86384f1b8a3e1b7df863c9fa7a78850347"
+    },
+    {
+      "path": "vendor/netron/mlir.js",
+      "bytes": 1187109,
+      "sha256": "5ea06135d48551aa7d7fdef8958412a7d43ddf3bda93db07f2eebf4928158514"
+    },
+    {
+      "path": "vendor/netron/mlnet-metadata.json",
+      "bytes": 3423,
+      "sha256": "cbfa724a7636d9762ac6f4d574b484bc32df0fbe81d1465e077b99890a78772b"
+    },
+    {
+      "path": "vendor/netron/mlnet.js",
+      "bytes": 78876,
+      "sha256": "69161e59ec332f263f578530cb0d2a274ae879726f40894f80ae509a61ea335a"
+    },
+    {
+      "path": "vendor/netron/mnn-metadata.json",
+      "bytes": 10297,
+      "sha256": "e05cffeb71ff5288f75b65ecc79d2eef66d33ac81d69ff48e9d4266ebb4f0a66"
+    },
+    {
+      "path": "vendor/netron/mnn-schema.js",
+      "bytes": 124733,
+      "sha256": "d58de4e899ed5730734820f733f22181975c96557a963141e49427611ff89a54"
+    },
+    {
+      "path": "vendor/netron/mnn.js",
+      "bytes": 16689,
+      "sha256": "6beff12adda636069de6ec4a13908cedca82733130e77f1632b07d5f62789133"
+    },
+    {
+      "path": "vendor/netron/mslite-metadata.json",
+      "bytes": 85645,
+      "sha256": "7eaf12104f3773a00906079f74a81f1eb5e351175c46aa3d30122e128485ce3d"
+    },
+    {
+      "path": "vendor/netron/mslite-schema.js",
+      "bytes": 166286,
+      "sha256": "fedf48eca5b48690cdbe0a7a4470d4099b6215209c4ec6cb4813a5e462040de3"
+    },
+    {
+      "path": "vendor/netron/mslite.js",
+      "bytes": 12282,
+      "sha256": "59a941959f14079e4798a38bbf7363c61520b8727099ce1755e9d955a6b08893"
+    },
+    {
+      "path": "vendor/netron/mxnet-metadata.json",
+      "bytes": 11629,
+      "sha256": "7addab84a0c0003353c473ec7bd8af239111cc263e995377bad4a5b970af16eb"
+    },
+    {
+      "path": "vendor/netron/mxnet.js",
+      "bytes": 36703,
+      "sha256": "4610f78f3d89b8a876a0862c1aceff286a50471d9ca5cd0c8f03361b2ee7fe80"
+    },
+    {
+      "path": "vendor/netron/ncnn-metadata.json",
+      "bytes": 33258,
+      "sha256": "83e3cbd58ad20e6d6a1091497f140293ffded7446c9cbc365884156a22ecc013"
+    },
+    {
+      "path": "vendor/netron/ncnn.js",
+      "bytes": 56129,
+      "sha256": "253f72f0b1e3e863eb7acf8ca13dda434bded8971cccc20493aa873ec74b0ae6"
+    },
+    {
+      "path": "vendor/netron/nnabla-metadata.json",
+      "bytes": 296983,
+      "sha256": "2960b743bd1baebeb5289cae8a4922ebc56868720f25eac4ec5eb25ef803d37d"
+    },
+    {
+      "path": "vendor/netron/nnabla-proto.js",
+      "bytes": 427254,
+      "sha256": "5486dc5673dc6932a6f682798ca8ce61eb33d889f578722548926fb4b0d9d27a"
+    },
+    {
+      "path": "vendor/netron/nnabla.js",
+      "bytes": 12318,
+      "sha256": "e31da0751972b3fa7b7a7db201a76bfbc3fd9fc4c48a2bc2c7f8d8446d0e02f6"
+    },
+    {
+      "path": "vendor/netron/nnc.js",
+      "bytes": 416,
+      "sha256": "12da19afa52efba4b897bfd13c419f940e0c69ba5434587494605f93bb08207b"
+    },
+    {
+      "path": "vendor/netron/nnef.js",
+      "bytes": 2368,
+      "sha256": "4576f51151ed58ef22ccd8c6af1cd23f3bfbd1ea3cb33c6d38061a0e4079d00e"
+    },
+    {
+      "path": "vendor/netron/node.js",
+      "bytes": 3766,
+      "sha256": "d4f38bfe648ecffccfa8400a6d7989891a1a37a09341bf3968cda93009bc2d50"
+    },
+    {
+      "path": "vendor/netron/numpy.js",
+      "bytes": 9634,
+      "sha256": "4f3c2b4b83b27044de0a8e902a4003cd0ed9737136c3ed95f21c03ea1e6b3216"
+    },
+    {
+      "path": "vendor/netron/om-metadata.json",
+      "bytes": 53492,
+      "sha256": "dc0fb5242792bacc85dcb701d5b7944c24e382fd1d7f642dbf4c17db19d074cb"
+    },
+    {
+      "path": "vendor/netron/om-proto.js",
+      "bytes": 35979,
+      "sha256": "93dbbfd96a3192f8d3ad34e52c952dd39a9740871e243ac96f09508f8e5799f8"
+    },
+    {
+      "path": "vendor/netron/om.js",
+      "bytes": 33134,
+      "sha256": "1bc238d70ab0a9824ca00b2dcc4236a7dbc4a87b9d8ebfa6521a2c8db32cf468"
+    },
+    {
+      "path": "vendor/netron/onednn-metadata.json",
+      "bytes": 6761,
+      "sha256": "15135ac4d11117049aeb29d86b20dabeda19b5b5454ee734aa1914708711876b"
+    },
+    {
+      "path": "vendor/netron/onednn.js",
+      "bytes": 10874,
+      "sha256": "9803062b36753f8ba9dd4d4bfadd4d875474aedc1f6ea30f98711f363c6db1f7"
+    },
+    {
+      "path": "vendor/netron/onnx-metadata.json",
+      "bytes": 5616457,
+      "sha256": "01a09e38e88cce9cf78046ac2c699eabd668c37cbaa423b2c41d826ea0d6ab77"
+    },
+    {
+      "path": "vendor/netron/onnx-proto.js",
+      "bytes": 92728,
+      "sha256": "7e8993540ebc6d27129b3e0cd6a124573a473baac465ffeff82991bf2db7b3cb"
+    },
+    {
+      "path": "vendor/netron/onnx-schema.js",
+      "bytes": 15377,
+      "sha256": "64362388df35affff67fcd3ef00db3be0b3aaf1529578e8e6e8b701cd6a2c48a"
+    },
+    {
+      "path": "vendor/netron/onnx.js",
+      "bytes": 111807,
+      "sha256": "5e05d181d124b8b904a6b37853ebfc99879b46c0e1c4f2cbc0cae4de2b10cf97"
+    },
+    {
+      "path": "vendor/netron/openvino-metadata.json",
+      "bytes": 87049,
+      "sha256": "9913e9622102bcbbba2d9d361529fc82eb206d781f0d92e73869872d21f4c687"
+    },
+    {
+      "path": "vendor/netron/openvino.js",
+      "bytes": 40553,
+      "sha256": "64c5e6d18b67bd83615a2fb8d57e20c30d0a49363da86e3dc496c40911dc1361"
+    },
+    {
+      "path": "vendor/netron/paddle-metadata.json",
+      "bytes": 2894,
+      "sha256": "8b257c8d497b02148e31355c58bac286c06a4b597c8aa19897df4a2d8165f77c"
+    },
+    {
+      "path": "vendor/netron/paddle-proto.js",
+      "bytes": 58187,
+      "sha256": "10ee87591f16edf7e8d5715d9b698e205fd8d692fb55ceac552e3c1852016d59"
+    },
+    {
+      "path": "vendor/netron/paddle-schema.js",
+      "bytes": 18550,
+      "sha256": "dafce46bd7ada4acd9cdbdac26d4c093180c672202106d4949c84eac4c86903d"
+    },
+    {
+      "path": "vendor/netron/paddle.js",
+      "bytes": 58251,
+      "sha256": "b24d5d8aaa766c5054f2dc577ba23b88350019aa76c050c549605a4f96e9b04e"
+    },
+    {
+      "path": "vendor/netron/pickle.js",
+      "bytes": 18906,
+      "sha256": "ae16a63d93bcc8b7cb9c849ed0dcf0ffd39513abe9d49f1d8cc920e08a8d2d85"
+    },
+    {
+      "path": "vendor/netron/protobuf.js",
+      "bytes": 44213,
+      "sha256": "4c649655a9e0f7d50bf13106ab9161a96d21790ac940ad7fc27766c5479ab263"
+    },
+    {
+      "path": "vendor/netron/python.js",
+      "bytes": 1147513,
+      "sha256": "12755794106f5dc76db3de488540c282b42588945a189cc2719bce86dadea849"
+    },
+    {
+      "path": "vendor/netron/pytorch-metadata.json",
+      "bytes": 389467,
+      "sha256": "0d57c892adf9ad68e89442fa02643516a471900d3d1d6fa5f78b718a28161319"
+    },
+    {
+      "path": "vendor/netron/pytorch-proto.js",
+      "bytes": 29394,
+      "sha256": "57517313c8640eb4f29414464513340e5fa019f28a3e6f389ffed87dd019ce05"
+    },
+    {
+      "path": "vendor/netron/pytorch-schema.js",
+      "bytes": 12454,
+      "sha256": "6073e973aef2cb44f424c76331319e27009efc395d51d77f05ab56ad14458d80"
+    },
+    {
+      "path": "vendor/netron/pytorch.js",
+      "bytes": 130993,
+      "sha256": "b758efed6e3bbd2f8ddd6332b83ee52fb099f2106b543c65d4bc124fea7c9359"
+    },
+    {
+      "path": "vendor/netron/qnn-metadata.json",
+      "bytes": 727,
+      "sha256": "d952f8f2258182218dd3abc6ac89e2627f97609f5c7df0e2e5fbf364901c174d"
+    },
+    {
+      "path": "vendor/netron/qnn.js",
+      "bytes": 11132,
+      "sha256": "a893354a811c8fc3b72aa7a64eb2fdaba4200f1172d754575a8104ac2cda3a37"
+    },
+    {
+      "path": "vendor/netron/rknn-metadata.json",
+      "bytes": 6582,
+      "sha256": "e49199663c7577510f5f5d03552e1d72a5cdbb6e03dcd90ce31ec2f3259d4b00"
+    },
+    {
+      "path": "vendor/netron/rknn-schema.js",
+      "bytes": 8821,
+      "sha256": "bbd31aec3e4023a76d9c5f64e68368ca9bdad678c58c8c542413b8445e14632b"
+    },
+    {
+      "path": "vendor/netron/rknn.js",
+      "bytes": 28430,
+      "sha256": "f7d997cfc52d9267099becabb568f07e4b77e2cc7ee28eb654719b4950b12a68"
+    },
+    {
+      "path": "vendor/netron/safetensors.js",
+      "bytes": 7562,
+      "sha256": "495014942adb44bdc77520f42fff9f35a35c7b4b45014ad9f447e218fe460438"
+    },
+    {
+      "path": "vendor/netron/sentencepiece-proto.js",
+      "bytes": 23073,
+      "sha256": "11736a34d948bfaa81d529dce86a97eda39f8e26584aa2f7ea639ba80f748fca"
+    },
+    {
+      "path": "vendor/netron/sentencepiece.js",
+      "bytes": 2992,
+      "sha256": "cc2d11c658233b7245513e7e1806ec65212d766118f9b692c696a7087cad31af"
+    },
+    {
+      "path": "vendor/netron/sklearn-metadata.json",
+      "bytes": 167301,
+      "sha256": "ce2648e803670636b054e48a6399a929d81be5c000be231f0975269886e7637d"
+    },
+    {
+      "path": "vendor/netron/sklearn.js",
+      "bytes": 12119,
+      "sha256": "b195dea749916ae1c4ee053c951cb7e38081ebbe5b9ff655703167c9b832d623"
+    },
+    {
+      "path": "vendor/netron/tar.js",
+      "bytes": 5769,
+      "sha256": "3a69a69f7cc97d20b3bda7ee1806af8acd82cf6b8412cf38f0928d214c9044e7"
+    },
+    {
+      "path": "vendor/netron/tengine-metadata.json",
+      "bytes": 27942,
+      "sha256": "571e501f0f499490f860414b5fb18351c6ed24733e417379ae9fde5ce31a7b1a"
+    },
+    {
+      "path": "vendor/netron/tengine.js",
+      "bytes": 25271,
+      "sha256": "8db3995de2a4b149212076c0b146a8b9f124d5e2f95f61399940612346da1e46"
+    },
+    {
+      "path": "vendor/netron/tensorrt.js",
+      "bytes": 6162,
+      "sha256": "09687eda4e29333ff9843c0cba6288fada9a6c9bdebe1b55f734f8fd9d09070c"
+    },
+    {
+      "path": "vendor/netron/text.js",
+      "bytes": 11520,
+      "sha256": "6cafc56a279199f73d01a86370f7fb9144ef5a456fa4aaca0b575ac9cb0cce6d"
+    },
+    {
+      "path": "vendor/netron/tf-metadata.json",
+      "bytes": 2325635,
+      "sha256": "bd6f2bf3a12737f3f95dd323d8cae3a69382d8243e13eeca30a2f746d5df05b9"
+    },
+    {
+      "path": "vendor/netron/tf-proto.js",
+      "bytes": 487027,
+      "sha256": "cec8b37df9aec71e62ea181199f4999fcce846b3608825d0177d9e2b20bfc446"
+    },
+    {
+      "path": "vendor/netron/tf.js",
+      "bytes": 102275,
+      "sha256": "f7e01cadeaab17505afef011cfdc9a923267c7197522625d8077d010eb2e9caa"
+    },
+    {
+      "path": "vendor/netron/tflite-metadata.json",
+      "bytes": 37260,
+      "sha256": "27f0264786033ba0415ca2ae83c74e8a1c3e286336e11d5fd2fd4e4b87ad291d"
+    },
+    {
+      "path": "vendor/netron/tflite-schema.js",
+      "bytes": 148053,
+      "sha256": "78c4f3ef9a486f7dd4b122fcf2891174adbbcb4c5fcba991ea8e8681ef109587"
+    },
+    {
+      "path": "vendor/netron/tflite.js",
+      "bytes": 25242,
+      "sha256": "5a514a616c679b11f90c6959b9b5f0d9c64861a8dcf33edc603da920d191faa7"
+    },
+    {
+      "path": "vendor/netron/tnn-metadata.json",
+      "bytes": 20468,
+      "sha256": "9ccbd292335097958e58af739bee75815d9aefbf0f195e594e8ca78f6495b5e8"
+    },
+    {
+      "path": "vendor/netron/tnn.js",
+      "bytes": 25409,
+      "sha256": "4028554236fa9d36ca91332c12e60d4c942267817450e18a9e5c0e8ea0c99ad5"
+    },
+    {
+      "path": "vendor/netron/torch-metadata.json",
+      "bytes": 12378,
+      "sha256": "71699a59a0ef428a72fee54339342f781e08c1ed3ab43183eda1f118d96b8bc2"
+    },
+    {
+      "path": "vendor/netron/torch.js",
+      "bytes": 30505,
+      "sha256": "4b9aa3fa22f52ed5d427c04eb14e631aa1b9d41db1bd6f9420add9fa52ef0ab2"
+    },
+    {
+      "path": "vendor/netron/tosa-metadata.json",
+      "bytes": 171385,
+      "sha256": "7feaf2d1940ff3b21283559e5b4f72dafcb9dfae569fdc5a555a064331d55f2f"
+    },
+    {
+      "path": "vendor/netron/tosa-schema.js",
+      "bytes": 77209,
+      "sha256": "4eb1bae9c54e56fdea4dc686255011e7cd2680212e2b46e9a3f9cad20f6260c6"
+    },
+    {
+      "path": "vendor/netron/tosa.js",
+      "bytes": 14876,
+      "sha256": "d0fd3abd056df5878d616e7da2e257ae8059c4fc91298feac7dc78d6158ad825"
+    },
+    {
+      "path": "vendor/netron/transformers.js",
+      "bytes": 7736,
+      "sha256": "2d6263f0e9dcc79bdeafa81ce46f66038d26aa5130b989f40aa32bc5b64d4b44"
+    },
+    {
+      "path": "vendor/netron/tvm.js",
+      "bytes": 13992,
+      "sha256": "3c82abb263867f06cd80eef268b6fbc0e684d75a92c3a1acbd8d34a306fee73e"
+    },
+    {
+      "path": "vendor/netron/uff-metadata.json",
+      "bytes": 2333,
+      "sha256": "91509ed360d929f4a84e0c2a7e3875f2341c226aded4a718920efafd634e6a02"
+    },
+    {
+      "path": "vendor/netron/uff-proto.js",
+      "bytes": 29834,
+      "sha256": "5f10688ef9a22b88fbe1c7dce9f9fd3d56d832145fd09797bd62ab82d6648cdb"
+    },
+    {
+      "path": "vendor/netron/uff.js",
+      "bytes": 11266,
+      "sha256": "d2a1a351bb119a33d6111015c428ab9de07c3e8857f493152856f2a1c0f7b633"
+    },
+    {
+      "path": "vendor/netron/view.js",
+      "bytes": 349515,
+      "sha256": "ced49ce37becaba390a334615ff6c1be7b437af1a285b346a3f64302d353795f"
+    },
+    {
+      "path": "vendor/netron/weka.js",
+      "bytes": 7813,
+      "sha256": "b1bfb49fbebe657ac745f10042a1dbeb0d820a9506b7ed0c7888ffc2527f23c6"
+    },
+    {
+      "path": "vendor/netron/worker.js",
+      "bytes": 1024,
+      "sha256": "1749908865bd7195f7766ec5ab7c563d9035519a2a3e08d6463e1bc427409f7d"
+    },
+    {
+      "path": "vendor/netron/xgboost.js",
+      "bytes": 5362,
+      "sha256": "9311cd71c5db76690a1c393e38f2e4c88ce7bf112390e57d1be0120f3bffa22e"
+    },
+    {
+      "path": "vendor/netron/xml.js",
+      "bytes": 63703,
+      "sha256": "2bd214936959746d178ac2024838f7939129b17825c205e97f5f05c155c3cfb0"
+    },
+    {
+      "path": "vendor/netron/xmodel-proto.js",
+      "bytes": 54312,
+      "sha256": "51a1bfb050eed2cf77cc0d895e6f0ea401fc72d434279fc7ddcf44db34cd898b"
+    },
+    {
+      "path": "vendor/netron/xmodel.js",
+      "bytes": 13489,
+      "sha256": "0a0c72d9a1623a41e3083650c1187532928a196e3c6df266ee77d73de9670be6"
+    },
+    {
+      "path": "vendor/netron/zip.js",
+      "bytes": 33448,
+      "sha256": "06317e931c3c2753bdb856e5206fef36a254938ec2c7b43677f3e7123e4f6b24"
+    }
+  ]
+}
