@@ -12,7 +12,7 @@
 
 ## Pattern 條件與工作階段
 
-可指定 pattern 中各 OP 的 shape、dtype 與 attributes 條件，條件隨 version 3 pattern JSON 保存，仍可匯入舊版。搜尋欄可下載工作階段 JSON，或恢復此瀏覽器上次儲存；重新選取本機模型並核對結構後，還原搜尋、選取、收合、字級與 SVG／Canvas 縮放位置。檔案不含模型與權重，不自動儲存每一步。操作方式與限制見 [條件與工作階段說明](docs/conditions-workspace.md)。
+可指定 pattern 中各 OP 的 shape、dtype 與 attributes 條件，條件隨 version 3 pattern JSON 保存，仍可匯入舊版。搜尋欄可下載工作階段 JSON，或恢復此瀏覽器上次儲存；重新選取本機模型並核對結構後，還原搜尋、選取、收合、字級與 SVG／Canvas 縮放位置。新版另有本機自動草稿、Undo／Redo、未完成編輯保存及多分頁衝突保護；模型與權重不存入草稿。操作方式與限制見 [保存及復原說明](docs/workspace-recovery.md) 和 [條件與工作階段說明](docs/conditions-workspace.md)。
 
 ## 搜尋工作區寬度
 
