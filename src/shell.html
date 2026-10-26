@@ -16,7 +16,7 @@
     <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
   </div>
   <div class="search-tools">
-    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button></div>
+    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button></div>
     <input id="workspace-file" type="file" accept=".json" hidden>
     <p id="workspace-hint" class="hint" hidden></p>
     <button id="choose-workspace-model" class="quiet" hidden>選取模型以恢復</button>
@@ -87,6 +87,13 @@
   <ol id="validation-errors" class="validation-errors"></ol>
   <p class="hint">檢查在本機背景執行，模型不會上傳。此檢查不取代 LLVM verifier 或公司 dialect 的自訂語意驗證。</p>
   <div class="import-actions"><button id="dismiss-validation" class="primary">關閉並調整</button></div>
+</dialog>
+<dialog id="export-report-dialog" aria-labelledby="export-report-title">
+  <div class="import-heading"><h2 id="export-report-title">最近匯出報告</h2><button id="close-export-report" class="icon-button" aria-label="關閉匯出報告">×</button></div>
+  <dl id="export-report-fields"></dl>
+  <ul id="export-report-checks"></ul>
+  <p class="hint">報告在本機產生，包含來源名稱、OP 與介面資訊，分享前請確認內容。報告未包含權重值，也不代表已通過公司 compiler／runtime 驗證。關閉模型後清除本次報告。</p>
+  <button id="download-export-report" class="quiet" disabled>下載完整報告 JSON</button>
 </dialog>
 <dialog id="release-dialog" aria-labelledby="release-title">
   <div class="import-heading"><h2 id="release-title">模鏡版本資訊</h2><button id="close-release-info" class="icon-button" aria-label="關閉版本資訊">×</button></div>

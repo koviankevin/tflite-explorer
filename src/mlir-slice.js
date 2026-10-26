@@ -2,7 +2,8 @@ import {assertValidMLIR,validateMLIRText} from './mlir-validate.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {buildDominance,opName} from './mlir-ir.js';
 import {typeSpelling} from './mlir-engine.js';
-import {mlirBlob} from './mlir-file.js';
+import {mlirArtifact} from './mlir-file.js';
+import {mlirProvenance} from './mlir-export-provenance.js';
 import {slicePatternGraph} from './mlir-pattern-projection.js';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
@@ -220,7 +221,14 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});
-    return {blob:mlirBlob(text,index.mlir.payloads),layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
+    const {blob,ranges:byteRanges}=mlirArtifact(text,index.mlir.payloads);
+    const operators=new Map([...bindings.operators].map(([op,n])=>[op,{block:bindings.blocks.get(ir.byOp.get(op).block),operation:n}]));
+    const generated=[{type:'cf.br',role:'entry-route',output:{block:0,operation:(conditional.length?2:0)+(multiExit?liveExits.length:0)}}];
+    if(conditional.length)for(let n=0;n<2;n++)generated.push({type:'arith.constant',role:'output-validity',output:{block:0,operation:n}});
+    if(multiExit)liveExits.forEach((b,n)=>generated.push({type:'arith.constant',role:'exit-tag',output:{block:0,operation:(conditional.length?2:0)+n}}));
+    for(const b of liveExits)if(!selected.has(b.operations.at(-1)))generated.push({type:'func.return',role:'output-boundary',output:{block:bindings.blocks.get(b),operation:b.operations.filter(op=>retained.has(op)).length}});
+    const provenance=mlirProvenance(index,{mode:'cfg-slice',operators,selected,ranges:byteRanges,generated});
+    return {blob,provenance,layers:retained.size+liveBlocks.length+1+(conditional.length?2:0)+(multiExit?liveExits.length:0),inputs,outputs:outputs.map(o=>({name:name(o.value),type:o.type,conditional:o.conditional,results:o.results})),validation,slice:{selected:selected.size,retained:retained.size,added:[...retained].filter(op=>!selected.has(op)).map(op=>opName(op)),blocks:liveBlocks.length+1,routingBlocks:liveBlocks.length,conditionalOutputs:conditional.length,exitTag:multiExit}};
 }
 
 function cyclicBlocks(blocks,edges) {

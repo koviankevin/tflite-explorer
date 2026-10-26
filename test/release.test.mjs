@@ -33,6 +33,8 @@ test('fixed public/internal packages preserve extensions and enforce release int
         assert.ok(!manifest.files.some(f=>f.path.includes('internal-dialects')));
         assert.ok((await readFile(path.join(publicPath,'index.html'),'utf8')).includes(`?v=${publicBuild.release.buildId}`));
         assert.ok(manifest.files.filter(f=>f.path.endsWith('.js')).length>50);
+        const companion=spawnSync(process.execPath,[path.join(publicPath,'tools/verify-export.mjs')],{encoding:'utf8',windowsHide:true});
+        assert.equal(companion.status,1);assert.match(companion.stderr,/用法/);assert.ok(!companion.stderr.includes('ERR_MODULE_NOT_FOUND'));
         assert.equal(releaseRows(manifest.release).find(r=>r[0]==='發行類型')[1],'公開版');
     });
     await t.test('internal build uses real adapter, search metadata and export/reopen without changing core',async()=>{

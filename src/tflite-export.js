@@ -51,7 +51,7 @@ export function exportTflite(index, graphIndex, selected, file) {
         const source = index.raw.buffers[id];
         if (!source) throw new Error('權重 buffer 編號無效。');
         const { offset, size } = range(source.offset, source.size);
-        return Object.assign(new schema.Buffer(), { data: size ? null : source.data || new Uint8Array(), offset: 0n, size: 0n, ...(size ? { sourceRange: { offset, size } } : {}) });
+        return Object.assign(new schema.Buffer(), { data: size ? null : source.data || new Uint8Array(), offset: 0n, size: 0n, ...(size ? { sourceRange: { offset, size, kind:'buffer', reference:`buffer:${id}` } } : {}) });
     });
     const tensors = tensorIds.map((id) => {
         const source = graph.tensors[id];
@@ -73,14 +73,21 @@ export function exportTflite(index, graphIndex, selected, file) {
         // metadata can be a custom runtime dependency, so keep it and its buffers.
         metadata: preservedIds ? index.raw.metadata.filter((item) => item.name !== 'TFLITE_METADATA') : [], metadata_buffer: preservedIds ? Int32Array.from(index.raw.metadata_buffer.filter((id) => !index.raw.metadata.some((item) => item.name === 'TFLITE_METADATA' && item.buffer === id))) : new Int32Array(), signature_defs: [], external_buffers: [], external_buffer_groups: []
     };
-    exported.subgraphs[0].operators = exported.subgraphs[0].operators.map((op) => {
+    exported.subgraphs[0].operators = exported.subgraphs[0].operators.map((op, i) => {
+        if (op.customOptionsInline && op.custom_options?.length) op = {...op, byteSources:{custom_options:{...op.customOptionsRange, kind:'custom-options-inline', reference:`operator:${nodes[i]}`}}};
         if (!op.large_custom_options_size && !op.customOptionsDeferred) return op;
         const sourceRange = op.customOptionsDeferred ? range(op.customOptionsRange.offset, op.customOptionsRange.size) : range(op.large_custom_options_offset, op.large_custom_options_size);
         // Preserve inline precedence when both representations exist. A large
         // deferred inline vector becomes the effective external initialization data.
         const inline = !op.customOptionsDeferred && op.customOptionsInline;
-        return { ...op, custom_options: inline ? op.custom_options : null, large_custom_options_offset: 0n, large_custom_options_size: 0n, externalRanges: [{ offsetKey: 'large_custom_options_offset', sizeKey: 'large_custom_options_size', ...sourceRange }] };
+        return { ...op, custom_options: inline ? op.custom_options : null, large_custom_options_offset: 0n, large_custom_options_size: 0n, externalRanges: [{ offsetKey: 'large_custom_options_offset', sizeKey: 'large_custom_options_size', ...sourceRange, kind:'custom-options-external', reference:`operator:${nodes[i]}` }] };
     });
-    const blob = new FlatbufferWriter().finish(exported, file);
-    return { blob, layers: nodes.length, tensors: tensors.length, customOperators, preservedIds, retainedBuffers: buffers.length, inputs: inputs.map((id) => ({ id: mapId(id), sourceId: id, name: graph.tensors[id].name })), outputs: outputs.map((id) => ({ id: mapId(id), sourceId: id, name: graph.tensors[id].name })) };
+    const {blob,ranges} = new FlatbufferWriter().finishArtifact(exported, file);
+    const boundary = id => {
+        const t=graph.tensors[id],q=t.quantization;
+        const details=q?.details;
+        return {id:mapId(id),sourceId:id,name:t.name,shape:[...t.shape],shapeSignature:[...(t.shape_signature || [])],dtype:schema.TensorType[t.type] || String(t.type),quantization:q ? {min:[...(q.min || [])],max:[...(q.max || [])],scale:[...(q.scale || [])],zeroPoint:[...(q.zero_point || [])].map(String),dimension:q.quantized_dimension,details:details?{type:details.constructor.name,...Object.fromEntries(Object.entries(details).map(([key,value])=>[key,typeof value==='bigint'?String(value):ArrayBuffer.isView(value)?[...value]:value]))}:null}:null};
+    };
+    const provenance={mode:'tflite-subgraph',ranges,operators:nodes.map((node,i)=>({source:{graph:graphIndex,node},output:{graph:0,node:i}})),tensorMap:[...used].sort((a,b)=>a-b).map(id=>({sourceId:id,outputId:mapId(id)}))};
+    return { blob, provenance, layers: nodes.length, tensors: tensors.length, customOperators, preservedIds, retainedBuffers: buffers.length, inputs: inputs.map(boundary), outputs: outputs.map(boundary) };
 }

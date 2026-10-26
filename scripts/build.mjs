@@ -42,12 +42,17 @@ export async function buildSite({output='dist',profile:profilePath}={}) {
         await writeFile(dest('demo.mlir'),MLIR_BRANCH+'\n');
         await cp(source('vendor/netron/LICENSE'),dest('LICENSE-Netron.txt'));
         await cp(source('LICENSE'),dest('LICENSE'));
+        // The offline verifier travels with both public and internal ZIPs.
+        // Its relative import resolves the same pure report module as the UI.
+        await mkdir(dest('tools'));
+        await cp(source('scripts/verify-export.mjs'),dest('tools/verify-export.mjs'));
+        await cp(source('docs/export-reports.md'),dest('tools/export-reports.md'));
         const pkg=JSON.parse(await readFile(source('package.json'),'utf8'));
         const release={schemaVersion:1,version:pkg.version,distribution:profile.distribution,extension:profile.extension,source:gitSource()};
         const files=await filesIn(stage),hashParts=[JSON.stringify(release)],modules=[];
         for(const name of files) {
             let bytes=await readFile(dest(name));
-            if(/\.(js|css|html|json|svg|md|txt|py)$/i.test(name) || path.basename(name).startsWith('LICENSE')){bytes=canonical(bytes);await writeFile(dest(name),bytes);}
+            if(/\.(m?js|css|html|json|svg|md|txt|py)$/i.test(name) || path.basename(name).startsWith('LICENSE')){bytes=canonical(bytes);await writeFile(dest(name),bytes);}
             hashParts.push(name,sha256(bytes));if(name.endsWith('.js'))modules.push(name);
         }
         release.buildId=sha256(Buffer.from(hashParts.join('\n'))).slice(0,16);

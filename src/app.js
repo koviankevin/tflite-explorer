@@ -5,6 +5,7 @@ import {overviewCanvas} from './overview-canvas.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
 import {initReleaseInfo} from './release-info.js';
+import {exportReportUI} from './export-report-ui.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
@@ -15,6 +16,7 @@ import { LORA_PATTERN } from './pattern-utils.js';
 import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js';
 
 const $ = (id) => document.getElementById(id);
+const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
@@ -191,7 +193,7 @@ function reset() {
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
-    exportBusy = false; $('validation-dialog').close();
+    exportBusy = false; $('validation-dialog').close();exportReports.clear();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
@@ -828,9 +830,12 @@ async function downloadSubmodel(graph, nodes, selections) {
     $('export-match').disabled = true;
     try {
         status(mlir ? '擷取局部 MLIR，保留原始型別、屬性與 SSA 連線…' : '建立 TFLite 子模型，保留所需權重與參數…');
-        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
+        const outputName=`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`;
+        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, outputName, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
         if (file !== sourceFile) return;
-        await host.export(`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`, result.blob);
+        await host.export(outputName, result.blob);
+        if(file!==sourceFile)return;
+        exportReports.set(result.report,outputName,result.reportError);
         if (mlir) {
             const checks=result.validation?.deferredPayloads ? '結構語法／SSA／dominance 已檢查；大型權重保留原文，未逐值驗證' : '已通過本機語法／SSA／dominance 檢查';
             if(result.slice) {

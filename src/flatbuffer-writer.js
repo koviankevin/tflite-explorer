@@ -17,7 +17,7 @@ const scalar = { bool_: ['setUint8', 1], int8_: ['setInt8', 1], int32_: ['setInt
 const vectors = { Int8Array: ['setInt8', 1], Uint8Array: ['setUint8', 1], Int16Array: ['setInt16', 2], Uint16Array: ['setUint16', 2], Int32Array: ['setInt32', 4], Uint32Array: ['setUint32', 4], Float32Array: ['setFloat32', 4], Float64Array: ['setFloat64', 8], int64s_: ['setBigInt64', 8], bools_: ['setUint8', 1] };
 
 export class FlatbufferWriter {
-    constructor() { this.bytes = new Uint8Array(65536); this.length = 8; this.external = []; }
+    constructor() { this.bytes = new Uint8Array(65536); this.length = 8; this.external = []; this.ranges = []; }
     reserve(count, alignment = 8, bias = 0) {
         const start = this.length + (alignment - (this.length + bias) % alignment) % alignment;
         const end = start + count;
@@ -69,7 +69,11 @@ export class FlatbufferWriter {
             else if (kind === 'tables' || kind === 'strings_') {
                 present(slot); const vector = this.reserve(4 + item.length * 4, 4); this.write(vector, item.length); this.ref(at(slot), vector);
                 item.forEach((v, i) => this.ref(vector + 4 + i * 4, kind === 'tables' ? this.table(v, args.replace('tflite.', '')) : this.string(v)));
-            } else if (kind === 'array' || vectors[kind]) { present(slot); this.ref(at(slot), this.vector(item, kind === 'array' ? args : kind)); }
+            } else if (kind === 'array' || vectors[kind]) {
+                present(slot); const vector = this.vector(item, kind === 'array' ? args : kind); this.ref(at(slot), vector);
+                const source = value.byteSources?.[field.key];
+                if (source && source.size) this.ranges.push({ ...source, outputOffset: vector + 4 });
+            }
             else throw new Error(`不支援的 TFLite 欄位：${name}.${field.key}`);
         }
         if (value.sourceRange) this.external.push({ offsetAt: at(6), sizeAt: at(8), ...value.sourceRange });
@@ -78,11 +82,12 @@ export class FlatbufferWriter {
             const size = fields.find((field) => field.key === range.sizeKey && field.kind === 'uint64_');
             if (!offset || !size) throw new Error('外部資料範圍沒有對應的 offset／size 欄位。');
             present(offset.slot); present(size.slot);
-            this.external.push({ offsetAt: at(offset.slot), sizeAt: at(size.slot), offset: range.offset, size: range.size });
+            this.external.push({ ...range, offsetAt: at(offset.slot), sizeAt: at(size.slot) });
         }
         return pos;
     }
-    finish(model, file) {
+    finish(model, file) { return this.finishArtifact(model, file).blob; }
+    finishArtifact(model, file) {
         const root = this.table(model, 'Model'); this.write(0, root); this.bytes.set([84, 70, 76, 51], 4);
         let offset = this.length;
         const parts = [];
@@ -90,8 +95,10 @@ export class FlatbufferWriter {
             if (!Number.isSafeInteger(range.offset) || !Number.isSafeInteger(range.size) || range.offset < 0 || range.size < 0 || range.offset > file.size - range.size) throw new Error('外部資料範圍超出來源檔案。');
             const padding = (16 - offset % 16) % 16;
             parts.push(new Uint8Array(padding), file.slice(range.offset, range.offset + range.size)); offset += padding;
+            if (range.size) this.ranges.push({ offset: range.offset, size: range.size, outputOffset: offset, kind: range.kind || 'buffer', reference: range.reference });
             this.write(range.offsetAt, offset, 'setBigUint64'); this.write(range.sizeAt, range.size, 'setBigUint64'); offset += range.size;
         }
-        return new Blob([this.bytes.slice(0, this.length), ...parts], { type: 'application/octet-stream' });
+        for (const range of this.ranges) if (!Number.isSafeInteger(range.offset) || !Number.isSafeInteger(range.size) || range.offset < 0 || range.size < 0 || range.offset > file.size - range.size) throw new Error('資料對照範圍超出來源檔案。');
+        return { blob: new Blob([this.bytes.slice(0, this.length), ...parts], { type: 'application/octet-stream' }), ranges: this.ranges.map(({offset, size, outputOffset, kind, reference})=>({sourceOffset:offset, outputOffset, bytes:size, kind, reference})) };
     }
 }

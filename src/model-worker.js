@@ -5,6 +5,7 @@ import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgra
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 import {foldPatternSnapshot} from './pattern-fold.js';
 import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
+import {createExportReport} from './export-report.js';
 let index;
 let overview;
 let results = [];
@@ -12,6 +13,12 @@ let generation = 0;
 let file;
 let identity;
 const send = (id, data) => postMessage({ id, data });
+const withReport=(result,args)=>{
+    try {
+        const report=createExportReport(index,file,result,{...args,buildId:new URL(import.meta.url).searchParams.get('v')});
+        const {provenance,...data}=result;return {...data,report};
+    } catch(error) {const {provenance,...data}=result;return {...data,reportError:error.message};}
+};
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
@@ -35,10 +42,10 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
-            send(id, exportTflite(index, args.graph, args.nodes, file));
+            send(id, withReport(exportTflite(index, args.graph, args.nodes, file),args));
         } else if (action === 'exportMLIR') {
             const { exportMLIR } = await import('./mlir-export.js');
-            send(id, await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}));
+            send(id, withReport(await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}),args));
         } else if (action === 'search') {
             overview=null;
             generation++;

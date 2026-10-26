@@ -1,5 +1,11 @@
 #release-dialog{width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:22px;background:var(--paper);color:var(--ink)}
 #release-dialog::backdrop{background:#142a2466}
+#export-report-dialog{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:22px;background:var(--paper);color:var(--ink)}
+#export-report-dialog::backdrop{background:#142a2466}
+#export-report-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#export-report-dialog h2{font-size:20px;margin:0}
+#export-report-fields{display:grid;grid-template-columns:100px minmax(0,1fr);gap:10px 16px;line-height:1.6}#export-report-fields dt{color:var(--muted)}#export-report-fields dd{margin:0;overflow-wrap:anywhere}
+#export-report-checks{padding-left:22px;line-height:1.7}#export-report-checks li{margin:10px 0;overflow-wrap:anywhere}
+@media(max-width:480px){#export-report-fields{grid-template-columns:1fr;gap:4px}#export-report-fields dd{margin-bottom:10px}#export-report-dialog{padding:16px}}
 #release-fields{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 18px;margin:20px 0;line-height:1.6}
 #release-fields dt{color:var(--muted)}#release-fields dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
 #release-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#release-dialog h2{font-size:20px;margin:0}
