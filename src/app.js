@@ -1,21 +1,21 @@
-import { Host } from '../vendor/netron/browser.js?v=44c61533b3e74ddf';
-import { View, Attachment } from '../vendor/netron/view.js?v=44c61533b3e74ddf';
-import { hydrate } from './hydrate.js?v=44c61533b3e74ddf';
-import {overviewCanvas} from './overview-canvas.js?v=44c61533b3e74ddf';
-import { modelFormat } from './model-formats.js?v=44c61533b3e74ddf';
-import {explorerResize} from './explorer-resize.js?v=44c61533b3e74ddf';
-import {initReleaseInfo} from './release-info.js?v=44c61533b3e74ddf';
-import {exportReportUI} from './export-report-ui.js?v=44c61533b3e74ddf';
-import {conditionEditor} from './pattern-condition-editor.js?v=44c61533b3e74ddf';
-import {parseGraphPattern} from './subgraph-pattern.js?v=44c61533b3e74ddf';
-import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=44c61533b3e74ddf';
-import {workspaceSessionUI} from './workspace-session-ui.js?v=44c61533b3e74ddf';
-import {draftModelKey} from './workspace-drafts.js?v=44c61533b3e74ddf';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=44c61533b3e74ddf';
-import {rectangleSelection} from './rectangle-selection.js?v=44c61533b3e74ddf';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=44c61533b3e74ddf';
-import { LORA_PATTERN } from './pattern-utils.js?v=44c61533b3e74ddf';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=44c61533b3e74ddf';
+import { Host } from '../vendor/netron/browser.js?v=66e1f1fa94a943d8';
+import { View, Attachment } from '../vendor/netron/view.js?v=66e1f1fa94a943d8';
+import { hydrate } from './hydrate.js?v=66e1f1fa94a943d8';
+import {overviewCanvas} from './overview-canvas.js?v=66e1f1fa94a943d8';
+import { modelFormat } from './model-formats.js?v=66e1f1fa94a943d8';
+import {explorerResize} from './explorer-resize.js?v=66e1f1fa94a943d8';
+import {initReleaseInfo} from './release-info.js?v=66e1f1fa94a943d8';
+import {exportReportUI} from './export-report-ui.js?v=66e1f1fa94a943d8';
+import {conditionEditor} from './pattern-condition-editor.js?v=66e1f1fa94a943d8';
+import {parseGraphPattern} from './subgraph-pattern.js?v=66e1f1fa94a943d8';
+import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=66e1f1fa94a943d8';
+import {workspaceSessionUI} from './workspace-session-ui.js?v=66e1f1fa94a943d8';
+import {draftModelKey} from './workspace-drafts.js?v=66e1f1fa94a943d8';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=66e1f1fa94a943d8';
+import {rectangleSelection} from './rectangle-selection.js?v=66e1f1fa94a943d8';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=66e1f1fa94a943d8';
+import { LORA_PATTERN } from './pattern-utils.js?v=66e1f1fa94a943d8';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=66e1f1fa94a943d8';
 
 const $ = (id) => document.getElementById(id);
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
@@ -52,7 +52,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=44c61533b3e74ddf`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=66e1f1fa94a943d8`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -180,7 +180,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=44c61533b3e74ddf', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=66e1f1fa94a943d8', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);

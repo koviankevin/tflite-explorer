@@ -1,14 +1,14 @@
-import {exportWorkspace,parseWorkspace} from './workspace.js?v=44c61533b3e74ddf';
-import {WorkspaceHistory} from './workspace-history.js?v=44c61533b3e74ddf';
-import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=44c61533b3e74ddf';
+import {exportWorkspace,parseWorkspace} from './workspace.js?v=66e1f1fa94a943d8';
+import {WorkspaceHistory} from './workspace-history.js?v=66e1f1fa94a943d8';
+import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=66e1f1fa94a943d8';
 const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join('');
 
 // The controller owns history, save ordering and optimistic concurrency. UI and
 // IndexedDB are adapters; model objects/File/Blob never enter this module.
 export function workspaceSession({store,capture,apply,ready=()=>true,settle=async()=>{},changed=()=>{},enabled=true,owner=id(),delay=600}) {
-    const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
+    const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,operation=null,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
     const emit=()=>changed({message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing});
-    const sample=(force=false)=>{if(!active || applying || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
+    const sample=(force=false,internal=false)=>{if(!active || (applying&&!internal) || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
     const savedMessage=current=>current.savedAt?`已自動儲存 ${new Date(current.savedAt).toLocaleTimeString()} · 僅含操作狀態`:'自動草稿已就緒。';
     const schedule=()=>{
         clearTimeout(timer);if(!active || applying)return;
@@ -16,9 +16,15 @@ export function workspaceSession({store,capture,apply,ready=()=>true,settle=asyn
         if(enabled && !active.pending && !active.conflict && !active.storageError){message='操作變更待儲存…';emit();}
         timer=setTimeout(()=>flush(),delay);
     };
+    const beginApply=()=>{
+        applying=true;let done;const task=new Promise(resolve=>done=resolve);operation=task;emit();
+        return ()=>{if(operation===task){applying=false;operation=null;}done();emit();schedule();};
+    };
     async function flush({force=false}={}) {
         clearTimeout(timer);timer=null;const current=active;
-        if(!current || applying)return;
+        if(!current)return;
+        if(operation)await operation;
+        if(active!==current || applying)return;
         if(!force){await settle();if(active!==current || applying)return;}
         if(!force&&!ready()){schedule();return;}
         try{sample(force);}catch(error){message=`草稿尚未儲存：${error.message}`;emit();return;}
@@ -71,22 +77,23 @@ export function workspaceSession({store,capture,apply,ready=()=>true,settle=asyn
             if(!active || applying)return;
             const decoded=readDraft(record),current=active;
             if(draftModelKey(decoded.workspace.identity)!==draftModelKey(current.identity))throw new Error('請先選取這份草稿的原模型。');
-            applying=true;emit();
+            const finish=beginApply();
             try {
                 await apply(decoded.workspace);
                 if(active!==current)return;
                 active={identity:current.identity,key:record.key,revision:record.revision,saved:exportWorkspace(decoded.workspace),savedAt:record.updatedAt,pending:false,conflict:false};
                 observed=exportWorkspace(capture(current.identity));history.push(observed);message=decoded.recoveredPrevious?'已恢復上次成功版本；損壞的記錄未直接套用。':'已恢復本機草稿。';
-            } finally {applying=false;emit();schedule();}
+            } finally {finish();}
         },
         async travel(delta) {
             if(!active || applying)return;
-            const expected=active;await settle();if(active!==expected || applying)return;
-            if(!ready()){message='請等待搜尋、繪圖或匯出完成後再復原／重做。';emit();return;}
-            sample();const target=history.target(delta);if(!target)return;
-            const current=active;applying=true;emit();
-            try{await apply(target.workspace);if(active===current){history.move(target.position);observed=exportWorkspace(capture(current.identity));message=delta<0?'已復原上一步操作。':'已重做操作。';}}
-            finally{applying=false;emit();schedule();}
+            const current=active,finish=beginApply();
+            try {
+                await settle();if(active!==current)return;
+                if(!ready()){message='請等待搜尋、繪圖或匯出完成後再復原／重做。';return;}
+                sample(false,true);const target=history.target(delta);if(!target)return;
+                await apply(target.workspace);if(active===current){history.move(target.position);observed=exportWorkspace(capture(current.identity));message=delta<0?'已復原上一步操作。':'已重做操作。';}
+            }finally{finish();}
         },
         list:()=>store.list(),
         fail(error){message=`無法保存本機草稿：${error.message}；請手動下載工作階段。`;emit();}

@@ -1,7 +1,7 @@
 
-import * as base from './base.js?v=44c61533b3e74ddf';
-import * as flatbuffers from './flatbuffers.js?v=44c61533b3e74ddf';
-import * as json from './json.js?v=44c61533b3e74ddf';
+import * as base from './base.js?v=66e1f1fa94a943d8';
+import * as flatbuffers from './flatbuffers.js?v=66e1f1fa94a943d8';
+import * as json from './json.js?v=66e1f1fa94a943d8';
 
 const rknn = {};
 const rknx = {};
