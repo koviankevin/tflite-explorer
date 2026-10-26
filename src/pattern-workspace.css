@@ -57,3 +57,4 @@
 html{overflow-anchor:none}
 #target .slice-connection{cursor:pointer}
 #target .slice-connection-hit:focus-visible{stroke:var(--accent);stroke-opacity:.35;outline:none}
+#pattern-library-status{display:block;overflow-wrap:anywhere;margin:6px 0}

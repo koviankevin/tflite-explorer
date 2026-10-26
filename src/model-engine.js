@@ -1,10 +1,10 @@
-import '../vendor/netron/base.js?v=66e1f1fa94a943d8';
-import { BinaryReader } from '../vendor/netron/flatbuffers.js?v=66e1f1fa94a943d8';
-import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js?v=66e1f1fa94a943d8';
-import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=66e1f1fa94a943d8';
-import { RangeStream } from './range-stream.js?v=66e1f1fa94a943d8';
-import { operatorKey, operatorIndex } from './pattern-utils.js?v=66e1f1fa94a943d8';
-export { operatorKey } from './pattern-utils.js?v=66e1f1fa94a943d8';
+import '../vendor/netron/base.js?v=d3740856bb6e74d3';
+import { BinaryReader } from '../vendor/netron/flatbuffers.js?v=d3740856bb6e74d3';
+import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js?v=d3740856bb6e74d3';
+import { tflite as schema } from '../vendor/netron/tflite-schema.js?v=d3740856bb6e74d3';
+import { RangeStream } from './range-stream.js?v=d3740856bb6e74d3';
+import { operatorKey, operatorIndex } from './pattern-utils.js?v=d3740856bb6e74d3';
+export { operatorKey } from './pattern-utils.js?v=d3740856bb6e74d3';
 const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter((value) => value && typeof value === 'object' && value.identifier !== undefined) : [];
 export const CUSTOM_OPTIONS_PREVIEW_LIMIT = 64 * 1024;
 

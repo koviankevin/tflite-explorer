@@ -1,6 +1,6 @@
 
-// import * as python from './python.js?v=66e1f1fa94a943d8';
-// import * as safetensors from './safetensors.js?v=66e1f1fa94a943d8';
+// import * as python from './python.js?v=d3740856bb6e74d3';
+// import * as safetensors from './safetensors.js?v=d3740856bb6e74d3';
 
 const transformers = {};
 

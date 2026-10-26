@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=66e1f1fa94a943d8">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=d3740856bb6e74d3">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=66e1f1fa94a943d8"></script>
+<script type="module" src="src/app.js?v=d3740856bb6e74d3"></script>
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
 body { touch-action: none; overflow: hidden; width: 100%; height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "PingFang SC"; font-size: 12px; text-rendering: geometricPrecision; }
@@ -307,16 +307,16 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/mobile.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/model-visibility.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/typography.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/overview-canvas.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/explorer-resize.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/workspace.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/laptop.css?v=66e1f1fa94a943d8">
-<link rel="stylesheet" href="src/release.css?v=66e1f1fa94a943d8">
+<link rel="stylesheet" href="src/app.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/mobile.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/model-visibility.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/typography.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/overview-canvas.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/explorer-resize.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/workspace.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/laptop.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/release.css?v=d3740856bb6e74d3">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -349,6 +349,7 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
     <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
     <div id="pattern-editor" hidden>
       <label for="saved-pattern" class="control-label">已儲存的 patterns <span>此瀏覽器</span></label><select id="saved-pattern"><option value="">選擇已儲存的 pattern…</option></select>
+      <output id="pattern-library-status" class="hint" aria-live="polite">正在讀取本機 pattern 清單…</output>
       <div class="library-actions"><button id="export-pattern" class="text-button" disabled>匯出所選</button><button id="export-patterns" class="text-button" disabled>匯出全部</button><button id="open-import" class="text-button">匯入 JSON</button></div>
       <div class="control-label">Operator 連接結構 <button id="reset-pattern" class="text-button">重設範例</button></div>
       <div id="graph-pattern-editor">
