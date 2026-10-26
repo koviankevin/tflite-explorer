@@ -1233,14 +1233,21 @@ function restoreDraftEditor(s) {
 }
 function captureSession(identity){return {format:'model-lens-workspace',version:2,identity,state:workspaceState({draft:true})};}
 function workspaceReady(){return !!model && !exportBusy && !workspaceBusy && !pending.size && $('target').getAttribute('aria-busy')!=='true' && $('loading-card').hidden;}
+const settleWorkspace=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 async function applySession(workspace) {
+    const source=file,query=queryGeneration,render=renderGeneration;
+    const currentView=()=>{if(file!==source || queryGeneration!==query || renderGeneration!==render)throw new DOMException('已取消','AbortError');};
     checkWorkspace(workspace,sessions.identity,model.graphs);
     const current=parseWorkspace(exportWorkspace(captureSession(sessions.identity))).state,s=workspace.state;
     const scene=value=>{const copy={...value};for(const key of ['selections','picking','captureName','camera'])delete copy[key];return JSON.stringify(copy);};
     if(scene(current)!==scene(s)){await restoreWorkspace(workspace);return;}
     cfgSelections.clear();for(const b of s.selections)cfgSelections.set(b.graph,new Set(b.nodes));pickedGraph=s.graph;pickedNodes=cfgSelections.get(s.graph) || new Set();$('capture-name').value=s.captureName;setPickingPattern(s.picking);refreshPickedNodes();
+    await settleWorkspace();
+    currentView();
     if(s.camera?.kind==='canvas' && virtualOverview)virtualOverview.restore(s.camera);
     else if(s.camera?.kind==='svg' && !virtualOverview && view.target)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),s.camera);
+    await settleWorkspace();
+    currentView();
 }
 function queueWorkspace(workspace,chooseNow=true) {
     pendingWorkspace=workspace;
@@ -1268,7 +1275,7 @@ new MutationObserver(() => {
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
-sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
+sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,settle:settleWorkspace,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
     if(model&&sessions.identity&&draftModelKey(workspace.identity)===draftModelKey(sessions.identity))await sessions.resume(record);
     else {queuedDraft=record;queueWorkspace(workspace,false);}
 }});

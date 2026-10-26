@@ -84,3 +84,15 @@ test('closing during an in-flight save retains the final UI snapshot even when s
     current.state.query='final unsaved edit';ready=false;const closing=controller.detach();release();await pending;await closing;
     assert.equal(readDraft([...store.records.values()][0]).workspace.state.query,'final unsaved edit');
 });
+test('layout settles before checkpoints so a clear-selection action takes one Undo and keeps Redo',async()=>{
+    const store=memoryStore();let current=fixture(),layoutPending=false;
+    current.state.selections=[{graph:0,nodes:[1]}];
+    const settle=async()=>{if(layoutPending){current.state.camera.scrollTop=40;layoutPending=false;}};
+    const controller=workspaceSession({store,owner:'tab',capture:()=>current,delay:60000,settle,apply:async w=>{current=structuredClone(w);await settle();}});
+    try {
+        await controller.attach(identity);await controller.flush();
+        current.state.selections=[];layoutPending=true;await controller.flush();
+        await controller.travel(-1);assert.deepEqual(current.state.selections,[{graph:0,nodes:[1]}]);
+        await controller.flush();await controller.travel(1);assert.deepEqual(current.state.selections,[]);assert.equal(current.state.camera.scrollTop,40);
+    }finally{controller.detach();}
+});

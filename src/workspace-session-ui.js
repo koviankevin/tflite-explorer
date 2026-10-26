@@ -2,11 +2,11 @@ import {draftStore,readDraft} from './workspace-drafts.js';
 import {workspaceSession} from './workspace-session.js';
 import {exportWorkspace} from './workspace.js';
 
-export function workspaceSessionUI({capture,apply,ready,restoreDraft,exportFile,error}) {
+export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,exportFile,error}) {
     const $=id=>document.getElementById(id),dialog=$('draft-dialog');let channel,session,records=[],selected,listGeneration=0;
     let enabled=true;try{enabled=localStorage.getItem('model-lens.autosave.v1')!=='off';}catch{/* IDB can still work. */}
     const store=draftStore({notify:record=>{if(record)channel?.postMessage({key:record.key,revision:record.revision,owner:record.owner,deleted:!!record.deleted});}});
-    session=workspaceSession({store,capture,apply,ready,enabled,changed:state=>{
+    session=workspaceSession({store,capture,apply,ready,settle,enabled,changed:state=>{
         $('autosave-enabled').checked=state.enabled;if($('draft-status').textContent!==state.message)$('draft-status').textContent=state.message;
         $('undo-workspace').disabled=!state.canUndo;$('redo-workspace').disabled=!state.canRedo;
         $('fork-draft').hidden=!state.pending&&!state.conflict;$('resume-draft-prompt').hidden=!state.pending&&!state.conflict;
@@ -25,7 +25,7 @@ export function workspaceSessionUI({capture,apply,ready,restoreDraft,exportFile,
         const generation=++listGeneration;selected=null;
         if(!dialog.open)dialog.showModal();$('draft-description').textContent='讀取本機草稿…';$('restore-draft').disabled=true;$('download-draft').disabled=true;$('remove-draft').disabled=true;$('draft-remove-confirm').checked=false;$('draft-list').disabled=true;
         try {
-            await session.flush();records=await session.list();
+            await settle();await session.flush({force:true});records=await session.list();
             if(generation!==listGeneration || !dialog.open)return;
             const identity=session.identity;
             records.sort((a,b)=>(b.modelKey===`${identity?.sourceFormat}:${identity?.bytes}:${identity?.signature}`)-(a.modelKey===`${identity?.sourceFormat}:${identity?.bytes}:${identity?.signature}`) || b.updatedAt-a.updatedAt);
@@ -44,7 +44,7 @@ export function workspaceSessionUI({capture,apply,ready,restoreDraft,exportFile,
     $('autosave-enabled').onchange=()=>{const value=$('autosave-enabled').checked;session.setEnabled(value);try{localStorage.setItem('model-lens.autosave.v1',value?'on':'off');}catch{/* Setting remains applied in memory. */}};
     const change=event=>{if(event.target?.closest?.('#draft-dialog, #export-report-dialog, #release-dialog, .session-tools'))return;session.change();};
     for(const type of ['click','input','change','pointerup','wheel','scroll'])document.addEventListener(type,change,{capture:true,passive:true});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush();});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush({force:true});});
     window.addEventListener('pagehide',()=>session.flush({force:true}));
     document.addEventListener('keydown',event=>{
         if(document.querySelector('dialog[open]') || event.target.closest?.('input, textarea, select, [contenteditable="true"]') || !(event.ctrlKey || event.metaKey) || event.altKey)return;
