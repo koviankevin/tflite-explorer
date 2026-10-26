@@ -1,4 +1,7 @@
 .workspace-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.session-tools{margin-bottom:10px;border:1px solid var(--line);border-radius:5px;padding:7px 9px;overflow-wrap:anywhere}.session-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.session-actions label{display:flex;align-items:center;gap:5px;color:var(--muted)}.session-actions input{margin:0}.session-tools p{font-size:12px;color:var(--muted);line-height:1.5;margin:5px 0 0}.session-tools>button{margin:6px 8px 0 0}
+#draft-dialog{max-height:calc(100dvh - 24px);overflow:auto}#draft-list{width:100%;min-width:0;margin:10px 0;padding:8px;background:var(--paper);color:var(--ink);border:1px solid var(--line)}#draft-description{overflow-wrap:anywhere;line-height:1.6}#draft-dialog .import-actions{flex-wrap:wrap}
+.draft-removal{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}.draft-removal summary{cursor:pointer}.draft-removal label{display:block;line-height:1.6;margin:10px 0}
 #condition-editor{margin-top:10px;border:1px solid var(--line);border-radius:5px}
 #condition-editor summary{cursor:pointer;padding:8px;color:var(--accent)}
 .condition-fields{padding:10px;max-height:340px;overflow:auto;display:grid;gap:8px}

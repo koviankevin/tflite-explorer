@@ -1,7 +1,7 @@
 
-import * as flatbuffers from './flatbuffers.js?v=fc124b8183a7a475';
-import * as flexbuffers from './flexbuffers.js?v=fc124b8183a7a475';
-import * as zip from './zip.js?v=fc124b8183a7a475';
+import * as flatbuffers from './flatbuffers.js?v=4e44cfa55e34993c';
+import * as flexbuffers from './flexbuffers.js?v=4e44cfa55e34993c';
+import * as zip from './zip.js?v=4e44cfa55e34993c';
 
 const circle = {};
 

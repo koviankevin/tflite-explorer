@@ -1,5 +1,7 @@
-import {reusablePattern} from './pattern-library.js?v=fc124b8183a7a475';
-export const WORKSPACE_KEY='model-lens.workspace.v1';
+import {reusablePattern} from './pattern-library.js?v=4e44cfa55e34993c';
+import {normalizeConditions} from './pattern-conditions.js?v=4e44cfa55e34993c';
+export const WORKSPACE_KEY='model-lens.workspace.v2';
+export const LEGACY_WORKSPACE_KEY='model-lens.workspace.v1';
 export const WORKSPACE_LIMIT=2*1024*1024;
 const integer=(n,max=10000000)=>Number.isSafeInteger(n) && n>=0 && n<=max;
 const text=(value,max=4096)=>typeof value==='string' && value.length<=max;
@@ -14,7 +16,7 @@ export function sameResultKey(saved,item) {
 }
 
 export function cleanWorkspace(value) {
-    if(value?.format!=='model-lens-workspace' || value.version!==1)fail();
+    if(value?.format!=='model-lens-workspace' || ![1,2].includes(value.version))fail();
     const {identity,state:s}=value;
     if(!identity || !text(identity.name,1024) || !integer(identity.bytes,Number.MAX_SAFE_INTEGER) || !['tflite','mlir'].includes(identity.sourceFormat) || !/^[a-f0-9]{64}$/.test(identity.signature))fail();
     if(!s || !['layers','tensors','patterns'].includes(s.kind) || !text(s.query) || !text(s.scope,32) || !/^(current|all|\d+)$/.test(s.scope) || !integer(s.graph) || !['none','graph','result','overview'].includes(s.view) || !integer(s.activeIndex+1,50000) || !(s.resultKey===null || text(s.resultKey,65536)))fail();
@@ -39,7 +41,16 @@ export function cleanWorkspace(value) {
     const state={};
     for(const key of ['kind','query','scope','graph','view','activeIndex','resultKey','font','direction','sidebarWidth','exportScope','full','collapsed','picking','across','sliceDetails','captureName','patternName','patternText','patternMode','overviewExpanded','expanded','pages','selections','camera'])state[key]=structuredClone(s[key]);
     state.pattern=pattern;
-    return {format:value.format,version:1,identity:{name:identity.name,bytes:identity.bytes,sourceFormat:identity.sourceFormat,signature:identity.signature},state};
+    if(value.version===2)state.editor=cleanDraftEditor(s.editor);
+    return {format:value.format,version:value.version,identity:{name:identity.name,bytes:identity.bytes,sourceFormat:identity.sourceFormat,signature:identity.signature},state};
+}
+export const DRAFT_FIELDS=['condition-node','condition-kind','condition-side','condition-port','condition-attribute-name','condition-value'];
+export function cleanDraftEditor(e) {
+    if(!e || !Array.isArray(e.nodes) || e.nodes.length>32 || e.nodes.some(n=>!text(n.alias,80) || !text(n.type,256)) || !Array.isArray(e.edges) || e.edges.length>64 || e.edges.some(v=>!text(v.from,80) || !text(v.to,80)) || !integer(e.nextNode) || typeof e.induced!=='boolean' || typeof e.visualOpen!=='boolean' || !Array.isArray(e.conditions) || e.conditions.length>64 || e.conditions.some(r=>!Array.isArray(r) || r.length!==2 || !text(r[0],80)) || !e.fields || DRAFT_FIELDS.some(k=>!text(e.fields[k],2048)))fail();
+    if(!['shape','dtype','attribute'].includes(e.fields['condition-kind']) || !['input','output'].includes(e.fields['condition-side']) || (e.cfg!==null && e.cfg?.mode!=='mlir-cfg') || new Set(e.conditions.map(r=>r[0])).size!==e.conditions.length)fail();
+    // Incomplete visual graphs/text are drafts, never prepared as executable
+    // patterns. Only known fields survive; conditions and CFGs remain validated.
+    return {nodes:e.nodes.map(n=>({alias:n.alias,type:n.type})),edges:e.edges.map(v=>({from:v.from,to:v.to})),nextNode:e.nextNode,induced:e.induced,visualOpen:e.visualOpen,cfg:e.cfg===null?null:reusablePattern('草稿 CFG',e.cfg),conditions:e.conditions.map(([alias,rules])=>[alias,normalizeConditions(rules)]),fields:Object.fromEntries(DRAFT_FIELDS.map(k=>[k,e.fields[k]]))};
 }
 export function exportWorkspace(value) {
     const text=JSON.stringify(cleanWorkspace(value),null,2);

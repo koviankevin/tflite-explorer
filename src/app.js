@@ -1,24 +1,27 @@
-import { Host } from '../vendor/netron/browser.js?v=fc124b8183a7a475';
-import { View, Attachment } from '../vendor/netron/view.js?v=fc124b8183a7a475';
-import { hydrate } from './hydrate.js?v=fc124b8183a7a475';
-import {overviewCanvas} from './overview-canvas.js?v=fc124b8183a7a475';
-import { modelFormat } from './model-formats.js?v=fc124b8183a7a475';
-import {explorerResize} from './explorer-resize.js?v=fc124b8183a7a475';
-import {initReleaseInfo} from './release-info.js?v=fc124b8183a7a475';
-import {exportReportUI} from './export-report-ui.js?v=fc124b8183a7a475';
-import {conditionEditor} from './pattern-condition-editor.js?v=fc124b8183a7a475';
-import {parseGraphPattern} from './subgraph-pattern.js?v=fc124b8183a7a475';
-import {WORKSPACE_KEY,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=fc124b8183a7a475';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=fc124b8183a7a475';
-import {rectangleSelection} from './rectangle-selection.js?v=fc124b8183a7a475';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=fc124b8183a7a475';
-import { LORA_PATTERN } from './pattern-utils.js?v=fc124b8183a7a475';
-import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=fc124b8183a7a475';
+import { Host } from '../vendor/netron/browser.js?v=4e44cfa55e34993c';
+import { View, Attachment } from '../vendor/netron/view.js?v=4e44cfa55e34993c';
+import { hydrate } from './hydrate.js?v=4e44cfa55e34993c';
+import {overviewCanvas} from './overview-canvas.js?v=4e44cfa55e34993c';
+import { modelFormat } from './model-formats.js?v=4e44cfa55e34993c';
+import {explorerResize} from './explorer-resize.js?v=4e44cfa55e34993c';
+import {initReleaseInfo} from './release-info.js?v=4e44cfa55e34993c';
+import {exportReportUI} from './export-report-ui.js?v=4e44cfa55e34993c';
+import {conditionEditor} from './pattern-condition-editor.js?v=4e44cfa55e34993c';
+import {parseGraphPattern} from './subgraph-pattern.js?v=4e44cfa55e34993c';
+import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=4e44cfa55e34993c';
+import {workspaceSessionUI} from './workspace-session-ui.js?v=4e44cfa55e34993c';
+import {draftModelKey} from './workspace-drafts.js?v=4e44cfa55e34993c';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=4e44cfa55e34993c';
+import {rectangleSelection} from './rectangle-selection.js?v=4e44cfa55e34993c';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=4e44cfa55e34993c';
+import { LORA_PATTERN } from './pattern-utils.js?v=4e44cfa55e34993c';
+import { loadPatterns, reusablePattern, savePattern, exportPatterns, parsePatternFile, planPatternImport, importPatterns, PATTERN_FILE_LIMIT } from './pattern-library.js?v=4e44cfa55e34993c';
 
 const $ = (id) => document.getElementById(id);
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
+let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
 try {
@@ -49,7 +52,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=fc124b8183a7a475`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=4e44cfa55e34993c`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -162,7 +165,7 @@ let fullConfirmed = false;
 let timer;
 
 function notice(text) { $('notice-text').textContent = text; $('notice').hidden = false; }
-function status(text) { $('status').textContent = text; }
+function status(text) { $('status').textContent = text;sessions?.change(); }
 function stopWorker() {
     worker?.terminate(); worker = null;
     for (const { reject } of pending.values()) reject(new DOMException('已取消', 'AbortError'));
@@ -177,7 +180,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=fc124b8183a7a475', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=4e44cfa55e34993c', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -188,6 +191,7 @@ function createWorker() {
     worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。'); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
 }
 function reset() {
+    sessions?.detach();
     detailNode=null;
     $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
@@ -224,6 +228,7 @@ async function openFile(nextFile) {
     try { await viewReady; modelFormat(nextFile.name); } catch (error) { notice(error.message); return; }
     reset(); file = nextFile;
     const thisFile = file;
+    let resumedDraft;
     $('file-name').textContent = file.name; $('file-stats').textContent = `${size(file.size)} · 建立索引中`;
     $('empty-state').hidden = true; $('loading-card').hidden = false; $('cancel-load').hidden = false;
     $('loading-stage').textContent = '讀取模型結構';
@@ -233,6 +238,7 @@ async function openFile(nextFile) {
         if (file !== thisFile) return;
         model = summary;
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
+        if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
         $('value-kind-label').textContent = model.sourceFormat === 'mlir' ? 'SSA Values' : 'Tensors';
         $('query').placeholder = model.sourceFormat === 'mlir' ? '搜尋 dialect.op、%SSA 名稱、#編號' : '搜尋名稱、operator、#編號';
@@ -254,8 +260,8 @@ async function openFile(nextFile) {
         $('save-workspace').disabled=false;
         renderPattern();
         if(pendingWorkspace) {
-            const workspace=pendingWorkspace;pendingWorkspace=null;
-            try {await restoreWorkspace(workspace);return;}
+            const workspace=pendingWorkspace,draft=queuedDraft;pendingWorkspace=null;queuedDraft=null;
+            try {await restoreWorkspace(workspace);resumedDraft=draft;return;}
             catch(error){if(file!==thisFile)return;notice(error.message);$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;}
         }
         await runSearch();
@@ -274,7 +280,12 @@ async function openFile(nextFile) {
         if (error.name !== 'AbortError') {
             reset(); notice(`無法開啟模型：${error.message}`); status('載入失敗，請重新選擇檔案。');
         }
-    } finally { if (file === thisFile) { $('loading-card').hidden = true; $('cancel-load').hidden = true; } }
+    } finally {
+        if (file === thisFile) {
+            $('loading-card').hidden = true; $('cancel-load').hidden = true;
+            if(model&&sessions)try{const identity=await rpc('workspaceIdentity');if(file===thisFile)await sessions.attach(identity,{resumed:resumedDraft});}catch(error){if(file===thisFile)sessions.fail(error);}
+        }
+    }
 }
 function setKind(nextKind, searchNow = true) {
     kind = nextKind;
@@ -1136,14 +1147,19 @@ function workspaceCamera() {
     if(!snapshot)return null;
     return {...snapshot,kind:'svg',page:snapshot.page || null,candidates:snapshot.candidates.slice(0,8).map(({id,x,y})=>({id,x,y}))};
 }
-function workspaceState() {
+function workspaceState({draft=false}={}) {
     const across=$('capture-cfg').checked;
-    return {kind,query:$('query').value,scope:$('scope').value,graph:currentGraph,
-        pattern:currentPattern(),patternText:$('graph-pattern').value,patternMode:$('graph-input-mode').value,patternName:$('condition-pattern-name').value || $('saved-pattern').value,
+    let pattern;
+    try{pattern=reusablePattern('工作階段 pattern',currentPattern());lastValidWorkspacePattern=pattern;}
+    catch(error){if(!draft)throw error;pattern=lastValidWorkspacePattern || {nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'}],edges:[{from:'N1',to:'N2'}],induced:false};}
+    const state={kind,query:$('query').value,scope:$('scope').value,graph:currentGraph,
+        pattern,patternText:$('graph-pattern').value,patternMode:$('graph-input-mode').value,patternName:$('condition-pattern-name').value || $('saved-pattern').value,
         view:!renderedGraph?'none':overviewMode?'overview':selection?'result':'graph',activeIndex,resultKey:resultKey(selection),full,collapsed:patternCollapsed,
         overviewExpanded:[...overviewExpanded],sliceDetails,expanded:[...sliceExpanded],pages:[...slicePages],
         picking:pickingPattern,across,captureName:$('capture-name').value,selections:across?captureSelections():pickedNodes.size && pickedGraph===currentGraph?[{graph:currentGraph,nodes:[...pickedNodes]}]:[],
         font:$('graph-font-size').value,direction:view.options.direction,sidebarWidth:Number($('explorer-resize').getAttribute('aria-valuenow')),exportScope:$('mlir-export-scope').value,camera:workspaceCamera()};
+    if(draft)state.editor={nodes:graphNodes,edges:graphEdges,nextNode:graphNodeNumber,cfg:cfgPattern,conditions:[...conditionsByAlias],induced:$('graph-induced').checked,visualOpen:$('visual-pattern-editor').open,fields:Object.fromEntries(DRAFT_FIELDS.map(id=>[id,$(id).value]))};
+    return state;
 }
 $('save-workspace').onclick=async()=>{
     if(!model || workspaceBusy)return;
@@ -1151,11 +1167,11 @@ $('save-workspace').onclick=async()=>{
     const source=file,query=queryGeneration,render=renderGeneration;
     workspaceBusy=true;$('save-workspace').disabled=true;
     try {
-        const state=workspaceState();
+        const state=workspaceState({draft:true});
         status('建立工作階段結構指紋（不讀取權重）…');
         const identity=await rpc('workspaceIdentity');
         if(source!==file || query!==queryGeneration || render!==renderGeneration)throw new Error('畫面已變更，請再次儲存工作階段。');
-        const text=exportWorkspace({format:'model-lens-workspace',version:1,identity,state});
+        const text=exportWorkspace({format:'model-lens-workspace',version:2,identity,state});
         let stored=true;try{localStorage.setItem(WORKSPACE_KEY,text);$('last-workspace').disabled=false;}catch{stored=false;}
         await host.export(`${source.name.replace(/\.[^.]+$/,'')}-workspace.json`,new Blob([text+'\n'],{type:'application/json'}));
         status(`工作階段下載已啟動${stored?'，也已記住此瀏覽器的上次儲存':''}。檔案不含模型或權重。`);
@@ -1166,8 +1182,9 @@ async function restoreWorkspace(workspace) {
     if(source!==file)throw new DOMException('已取消','AbortError');
     checkWorkspace(workspace,identity,model.graphs);
     const s=workspace.state;
+    lastValidWorkspacePattern=s.pattern;
     setPickingPattern(false);applyPattern(s.pattern);refreshPatternLibrary(patternLibrary.some(p=>p.name===s.patternName)?s.patternName:'');
-    $('condition-pattern-name').value=s.patternName;$('graph-pattern').value=s.patternText;$('graph-input-mode').value=s.patternMode;updateGraphInputMode();
+    $('condition-pattern-name').value=s.patternName;$('graph-pattern').value=s.patternText;$('graph-input-mode').value=s.editor?'visual':s.patternMode;updateGraphInputMode();
     $('graph-font-size').value=s.font;document.documentElement.style.setProperty('--graph-font-size',`${s.font}px`);view.options.direction=s.direction;explorer.setWidth(s.sidebarWidth);
     $('mlir-export-scope').value=s.exportScope;$('query').value=s.query;$('scope').value=s.scope;setCurrentGraph(s.graph);setKind(s.kind,false);
     const expectedQuery=queryGeneration+1;
@@ -1199,12 +1216,31 @@ async function restoreWorkspace(workspace) {
     current();
     if(exact && s.camera?.kind==='canvas' && virtualOverview)virtualOverview.restore(s.camera);
     else if(exact && s.camera?.kind==='svg' && !virtualOverview && view.target)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),s.camera);
+    if(s.editor)restoreDraftEditor(s);
     if(!renderedGraph){view.show('default');$('graph-caption').textContent='索引已就緒 · 選取結果以繪製局部圖';}
     $('workspace-hint').hidden=true;
     $('choose-workspace-model').hidden=true;
     status(exact?'已恢復工作階段：搜尋、選取、收合與圖形位置。':'已恢復搜尋與選取；儲存時的搜尋結果不符，已顯示目前 subgraph。');
     if(limited)notice('搜尋與選取已恢復；超過 1,500 個 OP 的 SVG 完整圖先以局部圖開啟，可手動確認繪製或使用 Canvas 總覽。');
     else if([...$('slice-connection-controls').querySelectorAll('button')].some(b=>b.textContent.startsWith('繼續分析')))notice('已保留路徑展開與目標分段；新開模型的路徑快取需重建，請按「繼續分析」逐步完成。');
+}
+function restoreDraftEditor(s) {
+    const e=s.editor;graphNodes=structuredClone(e.nodes);graphEdges=structuredClone(e.edges);graphNodeNumber=e.nextNode;cfgPattern=e.cfg?structuredClone(e.cfg):null;
+    conditionsByAlias.clear();for(const [alias,rules] of e.conditions)conditionsByAlias.set(alias,structuredClone(rules));
+    $('graph-induced').checked=e.induced;$('graph-pattern').value=s.patternText;$('graph-input-mode').value=s.patternMode;updateGraphInputMode();renderPattern();
+    $('visual-pattern-editor').open=e.visualOpen;for(const id of DRAFT_FIELDS)$(id).value=e.fields[id];conditionUI.render();
+    try{reusablePattern('草稿',currentPattern());}catch{$('pattern-decoded').textContent='已恢復未完成的 pattern 草稿；請修正後再搜尋。';}
+}
+function captureSession(identity){return {format:'model-lens-workspace',version:2,identity,state:workspaceState({draft:true})};}
+function workspaceReady(){return !!model && !exportBusy && !workspaceBusy && !pending.size && $('target').getAttribute('aria-busy')!=='true' && $('loading-card').hidden;}
+async function applySession(workspace) {
+    checkWorkspace(workspace,sessions.identity,model.graphs);
+    const current=parseWorkspace(exportWorkspace(captureSession(sessions.identity))).state,s=workspace.state;
+    const scene=value=>{const copy={...value};for(const key of ['selections','picking','captureName','camera'])delete copy[key];return JSON.stringify(copy);};
+    if(scene(current)!==scene(s)){await restoreWorkspace(workspace);return;}
+    cfgSelections.clear();for(const b of s.selections)cfgSelections.set(b.graph,new Set(b.nodes));pickedGraph=s.graph;pickedNodes=cfgSelections.get(s.graph) || new Set();$('capture-name').value=s.captureName;setPickingPattern(s.picking);refreshPickedNodes();
+    if(s.camera?.kind==='canvas' && virtualOverview)virtualOverview.restore(s.camera);
+    else if(s.camera?.kind==='svg' && !virtualOverview && view.target)restoreViewport($('target'),view.target,$('canvas'),viewportEntries(),s.camera);
 }
 function queueWorkspace(workspace,chooseNow=true) {
     pendingWorkspace=workspace;
@@ -1216,11 +1252,11 @@ $('choose-workspace-model').onclick=()=>{$('model-file').value='';$('model-file'
 $('open-workspace').onclick=()=>{$('workspace-file').value='';$('workspace-file').click();};
 $('workspace-file').onchange=async()=>{
     const selected=$('workspace-file').files[0],generation=++workspaceImport;if(!selected)return;
-    try{if(selected.size>WORKSPACE_LIMIT)throw new Error('工作階段檔案不得超過 2 MiB。');const workspace=parseWorkspace(await selected.text());if(generation===workspaceImport)queueWorkspace(workspace,false);}catch(error){report(error);}
+    try{if(selected.size>WORKSPACE_LIMIT)throw new Error('工作階段檔案不得超過 2 MiB。');const workspace=parseWorkspace(await selected.text());if(generation===workspaceImport){queuedDraft=null;queueWorkspace(workspace,false);}}catch(error){report(error);}
 };
-$('last-workspace').onclick=()=>{try{queueWorkspace(parseWorkspace(localStorage.getItem(WORKSPACE_KEY) || ''));}catch(error){report(error);}};
-$('model-file').addEventListener('cancel',()=>{if(pendingWorkspace){pendingWorkspace=null;$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;status('已取消恢復工作階段。');}});
-try{$('last-workspace').disabled=!localStorage.getItem(WORKSPACE_KEY);}catch{/* File import remains available. */}
+$('last-workspace').onclick=()=>{try{queuedDraft=null;queueWorkspace(parseWorkspace(localStorage.getItem(WORKSPACE_KEY) ?? localStorage.getItem(LEGACY_WORKSPACE_KEY) ?? ''));}catch(error){report(error);}};
+$('model-file').addEventListener('cancel',()=>{if(pendingWorkspace){pendingWorkspace=null;queuedDraft=null;$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;status('已取消恢復工作階段。');}});
+try{$('last-workspace').disabled=!(localStorage.getItem(WORKSPACE_KEY) ?? localStorage.getItem(LEGACY_WORKSPACE_KEY));}catch{/* File import remains available. */}
 new MutationObserver(() => {
     const open=$('sidebar').style.opacity==='1',opening=open&&!document.body.classList.contains('details-open');
     document.body.classList.toggle('details-open',open);
@@ -1232,5 +1268,9 @@ new MutationObserver(() => {
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
+sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:workspaceReady,exportFile:host.export,error:report,restoreDraft:async(workspace,record)=>{
+    if(model&&sessions.identity&&draftModelKey(workspace.identity)===draftModelKey(sessions.identity))await sessions.resume(record);
+    else {queuedDraft=record;queueWorkspace(workspace,false);}
+}});
 
 initReleaseInfo({exportFile:host.export});

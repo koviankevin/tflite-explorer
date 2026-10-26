@@ -1,11 +1,11 @@
-import { search, findPatterns, snapshot, selectionSnapshot, serialize } from './model-engine.js?v=fc124b8183a7a475';
-import { openModelFile } from './model-adapters.js?v=fc124b8183a7a475';
-import { mlirDialects } from './mlir-dialect-registry.js?v=fc124b8183a7a475';
-import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js?v=fc124b8183a7a475';
-import { operatorKey, operatorIndex } from './pattern-utils.js?v=fc124b8183a7a475';
-import {foldPatternSnapshot} from './pattern-fold.js?v=fc124b8183a7a475';
-import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js?v=fc124b8183a7a475';
-import {createExportReport} from './export-report.js?v=fc124b8183a7a475';
+import { search, findPatterns, snapshot, selectionSnapshot, serialize } from './model-engine.js?v=4e44cfa55e34993c';
+import { openModelFile } from './model-adapters.js?v=4e44cfa55e34993c';
+import { mlirDialects } from './mlir-dialect-registry.js?v=4e44cfa55e34993c';
+import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js?v=4e44cfa55e34993c';
+import { operatorKey, operatorIndex } from './pattern-utils.js?v=4e44cfa55e34993c';
+import {foldPatternSnapshot} from './pattern-fold.js?v=4e44cfa55e34993c';
+import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js?v=4e44cfa55e34993c';
+import {createExportReport} from './export-report.js?v=4e44cfa55e34993c';
 let index;
 let overview;
 let results = [];
@@ -37,14 +37,14 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             });
             send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
         } else if (action === 'workspaceIdentity') {
-            const {workspaceIdentity}=await import('./workspace.js?v=fc124b8183a7a475');
+            const {workspaceIdentity}=await import('./workspace.js?v=4e44cfa55e34993c');
             identity ||= await workspaceIdentity(index,file);send(id,identity);
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
-            const { exportTflite } = await import('./tflite-export.js?v=fc124b8183a7a475');
+            const { exportTflite } = await import('./tflite-export.js?v=4e44cfa55e34993c');
             send(id, withReport(exportTflite(index, args.graph, args.nodes, file),args));
         } else if (action === 'exportMLIR') {
-            const { exportMLIR } = await import('./mlir-export.js?v=fc124b8183a7a475');
+            const { exportMLIR } = await import('./mlir-export.js?v=4e44cfa55e34993c');
             send(id, withReport(await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}),args));
         } else if (action === 'search') {
             overview=null;
@@ -55,7 +55,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             overview=null;
             const current = ++generation;
             if(args.structure?.mode==='mlir-cfg') {
-                const {findMLIRPatterns}=await import('./mlir-pattern.js?v=fc124b8183a7a475');
+                const {findMLIRPatterns}=await import('./mlir-pattern.js?v=4e44cfa55e34993c');
                 const result=await findMLIRPatterns(index,args.structure,args.scope,()=>generation!==current);
                 if(!result){send(id,{cancelled:true});return;}
                 results=result.items;send(id,{items:results.slice(0,100),total:results.length,offset:0,truncated:result.truncated,searchLimited:result.searchLimited});return;
@@ -71,7 +71,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             send(id, { items: results.slice(0, 100), total: results.length, offset: 0, truncated: result.truncated, searchLimited: result.searchLimited, decodedNodes });
         } else if (action === 'capturePattern') {
             if(args.selections) {
-                const {captureMLIRPattern}=await import('./mlir-pattern.js?v=fc124b8183a7a475');send(id,captureMLIRPattern(index,args.selections));return;
+                const {captureMLIRPattern}=await import('./mlir-pattern.js?v=4e44cfa55e34993c');send(id,captureMLIRPattern(index,args.selections));return;
             }
             const entry = index.graphs[args.graph];
             if (!entry) throw new Error('找不到目前 subgraph。');
@@ -86,15 +86,15 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const node=index.graphs[args.graph]?.graph.nodes[args.node];if(!node)throw new Error('找不到原始 OP。');send(id,serialize(node));
         } else if (action === 'select') {
             if(index.mlir && args.item.kind==='layers') {
-                const {mlirSliceSnapshot}=await import('./mlir-pattern.js?v=fc124b8183a7a475'),dto=mlirSliceSnapshot(index,args.item.graph,args);
+                const {mlirSliceSnapshot}=await import('./mlir-pattern.js?v=4e44cfa55e34993c'),dto=mlirSliceSnapshot(index,args.item.graph,args);
                 const selected=`b${args.item.graph}:n${args.item.index}`;
                 if(dto?.nodes.includes(selected)){send(id,{...dto,selected:[selected]});return;}
             }
             if(args.item.mode==='mlir-cfg') {
-                const {mlirMatchSnapshot}=await import('./mlir-pattern.js?v=fc124b8183a7a475');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
+                const {mlirMatchSnapshot}=await import('./mlir-pattern.js?v=4e44cfa55e34993c');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
             } else {const dto=selectionSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);}
         } else if (action === 'graph') {
-            const {mlirSliceSnapshot}=await import('./mlir-pattern.js?v=fc124b8183a7a475');
+            const {mlirSliceSnapshot}=await import('./mlir-pattern.js?v=4e44cfa55e34993c');
             const slice=mlirSliceSnapshot(index,args.graph,args);
             send(id, slice || { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }
