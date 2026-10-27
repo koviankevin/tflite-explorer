@@ -7,9 +7,9 @@
 | 公開核心與內網擴充可獨立升級 | 不修改核心即可建立帶 dialect 的內網包；公開發布拒絕內網產物；版本及檔案完整性可核對 | 通用建置／封裝與合成 adapter 驗收通過；公司內網仍須自行驗收 |
 | 真實模型相容性 | 公司環境的 TFLite／MLIR／custom runtime 正負例、支援版本與限制清單 | 合成測試已有；公司實模尚待內網驗收 |
 | 匯出可信度 | 可下載的來源對照、輸出介面、權重與檢查範圍報告；公司 compiler／runtime 驗證接點 | 本機報告、串流 bytes 比對及可指定 native compiler 的 CLI 已實作；公司 compiler／runtime 正負例仍待內網驗收 |
-| 效能標準 | 固定硬體／引擎、不同檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | Node 九筆核心效能 CI 已通過；另加入實體寫滿 1.25 GiB／21,005 OP TFLite 的八輪原生選檔、下載、重開及關閉 CI，含完整權重/custom options、pattern 正反例、整個 Chromium 程序樹 RSS、Worker V8/backing storage、實際 Worker 終止與自然 Blob URL 撤銷；已通過並保存原始報告。數小時長時間負載、其他瀏覽器、固定實體硬體 SLA 及發布強制關卡仍需補齊 |
+| 效能標準 | 固定硬體／引擎、不同檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | Node 九筆核心效能 CI 已通過；另加入實體寫滿 1.25 GiB／21,005 OP TFLite 的八輪原生選檔、下載、重開及關閉 CI，含完整權重/custom options、pattern 正反例、整個 Chromium 程序樹 RSS、Worker V8/backing storage、實際 Worker 終止與自然 Blob URL 撤銷；已通過並保存原始報告。數小時長時間負載、其他瀏覽器及固定實體硬體 SLA 仍需補齊；受控發布已強制核對此驗收與來源相依 scope |
 | 保存及復原 | 草稿自動保存、Undo／Redo、跨分頁衝突、崩潰後恢復與格式遷移 | 已加入 IndexedDB 工作草稿、有限歷史、revision 衝突／分叉與 v1／v2 讀取；已驗證重載及兩分頁恢復。Pattern library 已加入交易合併、同名衝突副本與舊 key 保留，實際雙分頁與跨 block 保存／匯出重開通過；硬崩潰／儲存回收與公司環境仍需補齊驗收 |
 | 操作與診斷 | 新使用者完整操作流程、原文定位、鍵盤及焦點驗收、可預覽且不含模型的診斷報告 | 已加入白名單本機診斷預覽／下載、有限操作紀錄及版本缺失處理；合成敏感字串排除、Escape 保留跨 block 選取與手機版面已驗收。完整新手／鍵盤流程與公司環境仍待補 |
-| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 現有發布腳本已強制核對三項 GitHub CI、artifact digest、受測依賴 scope、原始量測與候選來源重建；完整正例與自製 manifest 負例已驗證。兩份正式 ZIP 的隔離 HTTP 升級／回退、逐檔 SHA、拒絕損壞候選及舊版 lazy import 已通過。Pages 仍可由直接推 gh-pages 繞過；受控 workflow／伺服器規則及正式站回退／資料遷移演練仍未完成 |
+| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 現有發布腳本已強制核對三項 GitHub CI、artifact digest、受測依賴 scope、原始量測與候選來源重建；完整正例與自製 manifest 負例已驗證。兩份正式 ZIP 的隔離 HTTP 升級／回退、逐檔 SHA、拒絕損壞候選及舊版 lazy import 已通過。Pages 已切換受控 workflow、main-only environment 與包含管理者的必要 PR 檢查；三項伺服器負例、修正後正式站逐檔與實際瀏覽器操作、固定來源 Release／四份資產實際下載比對均通過，詳見 [Pages 驗收](pages-deployment-verification.md)。正式站回退、資料遷移及升級時舊分頁／CDN 資產隔離仍未完成 |
 
 公開開發使用公開／合成樣本。公司模型、私有 dialect 與 compiler 留在內網；內網驗收尚未完成時不得將其標為已支援或將整個商品等級目標標為完成。
