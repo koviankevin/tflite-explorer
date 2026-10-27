@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "verificationMode": "Downloaded GitHub metadata/artifact snapshot, re-evaluated with unmodified main gate functions; not a publish authorization or live deployment receipt.",
+  "source": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+  "tree": "6c6956d42735b03b7247b992356df0586dfcebc5",
+  "verifiedAt": "2026-10-27T14:31:19.609Z",
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 40503475445,
+      "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445",
+      "source": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+      "artifactId": 12733912585,
+      "artifactDigest": "sha256:ac19712bdba79b2f4d5db48951f9300f01c502fa74852fe693d1aa4cb145fe83",
+      "reportSHA256": "cc251f058464a8ba4bd0470d68321d48bb8622c861e7552cf0c51311acf35e93",
+      "scopeFingerprint": "cf77c1b1377b55cf36fcba0c536e97bfdb391f10eec37f3830a0eb1a1ad1b7c8"
+    },
+    {
+      "kind": "browser",
+      "runId": 40503469247,
+      "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40503469247",
+      "source": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+      "artifactId": 12734038329,
+      "artifactDigest": "sha256:1347cdae8b1e1f94afbd1b459a2d80620b638dfe277b3aa01253d048bfab0652",
+      "reportSHA256": "fe8445415c71c9126a5f6ff1206374c27ec4d1f388076a96e99de17529dbf35d",
+      "scopeFingerprint": "6f814b17df130b393cd6e3baa836c868210a2741c055a8fd38e9bd21a1146744"
+    },
+    {
+      "kind": "contract",
+      "runId": 40503480942,
+      "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40503480942",
+      "source": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+      "artifactId": 12734096026,
+      "artifactDigest": "sha256:0ec6664b3d19b0e9efadd9ae6bdc0cd38529fe2c08db4d09d17d0a55b3667a3d",
+      "reportSHA256": "f2f8238806ae975956f87ab1ac1f0256dcc8726c8abe6fb3d538b4c66eb861f5",
+      "scopeFingerprint": "cf2e94b37465e0e15e36f1bb6c266e9c3c7b6cdf50f82d9ebae8d780621dd538"
+    },
+    {
+      "kind": "site",
+      "runId": 40503488236,
+      "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40503488236",
+      "source": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+      "artifactId": 12734011354,
+      "artifactDigest": "sha256:07a9c2331d2b100b542cf29db78df0af5c5b996ae823e915e7f06f7fc6c83b85",
+      "reportSHA256": "ef0b83844a2f6c6d78d9bd8acca4c336488e2c2317c5d52b2e0f7076b64c3085",
+      "scopeFingerprint": "0386dfdb37614779faf5a2336c85d4595f76f1dd730991b5c3e613f6b74723a8"
+    }
+  ]
+}

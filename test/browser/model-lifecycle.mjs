@@ -119,13 +119,16 @@ async function editWholeModel(cycle,entry,hashes){
     const full=path.join(temporary,`cycle-${cycle}-full.tflite`);await download.saveAs(full);await download.delete();await waitFor(()=>!document.querySelector('#open-edited-model').disabled);
     const exportMs=Date.now()-started;event=page.waitForEvent('download');await page.locator('#download-model-edit-report').click();download=await event;assert.equal(await download.failure(),null);const reportFile=full+'.report.json';await download.saveAs(reportFile);await download.delete();
     const proof=JSON.parse(await readFile(reportFile,'utf8'));assert.equal(proof.provenance.mode,'model-edit');assert.equal(proof.checks.find(c=>c.id==='serialized-roundtrip').status,'passed');assert.equal(proof.modification.before.layers,21005);assert.equal(proof.modification.after.layers,21006);
-    const before=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(before);let deadline;
-    try{const ended=Promise.race([once(before,'close'),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Original edit Worker did not close.')),5000);})]);await page.locator('#open-edited-model').click();await ended;}finally{clearTimeout(deadline);}
+    // Reopen the bytes actually saved by the native download, not the retained
+    // File behind "open edited model". Keep the same three Workers per cycle.
+    await page.locator('#cancel-model-edit').click();
+    await waitFor(()=>!document.querySelector('#model-edit-dialog').open);
+    await closeModel();await choose(full);
     await ready(21006);await page.locator('[data-kind="patterns"]').click();await match(patterns[0].name,1);await match(patterns[1].name,1);
     entry.workerHeaps.push({phase:'edited-model',...await modelWorkerHeap(browserCDP)});
     phase=`cycle-${cycle}-full-model-verify`;const verified=await verifyDownload(full,0,true),receipt=await verifyExportFiles({report:proof,source:report.fixture.file,output:full});assert.equal(receipt.byteComparison.status,'passed');assert.equal(receipt.outputSHA256,verified.sha256);
     if(hashes.has('full-model'))assert.equal(verified.sha256,hashes.get('full-model'));else hashes.set('full-model',verified.sha256);
-    entry.modelEdit={sourceOperators:21005,outputOperators:proof.modification.after.layers,readbackOperators:verified.operators,bytes:verified.bytes,sha256:verified.sha256,weightSHA256:verified.weightSHA256,weightVerified:verified.weightVerified,optionsVerified:verified.optionsVerified,roundTrip:true,prefixMatches:1,branchMatches:1,byteComparison:receipt.byteComparison.status,comparedBytes:receipt.byteComparison.bytes,byteRanges:receipt.byteComparison.ranges.length,exportMs};
+    entry.modelEdit={sourceOperators:21005,outputOperators:proof.modification.after.layers,readbackOperators:verified.operators,bytes:verified.bytes,sha256:verified.sha256,weightSHA256:verified.weightSHA256,weightVerified:verified.weightVerified,optionsVerified:verified.optionsVerified,roundTrip:true,reopenMethod:'native-chooser-downloaded-full-model',prefixMatches:1,branchMatches:1,byteComparison:receipt.byteComparison.status,comparedBytes:receipt.byteComparison.bytes,byteRanges:receipt.byteComparison.ranges.length,exportMs};
     return [full,reportFile];
 }
 try{
