@@ -4,7 +4,7 @@
 
 ## 已確認的問題
 
-用已發布 preview.6 ZIP 的 SHA-256 核對來源，再請求正式站帶 preview.6 `?v=` 的 app、MLIR engine、TFLite parser 三個檔案，三者全部回傳 preview.7 的 bytes。Query 標記可以分開快取鍵，但沒有讓靜態 server 保存舊檔案。現行 metadata 與 source hash 證據已保留在本機 `build/qa/versioned-site-20261027/legacy-query-repro.json`；之後需連同完整驗收公開歸檔。
+用已發布 preview.6 ZIP 的 SHA-256 核對來源，再請求正式站帶 preview.6 `?v=` 的 app、MLIR engine、TFLite parser 三個檔案，三者全部回傳 preview.7 的 bytes。Query 標記可以分開快取鍵，但沒有讓靜態 server 保存舊檔案。[原始負例](results/site-legacy-query-negative-2026-10-27.json) 保留觀察時間、兩份 release metadata 及三組來源／回應 SHA。
 
 ## 共同介面與目錄
 
@@ -44,6 +44,8 @@ node scripts/compose-site.mjs --verify build/new-site
 
 八項本機測試覆蓋實際靜態 HTTP 升級／回退、根路徑與 namespaced lazy assets、原有版本資訊、竄改檔案、重算外層 manifest 仍無法替換內層版本、私有擴充、混用發行類型、build ID 衝突、容量預算、既有輸出／來源保護、符號連結與實際 CLI。測試加入必要 release-contract；不把它列為模型功能變更重跑整套 runtime。
 
-下一步仍須完成：用正式部署包與新建置驗證、隔離 CI 的真實瀏覽器升級／回退與延後載入、GitHub 工作流程的可信舊版資產取得、整站 manifest／site ID 綁定、正式發布及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
+另以實際 preview.7 部署 ZIP（SHA `4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7`）及 clean source `92a08519264022fc4fc6ce3e50abd2dc458a3c9a` 的開發候選，完成 [真實部署包本機演練](results/site-real-artifacts-local-2026-10-27.json)。升級與回退各組成一份含 741 個受管理檔案的快照；所有檔案經 `verifySite` 核對，七次實際 HTTP parser 請求維持 root baseline 與兩個 namespace 各自的原始 bytes。候選只是本機驗收建置，沒有建立或覆寫另一個 preview.7 Release。
+
+下一步仍須完成：隔離 CI 的真實瀏覽器升級／回退與延後載入、GitHub 工作流程的可信舊版資產取得、整站 manifest／site ID 綁定、正式發布及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
