@@ -1,0 +1,166 @@
+{
+  "format": "model-lens-pages-delivery-verification",
+  "version": 1,
+  "status": "passed",
+  "observedAt": "2026-10-27T04:08:50.133Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "dryRun": 40447660731,
+  "publishRun": {
+    "id": 40447776209,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40447776209",
+    "headSha": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "jobs": [
+      {
+        "id": 122003037231,
+        "name": "prepare",
+        "conclusion": "success"
+      },
+      {
+        "id": 122003141213,
+        "name": "deploy",
+        "conclusion": "success"
+      },
+      {
+        "id": 122003207578,
+        "name": "verify_live",
+        "conclusion": "success"
+      },
+      {
+        "id": 122003407239,
+        "name": "release",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "deployment": {
+    "id": 7350054986,
+    "ref": "main",
+    "sha": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "state": "success"
+  },
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.7",
+  "assets": [
+    {
+      "id": 680389934,
+      "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip",
+      "bytes": 29454029,
+      "sha256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v0.2.0-preview.7/model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip"
+    },
+    {
+      "id": 680389937,
+      "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip.sha256",
+      "bytes": 121,
+      "sha256": "7471ecc5404b478e129c2460bdda052a3332386c0882a7cb8e9a4ef37e28c9a5",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v0.2.0-preview.7/model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip.sha256"
+    },
+    {
+      "id": 680389933,
+      "name": "release-gates.json",
+      "bytes": 94018,
+      "sha256": "1cd1083d2b6919fcb40c9b39e5ca1f477459fe6d37c31a2c6aaae978f31e769a",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v0.2.0-preview.7/release-gates.json"
+    },
+    {
+      "id": 680389932,
+      "name": "release-manifest.json",
+      "bytes": 39863,
+      "sha256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v0.2.0-preview.7/release-manifest.json"
+    }
+  ],
+  "plainChecks": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/",
+      "bytes": 72642,
+      "sha256": "d2fcdb67002750cb385908534a149a0404f4fcfe79a861fe363360c4b435fe36",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/release.json",
+      "bytes": 339,
+      "sha256": "224daed431994b1f7ca5f1ca1aab7ac97e4ee3e9165b2f0681c469ba6a8626c8",
+      "contentType": "application/json; charset=utf-8"
+    }
+  ],
+  "rawReports": [
+    {
+      "path": "docs/results/pages-live-2026-10-27.json",
+      "bytes": 54642,
+      "sha256": "dd010ea221ac8dbf6e5a65f0bac4993e204ac130711f59dc3dd35f2c51e2392d"
+    },
+    {
+      "path": "docs/results/pages-production-smoke-2026-10-27.json",
+      "bytes": 1035,
+      "sha256": "1d6a0cc22d0fe2d645c3dc00f62e08f32248f4915a76c872cb470a3cea99e88c"
+    },
+    {
+      "path": "docs/results/pages-published-release-2026-10-27.json",
+      "bytes": 1268,
+      "sha256": "46e941b83b2ba27c45458beb2b71bcff1f444fd6494448ffe8f076355bab7004"
+    },
+    {
+      "path": "docs/results/pages-release-gates-2026-10-27.json",
+      "bytes": 94018,
+      "sha256": "1cd1083d2b6919fcb40c9b39e5ca1f477459fe6d37c31a2c6aaae978f31e769a"
+    },
+    {
+      "path": "docs/results/pages-core-2026-10-27.json",
+      "bytes": 51036,
+      "sha256": "d9114ce969f41aaa4a3d16accade26cce435fd7bd32744f945be5408defcba29"
+    },
+    {
+      "path": "docs/results/pages-lifecycle-2026-10-27.json",
+      "bytes": 168675,
+      "sha256": "267c6bb2e16e2516a7a03f62429f47fb1165541c0063b859b95804e6d24a7168"
+    },
+    {
+      "path": "docs/results/pages-contract-2026-10-27.json",
+      "bytes": 913,
+      "sha256": "09075febd6730a93d3d1a2e5c0603de66eb114583b7e414ad5f5a8514b343d59"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12709460638,
+      "name": "live-release-verification",
+      "digest": "sha256:cddef2e1041d9c387be2ddc90c667976fdb0d89794a1b335f0478d1f210c6942",
+      "bytes": 13567
+    },
+    {
+      "id": 12708763231,
+      "name": "github-pages",
+      "digest": "sha256:19e5fb6b9389d429d60fe1d43672bb91d6bd7674fda0b4b95179ba70efc9db9b",
+      "bytes": 3824327
+    },
+    {
+      "id": 12708573451,
+      "name": "release-delivery",
+      "digest": "sha256:8c6df66c6cd5628f0be3f35c31d94f3b8120efba3efa80acd519dd8cb2560659",
+      "bytes": 3857213
+    },
+    {
+      "id": 12708418904,
+      "name": "published-release-verification",
+      "digest": "sha256:2204bf91a530dcb16915e145c830fae7d33740be7095586151323c65b85dc659",
+      "bytes": 764
+    }
+  ],
+  "limits": [
+    "Eight synthetic physical-file cycles on hosted Chromium; not hours of load, other engines or fixed physical hardware SLA.",
+    "Company real models, dialect semantics and compiler/runtime acceptance remain in the intranet.",
+    "No production rollback, reverse data migration or old-tab/CDN version isolation is claimed."
+  ]
+}

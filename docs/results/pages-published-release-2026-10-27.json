@@ -1,0 +1,41 @@
+{
+  "format": "model-lens-published-release",
+  "version": 1,
+  "status": "passed",
+  "url": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.7",
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip",
+      "bytes": 29454029,
+      "sha256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7"
+    },
+    {
+      "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip.sha256",
+      "bytes": 121,
+      "sha256": "7471ecc5404b478e129c2460bdda052a3332386c0882a7cb8e9a4ef37e28c9a5"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 94018,
+      "sha256": "1cd1083d2b6919fcb40c9b39e5ca1f477459fe6d37c31a2c6aaae978f31e769a"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 39863,
+      "sha256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+    }
+  ]
+}
