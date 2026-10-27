@@ -49,10 +49,12 @@ export function editTfliteModel(index,file,plans) {
         if(value.length>65535||Array.from(value).some(id=>!Number.isInteger(id)||(id<0?!(optional&&id===-1):id>=total)))throw Error('Tensor 連線編號超出範圍。');return Int32Array.from(value);
     };
     for(const plan of plans){
+        if(!plan||typeof plan!=='object')throw Error('模型修改格式無效。');
+        for(const key of Object.keys(plan))if(!['graph','operators','tensors','inputs','outputs','updateSignatures'].includes(key))throw Error('未知的模型修改欄位：'+key);
         const original=index.raw.subgraphs[plan.graph];if(!Number.isInteger(plan.graph)||!original||changed.has(plan.graph))throw Error('Subgraph 不存在或重複修改。');changed.add(plan.graph);
         const tensors=original.tensors.slice();
         if(plan.tensors!==undefined&&(!Array.isArray(plan.tensors)||plan.tensors.length>1024))throw Error('單次最多新增 1024 個 result tensors。');
-        for(const fresh of plan.tensors||[]){const source=original.tensors[fresh.like];if(!Number.isInteger(fresh.like)||!source||typeof fresh.name!=='string'||fresh.name.length>256)throw Error('新 tensor 需要有效的參考 tensor 與名稱。');tensors.push({...source,name:fresh.name,buffer:0,external_buffer:0,is_variable:false,sparsity:null});}
+        for(const fresh of plan.tensors||[]){if(!fresh||typeof fresh!=='object'||Object.keys(fresh).some(key=>!['like','name'].includes(key)))throw Error('新 tensor 修改欄位無效。');const source=original.tensors[fresh.like];if(!Number.isInteger(fresh.like)||!source||typeof fresh.name!=='string'||fresh.name.length>256)throw Error('新 tensor 需要有效的參考 tensor 與名稱。');tensors.push({...source,name:fresh.name,buffer:0,external_buffer:0,is_variable:false,sparsity:null});}
         if(plan.operators!==undefined&&!Array.isArray(plan.operators))throw Error('OP 修改必須是清單。');
         if(plan.operators?.length>original.operators.length+4096)throw Error('單次最多新增 4096 個 OP。');
         const entries=plan.operators||original.operators.map((_,template)=>({template}));
