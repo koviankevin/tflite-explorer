@@ -87,7 +87,10 @@ let detailNode=null,detailLocation=null;
 view.showNodeProperties = (node, source) => {
     if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;}
     detailNode=node;
-    detailLocation=layerLocation({node,index:Number(node.identifier)},currentGraph);
+    // Sidebar display/chain nodes may have identifier=null. Never coerce that
+    // into source OP #0; only the rendered source-location table is authoritative.
+    const entry=renderedNodes.find(entry=>entry.node===node);
+    detailLocation=entry?layerLocation(entry,currentGraph):null;
     $('tensor-summary').hidden = true;
     if(renderedGraph?.compactSlice && Number.isInteger(node.sourceGraph) && Number.isInteger(node.sourceNode)) {
         const generation=renderGeneration;
@@ -717,6 +720,7 @@ async function activateOverviewNode(node) {
     const detail=await rpc('overviewNode',{graph:node.sourceGraph,node:node.sourceNode});
     if(!controller || controller!==virtualOverview || generation!==renderGeneration)return;
     hydrate(detail,file);view.showNodeProperties(detail,'sidebar');
+    detailLocation={graph:node.sourceGraph,node:node.sourceNode};
 }
 function tensorSummary(value) {
     if (!value?.type) { $('tensor-summary').hidden = true; return; }
