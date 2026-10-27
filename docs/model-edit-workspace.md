@@ -31,8 +31,8 @@
 | 關卡 | 選擇與實際狀態 |
 | --- | --- |
 | [core 40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445) | 86 個執行依賴 fingerprint 與既有成功 main 量測相同，沿用九筆核心量測；發布前重新認證 artifact |
-| [browser 40558827707](https://github.com/koviankevin/tflite-explorer/actions/runs/40558827707) | 1.25 GiB／21,005 OP、實際新工作區的八輪完整改模／下載／重開／關閉量測中；不得用舊版或取消報告代替 |
-| [contract 40558833474](https://github.com/koviankevin/tflite-explorer/actions/runs/40558833474) | 正式來源的完整性、拒絕案例與安裝器限制；只採最終成功且零略過／取消的結果 |
-| [site 40558838921](https://github.com/koviankevin/tflite-explorer/actions/runs/40558838921) | 正式來源六種隔離切換與 19 項原生 UI；逐項核對完整成功報告 |
+| [browser 40558827707](https://github.com/koviankevin/tflite-explorer/actions/runs/40558827707) | [八輪實際工作區量測通過](results/preview12-main-browser-2026-10-28.json)，2 個原始 OP＋1 新 OP 的有限圖，完整模型 21,006 OP；24 個模型 Worker 終止、自然 URL 釋放與 bytes 比對均通過 |
+| [contract 40558833474](https://github.com/koviankevin/tflite-explorer/actions/runs/40558833474) | [76 項通過](results/preview12-main-contract-2026-10-28.json)，零失敗／略過／取消；含安裝器限制與完整性拒絕案例 |
+| [site 40558838921](https://github.com/koviankevin/tflite-explorer/actions/runs/40558838921) | [六種隔離切換](results/preview12-main-site-2026-10-28.json)與 [19 項原生 UI](results/preview12-main-ui-2026-10-28.json)成功，27 個模型 Worker 關閉 |
 
-正式網站與固定 Release 尚待本次受控發布完成。結構檢查、合成資料 bytes 比對與有限八輪量測不代表公司 compiler／runtime、數值等價、其他瀏覽器或數小時操作已驗證；商品等級未完成項目仍見 [工作清單](product-readiness.md)。
+[四項 provider／fingerprint 核對](results/preview12-gates-review-2026-10-28.json)通過，原生 UI 另有 [provider digest／版面核對](results/preview12-main-ui-review-2026-10-28.json)。八輪前兩輪暖機後，RSS 漂移約 11.6 MiB、每輪斜率約 0.75 MiB、取樣峰值約 889.7 MiB，維持原始門檻與 60 秒自然 URL 壽命；完整輸出每輪 SHA-256 一致，7 段共 1,342,177,328 bytes 權重／options 逐段比對成功。正式網站與固定 Release 尚待本次受控發布完成。結構檢查、合成資料 bytes 比對與有限八輪量測不代表公司 compiler／runtime、數值等價、其他瀏覽器或數小時操作已驗證；商品等級未完成項目仍見 [工作清單](product-readiness.md)。
