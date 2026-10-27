@@ -1,8 +1,9 @@
 import {modelEditDraft,editChanges,editIssues,editWireReason,editPosition} from './model-edit-draft.js';
 const NS='http://www.w3.org/2000/svg';
-export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,onExport,openResult,downloadReport}){
+export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
     const $=id=>document.getElementById(id),root=$('edit-workspace'),viewport=$('edit-viewport'),world=$('edit-world'),svg=$('edit-links');
-    let owner=null,snapshot=null,draft=null,active=false,busy=false,generation=0,selected=null,armed=null,zoom=1,exported='',pages=new Map(),frame=0,gesture=null,exploreScroll=null;
+    let owner=null,snapshot=null,draft=null,active=false,busy=false,generation=0,selected=null,armed=null,zoom=1,exported='',exportedToken=null,pages=new Map(),frame=0,gesture=null,exploreScroll=null;
+    const signature=()=>JSON.stringify({commands:draft?.commands,updateSignatures:$('edit-signatures').checked});
     const make=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
     const message=text=>{$('edit-message').textContent=text;};
     const live=ticket=>ticket===generation&&owner===getSource();
@@ -13,7 +14,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,o
         active=value;root.hidden=!value;document.body.classList.toggle('editing-model',value);
         $('explore-mode').setAttribute('aria-pressed',String(!value));$('edit-mode').setAttribute('aria-pressed',String(value));
         if(!value&&exploreScroll)requestAnimationFrame(()=>{$('target').scrollTo({left:exploreScroll.left,top:exploreScroll.top,behavior:'instant'});document.scrollingElement.scrollTo({left:exploreScroll.x,top:exploreScroll.y,behavior:'instant'});});
-        if(value)schedule();
+        if(value){availability();schedule();}
     };
     function availability(){
         const valid=!!draft,dirty=changes().length>0;
@@ -24,7 +25,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,o
         $('edit-delete').disabled=busy||!node?.removable||!!node?.removed;$('edit-restore').hidden=!node?.removed;
         $('edit-export').disabled=busy||!dirty||!!draft&&editIssues(draft.state).length>0;
         $('edit-advanced').disabled=busy||!node||node.fresh||node.removed||dirty;
-        $('edit-open-result').disabled=busy||!exported||exported!==JSON.stringify(draft?.commands);
+        $('edit-open-result').disabled=busy||!exported||exported!==signature()||!isCurrentResult(exportedToken);
         $('edit-download-report').disabled=$('edit-open-result').disabled;
         $('edit-signatures-field').hidden=!snapshot?.hasSignatures;
         root.setAttribute('aria-busy',String(busy));
@@ -98,18 +99,19 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,o
     async function extend(targets){if(busy||!draft)return;if(!targets.length){message('請回探索模型選取要加入的 OP；原草稿會保留。');return;}const ticket=generation,commands=draft.commands;setBusy(true);try{const next=await rpc('editWorkspaceExtend',{token:snapshot.token,targets,commands});if(!live(ticket))return;snapshot=next;draft=modelEditDraft(next,commands);render();message('已加入探索選取，保留原有草稿。');}catch(error){if(live(ticket))message(error.message);}finally{if(live(ticket))setBusy(false);}}
     $('edit-add-selection').onclick=()=>extend(getTargets());
     $('edit-export').onclick=async()=>{
-        if(busy||!draft||!changes().length)return;const ticket=generation,sourceFile=owner,commands=draft.commands,signature=JSON.stringify(commands),name=sourceFile.name.replace(/(?:-edited)?\.[^.]+$/,'')+`-edited.${snapshot.format==='mlir'?'mlir':'tflite'}`;
+        if(busy||!draft||!changes().length)return;const ticket=generation,sourceFile=owner,commands=draft.commands,stamp=signature(),name=sourceFile.name.replace(/(?:-edited)?\.[^.]+$/,'')+`-edited.${snapshot.format==='mlir'?'mlir':'tflite'}`;
         setBusy(true);message('在本機建立整份候選、重新解析並驗證接線／SSA／控制流程…');
-        try{const result=await rpc('editWorkspaceExport',{token:snapshot.token,commands,updateSignatures:$('edit-signatures').checked,outputName:name});if(!live(ticket))return;if(!result.roundTrip)throw Error('候選尚未重新解析。');await onExport(result,name,sourceFile);if(!live(ticket))return;exported=signature;message('修改模型已開始下載；可開啟修改結果繼續編輯。結構驗證通過，未執行推論或公司 verifier。');}
+        try{const result=await rpc('editWorkspaceExport',{token:snapshot.token,commands,updateSignatures:$('edit-signatures').checked,outputName:name});if(!live(ticket))return;if(!result.roundTrip)throw Error('候選尚未重新解析。');const token=await onExport(result,name,sourceFile);if(!live(ticket))return;exportedToken=token;exported=stamp;message('修改模型已開始下載；可開啟修改結果繼續編輯。結構驗證通過，未執行推論或公司 verifier。');}
         catch(error){if(live(ticket))message([error.message,...(error.validation?.diagnostics||[]).slice(0,8).map(d=>`${d.code}: ${d.message}`)].join('\n'));}
         finally{if(live(ticket))setBusy(false);}
     };
     $('edit-open-result').onclick=openResult;$('edit-download-report').onclick=downloadReport;
+    $('edit-signatures').onchange=()=>{availability();message('Signature 選項已變更，請重新驗證並匯出。');};
     $('explore-mode').onclick=()=>mode(false);$('edit-mode').onclick=()=>api.open();
     new ResizeObserver(()=>{root.style.setProperty('--edit-head',`${document.querySelector('.app-header').offsetHeight}px`);schedule();}).observe(document.querySelector('.app-header'));
     window.addEventListener('beforeunload',e=>{if(api.hasUnexported){e.preventDefault();e.returnValue='';}});
     const api={
-        get active(){return active;},get hasUnexported(){return !!draft&&changes().length>0&&exported!==JSON.stringify(draft.commands);},
+        get active(){return active;},get hasUnexported(){return !!draft&&changes().length>0&&exported!==signature();},
         advancedLocation(){const n=draft?.state.nodes.find(n=>n.id===selected);return n&&!n.fresh&&!n.removed&&!changes().length?n.source:null;},
         handleKey(e){if(e.defaultPrevented||e.isComposing||e.altKey)return false;const input=e.target.closest?.('input,textarea,select,[contenteditable="true"]');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!input){e.preventDefault();e.stopPropagation();travel(e.shiftKey);return true;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='f'){e.preventDefault();e.stopPropagation();$('edit-find').focus();return true;}if(e.key==='Escape'&&armed){e.preventDefault();armed=null;message('已取消接線。');return true;}return false;},
         enable(value){$('edit-mode').disabled=!value;},
