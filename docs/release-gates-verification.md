@@ -19,6 +19,8 @@
 - 本機六項關卡測試覆蓋未完成／失敗／PR／外部 repo／不同 attempt、略過及重複 job、缺少／過期／超量 artifact、錯誤 archive digest、路徑／多檔 archive、僅有 passed、缺少記憶體／實體 read 證據、受測 import 改動與 contract 零執行／略過等拒絕案例。CI 再執行六項封裝相關測試，共 12 項。
 - [實際產物負例](results/release-tamper-negative-2026-10-27.json)：修改候選 app.js 並重算 manifest，讓原本的逐檔 verifyArtifact 能成功；新的關卡仍因與 fresh build 不符，在任何 GitHub 網路請求前拒絕。沒有降低 integrity 規則或跳過來源重建。
 
+證據索引提交後，另在 clean `b60185a0481b3e609b83c489267c5ca6ee941b98` 執行真正的 `verify-release-gates.mjs` CLI，使用預設 `release-evidence.json`，候選 build `115d8e5ae29de6f3`，三項關卡均依相同 scope 成功沿用；見 [CLI 收據](results/release-gates-cli-2026-10-27.json)。此後收尾只記錄該收據與說明，scripts/test/src/vendor/workflow 未改，沿用此結果。最後唯讀核對 Pages 仍為 legacy／gh-pages，部署環境也只允許 gh-pages，伺服器端入口尚待下一階段遷移。
+
 ## 回退演練
 
 使用已交付的 preview.5 ZIP（29,453,921 bytes、SHA `1b6981ebd40ddd9f0c5c486b729309142bce57582dc7874ea0b11ac76ca33ef0`）及 preview.6 ZIP（29,453,947 bytes、SHA `82b358f03a6a18dea8d9e72fb445371d92f913c9ec67b4d2727baeb84f259193`）。演練工具實際受測來源為 `0a66a6343e6dea76a0638838a8d9404f527875fc`；後續僅改 gate validator、拒絕案例及證據選擇，該工具、HTTP server 與 artifact verifier 未改動，沿用成功演練。
