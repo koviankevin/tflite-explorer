@@ -13,9 +13,9 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const stable=value=>JSON.stringify(value,(_,v)=>v && !Array.isArray(v) && typeof v==='object'?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
 export const GATES=Object.freeze({
     core:{workflow:'.github/workflows/performance.yml',job:'measure',artifact:'core-performance',entries:['scripts/accept-performance.mjs','scripts/measure-performance.mjs','test/performance-policy.json']},
-    browser:{workflow:'.github/workflows/browser-lifecycle.yml',job:'lifecycle',artifact:'browser-lifecycle',entries:['test/browser/model-lifecycle.mjs','scripts/build.mjs']},
+    browser:{workflow:'.github/workflows/browser-lifecycle.yml',job:'lifecycle',artifact:'browser-lifecycle',entries:['test/browser/model-lifecycle.mjs','scripts/build.mjs','scripts/install-browser.mjs']},
     contract:{workflow:'.github/workflows/release-contract.yml',job:'release-contract',artifact:'release-contract',entries:['scripts/accept-release-contract.mjs','scripts/publish-github-pages.mjs','scripts/package-release.mjs','scripts/verify-release.mjs','test/release.test.mjs','test/release-gates.test.mjs']},
-    site:{workflow:'.github/workflows/production-smoke.yml',job:'site-upgrade',artifact:'versioned-site-browser',entries:['test/browser/versioned-site.mjs','test/browser/production-smoke.mjs','scripts/lib/versioned-site.mjs']}
+    site:{workflow:'.github/workflows/production-smoke.yml',job:'site-upgrade',artifact:'versioned-site-browser',entries:['test/browser/versioned-site.mjs','test/browser/production-smoke.mjs','scripts/lib/versioned-site.mjs','scripts/install-browser.mjs']}
 });
 export function gitReader(directory=root){
     const cache=new Map();
