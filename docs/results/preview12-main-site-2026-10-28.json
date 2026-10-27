@@ -1,0 +1,3100 @@
+{
+  "format": "model-lens-versioned-browser",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T18:19:48.008Z",
+  "source": {
+    "commit": "699dcafb99cc37e2b7c5596c73dc3eaa237c3e0d",
+    "tree": "117a9f133522ef2b5f4ecf1d40142749e2135091",
+    "committedAt": "2026-10-28T02:18:55+08:00",
+    "dirty": false
+  },
+  "baseline": {
+    "version": "0.2.0-preview.7",
+    "build": "163f38ab1dc856e4",
+    "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "sha256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+    "bytes": 29454029
+  },
+  "checks": [
+    "original legacy tab, native TFLite and persisted pattern before switching",
+    "legacy and namespaced old tabs lazily load custom MLIR after upgrade with their original version",
+    "new root selects the candidate namespace and sees the original IndexedDB pattern",
+    "already-open candidate lazily loads TFLite after rollback and retains its version and saved pattern",
+    "32px pattern search, native submodel download/reopen and original pattern export after rollback",
+    "fresh root after rollback opens the old version with its original persisted pattern"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/model-worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/model-worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/worker.js?v=b3586f28b4fc3c09",
+      "closed": true
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "closed": true
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "closed": true
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "closed": true
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-worker.js?v=163f38ab1dc856e4",
+      "closed": true
+    }
+  ],
+  "requests": [
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/grapher.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/app.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/app.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mobile.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-visibility.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/typography.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/overview-canvas.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/explorer-resize.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/laptop.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/release.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/browser.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/hydrate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/overview-canvas.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/explorer-resize.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/release-info.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/export-report-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-condition-editor.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace-session-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace-drafts.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/rectangle-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/svg-viewport.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-store.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/diagnostics.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/diagnostics-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/grapher.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace-session.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace-history.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/message.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/onnx.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/pytorch.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/mlnet.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/onnx-proto.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/onnx-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/onnx-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/pytorch-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/dagre.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/protobuf.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/python.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-adapters.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-dialect-registry.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-fold.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-overview.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/export-report.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite-schema.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/range-stream.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-dialect-contract.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-dialects.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-validate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-combined-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-pattern-projection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-slice-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-connection-index.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/mlir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-ir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-file.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/mlir-connection-view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "legacy-root",
+      "url": "./release.json?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/grapher.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/app.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/app.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/mobile.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/model-visibility.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/typography.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/overview-canvas.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/explorer-resize.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/laptop.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/release.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/browser.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/hydrate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/overview-canvas.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/explorer-resize.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/release-info.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/export-report-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-condition-editor.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-session-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-drafts.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/rectangle-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/svg-viewport.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-store.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/diagnostics.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/diagnostics-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/grapher.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-session.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-history.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/message.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/pytorch.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/mlnet.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-proto.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/pytorch-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/dagre.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/python.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/protobuf.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "namespaced-old",
+      "url": "./versions/163f38ab1dc856e4/release.json?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/model-worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/model-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/model-adapters.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-dialect-registry.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/pattern-fold.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/pattern-overview.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/export-report.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/tflite.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/tflite-schema.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/range-stream.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-dialect-contract.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/mlir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-ir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-file.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-dialects.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./vendor/netron/mlir-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-validate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-combined-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-pattern-projection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-slice-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-connection-index.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/mlir-connection-view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "legacy",
+      "phase": "upgrade",
+      "url": "./release.json?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/model-worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/model-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/model-adapters.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialect-registry.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-fold.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-overview.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/export-report.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-schema.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/range-stream.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialect-contract.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/mlir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-ir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-file.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialects.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/mlir-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-validate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-combined-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-projection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-slice-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-connection-index.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-connection-view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "old-namespace",
+      "phase": "upgrade",
+      "url": "./versions/163f38ab1dc856e4/release.json?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/grapher.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/app.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/app.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-workspace.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mobile.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-visibility.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/typography.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-canvas.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/explorer-resize.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/laptop.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/release.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-edit-workspace.css?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/browser.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/view.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/hydrate.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-canvas.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-formats.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/explorer-resize.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/release-info.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/dialog-keyboard.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/export-report-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/exported-model-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-edit-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-edit-workspace-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-editor.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-condition-editor.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/subgraph-pattern.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace-session-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace-drafts.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-selection.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/rectangle-selection.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/svg-viewport.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-utils.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-library.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-store.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/diagnostics.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/diagnostics-ui.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/base.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-layout.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/grapher.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-edit-draft.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-edit.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-spec.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-conditions.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace-session.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace-history.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/worker.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/message.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/onnx.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/pytorch.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/mlnet.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/onnx-proto.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/onnx-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/onnx-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/pytorch-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/zip.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/protobuf.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flatbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/dagre.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flexbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/python.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/text.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-engine.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-adapters.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-registry.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/subgraph-pattern.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-utils.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-fold.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-overview.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/export-report.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/base.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flatbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-schema.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/range-stream.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-contract.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-conditions.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/model-formats.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-layout.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flexbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/zip.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-engine.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/mlir.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/text.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-ir.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-file.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-types.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialects.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/mlir-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-validate.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-spec.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-combined-graph.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-projection.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-slice-graph.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-connection-index.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-connection-view.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-library.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "upgrade",
+      "url": "./versions/b3586f28b4fc3c09/release.json?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-engine.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-adapters.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-registry.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/subgraph-pattern.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-utils.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-fold.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-overview.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/export-report.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/base.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flatbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-schema.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/range-stream.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-conditions.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-formats.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-contract.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-layout.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flexbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/zip.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-library.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-spec.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/release.json?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/tflite-export.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/flatbuffer-writer.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-worker.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-engine.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-adapters.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-registry.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/subgraph-pattern.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-utils.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-fold.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-overview.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/export-report.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/base.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flatbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-schema.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/range-stream.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/model-formats.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-dialect-contract.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-conditions.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/overview-layout.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/flexbuffers.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/zip.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/workspace.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/pattern-library.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "candidate",
+      "phase": "rollback",
+      "url": "./versions/b3586f28b4fc3c09/src/mlir-pattern-spec.js?v=b3586f28b4fc3c09",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/grapher.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/app.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/app.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mobile.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-visibility.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/typography.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/overview-canvas.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/explorer-resize.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/laptop.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/release.css?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/browser.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/hydrate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/overview-canvas.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/explorer-resize.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/release-info.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/export-report-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-condition-editor.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-session-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-drafts.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/rectangle-selection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/svg-viewport.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-store.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/diagnostics.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/diagnostics-ui.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/grapher.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-session.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace-history.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/message.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/pytorch.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/mlnet.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-proto.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-schema.js",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/onnx-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/pytorch-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/dagre.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/python.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/protobuf.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/release.json?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-worker.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-adapters.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialect-registry.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/subgraph-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-utils.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-fold.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-overview.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/export-report.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/base.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flatbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-schema.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/range-stream.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialect-contract.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-conditions.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/model-formats.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/overview-layout.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/flexbuffers.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/zip.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/tflite-metadata.json",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-dialects.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-engine.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-validate.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-spec.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-combined-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-pattern-projection.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-slice-graph.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-connection-index.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/mlir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/vendor/netron/text.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-ir.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-file.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/mlir-connection-view.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/workspace.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    },
+    {
+      "page": "rolled-back",
+      "phase": "rollback",
+      "url": "./versions/163f38ab1dc856e4/src/pattern-library.js?v=163f38ab1dc856e4",
+      "method": "GET"
+    }
+  ],
+  "candidate": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.12",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "699dcafb99cc37e2b7c5596c73dc3eaa237c3e0d",
+      "tree": "117a9f133522ef2b5f4ecf1d40142749e2135091",
+      "committedAt": "2026-10-28T02:18:55+08:00",
+      "dirty": false
+    },
+    "buildId": "b3586f28b4fc3c09"
+  },
+  "snapshots": [
+    {
+      "siteId": "e2921b741013740b759a885969b5bb6682ea1ed959d1ac66e95107654e2f9df0",
+      "currentBuild": "163f38ab1dc856e4",
+      "files": 494,
+      "versions": [
+        "163f38ab1dc856e4"
+      ]
+    },
+    {
+      "siteId": "9b84cedb4c0737d5d11078af8db8b909a2051954c1f8fb8ae2377f989d67bcad",
+      "currentBuild": "b3586f28b4fc3c09",
+      "files": 755,
+      "versions": [
+        "163f38ab1dc856e4",
+        "b3586f28b4fc3c09"
+      ]
+    },
+    {
+      "siteId": "7addd9b062089c871bbf21208cbe60a3e3f9e7d31a359c606bc9020eb9d5cdb4",
+      "currentBuild": "163f38ab1dc856e4",
+      "files": 755,
+      "versions": [
+        "163f38ab1dc856e4",
+        "b3586f28b4fc3c09"
+      ]
+    }
+  ],
+  "chromium": "141.0.7390.37",
+  "sourceUnchanged": true,
+  "browserClosed": true,
+  "phase": "rollback",
+  "finishedAt": "2026-10-27T18:20:02.633Z",
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "modelWorkers": 7,
+      "requests": 491,
+      "scenarios": 6,
+      "snapshots": 3
+    }
+  }
+}
