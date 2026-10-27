@@ -3,19 +3,13 @@ import { Decoder } from '../vendor/netron/text.js';
 import { indexModel } from './model-engine.js';
 import { prepareMLIR, opName } from './mlir-ir.js';
 import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js';
+import {typeSpelling} from './mlir-types.js';
+export {typeSpelling} from './mlir-types.js';
 
 export const MLIR_TEXT_LIMIT = MLIR_STRUCTURE_LIMIT;
 export const MLIR_ATTRIBUTE_PREVIEW_LIMIT = 16 * 1024;
 const spelling = value => value === null || value === undefined ? '' : String(value);
 const argument = (name, value) => ({ name, value: [value] });
-export const typeSpelling = type => {
-    if (type && typeof type.dialect === 'string' && type.symbolData) {
-        const data=spelling(type.symbolData);
-        return `!${type.dialect}${data.startsWith('<') ? '' : '.'}${data}`;
-    }
-    const text=spelling(type);
-    return type?.elementType ? text.replace(spelling(type.elementType),typeSpelling(type.elementType)) : text;
-};
 const ssaName = value => {
     if (value.modelLensSSAName) return value.modelLensSSAName;
     const siblings = value.owner?.results;

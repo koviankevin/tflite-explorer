@@ -12,6 +12,7 @@ let results = [];
 let generation = 0;
 let file;
 let identity;
+let editInProgress=false;
 const send = (id, data) => postMessage({ id, data });
 const withReport=(result,args)=>{
     try {
@@ -36,6 +37,27 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 }, progress, dialects:mlirDialects
             });
             send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+        } else if (['modelEditInfo','modelEditValues','modelEditText','editModelOperation'].includes(action)) {
+            const {operationEditInfo,operationValueChoices,operationEditText,editModelOperation}=await import('./model-operation-edit.js');
+            if(action==='modelEditInfo'){send(id,operationEditInfo(index,args));return;}
+            if(action==='modelEditValues'){send(id,operationValueChoices(index,args));return;}
+            if(action==='modelEditText'){send(id,operationEditText(index,args));return;}
+            if(editInProgress)throw Error('上一筆模型修改仍在驗證，請稍後再試。');
+            editInProgress=true;
+            try {
+            const sourceIndex=index,sourceFile=file,result=await editModelOperation(sourceIndex,sourceFile,args,{progress:stage=>postMessage({stage})});
+            // Verify actual serialized bytes before offering a download. The
+            // candidate is local to this request; never replace the live index.
+            const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
+            const candidate=await openModelFile(candidateFile,{readAt:(offset,length)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(offset,offset+length))),readMetadata:async format=>{const response=await fetch(new URL(`../vendor/netron/${format}-metadata.json`,import.meta.url));if(!response.ok)throw Error('無法載入候選模型 metadata。');return response.text();},dialects:mlirDialects});
+            if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
+            else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const change of result.changes)validateTfliteModelGraph(candidate.raw,change.graph);}
+            if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
+            const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
+            try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,args,{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}
+            catch(reason){verified.reportError=reason.message;}
+            send(id,verified);
+            } finally {editInProgress=false;}
         } else if (action === 'workspaceIdentity') {
             const {workspaceIdentity}=await import('./workspace.js');
             identity ||= await workspaceIdentity(index,file);send(id,identity);
@@ -94,8 +116,8 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 const {mlirMatchSnapshot}=await import('./mlir-pattern.js');const dto=mlirMatchSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);
             } else {const dto=selectionSnapshot(index,args.item,args);send(id,args.collapsed?foldPatternSnapshot(dto,{name:args.patternName}):dto);}
         } else if (action === 'graph') {
-            const {mlirSliceSnapshot}=await import('./mlir-pattern.js');
-            const slice=mlirSliceSnapshot(index,args.graph,args);
+            let slice;
+            if(index.mlir){const {mlirSliceSnapshot}=await import('./mlir-pattern.js');slice=mlirSliceSnapshot(index,args.graph,args);}
             send(id, slice || { ...snapshot(index, args.graph, args.full ? [] : [0].filter(() => index.graphs[args.graph].graph.nodes.length), args.full), item: null });
         }
     } catch (error) { postMessage({ id, error: error.message || String(error), validation:error.validation }); }

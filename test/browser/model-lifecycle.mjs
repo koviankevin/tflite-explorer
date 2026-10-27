@@ -16,7 +16,8 @@ import {exportPatterns,reusablePattern,parsePatternFile} from '../../src/pattern
 import {createStaticServer} from '../../scripts/serve.mjs';
 import {installLifecycleAudit} from './lifecycle-audit.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
-import {evaluateLifecycle,LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
+import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
+import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
@@ -80,7 +81,7 @@ async function closeModel(){
     assert.equal(page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length,0);
     const {targetInfos}=await browserCDP.send('Target.getTargets');assert.equal(targetInfos.filter(t=>t.type==='worker'&&/\/model-worker\.js(?:\?|$)/.test(t.url)).length,0);
 }
-async function verifyDownload(filename,kind){
+async function verifyDownload(filename,kind,fullEdit=false){
     const fd=openSync(filename,'r');let index,readBytes=0,maxRead=0;
     try{
         const size=fstatSync(fd).size;assert.ok(size>1024**3);
@@ -90,9 +91,10 @@ async function verifyDownload(filename,kind){
             const bytes=new Uint8Array(length);assert.equal(readSync(fd,bytes,0,length,at),length);return bytes;
         },size,metadata);
     }finally{closeSync(fd);}
-    const graph=index.raw.subgraphs[0];assert.equal(graph.operators.length,4);assert.equal(graph.tensors.length,21011);assert.equal(graph.inputs.length,1);assert.equal(graph.outputs.length,kind===0?1:2);assert.equal(index.raw.buffers.length,5);
+    const graph=index.raw.subgraphs[0];assert.equal(graph.operators.length,fullEdit?21006:4);assert.equal(graph.tensors.length,21012);assert.equal(graph.inputs.length,1);assert.equal(graph.outputs.length,fullEdit?3:kind===0?1:2);assert.equal(index.raw.buffers.length,5);
     const custom=graph.operators.find(op=>op.opcode_index===(kind===0?0:5));assert.ok(custom);assert.deepEqual(custom.custom_options,PHYSICAL_OPTIONS);
     assert.deepEqual([...graph.operators[0].inputs],kind===0?[0,1]:[21005,4]);
+    if(fullEdit){assert.deepEqual([...graph.operators[1].inputs],[0,1]);assert.deepEqual([...graph.operators[1].outputs],[21011]);assert.deepEqual([...graph.operators[2].inputs],[5,2]);assert.equal(graph.tensors[21011].name,'projected_input_new_0');assert.equal(graph.operators.filter(op=>op.opcode_index===0).length,2);for(const op of graph.operators.filter(op=>[0,5].includes(op.opcode_index)))assert.deepEqual(op.custom_options,PHYSICAL_OPTIONS);}
     const weight=index.raw.buffers[1];assert.equal(Number(weight.size),PHYSICAL_WEIGHT_BYTES);
     const whole=createHash('sha256'),hash=createHash('sha256');let offset=0;
     const start=Number(weight.offset),end=Number(weight.offset+weight.size);
@@ -103,7 +105,28 @@ async function verifyDownload(filename,kind){
     for(const [id,expected] of [[2,new Uint8Array(Int32Array.of(1,2).buffer)],[3,new Uint8Array(Int32Array.of(0,1).buffer)],[4,new Uint8Array(Float32Array.of(2,3).buffer)]]){
         const b=index.raw.buffers[id],small=openSync(filename,'r');try{const bytes=new Uint8Array(Number(b.size));assert.equal(readSync(small,bytes,0,bytes.length,Number(b.offset)),bytes.length);assert.deepEqual(bytes,expected);}finally{closeSync(small);}
     }
-    return {bytes:offset,sha256:whole.digest('hex'),weightSHA256,readBytes,maxRead,operators:4,inputs:[...graph.inputs],outputs:[...graph.outputs],weightVerified:true,optionsVerified:true};
+    return {bytes:offset,sha256:whole.digest('hex'),weightSHA256,readBytes,maxRead,operators:graph.operators.length,inputs:[...graph.inputs],outputs:[...graph.outputs],weightVerified:true,optionsVerified:true};
+}
+
+async function editWholeModel(cycle,entry,hashes){
+    phase=`cycle-${cycle}-edit-source`;
+    await page.locator('[data-kind="layers"]').click();await page.locator('#scope').selectOption('current');await page.locator('#query').fill('#0');
+    await waitFor(()=>document.querySelector('#results').dataset.searchQuery==='#0'&&document.querySelector('#results').getAttribute('aria-busy')==='false'&&document.querySelector('#result-count').textContent==='1 筆結果');
+    await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
+    await page.locator('#open-model-editor').click();await waitFor(()=>document.querySelector('#model-edit-dialog').open&&!document.querySelector('#export-edited-model').disabled);
+    assert.match(await page.locator('#model-edit-target').textContent(),/OP #0 · HugeWeightProject/);await page.locator('#model-edit-mode').selectOption('add-after');
+    const started=Date.now();phase=`cycle-${cycle}-full-model-export`;let event=page.waitForEvent('download');await page.locator('#export-edited-model').click();let download=await event;assert.equal(await download.failure(),null);
+    const full=path.join(temporary,`cycle-${cycle}-full.tflite`);await download.saveAs(full);await download.delete();await waitFor(()=>!document.querySelector('#open-edited-model').disabled);
+    const exportMs=Date.now()-started;event=page.waitForEvent('download');await page.locator('#download-model-edit-report').click();download=await event;assert.equal(await download.failure(),null);const reportFile=full+'.report.json';await download.saveAs(reportFile);await download.delete();
+    const proof=JSON.parse(await readFile(reportFile,'utf8'));assert.equal(proof.provenance.mode,'model-edit');assert.equal(proof.checks.find(c=>c.id==='serialized-roundtrip').status,'passed');assert.equal(proof.modification.before.layers,21005);assert.equal(proof.modification.after.layers,21006);
+    const before=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(before);let deadline;
+    try{const ended=Promise.race([once(before,'close'),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Original edit Worker did not close.')),5000);})]);await page.locator('#open-edited-model').click();await ended;}finally{clearTimeout(deadline);}
+    await ready(21006);await page.locator('[data-kind="patterns"]').click();await match(patterns[0].name,1);await match(patterns[1].name,1);
+    entry.workerHeaps.push({phase:'edited-model',...await modelWorkerHeap(browserCDP)});
+    phase=`cycle-${cycle}-full-model-verify`;const verified=await verifyDownload(full,0,true),receipt=await verifyExportFiles({report:proof,source:report.fixture.file,output:full});assert.equal(receipt.byteComparison.status,'passed');assert.equal(receipt.outputSHA256,verified.sha256);
+    if(hashes.has('full-model'))assert.equal(verified.sha256,hashes.get('full-model'));else hashes.set('full-model',verified.sha256);
+    entry.modelEdit={sourceOperators:21005,outputOperators:proof.modification.after.layers,readbackOperators:verified.operators,bytes:verified.bytes,sha256:verified.sha256,weightSHA256:verified.weightSHA256,weightVerified:verified.weightVerified,optionsVerified:verified.optionsVerified,roundTrip:true,prefixMatches:1,branchMatches:1,byteComparison:receipt.byteComparison.status,comparedBytes:receipt.byteComparison.bytes,byteRanges:receipt.byteComparison.ranges.length,exportMs};
+    return [full,reportFile];
 }
 try{
     assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI.');
@@ -140,6 +163,7 @@ try{
         await match(name,1);entry.patternSourceMatches=1;await match(other,1);await match(name,1);
         await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
         entry.workerHeaps.push({phase:'source',...await modelWorkerHeap(browserCDP)});
+        const editedFiles=await editWholeModel(cycle,entry,hashes);await match(name,1);await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
         phase=`cycle-${cycle}-download`;const downloadEvent=page.waitForEvent('download');await page.locator('#export-match').click();const download=await downloadEvent;assert.equal(await download.failure(),null);const child=path.join(temporary,`cycle-${cycle}.tflite`);await download.saveAs(child);await download.delete();assert.ok((await stat(child)).size>1024**3);
         await closeModel();phase=`cycle-${cycle}-reopen`;await choose(child);await ready(4);await match(name,1);entry.patternReopenMatches=1;await match(other,0);entry.negativePatternMatches=0;await match(name,1);
         await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
@@ -148,11 +172,12 @@ try{
         phase=`cycle-${cycle}-release`;await waitFor(()=>globalThis.__lifecycle.urls.every(item=>item.revoked),policy.urlReleaseTimeoutMs);
         const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample());}
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);
-        await rm(child);console.log(`PASS cycle ${cycle}/${policy.cycles}: ${entry.kind}, verified ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
+        await rm(child);for(const filename of editedFiles)await rm(filename);console.log(`PASS cycle ${cycle}/${policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
     }
     report.audit=await readPage(()=>globalThis.__lifecycle);
-    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,16);
-    for(const entry of report.audit.workers){assert.equal(entry.error,undefined);if(/\/model-worker\.js(?:\?|$)/.test(entry.url)){assert.equal(entry.terminated,true);assert.ok(entry.audit?.bytes>0);assert.equal(entry.audit.bytes,entry.stats.bytesRead);}}
+    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,24);
+    assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,8);
+    for(const entry of report.audit.workers){assert.equal(entry.error,undefined);if(/\/model-worker\.js(?:\?|$)/.test(entry.url)){assert.equal(entry.terminated,true);assert.ok(entry.audit?.bytes>0);assert.equal(entry.audit.bytes,entry.stats.bytesRead+(entry.verificationReadBytes||0));}}
     for(const audit of [report.audit.audit,...report.audit.workers.map(w=>w.audit).filter(Boolean)]){assert.deepEqual(audit.violations,[]);assert.ok(audit.maxRead<=policy.maxReadBytes&&audit.bytes<=policy.realmReadBytes);}
     assert.deepEqual(errors,[]);report.evaluation=evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check('eight physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits');report.status='passed';
 }catch(error){report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}

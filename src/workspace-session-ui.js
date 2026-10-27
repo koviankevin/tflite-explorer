@@ -43,6 +43,7 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
     $('fork-draft').onclick=()=>session.fork().catch(error);
     $('undo-workspace').onclick=()=>session.travel(-1).catch(error);$('redo-workspace').onclick=()=>session.travel(1).catch(error);
     $('autosave-enabled').onchange=()=>{const value=$('autosave-enabled').checked;session.setEnabled(value);try{localStorage.setItem('model-lens.autosave.v1',value?'on':'off');}catch{/* Setting remains applied in memory. */}};
+    $('autosave-enabled').disabled=false;
     const change=event=>{if(event.target?.closest?.('#draft-dialog, #export-report-dialog, #release-dialog, #diagnostic-dialog, .session-tools'))return;session.change();};
     for(const type of ['click','input','change','pointerup','wheel','scroll'])document.addEventListener(type,change,{capture:true,passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush({force:true});});

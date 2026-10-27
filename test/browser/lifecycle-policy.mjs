@@ -1,14 +1,22 @@
 const MiB=1024**2;
 export const LIFECYCLE_POLICY=Object.freeze({version:1,cycles:8,warmupCycles:2,sampleIntervalMs:500,urlReleaseTimeoutMs:80000,settleSamples:5,
     maxReadBytes:MiB,realmReadBytes:16*MiB,browserPeakGrowthBytes:768*MiB,closedRssDriftBytes:128*MiB,closedRssSlopeBytesPerCycle:16*MiB,closedMainHeapDriftBytes:32*MiB,modelWorkerUsedBytes:512*MiB,modelWorkerBackingBytes:512*MiB});
+// Same memory/read limits. v2 also requires the real full-model edit path in
+// every cycle; v1 remains verifiable for immutable historical rollback assets.
+export const MODEL_EDIT_LIFECYCLE_POLICY=Object.freeze({...LIFECYCLE_POLICY,version:2});
 export function median(values) {if(!values.length||values.some(x=>!Number.isFinite(x)))throw Error('Missing finite samples.');const sorted=[...values].sort((a,b)=>a-b),at=Math.floor(sorted.length/2);return sorted.length%2?sorted[at]:(sorted[at-1]+sorted[at])/2;}
 export function slope(values) {if(values.length<2||values.some(x=>!Number.isFinite(x)))throw Error('Missing slope samples.');const mean=(values.length-1)/2,average=values.reduce((a,b)=>a+b,0)/values.length;return values.reduce((n,v,i)=>n+(i-mean)*(v-average),0)/values.reduce((n,_,i)=>n+(i-mean)**2,0);}
 export function evaluateLifecycle(report,policy=LIFECYCLE_POLICY) {
+    if(policy===LIFECYCLE_POLICY&&report.policy?.version===2)policy=MODEL_EDIT_LIFECYCLE_POLICY;
     const issues=[],cycles=report.cycles || [],samples=report.samples || [];
     if(cycles.length!==policy.cycles)issues.push('missing-cycles');
     for(const [i,c] of cycles.entries()) {
         if(c.cycle!==i+1 || c.weightVerified!==true || c.optionsVerified!==true || c.patternSourceMatches!==1 || c.patternReopenMatches!==1 || c.negativePatternMatches!==0 || c.fileInputEmpty!==true || c.liveModelWorkers!==0 || c.activeBlobUrls!==0 || !Number.isFinite(c.closedRssBytes) || c.closedRssBytes<=0 || !Number.isFinite(c.closedMainHeapBytes) || c.closedMainHeapBytes<=0)issues.push(`cycle-${i+1}-incomplete`);
         if(!Array.isArray(c.workerHeaps)||c.workerHeaps.length<2||c.workerHeaps.some(h=>!Number.isFinite(h.usedSize)||h.usedSize<=0||h.usedSize>policy.modelWorkerUsedBytes||!Number.isFinite(h.backingStorageSize)||h.backingStorageSize<0||h.backingStorageSize>policy.modelWorkerBackingBytes))issues.push(`cycle-${i+1}-worker-heap`);
+        if(policy.version===2){
+            const m=c.modelEdit;
+            if(!m||m.sourceOperators!==21005||m.outputOperators!==21006||m.readbackOperators!==21006||!Number.isSafeInteger(m.bytes)||m.bytes<=1024**3||m.weightVerified!==true||m.optionsVerified!==true||!/^[a-f0-9]{64}$/.test(m.weightSHA256||'')||m.weightSHA256!==report.fixture?.weightSHA256||m.roundTrip!==true||m.prefixMatches!==1||m.branchMatches!==1||m.byteComparison!=='passed'||!Number.isSafeInteger(m.comparedBytes)||m.comparedBytes<1024**3||!Number.isSafeInteger(m.byteRanges)||m.byteRanges<1||!/^[a-f0-9]{64}$/.test(m.sha256||'')||!Number.isFinite(m.exportMs)||m.exportMs<=0||c.workerHeaps?.length<3)issues.push(`cycle-${i+1}-model-edit-incomplete`);
+        }
     }
     if(!samples.length || samples.some(s=>!Number.isFinite(s.rssBytes)||s.rssBytes<=0))issues.push('missing-browser-rss');
     let summary=null;

@@ -16,10 +16,10 @@
     <button id="patterns-tab" role="tab" aria-controls="search-controls" aria-selected="false" tabindex="-1" data-kind="patterns" title="左右方向鍵移動；Enter／Space 切換並搜尋">Pattern</button>
   </div>
   <div id="search-controls" class="search-tools" role="tabpanel" aria-labelledby="layers-tab">
-    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button></div>
+    <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="open-model-editor" class="text-button" aria-haspopup="dialog" disabled>編輯實際模型</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button><button id="open-export-model" class="text-button" title="在目前分頁開啟本次匯出的模型；關閉模型或再次匯出後清除此入口" hidden disabled>開啟匯出結果</button></div>
     <input id="workspace-file" type="file" accept=".json" hidden>
     <div class="session-tools" aria-label="本機草稿與操作歷史">
-      <div class="session-actions"><button id="undo-workspace" class="text-button" disabled title="Ctrl／⌘ Z（輸入框保留文字復原）">復原</button><button id="redo-workspace" class="text-button" disabled title="Ctrl／⌘ Shift Z 或 Ctrl Y">重做</button><button id="open-drafts" class="text-button" aria-haspopup="dialog">本機草稿</button><label><input id="autosave-enabled" type="checkbox" checked>自動儲存</label></div>
+      <div class="session-actions"><button id="undo-workspace" class="text-button" disabled title="Ctrl／⌘ Z（輸入框保留文字復原）">復原</button><button id="redo-workspace" class="text-button" disabled title="Ctrl／⌘ Shift Z 或 Ctrl Y">重做</button><button id="open-drafts" class="text-button" aria-haspopup="dialog">本機草稿</button><label><input id="autosave-enabled" type="checkbox" checked disabled>自動儲存</label></div>
       <p id="draft-status" role="status">開啟模型後開始保存本機草稿。</p>
       <button id="resume-draft-prompt" class="text-button" hidden>選擇草稿以恢復</button><button id="fork-draft" class="text-button" hidden>另開草稿，保留原版本</button>
     </div>
@@ -39,6 +39,7 @@
         <label class="exact-option"><input id="graph-induced" type="checkbox">選取節點之間的連線須完全相同</label>
       </div>
       <p id="cfg-pattern-summary" class="hint" hidden></p>
+      <details id="cfg-pattern-editor" class="cfg-editor" open hidden></details>
       <details id="condition-editor"><summary id="condition-summary">條件篩選 · 0 個</summary><div class="condition-fields">
         <label>指定 OP<select id="condition-node" aria-label="條件指定 OP"></select></label>
         <label>條件<select id="condition-kind"><option value="shape">Shape</option><option value="dtype">Dtype</option><option value="attribute">Attribute</option></select></label>
@@ -76,8 +77,25 @@
 <section id="capture-toolbar" class="capture-toolbar" aria-label="從模型圖建立 pattern" hidden>
   <div><strong id="capture-count" aria-live="polite">已選取 0 個 layers</strong><span id="capture-hint">點選 layer 可加入／取消；自動擷取選取節點之間的連線。</span></div>
   <div id="capture-cfg-option" hidden><label><input id="capture-cfg" type="checkbox">跨 block 保留選取</label><button id="add-capture-block" class="quiet">加入目前 block 全部 layers</button><button id="add-visible-layers" class="quiet" hidden>選取圖中全部 layers</button><div id="capture-blocks" class="capture-blocks"></div></div>
-  <div class="capture-actions"><label for="capture-name" class="sr-only">Pattern 名稱</label><input id="capture-name" placeholder="Pattern 名稱" maxlength="80"><button id="save-capture" class="primary" disabled>儲存並搜尋</button><button id="export-submodel" class="quiet" disabled>匯出 TFLite 子模型</button><button id="clear-capture" class="quiet">清除選取</button><button id="cancel-capture" class="quiet">完成選取</button></div>
+  <div class="capture-actions"><label for="capture-name" class="sr-only">Pattern 名稱</label><input id="capture-name" placeholder="Pattern 名稱" maxlength="80"><button id="edit-capture" class="quiet" disabled>編輯選取 pattern</button><button id="save-capture" class="primary" disabled>儲存並搜尋</button><button id="export-submodel" class="quiet" disabled>匯出 TFLite 子模型</button><button id="clear-capture" class="quiet">清除選取</button><button id="cancel-capture" class="quiet">完成選取</button></div>
 </section>
+<dialog id="model-edit-dialog" aria-labelledby="model-edit-title">
+  <div class="import-heading"><h2 id="model-edit-title">編輯實際模型</h2><button id="close-model-edit" class="icon-button" aria-label="關閉模型編輯">×</button></div>
+  <p id="model-edit-target"></p><p class="hint">產生修改後的整份模型，原始檔案保持不變。先在本機驗證並下載，再開啟結果繼續編輯；這裡不會修改搜尋 pattern。</p>
+  <div id="model-edit-form">
+    <label>操作<select id="model-edit-mode"><option value="replace">修改此 OP</option><option value="add-before">在前方複製新增 OP</option><option value="add-after">在後方複製新增 OP</option><option value="remove">刪除此 OP</option></select></label>
+    <label id="model-edit-name-field">Operator 名稱<input id="model-edit-name" maxlength="256"></label>
+    <label>搜尋可接線的值<input id="model-edit-value-search" type="search" maxlength="256" placeholder="SSA 名稱／tensor 名稱或 #編號"></label><p id="model-edit-choice-count" class="hint"></p><datalist id="model-edit-values"></datalist>
+    <div id="model-edit-boundary"><label>刪除後的輸出去向<select id="model-edit-delete-mode"><option value="reconnect">接到下方指定的替代值</option><option value="boundary">將仍使用的輸出改為模型輸入</option></select></label><p class="hint">改為模型輸入後，呼叫端必須提供這些值；保留原 dtype、shape 和量化資料。</p></div>
+    <section id="model-edit-port-fields" aria-label="OP 接線"><div id="model-edit-ports"></div><nav class="model-edit-actions" aria-label="OP port 分頁"><button id="model-edit-ports-previous" class="quiet">上一頁</button><span id="model-edit-port-page"></span><button id="model-edit-ports-next" class="quiet">下一頁</button></nav></section>
+    <label id="model-edit-expose-field"><input id="model-edit-expose" type="checkbox" checked>將新增 OP 的輸出加入模型 outputs</label>
+    <label id="model-edit-signature-field"><input id="model-edit-update-signatures" type="checkbox">介面變更時同步更新 signature；保留未改動的名稱對照</label>
+    <div id="model-edit-options"></div>
+    <div id="model-edit-ir-controls"><label><input id="model-edit-advanced" type="checkbox">使用完整 IR（優先套用此文字，基本名稱／接線欄位停用）</label><textarea id="model-edit-ir" rows="8" spellcheck="false" aria-label="OP 完整 MLIR" readonly></textarea><p id="model-edit-ir-hint" class="hint"></p></div>
+  </div>
+  <output id="model-edit-result" role="status" aria-live="polite"></output>
+  <div class="model-edit-actions"><button id="cancel-model-edit" class="quiet">取消</button><button id="export-edited-model" class="primary" disabled>驗證並匯出整份模型</button><button id="open-edited-model" class="quiet" disabled>開啟修改結果</button><button id="download-model-edit-report" class="quiet" disabled>下載修改報告</button></div>
+</dialog>
 <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title">
   <div class="import-heading"><h2 id="import-title">匯入 patterns</h2><button id="close-import" class="icon-button" aria-label="關閉匯入">×</button></div>
   <p>選擇模鏡匯出的 JSON 檔案。既有 pattern 會保留；同名且內容相同的略過，內容不同的自動改名。</p>

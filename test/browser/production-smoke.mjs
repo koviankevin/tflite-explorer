@@ -11,6 +11,8 @@ import {resolveLiveCore,readStaticFile,verifyRemoteSnapshot} from '../../scripts
 import {verifySite} from '../../scripts/lib/versioned-site.mjs';
 import {createStaticServer} from '../../scripts/serve.mjs';
 import {keyboardFlow} from './keyboard-flow.mjs';
+import {mlirSelectionFlow} from './mlir-selection-flow.mjs';
+import {modelEditFlow} from './model-edit-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -19,6 +21,7 @@ const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{1
 const keyboardAudit=process.env.KEYBOARD_AUDIT==='true';
 if(keyboardAudit){assert.equal(process.env.GITHUB_WORKFLOW,'Public site browser smoke');assert.equal(process.env.GITHUB_REF,'refs/heads/main');}
 const keyboardRequired=keyboardAudit||!['163f38ab1dc856e4','017eed149449e951'].includes(expected);
+const selectionToolsRequired=!['163f38ab1dc856e4','017eed149449e951','35c75cab9fab0def'].includes(expected);
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
 let browser,context,page,readPage,releaseStartup,server;
@@ -63,6 +66,7 @@ try{
     let startupTimer;
     try{await Promise.race([startupBlocked,new Promise((_,reject)=>{startupTimer=setTimeout(()=>reject(Error('Graph initialization request was not observed.')),30000);})]);}finally{clearTimeout(startupTimer);}
     assert.equal(await readPage(()=>typeof document.querySelector('#release-info-button').onclick),'function','Version control must work while graph initialization is pending.');
+    if(selectionToolsRequired)assert.equal(await readPage(()=>document.querySelector('#autosave-enabled').disabled),true,'Autosave must not accept changes before the session preferences initialize.');
     await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();releaseStartup();check('version dialog works during delayed graph initialization at the repository subpath');
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
     await page.locator('#query').fill('#0');await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);check('public demo, 32px graph, exact layer search and location');
@@ -72,8 +76,11 @@ try{
     await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');event=page.waitForEvent('download');await page.locator('#export-match').click();download=await event;assert.equal(await download.failure(),null);const child=path.join(temporary,'submodel.tflite');await download.saveAs(child);await download.delete();
     await close();await choose(child);await ready(3);await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();check('actual TFLite submodel download, native reopen, original pattern and worker cleanup');
     report.keyboardRequired=keyboardRequired;report.keyboardAudit=keyboardAudit;
-    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check});
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?5:3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    report.selectionToolsRequired=selectionToolsRequired;
+    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired});
+    if(selectionToolsRequired)report.mlirSelection=await mlirSelectionFlow({page,read:readPage,base,directory:temporary,check});
+    if(selectionToolsRequired)report.modelEditing=await modelEditFlow({page,read:readPage,base,directory:temporary,check});
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?(selectionToolsRequired?21:5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();
