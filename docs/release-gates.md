@@ -1,6 +1,6 @@
 # 發布驗收與回退基礎
 
-現有 `scripts/publish-github-pages.mjs` 在推送前會執行線上關卡檢查，不接受自行提供的 passed JSON。一般建置與公司內網封裝仍不需連外；這個關卡只適用於公開 GitHub 發布。
+現有 `scripts/publish-github-pages.mjs` 先執行線上關卡、固定來源與伺服器設定檢查，再 dispatch 受控 Pages 工作流程；不再直接推送 gh-pages。不接受自行提供的 passed JSON。一般建置與公司內網封裝仍不需連外；這個關卡只適用於公開 GitHub 發布。
 
 ```powershell
 $env:GH_BIN = 'C:\tools\gh.exe' # 已登入的 GitHub CLI；在 PATH 時不用設定
@@ -31,6 +31,6 @@ node scripts/drill-release-rollback.mjs previous.zip candidate.zip build/qa/new-
 
 這是靜態交付／版本路由的回退演練，不代表 GitHub 正式站已切換回舊版，也不證明 IndexedDB 或工作階段格式可反向遷移。公司內網仍須按自己的 server 設定部署版本目錄與路由，並在更新前匯出使用者資料。
 
-## 尚未完成的強制邊界
+## 伺服器強制邊界與後續
 
-目前 GitHub Pages 仍設定成推送 gh-pages 分支就部署；repository 管理者或其他工具仍可直接繞過本機腳本。這個限制不能靠本機收據解決。後續需將 Pages 入口切換至受控 workflow，讓部署 job 依賴成功的關卡與固定產物，並核對 environment／分支規則。這一層尚未完成前，不宣稱已建立伺服器端不可略過的發布關卡，也不把商品等級目標標為完成。
+GitHub Pages 已切換為 workflow，github-pages environment 只允許 main；main 的必要檢查限定 GitHub Actions App 並包含管理者。實際負例已確認未受測的 main 推送遭拒、舊 gh-pages 分支更新不再部署、版本不符時 deploy 與 release 不執行。流程見 [受控發布](pages-deployment.md)，實際狀態及尚待完成的正式交付見 [伺服器驗收](pages-deployment-verification.md)。管理者仍可明確修改 repository 規則，不能宣稱完全無法繞過管理權限。正式站回退、資料遷移及升級時舊分頁／CDN 資產隔離仍需另行驗收，商品等級目標尚未完成。

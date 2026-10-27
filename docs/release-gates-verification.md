@@ -1,5 +1,7 @@
 # 發布關卡與隔離回退驗收（2026-10-27）
 
+此文保留本輪歷史結果。後續 Pages 已切換為受控 workflow 並驗證伺服器負例，最新狀態見 [Pages 伺服器驗收](pages-deployment-verification.md)；下文當時的 legacy 設定不再代表現行設定。
+
 本輪修改發布工具與測試，沒有更動網站 src/vendor 或重新部署正式站。現有正式版仍是 `0.2.0-preview.6`／build `0f8361cc44fcd547`。下述新來源 build 只是公開產物候選，用於驗證關卡，不是另一份覆蓋同 tag 的 GitHub Release。
 
 ## 關卡證據
