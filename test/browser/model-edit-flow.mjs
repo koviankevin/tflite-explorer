@@ -37,10 +37,11 @@ export async function modelEditFlow({page,read,base,directory,check}){
     async function pickTarget(key){await page.locator(`[data-model-edit-target="${key}"]`).click();await until(()=>!document.querySelector('#export-edited-model').disabled&&!document.querySelector('#model-edit-form').hidden);}
     async function marquee(){
         await page.locator('#pick-pattern').click();await wait(150);
-        const fits=()=>read(()=>{const t=document.querySelector('#target').getBoundingClientRect(),nodes=[...document.querySelectorAll('#target .node[data-model-node]')].map(n=>n.getBoundingClientRect());return nodes.length===3&&nodes.every(r=>r.left>t.left+4&&r.right<t.right-4&&r.top>t.top+4&&r.bottom<t.bottom-4);});
+        const fits=()=>read(()=>{const t=document.querySelector('#target').getBoundingClientRect(),nodes=[...document.querySelectorAll('#target .node[data-model-node]')].map(n=>n.getBoundingClientRect());return nodes.length===3&&nodes.every(r=>r.left>t.left+20&&r.right<t.right-20&&r.top>t.top+20&&r.bottom<t.bottom-20);});
         for(let i=0;i<16&&!await fits();i++){await page.locator('#zoom-out').click();await wait(100);}assert.ok(await fits(),'Three source OPs must fit before native marquee.');
         const r=await read(()=>{const t=document.querySelector('#target').getBoundingClientRect();return {left:t.left,top:t.top,right:t.right,bottom:t.bottom};});
-        await page.mouse.move(r.left+2,r.top+2);await page.mouse.down();await page.mouse.move(r.right-2,r.bottom-2,{steps:12});await page.mouse.up();
+        assert.ok(await read((x,y)=>!!document.elementFromPoint(x,y)?.closest('#target'),r.left+16,r.top+16),'Marquee must start on the graph, beyond the sidebar resize handle.');
+        await page.mouse.move(r.left+16,r.top+16);await page.mouse.down();await page.mouse.move(r.right-16,r.bottom-16,{steps:12});await page.mouse.up();
         await until(()=>document.querySelector('#capture-count').textContent==='已選取 3 個 layers');
     }
     const saved=new Set();
