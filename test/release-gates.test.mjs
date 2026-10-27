@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {GATES,assertRun,assertReport,sourceScope,gitReader,readArtifact} from '../scripts/lib/release-gates.mjs';
+import {RELEASE_CONTRACT_TESTS} from '../scripts/lib/release-test-plan.mjs';
 const repository='koviankevin/tflite-explorer',commit='a'.repeat(40),tree='b'.repeat(40);
 function evidence(kind='browser'){
     const spec=GATES[kind];return {run:{id:123,status:'completed',conclusion:'success',event:'workflow_dispatch',head_branch:'main',head_repository:{full_name:repository},path:spec.workflow,head_sha:commit,run_attempt:1},jobs:[{name:spec.job,status:'completed',conclusion:'success'}],artifact:{id:456,name:`${spec.artifact}-${commit}-1`,expired:false,size_in_bytes:100,digest:'sha256:'+'c'.repeat(64)}};
@@ -22,9 +23,9 @@ test('a passed label cannot replace actual browser/worker/read/release evidence'
     for(const [i,change] of [r=>r.cycles.pop(),r=>r.errors.push('error'),r=>worker(r).terminated=false,r=>worker(r).audit.bytes++,r=>r.audit.urls[0].revoked=false,r=>r.environment.sourceDirty=true,r=>r.policy.cycles=1,r=>r.browserClosed=false,r=>r.audit.audit.maxRead=2*1024**2,r=>worker(r).audit.violations.push('read'),r=>r.fixture.sha256='0'.repeat(64),r=>r.fixture.allocatedBytes=undefined].entries()){const r=structuredClone(report);change(r);assert.throws(()=>assertReport(r,'browser',run,report.environment.sourceTree),`negative ${i}`);}
 });
 test('contract evidence requires real tests, clean bound source and zero skips',()=>{
-    const r={format:'model-lens-release-contract',version:1,status:'passed',source:{commit,tree,dirty:false},sourceUnchanged:true,tests:['test/release.test.mjs','test/release-gates.test.mjs'],exitCode:0,counts:{tests:10,fail:0,skipped:0,cancelled:0}};
+    const r={format:'model-lens-release-contract',version:1,status:'passed',source:{commit,tree,dirty:false},sourceUnchanged:true,tests:[...RELEASE_CONTRACT_TESTS],exitCode:0,counts:{tests:10,fail:0,skipped:0,cancelled:0}};
     assert.doesNotThrow(()=>assertReport(r,'contract',{head_sha:commit},tree));
-    for(const change of [r=>r.tests.pop(),r=>r.counts.skipped=1,r=>r.counts.tests=0,r=>r.exitCode=1,r=>r.source.tree='f'.repeat(40)]){const c=structuredClone(r);change(c);assert.throws(()=>assertReport(c,'contract',{head_sha:commit},tree));}
+    for(const change of [r=>r.status='not_required',r=>r.tests.pop(),r=>r.counts.skipped=1,r=>r.counts.tests=0,r=>r.exitCode=1,r=>r.source.tree='f'.repeat(40)]){const c=structuredClone(r);change(c);assert.throws(()=>assertReport(c,'contract',{head_sha:commit},tree));}
 });
 test('Git dependency scope follows imported processors and rejects changed executed sources',()=>{
     const data=new Map([['package.json','{"version":"1","scripts":{"test":"node --test"}}'],['package-lock.json','{"version":"1","packages":{"":{"version":"1"}}}'],[GATES.core.workflow,'workflow'],['scripts/accept-performance.mjs',"import './lib/helper.mjs';"],['scripts/lib/helper.mjs','export const value=1;'],['scripts/measure-performance.mjs','// fixture runner'],['test/performance-policy.json','{}']]);

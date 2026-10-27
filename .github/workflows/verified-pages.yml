@@ -1,0 +1,56 @@
+{
+  "name": "Verified Pages release",
+  "on": {"workflow_dispatch": {"inputs": {
+    "publish": {"description": "Deploy after all gates (false prepares artifacts only)", "type": "boolean", "default": false},
+    "expected_build_id": {"description": "Exact build ID from the successful preparation run", "type": "string", "default": ""}
+  }}},
+  "permissions": {"contents": "read"},
+  "concurrency": {"group": "pages-production", "cancel-in-progress": false},
+  "jobs": {
+    "prepare": {
+      "if": "${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",
+      "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
+      "permissions": {"contents": "read", "actions": "read", "pages": "read"},
+      "outputs": {"build_id": "${{ steps.prepare.outputs.build_id }}", "version": "${{ steps.prepare.outputs.version }}", "manifest_sha": "${{ steps.prepare.outputs.manifest_sha }}", "receipt_sha": "${{ steps.prepare.outputs.receipt_sha }}", "zip_sha": "${{ steps.prepare.outputs.zip_sha }}"},
+      "steps": [
+        {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false, "fetch-depth": 0}},
+        {"uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020", "with": {"node-version": "22.23.3"}},
+        {"name": "Install locked release tools without lifecycle scripts", "run": "npm ci --ignore-scripts"},
+        {"id": "prepare", "name": "Verify source, all gates and immutable delivery", "run": "node scripts/prepare-pages-release.mjs", "env": {"GH_TOKEN": "${{ github.token }}", "PUBLISH_SITE": "${{ inputs.publish }}", "EXPECTED_BUILD": "${{ inputs.expected_build_id }}"}},
+        {"name": "Upload only the verified Pages tar", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "github-pages", "path": "${{ steps.prepare.outputs.pages_tar }}", "if-no-files-found": "error", "retention-days": 7}},
+        {"name": "Retain immutable ZIP and gate evidence", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "release-delivery", "path": "${{ steps.prepare.outputs.delivery_directory }}", "if-no-files-found": "error", "retention-days": 30}}
+      ]
+    },
+    "deploy": {
+      "if": "${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",
+      "needs": ["prepare"], "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
+      "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"},
+      "environment": {"name": "github-pages", "url": "${{ steps.deployment.outputs.page_url }}"},
+      "steps": [{"id": "deployment", "uses": "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e", "with": {"artifact_name": "github-pages"}}]
+    },
+    "verify_live": {
+      "if": "${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",
+      "needs": ["prepare", "deploy"], "runs-on": "ubuntu-24.04", "timeout-minutes": 8,
+      "permissions": {"contents": "read", "actions": "read"},
+      "steps": [
+        {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false}},
+        {"uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020", "with": {"node-version": "22.23.3"}},
+        {"uses": "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093", "with": {"name": "release-delivery", "path": "build/pages-delivery"}},
+        {"name": "Check ZIP and every live application file", "run": "node scripts/verify-pages-live.mjs", "env": {"EXPECTED_BUILD": "${{ needs.prepare.outputs.build_id }}", "EXPECTED_MANIFEST_SHA": "${{ needs.prepare.outputs.manifest_sha }}", "EXPECTED_RECEIPT_SHA": "${{ needs.prepare.outputs.receipt_sha }}", "EXPECTED_ZIP_SHA": "${{ needs.prepare.outputs.zip_sha }}"}},
+        {"if": "${{ always() }}", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "live-release-verification", "path": "${{ runner.temp }}/pages-live-report.json", "if-no-files-found": "error", "retention-days": 30}}
+      ]
+    },
+    "release": {
+      "if": "${{ inputs.publish && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}",
+      "needs": ["prepare", "verify_live"], "runs-on": "ubuntu-24.04", "timeout-minutes": 8,
+      "permissions": {"contents": "write", "actions": "read"},
+      "steps": [
+        {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false}},
+        {"uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020", "with": {"node-version": "22.23.3"}},
+        {"uses": "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093", "with": {"name": "release-delivery", "path": "build/pages-delivery"}},
+        {"name": "Publish or verify the immutable fixed-version release", "run": "node scripts/publish-release-bundle.mjs", "env": {"GH_TOKEN": "${{ github.token }}", "EXPECTED_BUILD": "${{ needs.prepare.outputs.build_id }}", "EXPECTED_MANIFEST_SHA": "${{ needs.prepare.outputs.manifest_sha }}", "EXPECTED_RECEIPT_SHA": "${{ needs.prepare.outputs.receipt_sha }}", "EXPECTED_ZIP_SHA": "${{ needs.prepare.outputs.zip_sha }}"}},
+        {"if": "${{ always() }}", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "published-release-verification", "path": "${{ runner.temp }}/pages-release-report.json", "if-no-files-found": "error", "retention-days": 30}}
+      ]
+    }
+  }
+}

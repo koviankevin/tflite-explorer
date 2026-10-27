@@ -4,6 +4,7 @@ import path from 'node:path';
 import {readFile,mkdir,mkdtemp} from 'node:fs/promises';
 import {root,verifyArtifact,gitSource} from './release-artifact.mjs';
 import {buildSite} from '../build.mjs';
+import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
 import {evaluateLifecycle,LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
 
@@ -29,8 +30,9 @@ export function sourceScope(kind,commit,reader){
     // Contract tests deliberately generate JS import strings as fixtures. Scope
     // all build/test sources instead of treating those strings as real imports.
     if(kind==='contract'){
-        for(const name of tree.keys())if(/^(src|vendor|scripts|test)\//.test(name))names.add(name);
+        for(const name of tree.keys())if(/^(src|vendor|scripts|test)\//.test(name)||/^\.github\/workflows\//.test(name))names.add(name);
         names.add('docs/results/browser-lifecycle-2026-10-27.json');
+        names.add('.github/workflows/verified-pages.yml');
     }
     // Browser/packaging copy or execute web files; Node core only executes its module closure.
     for(const name of tree.keys())if((kind!=='core' && /^(src|vendor)\//.test(name)) || /^vendor\/.*\.json$/.test(name))queue.push(name);
@@ -72,7 +74,7 @@ export function assertReport(report,kind,run,tree,policy){
         for(const audit of [report.audit.audit,...workers.map(w=>w.audit)])if(!audit||!Array.isArray(audit.violations)||audit.violations.length||!Number.isFinite(audit.bytes)||audit.bytes<=0||audit.bytes>LIFECYCLE_POLICY.realmReadBytes||!Number.isFinite(audit.maxRead)||audit.maxRead<=0||audit.maxRead>LIFECYCLE_POLICY.maxReadBytes)throw Error('browser: invalid or excessive native reads.');
         if(report.fixture?.sha256!=='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'||report.fixture.operators!==21005||report.fixture.bytes!==1349965216||!Number.isFinite(report.fixture.allocatedBytes)||report.fixture.allocatedBytes<report.fixture.bytes*.99)throw Error('browser: missing physical fixture evidence.');
     }else if(kind==='contract'){
-        if(report.format!=='model-lens-release-contract'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||stable(report.tests)!==stable(['test/release.test.mjs','test/release-gates.test.mjs'])||report.exitCode!==0||!Number.isInteger(report.counts?.tests)||report.counts.tests<1||report.counts.fail!==0||report.counts.skipped!==0||report.counts.cancelled!==0)throw Error('contract: incomplete or failed release tests.');
+        if(report.format!=='model-lens-release-contract'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||stable(report.tests)!==stable(RELEASE_CONTRACT_TESTS)||report.exitCode!==0||!Number.isInteger(report.counts?.tests)||report.counts.tests<1||report.counts.fail!==0||report.counts.skipped!==0||report.counts.cancelled!==0)throw Error('contract: incomplete or failed release tests.');
     }else throw Error('Unknown gate report.');
 }
 export function readArtifact(bytes,expectedDigest){

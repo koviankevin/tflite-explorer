@@ -2,11 +2,6 @@ name: Release contract gate
 on:
   workflow_dispatch:
   pull_request:
-    paths:
-      - 'scripts/**'
-      - 'test/release*'
-      - 'package*.json'
-      - '.github/workflows/release-contract.yml'
 permissions:
   contents: read
 jobs:
@@ -24,7 +19,15 @@ jobs:
         with:
           node-version: '22.23.3'
       - name: Require release integrity and gate rejection cases
+        # The inventory validator uses the exact lockfile YAML parser.
+        # Avoid running dependency lifecycle scripts in this read-only gate.
+        # Installed files remain ignored; source binding must stay clean.
+        # The npm step is separate so a failed install cannot appear as test success.
+        run: npm ci --ignore-scripts
+      - name: Run selected release contracts
         run: node scripts/accept-release-contract.mjs --out "$RUNNER_TEMP/$REPORT_NAME"
+        env:
+          RELEASE_BASE_SHA: ${{ github.event.pull_request.base.sha }}
       - name: Retain bounded source-bound report, including failures
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

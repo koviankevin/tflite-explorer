@@ -1,6 +1,6 @@
 {
   "name": "tflite-pattern-explorer",
-  "version": "0.2.0-preview.6",
+  "version": "0.2.0-preview.7",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -15,6 +15,7 @@
     "test:browser-lifecycle": "node test/browser/model-lifecycle.mjs"
   },
   "devDependencies": {
-    "playwright": "1.56.1"
+    "playwright": "1.56.1",
+    "yaml": "2.9.1"
   }
 }
