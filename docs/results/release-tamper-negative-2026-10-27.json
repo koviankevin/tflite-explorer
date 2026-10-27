@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "source": {
+    "commit": "dfbb2e1667fba6d20c7a91fc101d5657107a9ff8",
+    "tree": "c3b9f7405a91f11dbc256850b9a7ab3e6940af89",
+    "committedAt": "2026-10-27T09:39:42+08:00",
+    "dirty": false
+  },
+  "candidateBuildId": "7d95754588e0d7a0",
+  "selfConsistentModifiedManifest": true,
+  "rejectedBeforeNetwork": true
+}

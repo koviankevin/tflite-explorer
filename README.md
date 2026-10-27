@@ -93,6 +93,8 @@ node scripts/publish-github-pages.mjs
 
 發布腳本使用已設定的 GitHub `origin` 和 Git 認證，不修改來源工作樹，也不使用 force push。需要先將來源推送到自己的 GitHub repo。GitHub Pages 網站通常公開；私人 repo 能否啟用 Pages 取決於 GitHub 方案。模型仍由訪客瀏覽器本機處理。
 
+發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的三項成功 CI。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布隔離快照；缺少必要工作或來源改變會拒絕。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
+
 Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保留，見 [保存說明](docs/pattern-library-recovery.md) 與 [驗收紀錄](docs/pattern-library-verification.md)。
 
 右上角「版本 → 本機診斷報告」可預覽及下載不含模型名稱／內容的操作紀錄，見 [診斷說明](docs/diagnostics.md) 與 [驗收紀錄](docs/diagnostics-verification.md)。

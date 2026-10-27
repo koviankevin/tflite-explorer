@@ -1,0 +1,28 @@
+{
+  "format": "model-lens-release-contract",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T01:39:56.058Z",
+  "source": {
+    "commit": "dfbb2e1667fba6d20c7a91fc101d5657107a9ff8",
+    "tree": "c3b9f7405a91f11dbc256850b9a7ab3e6940af89",
+    "committedAt": "2026-10-27T09:39:42+08:00",
+    "dirty": false
+  },
+  "tests": [
+    "test/release.test.mjs",
+    "test/release-gates.test.mjs"
+  ],
+  "node": "v22.23.3",
+  "exitCode": 0,
+  "stdoutSHA256": "ada5e4f4be3631266d004d9fd133eaa1e8c5b1e93a526839020b0f5b7aecc36c",
+  "counts": {
+    "tests": 12,
+    "pass": 12,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T01:40:00.392Z"
+}

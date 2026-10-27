@@ -1,0 +1,83 @@
+{
+  "format": "model-lens-rollback-drill",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T01:35:25.065Z",
+  "source": {
+    "commit": "0a66a6343e6dea76a0638838a8d9404f527875fc",
+    "tree": "3b9cb9c81252a64c848339715155d6e6cebfdbc9",
+    "committedAt": "2026-10-27T09:33:50+08:00",
+    "dirty": false
+  },
+  "steps": [
+    {
+      "operation": "verified-zip",
+      "zip": "model-lens-public-0.2.0-preview.5-e67611582982ec3f.zip",
+      "zipSHA256": "1b6981ebd40ddd9f0c5c486b729309142bce57582dc7874ea0b11ac76ca33ef0",
+      "release": {
+        "schemaVersion": 1,
+        "version": "0.2.0-preview.5",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "069ed2d6093b144e0bb3fe5dd42e9725824dcfe6",
+          "tree": "a1794ef17e9198ec520b46557b24b0a1dd778e03",
+          "committedAt": "2026-10-27T08:02:57+08:00",
+          "dirty": false
+        },
+        "buildId": "e67611582982ec3f"
+      },
+      "files": 246
+    },
+    {
+      "operation": "verified-zip",
+      "zip": "model-lens-public-0.2.0-preview.6-0f8361cc44fcd547.zip",
+      "zipSHA256": "82b358f03a6a18dea8d9e72fb445371d92f913c9ec67b4d2727baeb84f259193",
+      "release": {
+        "schemaVersion": 1,
+        "version": "0.2.0-preview.6",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "eb0a330865fd5d6cbf01cff9109ee5ff9f94ae61",
+          "tree": "19355d7a9bf850d8fc8f712844bfa7d84a3d4fc5",
+          "committedAt": "2026-10-27T08:55:02+08:00",
+          "dirty": false
+        },
+        "buildId": "0f8361cc44fcd547"
+      },
+      "files": 246
+    },
+    {
+      "operation": "initial",
+      "buildId": "e67611582982ec3f",
+      "files": 246,
+      "allHTTPHashesMatch": true
+    },
+    {
+      "operation": "reject-tampered-candidate",
+      "previousPointerPreserved": true
+    },
+    {
+      "operation": "upgrade",
+      "buildId": "0f8361cc44fcd547",
+      "files": 246,
+      "allHTTPHashesMatch": true
+    },
+    {
+      "operation": "old-version-lazy-asset-still-consistent"
+    },
+    {
+      "operation": "rollback",
+      "buildId": "e67611582982ec3f",
+      "files": 246,
+      "allHTTPHashesMatch": true
+    }
+  ],
+  "scope": "Isolated loopback HTTP version directories and atomic pointer; no production switch or browser data migration.",
+  "finishedAt": "2026-10-27T01:35:38.587Z",
+  "redactions": [
+    "Local temporary directory removed."
+  ],
+  "originalLocalReportSHA256": "464ebdb27d0ca28b7d3ec4c12c58233a652977e5eacfdef8d1475cade01618d6"
+}
