@@ -59,7 +59,7 @@ export function assertRun({run,jobs,artifact},kind,repository){
     const spec=GATES[kind];
     if(!spec || run?.status!=='completed'||run.conclusion!=='success'||run.event!=='workflow_dispatch'||run.head_branch!=='main'||run.head_repository?.full_name!==repository||run.path!==spec.workflow||!/^[a-f0-9]{40}$/.test(run.head_sha)||!Number.isSafeInteger(run.run_attempt)||run.run_attempt<1)throw Error(`${kind}: untrusted, incomplete or unsuccessful workflow.`);
     const matches=jobs.filter(job=>job.name===spec.job);if(matches.length!==1||matches[0].status!=='completed'||matches[0].conclusion!=='success')throw Error(`${kind}: required job did not succeed.`);
-    if(artifact?.name!==`${spec.artifact}-${run.head_sha}-${run.run_attempt}`||artifact.expired!==false||!Number.isSafeInteger(artifact.id)||artifact.size_in_bytes<=0||artifact.size_in_bytes>4*1024**2||!/^sha256:[a-f0-9]{64}$/.test(artifact.digest||''))throw Error(`${kind}: missing, stale or invalid artifact.`);
+    if(artifact?.name!==`${spec.artifact}-${run.head_sha}-${run.run_attempt}`||artifact.expired!==false||!Number.isSafeInteger(artifact.id)||!Number.isSafeInteger(artifact.size_in_bytes)||artifact.size_in_bytes<=0||artifact.size_in_bytes>4*1024**2||!/^sha256:[a-f0-9]{64}$/.test(artifact.digest||''))throw Error(`${kind}: missing, stale or invalid artifact.`);
 }
 export function assertReport(report,kind,run,tree,policy){
     if(report?.status!=='passed')throw Error(`${kind}: failed report.`);
@@ -70,7 +70,7 @@ export function assertReport(report,kind,run,tree,policy){
         const workers=report.audit?.workers?.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url))||[];
         if(workers.length!==16||workers.some(w=>w.terminated!==true||w.error||!w.audit?.calls||w.audit.violations?.length!==0||w.audit.bytes!==w.stats?.bytesRead)||!Array.isArray(report.audit?.urls)||!report.audit.urls.length||report.audit.urls.some(u=>u.revoked!==true))throw Error('browser: retained resources or missing read audit.');
         for(const audit of [report.audit.audit,...workers.map(w=>w.audit)])if(!audit||!Array.isArray(audit.violations)||audit.violations.length||!Number.isFinite(audit.bytes)||audit.bytes<=0||audit.bytes>LIFECYCLE_POLICY.realmReadBytes||!Number.isFinite(audit.maxRead)||audit.maxRead<=0||audit.maxRead>LIFECYCLE_POLICY.maxReadBytes)throw Error('browser: invalid or excessive native reads.');
-        if(report.fixture?.sha256!=='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'||report.fixture.operators!==21005||report.fixture.bytes!==1349965216||report.fixture.allocatedBytes<report.fixture.bytes*.99)throw Error('browser: missing physical fixture evidence.');
+        if(report.fixture?.sha256!=='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'||report.fixture.operators!==21005||report.fixture.bytes!==1349965216||!Number.isFinite(report.fixture.allocatedBytes)||report.fixture.allocatedBytes<report.fixture.bytes*.99)throw Error('browser: missing physical fixture evidence.');
     }else if(kind==='contract'){
         if(report.format!=='model-lens-release-contract'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||stable(report.tests)!==stable(['test/release.test.mjs','test/release-gates.test.mjs'])||report.exitCode!==0||!Number.isInteger(report.counts?.tests)||report.counts.tests<1||report.counts.fail!==0||report.counts.skipped!==0||report.counts.cancelled!==0)throw Error('contract: incomplete or failed release tests.');
     }else throw Error('Unknown gate report.');
@@ -96,6 +96,7 @@ export function githubClient(){
 }
 export async function verifyReleaseGates({directory='dist',evidence,api=githubClient(),reader=gitReader()}={}){
     const manifest=await verifyArtifact(directory,{publicOnly:true,requireClean:true});
+    if(!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(manifest.release.version||''))throw Error('Release needs a valid version label.');
     const commit=manifest.release.source.commit;
     const source=gitSource();if(source.dirty||source.commit!==commit||source.tree!==manifest.release.source.tree)throw Error('Gate verification requires the exact clean candidate checkout.');
     // A self-consistent manifest is not proof that its files came from that Git
