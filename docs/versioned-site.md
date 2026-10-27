@@ -72,7 +72,7 @@ node scripts/compose-site.mjs --verify build/new-site
 
 `scripts/lib/site-history.mjs` 的 `preparePublicSnapshot()` 已串接唯讀正式站歷史讀取、獨立取得 core 和 composer。只有 `site-manifest.json` 的實際 HTTP 404 才允許首次遷移；此時根版本必須仍是已知 preview.7 baseline。其他 HTTP 錯誤、無效 metadata 或改過 baseline 均拒絕。之後以真正現行版本及最近的 retained 順序保留兩個先前版本，baseline 永久保留；composer 不再依 build ID 字母排序打亂近期順序。已上線版本恰好是同一個重建候選時，直接使用已驗證候選，不必等待它的 Release 完成。
 
-本機 50 項發布契約已通過，之後另補一項 bot draft／部分發行的恢復正例，11 項 history 測試均通過；完整契約現為 51 項。涵蓋中斷發布恢復、錯誤來源／attempt／過期／竄改資產、歷史順序、重複準備／回退及 metadata 容量與路徑。這些是工具與契約驗收，尚不代表正式 Pages 工作流程已切換。
+本機 50 項發布契約已通過，之後另補一項 bot draft／部分發行的恢復正例，11 項 history 測試均通過。[CI 40456879636](https://github.com/koviankevin/tflite-explorer/actions/runs/40456879636) 的完整契約為 51 項、51 通過、零失敗／略過／取消，受測 PR merge source `3b1699bbf0d0ac49b3b1cef2c87d7f296ae0500d` 與 tree 均固定、全程 clean 且未改變，見 [原始報告](results/site-history-contract-2026-10-27.json)。涵蓋中斷發布恢復、錯誤來源／attempt／過期／竄改資產、歷史順序、重複準備／回退及 metadata 容量與路徑。這些是工具與契約驗收，尚不代表正式 Pages 工作流程已切換；PR CI 也不能替代正式 main dispatch 的發布憑證。
 
 [真實歷史規劃演練](results/site-history-plan-2026-10-27.json) 來源為 clean `a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7`：正式站 index 實際回應 404、根 release metadata 符合 preview.7，獨立下載的固定 ZIP／manifest／246 個檔案均核對後，組成含 741 個受管理檔案的本機快照。以該真實快照作下一輪現行 index 重複準備，site ID 維持 `3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184`；未取得候選尚不存在的 Release。開發候選 build `544a3fe021bad19a` 只供本機演練，沒有發布或覆寫 preview.7；正式站和內網均未更動。
 
