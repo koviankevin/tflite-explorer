@@ -4,9 +4,10 @@ import { mkdtempSync, existsSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {verifyArtifact,gitSource} from './lib/release-artifact.mjs';
+import {verifyReleaseGates} from './lib/release-gates.mjs';
 const source = process.cwd();
-const dist = path.resolve('dist');
-if (!existsSync(path.join(dist, 'index.html'))) throw new Error('Run node scripts/build.mjs first.');
+const candidateDist = path.resolve('dist');
+if (!existsSync(path.join(candidateDist, 'index.html'))) throw new Error('Run node scripts/build.mjs first.');
 const run = (args, options = {}) => {
     const result = spawnSync('git', args, { cwd: source, encoding: 'utf8', ...options });
     if (result.status !== 0) throw new Error(result.stderr || result.error?.message || 'Git command failed.');
@@ -16,8 +17,15 @@ const remote = run(['remote', 'get-url', 'origin']);
 if (!/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+(?:\.git)?$/.test(remote)) throw new Error('origin must be the intended GitHub HTTPS repository.');
 const current=gitSource();
 if(current.dirty)throw new Error('工作區尚有未提交修改；公開發布前請提交並重新建置。');
-const artifact=await verifyArtifact(dist,{publicOnly:true,expectedCommit:current.commit,requireClean:true});
+const artifact=await verifyArtifact(candidateDist,{publicOnly:true,expectedCommit:current.commit,requireClean:true});
 if(artifact.release.source.tree!==current.tree)throw new Error('建置的來源 tree 不符，已停止發布。');
+// Never accept a caller-supplied "passed" file: resolve authoritative workflow
+// status, artifact digest and executed-source scope from GitHub on every publish.
+const gates=await verifyReleaseGates({directory:candidateDist});
+// Promote the fresh, byte-identical isolated snapshot. Another process rebuilding
+// dist during network verification cannot change the tree about to be pushed.
+const dist=gates.preparedDirectory;
+console.log(JSON.stringify({releaseGates:gates.gates.map(g=>({kind:g.kind,runId:g.runId,reused:g.reused}))}));
 const directory = mkdtempSync(path.join(os.tmpdir(), 'model-lens-pages-'));
 try {
     const env = { ...process.env, GIT_INDEX_FILE: path.join(directory, 'index') };
