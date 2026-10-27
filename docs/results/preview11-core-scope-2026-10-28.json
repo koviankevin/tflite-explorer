@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "source": {
+    "commit": "d61090ca0ec4d33af48a4f54e81a312c34ab6aa0",
+    "tree": "c50ac00cf347c21dda523d43b40d74034aac9caa",
+    "committedAt": "2026-10-28T00:15:18+08:00",
+    "dirty": false
+  },
+  "runId": 40503475445,
+  "testedSource": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+  "fingerprint": "cf77c1b1377b55cf36fcba0c536e97bfdb391f10eec37f3830a0eb1a1ad1b7c8",
+  "files": 86,
+  "reused": true,
+  "publicationMustReauthenticateArtifacts": true
+}

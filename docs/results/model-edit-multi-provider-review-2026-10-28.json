@@ -1,0 +1,59 @@
+[
+  {
+    "id": 40538489292,
+    "kind": "old",
+    "job": "public-smoke",
+    "artifact": "production-smoke",
+    "conclusion": "failure",
+    "head": "49e4112bd2666ca8d955c9501b9316055c17ef1b",
+    "artifactId": 12749651440,
+    "artifactDigest": "sha256:1426e56fb0d39a7ed01f733b251cce333afb5572d4961ca3342088754d628b2d",
+    "reportSHA256": "c2fe07f2dde4fdbbee01f6647d9358af33978631f26743be21cf952180bedb26",
+    "checks": 13
+  },
+  {
+    "id": 40538497401,
+    "kind": "fixed",
+    "job": "site-upgrade",
+    "artifact": "versioned-delivery-smoke-49e4112bd2666ca8d955c9501b9316055c17ef1b-1",
+    "conclusion": "success",
+    "head": "49e4112bd2666ca8d955c9501b9316055c17ef1b",
+    "artifactId": 12747744476,
+    "artifactDigest": "sha256:b8d7b55631f040a1d3a8c3096e18ecff28409ccebe658b8f1e08bbadcd1304a2",
+    "reportSHA256": "fb8398fdb471539a08dd54f623b88b31ef4e410c2e33ca03bae5356f16f2424d",
+    "checks": 16,
+    "multiSelection": [
+      {
+        "format": "tflite",
+        "nativeMarquee": true,
+        "targets": [
+          {
+            "key": "0:1",
+            "label": "subgraph/block 0 · OP #1 · InternalSplitFoo"
+          },
+          {
+            "key": "0:2",
+            "label": "subgraph/block 0 · OP #2 · ADD"
+          }
+        ],
+        "staleTargetExcluded": true,
+        "selectionPreserved": true,
+        "cameraPreserved": true
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "targets": 7,
+        "blocks": 4,
+        "selectionPreserved": true
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "targets": 4,
+        "blocks": 3,
+        "selectionPreserved": true
+      }
+    ]
+  }
+]
