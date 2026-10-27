@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci --ignore-scripts
-      - run: node node_modules/playwright/cli.js install --with-deps chromium
+      - run: node scripts/install-browser.mjs
       - run: node test/browser/production-smoke.mjs
         env:
           EXPECTED_BUILD: ${{ inputs.expected_build_id }}
@@ -54,7 +54,7 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci --ignore-scripts
-      - run: node node_modules/playwright/cli.js install --with-deps chromium
+      - run: node scripts/install-browser.mjs
       - id: switching
         run: node test/browser/versioned-site.mjs
         env:

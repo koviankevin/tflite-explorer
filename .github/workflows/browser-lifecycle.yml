@@ -23,7 +23,7 @@ jobs:
       - run: npm ci
       - name: Check gate failure cases and fixture/export contract
         run: node --test test/browser-lifecycle.test.mjs test/physical-fixture.test.mjs test/custom-export.test.mjs
-      - run: npx playwright install --with-deps chromium
+      - run: node scripts/install-browser.mjs
       - name: Eight real File/download/reopen/close cycles without forced GC
         run: LIFECYCLE_REPORT="$RUNNER_TEMP/$REPORT_NAME" node test/browser/model-lifecycle.mjs
       - name: Retain bounded metadata and failures, never model files

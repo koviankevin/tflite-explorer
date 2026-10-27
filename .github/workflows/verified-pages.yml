@@ -41,7 +41,7 @@
         {"uses": "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093", "with": {"name": "release-delivery", "path": "build/pages-delivery"}},
         {"name": "Check ZIP and every live application file", "run": "node scripts/verify-pages-live.mjs", "env": {"EXPECTED_BUILD": "${{ needs.prepare.outputs.build_id }}", "EXPECTED_CORE_SOURCE": "${{ needs.prepare.outputs.core_source }}", "EXPECTED_MANIFEST_SHA": "${{ needs.prepare.outputs.manifest_sha }}", "EXPECTED_RECEIPT_SHA": "${{ needs.prepare.outputs.receipt_sha }}", "EXPECTED_ZIP_SHA": "${{ needs.prepare.outputs.zip_sha }}", "EXPECTED_SITE_ID": "${{ needs.prepare.outputs.site_id }}", "EXPECTED_SITE_MANIFEST_SHA": "${{ needs.prepare.outputs.site_manifest_sha }}", "CORE_PROMOTION": "${{ needs.prepare.outputs.promotion }}"}},
         {"run": "npm ci --ignore-scripts"},
-        {"run": "node node_modules/playwright/cli.js install --with-deps chromium"},
+        {"run": "node scripts/install-browser.mjs"},
         {"run": "node test/browser/production-smoke.mjs", "env": {"EXPECTED_BUILD": "${{ needs.prepare.outputs.build_id }}", "EXPECTED_SITE_ID": "${{ needs.prepare.outputs.site_id }}"}},
         {"if": "${{ always() }}", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "live-release-verification", "path": "${{ runner.temp }}/pages-live-report.json\n${{ runner.temp }}/production-smoke.json\n${{ runner.temp }}/production-smoke.png", "if-no-files-found": "error", "retention-days": 30}}
       ]

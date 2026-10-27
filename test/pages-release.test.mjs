@@ -6,8 +6,13 @@ import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
 import {RELEASE_GATE_KINDS} from '../scripts/lib/release-test-plan.mjs';
+import {browserRunnerAllowed,ubuntuMirrorText} from '../scripts/install-browser.mjs';
 import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime,expectedDelivery} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
+test('browser installer preserves signed apt sources and restricts mirror setup to hosted Ubuntu 24.04',()=>{
+ const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer'},release='ID=ubuntu\nVERSION_ID="24.04"\n';assert.equal(browserRunnerAllowed(env,'linux',release),true);for(const [e,p,r] of [[{},'linux',release],[env,'win32',release],[{...env,GITHUB_REPOSITORY:'other/repo'},'linux',release],[env,'linux',release.replace('24.04','26.04')]])assert.equal(browserRunnerAllowed(e,p,r),false);
+ const before='http://azure.archive.ubuntu.com/ubuntu/ priority:1\nhttp://archive.ubuntu.com/ubuntu\nhttp://security.ubuntu.com/ubuntu\nhttps://packages.microsoft.com/ubuntu/24.04/prod\n',after=ubuntuMirrorText(before);assert.equal(after,'https://archive.ubuntu.com/ubuntu priority:1\nhttps://archive.ubuntu.com/ubuntu\nhttps://security.ubuntu.com/ubuntu\nhttps://packages.microsoft.com/ubuntu/24.04/prod\n');assert.equal(ubuntuMirrorText(after),after);assert.throws(()=>ubuntuMirrorText('x'.repeat(65537)));const changed=structuredClone(workflow);changed.jobs.verify_live.steps[5].run='echo skip browser install';assert.throws(()=>validatePagesWorkflow(changed));
+});
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
     for(const change of [w=>w.jobs.deploy.name='deploy',w=>w.jobs.deploy.needs=[],w=>w.jobs.deploy.if='${{ always() }}',w=>w.jobs.prepare.permissions.pages='write',w=>w.jobs.deploy.steps.push({run:'echo unchecked'}),w=>w.jobs.verify_live.needs=['prepare'],w=>w.jobs.release.if='${{ always() }}',w=>w.jobs.prepare.steps[4].with.path='dist',w=>w.jobs.verify_live.steps[3].env.EXPECTED_ZIP_SHA='untrusted',w=>w.jobs.prepare.outputs.build_id='untrusted',w=>w.on.push={},w=>w.jobs.extra={...w.jobs.deploy},w=>w.jobs.release.steps[0].with['persist-credentials']=true]){const w=structuredClone(workflow);change(w);assert.throws(()=>validatePagesWorkflow(w));}

@@ -57,7 +57,7 @@ export function validatePagesWorkflow(w){
     }
     for(const [key,value] of Object.entries({EXPECTED_SITE_ID:'site_id',EXPECTED_SITE_MANIFEST_SHA:'site_manifest_sha'}))if(w.jobs.verify_live.steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Live verification requires the prepared full-site identity.');
     if(w.jobs.verify_live.steps[3].env?.CORE_PROMOTION!=='${{ needs.prepare.outputs.promotion }}')throw Error('Historical core validation must use the trusted prepare mode.');
-    const smoke=w.jobs.verify_live.steps;if(smoke[4].run!=='npm ci --ignore-scripts'||smoke[5].run!=='node node_modules/playwright/cli.js install --with-deps chromium'||smoke[6].run!=='node test/browser/production-smoke.mjs'||!equal(smoke[6].env,{EXPECTED_BUILD:'${{ needs.prepare.outputs.build_id }}',EXPECTED_SITE_ID:'${{ needs.prepare.outputs.site_id }}'}))throw Error('Live browser smoke cannot be omitted or use another build/site.');
+    const smoke=w.jobs.verify_live.steps;if(smoke[4].run!=='npm ci --ignore-scripts'||smoke[5].run!=='node scripts/install-browser.mjs'||smoke[6].run!=='node test/browser/production-smoke.mjs'||!equal(smoke[6].env,{EXPECTED_BUILD:'${{ needs.prepare.outputs.build_id }}',EXPECTED_SITE_ID:'${{ needs.prepare.outputs.site_id }}'}))throw Error('Live browser smoke cannot be omitted or use another build/site.');
     return true;
 }
 export function assertPagesConfiguration(pages,environment,policies){
