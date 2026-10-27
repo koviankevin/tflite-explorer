@@ -60,6 +60,16 @@ node scripts/compose-site.mjs --verify build/new-site
 
 同一既有 `production-smoke.yml` 提供 `scenario=versioned` 的唯讀隔離測試入口。新增的第四項 `site` 發布關卡只接受 main 的成功 workflow_dispatch、正確 site-upgrade job、當次 artifact digest、原始 policy 判定及相依 scope；上列分支成功報告可驗證行為，但不能充當正式 main 發布憑證。舊版已交付的三關卡 receipt 保持原樣，新候選缺少第四項時會拒絕準備／提升。
 
-下一步仍須完成：GitHub 工作流程的可信舊版資產取得、整站 manifest／site ID 綁定、完整正式發布整合、main 的新版憑證，以及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
+加入 policy 的 [重驗 40453158488](https://github.com/koviankevin/tflite-explorer/actions/runs/40453158488) 也已成功，來源 `99498c145c98465dd7f402d21b007f0e59876147`，見 [原始 policy 報告](results/site-browser-policy-2026-10-27.json)。六項情境、七個模型 Worker、508 筆請求與三份快照均通過重新判定。
 
-技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
+## 舊核心資產的取得
+
+`scripts/lib/release-history.mjs` 的 `fetchReleasedCore()` 只讀取固定公開 repository 的 GitHub Release。參考資料必須提供版本、build ID、source commit 和完整 core manifest SHA，也可加上已知 ZIP SHA／大小。它要求 bot 發行／上傳、正式 tag 指向同一 commit、Git tree 相符、唯一已上傳 ZIP 與服務端 digest；先用特定 asset ID 串流下載到全新目錄，再獨立核對檔案大小／SHA，才會檢查 CRC／路徑／容量並解壓。輸入中的 JavaScript 不執行，internal／private core 不接受。此 module 供公開站發布控制使用；公司內網仍使用本機 core／profile，不經此 GitHub 下載流程。
+
+[實際下載核對](results/site-history-fetch-2026-10-27.json) 來自 clean source `a28b7dddb01d22665e235a66b68ee483eb251f56`：讀取 preview.7 的 Release `425024166`／asset `680389934`，29,454,029 bytes 的 ZIP SHA 為 `4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7`，manifest SHA 為 `856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54`，所有 246 個 core 檔案完整性通過。另有五項取得流程測試涵蓋 metadata 下載前拒絕、傳輸不符、ZIP traversal、私有發行、不同 manifest 與 Git tree。加上原有契約，本機共 37 項、零失敗／略過。
+
+沒有已發行 tag／Release 的 core 會回報 `UNRELEASED_CORE`，不猜測另一個版本，也不丟棄既有 namespace。若前一輪部署已上線但尚未完成 Release，還需從已驗證 CI delivery 取得同一份 core 的恢復流程；此情況尚未接入，不能宣稱中斷發布恢復已完成。
+
+下一步仍須完成：將取得流程接進正式站歷史規劃與 CI delivery 恢復、整站 manifest／site ID 綁定、完整正式發布整合、main 的新版憑證，以及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
+
+技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

@@ -30,6 +30,7 @@ test('foreign refs, manual uploads, draft/duplicate assets and digest drift fail
     const f=await fixture(),original=structuredClone(f.metadata);
     for(const [i,change] of changes.entries()){Object.assign(f.metadata,structuredClone(original));change(f.metadata);const out=path.join(f.temporary,'bad-'+i);await assert.rejects(fetchReleasedCore(f.reference,{outputDirectory:out,api:f.api,download:f.download}));await assert.rejects(lstat(out),e=>e.code==='ENOENT');}
     assert.equal(f.downloads(),0);await assert.rejects(fetchReleasedCore({...f.reference,version:'../../other'},{outputDirectory:path.join(f.temporary,'unsafe'),api:f.api,download:f.download}));
+    Object.assign(f.metadata,structuredClone(original));for(const key of ['build','source','manifestSHA256','sha256'])await assert.rejects(fetchReleasedCore({...f.reference,[key]:[f.reference[key]]},{outputDirectory:path.join(f.temporary,'typed-'+key),api:f.api,download:f.download}),/reference/i);assert.equal(f.downloads(),0);
     await assert.rejects(fetchReleasedCore(f.reference,{outputDirectory:path.join(f.temporary,'unfinished'),api:async route=>route.includes('/releases/tags/')?null:f.api(route),download:f.download}),error=>error.code==='UNRELEASED_CORE');assert.equal(f.downloads(),0);
 });
 

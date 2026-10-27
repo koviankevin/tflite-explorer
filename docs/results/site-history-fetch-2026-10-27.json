@@ -1,0 +1,36 @@
+{
+  "format": "model-lens-history-fetch-verification",
+  "version": 1,
+  "status": "passed",
+  "observedAt": "2026-10-27T05:14:43.142Z",
+  "source": {
+    "commit": "a28b7dddb01d22665e235a66b68ee483eb251f56",
+    "tree": "ab4abb8a0a83bf213ac3b75e7ff4a3472259eda0",
+    "committedAt": "2026-10-27T13:14:29+08:00",
+    "dirty": false
+  },
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "files": 246,
+  "provenance": {
+    "kind": "github-release",
+    "releaseId": 425024166,
+    "assetId": 680389934,
+    "tag": "v0.2.0-preview.7",
+    "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+    "zipBytes": 29454029,
+    "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+  }
+}

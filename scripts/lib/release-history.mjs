@@ -11,7 +11,7 @@ const repository='repos/koviankevin/tflite-explorer/',MAX_BYTES=512*1024**2,BOT=
 const HEX64=/^[a-f0-9]{64}$/;
 function checkReference(ref){
     const allowed=['version','build','source','manifestSHA256','sha256','bytes'];
-    if(!ref||typeof ref!=='object'||Array.isArray(ref)||Object.keys(ref).some(k=>!allowed.includes(k))||typeof ref.version!=='string'||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(ref.version)||!/^[a-f0-9]{16}$/.test(ref.build||'')||!/^[a-f0-9]{40}$/.test(ref.source||'')||!HEX64.test(ref.manifestSHA256||'')||ref.sha256!==undefined&&!HEX64.test(ref.sha256)||ref.bytes!==undefined&&(!Number.isSafeInteger(ref.bytes)||ref.bytes<=0||ref.bytes>MAX_BYTES))throw Error('Invalid immutable release reference.');
+    if(!ref||typeof ref!=='object'||Array.isArray(ref)||Object.keys(ref).some(k=>!allowed.includes(k))||typeof ref.version!=='string'||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(ref.version)||typeof ref.build!=='string'||!/^[a-f0-9]{16}$/.test(ref.build)||typeof ref.source!=='string'||!/^[a-f0-9]{40}$/.test(ref.source)||typeof ref.manifestSHA256!=='string'||!HEX64.test(ref.manifestSHA256)||ref.sha256!==undefined&&(typeof ref.sha256!=='string'||!HEX64.test(ref.sha256))||ref.bytes!==undefined&&(!Number.isSafeInteger(ref.bytes)||ref.bytes<=0||ref.bytes>MAX_BYTES))throw Error('Invalid immutable release reference.');
 }
 
 async function streamAsset(route,filename,expectedBytes){
