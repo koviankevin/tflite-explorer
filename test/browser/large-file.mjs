@@ -200,7 +200,10 @@ try {
     await ready();
     report.initialLoadMs = performance.now() - start;
     report.metrics = await page.locator('#metrics').textContent();
-    assert.equal(await readPage(() => document.querySelector('#model-file').files[0].size), report.fixture.bytes);
+    // reset() clears the input's redundant File reference; the actual model
+    // remains a disk-backed File owned by the current model Worker.
+    assert.equal(await readPage(() => globalThis.__largeFileAcceptance.workers.findLast(w => w.stats)?.stats.fileBytes), report.fixture.bytes);
+    assert.equal(await readPage(() => document.querySelector('#model-file').files.length), 0);
     assert.equal(await page.locator('#target .node').count(), 0, 'Large model must remain index-only');
     check('native file chooser, disk-backed >1 GiB File, worker index (6,002 operators), index-only UI');
     phase = 'interaction';

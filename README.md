@@ -97,6 +97,8 @@ Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保
 
 右上角「版本 → 本機診斷報告」可預覽及下載不含模型名稱／內容的操作紀錄，見 [診斷說明](docs/diagnostics.md) 與 [驗收紀錄](docs/diagnostics-verification.md)。
 
+大型模型另有 [實體瀏覽器生命週期關卡](docs/browser-lifecycle-gate.md) 與 [八輪驗收紀錄](docs/browser-lifecycle-verification.md)，涵蓋 >1 GiB／21,005 OP 的選檔、下載重開、custom options、pattern 正反例及記憶體釋放。
+
 ## 功能
 
 - 常駐 Layers／Tensors 清單；名稱不分大小寫、operator 類型搜尋，`#123` 或純數字精確比對編號。
