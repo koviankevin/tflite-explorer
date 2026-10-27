@@ -7,6 +7,7 @@ import {explorerResize} from './explorer-resize.js';
 import {initReleaseInfo} from './release-info.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
+import {exportedModelUI} from './exported-model-ui.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
@@ -26,6 +27,7 @@ const diagnostics=diagnosticJournal();
 window.addEventListener('error',event=>diagnostics.record('global','error',event.error));
 window.addEventListener('unhandledrejection',event=>diagnostics.record('global','error',event.reason));
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
+const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -209,7 +211,7 @@ function reset() {
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
     disposeVirtualOverview();
-    exportBusy = false; $('validation-dialog').close();exportReports.clear();
+    exportBusy = false; $('validation-dialog').close();exportReports.clear();exportedModels.clear();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; $('model-file').value=''; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
@@ -847,6 +849,8 @@ function refreshPickedNodes() {
         $('export-match').textContent=matched && whole ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
+    $('edit-capture').disabled = $('save-capture').disabled;
+    $('edit-capture').textContent = across ? '編輯選取條件' : '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
     if(virtualOverview)virtualOverview.setPicking(pickingPattern,pickingPattern?renderedNodes.filter(entry=>{const loc=layerLocation(entry,currentGraph);return loc && (across?cfgSelections.get(loc.graph)?.has(loc.node):pickedGraph===loc.graph && pickedNodes.has(loc.node));}).map(entry=>entry.node.identifier):[]);
@@ -885,6 +889,7 @@ async function downloadSubmodel(graph, nodes, selections) {
     const sourceFile = file;
     const mlir = model.capabilities.mlirExport;
     exportBusy = true;
+    exportedModels.clear();
     $('export-submodel').disabled = true;
     $('export-match').disabled = true;
     try {
@@ -894,6 +899,7 @@ async function downloadSubmodel(graph, nodes, selections) {
         if (file !== sourceFile) return;
         await host.export(outputName, result.blob);
         if(file!==sourceFile)return;
+        exportedModels.remember(result.blob,outputName);
         exportReports.set(result.report,outputName,result.reportError);
         if (mlir) {
             const checks=result.validation?.deferredPayloads ? '結構語法／SSA／dominance 已檢查；大型權重保留原文，未逐值驗證' : '已通過本機語法／SSA／dominance 檢查';
@@ -1028,6 +1034,26 @@ function addVisibleLayers(graph) {
     syncCaptureGraph();refreshPickedNodes();
 }
 $('add-visible-layers').onclick=()=>addVisibleLayers();
+$('edit-capture').onclick = async () => {
+    if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
+    const generation=renderGeneration,sourceFile=file,graph=currentGraph;
+    const payload=()=>$('capture-cfg').checked ? {selections:captureSelections()} : {graph:currentGraph,nodes:[...pickedNodes]};
+    const selected=payload(),signature=JSON.stringify(selected),base=captureLibrary.slice();
+    $('edit-capture').disabled=true;
+    try {
+        const structure=await rpc('capturePattern',selected);
+        // A result from an old file, drawing or selection must not replace a
+        // newer query draft. Capturing does not save or start a search.
+        if(file!==sourceFile || !pickingPattern || generation!==renderGeneration || graph!==currentGraph || signature!==JSON.stringify(payload()))return;
+        const pattern=reusablePattern($('capture-name').value,structure);
+        applyPattern(pattern);editorLibrary=base;$('saved-pattern').value='';updatePatternExport();
+        setPickingPattern(false);
+        if(cfgPattern){$('condition-editor').open=true;$('condition-node').focus();}
+        else {$('visual-pattern-editor').open=true;$('graph-node-rows').querySelector('select').focus();}
+        status(cfgPattern ? '已將圈選結果載入條件編輯器；可調整 shape、dtype、attributes，按「尋找模式」套用。跨 block 結構仍以圈選內容為準。' : '已將圈選結果載入結構編輯器；可新增／移除 pattern 節點及連線，按「尋找模式」套用。原模型保持唯讀。');
+    } catch(error) { if(file===sourceFile)report(error); }
+    finally { refreshPickedNodes(); }
+};
 $('save-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation = renderGeneration;

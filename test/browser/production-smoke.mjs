@@ -19,6 +19,7 @@ const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{1
 const keyboardAudit=process.env.KEYBOARD_AUDIT==='true';
 if(keyboardAudit){assert.equal(process.env.GITHUB_WORKFLOW,'Public site browser smoke');assert.equal(process.env.GITHUB_REF,'refs/heads/main');}
 const keyboardRequired=keyboardAudit||!['163f38ab1dc856e4','017eed149449e951'].includes(expected);
+const selectionToolsRequired=!['163f38ab1dc856e4','017eed149449e951','35c75cab9fab0def'].includes(expected);
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
 let browser,context,page,readPage,releaseStartup,server;
@@ -72,8 +73,9 @@ try{
     await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');event=page.waitForEvent('download');await page.locator('#export-match').click();download=await event;assert.equal(await download.failure(),null);const child=path.join(temporary,'submodel.tflite');await download.saveAs(child);await download.delete();
     await close();await choose(child);await ready(3);await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();check('actual TFLite submodel download, native reopen, original pattern and worker cleanup');
     report.keyboardRequired=keyboardRequired;report.keyboardAudit=keyboardAudit;
-    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check});
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?5:3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    report.selectionToolsRequired=selectionToolsRequired;
+    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired});
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?(selectionToolsRequired?6:5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();

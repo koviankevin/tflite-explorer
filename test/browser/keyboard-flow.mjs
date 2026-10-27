@@ -6,7 +6,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {reusablePattern,exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
 
-export async function keyboardFlow({page,read,base,demo,directory,check}){
+export async function keyboardFlow({page,read,base,demo,directory,check,selectionTools=false}){
     let tabPresses=0;
     const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Keyboard DOM wait: '+fn);await pause(100);}}
@@ -70,7 +70,20 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     await enter('#open-drafts');await until(()=>document.querySelector('#draft-dialog').open);await cycleModal('#draft-dialog','#close-drafts','.draft-removal>summary');await page.keyboard.press('Escape');await until(()=>!document.querySelector('#draft-dialog').open);assert.equal(await read(()=>document.activeElement.id),'open-drafts');
     await enter('#release-info-button');await until(()=>document.querySelector('#release-dialog').open&&document.querySelector('#release-fields dd'));await cycleModal('#release-dialog','#close-release-info','#open-diagnostics');await enter('#open-diagnostics');await until(()=>document.querySelector('#diagnostic-dialog').open&&!document.querySelector('#download-diagnostics').disabled);await cycleModal('#diagnostic-dialog','#close-diagnostics','#diagnostic-preview');await page.keyboard.press('Escape');await until(()=>!document.querySelector('#diagnostic-dialog').open);assert.equal(await read(()=>document.activeElement.id),'release-info-button');assert.equal(await read(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')),'true');assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 1 個 layers');
     for(const index of [1,2]){await tabTo('#target .node[role="button"][aria-label^="選取 layer #'+index+' "]');await page.keyboard.press('Space');}
-    assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 3 個 layers');await tabTo('#capture-name');await page.keyboard.press('Control+a');await page.keyboard.type('Keyboard captured RTR');await enter('#save-capture');
+    assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 3 個 layers');await tabTo('#capture-name');await page.keyboard.press('Control+a');await page.keyboard.type('Keyboard captured RTR');
+    if(selectionTools){
+        const camera=await read(()=>({box:document.querySelector('#target svg').getAttribute('viewBox'),width:document.querySelector('#target svg').style.width}));
+        await enter('#edit-capture');await until(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')==='false'&&document.querySelectorAll('#graph-node-rows .graph-form-row').length===3);
+        assert.equal(await read(()=>document.querySelectorAll('#graph-edge-rows .graph-form-row').length),2);
+        assert.equal(await read(()=>[...document.querySelector('#saved-pattern').options].some(o=>o.value==='Keyboard captured RTR')),false,'Editing a selection must not save it automatically.');
+        assert.deepEqual(await read(()=>({box:document.querySelector('#target svg').getAttribute('viewBox'),width:document.querySelector('#target svg').style.width})),camera,'Loading a query draft must not redraw the model.');
+        await enter('#add-graph-node');await until(()=>document.querySelectorAll('#graph-node-rows .graph-form-row').length===4);await enter('button[aria-label="移除節點 N4"]');await until(()=>document.querySelectorAll('#graph-node-rows .graph-form-row').length===3);
+        await enter('#add-graph-edge');await until(()=>document.querySelectorAll('#graph-edge-rows .graph-form-row').length===3);await enter('button[aria-label="移除連線 3"]');await until(()=>document.querySelectorAll('#graph-edge-rows .graph-form-row').length===2);
+        assert.equal(await read(()=>document.querySelector('#layer-count').textContent),'26','Pattern edits must not modify the model.');
+        await enter('#pick-pattern');assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 3 個 layers');
+        check('selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection');
+    }
+    await enter('#save-capture');
     await until(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')==='false'&&document.querySelector('#result-count').textContent==='4 筆匹配路徑');
     await tabTo('#export-pattern');const captureEvent=page.waitForEvent('download');await page.keyboard.press('Enter');const captureDownload=await captureEvent;assert.equal(await captureDownload.failure(),null);const captureFile=path.join(directory,'keyboard-captured-pattern.json');await captureDownload.saveAs(captureFile);await captureDownload.delete();const captured=parsePatternFile(await readFile(captureFile,'utf8'));assert.equal(captured.length,1);assert.equal(captured[0].name,'Keyboard captured RTR');assert.deepEqual(captured[0].nodes.map(n=>n.type),['Reshape','Transpose','Reshape']);assert.equal(captured[0].edges.length,2);
     check('modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern');
@@ -81,9 +94,18 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     await tabTo('#export-pattern');let event=page.waitForEvent('download');await page.keyboard.press('Enter');let download=await event;assert.equal(await download.failure(),null);const exported=path.join(directory,'keyboard-pattern-export.json');await download.saveAs(exported);await download.delete();assert.deepEqual(parsePatternFile(await readFile(exported,'utf8')),[pattern]);
     check('keyboard native pattern import, saved selection, search and exact JSON export');
 
-    await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');await tabTo('#export-match');event=page.waitForEvent('download');await page.keyboard.press('Enter');download=await event;assert.equal(await download.failure(),null);const child=path.join(directory,'keyboard-child.tflite');await download.saveAs(child);await download.delete();await enter('#export-report-button');await until(()=>document.querySelector('#export-report-dialog').open&&!document.querySelector('#download-export-report').disabled);await cycleModal('#export-report-dialog','#close-export-report','#download-export-report');await page.keyboard.press('Escape');await until(()=>!document.querySelector('#export-report-dialog').open);assert.equal(await read(()=>document.activeElement.id),'export-report-button');await close();
+    await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');await tabTo('#export-match');event=page.waitForEvent('download');await page.keyboard.press('Enter');download=await event;assert.equal(await download.failure(),null);const child=path.join(directory,'keyboard-child.tflite');await download.saveAs(child);await download.delete();await enter('#export-report-button');await until(()=>document.querySelector('#export-report-dialog').open&&!document.querySelector('#download-export-report').disabled);await cycleModal('#export-report-dialog','#close-export-report','#download-export-report');await page.keyboard.press('Escape');await until(()=>!document.querySelector('#export-report-dialog').open);assert.equal(await read(()=>document.activeElement.id),'export-report-button');
+    if(selectionTools){
+        const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;
+        try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Direct reopen retained the original model worker.')),5000);})]);await enter('#open-export-model');await ended;}finally{clearTimeout(timer);}
+        await ready(3);await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');assert.equal(await read(()=>document.querySelector('#open-export-model').hidden&&document.querySelector('#open-export-model').disabled),true);
+        assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);
+        check('direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result');
+    }
+    await close();
+    if(selectionTools)assert.equal(await read(()=>document.querySelector('#open-export-model').hidden&&document.querySelector('#open-export-model').disabled),true);
     event=page.waitForEvent('filechooser');await page.keyboard.press('Control+o');await(await event).setFiles(child);await ready(3);await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();
     check('keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure');
-    return {tabPresses,modelWorkers:2};
+    return {tabPresses,modelWorkers:selectionTools?3:2};
     }finally{page.off('filechooser',intercept);}
 }
