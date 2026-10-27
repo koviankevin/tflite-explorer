@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.10，1,246 檔與 16 項原生操作、固定資產實際下載比對均通過，含實際模型 OP 編輯與直接重開，見 [最新交付驗收](docs/model-editing-delivery.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
+[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.11，1,256 檔與 16 項原生操作、固定資產實際下載比對均通過，含實際模型 OP 編輯與直接重開，見 [最新交付驗收](docs/model-edit-multiselect.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
 匯出後可從「最近匯出報告」下載來源 OP、輸入／輸出和原始資料位置對照；以本機 CLI 串流比對實際下載檔的權重／custom options，並可指定公司 MLIR compiler。報告清楚區分結構檢查、bytes 比對和未驗證的 runtime 語意，見 [匯出報告與本機驗證](docs/export-reports.md)。
 
@@ -16,7 +16,7 @@
 
 選 pattern 時按住 **Alt＋拖曳**可平移模型，滾輪縮放；已有選取會保留。「編輯選取 pattern」把圈選轉成未儲存的 pattern 草稿，可增刪節點與連線；這項操作修改搜尋條件。匯出子模型後可按「開啟匯出結果」，直接在目前網站重新開啟。
 
-要修改實際模型，先在 Layers 或模型圖選取原始 OP，再按「編輯實際模型」。可修改接線、新增或刪除 OP，驗證並匯出整份新模型，再按「開啟修改結果」。TFLite 新增以既有 OP 為範本，可調整支援的 scalar options；MLIR 支援 generic 名稱、接線及完整 IR。保留原始模型檔，輸出前重新解析候選並驗證結構；未執行推論或公司 dialect／custom kernel verifier。操作及限制見 [實際模型編輯](docs/model-editing.md)。
+模型圖上方有明顯的「編輯實際模型」與「開啟匯出結果」按鈕；框選工具列也有模型編輯入口。選取多個 OP 後會先開啟清單，選一個原始 OP 再編輯，其餘選取與視角保留。可修改接線、新增或刪除 OP，驗證並匯出整份新模型，再按「開啟修改結果」。TFLite 新增以既有 OP 為範本，可調整支援的 scalar options；MLIR 支援 generic 名稱、接線及完整 IR。保留原始模型檔，輸出前重新解析候選並驗證結構；未執行推論或公司 dialect／custom kernel verifier。操作及限制見 [實際模型編輯](docs/model-editing.md)。
 
 ## Pattern 條件與工作階段
 

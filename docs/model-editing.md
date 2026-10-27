@@ -1,6 +1,6 @@
 # 實際模型編輯
 
-使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。核心與介面已合併 main，最終來源的大型模型及四關卡均通過；**preview.10 已部署 GitHub Pages，正式站與固定 Release 驗收通過**。見 [交付與原始證據](model-editing-delivery.md)。
+使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。核心與介面已合併 main，最終來源的大型模型及四關卡均通過；**最新 preview.11 已部署，包含多選編輯修正和更明顯的操作入口；正式站與固定 Release 驗收通過**。見 [最新交付與原始證據](model-edit-multiselect.md)。
 
 ## 已完成的核心
 
@@ -28,6 +28,8 @@
 公司 dialect verifier、custom kernel 和推論正確性仍須內網驗收；TFLite 任意新 OP catalog、所有 metadata 參數和完整全模型 OP diff 不在這版已驗證範圍。
 
 ## 最終來源驗收
+
+此節保留 preview.10 的原始來源驗收；preview.11 的多選修正、最新來源關卡與正式交付見 [多選編輯驗收](model-edit-multiselect.md)。
 
 受測 main 為 `d28e42fb70d0f81329dd49d08b6f5db8b136f7db`、tree `6c6956d42735b03b7247b992356df0586dfcebc5`；四個 workflow_dispatch 均成功。後續只補操作說明、原始證據及 run 選擇；prepare 仍須重新核對相依 fingerprint、API、artifact digest、原始量測與乾淨候選重建。
 
