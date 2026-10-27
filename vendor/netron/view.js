@@ -2500,7 +2500,13 @@ view.Graph = class extends grapher.Graph {
             this._events.touchstart = (e) => this._touchStartHandler(e);
             const document = this.host.document;
             const element = document.getElementById('target');
-            element.focus();
+            // Repainting must not steal focus from an active search, toolbar,
+            // native select or modal control. Keep graph keyboard focus when
+            // the previous graph element was replaced or already owned it.
+            const active = document.activeElement;
+            if (!active || active === document.body || element.contains(active)) {
+                element.focus();
+            }
             element.addEventListener('scroll', this._events.scroll);
             element.addEventListener('wheel', this._events.wheel, { passive: false });
             element.addEventListener('pointerdown', this._events.pointerdown);

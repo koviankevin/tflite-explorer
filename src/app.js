@@ -301,7 +301,7 @@ async function openFile(nextFile) {
 function setKind(nextKind, searchNow = true) {
     kind = nextKind;
     $('run-pattern-laptop').hidden=kind!=='patterns';
-    document.querySelectorAll('[data-kind]').forEach((button) => button.setAttribute('aria-selected', String(button.dataset.kind === kind)));
+    document.querySelectorAll('[data-kind]').forEach((button) => {const active=button.dataset.kind===kind;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;if(active)$('search-controls').setAttribute('aria-labelledby',button.id);});
     $('text-search').hidden = kind === 'patterns'; $('pattern-editor').hidden = kind !== 'patterns';
     renderPattern(); if (model && searchNow) runSearch().catch(report);
 }
@@ -1076,6 +1076,19 @@ $('open-lora-demo').onclick = async () => {
 };
 $('cancel-load').onclick = reset; $('close-model').onclick = reset;
 document.querySelectorAll('[data-kind]').forEach((button) => button.onclick = () => setKind(button.dataset.kind));
+const searchTabs=document.querySelector('[role="tablist"]');
+searchTabs.addEventListener('keydown',event=>{
+    if(event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
+    const tabs=[...searchTabs.querySelectorAll('[role="tab"]')],index=tabs.indexOf(event.target);
+    if(index<0)return;
+    const next=event.key==='ArrowRight'?(index+1)%tabs.length:event.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:event.key==='Home'?0:event.key==='End'?tabs.length-1:-1;
+    if(next<0)return;event.preventDefault();event.stopPropagation();
+    // Focus navigation is cheap; native Enter/Space activates the button and
+    // starts a search only after the user confirms the desired category.
+    tabs.forEach((tab,i)=>{tab.tabIndex=i===next?0:-1;});tabs[next].focus();
+});
+searchTabs.addEventListener('focusout',event=>{if(!searchTabs.contains(event.relatedTarget))for(const tab of searchTabs.querySelectorAll('[role="tab"]'))tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;});
+for(const dialog of document.querySelectorAll('dialog'))for(const type of ['keydown','keyup'])dialog.addEventListener(type,event=>event.stopPropagation());
 $('query').oninput = () => { clearTimeout(timer); timer = setTimeout(() => runSearch().catch(report), 180); };
 $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
@@ -1178,6 +1191,7 @@ $('dismiss-notice').onclick = () => $('notice').hidden = true;
 document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer?.files[0]) openFile(e.dataTransfer.files[0]); });
 document.addEventListener('keydown', (e) => {
+    if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }

@@ -18,6 +18,8 @@
 
 ## 搜尋工作區寬度
 
+候選 preview.9 的搜尋分頁支援左右方向鍵、Home／End 移焦點，Enter／Space 切換並搜尋；圖形重畫保留目前操作控制項的焦點，對話框快捷鍵不影響後方選取。完整鍵盤驗收與目前限制見 [操作說明](docs/keyboard-acceptance.md)；尚待候選正式部署驗收。
+
 桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
 
 14 吋筆電常見的可用畫面另有調整：901～1600px 寬時，「尋找模式」固定在結果列，不隨結構／條件編輯器捲走；左欄暫時限制在畫面的 35% 內。開啟右側詳情會再調整左欄，於至少 1280px 的畫面保留 600px 模型圖；關閉詳情或回到大視窗時恢復可用範圍內的偏好寬度。字級維持 14px，模型圖可選至 32px。已驗證包含瀏覽器工具列占用的 1280×600、1366×640，以及 1280×720、1366×768、1536×864；詳細紀錄見 [筆電版面驗證](docs/laptop-layout-verification.md)。
@@ -214,4 +216,4 @@ Netron: https://github.com/lutzroeder/netron
 
 使用 Netron 9.3.2，固定來源 commit `0994fdd00d6668280b0b98a6f5323a736236208b`。完整 MIT 授權及原作者聲明保留於 `vendor/netron/LICENSE`，建置時另複製為 `dist/LICENSE-Netron.txt`。
 
-`vendor/netron` 保留上游 source，新增 `Value`、`Tensor`、`Attachment` exports 供 adapter 使用，並在 `dagre.js` 的連線排序條件補上邊界／終端節點檢查，避免局部迴圈有外部 SSA 輸入時讀取不存在的 incoming／outgoing edge。`scripts/build.mjs` 另對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。
+`vendor/netron` 保留上游 source，新增 `Value`、`Tensor`、`Attachment` exports 供 adapter 使用，並在 `dagre.js` 的連線排序條件補上邊界／終端節點檢查，避免局部迴圈有外部 SSA 輸入時讀取不存在的 incoming／outgoing edge。`view.js` 的圖形 register 另保留圖外控制項的鍵盤焦點，避免重畫搶走字級選單或 modal 焦點。`scripts/build.mjs` 對產出的少數詳細資料標題作繁體中文翻譯。Netron Host 的遙測、地理位置查詢和遠端開檔啟動流程沒有啟用；頁面的 CSP 限制連線到同來源。
