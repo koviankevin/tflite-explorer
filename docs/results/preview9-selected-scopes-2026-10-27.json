@@ -1,0 +1,69 @@
+{
+  "format": "model-lens-selected-source-scopes",
+  "version": 1,
+  "status": "passed",
+  "checkedAt": "2026-10-27T09:52:45.821Z",
+  "candidate": {
+    "commit": "0a01260a3f8a605a066caf72975996531b3db726",
+    "tree": "fc1b771070997870e56be65cd5134947249d47b5",
+    "committedAt": "2026-10-27T17:46:11+08:00",
+    "dirty": false
+  },
+  "runs": {
+    "core": 40438427440,
+    "browser": 40482578652,
+    "contract": 40482149049,
+    "site": 40482153614
+  },
+  "scopes": [
+    {
+      "kind": "core",
+      "runId": 40438427440,
+      "testedCommit": "521d1b206bb9345117b340cf625493ca5c490040",
+      "candidateCommit": "0a01260a3f8a605a066caf72975996531b3db726",
+      "fingerprint": "42592c65576f4b195a9cd90a802a04a477d738752940e94c2b1913be4328ea46",
+      "files": 85,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "browser",
+      "runId": 40482578652,
+      "testedCommit": "b2f6ac1b4ae6a45506ccb05048b18bc74527b0ac",
+      "candidateCommit": "0a01260a3f8a605a066caf72975996531b3db726",
+      "fingerprint": "b89d1ddb25710d8fc31b59f22dfb961e96f5b7c0dcd333305f04564c51e02add",
+      "files": 256,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "contract",
+      "runId": 40482149049,
+      "testedCommit": "b2f6ac1b4ae6a45506ccb05048b18bc74527b0ac",
+      "candidateCommit": "0a01260a3f8a605a066caf72975996531b3db726",
+      "fingerprint": "dfb5cfae791f0fdac6dca07f276c618d5e0da9d66ab141513fd3f645cbc2886b",
+      "files": 368,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "site",
+      "runId": 40482153614,
+      "testedCommit": "b2f6ac1b4ae6a45506ccb05048b18bc74527b0ac",
+      "candidateCommit": "0a01260a3f8a605a066caf72975996531b3db726",
+      "fingerprint": "cebbc7c6352ecd895054faef11187cc5f1a7b907e3d06976d34b3d5fa55fe21f",
+      "files": 263,
+      "sourceEquivalent": true
+    }
+  ],
+  "physicalPolicy": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 739269.4857142858,
+      "rssDriftBytes": 15835136,
+      "mainHeapDriftBytes": 43028,
+      "sampledPeakRssBytes": 768409600,
+      "sampledPeakGrowthBytes": 262897664
+    }
+  },
+  "publicationMustReauthenticateArtifacts": true
+}

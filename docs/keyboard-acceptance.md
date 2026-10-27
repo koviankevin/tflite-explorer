@@ -14,6 +14,10 @@
 
 `dialog-keyboard.js` 補上即時焦點循環後，[main 40482153614](https://github.com/koviankevin/tflite-explorer/actions/runs/40482153614) 已完成 [六種切換](results/keyboard-main-site-2026-10-27.json) 與 [742 檔 HTTP／八項原生 UI](results/keyboard-main-ui-2026-10-27.json)。來源 `b2f6ac1b4ae6a45506ccb05048b18bc74527b0ac`，1366×768、Chromium 141.0.7390.37，實際按下 574 次 Tab；匯入、本機草稿、版本、診斷與最近匯出報告共五種 modal 驗證正反邊界、關閉後焦點、隱藏／disabled 控制項及匯入確認動態啟用。原選取 OP 保留，鍵盤加入另兩個 OP、儲存／搜尋四筆並匯出三節點兩連線的 pattern；原生 JSON 與三 OP TFLite 子模型下載重開後仍匹配一次。五個 model workers 均關閉。MLIR validation modal、MLIR／Canvas 的完整鍵盤流程及其他引擎仍未在這輪涵蓋。
 
-[main 契約 40482149049](https://github.com/koviankevin/tflite-explorer/actions/runs/40482149049) 的 [74 項測試](results/keyboard-main-contract-2026-10-27.json) 通過、無略過／取消，受測來源未變。[85 個核心依賴指紋](results/keyboard-core-scope-2026-10-27.json) 與既有 main core `40438427440` 完全相同，正式 prepare 仍須重驗原始憑證。最終來源的 [1.25 GiB／21,005 OP 八輪瀏覽器關卡 40482578652](https://github.com/koviankevin/tflite-explorer/actions/runs/40482578652) 正在執行；只有完成來源／artifact／原始量測核對後才可選入交付索引。此前較早來源的成功大檔測試不冒充本次最終模組的驗收。
+[main 契約 40482149049](https://github.com/koviankevin/tflite-explorer/actions/runs/40482149049) 的 [74 項測試](results/keyboard-main-contract-2026-10-27.json) 通過、無略過／取消，受測來源未變。[85 個核心依賴指紋](results/keyboard-core-scope-2026-10-27.json) 與既有 main core `40438427440` 完全相同。
+
+最終來源的 [1.25 GiB／21,005 OP 八輪瀏覽器關卡 40482578652](https://github.com/koviankevin/tflite-explorer/actions/runs/40482578652) 已成功，見 [完整原始量測](results/keyboard-final-browser-2026-10-27.json)。重新執行原始 policy 為 passed；扣除兩輪 warmup，六輪 sampled whole-browser peak RSS 約 732.8 MiB，closed RSS drift 約 15.1 MiB、slope 約 0.71 MiB／輪，均在原門檻內；main heap drift 約 42 KiB。這是此環境八輪的有限證據，不代表永不洩漏、連續峰值或固定硬體 SLA。實際 Worker 終止、Blob URL 自然撤銷、完整權重／custom options 和 pattern 正反例也通過，未強制 GC。
+
+[四關卡來源比較](results/preview9-selected-scopes-2026-10-27.json) 已核對成功 main run 與全部相依 fingerprint；交付索引選入新的 browser／contract／site，沿用內容相同的 core。正式 prepare 仍須重新驗證 API、provider artifact digest／原始報告及乾淨來源重建，這份索引／文件本身不等於已發布。此前較早來源的成功大檔測試不冒充本次最終模組的驗收。
 
 操作設計參考 [W3C APG tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) 的手動啟用與 [modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) 的焦點循環建議。
