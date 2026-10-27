@@ -1,5 +1,5 @@
-import {serialize} from './model-engine.js?v=d3740856bb6e74d3';
-import {connectionSliceView} from './mlir-connection-view.js?v=d3740856bb6e74d3';
+import {serialize} from './model-engine.js?v=e67611582982ec3f';
+import {connectionSliceView} from './mlir-connection-view.js?v=e67611582982ec3f';
 
 // A display-only contraction of the checked source projection. Never follow a
 // hidden computation as if it were a wire, and never rewrite the source IR.

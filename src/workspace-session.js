@@ -1,13 +1,13 @@
-import {exportWorkspace,parseWorkspace} from './workspace.js?v=d3740856bb6e74d3';
-import {WorkspaceHistory} from './workspace-history.js?v=d3740856bb6e74d3';
-import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=d3740856bb6e74d3';
+import {exportWorkspace,parseWorkspace} from './workspace.js?v=e67611582982ec3f';
+import {WorkspaceHistory} from './workspace-history.js?v=e67611582982ec3f';
+import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=e67611582982ec3f';
 const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join('');
 
 // The controller owns history, save ordering and optimistic concurrency. UI and
 // IndexedDB are adapters; model objects/File/Blob never enter this module.
 export function workspaceSession({store,capture,apply,ready=()=>true,settle=async()=>{},changed=()=>{},enabled=true,owner=id(),delay=600}) {
     const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,operation=null,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
-    const emit=()=>changed({message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing});
+    const emit=()=>changed({message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing,storageFailed:!!active?.storageError});
     const sample=(force=false,internal=false)=>{if(!active || (applying&&!internal) || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
     const savedMessage=current=>current.savedAt?`已自動儲存 ${new Date(current.savedAt).toLocaleTimeString()} · 僅含操作狀態`:'自動草稿已就緒。';
     const schedule=()=>{

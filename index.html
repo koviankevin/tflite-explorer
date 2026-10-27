@@ -8,13 +8,13 @@
 <meta name="version" content="0.0.0">
 <meta name="date" content="">
 <title>模鏡｜TFLite・MLIR 模型探索</title>
-<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" type="text/css" href="vendor/netron/grapher.css?v=e67611582982ec3f">
 <link rel="shortcut icon" type="image/x-icon" href="vendor/netron/favicon.ico">
 <link rel="icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon" type="image/png" href="vendor/netron/icon.png">
 <link rel="apple-touch-icon-precomposed" type="image/png" href="vendor/netron/icon.png">
 <link rel="fluid-icon" type="image/png" href="vendor/netron/icon.png">
-<script type="module" src="src/app.js?v=d3740856bb6e74d3"></script>
+<script type="module" src="src/app.js?v=e67611582982ec3f"></script>
 <style>
 html { touch-action: none; overflow: hidden; width: 100%; height: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; }
 body { touch-action: none; overflow: hidden; width: 100%; height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "PingFang SC"; font-size: 12px; text-rendering: geometricPrecision; }
@@ -307,16 +307,16 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
 .sidebar { transition: none; }
 }
 </style>
-<link rel="stylesheet" href="src/app.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/pattern-workspace.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/mobile.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/model-visibility.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/typography.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/overview-canvas.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/explorer-resize.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/workspace.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/laptop.css?v=d3740856bb6e74d3">
-<link rel="stylesheet" href="src/release.css?v=d3740856bb6e74d3">
+<link rel="stylesheet" href="src/app.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/pattern-workspace.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/mobile.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/model-visibility.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/typography.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/overview-canvas.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/explorer-resize.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/workspace.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/laptop.css?v=e67611582982ec3f">
+<link rel="stylesheet" href="src/release.css?v=e67611582982ec3f">
 </head>
 <body class="welcome">
 <header class="app-header">
@@ -434,6 +434,15 @@ button { font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI"
   <dl id="release-fields"></dl>
   <p class="hint">版本資訊只包含程式建置與擴充版本，不含模型、權重或搜尋內容。內網更新時可用來核對安裝的版本。</p>
   <button id="download-release-info" class="quiet" disabled>下載版本資訊</button>
+  <button id="open-diagnostics" class="quiet">本機診斷報告</button>
+</dialog>
+<dialog id="diagnostic-dialog" aria-labelledby="diagnostic-title">
+  <div class="import-heading"><h2 id="diagnostic-title">本機診斷報告</h2><button id="close-diagnostics" class="icon-button" aria-label="關閉診斷報告">×</button></div>
+  <p class="hint">先預覽，再自行下載。只包含程式版本、瀏覽器種類、粗略規模與操作分類；不含模型檔名、OP／SSA 名稱、搜尋／pattern 內容、權重、屬性、私有 dialect 資訊或原始錯誤訊息。診斷內容不會上傳。</p>
+  <output id="diagnostic-summary" role="status"></output>
+  <div class="diagnostic-actions"><button id="refresh-diagnostics" class="quiet">更新預覽</button><button id="clear-diagnostics" class="quiet">清除本次操作紀錄</button><button id="download-diagnostics" class="primary" disabled>下載預覽 JSON</button></div>
+  <pre id="diagnostic-preview" tabindex="0" aria-label="診斷 JSON 預覽"></pre>
+  <p class="hint">紀錄最多 64 筆，只留在本分頁記憶體，重新整理即清除。未量測整個瀏覽器／Worker 記憶體；操作紀錄不等同於模型相容性或下載完成證明。</p>
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>

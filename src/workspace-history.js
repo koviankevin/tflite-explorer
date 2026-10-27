@@ -1,4 +1,4 @@
-import {parseWorkspace,exportWorkspace} from './workspace.js?v=d3740856bb6e74d3';
+import {parseWorkspace,exportWorkspace} from './workspace.js?v=e67611582982ec3f';
 export const HISTORY_BYTES=8*1024*1024;
 
 // Whole UI snapshots are small and exclude the model/weights. Keep both a count

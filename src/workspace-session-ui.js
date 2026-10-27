@@ -1,12 +1,13 @@
-import {draftStore,readDraft} from './workspace-drafts.js?v=d3740856bb6e74d3';
-import {workspaceSession} from './workspace-session.js?v=d3740856bb6e74d3';
-import {exportWorkspace} from './workspace.js?v=d3740856bb6e74d3';
+import {draftStore,readDraft} from './workspace-drafts.js?v=e67611582982ec3f';
+import {workspaceSession} from './workspace-session.js?v=e67611582982ec3f';
+import {exportWorkspace} from './workspace.js?v=e67611582982ec3f';
 
 export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,exportFile,error}) {
-    const $=id=>document.getElementById(id),dialog=$('draft-dialog');let channel,session,records=[],selected,listGeneration=0;
+    const $=id=>document.getElementById(id),dialog=$('draft-dialog');let channel,session,records=[],selected,listGeneration=0,diagnosticState={};
     let enabled=true;try{enabled=localStorage.getItem('model-lens.autosave.v1')!=='off';}catch{/* IDB can still work. */}
     const store=draftStore({notify:record=>{if(record)channel?.postMessage({key:record.key,revision:record.revision,owner:record.owner,deleted:!!record.deleted});}});
     session=workspaceSession({store,capture,apply,ready,settle,enabled,changed:state=>{
+        diagnosticState=Object.fromEntries(['enabled','attached','pending','conflict','busy','saving','storageFailed'].map(key=>[key,state[key]]));
         $('autosave-enabled').checked=state.enabled;if($('draft-status').textContent!==state.message)$('draft-status').textContent=state.message;
         $('undo-workspace').disabled=!state.canUndo;$('redo-workspace').disabled=!state.canRedo;
         $('fork-draft').hidden=!state.pending&&!state.conflict;$('resume-draft-prompt').hidden=!state.pending&&!state.conflict;
@@ -42,7 +43,7 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
     $('fork-draft').onclick=()=>session.fork().catch(error);
     $('undo-workspace').onclick=()=>session.travel(-1).catch(error);$('redo-workspace').onclick=()=>session.travel(1).catch(error);
     $('autosave-enabled').onchange=()=>{const value=$('autosave-enabled').checked;session.setEnabled(value);try{localStorage.setItem('model-lens.autosave.v1',value?'on':'off');}catch{/* Setting remains applied in memory. */}};
-    const change=event=>{if(event.target?.closest?.('#draft-dialog, #export-report-dialog, #release-dialog, .session-tools'))return;session.change();};
+    const change=event=>{if(event.target?.closest?.('#draft-dialog, #export-report-dialog, #release-dialog, #diagnostic-dialog, .session-tools'))return;session.change();};
     for(const type of ['click','input','change','pointerup','wheel','scroll'])document.addEventListener(type,change,{capture:true,passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush({force:true});});
     window.addEventListener('pagehide',()=>session.flush({force:true}));
@@ -50,5 +51,5 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
         if(document.querySelector('dialog[open]') || event.target.closest?.('input, textarea, select, [contenteditable="true"]') || !(event.ctrlKey || event.metaKey) || event.altKey)return;
         const key=event.key.toLowerCase();if(key==='z' || key==='y'){event.preventDefault();event.stopPropagation();session.travel(key==='y' || event.shiftKey?1:-1).catch(error);}
     });
-    return session;
+    return Object.assign(session,{diagnosticState:()=>({...diagnosticState})});
 }

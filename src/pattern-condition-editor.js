@@ -1,4 +1,4 @@
-import {normalizeConditions,parseShape,shapeText} from './pattern-conditions.js?v=d3740856bb6e74d3';
+import {normalizeConditions,parseShape,shapeText} from './pattern-conditions.js?v=e67611582982ec3f';
 export function conditionEditor({getNodes,getRules,setRules,error}) {
     const $=id=>document.getElementById(id);
     const modes=()=>{const attribute=$('condition-kind').value==='attribute';$('condition-tensor').hidden=attribute;$('condition-attribute').hidden=!attribute;$('condition-value').placeholder=attribute?'與詳細資料的值相同':$('condition-kind').value==='shape'?'1, *, 128；[] 為 scalar':'例如 float32（TFLite）或 f32（MLIR）';};

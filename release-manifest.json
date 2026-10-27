@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "release": {
     "schemaVersion": 1,
-    "version": "0.2.0-preview.4",
+    "version": "0.2.0-preview.5",
     "distribution": "public",
     "extension": null,
     "source": {
-      "commit": "8052491dead0cfac9ed393ad6d4f8b80cdd9b80d",
-      "tree": "f662c14df2ae9e5aadb7c37ab2bfe3da8157dfeb",
-      "committedAt": "2026-10-27T07:35:25+08:00",
+      "commit": "069ed2d6093b144e0bb3fe5dd42e9725824dcfe6",
+      "tree": "a1794ef17e9198ec520b46557b24b0a1dd778e03",
+      "committedAt": "2026-10-27T08:02:57+08:00",
       "dirty": false
     },
-    "buildId": "d3740856bb6e74d3"
+    "buildId": "e67611582982ec3f"
   },
   "files": [
     {
@@ -41,8 +41,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 71410,
-      "sha256": "3228d226d3cb9b720579d349613dbdd4cd0300296b3e50a91a81e046599471af"
+      "bytes": 72642,
+      "sha256": "99982ed2d93965b266925cfe06b69b13bd5c88107077eee61928ee3365aba1c3"
     },
     {
       "path": "lora-demo.tflite",
@@ -52,7 +52,7 @@
     {
       "path": "release.json",
       "bytes": 339,
-      "sha256": "35c7f44eeaa702c16856a76f75f86e9439e15260c1f7b78b9ae930264121010c"
+      "sha256": "645de9ec26804578762cf7517130ac79d59686fc605139278832eed2b17f8a8a"
     },
     {
       "path": "src/app.css",
@@ -61,8 +61,18 @@
     },
     {
       "path": "src/app.js",
-      "bytes": 104907,
-      "sha256": "451caffcc1068b46dbceb0abff0e80b763681b1636a361c104d120902f749d25"
+      "bytes": 106752,
+      "sha256": "3fc3916cdce26357112438177cae15e33313619adb6e0e3dc6c91d5f01b69f61"
+    },
+    {
+      "path": "src/diagnostics-ui.js",
+      "bytes": 2851,
+      "sha256": "d4b3d6e723119ddbd761631541b01975303e4bb30fd372bb44617a26cef22e97"
+    },
+    {
+      "path": "src/diagnostics.js",
+      "bytes": 6972,
+      "sha256": "3eae849669254e32699e1c588f06d2413a807a819925376027116cb7ca311152"
     },
     {
       "path": "src/explorer-resize.css",
@@ -87,7 +97,7 @@
     {
       "path": "src/flatbuffer-writer.js",
       "bytes": 7985,
-      "sha256": "48dfe386c697ca0fc697be1e243b72a4bd6e8776c1dab3fcbf9921b28d986131"
+      "sha256": "f50e9d843a94608e7c4d5418e9edc977b5dcb1cb03c1c71b7a738324737614b7"
     },
     {
       "path": "src/hydrate.js",
@@ -102,7 +112,7 @@
     {
       "path": "src/mlir-combined-graph.js",
       "bytes": 9052,
-      "sha256": "31a4b28d22b508928586f615e54992ede28ee53fd57ac10aced6ad6f80cd5d5d"
+      "sha256": "9e94ce273783bf983f035716724c6d9f0aea4ca26a710b2eb09c9e8f995208bb"
     },
     {
       "path": "src/mlir-connection-index.js",
@@ -112,7 +122,7 @@
     {
       "path": "src/mlir-connection-view.js",
       "bytes": 10893,
-      "sha256": "10a6268b278a591e5c94225fc6d865f31a248f58aaa3170b35351822b78589b7"
+      "sha256": "b7c487454e52ae1fa08ef1c2663f04a1c7aac0f840f2e5aee5c3e420d7e2b0c2"
     },
     {
       "path": "src/mlir-dialect-contract.js",
@@ -122,7 +132,7 @@
     {
       "path": "src/mlir-dialect-registry.js",
       "bytes": 285,
-      "sha256": "8e0ec3c92caa1ce2fee2b4fd5bef1d4286ba43abad1113a921aeafd099b11225"
+      "sha256": "1833b2ec458c7fd08c58fac1199ed279692980533ea1b5e1b15de60c11942661"
     },
     {
       "path": "src/mlir-dialects.js",
@@ -132,7 +142,7 @@
     {
       "path": "src/mlir-engine.js",
       "bytes": 10790,
-      "sha256": "46d697ee10295ef822de5923eeec053335fd9c27b456de915333fcd862a89656"
+      "sha256": "070daaf64bcac5faa853c468d919201b0308b9004af2dee28c640718be204b7a"
     },
     {
       "path": "src/mlir-export-provenance.js",
@@ -142,7 +152,7 @@
     {
       "path": "src/mlir-export.js",
       "bytes": 10826,
-      "sha256": "72ea39469b35b2876b9041aa6f89fb20682af81ddb8ffa480cdf1d62f88d0797"
+      "sha256": "2e500c036ff9e44f09dccdad7cebb0fcbeec9881ed44a3fcd49ad2948296b5ef"
     },
     {
       "path": "src/mlir-file.js",
@@ -152,37 +162,37 @@
     {
       "path": "src/mlir-ir.js",
       "bytes": 5243,
-      "sha256": "f9492c7c05d8c41f171c9f368e7a34833b1186079ce4786d9a14a39ad2f55ee8"
+      "sha256": "e0321316af0c70db54b583a57f0e23b61b8c2b71af275b6b9be5fb1a5144e13a"
     },
     {
       "path": "src/mlir-pattern-projection.js",
       "bytes": 11712,
-      "sha256": "7018763fe691379f7ef7c209e11f241dc8378cbc5efe4083aa65f2a76dfb7556"
+      "sha256": "3a2ee20c26469c0dedccf4a5b290e72057bec3e774e1a15f9b67c07348d22787"
     },
     {
       "path": "src/mlir-pattern-spec.js",
       "bytes": 5299,
-      "sha256": "a3149526e0fdf25a0f2e46a31ed90de5e0ce5be6587591c1c687892a6852e9bf"
+      "sha256": "921249e2b499ae913d21f9eb58798717665a74c1171e6a421b06f12e45671ae7"
     },
     {
       "path": "src/mlir-pattern.js",
       "bytes": 16639,
-      "sha256": "2b73e26f18301df7baa526ebf6ebcd21f1aa8e26fdc832bf302a3053af84dfd6"
+      "sha256": "19b0bf5a7774c763409eb0c3d02b04c3d93d0c8cd2f47833609602fada714dc5"
     },
     {
       "path": "src/mlir-slice-graph.js",
       "bytes": 4629,
-      "sha256": "cdfd9223e3f493913e3b52c1bd8a64c98774c0eed869263724db8c4acde35556"
+      "sha256": "4907a42be6f20411968c60dff9d3aca1a33e04824f5a864c55ea1be86cb39543"
     },
     {
       "path": "src/mlir-slice.js",
       "bytes": 21409,
-      "sha256": "9723c4622d4eacce2bedc154a8ce8d9b5e0e60bcf49ddedda184590569fa8606"
+      "sha256": "686f17fa160f3e28b50c9f91367d296e7e8e0c80c5aad7773139e271328410a6"
     },
     {
       "path": "src/mlir-validate.js",
       "bytes": 10635,
-      "sha256": "04a7ba52de1e7256542ee47d66ad58b69d9a92184bb7af3a52476469fe30a7e4"
+      "sha256": "bdb1999cd49cd45a436fb0d219cfbc8a92c811ef1413f2e0ef53ca89b7ae2938"
     },
     {
       "path": "src/mobile.css",
@@ -192,12 +202,12 @@
     {
       "path": "src/model-adapters.js",
       "bytes": 766,
-      "sha256": "51d846f6963deb05532fc69218675cc8a1560d7d8bf88b334657f6822941e5a9"
+      "sha256": "c92d8b7922e5b9bf0b973a3a204642f8209917029dc1c0d9cf7f08817c9aa88c"
     },
     {
       "path": "src/model-engine.js",
       "bytes": 15500,
-      "sha256": "78715e910b220ea0fe0c6f73970af687204d6a78739bfaec41b2681f1a9f5c4b"
+      "sha256": "69ab925fd78923f63f56238e15b2dea388e8bc6ca742628816ecd1783c011f67"
     },
     {
       "path": "src/model-formats.js",
@@ -212,7 +222,7 @@
     {
       "path": "src/model-worker.js",
       "bytes": 8118,
-      "sha256": "765e703fe43ef323a607cab22e94ab793bd4208d504a3b24230d70b0161bfb43"
+      "sha256": "2813a7f6c36d5991febe13d8033c57fdae3224d71eba98f8b2f24e706a10827c"
     },
     {
       "path": "src/overview-canvas.css",
@@ -222,7 +232,7 @@
     {
       "path": "src/overview-canvas.js",
       "bytes": 12331,
-      "sha256": "32be577da455024ee042f006c96ea6ef4da18195e5fa1d225a07d8395f6e719d"
+      "sha256": "7b386a5b73e77a0dbb80714996e09977d46731ccc4d951bfb6667615f5aa80e5"
     },
     {
       "path": "src/overview-layout.js",
@@ -232,7 +242,7 @@
     {
       "path": "src/pattern-condition-editor.js",
       "bytes": 2543,
-      "sha256": "05c3603795096ef396ce4ee26e70d0105435306f87148a153b46fa81e904f471"
+      "sha256": "42f6245fc5440bad6d66b95a4922b00219d492de47b19ff47159554aefb3504e"
     },
     {
       "path": "src/pattern-conditions.js",
@@ -247,12 +257,12 @@
     {
       "path": "src/pattern-library.js",
       "bytes": 6522,
-      "sha256": "b5a3680ada287b8b154c20155edc3771e0da4898b32ff11abddb234487149d73"
+      "sha256": "7eeb051e0d2803cc2c9407072d3a0c324b0663cecc851ab9c8f245438ac67bf6"
     },
     {
       "path": "src/pattern-overview.js",
       "bytes": 10143,
-      "sha256": "bfe8a310279cdd2b2b7681c3d78b9ff923ef3c19bca3ad0f294c984f21081874"
+      "sha256": "21b4b9ba14b71b13e18e461417e0edf56541da5f502e75509780c1f3f406d18d"
     },
     {
       "path": "src/pattern-selection.js",
@@ -262,7 +272,7 @@
     {
       "path": "src/pattern-store.js",
       "bytes": 6351,
-      "sha256": "ce2f4042ace1427045dd2947ebbee3dc304eec22fba46251cfef5578594142ad"
+      "sha256": "0e85243058c3befd297200a399cb583d46e01504b77d886c7323ef46109674d1"
     },
     {
       "path": "src/pattern-utils.js",
@@ -282,7 +292,7 @@
     {
       "path": "src/rectangle-selection.js",
       "bytes": 4324,
-      "sha256": "189319f25e66e7b13c6d8f9dd0c98e1922ccdcba4b881765117adfca43e88e41"
+      "sha256": "09f7f9e324185b428f31463450789be833ae3abd71c345ec3af90d65fc1cde8e"
     },
     {
       "path": "src/release-info.js",
@@ -291,18 +301,18 @@
     },
     {
       "path": "src/release.css",
-      "bytes": 1673,
-      "sha256": "5e61a2882b0939478196431c13c898d873dc1d2654c5722b010dbbef52a43e27"
+      "bytes": 2542,
+      "sha256": "ff0946ddeacca82e5a1e0456272e11b8487f73fa416e125555064b27c3524858"
     },
     {
       "path": "src/shell.html",
-      "bytes": 19121,
-      "sha256": "517c25b68f28cf6bc6ef763cd03d5fb40489681515f8ca6a3b5e3254208f10aa"
+      "bytes": 20353,
+      "sha256": "85e41c10b2c046ff10cd7a50b022835b5bdeb85d012d991c5801e1415e5f29ac"
     },
     {
       "path": "src/subgraph-pattern.js",
       "bytes": 10669,
-      "sha256": "1bae70c5ea214491ee6f2aa65aafa7cf72108d4e2710ba7bf4de557b7f854567"
+      "sha256": "71b20f072d55510bc68e449be58f0aa085fd903e9160c2298301f6fe9034322a"
     },
     {
       "path": "src/svg-viewport.js",
@@ -312,7 +322,7 @@
     {
       "path": "src/tflite-export.js",
       "bytes": 9453,
-      "sha256": "4bac6f20d7898b0a521b2072afce1eec0105533951d8bdd464a3c642991cba0e"
+      "sha256": "2e8b9f4a7087ad451162f280c794fe80190efc3200708b197c4c7ccaa764cebb"
     },
     {
       "path": "src/typography.css",
@@ -322,22 +332,22 @@
     {
       "path": "src/workspace-drafts.js",
       "bytes": 5533,
-      "sha256": "b5ba30ff56662bd83a9d0020898bf9a1f52178a09b3550c31c96f00cfd52fe8e"
+      "sha256": "e3092e02874d8f1abef565ffb6bfcac9147155f00f2e3febc7c251f24729af65"
     },
     {
       "path": "src/workspace-history.js",
       "bytes": 1580,
-      "sha256": "39ca721239ece8ef0fb0fef7b52375df3dbd52e0ef3a98d73cc561fee0753e8c"
+      "sha256": "008408c5a796bff2a1167de0b2843bffe0f91ad7c51fa59c89f75773325e75ef"
     },
     {
       "path": "src/workspace-session-ui.js",
-      "bytes": 6122,
-      "sha256": "da81d77bc5746fd9e15cd79ff687af5b5f7f0e7e49741d8543cf79ee0a2ea059"
+      "bytes": 6369,
+      "sha256": "406ba7b360c13189de630f018acd6312283b80a97f21820f926a49ac610e6f01"
     },
     {
       "path": "src/workspace-session.js",
-      "bytes": 8186,
-      "sha256": "2cf743173e06e038cac4b5040522bea0d6fa84a6b03511f6fd2dfef81052128f"
+      "bytes": 8223,
+      "sha256": "c11aad4f14ab4c8011b2cd828775e41c08cc3014787c4f03dac169d3f2afc949"
     },
     {
       "path": "src/workspace.css",
@@ -347,7 +357,7 @@
     {
       "path": "src/workspace.js",
       "bytes": 8647,
-      "sha256": "a24ec8a761d22ef891b8b138e0f2584dd56da3a35f19f76185ebd5c69f7da2af"
+      "sha256": "194850ad2aef8493af4eb9589ddc9da938c05df73d72f287b06c3dbc762dd2ea"
     },
     {
       "path": "tools/export-reports.md",
@@ -377,7 +387,7 @@
     {
       "path": "vendor/netron/app.js",
       "bytes": 38850,
-      "sha256": "cca7ccbec04057c57584fd03e91425c28e1705955032c2550523eed9e03a9a6e"
+      "sha256": "cc5323a3e0d229cdead51d2e88cf8d19c65b749d389491a1334a5357792f01ad"
     },
     {
       "path": "vendor/netron/armnn-metadata.json",
@@ -422,7 +432,7 @@
     {
       "path": "vendor/netron/browser.js",
       "bytes": 34614,
-      "sha256": "9cad2f3f15f8e4d365f1142fa15f602abfae6dcec529df337b57863c107b0411"
+      "sha256": "12653dc276cf4d5034e2ceb4cb142591fbade295c2b5e34a5b7ac83a727b15c6"
     },
     {
       "path": "vendor/netron/caffe-metadata.json",
@@ -462,7 +472,7 @@
     {
       "path": "vendor/netron/catboost.js",
       "bytes": 6650,
-      "sha256": "f5427f10c9d45ae180b62af42459b6f5a760f8724369ca36d227054b67ed143e"
+      "sha256": "fa6d6bb97c866d799a5d8913d387c924bddc76d4c467bcbd88920f1f7565e614"
     },
     {
       "path": "vendor/netron/circle-metadata.json",
@@ -477,7 +487,7 @@
     {
       "path": "vendor/netron/circle.js",
       "bytes": 24353,
-      "sha256": "0870998af734c00694d30653c5acda23de0ab205f545866fb5bf598b32b077ef"
+      "sha256": "d19ff47a2bfc61b4752d2e57726b8722e1bd22119ea782737cabd0bf95daf938"
     },
     {
       "path": "vendor/netron/cntk-metadata.json",
@@ -507,7 +517,7 @@
     {
       "path": "vendor/netron/coreml.js",
       "bytes": 71553,
-      "sha256": "346fdde19fb82817088ab9fdf2a6b4b461c6a496f6e0867121fff631c70a8572"
+      "sha256": "dcc56028b27993cec74084f452e0961edde0b97037db21b979a49faea66fc275"
     },
     {
       "path": "vendor/netron/dagre.js",
@@ -547,7 +557,7 @@
     {
       "path": "vendor/netron/dlc.js",
       "bytes": 27397,
-      "sha256": "c0b55f9762ec526dbc693a7aa8b94a9a9cffe70b2dc91105f0eaec15a6a8a963"
+      "sha256": "2ef0e9866e25cd101f40434fc83ab0244b3250feaee54012025356922d6d97da"
     },
     {
       "path": "vendor/netron/dnn-metadata.json",
@@ -582,7 +592,7 @@
     {
       "path": "vendor/netron/espdl.js",
       "bytes": 14714,
-      "sha256": "a4967cbc12d8b024eee0fa5e741e9cce916266e8575a15b2e90dd516c6e3f61d"
+      "sha256": "298bcb6687ecb18941fc75fed15f9db7da9410f90e72c4329cb28c2bbd18ee4d"
     },
     {
       "path": "vendor/netron/espresso-metadata.json",
@@ -602,7 +612,7 @@
     {
       "path": "vendor/netron/executorch.js",
       "bytes": 48517,
-      "sha256": "5e722fb560f1d72f27748d23429e1034d09c40d2800e3afe7858e3ad9fe33156"
+      "sha256": "1d166aa1f3e32f1cc90d5487e3af049e46a7345ab6cba907833845782705c6ab"
     },
     {
       "path": "vendor/netron/favicon.ico",
@@ -617,7 +627,7 @@
     {
       "path": "vendor/netron/flax.js",
       "bytes": 6245,
-      "sha256": "50f31b3f06ebe76e450746f45d24ccf9a7c12e516bb573a432ea5166020e473b"
+      "sha256": "9b503c7d8234507ea5c451e6e1e5c7b8752ab33bdcbbcec7cf3451acffa6c011"
     },
     {
       "path": "vendor/netron/flexbuffers.js",
@@ -652,7 +662,7 @@
     {
       "path": "vendor/netron/grapher.js",
       "bytes": 36278,
-      "sha256": "1d9943c091b507683d2cd97868f85dd3224a4f2f9bccace64f0c8f69e75cfc92"
+      "sha256": "162446edc8c6dfc4433163d403a83b8cc13382d684645d02e9dea7a3c05fcb44"
     },
     {
       "path": "vendor/netron/hailo-metadata.json",
@@ -667,7 +677,7 @@
     {
       "path": "vendor/netron/hdf5.js",
       "bytes": 65262,
-      "sha256": "9c4393dd3e43a123e88dd4b87a7a6d6e731fd488281f2539721128e128e944df"
+      "sha256": "7dc0e96ede5903466eec89742fb308ddab72f7ab829d9c50ecb47c3fbe12186d"
     },
     {
       "path": "vendor/netron/hickle.js",
@@ -702,12 +712,12 @@
     {
       "path": "vendor/netron/jax.js",
       "bytes": 5008,
-      "sha256": "34ba5a94ab18654ec96e7e1720fc45987070abce93a3e1437a62e66964bcd692"
+      "sha256": "2fcd2eb7aa538baebd0d1cbd263cc986c6b659020c4d2b80bb4da59bd0dc1818"
     },
     {
       "path": "vendor/netron/json.js",
       "bytes": 19666,
-      "sha256": "cd7ac17a79f33d095ca5279daae975951dc12fed8461c9b3275c0f35aede2bce"
+      "sha256": "e05c62ad83687e3592bd472af027aa9c2829b6f35b4f9846020043939d57c92d"
     },
     {
       "path": "vendor/netron/kann-metadata.json",
@@ -737,12 +747,12 @@
     {
       "path": "vendor/netron/keras.js",
       "bytes": 72862,
-      "sha256": "ba13895a0ed1d7941ccc2700dd253542b6f59772006f74108ce7d132c35141e1"
+      "sha256": "dbab5359c377c41dddc0ca1482474090f4870bb66bf98eb1e474000f798d21f2"
     },
     {
       "path": "vendor/netron/kmodel.js",
       "bytes": 100961,
-      "sha256": "760ba2c48838dd1d59f1d7942943cc3739e4b5836152dd0811e4bed64f4d623f"
+      "sha256": "0cf1e52a12928ce2741d4681241a7c84664857666bc8fb5951769f6b4722382d"
     },
     {
       "path": "vendor/netron/lasagne-metadata.json",
@@ -757,7 +767,7 @@
     {
       "path": "vendor/netron/lightgbm.js",
       "bytes": 5174,
-      "sha256": "38d876c76a2b9d41588ec3c55df8a30d37319b8638932f9ed4720fd2d52a87a8"
+      "sha256": "c92a5afdedb43ebe1e338e9a066d92b101073cc89f08c37299f62392aa408278"
     },
     {
       "path": "vendor/netron/litertlm-proto.js",
@@ -772,12 +782,12 @@
     {
       "path": "vendor/netron/litertlm.js",
       "bytes": 5885,
-      "sha256": "31960fc51792432c80b832b76052d728ab44214c0af8ef5c105b7618abc5e865"
+      "sha256": "3c055fd56a8591a516c105468c2bae0d2265853f6b84e587f18054d03c77d8de"
     },
     {
       "path": "vendor/netron/mediapipe.js",
       "bytes": 10395,
-      "sha256": "8215d18c4918bedb6302ed2a2d9f636dfcd76f02ef72b70a5f2aa6ca92af90ca"
+      "sha256": "510c108cfc00ade951c45da8776216d425435d5919d09f1c5815cefd668c764c"
     },
     {
       "path": "vendor/netron/megengine-metadata.json",
@@ -792,7 +802,7 @@
     {
       "path": "vendor/netron/megengine.js",
       "bytes": 30229,
-      "sha256": "317f6aeb4f950a8ceca537aacf21d5ad38ad271738dc79df7534a88d480f2441"
+      "sha256": "6990098599569cde6073e4c86f36a7c9173ce19a585fae44380190a4154891c1"
     },
     {
       "path": "vendor/netron/message.js",
@@ -822,7 +832,7 @@
     {
       "path": "vendor/netron/mlir.js",
       "bytes": 1187109,
-      "sha256": "b1d95561c92ec1ac938fafe27bdfda129538665f53722b06606736e6149996b5"
+      "sha256": "a8c2d7de8f8b25248ea15a86377071599754bf4ca36f2c62b1ac3ce66e041a80"
     },
     {
       "path": "vendor/netron/mlnet-metadata.json",
@@ -832,7 +842,7 @@
     {
       "path": "vendor/netron/mlnet.js",
       "bytes": 78876,
-      "sha256": "83f39944c4f859b3d83354307d3cb634e9f4d673a199ec6eb08ad709bfa89edd"
+      "sha256": "35820859a0959d2b25144d3f3d4609fd75f5620f7391931a2474da5c238e57f0"
     },
     {
       "path": "vendor/netron/mnn-metadata.json",
@@ -872,7 +882,7 @@
     {
       "path": "vendor/netron/mxnet.js",
       "bytes": 36703,
-      "sha256": "67c95c95747a4dd3e26cc042599b097067511d4ff18acb3cf824aac79eb528ea"
+      "sha256": "4c35a6e8c29d832e311b90590b3d5cb2f3cfe6eb7ef3b71078b8e1c0493f3a96"
     },
     {
       "path": "vendor/netron/ncnn-metadata.json",
@@ -882,7 +892,7 @@
     {
       "path": "vendor/netron/ncnn.js",
       "bytes": 56129,
-      "sha256": "a41aacba4750497c66838151398a8b6842dd575d132163387e1e9e9cbe8d952c"
+      "sha256": "66ac23e646326d3c8e4b9a56faea4555843fe6217cdf87e8dcdfa93ec9f036e9"
     },
     {
       "path": "vendor/netron/nnabla-metadata.json",
@@ -917,7 +927,7 @@
     {
       "path": "vendor/netron/numpy.js",
       "bytes": 9634,
-      "sha256": "08dd9836bb1d24fe8dc5cc49978370c667f9baa4994e68b82524a79fc83a14f7"
+      "sha256": "7d9d5d11af09d40650c069514cb333db48d7769c9e569994fd708d46ab48a995"
     },
     {
       "path": "vendor/netron/om-metadata.json",
@@ -932,7 +942,7 @@
     {
       "path": "vendor/netron/om.js",
       "bytes": 33134,
-      "sha256": "3c003c2a82dbd55056b6c6ba39db4cf7ccd23496ff9e3486a579c43956d20413"
+      "sha256": "794564f6872799ee60cbc4f3652ba54b0ad73ec7227d2b246e08218cb88ec3cb"
     },
     {
       "path": "vendor/netron/onednn-metadata.json",
@@ -962,7 +972,7 @@
     {
       "path": "vendor/netron/onnx.js",
       "bytes": 111807,
-      "sha256": "cacf6bc1656c65ebcce4622e934fcfd999b5b370edfc81f725610064edd08dab"
+      "sha256": "f4700213b532dbdc374997e5d128194a50ccb4609d0a781706d32fb4081fe1d3"
     },
     {
       "path": "vendor/netron/openvino-metadata.json",
@@ -992,7 +1002,7 @@
     {
       "path": "vendor/netron/paddle.js",
       "bytes": 58251,
-      "sha256": "22b572f34e87b19dba79740e69ac0fc8235e65149f0a2e422f6fe08b96d83d0f"
+      "sha256": "b330a3d72b7840f335d09340df89598e89b9b7c03abd2133327ea18105769555"
     },
     {
       "path": "vendor/netron/pickle.js",
@@ -1002,7 +1012,7 @@
     {
       "path": "vendor/netron/protobuf.js",
       "bytes": 44213,
-      "sha256": "4c77a4b50a1e45de4614705c4297bc1b8a00645d65c057dafb581dd6ccb0a4d3"
+      "sha256": "856e2aa22acd4d983622ddd36cddf31f9da99411874c9bb6cf481e05dd3b93dd"
     },
     {
       "path": "vendor/netron/python.js",
@@ -1027,7 +1037,7 @@
     {
       "path": "vendor/netron/pytorch.js",
       "bytes": 130993,
-      "sha256": "8798dd4832ffaf286515f8b1d6e014230f5489b7acb69ce4b5d0857c235ba990"
+      "sha256": "9791e274877bf79b520aaec3af51b06da158b379df28cbd821294c7d3425b47a"
     },
     {
       "path": "vendor/netron/qnn-metadata.json",
@@ -1052,12 +1062,12 @@
     {
       "path": "vendor/netron/rknn.js",
       "bytes": 28430,
-      "sha256": "34576c4cabca02ab2f77112ef11f27444684628d38754ab430d954e98d60207d"
+      "sha256": "6dc710206bdf333d11beaa2f1438e055ccff503a921ba7b783036cc612093933"
     },
     {
       "path": "vendor/netron/safetensors.js",
       "bytes": 7562,
-      "sha256": "0abea0f6cd7cda351dbf9850be35fabb6d8f293dcff89fa628f3181bfd886aee"
+      "sha256": "2999552c6b512b589682e5511046da6c9acced942d4208bc277666ac3f330b2b"
     },
     {
       "path": "vendor/netron/sentencepiece-proto.js",
@@ -1097,7 +1107,7 @@
     {
       "path": "vendor/netron/tensorrt.js",
       "bytes": 6162,
-      "sha256": "da119a786731fdb871790ef4d294ace25766d4d914648b9024310c82c37d8467"
+      "sha256": "5d9e2fa8f59db2c17837d658670e0b8e3b24449ce2b02e1a47f33e45bc6aaf4a"
     },
     {
       "path": "vendor/netron/text.js",
@@ -1117,7 +1127,7 @@
     {
       "path": "vendor/netron/tf.js",
       "bytes": 102275,
-      "sha256": "f7cfe04eae210014a96a5ac150666fddf0e096848281fdfa1791e2aa881acb5e"
+      "sha256": "8f0789ac22ecf6aa05a9b9eddd5084b2a25c75d2189e37760dd0f40c247a6ba6"
     },
     {
       "path": "vendor/netron/tflite-metadata.json",
@@ -1132,7 +1142,7 @@
     {
       "path": "vendor/netron/tflite.js",
       "bytes": 25242,
-      "sha256": "8af596d03c2facf9e18ca4ba3c43fa95c4ba24526925c166dfddb17399af683b"
+      "sha256": "34c856acacea7bdccc56bfa07b978eb3272e1172c346f59c9ecc3cc4bc2f9263"
     },
     {
       "path": "vendor/netron/tnn-metadata.json",
@@ -1152,7 +1162,7 @@
     {
       "path": "vendor/netron/torch.js",
       "bytes": 30505,
-      "sha256": "d28bdf7af81ee0e95c64e7c1248539efed3279c3389d18835dfcbf386ca2613a"
+      "sha256": "f196b202bb31602706fa53a824003ffe0a17002df492f2cbfd3eececb975642c"
     },
     {
       "path": "vendor/netron/tosa-metadata.json",
@@ -1172,7 +1182,7 @@
     {
       "path": "vendor/netron/transformers.js",
       "bytes": 7736,
-      "sha256": "c399fa4f9923562faecdbd591eba3f457eaa34c53b11c18ef92557f9d21f9f1c"
+      "sha256": "db01619250c4a91b2838cd9c0f8ec66a7ad165ef290b3530b4ebc0ec9136516e"
     },
     {
       "path": "vendor/netron/tvm.js",
@@ -1197,7 +1207,7 @@
     {
       "path": "vendor/netron/view.js",
       "bytes": 349515,
-      "sha256": "0df47ddcd09fe5fd74c30f903f9d8f7530e7a3da27e99526b7126989b5216eb8"
+      "sha256": "e5b41560ecdab7a2e9de2f77a876c649d69c03d3f0825a87d0d2fa78ec90ddf1"
     },
     {
       "path": "vendor/netron/weka.js",
@@ -1207,17 +1217,17 @@
     {
       "path": "vendor/netron/worker.js",
       "bytes": 1024,
-      "sha256": "5ebd3517332ffe64d3b1fea6004fc87747613057e2688b72501e0b8c81a9a95c"
+      "sha256": "0fc97fad4aab40fc08360b3c22274fe31c842bcec581f7e372598ebc93503817"
     },
     {
       "path": "vendor/netron/xgboost.js",
       "bytes": 5362,
-      "sha256": "70a1d32225419da9772be25c74e8d2905be53a493d194577a2151b6c33af1275"
+      "sha256": "b2b2068709dc4b6b48910e4ebeff1f6385a76ef5f4a2d496608ad9a812f794ad"
     },
     {
       "path": "vendor/netron/xml.js",
       "bytes": 63703,
-      "sha256": "305b59ddeb8bbf0b17bf69fd3ed4e1a75ff9583e1eda33c774178224619ad607"
+      "sha256": "7ce28c07c136a4d10291dddc5b2cfb6df2f0832f1e7e1a4edfd2e43be9e7b8b5"
     },
     {
       "path": "vendor/netron/xmodel-proto.js",
