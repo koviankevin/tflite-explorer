@@ -11,9 +11,10 @@ import {composeSite,verifySite} from '../../scripts/lib/versioned-site.mjs';
 import {root,verifyArtifact,sha256,gitSource} from '../../scripts/lib/release-artifact.mjs';
 import {createStaticServer} from '../../scripts/serve.mjs';
 import {reusablePattern,exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
+import {SITE_BASELINE,evaluateSiteBrowser} from '../../scripts/lib/site-browser-policy.mjs';
 
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
-const baseline={version:'0.2.0-preview.7',build:'163f38ab1dc856e4',source:'a0c0f702e310b53fc6baa3a05a57dbb5ca79b887',sha256:'4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7',bytes:29454029};
+const baseline=SITE_BASELINE;
 const report={format:'model-lens-versioned-browser',version:1,status:'failed',startedAt:new Date().toISOString(),source:gitSource(),baseline,checks:[],errors:[],workers:[],requests:[]};
 const reportPath=path.join(process.env.RUNNER_TEMP,'versioned-site-browser.json'),sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 let browser,context,server,lastPage,phase='prepare';
@@ -73,5 +74,7 @@ try{
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(lastPage)await lastPage.screenshot({path:path.join(process.env.RUNNER_TEMP,'versioned-site-browser.png')}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser){let timer;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Browser close timeout.')),10000);})]);report.browserClosed=true;}finally{clearTimeout(timer);}}if(report.workers.some(w=>!w.closed))throw Error('Retained Worker after browser shutdown.');}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
-    if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}report.phase=phase;report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,phase,checks:report.checks,error:report.error}));
+    if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}report.phase=phase;report.finishedAt=new Date().toISOString();
+    report.evaluation=evaluateSiteBrowser(report);if(report.evaluation.status!=='passed'){report.status='failed';process.exitCode=1;}
+    await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,phase,checks:report.checks,error:report.error,issues:report.evaluation.issues}));
 }

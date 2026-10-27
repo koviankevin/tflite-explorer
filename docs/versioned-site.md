@@ -46,6 +46,20 @@ node scripts/compose-site.mjs --verify build/new-site
 
 另以實際 preview.7 部署 ZIP（SHA `4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7`）及 clean source `92a08519264022fc4fc6ce3e50abd2dc458a3c9a` 的開發候選，完成 [真實部署包本機演練](results/site-real-artifacts-local-2026-10-27.json)。升級與回退各組成一份含 741 個受管理檔案的快照；所有檔案經 `verifySite` 核對，七次實際 HTTP parser 請求維持 root baseline 與兩個 namespace 各自的原始 bytes。候選只是本機驗收建置，沒有建立或覆寫另一個 preview.7 Release。
 
-下一步仍須完成：隔離 CI 的真實瀏覽器升級／回退與延後載入、GitHub 工作流程的可信舊版資產取得、整站 manifest／site ID 綁定、正式發布及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
+## 真實瀏覽器情境與發布關卡
+
+[隔離 CI 40451936799](https://github.com/koviankevin/tflite-explorer/actions/runs/40451936799) 已在乾淨分支 `d51f644aba83d26032a7df0b84badf40af3de69f` 通過六項情境，見 [原始瀏覽器報告](results/site-browser-2026-10-27.json)。它使用真正的 preview.7 ZIP 和新建置，在同一 origin／repository 子路徑下保留原有 root tab、namespaced 舊 tab 與 candidate tab：
+
+- 原有 root tab 先開 TFLite、以原生選檔匯入 pattern，並寫入真實 IndexedDB。
+- 切換到新快照後，兩種舊 tab 才首次開 MLIR；五個 OP 與 custom `acme.split` 搜尋成功，版本視窗仍是舊版本。
+- 新 tab 的 `document.baseURI`、module 與 Worker 路徑指向 candidate，並可讀到原本儲存的 pattern。
+- 回退後，仍開著的 candidate tab 才首次開 TFLite；仍使用自己的 namespace，32px pattern 搜尋為四筆，實際下載子模型、原生重開為三個 OP／一筆匹配，pattern JSON 匯出仍等同原內容。
+- 回退後新開 tab 使用舊版本，原 pattern 仍為四筆匹配。
+
+原始報告包含三份真實快照、508 筆唯讀同來源請求與七個已終止的模型 Worker。另新增獨立 policy 重新判定版本／相位／lazy parser 請求與完整關閉，不接受只有 passed 標籤、缺少情境或錯誤 namespace。新增正反例後，本機完整發布契約為 32 項、零失敗／略過。
+
+同一既有 `production-smoke.yml` 提供 `scenario=versioned` 的唯讀隔離測試入口。新增的第四項 `site` 發布關卡只接受 main 的成功 workflow_dispatch、正確 site-upgrade job、當次 artifact digest、原始 policy 判定及相依 scope；上列分支成功報告可驗證行為，但不能充當正式 main 發布憑證。舊版已交付的三關卡 receipt 保持原樣，新候選缺少第四項時會拒絕準備／提升。
+
+下一步仍須完成：GitHub 工作流程的可信舊版資產取得、整站 manifest／site ID 綁定、完整正式發布整合、main 的新版憑證，以及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {spawnSync,execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {safeFile,sha256} from './release-artifact.mjs';
+import {RELEASE_GATE_KINDS} from './release-test-plan.mjs';
 export const PAGES_WORKFLOW='.github/workflows/verified-pages.yml';
 export const OFFICIAL_ACTIONS=Object.freeze({checkout:'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',node:'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',upload:'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',download:'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093',deploy:'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e'});
 export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
@@ -86,7 +87,7 @@ export async function validateDelivery(directory,expected){
     const manifestBytes=await readFile(path.join(directory,'release-manifest.json')),receiptBytes=await readFile(path.join(directory,'release-gates.json'));
     if(manifestBytes.length>4*1024**2||receiptBytes.length>4*1024**2||sha256(manifestBytes)!==expected.manifest||sha256(receiptBytes)!==expected.receipt)throw Error('Delivery metadata hash mismatch.');
     const manifest=JSON.parse(manifestBytes),receipt=JSON.parse(receiptBytes),r=manifest.release;
-    if(r?.distribution!=='public'||r.extension||r.source?.dirty!==false||r.source.commit!==expected.source||r.buildId!==expected.build||receipt.format!=='model-lens-release-evidence'||receipt.version!==1||receipt.status!=='passed'||!equal(receipt.release,r)||!equal(receipt.gates?.map(g=>g.kind),['core','browser','contract']))throw Error('Delivery is not the verified public candidate.');
+    if(r?.distribution!=='public'||r.extension||r.source?.dirty!==false||r.source.commit!==expected.source||r.buildId!==expected.build||receipt.format!=='model-lens-release-evidence'||receipt.version!==1||receipt.status!=='passed'||!equal(receipt.release,r)||!equal(receipt.gates?.map(g=>g.kind),RELEASE_GATE_KINDS))throw Error('Delivery is not the verified public candidate.');
     const zipName=`model-lens-public-${r.version}-${r.buildId}.zip`,allowed=[zipName,zipName+'.sha256','release-manifest.json','release-gates.json'].sort();if(!equal([...names].sort(),allowed))throw Error('Unexpected/missing delivery files.');
     const zip=path.join(directory,zipName),size=(await lstat(zip)).size;if(size>512*1024**2||await fileSHA256(zip)!==expected.zip)throw Error('ZIP hash/size mismatch.');
     const checksum=await readFile(zip+'.sha256','utf8');if(checksum!==`${expected.zip}  ${zipName}\n`)throw Error('Checksum sidecar differs.');

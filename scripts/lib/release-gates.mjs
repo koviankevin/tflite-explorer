@@ -7,13 +7,15 @@ import {buildSite} from '../build.mjs';
 import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
 import {evaluateLifecycle,LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
+import {evaluateSiteBrowser} from './site-browser-policy.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const stable=value=>JSON.stringify(value,(_,v)=>v && !Array.isArray(v) && typeof v==='object'?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
 export const GATES=Object.freeze({
     core:{workflow:'.github/workflows/performance.yml',job:'measure',artifact:'core-performance',entries:['scripts/accept-performance.mjs','scripts/measure-performance.mjs','test/performance-policy.json']},
     browser:{workflow:'.github/workflows/browser-lifecycle.yml',job:'lifecycle',artifact:'browser-lifecycle',entries:['test/browser/model-lifecycle.mjs','scripts/build.mjs']},
-    contract:{workflow:'.github/workflows/release-contract.yml',job:'release-contract',artifact:'release-contract',entries:['scripts/accept-release-contract.mjs','scripts/publish-github-pages.mjs','scripts/package-release.mjs','scripts/verify-release.mjs','test/release.test.mjs','test/release-gates.test.mjs']}
+    contract:{workflow:'.github/workflows/release-contract.yml',job:'release-contract',artifact:'release-contract',entries:['scripts/accept-release-contract.mjs','scripts/publish-github-pages.mjs','scripts/package-release.mjs','scripts/verify-release.mjs','test/release.test.mjs','test/release-gates.test.mjs']},
+    site:{workflow:'.github/workflows/production-smoke.yml',job:'site-upgrade',artifact:'versioned-site-browser',entries:['test/browser/versioned-site.mjs','scripts/lib/versioned-site.mjs']}
 });
 export function gitReader(directory=root){
     const cache=new Map();
@@ -32,6 +34,7 @@ export function sourceScope(kind,commit,reader){
     if(kind==='contract'){
         for(const name of tree.keys())if(/^(src|vendor|scripts|test)\//.test(name)||/^\.github\/workflows\//.test(name))names.add(name);
         names.add('docs/results/browser-lifecycle-2026-10-27.json');
+        names.add('docs/results/site-browser-2026-10-27.json');
         names.add('.github/workflows/verified-pages.yml');
     }
     // Browser/packaging copy or execute web files; Node core only executes its module closure.
@@ -73,6 +76,8 @@ export function assertReport(report,kind,run,tree,policy){
         if(workers.length!==16||workers.some(w=>w.terminated!==true||w.error||!w.audit?.calls||w.audit.violations?.length!==0||w.audit.bytes!==w.stats?.bytesRead)||!Array.isArray(report.audit?.urls)||!report.audit.urls.length||report.audit.urls.some(u=>u.revoked!==true))throw Error('browser: retained resources or missing read audit.');
         for(const audit of [report.audit.audit,...workers.map(w=>w.audit)])if(!audit||!Array.isArray(audit.violations)||audit.violations.length||!Number.isFinite(audit.bytes)||audit.bytes<=0||audit.bytes>LIFECYCLE_POLICY.realmReadBytes||!Number.isFinite(audit.maxRead)||audit.maxRead<=0||audit.maxRead>LIFECYCLE_POLICY.maxReadBytes)throw Error('browser: invalid or excessive native reads.');
         if(report.fixture?.sha256!=='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'||report.fixture.operators!==21005||report.fixture.bytes!==1349965216||!Number.isFinite(report.fixture.allocatedBytes)||report.fixture.allocatedBytes<report.fixture.bytes*.99)throw Error('browser: missing physical fixture evidence.');
+    }else if(kind==='site'){
+        if(report.source?.commit!==run.head_sha||report.source.tree!==tree||evaluateSiteBrowser(report).status!=='passed')throw Error('site: incomplete browser upgrade/rollback evidence or wrong source.');
     }else if(kind==='contract'){
         if(report.format!=='model-lens-release-contract'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||stable(report.tests)!==stable(RELEASE_CONTRACT_TESTS)||report.exitCode!==0||!Number.isInteger(report.counts?.tests)||report.counts.tests<1||report.counts.fail!==0||report.counts.skipped!==0||report.counts.cancelled!==0)throw Error('contract: incomplete or failed release tests.');
     }else throw Error('Unknown gate report.');

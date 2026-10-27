@@ -5,6 +5,7 @@ import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
+import {RELEASE_GATE_KINDS} from '../scripts/lib/release-test-plan.mjs';
 import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
@@ -49,7 +50,7 @@ test('delivery consumers verify trusted output hashes, complete ZIP members and 
     const dir=await mkdtemp(path.join(os.tmpdir(),'pages-delivery-unit-'));
     try{
         const release={version:'0.2.0-preview.7',distribution:'public',extension:null,source:{commit:'a'.repeat(40),tree:'b'.repeat(40),dirty:false},buildId:'c'.repeat(16)},body=Buffer.from('fixed public app'),manifest={schemaVersion:1,release,files:[{path:'app.txt',bytes:body.length,sha256:sha256(body)}]};
-        const manifestBytes=Buffer.from(JSON.stringify(manifest)),receiptBytes=Buffer.from(JSON.stringify({format:'model-lens-release-evidence',version:1,status:'passed',release,gates:['core','browser','contract'].map(kind=>({kind}))}));
+        const manifestBytes=Buffer.from(JSON.stringify(manifest)),receiptBytes=Buffer.from(JSON.stringify({format:'model-lens-release-evidence',version:1,status:'passed',release,gates:RELEASE_GATE_KINDS.map(kind=>({kind}))}));
         await writeFile(path.join(dir,'release-manifest.json'),manifestBytes);await writeFile(path.join(dir,'release-gates.json'),receiptBytes);
         const zipName=`model-lens-public-${release.version}-${release.buildId}.zip`,zip=path.join(dir,zipName);
         execFileSync(process.env.PYTHON_BIN||(process.platform==='win32'?'python':'python3'),['-I','-c',"import sys,zipfile\nwith zipfile.ZipFile(sys.argv[1],'w') as z:\n z.write(sys.argv[2],'release-manifest.json');z.writestr('app.txt','fixed public app')",zip,path.join(dir,'release-manifest.json')],{windowsHide:true});
