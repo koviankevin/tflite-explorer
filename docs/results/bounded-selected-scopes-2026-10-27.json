@@ -1,0 +1,57 @@
+{
+  "format": "model-lens-selected-source-scopes",
+  "version": 1,
+  "status": "passed",
+  "checkedAt": "2026-10-27T08:19:47.658Z",
+  "candidate": {
+    "commit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+    "tree": "0e5e5bac5c68277f707c63087317bc04a267fb7d",
+    "committedAt": "2026-10-27T16:16:56+08:00",
+    "dirty": false
+  },
+  "runs": {
+    "core": 40438427440,
+    "browser": 40445983471,
+    "contract": 40472431959,
+    "site": 40472435489
+  },
+  "scopes": [
+    {
+      "kind": "core",
+      "runId": 40438427440,
+      "testedCommit": "521d1b206bb9345117b340cf625493ca5c490040",
+      "candidateCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "fingerprint": "42592c65576f4b195a9cd90a802a04a477d738752940e94c2b1913be4328ea46",
+      "files": 85,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "browser",
+      "runId": 40445983471,
+      "testedCommit": "35baf490d665ceafcf795a325e1f4036dd096d98",
+      "candidateCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "fingerprint": "768b82077179d00d961c56b46d1fa5908e2624e1016fc746d162dbfccada29c8",
+      "files": 255,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "contract",
+      "runId": 40472431959,
+      "testedCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "candidateCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "fingerprint": "a9ad28fcecbbd3a8df32f6dc3afbb2571aabc2f937700d51f6a2133c53d2c9d1",
+      "files": 366,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "site",
+      "runId": 40472435489,
+      "testedCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "candidateCommit": "fc426c58c40e57e57fef6d850962015d5d8f0165",
+      "fingerprint": "a9f7f68462f1b023062da367365c12f8df8dc29e88981889ae7dfd3bd5711e3e",
+      "files": 261,
+      "sourceEquivalent": true
+    }
+  ],
+  "publicationMustReauthenticateArtifacts": true
+}

@@ -130,6 +130,8 @@ node scripts/compose-site.mjs --verify build/new-site
 
 針對已重現的 HTTP 問題，靜態讀取只對 502／503／504 以 1、2、4 秒間隔重試，總共最多四次，逐檔記錄 attempts。永久 HTTP、redirect、大小、SHA 和 MIME 錯誤仍立即失敗；未改六路併發，也不以重跑整個 deploy 處理暫時讀取問題。新增三項回歸包含真實 HTTP 驗證鏈的兩次 503 後成功、重試上限，以及恢復後錯誤內容仍被拒絕。
 
-後續完整觀察改用 60 分鐘限時。已完成首次遷移時，必須明確選擇 `allow_versioned_start` 且現行 build／site 完全符合預期，才從保留的 baseline namespace 開始，再觀察真正的回退與恢復。此模式明示沒有觀察首次升級，不拿重建分頁冒充原 root；第一輪部分證據與後續完整回退／恢復報告分開保存。此修正仍待新的 main 關卡與正式切換驗收。
+後續完整觀察改用 60 分鐘限時。已完成首次遷移時，必須明確選擇 `allow_versioned_start` 且現行 build／site 完全符合預期，才從保留的 baseline namespace 開始，再觀察真正的回退與恢復。此模式明示沒有觀察首次升級，不拿重建分頁冒充原 root；第一輪部分證據與後續完整回退／恢復報告分開保存。
+
+修正合併來源 `fc426c58c40e57e57fef6d850962015d5d8f0165` 的 [main 契約 40472431959](https://github.com/koviankevin/tflite-explorer/actions/runs/40472431959) 已通過 [74 項契約](results/bounded-main-contract-2026-10-27.json)，零失敗／略過／取消；[main site 40472435489](https://github.com/koviankevin/tflite-explorer/actions/runs/40472435489) 通過 [六種切換情境](results/bounded-main-site-2026-10-27.json) 和 [741 檔 HTTP／四項原生 UI 驗收](results/bounded-main-http-smoke-2026-10-27.json)。[相依來源比較](results/bounded-selected-scopes-2026-10-27.json) 支持沿用既有 core 與實體大檔 browser，其 fingerprint 完全相符；索引改選新 contract／site，正式 prepare 仍會重新核對原始 GitHub 憑證。完整正式站持續觀察仍待完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
