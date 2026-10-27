@@ -19,7 +19,7 @@ test('a passed label cannot replace actual browser/worker/read/release evidence'
     const report=JSON.parse(await readFile(new URL('../docs/results/browser-lifecycle-2026-10-27.json',import.meta.url))),run={head_sha:report.environment.sourceCommit};
     assert.doesNotThrow(()=>assertReport(report,'browser',run,report.environment.sourceTree));
     const worker=r=>r.audit.workers.find(w=>w.url.includes('/model-worker.js'));
-    for(const [i,change] of [r=>r.cycles.pop(),r=>r.errors.push('error'),r=>worker(r).terminated=false,r=>worker(r).audit.bytes++,r=>r.audit.urls[0].revoked=false,r=>r.environment.sourceDirty=true,r=>r.policy.cycles=1,r=>r.browserClosed=false].entries()){const r=structuredClone(report);change(r);assert.throws(()=>assertReport(r,'browser',run,report.environment.sourceTree),`negative ${i}`);}
+    for(const [i,change] of [r=>r.cycles.pop(),r=>r.errors.push('error'),r=>worker(r).terminated=false,r=>worker(r).audit.bytes++,r=>r.audit.urls[0].revoked=false,r=>r.environment.sourceDirty=true,r=>r.policy.cycles=1,r=>r.browserClosed=false,r=>r.audit.audit.maxRead=2*1024**2,r=>worker(r).audit.violations.push('read'),r=>r.fixture.sha256='0'.repeat(64)].entries()){const r=structuredClone(report);change(r);assert.throws(()=>assertReport(r,'browser',run,report.environment.sourceTree),`negative ${i}`);}
 });
 test('contract evidence requires real tests, clean bound source and zero skips',()=>{
     const r={format:'model-lens-release-contract',version:1,status:'passed',source:{commit,tree,dirty:false},sourceUnchanged:true,tests:['test/release.test.mjs','test/release-gates.test.mjs'],exitCode:0,counts:{tests:10,fail:0,skipped:0,cancelled:0}};
