@@ -29,15 +29,25 @@ export async function editMLIRModel(index,edits,{progress=()=>{}}={}) {
         const spelling=definition.name+(definition.number||actual.owner?.results?.length>1?`#${definition.number}`:'');
         return {actual,definition,spelling};
     };
+    const removedRanges=edits.filter(e=>e?.kind==='remove').map(e=>operation(e.graph,e.node).range);
+    const replaceUse=(use,row,target,number)=>{
+        if(target.definition&&ir.lookup(row.region,target.definition.key)!==target.definition)throw Error('SSA 來源不在此 OP 可見的 scope；不能用同名 SSA 值代替其他 function／region 的定義。');
+        const previous=ir.definitions.get(use.value);
+        if(previous&&target.definition&&typeSpelling(previous.type)!==typeSpelling(target.definition.type))throw Error('SSA 重接的型別不同；請先修改 OP 的完整型別簽章。');
+        patches.push({start:use.range[0],end:use.range[1],text:target.spelling,edit:number});
+    };
     let insertedCharacters=0;
     for(const [number,edit] of edits.entries()) {
         const {op,range,row}=operation(edit.graph,edit.node);
+        if(edit.kind==='replace-value'){
+            if(!Number.isInteger(edit.result)||edit.result<0||!op.results[edit.result])throw Error('找不到要重接的 SSA result。');
+            const target=value(edit.value),original=op.results[edit.result];
+            for(const consumer of ir.rows)for(const use of consumer.uses)if(use.value===original&&!removedRanges.some(([start,end])=>use.range[0]>=start&&use.range[1]<=end))replaceUse(use,consumer,target,number);
+            continue;
+        }
         if(edit.kind==='rewire') {
             if(!Number.isInteger(edit.operand)||edit.operand<0||!row?.uses[edit.operand])throw Error('找不到要重接的 SSA operand。');
-            const use=row.uses[edit.operand],target=value(edit.value),previous=ir.definitions.get(use.value);
-            if(target.definition&&ir.lookup(row.region,target.definition.key)!==target.definition)throw Error('SSA 來源不在此 OP 可見的 scope；不能用同名 SSA 值代替其他 function／region 的定義。');
-            if(previous&&target.definition&&typeSpelling(previous.type)!==typeSpelling(target.definition.type))throw Error('SSA 重接的型別不同；請先修改 OP 的完整型別簽章。');
-            patches.push({start:use.range[0],end:use.range[1],text:target.spelling,edit:number});continue;
+            replaceUse(row.uses[edit.operand],row,value(edit.value),number);continue;
         }
         if(edit.kind==='remove'){patches.push({start:range[0],end:range[1],text:'',edit:number});continue;}
         if(!['replace','insert-before','insert-after'].includes(edit.kind)||typeof edit.text!=='string'||!edit.text.trim()||edit.text.length>1024*1024)throw Error('請提供有效的 OP 文字；每筆最多 1 MiB。');

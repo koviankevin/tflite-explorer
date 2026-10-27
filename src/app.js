@@ -8,6 +8,7 @@ import {initReleaseInfo} from './release-info.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
+import {modelEditUI} from './model-edit-ui.js';
 import {mlirPatternEditor} from './mlir-pattern-editor.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
@@ -29,6 +30,7 @@ window.addEventListener('error',event=>diagnostics.record('global','error',event
 window.addEventListener('unhandledrejection',event=>diagnostics.record('global','error',event.reason));
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
+const modelEditor=modelEditUI({rpc,getSource:()=>file,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');await host.export(name,result.blob);exportedModels.remember(result.blob,name);},openResult:()=>$('open-export-model').click(),error:reason=>report(reason)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -81,10 +83,11 @@ view.options.weights = false;
 view.options.mousewheel = 'zoom';
 view.error = async (error) => { notice(error.message || String(error)); view.show(null); };
 const originalNodeProperties = view.showNodeProperties.bind(view);
-let detailNode=null;
+let detailNode=null,detailLocation=null;
 view.showNodeProperties = (node, source) => {
     if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;}
     detailNode=node;
+    detailLocation=layerLocation({node,index:Number(node.identifier)},currentGraph);
     $('tensor-summary').hidden = true;
     if(renderedGraph?.compactSlice && Number.isInteger(node.sourceGraph) && Number.isInteger(node.sourceNode)) {
         const generation=renderGeneration;
@@ -212,7 +215,7 @@ function createWorker() {
 }
 function reset() {
     sessions?.detach();
-    detailNode=null;
+    detailNode=null;detailLocation=null;modelEditor.clear();$('open-model-editor').disabled=true;
     $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
@@ -257,6 +260,7 @@ async function openFile(nextFile) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
+        $('open-model-editor').disabled=false;
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
@@ -575,6 +579,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,
     if (index < page.offset || index >= page.offset + page.items.length) await changePage(Math.floor(index / 100) * 100);
     if (generation !== queryGeneration) return;
     const item = page.items[index - page.offset];
+    detailLocation=null;
     if (!item) return;
     if(overviewMode && renderedGraph?.overview && !forceDraw){focusOverviewMatch(item,index);return;}
     whole ??= item.blocks && !selection?.blocks ? false : full;
@@ -1041,6 +1046,14 @@ function addVisibleLayers(graph) {
     syncCaptureGraph();refreshPickedNodes();
 }
 $('add-visible-layers').onclick=()=>addVisibleLayers();
+$('open-model-editor').onclick=()=>{
+    if(!model||exportBusy){notice('請先開啟模型，並等待匯出完成。');return;}
+    let location=detailLocation;
+    if(pickingPattern){const selected=$('capture-cfg').checked?captureSelections().flatMap(s=>s.nodes.map(node=>({graph:s.graph,node}))):[...pickedNodes].map(node=>({graph:pickedGraph,node}));if(selected.length===1)location=selected[0];}
+    location ||= selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null;
+    if(!location){notice('請先在 Layers 搜尋結果或模型圖中點選一個原始 OP，再按「編輯實際模型」。');return;}
+    modelEditor.open(location).catch(report);
+};
 $('edit-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation=renderGeneration,sourceFile=file,graph=currentGraph;
