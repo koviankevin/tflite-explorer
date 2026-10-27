@@ -116,7 +116,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,onBusy,o
         reset(){generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;selected=null;armed=null;exported='';pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;$('edit-mode').disabled=true;},
         async open(){
             if(!getSource())return;if(owner===getSource()&&draft){mode(true);return;}
-            owner=getSource();const ticket=++generation;mode(true);setBusy(true);message('載入編輯範圍（模型與權重保留本機）…');
+            owner=getSource();const ticket=++generation;mode(true);root.scrollTo(0,0);setBusy(true);message('載入編輯範圍（模型與權重保留本機）…');
             try{const next=await rpc('editWorkspaceOpen',{targets:getTargets(),graph:getGraph()});if(!live(ticket))return;snapshot=next;draft=modelEditDraft(next);selected=next.selected[0];pages.clear();zoom=1;exported='';$('edit-font').value=$('graph-font-size').value;root.style.setProperty('--edit-font',`${$('edit-font').value}px`);render();message('點來源輸出端，再點目標輸入端接線。藍色虛線是保留的控制流程；新增輸出自動建立。');requestAnimationFrame(()=>$('edit-fit').click());}
             catch(error){if(live(ticket))message(error.message);}finally{if(live(ticket))setBusy(false);}
         }
