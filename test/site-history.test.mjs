@@ -52,15 +52,20 @@ async function candidateFixture(){
 test('unavailable history fails closed and an already-live candidate is never reacquired',async()=>{
     const f=await candidateFixture(),calls=[],snapshot=path.join(f.temporary,'site');
     const live=site(f.reference,[baseline]);
-    await assert.rejects(preparePublicSnapshot({currentDirectory:f.core,outputDirectory:snapshot,historyDirectory:path.join(f.temporary,'history'),readPublic:async name=>{assert.equal(name,'site-manifest.json');return encoded(live);},acquire:async(reference,options)=>{calls.push(reference);assert.ok(options.outputDirectory.endsWith(SITE_BASELINE.build));throw Error('Verified backup unavailable');}}),/backup/);
+    await assert.rejects(preparePublicSnapshot({currentDirectory:f.core,outputDirectory:snapshot,historyDirectory:path.join(f.temporary,'history'),readDeployment:async()=>({siteId:live.siteId,legacy:false}),readPublic:async name=>{assert.equal(name,'site-manifest.json');return encoded(live);},acquire:async(reference,options)=>{calls.push(reference);assert.ok(options.outputDirectory.endsWith(SITE_BASELINE.build));throw Error('Verified backup unavailable');}}),/backup/);
     assert.deepEqual(calls,[{version:SITE_BASELINE.version,build:SITE_BASELINE.build,source:SITE_BASELINE.source,manifestSHA256:BASELINE_MANIFEST_SHA256,sha256:SITE_BASELINE.sha256,bytes:SITE_BASELINE.bytes}]);await assert.rejects(lstat(snapshot),e=>e.code==='ENOENT');
 });
 
 test('a wrong live root or HTTP failure cannot silently fall back or produce a replacement site',async()=>{
-    const f=await candidateFixture(),base={currentDirectory:f.core,outputDirectory:path.join(f.temporary,'site'),historyDirectory:path.join(f.temporary,'history'),acquire:async()=>assert.fail('must reject before downloading')};
+    const f=await candidateFixture(),base={currentDirectory:f.core,outputDirectory:path.join(f.temporary,'site'),historyDirectory:path.join(f.temporary,'history'),readDeployment:async()=>({siteId:'0'.repeat(64),legacy:false}),acquire:async()=>assert.fail('must reject before downloading')};
     await assert.rejects(preparePublicSnapshot({...base,readPublic:async()=>{throw Error('HTTP 503');}}),/503/);
-    await assert.rejects(preparePublicSnapshot({...base,readPublic:async name=>name==='site-manifest.json'?null:encoded({...baseline.release,buildId:'0'.repeat(16)})}),/baseline|reference/i);
+    await assert.rejects(preparePublicSnapshot({...base,readPublic:async name=>name==='site-manifest.json'?null:encoded({...baseline.release,buildId:'0'.repeat(16)})}),/history|baseline|reference/i);
     await assert.rejects(preparePublicSnapshot({...base,readPublic:async()=>encoded({format:'unknown'})}));await assert.rejects(lstat(base.outputDirectory),e=>e.code==='ENOENT');
+});
+
+test('a stale CDN snapshot stops preparation before acquiring or deleting any retained core',async()=>{
+    const f=await candidateFixture(),live=site(f.reference,[baseline]),output=path.join(f.temporary,'stale-site');
+    await assert.rejects(preparePublicSnapshot({currentDirectory:f.core,outputDirectory:output,historyDirectory:path.join(f.temporary,'history'),readDeployment:async()=>({siteId:'0'.repeat(64),legacy:false}),readPublic:async()=>encoded(live),acquire:async()=>assert.fail('stale HTTP must not alter retention')}),/history/);await assert.rejects(lstat(output),e=>e.code==='ENOENT');
 });
 
 test('public metadata reads are fixed-origin, bounded, and only an actual index 404 permits legacy migration',async()=>{

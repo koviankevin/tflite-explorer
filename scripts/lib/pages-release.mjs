@@ -7,6 +7,7 @@ import {safeFile,sha256} from './release-artifact.mjs';
 import {RELEASE_GATE_KINDS} from './release-test-plan.mjs';
 import {LEGACY_DELIVERY} from './release-baseline.mjs';
 export const PAGES_WORKFLOW='.github/workflows/verified-pages.yml';
+export const DEPLOY_JOB_NAME='Publish site ${{ needs.prepare.outputs.site_id }}';
 export const OFFICIAL_ACTIONS=Object.freeze({checkout:'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',node:'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',upload:'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',download:'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093',deploy:'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e'});
 export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
@@ -29,14 +30,14 @@ export async function validateWorkflowInventory(files){
 }
 export function validatePagesWorkflow(w){
     if(!equal(Object.keys(w.on||{}),['workflow_dispatch'])||w.on.workflow_dispatch.inputs?.publish?.type!=='boolean'||w.on.workflow_dispatch.inputs.publish.default!==false||!equal(w.permissions,{'contents':'read'})||w.concurrency?.group!=='pages-production'||w.concurrency['cancel-in-progress']!==false||!equal(Object.keys(w.jobs||{}).sort(),['deploy','prepare','release','verify_live']))throw Error('Invalid Pages workflow entry, permissions or concurrency.');
-    const rights={prepare:{contents:'read',actions:'read',pages:'read'},deploy:{contents:'read',actions:'read',pages:'write','id-token':'write'},verify_live:{contents:'read',actions:'read'},release:{contents:'write',actions:'read'}};
+    const rights={prepare:{contents:'read',actions:'read',pages:'read',deployments:'read'},deploy:{contents:'read',actions:'read',pages:'write','id-token':'write'},verify_live:{contents:'read',actions:'read'},release:{contents:'write',actions:'read'}};
     const needs={prepare:undefined,deploy:['prepare'],verify_live:['prepare','deploy'],release:['prepare','verify_live']};
     for(const [name,job] of Object.entries(w.jobs)){
         if(job.if!==PAGES_CONDITIONS[name]||!equal(job.permissions,rights[name])||!equal(job.needs,needs[name])||job['continue-on-error']||!Number.isInteger(job['timeout-minutes'])||job['timeout-minutes']>15||job['runs-on']!=='ubuntu-24.04')throw Error(`Unsafe Pages job ${name}.`);
         if(job.steps.some(s=>s['continue-on-error']||s.uses&&!Object.values(OFFICIAL_ACTIONS).includes(s.uses)))throw Error(`Unpinned/ignored step in ${name}.`);
     }
     const deploy=w.jobs.deploy;
-    if(deploy.environment?.name!=='github-pages'||deploy.steps.length!==1||deploy.steps[0].uses!==OFFICIAL_ACTIONS.deploy||deploy.steps[0].with?.artifact_name!=='github-pages')throw Error('Deployment must only promote its gated Pages artifact.');
+    if(deploy.name!==DEPLOY_JOB_NAME||deploy.environment?.name!=='github-pages'||deploy.steps.length!==1||deploy.steps[0].uses!==OFFICIAL_ACTIONS.deploy||deploy.steps[0].with?.artifact_name!=='github-pages')throw Error('Deployment must only promote and record its gated Pages site ID.');
     for(const job of [w.jobs.prepare,w.jobs.verify_live,w.jobs.release]){
         const checkout=job.steps.find(s=>s.uses===OFFICIAL_ACTIONS.checkout);
         if(checkout?.with?.ref!=='${{ github.sha }}'||checkout.with['persist-credentials']!==false)throw Error('Checkout must be fixed and credential-free.');

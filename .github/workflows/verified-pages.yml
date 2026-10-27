@@ -12,7 +12,7 @@
     "prepare": {
       "if": "${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",
       "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
-      "permissions": {"contents": "read", "actions": "read", "pages": "read"},
+      "permissions": {"contents": "read", "actions": "read", "pages": "read", "deployments": "read"},
       "outputs": {"build_id": "${{ steps.prepare.outputs.build_id }}", "core_source": "${{ steps.prepare.outputs.core_source }}", "promotion": "${{ steps.prepare.outputs.promotion }}", "site_id": "${{ steps.prepare.outputs.site_id }}", "site_manifest_sha": "${{ steps.prepare.outputs.site_manifest_sha }}", "version": "${{ steps.prepare.outputs.version }}", "manifest_sha": "${{ steps.prepare.outputs.manifest_sha }}", "receipt_sha": "${{ steps.prepare.outputs.receipt_sha }}", "zip_sha": "${{ steps.prepare.outputs.zip_sha }}"},
       "steps": [
         {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false, "fetch-depth": 0}},
@@ -24,6 +24,7 @@
       ]
     },
     "deploy": {
+      "name": "Publish site ${{ needs.prepare.outputs.site_id }}",
       "if": "${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",
       "needs": ["prepare"], "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
       "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"},

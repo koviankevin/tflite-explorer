@@ -4,6 +4,7 @@ import {verifyArtifact,buildDestination,safeFile,sha256} from './release-artifac
 import {SITE_LIMITS,composeSite} from './versioned-site.mjs';
 import {SITE_BASELINE,BASELINE_MANIFEST_SHA256} from './release-baseline.mjs';
 import {fetchRetainedCore} from './release-history.mjs';
+import {readDeployedSite,assertDeployedHistory} from './deployment-history.mjs';
 
 export const PUBLIC_SITE='https://koviankevin.github.io/tflite-explorer/';
 export {BASELINE_MANIFEST_SHA256};
@@ -72,11 +73,12 @@ export async function readPublicSiteFile(name){
     return Buffer.concat(chunks);
 }
 
-export async function preparePublicSnapshot({currentDirectory,outputDirectory,historyDirectory,readPublic=readPublicSiteFile,acquire=fetchRetainedCore}){
+export async function preparePublicSnapshot({currentDirectory,outputDirectory,historyDirectory,readPublic=readPublicSiteFile,acquire=fetchRetainedCore,readDeployment=readDeployedSite}){
     if(typeof historyDirectory!=='string'||!historyDirectory.trim()||typeof outputDirectory!=='string'||!outputDirectory.trim())throw Error('Explicit fresh history and snapshot directories are required.');
     const manifest=await verifyArtifact(currentDirectory,{publicOnly:true,requireClean:true}),candidate={release:manifest.release,basePath:`versions/${manifest.release.buildId}/`,manifestSHA256:sha256(await readFile(path.join(currentDirectory,'release-manifest.json')))};
-    const index=await readPublic('site-manifest.json'),liveSite=index===null?null:parseLiveSite(index);
-    const plan=planSiteHistory({candidate,liveSite,legacyRelease:liveSite?null:JSON.parse(await readPublic('release.json'))});
+    const deployed=await readDeployment(),index=await readPublic('site-manifest.json'),liveSite=index===null?null:parseLiveSite(index),legacyRelease=liveSite?null:JSON.parse(await readPublic('release.json'));
+    assertDeployedHistory({liveSite,legacyRelease},deployed);
+    const plan={...planSiteHistory({candidate,liveSite,legacyRelease}),deployment:deployed};
     const history=await buildDestination(historyDirectory),references=new Map([[candidate.release.buildId,candidate]]),cores=new Map([[candidate.release.buildId,{directory:currentDirectory,manifest,provenance:{kind:'verified-candidate'}}]]);
     for(const ref of [plan.legacyRoot,...plan.retained]){
         const id=ref.release.buildId;if(cores.has(id)){if(!equal(ref,references.get(id)))throw Error('History reference conflicts with the candidate.');continue;}

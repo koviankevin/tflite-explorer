@@ -10,7 +10,7 @@ import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,as
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
-    for(const change of [w=>w.jobs.deploy.needs=[],w=>w.jobs.deploy.if='${{ always() }}',w=>w.jobs.prepare.permissions.pages='write',w=>w.jobs.deploy.steps.push({run:'echo unchecked'}),w=>w.jobs.verify_live.needs=['prepare'],w=>w.jobs.release.if='${{ always() }}',w=>w.jobs.prepare.steps[4].with.path='dist',w=>w.jobs.verify_live.steps[3].env.EXPECTED_ZIP_SHA='untrusted',w=>w.jobs.prepare.outputs.build_id='untrusted',w=>w.on.push={},w=>w.jobs.extra={...w.jobs.deploy},w=>w.jobs.release.steps[0].with['persist-credentials']=true]){const w=structuredClone(workflow);change(w);assert.throws(()=>validatePagesWorkflow(w));}
+    for(const change of [w=>w.jobs.deploy.name='deploy',w=>w.jobs.deploy.needs=[],w=>w.jobs.deploy.if='${{ always() }}',w=>w.jobs.prepare.permissions.pages='write',w=>w.jobs.deploy.steps.push({run:'echo unchecked'}),w=>w.jobs.verify_live.needs=['prepare'],w=>w.jobs.release.if='${{ always() }}',w=>w.jobs.prepare.steps[4].with.path='dist',w=>w.jobs.verify_live.steps[3].env.EXPECTED_ZIP_SHA='untrusted',w=>w.jobs.prepare.outputs.build_id='untrusted',w=>w.on.push={},w=>w.jobs.extra={...w.jobs.deploy},w=>w.jobs.release.steps[0].with['persist-credentials']=true]){const w=structuredClone(workflow);change(w);assert.throws(()=>validatePagesWorkflow(w));}
 });
 test('all other workflows are read-only, including YAML aliases and escaped keys',async()=>{
     const inventory=await readWorkflowInventory();

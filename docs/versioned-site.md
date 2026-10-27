@@ -96,6 +96,14 @@ node scripts/compose-site.mjs --verify build/new-site
 
 唯一舊三關卡例外限於 `release-baseline.mjs` 固定的 preview.7：只有明確的歷史提升模式，且來源、build、core manifest SHA、ZIP SHA 和原 receipt SHA 五項全部完全一致，才接受原有三關卡憑證。任一不同仍要求四關卡，新候選的預設驗證完全不放寬。例外不豁免目前控制程式的四關卡，也不代表已完成正式站回退或資料格式遷移。
 
+## 防止 CDN 舊歷史遺漏保留版本
+
+只驗 HTTP index 的自有 hash 仍不夠：CDN 可能回傳較早、但本身完整有效的 index，甚至現行 core 相同卻缺少後來保留的版本。新增 `deployment-history.mjs`，先向 GitHub 唯讀核對最新 github-pages deployment、成功 status 的固定 workflow job link、來源與確切 attempt，再從 `Publish site <完整 site ID>` job metadata 取得已部署 ID。HTTP index 必須完全符合，否則在取得歷史 core／組裝快照前停止，不會用舊歷史刪掉 namespace。
+
+首次遷移只允許已獨立驗收的 deployment `7350054986`／run `40447776209`／job `122003141213`／preview.7 source；未綁定 ID 的其他 deploy 不作自動猜測。後續 Release 失敗仍可保留已成功部署的 ID；最新部署若待處理／失敗、run/job 被刪除或 metadata 不符，則需先釐清，不能把 HTTP 回應當作唯一依據。此檢查不需下載已過期的 Pages artifact；prepare 僅增加 `deployments: read`，沒有擴大正式寫入權限。
+
+新增六項權威來源／stale CDN 測試，最新契約共 70 項。已通過先前完整本機 64 項，以及本次受影響的 24 項；完整 70 項 CI 與目前正式部署的唯讀來源核對仍待新提交驗證。
+
 下一步仍須完成：提升來源的 hosted CI 與實際固定資產取得、main 的新版憑證，以及正式站交付／回退實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
