@@ -9,6 +9,7 @@ import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
 import {modelEditUI} from './model-edit-ui.js';
+import {modelEditWorkspaceUI} from './model-edit-workspace-ui.js';
 import {mlirPatternEditor} from './mlir-pattern-editor.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
@@ -31,6 +32,7 @@ window.addEventListener('unhandledrejection',event=>diagnostics.record('global',
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
 const modelEditor=modelEditUI({rpc,getSource:()=>file,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
+const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getGraph:()=>currentGraph,getTargets:editTargets,onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -218,6 +220,8 @@ function createWorker() {
 }
 function reset() {
     sessions?.detach();
+    editWorkspace.reset();
+    $('open-edit-workspace').disabled=true;$('edit-capture-workspace').disabled=true;
     detailNode=null;detailLocation=null;modelEditor.clear();$('open-model-editor').disabled=true;
     $('results').setAttribute('aria-busy','false');delete $('results').dataset.searchQuery;
     $('save-workspace').disabled=true;
@@ -253,6 +257,7 @@ function reset() {
 }
 async function openFile(nextFile) {
     try { await viewReady; modelFormat(nextFile.name); } catch (error) { diagnostics.record('open','error',error);notice(error.message); return; }
+    if(!discardEditDraft())return false;
     reset(); file = nextFile;
     const thisFile = file;
     let resumedDraft;
@@ -264,6 +269,8 @@ async function openFile(nextFile) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
+        editWorkspace.enable(true);
+        $('open-edit-workspace').disabled=false;
         $('open-model-editor').disabled=false;
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
@@ -875,6 +882,7 @@ function refreshPickedNodes() {
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     $('edit-capture').disabled = $('save-capture').disabled;
     $('edit-capture-model').disabled = !model || exportBusy || !count;
+    $('edit-capture-workspace').disabled = !model || exportBusy || !count;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
@@ -1059,10 +1067,17 @@ function addVisibleLayers(graph) {
     syncCaptureGraph();refreshPickedNodes();
 }
 $('add-visible-layers').onclick=()=>addVisibleLayers();
-$('open-model-editor').onclick=()=>{
-    if(!model||exportBusy){notice('請先開啟模型，並等待匯出完成。');return;}
+function editTargets(){
     let targets=pickingPattern?($('capture-cfg').checked?captureSelections().flatMap(s=>s.nodes.map(node=>({graph:s.graph,node}))):[...pickedNodes].map(node=>({graph:pickedGraph,node}))):[];
     if(!targets.length&&!pickingPattern){const location=detailLocation||(selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null);if(location)targets=[location];}
+    return targets;
+}
+$('edit-advanced').onclick=()=>{const location=editWorkspace.advancedLocation();if(location&&!exportBusy)modelEditor.open([location]).catch(report);};
+$('open-edit-workspace').onclick=$('edit-capture-workspace').onclick=()=>editWorkspace.open();
+$('open-model-editor').onclick=()=>{
+    if(!model||exportBusy){notice('請先開啟模型，並等待匯出完成。');return;}
+    if(editWorkspace.hasUnexported){editWorkspace.open();return;}
+    const targets=editTargets();
     if(!targets.length){notice('請先點選或框選原始 OP，再按「編輯實際模型」。');return;}
     modelEditor.open(targets).catch(report);
 };
@@ -1134,7 +1149,8 @@ $('open-lora-demo').onclick = async () => {
         await openFile(new File([await r.blob()], 'LoRA 結構示範.tflite'));
     } catch (error) { report(error); }
 };
-$('cancel-load').onclick = reset; $('close-model').onclick = reset;
+function discardEditDraft(){return !editWorkspace.hasUnexported||window.confirm('編輯工作區有尚未匯出的變更。要放棄草稿並關閉目前模型嗎？');}
+$('cancel-load').onclick = reset; $('close-model').onclick = ()=>{if(discardEditDraft())reset();};
 document.querySelectorAll('[data-kind]').forEach((button) => button.onclick = () => setKind(button.dataset.kind));
 const searchTabs=document.querySelector('[role="tablist"]');
 searchTabs.addEventListener('keydown',event=>{
@@ -1252,6 +1268,7 @@ document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer?.files[0]) openFile(e.dataTransfer.files[0]); });
 document.addEventListener('keydown', (e) => {
     if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
+    if(editWorkspace.active){if(editWorkspace.handleKey(e))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }

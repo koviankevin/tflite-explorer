@@ -18,12 +18,14 @@ export function createModelEditReport(index,file,result,candidate,args,{outputNa
     const before={inputs:interfaces(index,'inputs'),outputs:interfaces(index,'outputs')},inputs=interfaces(candidate,'inputs'),outputs=interfaces(candidate,'outputs');
     const total=model=>model.graphs.reduce((n,g)=>n+g.graph.nodes.length,0),sourceNode=index.graphs[args.graph]?.graph.nodes[args.node];
     if(!sourceNode)throw Error('模型修改的來源 OP 不存在。');
-    const outputNode=args.mode==='remove'||args.advanced||index.mlir?.graphs[args.graph]?.operations[args.node]?.regions?.length?null:args.node+(args.mode==='add-after'?1:0);
+    const workspace=Array.isArray(result.workspaceChanges);
+    const outputNode=workspace||args.mode==='remove'||args.advanced||index.mlir?.graphs[args.graph]?.operations[args.node]?.regions?.length?null:args.node+(args.mode==='add-after'?1:0);
     const target=outputNode===null?null:{graph:args.graph,node:outputNode,type:text(candidate.graphs[args.graph]?.graph.nodes[outputNode]?.type?.name)};
     const modification={action:args.mode,source:{graph:args.graph,node:args.node,type:text(sourceNode.type.name)},output:target,
         before:{layers:total(index),scopes:index.graphs.length,interface:before},after:{layers:total(candidate),scopes:candidate.graphs.length},
         parameterNames:[...Object.keys(args.options||{}),...Object.keys(args.options2||{})],fullIR:!!args.advanced,metadataChanges:result.metadataChanges||[],
         mappingScope:'只列修改目標；完整 IR 或 region 修改不推測一對一 OP 對照。未提供其他 OP 的逐筆位置映射。',interfaceScope:'各顯示 block／subgraph 的介面；不等同於所有 MLIR function 的 ABI。'};
+    if(workspace){modification.workspaceChanges=result.workspaceChanges;modification.mappingScope='工作區列出草稿的新增、刪除與改線；來源標示首項範本，不推測整份模型逐 OP 的位置對照。';}
     const provenance={mode:'model-edit',ranges:result.ranges,operators:target?[{source:{graph:args.graph,node:args.node},output:{graph:target.graph,node:target.node},role:args.mode==='replace'?'modified':'cloned'}]:[],generated:[]};
-    return createExportReport(index,file,{...result,provenance,modification,inputs,outputs,layers:total(candidate),tensors:candidate.graphs.reduce((n,g)=>n+g.tensors.size,0),preservedIds:!index.mlir,retainedBuffers:candidate.raw?.buffers.length},{graph:args.graph,nodes:[args.node],outputName,buildId});
+    return createExportReport(index,file,{...result,provenance,modification,inputs,outputs,layers:total(candidate),tensors:candidate.graphs.reduce((n,g)=>n+g.tensors.size,0),preservedIds:!index.mlir,retainedBuffers:candidate.raw?.buffers.length},{graph:args.graph,nodes:[args.node],...(workspace?{selections:args.workspaceTargets?.map(t=>({graph:t.graph,nodes:[t.node]}))}:{}),outputName,buildId});
 }

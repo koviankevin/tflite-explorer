@@ -26,7 +26,7 @@ function mlirText(index,args){
     }
     let renamed;
     if(args.mode.startsWith('add-')&&op.results.length){
-        let prefix='%model_lens_new_';while(data.source.includes(prefix))prefix='%_'+prefix.slice(1);
+        let prefix=args.resultPrefix||'%model_lens_new_';if(typeof prefix!=='string'||!/^%[A-Za-z_$][A-Za-z0-9_$.-]*_$/.test(prefix)||prefix.length>128)throw Error('新增 SSA prefix 無效。');while(data.source.includes(prefix)){if(args.resultPrefix)throw Error('新增 SSA 名稱與原模型重複。');prefix='%_'+prefix.slice(1);}
         renamed=new Map();for(const result of op.results){const def=data.ir.definitions.get(result);if(def&&!renamed.has(def.name))renamed.set(def.name,prefix+renamed.size);}
         const own=new Set(op.results);
         for(const consumer of data.ir.rows)for(const use of consumer.uses)if(own.has(use.value)&&use.range[0]>=range[0]&&use.range[1]<=range[1]){
