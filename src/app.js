@@ -219,6 +219,7 @@ function createWorker() {
 function reset() {
     sessions?.detach();
     detailNode=null;detailLocation=null;modelEditor.clear();$('open-model-editor').disabled=true;
+    $('results').setAttribute('aria-busy','false');delete $('results').dataset.searchQuery;
     $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
     sliceDetails=false;$('toggle-slice-details').hidden=true;
@@ -331,9 +332,15 @@ function renderPattern() {
     if(cfgPattern) $('cfg-pattern-summary').textContent=`跨 block pattern · 比對 SSA ports、block arguments、successor 順序及迴圈；目前範圍會搜尋所在的完整 region。可在結構編輯器調整 OP、block 歸屬及連線；原模型保持唯讀。`;
     else renderVisualPattern();
 }
+function suspendResults(){
+    $('results').setAttribute('aria-busy','true');$('result-count').textContent='搜尋中…';
+    for(const button of $('results').querySelectorAll('button'))button.disabled=true;
+    for(const id of ['previous-page','next-page','previous-result','next-result'])$(id).disabled=true;
+}
 async function runSearch() {
     if (!model) return;
     const generation = ++queryGeneration;
+    const searchQuery=$('query').value;suspendResults();
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('pattern-overview-controls').hidden=true;
     activeIndex = -1;
     selection = null;
@@ -344,19 +351,19 @@ async function runSearch() {
     $('result-count').textContent = '搜尋中…';
     const structure = kind==='patterns' ? currentPattern() : null;
     const scope = $('scope').value === 'current' ? String(currentGraph) : $('scope').value;
-    const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope } : { kind, query: $('query').value, scope });
+    const result = await rpc(kind === 'patterns' ? 'subgraphPattern' : 'search', kind === 'patterns' ? { text: $('graph-pattern').value, structure, induced: $('graph-induced').checked, scope } : { kind, query: searchQuery, scope });
     if (generation !== queryGeneration || result.cancelled) return;
     if (result.decodedNodes) {
         const missing = result.decodedNodes.filter((node) => !node.present);
         $('pattern-decoded').textContent = '解讀：' + result.decodedNodes.map((node) => `${node.alias}:${node.type}`).join(' · ') + (missing.length ? `。模型中沒有：${[...new Set(missing.map((node) => node.type))].join('、')}` : '');
         $('pattern-decoded').classList.toggle('missing', missing.length > 0);
     }
-    patternSearchReady=kind==='patterns';showPage(result);refreshPatternFold();
+    patternSearchReady=kind==='patterns';showPage(result,searchQuery);refreshPatternFold();
     if (structure && result.total) $('visual-pattern-editor').open = false;
     if (result.searchLimited) notice('搜尋已達計算上限，結果可能不完整；請指定 subgraph 或加入更明確的 operator 限制。');
     status(`找到 ${result.total.toLocaleString()} 筆${kind === 'patterns' ? '路徑' : '結果'}${result.searchLimited ? '（已達計算上限，結果可能不完整）' : result.truncated ? '（已達 50,000 筆上限，請縮小範圍）' : ''}`);
 }
-function showPage(result) {
+function showPage(result,searchQuery=$('query').value) {
     page = result;
     $('result-count').textContent = model ? `${result.truncated ? '至少 ' : ''}${result.total.toLocaleString()} 筆${kind === 'patterns' ? '匹配路徑' : '結果'}` : '等待開啟模型';
     const nodes = result.items.map((item, i) => {
@@ -378,6 +385,7 @@ function showPage(result) {
         const empty = element('div', 'list-empty'); empty.append(element('span', '', '⌕'), element('p', '', model ? '沒有符合的結果' : '開啟模型後，從這裡開始探索。'), element('small', '', model ? '調整搜尋字詞、連接模式或 subgraph 範圍。' : '搜尋清單會保留在模型圖旁。')); nodes.push(empty);
     }
     $('results').replaceChildren(...nodes); $('results').scrollTop = 0;
+    $('results').dataset.searchQuery=searchQuery;$('results').setAttribute('aria-busy','false');
     $('pagination').hidden = result.total <= 100;
     $('page-label').textContent = `${result.offset + 1}–${Math.min(result.offset + 100, result.total)} / ${result.total}`;
     $('previous-page').disabled = result.offset === 0; $('next-page').disabled = result.offset + 100 >= result.total;
@@ -1140,7 +1148,7 @@ searchTabs.addEventListener('keydown',event=>{
 });
 searchTabs.addEventListener('focusout',event=>{if(!searchTabs.contains(event.relatedTarget))for(const tab of searchTabs.querySelectorAll('[role="tab"]'))tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;});
 for(const dialog of document.querySelectorAll('dialog'))dialogKeyboard(dialog);
-$('query').oninput = () => { clearTimeout(timer); timer = setTimeout(() => runSearch().catch(report), 180); };
+$('query').oninput = () => { clearTimeout(timer);++queryGeneration;if(model)suspendResults();timer = setTimeout(() => runSearch().catch(report), 180); };
 $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
 $('run-pattern-laptop').onclick=$('run-pattern').onclick;
