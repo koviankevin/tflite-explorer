@@ -874,6 +874,7 @@ function refreshPickedNodes() {
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     $('edit-capture').disabled = $('save-capture').disabled;
+    $('edit-capture-model').disabled = !model || exportBusy || !count;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
@@ -1060,12 +1061,12 @@ function addVisibleLayers(graph) {
 $('add-visible-layers').onclick=()=>addVisibleLayers();
 $('open-model-editor').onclick=()=>{
     if(!model||exportBusy){notice('請先開啟模型，並等待匯出完成。');return;}
-    let location=detailLocation;
-    if(pickingPattern){const selected=$('capture-cfg').checked?captureSelections().flatMap(s=>s.nodes.map(node=>({graph:s.graph,node}))):[...pickedNodes].map(node=>({graph:pickedGraph,node}));if(selected.length===1)location=selected[0];}
-    location ||= selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null;
-    if(!location){notice('請先在 Layers 搜尋結果或模型圖中點選一個原始 OP，再按「編輯實際模型」。');return;}
-    modelEditor.open(location).catch(report);
+    let targets=pickingPattern?($('capture-cfg').checked?captureSelections().flatMap(s=>s.nodes.map(node=>({graph:s.graph,node}))):[...pickedNodes].map(node=>({graph:pickedGraph,node}))):[];
+    if(!targets.length&&!pickingPattern){const location=detailLocation||(selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null);if(location)targets=[location];}
+    if(!targets.length){notice('請先點選或框選原始 OP，再按「編輯實際模型」。');return;}
+    modelEditor.open(targets).catch(report);
 };
+$('edit-capture-model').onclick=()=>$('open-model-editor').click();
 $('edit-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation=renderGeneration,sourceFile=file,graph=currentGraph;

@@ -40,6 +40,21 @@ function mlirText(index,args){
 }
 export const operationEditText=(index,args)=>mlirText(index,args);
 
+// A multi-selection picker needs labels, never OP text, attributes or weights.
+export function operationEditTargets(index,{targets}){
+    if(!Array.isArray(targets)||targets.length<1||targets.length>32)throw Error('請選取 1～32 個原始 OP。');
+    const seen=new Set(),rows=[];
+    for(const {graph,node} of targets){
+        if(!Number.isSafeInteger(graph)||graph<0||!Number.isSafeInteger(node)||node<0)throw Error('原始 OP 位置無效。');
+        const key=`${graph}:${node}`;if(seen.has(key))continue;seen.add(key);
+        let name;
+        if(index.mlir){const op=index.mlir.graphs[graph]?.operations[node];if(!op)throw Error('找不到已選取的原始 OP。');name=op.name.getStringRef();}
+        else {const {op}=tfOp(index,graph,node),code=index.raw.operator_codes[op.opcode_index];name=code.custom_code||schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code)];}
+        rows.push({graph,node,name:String(name).slice(0,1024)});
+    }
+    return rows;
+}
+
 export function operationEditInfo(index,{graph,node}){
     if(index.mlir){
         const {data,op,range,row}=mlirOp(index,graph,node);
