@@ -18,6 +18,19 @@ export async function mlirSelectionFlow({page,read,base,directory,check}) {
     async function ready(){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');}
     async function search(){const laptop=page.locator('#run-pattern-laptop');await (await laptop.isVisible()?laptop:page.locator('#run-pattern')).click();}
     async function workerClosed(action){const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;try{const closed=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('MLIR previous worker retained.')),5000);})]);await action();await closed;}finally{clearTimeout(timer);}}
+    async function boundedEditor(){
+        const nodes=[{alias:'B',kind:'block',type:'block',arity:223},...Array.from({length:32},(_,i)=>({alias:`O${i}`,kind:'operator',type:'public.stress',order:i})),...Array.from({length:223},(_,i)=>({alias:`A${i}`,kind:'argument',type:'argument',slot:i}))];
+        const edges=[...nodes.slice(1).map(n=>({from:'B',to:n.alias,kind:'contains'})),...Array.from({length:245},(_,i)=>({from:`O${i%32}`,to:`O${(i+1)%32}`,kind:'ssa',port:`${Math.floor(i/32)}:0`}))];
+        const pattern=reusablePattern('Public bounded CFG editor',{mode:'mlir-cfg',nodes,edges,induced:true}),filename=path.join(directory,'bounded-editor.json');await writeFile(filename,exportPatterns([pattern]),{flag:'wx'});
+        await page.locator('#open-import').click();const chooser=page.waitForEvent('filechooser');await page.locator('#choose-pattern-file').click();await(await chooser).setFiles(filename);await page.locator('#confirm-import').click();await page.locator('#saved-pattern').selectOption(pattern.name);await until(()=>document.querySelector('#result-count').textContent==='0 筆匹配路徑');
+        const bounds=()=>read(()=>({rows:document.querySelectorAll('[data-cfg-edge]').length,options:document.querySelectorAll('#cfg-pattern-editor option').length,elements:document.querySelectorAll('#cfg-pattern-editor *').length,first:document.querySelector('[data-cfg-edge]').dataset.cfgEdge,page:document.querySelector('[aria-label="Pattern 連線分頁"]').textContent}));
+        const first=await bounds();assert.equal(first.rows,12);assert.ok(first.options<5000&&first.elements<10000,JSON.stringify(first));
+        await page.locator('[data-cfg-key="edges-next"]').click();const second=await bounds();assert.equal(second.rows,12);assert.notEqual(second.first,first.first);
+        await page.locator('[data-cfg-key="add-edge"]').click();const last=await bounds();assert.ok(last.rows>0&&last.rows<=12);assert.ok(last.page.includes('246 條連線'));
+        const added=page.locator('[data-cfg-key="edge-500-remove"]');await added.click();const removed=await bounds();assert.ok(removed.page.includes('245 條連線'));assert.ok(removed.rows<=12);
+        check('maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded');
+        return {nodes:nodes.length,edges:edges.length,first,second,last,removed};
+    }
     const intercept=()=>{};page.on('filechooser',intercept);
     try {
         for(const [name,text] of [['branch-join-custom',MLIR_CFG_DIAMOND],['loop-custom',MLIR_CFG_LOOP]]) {
@@ -52,7 +65,9 @@ export async function mlirSelectionFlow({page,read,base,directory,check}) {
             await page.locator('.result-item').first().click();await ready();event=page.waitForEvent('download');await page.locator('#export-match').click();const download=await event;assert.equal(await download.failure(),null);const output=path.join(directory,name+'-cut.mlir');await download.saveAs(output);await download.delete();
             const child=await parse(await readFile(output,'utf8'));assert.deepEqual(validateMLIR(child).diagnostics,[]);assert.equal((await findMLIRPatterns(child,pattern)).items.length,1);
             await workerClosed(()=>page.locator('#open-export-model').click());await ready();report.modelWorkers++;await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');
-            assert.equal(await read(()=>document.querySelector('#open-export-model').hidden),true);await workerClosed(()=>page.locator('#close-model').click());
+            assert.equal(await read(()=>document.querySelector('#open-export-model').hidden),true);
+            if(name==='loop-custom')report.editorBounds=await boundedEditor();
+            await workerClosed(()=>page.locator('#close-model').click());
             report.cases.push({name,originalLayers:Number(originalCount),operators:aliases.length,layouts,negativeMatches:0,restoredMatches:1,exportedSSA:'passed',reopenedMatches:1});
             check(`${name}: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure`);
         }
