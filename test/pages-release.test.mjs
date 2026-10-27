@@ -20,6 +20,13 @@ test('all other workflows are read-only, including YAML aliases and escaped keys
     assert.equal(await validateWorkflowInventory([own,{path:'.github/workflows/read.yml',text:'permissions: &safe {contents: read}\njobs: {read: {permissions: *safe}}'}]),true);
     const temporary=await mkdtemp(path.join(os.tmpdir(),'workflow-case-unit-'));try{await writeFile(path.join(temporary,'BYPASS.YML'),'permissions: write-all\njobs: {}');const upper=await readWorkflowInventory(temporary);assert.equal(upper.length,1);await assert.rejects(validateWorkflowInventory([own,...upper]));}finally{await rm(temporary,{recursive:true,force:true});}
 });
+
+test('production-transition drivers are valid and reject execution outside isolated CI before opening a browser',()=>{
+    for(const file of ['test/browser/production-transition.mjs','test/browser/transition-control.mjs']){
+        assert.doesNotThrow(()=>execFileSync(process.execPath,['--check',file],{windowsHide:true,stdio:['ignore','pipe','pipe']}));
+        assert.throws(()=>execFileSync(process.execPath,[file,'start'],{env:{...process.env,GITHUB_ACTIONS:'false'},windowsHide:true,timeout:10000,stdio:['ignore','pipe','pipe']}),error=>error.status!==0&&String(error.stderr).includes('ERR_ASSERTION'));
+    }
+});
 test('legacy Pages, wildcard/tag policies and non-main dispatches are rejected',()=>{
     const pages={build_type:'workflow'},env={deployment_branch_policy:{custom_branch_policies:true,protected_branches:false}},policies={total_count:1,branch_policies:[{name:'main',type:'branch'}]};
     assert.doesNotThrow(()=>assertPagesConfiguration(pages,env,policies));

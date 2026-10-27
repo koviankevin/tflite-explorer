@@ -1,0 +1,75 @@
+name: Production version transition
+on:
+  workflow_dispatch:
+    inputs:
+      expected_build_id:
+        description: Reviewed new core build ID, before first versioned deployment
+        type: string
+        required: true
+      expected_site_id:
+        description: Reviewed complete new site ID from preparation
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  observe:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      EXPECTED_BUILD: ${{ inputs.expected_build_id }}
+      EXPECTED_SITE_ID: ${{ inputs.expected_site_id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - run: node node_modules/playwright/cli.js install --with-deps chromium
+      - name: Start persistent public observer
+        run: node test/browser/transition-control.mjs start
+      - name: Confirm original tab ready before deployment
+        run: node test/browser/transition-control.mjs wait initial-ready
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: transition-initial-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/production-transition/state.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Confirm candidate tab ready before rollback
+        run: node test/browser/transition-control.mjs wait candidate-ready
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: transition-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/production-transition/state.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Confirm rollback before restore
+        run: node test/browser/transition-control.mjs wait rollback-verified
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: transition-rollback-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/production-transition/state.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Confirm restore and full browser shutdown
+        run: node test/browser/transition-control.mjs wait complete
+      - if: always()
+        name: Stop observer if unfinished
+        run: node test/browser/transition-control.mjs stop
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: production-transition-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/production-transition/report.json
+            ${{ runner.temp }}/production-transition/state.json
+            ${{ runner.temp }}/production-transition/observer.log
+            ${{ runner.temp }}/production-transition/failure.png
+          if-no-files-found: error
+          retention-days: 30
