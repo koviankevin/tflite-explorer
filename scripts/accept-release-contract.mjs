@@ -10,12 +10,12 @@ const output=path.resolve(args[1]);await mkdir(path.dirname(output),{recursive:t
 const report={format:'model-lens-release-contract',version:1,status:'failed',startedAt:new Date().toISOString(),source:gitSource(),tests:RELEASE_CONTRACT_TESTS,node:process.version};
 try{
     if(report.source.dirty)throw Error('Release contract needs committed clean source.');
-    let required=true;
+    let required=true,scopeCheck=null;
     if(process.env.GITHUB_EVENT_NAME==='pull_request'&&/^[a-f0-9]{40}$/.test(process.env.RELEASE_BASE_SHA||'')){
-        try{const reader=gitReader();required=sourceScope('contract',process.env.RELEASE_BASE_SHA,reader).fingerprint!==sourceScope('contract',report.source.commit,reader).fingerprint;}catch{required=true;}
+        try{const reader=gitReader(),baseScope=sourceScope('contract',process.env.RELEASE_BASE_SHA,reader),candidateScope=sourceScope('contract',report.source.commit,reader);required=baseScope.fingerprint!==candidateScope.fingerprint;scopeCheck={baseCommit:process.env.RELEASE_BASE_SHA,baseFingerprint:baseScope.fingerprint,candidateFingerprint:candidateScope.fingerprint};}catch{required=true;}
     }
-    report.plan={required,reason:required?'contract dependencies changed or explicit main dispatch':'unchanged contract dependency scope'};
-    if(!required){const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;if(!report.sourceUnchanged)throw Error('Source changed during scope planning.');report.status='not_required';report.selectedTests=[];}
+    report.plan={required,reason:required?'contract dependencies changed or explicit main dispatch':'unchanged contract dependency scope',scopeCheck};
+    if(!required){const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;if(!report.sourceUnchanged)throw Error('Source changed during scope planning.');report.status='not_required';report.tests=[];report.selectedTests=[];}
     else{
     const result=spawnSync(process.execPath,['--test','--test-reporter=tap',...report.tests],{cwd:root,encoding:'utf8',timeout:180000,maxBuffer:4*1024**2,windowsHide:true});
     process.stdout.write(result.stdout||'');process.stderr.write(result.stderr||'');report.exitCode=result.status;report.stdoutSHA256=createHash('sha256').update(result.stdout||'').digest('hex');
