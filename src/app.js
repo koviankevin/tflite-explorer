@@ -8,6 +8,7 @@ import {initReleaseInfo} from './release-info.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
+import {mlirPatternEditor} from './mlir-pattern-editor.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
@@ -162,6 +163,11 @@ function currentPattern() {
     return {...structure,induced:cfgPattern?cfgPattern.induced:$('graph-induced').checked,nodes:structure.nodes.map(n=>{const {conditions,...base}=n;const rules=conditionsByAlias.get(n.alias);return {...base,...(rules?.length?{conditions:rules}:{})};})};
 }
 const conditionUI=conditionEditor({getNodes:conditionNodes,getRules:alias=>conditionsByAlias.get(alias),setRules:(alias,rules)=>{conditionsByAlias.set(alias,rules);status('條件已變更，按「尋找模式」套用。');},error:report});
+const cfgEditor=mlirPatternEditor({root:$('cfg-pattern-editor'),getPattern:()=>cfgPattern,getTypes:()=>model?.operators||[],change:pattern=>{
+    cfgPattern=pattern;
+    const aliases=new Set(pattern.nodes.map(n=>n.alias));for(const alias of conditionsByAlias.keys())if(!aliases.has(alias))conditionsByAlias.delete(alias);
+    conditionUI.render();status('跨 block pattern 草稿已變更；按「尋找模式」套用。原模型保持唯讀。');
+},error:report});
 let page = { items: [], total: 0, offset: 0 };
 let activeIndex = -1;
 let selection;
@@ -310,11 +316,12 @@ function setKind(nextKind, searchNow = true) {
 }
 function renderPattern() {
     conditionUI.render();
+    cfgEditor.render();
     updatePatternExport();
     $('graph-pattern-editor').hidden=Boolean(cfgPattern);
     $('cfg-pattern-summary').hidden=!cfgPattern;
     $('pattern-match-hint').textContent=cfgPattern ? '依 SSA ports 與控制流程匹配，包含分支、匯合及迴圈；不比對 block／SSA 名稱。指定的條件需全部符合。' : '依 tensor 直接連接的順序匹配，允許分支；指定的條件需全部符合，未加條件的 OP 不限制參數。';
-    if(cfgPattern) $('cfg-pattern-summary').textContent=`跨 block pattern · ${cfgPattern.nodes.filter(n=>n.kind==='block').length} blocks · ${cfgPattern.nodes.filter(n=>n.kind==='operator').length} operators。比對 SSA ports、block arguments、successor 順序及迴圈；目前範圍會搜尋所在的完整 region。重新圈選可建立另一組。`;
+    if(cfgPattern) $('cfg-pattern-summary').textContent=`跨 block pattern · 比對 SSA ports、block arguments、successor 順序及迴圈；目前範圍會搜尋所在的完整 region。可在結構編輯器調整 OP、block 歸屬及連線；原模型保持唯讀。`;
     else renderVisualPattern();
 }
 async function runSearch() {
@@ -850,7 +857,7 @@ function refreshPickedNodes() {
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     $('edit-capture').disabled = $('save-capture').disabled;
-    $('edit-capture').textContent = across ? '編輯選取條件' : '編輯選取 pattern';
+    $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
     if(virtualOverview)virtualOverview.setPicking(pickingPattern,pickingPattern?renderedNodes.filter(entry=>{const loc=layerLocation(entry,currentGraph);return loc && (across?cfgSelections.get(loc.graph)?.has(loc.node):pickedGraph===loc.graph && pickedNodes.has(loc.node));}).map(entry=>entry.node.identifier):[]);
@@ -1048,9 +1055,9 @@ $('edit-capture').onclick = async () => {
         const pattern=reusablePattern($('capture-name').value,structure);
         applyPattern(pattern);editorLibrary=base;$('saved-pattern').value='';updatePatternExport();
         setPickingPattern(false);
-        if(cfgPattern){$('condition-editor').open=true;$('condition-node').focus();}
+        if(cfgPattern)cfgEditor.focus();
         else {$('visual-pattern-editor').open=true;$('graph-node-rows').querySelector('select').focus();}
-        status(cfgPattern ? '已將圈選結果載入條件編輯器；可調整 shape、dtype、attributes，按「尋找模式」套用。跨 block 結構仍以圈選內容為準。' : '已將圈選結果載入結構編輯器；可新增／移除 pattern 節點及連線，按「尋找模式」套用。原模型保持唯讀。');
+        status('已將圈選結果載入結構編輯器；可調整 pattern 節點及連線，按「尋找模式」套用。原模型保持唯讀。');
     } catch(error) { if(file===sourceFile)report(error); }
     finally { refreshPickedNodes(); }
 };
@@ -1325,7 +1332,7 @@ function restoreDraftEditor(s) {
     const e=s.editor;graphNodes=structuredClone(e.nodes);graphEdges=structuredClone(e.edges);graphNodeNumber=e.nextNode;cfgPattern=e.cfg?structuredClone(e.cfg):null;
     conditionsByAlias.clear();for(const [alias,rules] of e.conditions)conditionsByAlias.set(alias,structuredClone(rules));
     $('graph-induced').checked=e.induced;$('graph-pattern').value=s.patternText;$('graph-input-mode').value=s.patternMode;updateGraphInputMode();renderPattern();
-    $('visual-pattern-editor').open=e.visualOpen;for(const id of DRAFT_FIELDS)$(id).value=e.fields[id];conditionUI.render();
+    $('visual-pattern-editor').open=e.visualOpen;for(const id of DRAFT_FIELDS)$(id).value=e.fields[id];conditionUI.render();cfgEditor.render();
     try{reusablePattern('草稿',currentPattern());}catch{$('pattern-decoded').textContent='已恢復未完成的 pattern 草稿；請修正後再搜尋。';}
 }
 function captureSession(identity){return {format:'model-lens-workspace',version:2,identity,state:workspaceState({draft:true})};}

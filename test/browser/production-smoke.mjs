@@ -11,6 +11,7 @@ import {resolveLiveCore,readStaticFile,verifyRemoteSnapshot} from '../../scripts
 import {verifySite} from '../../scripts/lib/versioned-site.mjs';
 import {createStaticServer} from '../../scripts/serve.mjs';
 import {keyboardFlow} from './keyboard-flow.mjs';
+import {mlirSelectionFlow} from './mlir-selection-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -75,7 +76,8 @@ try{
     report.keyboardRequired=keyboardRequired;report.keyboardAudit=keyboardAudit;
     report.selectionToolsRequired=selectionToolsRequired;
     if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired});
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?(selectionToolsRequired?6:5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    if(selectionToolsRequired)report.mlirSelection=await mlirSelectionFlow({page,read:readPage,base,directory:temporary,check});
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?(selectionToolsRequired?10:5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();
