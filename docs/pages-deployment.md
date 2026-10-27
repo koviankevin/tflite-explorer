@@ -5,7 +5,7 @@
 ```text
 prepare：固定來源 → 三項成功 CI → 來源重建／逐檔比對 → ZIP／Pages tar
   deploy：只提升該 tar
-    verify_live：固定來源與 ZIP → 正式站全部檔案 SHA
+    verify_live：固定來源與 ZIP → 正式站全部檔案 SHA／MIME → 實際瀏覽器選檔、搜尋、pattern、子模型重開
       release：建立或核對不可覆寫的固定版本與四個下載資產
 ```
 
@@ -33,7 +33,7 @@ gh workflow run verified-pages.yml --ref main -f publish=true -f expected_build_
 
 ## 固定版本與交付物
 
-正式站逐檔成功後才建立 GitHub Release，包含部署 ZIP、checksum、release-manifest.json 及 release-gates.json。寫入 Release 的權限與 Pages 部署權限分開。ZIP 內只放網站、公開示範與授權；模型與公司私有擴充不進 CI 或公開 artifact。
+正式站逐檔與瀏覽器操作成功後才建立 GitHub Release，包含部署 ZIP、checksum、release-manifest.json 及 release-gates.json。瀏覽器使用全新 CI context 與公開示範，確認正式子路徑的 module／版本資訊、32px 圖、精確搜尋定位、原生選檔、pattern JSON 匯入匯出、TFLite 子模型下載重開與原 pattern；HTTP 只允許本站 GET，沒有上傳模型。寫入 Release 的權限與 Pages 部署權限分開。ZIP 內只放網站、公開示範與授權；使用者模型與公司私有擴充不進 CI 或公開 artifact。
 
 Release 證據集合移除每次查核時間及本機快照目錄，保留固定來源、run、artifact digest 與 scope，使同一來源重試時四份資產位元組一致；實際查核時間保留在工作流程 log。既有 tag 若指向不同 source，或任何下載資產的大小／SHA 不符，都會拒絕，沒有覆寫舊版本的 fallback。
 

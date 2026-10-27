@@ -80,7 +80,7 @@ node scripts/serve.mjs
 
 ## GitHub Pages
 
-原始碼保留在 `main`，網站靜態產物發布至 `gh-pages`。設定 GitHub Pages 的來源為 `gh-pages` 分支根目錄；`.nojekyll` 會保留所有靜態資源。專案網址的子路徑也能使用，程式不依賴網域根路徑。
+原始碼保留在 `main`，正式發布入口為 `Verified Pages release`。啟用時將 GitHub Pages 來源設定為 GitHub Actions，github-pages environment 僅允許 main。`gh-pages` 保留舊靜態產物供追查；切換完成後，直接推送該分支不再觸發網站更新。專案網址的子路徑也能使用，程式不依賴網域根路徑。
 
 局部 MLIR 重新開啟時預設為精簡圖，只顯示匯出時圈選的原始 OP。匯出器補上的輸入、輸出有效旗標、block arguments 與控制路由保留在 MLIR 內，圖面將其收起並直接連接原始 OP；分支、匯合與迴圈回跳仍可查看。點精簡圖的連線可只展開該段隱藏的 SSA、block arguments 與控制路由，其餘支線保持收起；再點展開的連線可收起，也可從側欄逐段收起或「收起全部路徑」。共享的輔助節點只顯示一次，仍被其他展開路徑使用時會保留。展開／收起會保留目前縮放，並以該段仍存在的節點維持畫面位置；若端點原本在畫面外，會定位到畫面邊緣附近。選取 pattern 模式中也可點連線展開／收起，或用側欄收起路徑；已選的原始 layers 會保留，可繼續跨 block 框選，再儲存 pattern 或匯出 MLIR。展開的輔助節點不參與圈選 pattern。點「展開輔助節點」可檢視完整 SSA 與控制流程，再點「收起輔助節點」返回。此顯示切換不改動模型、匯出或 pattern 比對。較舊的局部檔案沒有圈選標記，預設顯示可驗證的原始 OP；套用原先儲存的 pattern 後會只顯示該匹配的 OP，或可重新匯出以記錄精確圈選。
 
@@ -91,7 +91,7 @@ node scripts/build.mjs
 node scripts/publish-github-pages.mjs
 ```
 
-發布腳本使用已設定的 GitHub `origin` 和 Git 認證，不修改來源工作樹，也不使用 force push。需要先將來源推送到自己的 GitHub repo。GitHub Pages 網站通常公開；私人 repo 能否啟用 Pages 取決於 GitHub 方案。模型仍由訪客瀏覽器本機處理。
+發布腳本以已登入的 GitHub CLI dispatch 受控工作流程，要求本機建置與目前 main 完全相同；不推送靜態分支。先用工作流程的準備模式核對 build ID，再以該 ID 發布。正式站逐檔 SHA、瀏覽器選檔／搜尋／匯出重開都成功後，才建立不可覆寫的固定版本 Release。GitHub Pages 通常公開，模型仍由訪客瀏覽器本機處理。完整步驟見 [Pages 發布](docs/pages-deployment.md)。
 
 發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的三項成功 CI。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布隔離快照；缺少必要工作或來源改變會拒絕。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
 
