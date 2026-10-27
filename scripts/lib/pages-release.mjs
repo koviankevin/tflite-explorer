@@ -38,8 +38,8 @@ export function validatePagesWorkflow(w){
     for(const job of [w.jobs.prepare,w.jobs.verify_live,w.jobs.release]){
         const checkout=job.steps.find(s=>s.uses===OFFICIAL_ACTIONS.checkout);
         if(checkout?.with?.ref!=='${{ github.sha }}'||checkout.with['persist-credentials']!==false)throw Error('Checkout must be fixed and credential-free.');
-        const prepare=job===w.jobs.prepare;
-        if(job.steps.length!==(prepare?6:5)||job.steps[0]!==checkout||job.steps[1].uses!==OFFICIAL_ACTIONS.node||job.steps[1].with?.['node-version']!=='22.23.3'||job.steps.filter(s=>s.run).length!==(prepare?2:1))throw Error('Unexpected executable release steps.');
+        const prepare=job===w.jobs.prepare,verify=job===w.jobs.verify_live;
+        if(job.steps.length!==(prepare?6:verify?8:5)||job.steps[0]!==checkout||job.steps[1].uses!==OFFICIAL_ACTIONS.node||job.steps[1].with?.['node-version']!=='22.23.3'||job.steps.filter(s=>s.run).length!==(prepare?2:verify?4:1))throw Error('Unexpected executable release steps.');
     }
     if(!w.jobs.prepare.steps.some(s=>s.run==='node scripts/prepare-pages-release.mjs')||!w.jobs.verify_live.steps.some(s=>s.run==='node scripts/verify-pages-live.mjs')||!w.jobs.release.steps.some(s=>s.run==='node scripts/publish-release-bundle.mjs'))throw Error('Required verification entry missing.');
     const p=w.jobs.prepare.steps;
@@ -50,6 +50,7 @@ export function validatePagesWorkflow(w){
         if(steps[2].uses!==OFFICIAL_ACTIONS.download||!equal(steps[2].with,{name:'release-delivery',path:'build/pages-delivery'})||steps[3].run!==script)throw Error('Release consumers must read the current gated bundle.');
         for(const [key,value] of Object.entries({EXPECTED_BUILD:'build_id',EXPECTED_MANIFEST_SHA:'manifest_sha',EXPECTED_RECEIPT_SHA:'receipt_sha',EXPECTED_ZIP_SHA:'zip_sha'}))if(steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Missing trusted delivery hash output.');
     }
+    const smoke=w.jobs.verify_live.steps;if(smoke[4].run!=='npm ci --ignore-scripts'||smoke[5].run!=='node node_modules/playwright/cli.js install --with-deps chromium'||smoke[6].run!=='node test/browser/production-smoke.mjs'||smoke[6].env?.EXPECTED_BUILD!=='${{ needs.prepare.outputs.build_id }}')throw Error('Live browser smoke cannot be omitted or use another build.');
     return true;
 }
 export function assertPagesConfiguration(pages,environment,policies){
@@ -60,6 +61,7 @@ export function checkDispatchContext(env=process.env){
 }
 export function assertExpectedBuild(publish,expected,actual){if(publish==='true'&&(!/^[a-f0-9]{16}$/.test(expected||'')||expected!==actual))throw Error('Publish needs the exact build ID from a successful dry run.');}
 export function immutableGateEvidence(receipt){const {preparedDirectory,verifiedAt,...evidence}=receipt;return {...evidence,format:'model-lens-release-evidence'};}
+export function assertStaticMime(name,type){let required=null;if(/^(?:src|vendor)\/.*\.m?js$/.test(name))required=/^(?:text|application)\/(?:java|ecma)script(?:\s*;|$)/i;else if(/\.html$/.test(name))required=/^text\/html(?:\s*;|$)/i;else if(/\.css$/.test(name))required=/^text\/css(?:\s*;|$)/i;if(required&&!required.test(type||''))throw Error(`Incorrect browser MIME type: ${name}`);}
 export function ghJSON(route,{allow404=false}={}){
     if(!/^repos\/[\w.-]+\/[\w.-]+\//.test(route))throw Error('Only repository API reads are allowed.');
     const r=spawnSync(process.env.GH_BIN||'gh',['api',route],{encoding:'utf8',timeout:30000,maxBuffer:8*1024**2,windowsHide:true});

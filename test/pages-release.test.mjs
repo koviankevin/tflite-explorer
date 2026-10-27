@@ -5,7 +5,7 @@ import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
-import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence} from '../scripts/lib/pages-release.mjs';
+import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
@@ -40,6 +40,10 @@ test('published tags and asset bytes are immutable',()=>{
     assert.throws(()=>assertVersionAvailable(manifest,assets,route=>route.includes('/git/ref/')?{object:{type:'commit',sha:'d'.repeat(40)}}:release));
     assert.throws(()=>assertVersionAvailable(manifest,assets,()=>release));
     const evidence={status:'passed',version:1,release:manifest.release,gates:[]};assert.deepEqual(immutableGateEvidence({...evidence,verifiedAt:'first',preparedDirectory:'/first'}),immutableGateEvidence({...evidence,verifiedAt:'second',preparedDirectory:'/second'}));
+});
+test('browser modules and styles require executable MIME types',()=>{
+    assert.doesNotThrow(()=>assertStaticMime('src/app.js','text/javascript; charset=utf-8'));assert.doesNotThrow(()=>assertStaticMime('src/app.css','text/css'));assert.doesNotThrow(()=>assertStaticMime('tools/verify-export.mjs','application/octet-stream'));
+    for(const [name,type] of [['src/app.js','application/octet-stream'],['src/app.css','text/plain'],['index.html','application/octet-stream']])assert.throws(()=>assertStaticMime(name,type));
 });
 test('delivery consumers verify trusted output hashes, complete ZIP members and source',async()=>{
     const dir=await mkdtemp(path.join(os.tmpdir(),'pages-delivery-unit-'));
