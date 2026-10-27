@@ -9,7 +9,7 @@ node --test test/performance-policy.test.mjs test/performance.test.mjs
 node scripts/accept-performance.mjs --out test-results/new-performance-run.json
 ```
 
-輸出檔必須尚未存在，避免把上次成功報告誤當本次結果。需要至少 2 GiB 可用記憶體；資源不足、逾時、少一筆量測、子程序失敗、未知／零／非有限數值、結構不符或測試途中來源改變，均不標示通過。沒有自動縮小 fixture 或重試。三種案例各啟動三個全新 Node 子程序，所有九筆均須符合門檻；不是把最好的一筆當結果，也不是同程序長時間洩漏率測試。
+輸出檔必須尚未存在，避免把上次成功報告誤當本次結果。需要至少 2 GiB 可用記憶體；資源不足、逾時、少一筆量測、子程序失敗、未知／非有限數值、耗時／RSS 等應有量測被記成零、結構不符或測試途中來源改變，均不標示通過。沒有自動縮小 fixture 或重試。三種案例各啟動三個全新 Node 子程序，所有九筆均須符合門檻；不是把最好的一筆當結果，也不是同程序長時間洩漏率測試。
 
 ## 固定案例
 

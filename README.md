@@ -171,6 +171,10 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 獨立 Chromium 合成大檔與 GitHub CI 的驗收另見下節，與上述 Edge 非 sparse 權重測試分開記錄。
 
+### 核心效能 CI
+
+相關核心變更的 PR 會執行固定 Node.js 22.23.3／Ubuntu 24.04 的三種規模、各三筆全新程序量測，檢查解析、搜尋、取消、RSS、跨 block 分段快取及匯出重開。亦可手動執行 `Core performance gate`，或本機執行 `node scripts/accept-performance.mjs --out test-results/new-performance-run.json`。CI 九筆已通過，來源與原始報告見 [驗收紀錄](docs/performance-gate-verification.md)，預算與限制見 [門檻說明](docs/performance-gate.md)。這一層量測 Node 核心，不代表下方原生瀏覽器或公司模型驗收。
+
 ### 可選的 >1 GiB Chromium 選檔驗收
 
 `npm ci`、`npx playwright install --with-deps chromium` 後執行 `npm run test:large-browser`。以參數指定現有產生器的雙子圖案例，自動建立 1.25 GiB／6,002 operators 的稀疏合成實體檔，經 Chromium 原生 File API 與 Worker 驗證索引、局部圖、搜尋／分頁、取消、無效大檔恢復及子模型下載後重新開啟。另涵蓋 metadata 條件切換重搜、v3 pattern JSON、工作階段 JSON 與 SVG 選取／縮放恢復、重新整理後恢復，以及相同大小但 dtype 不同的模型拒絕。獨立的 GitHub Actions workflow 僅能手動啟動，不增加一般 CI 或 Pages 發布的巨型檔案負擔。
