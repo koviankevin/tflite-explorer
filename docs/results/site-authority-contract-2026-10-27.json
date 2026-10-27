@@ -1,0 +1,42 @@
+{
+  "format": "model-lens-release-contract",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T06:28:24.648Z",
+  "source": {
+    "commit": "67a8ae38b9869b91f7b548f1da412625631c7508",
+    "tree": "8c067d98787dcbb4de57ef260189e0b45d65d484",
+    "committedAt": "2026-10-27T06:28:12Z",
+    "dirty": false
+  },
+  "tests": [
+    "test/release.test.mjs",
+    "test/release-gates.test.mjs",
+    "test/pages-release.test.mjs",
+    "test/pr-validation.test.mjs",
+    "test/versioned-site.test.mjs",
+    "test/site-browser-policy.test.mjs",
+    "test/release-history.test.mjs",
+    "test/site-history.test.mjs",
+    "test/live-site.test.mjs",
+    "test/published-delivery.test.mjs",
+    "test/deployment-history.test.mjs"
+  ],
+  "node": "v22.23.3",
+  "plan": {
+    "required": true,
+    "reason": "contract dependencies changed or explicit main dispatch",
+    "scopeCheck": null
+  },
+  "exitCode": 0,
+  "stdoutSHA256": "3ecc739c78506eb16b2fa0b647ec3167718da7a370fe97a8383737104cc8ec9e",
+  "counts": {
+    "tests": 70,
+    "pass": 70,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T06:28:31.503Z"
+}

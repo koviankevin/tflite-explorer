@@ -102,7 +102,11 @@ node scripts/compose-site.mjs --verify build/new-site
 
 首次遷移只允許已獨立驗收的 deployment `7350054986`／run `40447776209`／job `122003141213`／preview.7 source；未綁定 ID 的其他 deploy 不作自動猜測。後續 Release 失敗仍可保留已成功部署的 ID；最新部署若待處理／失敗、run/job 被刪除或 metadata 不符，則需先釐清，不能把 HTTP 回應當作唯一依據。此檢查不需下載已過期的 Pages artifact；prepare 僅增加 `deployments: read`，沒有擴大正式寫入權限。
 
-新增六項權威來源／stale CDN 測試，最新契約共 70 項。已通過先前完整本機 64 項，以及本次受影響的 24 項；完整 70 項 CI 與目前正式部署的唯讀來源核對仍待新提交驗證。
+新增六項權威來源／stale CDN 測試，最新契約共 70 項。[CI 40461287910](https://github.com/koviankevin/tflite-explorer/actions/runs/40461287910) 全部通過，零失敗／略過／取消，受測 PR merge source `67a8ae38b9869b91f7b548f1da412625631c7508` 的 tree 與功能來源 `209a53d787832a87b4d4e7230ed271b0f7ed1806` 完全一致，見 [原始契約報告](results/site-authority-contract-2026-10-27.json)。
+
+同來源的 [實際權威資料核對](results/site-deployment-authority-2026-10-27.json) 已從 GitHub 取得固定 deployment／成功 job／確切 attempt，並與正式站 index 404 及 preview.7 根 metadata 核對一致。另見 [實際固定 Release 提升來源演練](results/site-published-promotion-2026-10-27.json)：從 clean `78b0e3895031ef76723e35b5f435f80fd5779de9` 下載原始四份 assets、重驗 246 個 core 檔案與原三關卡 receipt；預設新候選模式拒絕此舊 receipt，只有五項固定 pins 全符且明確歷史模式才通過。兩個既有 main core／大檔瀏覽器關卡的 source scopes 仍完全相同，正式發布時仍須重新向 GitHub 驗證其原始憑證，不能只拿這份來源比較當作發布授權。
+
+固定 Release helper 的 [隔離 CI 40459962581](https://github.com/koviankevin/tflite-explorer/actions/runs/40459962581) 也完成 [六項切換情境](results/site-promotion-browser-2026-10-27.json) 與 [741 檔 HTTP／四項原生 UI 驗收](results/site-promotion-http-smoke-2026-10-27.json)。此後的 authority 改動由 70 項契約及上述實際 API 核對驗收；正式發布仍需新 main 的 site／contract 憑證。所有演練均未切換正式站或公司內網。
 
 下一步仍須完成：提升來源的 hosted CI 與實際固定資產取得、main 的新版憑證，以及正式站交付／回退實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 

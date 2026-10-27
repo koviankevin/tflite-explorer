@@ -13,3 +13,5 @@
 | 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 現有發布腳本已強制核對三項 GitHub CI、artifact digest、受測依賴 scope、原始量測與候選來源重建；完整正例與自製 manifest 負例已驗證。兩份正式 ZIP 的隔離 HTTP 升級／回退、逐檔 SHA、拒絕損壞候選及舊版 lazy import 已通過。Pages 已切換受控 workflow、main-only environment 與包含管理者的必要 PR 檢查；三項伺服器負例、修正後正式站逐檔與實際瀏覽器操作、固定來源 Release／四份資產實際下載比對均通過，詳見 [Pages 驗收](pages-deployment-verification.md)。正式站回退、資料遷移及升級時舊分頁／CDN 資產隔離仍未完成 |
 
 公開開發使用公開／合成樣本。公司模型、私有 dialect 與 compiler 留在內網；內網驗收尚未完成時不得將其標為已支援或將整個商品等級目標標為完成。
+
+版本隔離草稿已補齊完整快照、可信 site ID、歷史保留／中斷恢復、固定 Release 提升及 GitHub 部署權威來源核對。70 項 CI、實際 Release 四份資產與 API 核對、隔離 741 檔 HTTP／瀏覽器切換均已通過；正式站目前仍為已交付 preview.7。接下來須 main 四關卡、完整新站交付與正式回退，不能以草稿綠燈取代上表尚未完成的正式驗收。來源與原始報告見 [版本隔離](versioned-site.md)。
