@@ -1,21 +1,23 @@
 // Keep one file-backed result for local reopening, without reading its body.
 // Closing/changing the model or starting a new export discards this reference.
 export function exportedModelUI({button,open,error}) {
-    let latest=null;
-    const clear=()=>{latest=null;button.hidden=true;button.disabled=true;};
+    let latest=null,revision=0;
+    const clear=()=>{latest=null;revision++;button.hidden=true;button.disabled=true;};
     button.onclick=async()=>{
-        const selected=latest;
+        const selected=latest,selectedRevision=revision;
         if(!selected)return;
-        clear();
-        try{const opened=await open(selected);if(opened===false&&!latest){latest=selected;button.hidden=false;button.disabled=false;}}catch(reason){error(reason);}
+        clear();const attempt=revision;
+        try{const opened=await open(selected);if(opened===false&&!latest&&revision===attempt){latest=selected;revision=selectedRevision;button.hidden=false;button.disabled=false;}}catch(reason){error(reason);}
     };
     clear();
     return {
         clear,
+        isCurrent:token=>!!latest&&token===revision,
         remember(blob,name){
             if(!(blob instanceof Blob)||!blob.size||typeof name!=='string'||!/\.(?:tflite|mlir)$/i.test(name))throw new Error('沒有可開啟的匯出模型。');
             latest=new File([blob],name,{type:blob.type||'application/octet-stream'});
             button.hidden=false;button.disabled=false;
+            return ++revision;
         }
     };
 }

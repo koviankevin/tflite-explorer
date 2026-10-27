@@ -36,6 +36,9 @@ test('latest local export opens once; replacement, closing and failures leave no
 test('declining to discard an edit draft keeps the latest local export available',async()=>{
  const button={};let allow=false,opens=0;const ui=exportedModelUI({button,open:async()=>{opens++;return allow;},error:reason=>{throw reason;}});ui.remember(new Blob(['local']),'local.mlir');await button.onclick();assert.ok(!button.disabled&&!button.hidden);allow=true;await button.onclick();assert.equal(opens,2);assert.ok(button.disabled&&button.hidden);
 });
+test('result identity changes on replacement and closing, and survives a declined open',async()=>{
+ const button={},ui=exportedModelUI({button,open:async()=>false,error:e=>{throw e;}}),first=ui.remember(new Blob(['a']),'a.mlir');assert.equal(ui.isCurrent(first),true);const second=ui.remember(new Blob(['b']),'b.mlir');assert.equal(ui.isCurrent(first),false);assert.equal(ui.isCurrent(second),true);await button.onclick();assert.equal(ui.isCurrent(second),true);ui.clear();assert.equal(ui.isCurrent(second),false);
+});
 
 test('directly opened TFLite preserves custom options, weights and original tensor numbering without whole-Blob reads',async()=>{
     const {bytes,weight,options}=await customFixture({external:true}),source=new File([bytes],'custom.tflite');
