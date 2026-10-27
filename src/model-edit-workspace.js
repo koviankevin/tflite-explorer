@@ -15,7 +15,8 @@ export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
     if(!Array.isArray(targets)||!targets.length||targets.length>EDIT_LIMITS.originals)throw Error('編輯範圍最多容納 64 個原始 OP。');
     const selected=new Map();
     for(const target of targets){if(!Number.isInteger(target?.graph)||!Number.isInteger(target.node)||target.graph<0||target.node<0||!all[target.graph]?.graph.nodes[target.node])throw Error('找不到要編輯的原始 OP。');selected.set(opId(target.graph,target.node),{graph:target.graph,node:target.node});}
-    const originals=[...selected.values()],nodes=[],values=new Map(),controls=[];
+    const originals=[...selected.values()],nodes=[],values=new Map(),controls=[];let transferBytes=4096;
+    const bounded=value=>{transferBytes+=JSON.stringify(value).length;if(transferBytes>4*1024**2)throw Error('編輯範圍 metadata 超過 4 MiB，請縮小選取範圍。');return value;};
     let prefix='%model_lens_workspace_';if(index.mlir)while(index.mlir.source.includes(prefix))prefix='%_'+prefix.slice(1);
     const graphByBlock=index.mlir?new Map(index.mlir.graphs.map((g,i)=>[g.block,i])):null;
     const regionIds=index.mlir?new Map(index.mlir.ir.regions.map((r,i)=>[r,i])):null;
@@ -26,13 +27,13 @@ export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
         if(!source||!Number.isInteger(source.graph))throw Error('此 SSA 來源尚無可編輯的 block 對照。');
         return {def,source,key:def.row?`m:${source.graph}:${source.node}:${value.resultNumber}`:`a:${source.graph}:${source.argument}`};
     };
-    const rawPorts=({graph,node})=>index.mlir?{inputs:index.mlir.ir.byOp.get(index.mlir.graphs[graph].operations[node]).uses.map(u=>valueKey(u.value).key),outputs:index.mlir.graphs[graph].operations[node].results.map(v=>valueKey(v).key)}:{inputs:Array.from(index.raw.subgraphs[graph].operators[node].inputs,id=>`t:${graph}:${id}`),outputs:Array.from(index.raw.subgraphs[graph].operators[node].outputs,id=>`t:${graph}:${id}`)};
+    const rawPorts=({graph,node},strict=false)=>{const op=index.mlir?index.mlir.graphs[graph].operations[node]:index.raw.subgraphs[graph].operators[node],uses=index.mlir?index.mlir.ir.byOp.get(op).uses:op.inputs,defs=index.mlir?op.results:op.outputs;if(uses.length+defs.length+(op.successors?.length||0)>1024){if(strict)throw Error('選取 OP 的 ports 超過 1024，請使用進階表單。');return null;}return index.mlir?{inputs:uses.map(u=>valueKey(u.value).key),outputs:defs.map(v=>valueKey(v).key)}:{inputs:Array.from(uses,id=>`t:${graph}:${id}`),outputs:Array.from(defs,id=>`t:${graph}:${id}`)};};
     // One direct neighbourhood pass; never expand recursively through a big model.
-    const inputs=new Set(originals.flatMap(loc=>rawPorts(loc).inputs)),outputs=new Set(originals.flatMap(loc=>rawPorts(loc).outputs));
+    const inputs=new Set(originals.flatMap(loc=>rawPorts(loc,true).inputs)),outputs=new Set(originals.flatMap(loc=>rawPorts(loc,true).outputs));
     const graphs=new Set(index.mlir?all.map((_,i)=>i):originals.map(t=>t.graph));
     for(const graph of graphs)for(let node=0;node<all[graph].graph.nodes.length&&selected.size<EDIT_LIMITS.originals;node++){
         const loc={graph,node},id=opId(graph,node);if(selected.has(id))continue;const p=rawPorts(loc);
-        if(p.inputs.some(k=>outputs.has(k))||p.outputs.some(k=>inputs.has(k)))selected.set(id,loc);
+        if(p&&(p.inputs.some(k=>outputs.has(k))||p.outputs.some(k=>inputs.has(k))))selected.set(id,loc);
     }
     const producers=index.raw?new Map([...graphs].map(graph=>{const map=new Map();index.raw.subgraphs[graph].operators.forEach((op,node)=>{for(const id of op.outputs)map.set(id,node);});return [graph,map];})):null;
     const addTF=(graph,id)=>{
@@ -40,15 +41,15 @@ export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
         if(!t&&!optional)throw Error('Tensor 索引不存在。');
         const producer=optional||t.is_variable?-1:producers.get(graph).get(id)??-1,signature=optional?null:tfSignature(t);
         const type=optional?'optional':`${schema.TensorType[t.type]} [${Array.from(t.shape||[]).join(', ')}]`;
-        values.set(key,{id:key,name:optional?'未連接（optional）':text(t.name||`tensor_${id}`),type,signature,graph,tensor:id,optional,
+        values.set(key,bounded({id:key,name:optional?'未連接（optional）':text(t.name||`tensor_${id}`),type,signature,graph,tensor:id,optional,
             producer:producer<0?null:opId(graph,producer),order:producer<0?-1:producer*4+2,source:{graph,tensor:id},modelOutput:g.outputs.includes(id),
-            kind:optional?'optional':t.is_variable?'變數':g.inputs.includes(id)?'模型輸入':producer<0?'權重／常數':'範圍外輸出'});return key;
+            kind:optional?'optional':t.is_variable?'變數':g.inputs.includes(id)?'模型輸入':producer<0?'權重／常數':'範圍外輸出'}));return key;
     };
     const addML=value=>{
         const {def,source,key}=valueKey(value);if(values.has(key))return key;if(values.size>=EDIT_LIMITS.ports)throw Error('編輯範圍的 ports 過多，請縮小選取。');
         const type=typeSpelling(def.type),name=def.name+(def.number||value.owner?.results?.length>1?`#${def.number}`:'');if(type.length>4096||name.length>512)throw Error('SSA 型別／名稱過長，請使用進階表單。');
-        values.set(key,{id:key,name,type,signature:type,graph:source.graph,source:{...source,...(def.row?{result:value.resultNumber}:{})},producer:def.row?opId(source.graph,source.node):null,
-            order:def.row?source.node*4+2:-1,region:regionIds.get(def.region),kind:def.row?'範圍外輸出':'Block／function 輸入',number:def.number||0,grouped:value.owner?.results?.length>1});return key;
+        values.set(key,bounded({id:key,name,type,signature:type,graph:source.graph,source:{...source,...(def.row?{result:value.resultNumber}:{})},producer:def.row?opId(source.graph,source.node):null,
+            order:def.row?source.node*4+2:-1,region:regionIds.get(def.region),kind:def.row?'範圍外輸出':'Block／function 輸入',number:def.number||0,grouped:value.owner?.results?.length>1}));return key;
     };
     for(const loc of [...selected.values()].sort((a,b)=>a.graph-b.graph||a.node-b.node)){
         const {graph,node}=loc,id=opId(graph,node),name=text(all[graph].graph.nodes[node].type.name);
@@ -58,12 +59,12 @@ export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
             const groups=new Map(),outputs=op.results.map(value=>{const key=addML(value),def=data.ir.definitions.get(value);if(!groups.has(def.name))groups.set(def.name,groups.size);values.get(key).group=groups.get(def.name);return {value:key,type:values.get(key).type};});
             nodes.push({id,source:loc,name,block:text(data.graphs[graph].block.label||data.graphs[graph].block.name||`block ${graph}`),visibleRegions:visible,ordered:row.region.kind!=='graph',
                 cloneable:!sem.terminator&&!op.successors?.length&&!op.regions?.length,removable:!sem.terminator&&!op.successors?.length&&!op.regions?.length,
-                inputs:row.uses.map(use=>{const key=addML(use.value);return {value:key,type:values.get(key).type,signature:values.get(key).signature};}),outputs});
-            for(const s of op.successors||[]){const target=row.region.blocks.find(b=>(b.label||b.name)===(s.label||s.name)),targetGraph=graphByBlock.get(target);if(Number.isInteger(targetGraph))controls.push({from:id,graph:targetGraph,label:text(s.label||s.name)});}
+                inputs:row.uses.map(use=>{const key=addML(use.value);return bounded({value:key,type:values.get(key).type,signature:values.get(key).signature});}),outputs});
+            for(const s of op.successors||[]){const target=row.region.blocks.find(b=>(b.label||b.name)===(s.label||s.name)),targetGraph=graphByBlock.get(target);if(Number.isInteger(targetGraph))controls.push(bounded({from:id,graph:targetGraph,label:text(s.label||s.name)}));}
         }else{
             const op=index.raw.subgraphs[graph].operators[node];
             nodes.push({id,source:loc,name,block:text(all[graph].graph.name||`subgraph ${graph}`),ordered:true,cloneable:true,removable:true,
-                inputs:Array.from(op.inputs,(value,i)=>{const key=addTF(graph,value);return {value:key,type:values.get(key).type,signature:values.get(key).signature,optional:value===-1||all[graph].graph.nodes[node].type.inputs?.[i]?.option==='optional'};}),
+                inputs:Array.from(op.inputs,(value,i)=>{const key=addTF(graph,value);return bounded({value:key,type:values.get(key).type,signature:values.get(key).signature,optional:value===-1||all[graph].graph.nodes[node].type.inputs?.[i]?.option==='optional'});}),
                 outputs:Array.from(op.outputs,value=>({value:addTF(graph,value)}))});
         }
     }
