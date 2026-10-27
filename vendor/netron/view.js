@@ -3404,6 +3404,8 @@ view.Sidebar = class {
         const element = this._element('sidebar-content');
         const container = this._element('target');
         const closeButton = this._element('sidebar-closebutton');
+        const active = this._host.document.activeElement;
+        const returnGraphFocus = !active || active === this._host.document.body || container.contains(active) || sidebar.contains(active);
         closeButton.removeEventListener('click', this._closeSidebarHandler);
         this._host.document.removeEventListener('keydown', this._closeSidebarKeyDownHandler);
         if (this._stack.length > 0) {
@@ -3442,7 +3444,9 @@ view.Sidebar = class {
             const clone = element.cloneNode(true);
             element.parentNode.replaceChild(clone, element);
             container.style.width = '100%';
-            container.focus();
+            if (returnGraphFocus) {
+                container.focus();
+            }
         }
     }
 };
