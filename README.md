@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.8，已完成真實回退／恢復、同一瀏覽器 pattern 保存、741 檔與原生 UI 驗收，見 [切換驗收與限制](docs/production-transition-verification.md)。
+[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.9，989 檔與八項原生 UI／鍵盤操作、固定資產實際下載比對均通過，見 [最新驗收](docs/keyboard-acceptance.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
 匯出後可從「最近匯出報告」下載來源 OP、輸入／輸出和原始資料位置對照；以本機 CLI 串流比對實際下載檔的權重／custom options，並可指定公司 MLIR compiler。報告清楚區分結構檢查、bytes 比對和未驗證的 runtime 語意，見 [匯出報告與本機驗證](docs/export-reports.md)。
 
@@ -18,7 +18,7 @@
 
 ## 搜尋工作區寬度
 
-候選 preview.9 的搜尋分頁支援左右方向鍵、Home／End 移焦點，Enter／Space 切換並搜尋；圖形重畫保留目前操作控制項的焦點，對話框快捷鍵不影響後方選取。完整鍵盤驗收與目前限制見 [操作說明](docs/keyboard-acceptance.md)；尚待候選正式部署驗收。
+自 preview.9 起，搜尋分頁支援左右方向鍵、Home／End 移焦點，Enter／Space 切換並搜尋；圖形重畫保留目前操作控制項的焦點，對話框快捷鍵不影響後方選取。已驗證 TFLite 原生鍵盤工作流程，實際涵蓋範圍及限制見 [操作說明](docs/keyboard-acceptance.md)。
 
 桌面版可拖曳左側搜尋欄的右邊界調整寬度，並記住此瀏覽器的設定。分隔線支援方向鍵微調、Shift 加速、Home／End 調至最窄／最寬，Enter 或雙擊恢復預設。寬度會依視窗限制，保留模型圖空間；拖曳保留目前圖形、縮放與已選 layers，工具列依可用寬度換行。手機維持上下排列，不顯示拖曳線；大型模型只完成索引時也能直接使用搜尋欄。
 

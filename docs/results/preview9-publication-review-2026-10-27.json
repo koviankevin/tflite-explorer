@@ -1,0 +1,242 @@
+{
+  "format": "model-lens-preview9-published-review",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T10:04:59.224Z",
+  "source": {
+    "commit": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+    "tree": "e4a22cdef8996b61528584fb1899f0e96eb08b5a",
+    "committedAt": "2026-10-27T17:55:21+08:00",
+    "dirty": false
+  },
+  "run": {
+    "id": 40485119978,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40485119978",
+    "attempt": 1,
+    "source": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 122124873565,
+        "name": "prepare",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-27T10:00:31Z",
+        "completedAt": "2026-10-27T10:01:07Z"
+      },
+      {
+        "id": 122125165058,
+        "name": "Publish site 972b669f7f6d39fb720932f24811c9afbcdfae13c75f35699aa08c25e6f02e66",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-27T10:01:11Z",
+        "completedAt": "2026-10-27T10:02:17Z"
+      },
+      {
+        "id": 122125680421,
+        "name": "verify_live",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-27T10:02:19Z",
+        "completedAt": "2026-10-27T10:03:08Z"
+      },
+      {
+        "id": 122126059008,
+        "name": "release",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-27T10:03:11Z",
+        "completedAt": "2026-10-27T10:03:27Z"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 12725315378,
+      "name": "live-release-verification",
+      "jobId": 122125680421,
+      "attempt": 1,
+      "createdAt": "2026-10-27T10:03:05Z",
+      "bytes": 51501,
+      "digest": "sha256:ad07433065731c5088a8b897960f0a939b29cefcbd9a91028e89c31d1b80aa74",
+      "members": [
+        {
+          "name": "pages-live-report.json",
+          "bytes": 258754,
+          "sha256": "ce6def758a1a6441db368bf0deacd0554b116c340af567540b611007c69e8285"
+        },
+        {
+          "name": "production-smoke.json",
+          "bytes": 2875,
+          "sha256": "f159991e2ff4a44e15daea35221c0c5f022703e5f59a6019e65733f3d54c136f"
+        }
+      ]
+    },
+    {
+      "id": 12725270676,
+      "name": "published-release-verification",
+      "jobId": 122126059008,
+      "attempt": 1,
+      "createdAt": "2026-10-27T10:03:24Z",
+      "bytes": 765,
+      "digest": "sha256:fa2d9db07689050b3e4c39c07deebc497b67896f4d805fb912e072ff14a67ed1",
+      "members": [
+        {
+          "name": "pages-release-report.json",
+          "bytes": 1269,
+          "sha256": "8cb9e3052740af3088b0dc939993f17f4371c8cdea77eb4ec9ad862666f238fa"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "exact successful job artifacts authenticated by provider digest, CRC, source and attempt timestamps",
+    "all 989 live file rows and root match the independently reviewed complete snapshot",
+    "all eight native UI/keyboard checks pass with five model workers closed",
+    "all four actual fixed Release downloads match the original reviewed bytes and source tag/tree",
+    "latest authoritative Pages deployment and independent no-query root agree with preview.9"
+  ],
+  "fixedRelease": {
+    "url": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.9",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.9",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+        "tree": "e4a22cdef8996b61528584fb1899f0e96eb08b5a",
+        "committedAt": "2026-10-27T17:55:21+08:00",
+        "dirty": false
+      },
+      "buildId": "35c75cab9fab0def"
+    },
+    "provenance": {
+      "kind": "github-published-promotion",
+      "releaseId": 425281690,
+      "assetId": 681181866,
+      "tag": "v0.2.0-preview.9",
+      "source": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+      "zipSHA256": "0f8743e9b2e94e2d4eff9791a261183b2a9fc5bd054df10d7d6df53311f10911",
+      "zipBytes": 29459158,
+      "manifestSHA256": "7f3be79b0bc771387a1ffb4ad4c269bd0c9756b36c5758e2b101ec378f5b7ec1",
+      "assets": [
+        {
+          "name": "model-lens-public-0.2.0-preview.9-35c75cab9fab0def.zip",
+          "bytes": 29459158,
+          "sha256": "0f8743e9b2e94e2d4eff9791a261183b2a9fc5bd054df10d7d6df53311f10911"
+        },
+        {
+          "name": "model-lens-public-0.2.0-preview.9-35c75cab9fab0def.zip.sha256",
+          "bytes": 121,
+          "sha256": "e5567ee8236a9a0563ecdc021754c737d58715e3a9748efd3053e2feec81418d"
+        },
+        {
+          "name": "release-gates.json",
+          "bytes": 132605,
+          "sha256": "f3daaf4f60da7429a56bd0b03855c5d593df216cbae1f3612ee0ea92eb66bab0"
+        },
+        {
+          "name": "release-manifest.json",
+          "bytes": 40020,
+          "sha256": "7f3be79b0bc771387a1ffb4ad4c269bd0c9756b36c5758e2b101ec378f5b7ec1"
+        }
+      ]
+    },
+    "assets": [
+      {
+        "name": "model-lens-public-0.2.0-preview.9-35c75cab9fab0def.zip",
+        "bytes": 29459158,
+        "sha256": "0f8743e9b2e94e2d4eff9791a261183b2a9fc5bd054df10d7d6df53311f10911"
+      },
+      {
+        "name": "model-lens-public-0.2.0-preview.9-35c75cab9fab0def.zip.sha256",
+        "bytes": 121,
+        "sha256": "e5567ee8236a9a0563ecdc021754c737d58715e3a9748efd3053e2feec81418d"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 132605,
+        "sha256": "f3daaf4f60da7429a56bd0b03855c5d593df216cbae1f3612ee0ea92eb66bab0"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 40020,
+        "sha256": "7f3be79b0bc771387a1ffb4ad4c269bd0c9756b36c5758e2b101ec378f5b7ec1"
+      }
+    ],
+    "coreFiles": 247,
+    "allOriginalPreparedBytesMatch": true
+  },
+  "deployment": {
+    "deploymentId": 7355478805,
+    "controllerSource": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+    "runId": 40485119978,
+    "attempt": 1,
+    "jobId": 122125165058,
+    "siteId": "972b669f7f6d39fb720932f24811c9afbcdfae13c75f35699aa08c25e6f02e66",
+    "legacy": false
+  },
+  "site": {
+    "siteId": "972b669f7f6d39fb720932f24811c9afbcdfae13c75f35699aa08c25e6f02e66",
+    "manifestSHA256": "d3dfdc233251c52807516ba378b9158ce7d13c27d6e43b7d46d4a2da20ae1e12",
+    "rootSHA256": "4ad7f75994712b5855bd14f5c257589eed163fb5c1679b0d337c47956fcd373c",
+    "current": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.9",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+        "tree": "e4a22cdef8996b61528584fb1899f0e96eb08b5a",
+        "committedAt": "2026-10-27T17:55:21+08:00",
+        "dirty": false
+      },
+      "buildId": "35c75cab9fab0def"
+    },
+    "legacy": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.7",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+        "committedAt": "2026-10-27T12:03:57+08:00",
+        "dirty": false
+      },
+      "buildId": "163f38ab1dc856e4"
+    },
+    "retainedBuildIds": [
+      "017eed149449e951",
+      "163f38ab1dc856e4"
+    ],
+    "files": 989
+  },
+  "live": {
+    "files": 989,
+    "httpRetries": 0,
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure"
+    ],
+    "keyboard": {
+      "tabPresses": 586,
+      "modelWorkers": 2
+    },
+    "allWorkersClosed": true
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T10:05:22.696Z"
+}
