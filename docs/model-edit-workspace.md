@@ -14,4 +14,25 @@
 
 編輯草稿只保存在目前分頁記憶體，切換探索／編輯會保留；關閉或更換模型、離開頁面前會提示未匯出的變更。探索工作階段 JSON／自動草稿不包含模型編輯命令。匯出後請保存新模型與報告。
 
-驗收狀態：本機核心測試已通過；Hosted Chromium 原生接線、手機／14 吋版面、實際下載、重新開啟和正式部署仍待本次交付驗證，完成後補上來源與執行紀錄。
+本機工作區 12 項測試通過，包含 21,004 OP 有限範圍、提前 metadata 限量、實際 TFLite weights／custom options、deferred MLIR 權重複製與報告。Hosted Chromium 的 19 項原生操作已通過，27 個模型 Worker 關閉；含點選／拖曳接線、自動輸出、復原／重做、TFLite 下載重開，以及分支／匯合／迴圈 custom MLIR 的 SSA、控制流程和 pattern 搜尋。
+
+## 手機版面修正與環境診斷
+
+初版 main [40555286507](https://github.com/koviankevin/tflite-explorer/actions/runs/40555286507) 的舊斷言雖通過，原始數據卻顯示 390×844 的標頭高達 592／752px；只檢查邊界不足以證明可用。後續改用獨立緊湊手機標頭，並要求工作區至少為視窗 65%、可見圖區至少 200px。
+
+[強化版原生驗收 40556673985](https://github.com/koviankevin/tflite-explorer/actions/runs/40556673985) 通過；實際手機標頭 93px、工作區 721px、圖區約 371px，長名稱無超框，另保存原生截圖。1366×640 的工作區 534px、圖區 375px。匯出結果綁定精確版本，改變 signature 選項或另一份匯出取代結果時，不提供過期的「開啟修改結果」。
+
+舊來源 [40556008400](https://github.com/koviankevin/tflite-explorer/actions/runs/40556008400) 停在 Azure apt 套件下載，25.9 MB 耗時 9min29s；取消的安裝不列為原生操作通過。[40558217127](https://github.com/koviankevin/tflite-explorer/actions/runs/40558217127) 使用官方 Ubuntu HTTPS 鏡像，保留原 signed apt／Playwright `--with-deps`、版本與必要操作後成功。安裝器限制在本 repository 的 Ubuntu 24.04 hosted CI，並納入 browser／site 相依指紋；不在使用者電腦開瀏覽器，也不略過驗收。
+
+## 正式發布證據選擇
+
+功能來源 `699dcafb99cc37e2b7c5596c73dc3eaa237c3e0d`，tree `117a9f133522ef2b5f4ecf1d40142749e2135091`。`release-evidence.json` 選定下列 run IDs；此選擇不代表尚在進行中的量測已通過。prepare 必須重新核對 provider digest、原始報告、source fingerprint、完整產物及乾淨來源重建。
+
+| 關卡 | 選擇與實際狀態 |
+| --- | --- |
+| [core 40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445) | 86 個執行依賴 fingerprint 與既有成功 main 量測相同，沿用九筆核心量測；發布前重新認證 artifact |
+| [browser 40558827707](https://github.com/koviankevin/tflite-explorer/actions/runs/40558827707) | 1.25 GiB／21,005 OP、實際新工作區的八輪完整改模／下載／重開／關閉量測中；不得用舊版或取消報告代替 |
+| [contract 40558833474](https://github.com/koviankevin/tflite-explorer/actions/runs/40558833474) | 正式來源的完整性、拒絕案例與安裝器限制；只採最終成功且零略過／取消的結果 |
+| [site 40558838921](https://github.com/koviankevin/tflite-explorer/actions/runs/40558838921) | 正式來源六種隔離切換與 19 項原生 UI；逐項核對完整成功報告 |
+
+正式網站與固定 Release 尚待本次受控發布完成。結構檢查、合成資料 bytes 比對與有限八輪量測不代表公司 compiler／runtime、數值等價、其他瀏覽器或數小時操作已驗證；商品等級未完成項目仍見 [工作清單](product-readiness.md)。
