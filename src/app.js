@@ -257,7 +257,7 @@ function reset() {
 }
 async function openFile(nextFile) {
     try { await viewReady; modelFormat(nextFile.name); } catch (error) { diagnostics.record('open','error',error);notice(error.message); return; }
-    if(!discardEditDraft())return;
+    if(!discardEditDraft())return false;
     reset(); file = nextFile;
     const thisFile = file;
     let resumedDraft;

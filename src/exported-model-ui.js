@@ -7,7 +7,7 @@ export function exportedModelUI({button,open,error}) {
         const selected=latest;
         if(!selected)return;
         clear();
-        try{await open(selected);}catch(reason){error(reason);}
+        try{const opened=await open(selected);if(opened===false&&!latest){latest=selected;button.hidden=false;button.disabled=false;}}catch(reason){error(reason);}
     };
     clear();
     return {
