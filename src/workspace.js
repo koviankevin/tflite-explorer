@@ -1,5 +1,5 @@
-import {reusablePattern} from './pattern-library.js?v=e67611582982ec3f';
-import {normalizeConditions} from './pattern-conditions.js?v=e67611582982ec3f';
+import {reusablePattern} from './pattern-library.js?v=0f8361cc44fcd547';
+import {normalizeConditions} from './pattern-conditions.js?v=0f8361cc44fcd547';
 export const WORKSPACE_KEY='model-lens.workspace.v2';
 export const LEGACY_WORKSPACE_KEY='model-lens.workspace.v1';
 export const WORKSPACE_LIMIT=2*1024*1024;

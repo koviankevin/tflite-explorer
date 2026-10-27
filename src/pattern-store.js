@@ -1,4 +1,4 @@
-import {PATTERN_LIBRARY_KEY,PATTERN_FILE_LIMIT,reusablePattern,patternSignature,planPatternImport,parsePatternFile} from './pattern-library.js?v=e67611582982ec3f';
+import {PATTERN_LIBRARY_KEY,PATTERN_FILE_LIMIT,reusablePattern,patternSignature,planPatternImport,parsePatternFile} from './pattern-library.js?v=0f8361cc44fcd547';
 
 export const PATTERN_DATABASE='model-lens.pattern-library.v4';
 export const PATTERN_CHANNEL='model-lens.pattern-library.v4';

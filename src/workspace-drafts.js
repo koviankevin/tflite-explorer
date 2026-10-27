@@ -1,4 +1,4 @@
-import {parseWorkspace,exportWorkspace,WORKSPACE_LIMIT} from './workspace.js?v=e67611582982ec3f';
+import {parseWorkspace,exportWorkspace,WORKSPACE_LIMIT} from './workspace.js?v=0f8361cc44fcd547';
 export const DRAFT_DATABASE='model-lens.local-drafts.v1';
 export const draftModelKey=identity=>`${identity.sourceFormat}:${identity.bytes}:${identity.signature}`;
 export class DraftConflict extends Error {constructor(){super('另一分頁已更新這份草稿；你的操作保留在目前分頁，請恢復新版或另開草稿。');this.name='DraftConflict';}}

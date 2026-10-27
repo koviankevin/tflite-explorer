@@ -1,6 +1,6 @@
-import {exportWorkspace,parseWorkspace} from './workspace.js?v=e67611582982ec3f';
-import {WorkspaceHistory} from './workspace-history.js?v=e67611582982ec3f';
-import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=e67611582982ec3f';
+import {exportWorkspace,parseWorkspace} from './workspace.js?v=0f8361cc44fcd547';
+import {WorkspaceHistory} from './workspace-history.js?v=0f8361cc44fcd547';
+import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js?v=0f8361cc44fcd547';
 const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join('');
 
 // The controller owns history, save ordering and optimistic concurrency. UI and

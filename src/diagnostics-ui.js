@@ -1,4 +1,4 @@
-import {createDiagnosticReport} from './diagnostics.js?v=e67611582982ec3f';
+import {createDiagnosticReport} from './diagnostics.js?v=0f8361cc44fcd547';
 
 export function diagnosticUI({journal,context,exportFile}) {
     const $=id=>document.getElementById(id),dialog=$('diagnostic-dialog'),preview=$('diagnostic-preview'),download=$('download-diagnostics');

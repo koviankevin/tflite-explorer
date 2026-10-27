@@ -1,5 +1,5 @@
 
-import * as json from './json.js?v=e67611582982ec3f';
+import * as json from './json.js?v=0f8361cc44fcd547';
 
 const safetensors = {};
 

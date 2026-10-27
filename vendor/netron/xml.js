@@ -1,5 +1,5 @@
 
-import * as text from './text.js?v=e67611582982ec3f';
+import * as text from './text.js?v=0f8361cc44fcd547';
 
 const xml = {};
 

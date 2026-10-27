@@ -1,24 +1,24 @@
-import { Host } from '../vendor/netron/browser.js?v=e67611582982ec3f';
-import { View, Attachment } from '../vendor/netron/view.js?v=e67611582982ec3f';
-import { hydrate } from './hydrate.js?v=e67611582982ec3f';
-import {overviewCanvas} from './overview-canvas.js?v=e67611582982ec3f';
-import { modelFormat } from './model-formats.js?v=e67611582982ec3f';
-import {explorerResize} from './explorer-resize.js?v=e67611582982ec3f';
-import {initReleaseInfo} from './release-info.js?v=e67611582982ec3f';
-import {exportReportUI} from './export-report-ui.js?v=e67611582982ec3f';
-import {conditionEditor} from './pattern-condition-editor.js?v=e67611582982ec3f';
-import {parseGraphPattern} from './subgraph-pattern.js?v=e67611582982ec3f';
-import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=e67611582982ec3f';
-import {workspaceSessionUI} from './workspace-session-ui.js?v=e67611582982ec3f';
-import {draftModelKey} from './workspace-drafts.js?v=e67611582982ec3f';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=e67611582982ec3f';
-import {rectangleSelection} from './rectangle-selection.js?v=e67611582982ec3f';
-import {captureViewport,restoreViewport} from './svg-viewport.js?v=e67611582982ec3f';
-import { LORA_PATTERN } from './pattern-utils.js?v=e67611582982ec3f';
-import { loadPatterns, reusablePattern, exportPatterns, parsePatternFile, planPatternImport, PATTERN_FILE_LIMIT } from './pattern-library.js?v=e67611582982ec3f';
-import {patternStore,PATTERN_CHANNEL} from './pattern-store.js?v=e67611582982ec3f';
-import {diagnosticJournal} from './diagnostics.js?v=e67611582982ec3f';
-import {diagnosticUI} from './diagnostics-ui.js?v=e67611582982ec3f';
+import { Host } from '../vendor/netron/browser.js?v=0f8361cc44fcd547';
+import { View, Attachment } from '../vendor/netron/view.js?v=0f8361cc44fcd547';
+import { hydrate } from './hydrate.js?v=0f8361cc44fcd547';
+import {overviewCanvas} from './overview-canvas.js?v=0f8361cc44fcd547';
+import { modelFormat } from './model-formats.js?v=0f8361cc44fcd547';
+import {explorerResize} from './explorer-resize.js?v=0f8361cc44fcd547';
+import {initReleaseInfo} from './release-info.js?v=0f8361cc44fcd547';
+import {exportReportUI} from './export-report-ui.js?v=0f8361cc44fcd547';
+import {conditionEditor} from './pattern-condition-editor.js?v=0f8361cc44fcd547';
+import {parseGraphPattern} from './subgraph-pattern.js?v=0f8361cc44fcd547';
+import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js?v=0f8361cc44fcd547';
+import {workspaceSessionUI} from './workspace-session-ui.js?v=0f8361cc44fcd547';
+import {draftModelKey} from './workspace-drafts.js?v=0f8361cc44fcd547';
+import {layerLocation,updateLayerSelection} from './pattern-selection.js?v=0f8361cc44fcd547';
+import {rectangleSelection} from './rectangle-selection.js?v=0f8361cc44fcd547';
+import {captureViewport,restoreViewport} from './svg-viewport.js?v=0f8361cc44fcd547';
+import { LORA_PATTERN } from './pattern-utils.js?v=0f8361cc44fcd547';
+import { loadPatterns, reusablePattern, exportPatterns, parsePatternFile, planPatternImport, PATTERN_FILE_LIMIT } from './pattern-library.js?v=0f8361cc44fcd547';
+import {patternStore,PATTERN_CHANNEL} from './pattern-store.js?v=0f8361cc44fcd547';
+import {diagnosticJournal} from './diagnostics.js?v=0f8361cc44fcd547';
+import {diagnosticUI} from './diagnostics-ui.js?v=0f8361cc44fcd547';
 
 const $ = (id) => document.getElementById(id);
 const diagnostics=diagnosticJournal();
@@ -58,7 +58,7 @@ host.asset = async (file) => {
     if (!response.ok) throw new Error(`無法讀取 ${file}`);
     return response.text();
 };
-host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=e67611582982ec3f`, import.meta.url), { type: 'module' });
+host.worker = (id) => new Worker(new URL(`../vendor/netron/${id}.js?v=0f8361cc44fcd547`, import.meta.url), { type: 'module' });
 let layoutNotice = false;
 host.message = async (message, alert, action) => {
     if (!message) {
@@ -191,7 +191,7 @@ function rpc(action, args = {}) {
     });
 }
 function createWorker() {
-    worker = new Worker(new URL('./model-worker.js?v=e67611582982ec3f', import.meta.url), { type: 'module' });
+    worker = new Worker(new URL('./model-worker.js?v=0f8361cc44fcd547', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
         if (data.stage) { $('loading-stage').textContent = data.stage; status(data.stage); return; }
         const entry = pending.get(data.id);
@@ -210,7 +210,7 @@ function reset() {
     disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();exportReports.clear();
     ++queryGeneration; ++renderGeneration;
-    stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
+    stopWorker(); model = null; file = null; $('model-file').value=''; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
     pickedNodes=new Set();pickedGraph=0;cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;

@@ -1,10 +1,10 @@
-import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=e67611582982ec3f';
-import {operationSemantics} from './mlir-dialects.js?v=e67611582982ec3f';
-import {buildDominance,opName} from './mlir-ir.js?v=e67611582982ec3f';
-import {typeSpelling} from './mlir-engine.js?v=e67611582982ec3f';
-import {mlirArtifact} from './mlir-file.js?v=e67611582982ec3f';
-import {mlirProvenance} from './mlir-export-provenance.js?v=e67611582982ec3f';
-import {slicePatternGraph} from './mlir-pattern-projection.js?v=e67611582982ec3f';
+import {assertValidMLIR,validateMLIRText} from './mlir-validate.js?v=0f8361cc44fcd547';
+import {operationSemantics} from './mlir-dialects.js?v=0f8361cc44fcd547';
+import {buildDominance,opName} from './mlir-ir.js?v=0f8361cc44fcd547';
+import {typeSpelling} from './mlir-engine.js?v=0f8361cc44fcd547';
+import {mlirArtifact} from './mlir-file.js?v=0f8361cc44fcd547';
+import {mlirProvenance} from './mlir-export-provenance.js?v=0f8361cc44fcd547';
+import {slicePatternGraph} from './mlir-pattern-projection.js?v=0f8361cc44fcd547';
 
 // A CFG slice is a new function contract. Keep execution routes, cut ordinary
 // data dependencies into inputs, and retain cyclic producers that must change
@@ -217,7 +217,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
     const intro=`${contract.join('\n')}\n${aliases}\n"builtin.module"() ({\n"func.func"() <{sym_name = "extracted", function_type = (${inputs.map(v=>v.type).join(', ')}) -> (${resultTypes.join(', ')})}>`;
     const body=`${intro} ({\n${lines.join('\n')}\n})`;
     let text=`${body} : () -> ()\n}) : () -> ()\n${resources}\n`;
-    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=e67611582982ec3f');
+    const {attachSlicePattern}=await import('./mlir-pattern-projection.js?v=0f8361cc44fcd547');
     text=await attachSlicePattern(index,regionInfo,text,body.length,bindings);
     progress('重新驗證局部 MLIR 的語法、SSA、分支傳值與 dominance…');
     const validation=await validateMLIRText(text,{metadata,dialects,payloads:index.mlir.payloads});

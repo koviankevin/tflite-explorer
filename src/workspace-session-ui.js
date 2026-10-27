@@ -1,6 +1,6 @@
-import {draftStore,readDraft} from './workspace-drafts.js?v=e67611582982ec3f';
-import {workspaceSession} from './workspace-session.js?v=e67611582982ec3f';
-import {exportWorkspace} from './workspace.js?v=e67611582982ec3f';
+import {draftStore,readDraft} from './workspace-drafts.js?v=0f8361cc44fcd547';
+import {workspaceSession} from './workspace-session.js?v=0f8361cc44fcd547';
+import {exportWorkspace} from './workspace.js?v=0f8361cc44fcd547';
 
 export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,exportFile,error}) {
     const $=id=>document.getElementById(id),dialog=$('draft-dialog');let channel,session,records=[],selected,listGeneration=0,diagnosticState={};
