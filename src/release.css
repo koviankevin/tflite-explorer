@@ -1,5 +1,6 @@
 #release-dialog{width:min(640px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:22px;background:var(--paper);color:var(--ink)}
 #release-dialog::backdrop{background:#142a2466}
+dialog :is(summary,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 #export-report-dialog{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:22px;background:var(--paper);color:var(--ink)}
 #export-report-dialog::backdrop{background:#142a2466}
 #export-report-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#export-report-dialog h2{font-size:20px;margin:0}

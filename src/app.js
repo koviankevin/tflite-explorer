@@ -5,6 +5,7 @@ import {overviewCanvas} from './overview-canvas.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
 import {initReleaseInfo} from './release-info.js';
+import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
@@ -1088,7 +1089,7 @@ searchTabs.addEventListener('keydown',event=>{
     tabs.forEach((tab,i)=>{tab.tabIndex=i===next?0:-1;});tabs[next].focus();
 });
 searchTabs.addEventListener('focusout',event=>{if(!searchTabs.contains(event.relatedTarget))for(const tab of searchTabs.querySelectorAll('[role="tab"]'))tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;});
-for(const dialog of document.querySelectorAll('dialog'))for(const type of ['keydown','keyup'])dialog.addEventListener(type,event=>event.stopPropagation());
+for(const dialog of document.querySelectorAll('dialog'))dialogKeyboard(dialog);
 $('query').oninput = () => { clearTimeout(timer); timer = setTimeout(() => runSearch().catch(report), 180); };
 $('scope').onchange = () => runSearch().catch(report);
 $('run-pattern').onclick = () => runSearch().catch(report);
