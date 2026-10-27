@@ -1,0 +1,73 @@
+{
+  "format": "model-lens-production-smoke",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T10:02:57.711Z",
+  "driverSourceCommit": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+  "expectedBuild": "35c75cab9fab0def",
+  "checks": [
+    "version dialog works during delayed graph initialization at the repository subpath",
+    "public demo, 32px graph, exact layer search and location",
+    "native model chooser and native pattern JSON import/export",
+    "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+    "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+    "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+    "keyboard native pattern import, saved selection, search and exact JSON export",
+    "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/vendor/netron/worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/src/model-worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/src/model-worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/src/model-worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/vendor/netron/worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/src/model-worker.js?v=35c75cab9fab0def",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/35c75cab9fab0def/src/model-worker.js?v=35c75cab9fab0def",
+      "closed": true
+    }
+  ],
+  "target": "public-production",
+  "siteRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.9",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "8025bc6ac03b18298c86c387a834b74b757ec6bc",
+      "tree": "e4a22cdef8996b61528584fb1899f0e96eb08b5a",
+      "committedAt": "2026-10-27T17:55:21+08:00",
+      "dirty": false
+    },
+    "buildId": "35c75cab9fab0def"
+  },
+  "siteId": "972b669f7f6d39fb720932f24811c9afbcdfae13c75f35699aa08c25e6f02e66",
+  "coreBasePath": "versions/35c75cab9fab0def/",
+  "chromium": "141.0.7390.37",
+  "keyboardRequired": true,
+  "keyboardAudit": false,
+  "keyboard": {
+    "tabPresses": 586,
+    "modelWorkers": 2
+  },
+  "finishedAt": "2026-10-27T10:03:04.923Z"
+}
