@@ -65,6 +65,7 @@ try{
     let startupTimer;
     try{await Promise.race([startupBlocked,new Promise((_,reject)=>{startupTimer=setTimeout(()=>reject(Error('Graph initialization request was not observed.')),30000);})]);}finally{clearTimeout(startupTimer);}
     assert.equal(await readPage(()=>typeof document.querySelector('#release-info-button').onclick),'function','Version control must work while graph initialization is pending.');
+    if(selectionToolsRequired)assert.equal(await readPage(()=>document.querySelector('#autosave-enabled').disabled),true,'Autosave must not accept changes before the session preferences initialize.');
     await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();releaseStartup();check('version dialog works during delayed graph initialization at the repository subpath');
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
     await page.locator('#query').fill('#0');await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);check('public demo, 32px graph, exact layer search and location');

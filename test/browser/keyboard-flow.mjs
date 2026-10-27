@@ -48,7 +48,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     const intercept=()=>{};page.on('filechooser',intercept);
     try{
     await page.goto(base,{waitUntil:'domcontentloaded'});
-    await until(()=>typeof document.querySelector('#open-model').onclick==='function');
+    await until(()=>typeof document.querySelector('#open-model').onclick==='function'&&typeof document.querySelector('#autosave-enabled').onchange==='function'&&!document.querySelector('#autosave-enabled').disabled);
     await choose(demo);await ready(26);
     if(await read(()=>document.querySelector('#autosave-enabled').checked)){await tabTo('#autosave-enabled');await page.keyboard.press('Space');}
     await page.keyboard.press('Control+f');assert.equal(await read(()=>document.activeElement.id),'query');await page.keyboard.press('Control+a');await page.keyboard.type('#0');

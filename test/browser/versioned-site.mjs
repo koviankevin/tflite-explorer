@@ -52,7 +52,11 @@ try{
         page.on('pageerror',e=>report.errors.push(`${label}: ${e.message}`));page.on('crash',()=>report.errors.push(label+': page crash'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
         page.on('request',r=>{if(report.requests.length<2000)report.requests.push({page:label,phase,url:r.url().replace(base,'./'),method:r.method()});else report.errors.push('Request limit exceeded.');});
         page.on('worker',worker=>{const item={page:label,phase,url:worker.url().replace(base,'./'),closed:false};report.workers.push(item);worker.once('close',()=>{item.closed=true;});if(worker.url().includes('/model-worker.js')&&!worker.url().startsWith(base+assetBase+'src/model-worker.js'))report.errors.push(label+': model Worker used another version path.');});
-        await page.goto(base,{waitUntil:'domcontentloaded'});await waitFor(page,()=>typeof document.querySelector('#open-model').onclick==='function');await page.locator('#autosave-enabled').uncheck();assert.equal(await read(page,()=>document.baseURI),base+assetBase);return page;
+        await page.goto(base,{waitUntil:'domcontentloaded'});await waitFor(page,()=>typeof document.querySelector('#open-model').onclick==='function');
+        // Session initialization follows an awaited graph startup. A registered
+        // open button alone does not mean stored preferences have been applied.
+        await waitFor(page,()=>typeof document.querySelector('#autosave-enabled').onchange==='function'&&!document.querySelector('#autosave-enabled').disabled);
+        await page.locator('#autosave-enabled').uncheck();assert.equal(await read(page,()=>document.baseURI),base+assetBase);return page;
     }
     const pattern=reusablePattern('Version-switch saved RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(temporary,'saved-pattern.json');await writeFile(patternFile,exportPatterns([pattern]));
     phase='legacy-root';const legacyPage=await newPage('legacy','');await choose(legacyPage,path.join(previous,'demo.tflite'));await ready(legacyPage,26);await version(legacyPage,baseline.build);
