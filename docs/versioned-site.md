@@ -134,4 +134,8 @@ node scripts/compose-site.mjs --verify build/new-site
 
 修正合併來源 `fc426c58c40e57e57fef6d850962015d5d8f0165` 的 [main 契約 40472431959](https://github.com/koviankevin/tflite-explorer/actions/runs/40472431959) 已通過 [74 項契約](results/bounded-main-contract-2026-10-27.json)，零失敗／略過／取消；[main site 40472435489](https://github.com/koviankevin/tflite-explorer/actions/runs/40472435489) 通過 [六種切換情境](results/bounded-main-site-2026-10-27.json) 和 [741 檔 HTTP／四項原生 UI 驗收](results/bounded-main-http-smoke-2026-10-27.json)。[相依來源比較](results/bounded-selected-scopes-2026-10-27.json) 支持沿用既有 core 與實體大檔 browser，其 fingerprint 完全相符；索引改選新 contract／site，正式 prepare 仍會重新核對原始 GitHub 憑證。完整正式站持續觀察仍待完成。
 
+## 正式切換完成紀錄
+
+[正式站回退／恢復驗收](production-transition-verification.md) 已完成：控制來源 `eca6e88f740b13f7ae862dce3523b92a59726f37` 將原固定 preview.7／preview.8 完整快照實際切換，兩次均通過 741 檔與四項原生 UI；同一 browser context 的六項操作、pattern 保存與六個模型 Worker 關閉均通過。原 root 遷移的部分失敗報告與後續完整 versioned 回退／恢復分開保留；最後獨立 UI 因 Ubuntu 鏡像下載慢取消一次，僅重試失敗 verify 後成功，未重新 deploy。正式站已恢復原 preview.8／site `13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5`，四份 Release assets 未改。此結果不代表公司模型或任意資料格式升降級皆已驗收。
+
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

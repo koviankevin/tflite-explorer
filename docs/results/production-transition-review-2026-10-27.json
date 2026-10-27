@@ -1,0 +1,605 @@
+{
+  "format": "model-lens-production-transition-review",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T08:42:28.351Z",
+  "source": {
+    "commit": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+    "tree": "3308749121ab3acd2f57f20bd1b038d1e2152f84",
+    "committedAt": "2026-10-27T16:21:54+08:00",
+    "dirty": false
+  },
+  "runs": [
+    {
+      "id": 40472995964,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40472995964",
+      "source": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "path": ".github/workflows/verified-pages.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 122084355907,
+          "name": "prepare",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:22:06Z",
+          "completedAt": "2026-10-27T08:22:44Z"
+        },
+        {
+          "id": 122084607009,
+          "name": "Publish site ${{ needs.prepare.outputs.site_id }}",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:22:45Z",
+          "completedAt": "2026-10-27T08:22:45Z"
+        },
+        {
+          "id": 122084607607,
+          "name": "verify_live",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:22:45Z",
+          "completedAt": "2026-10-27T08:22:45Z"
+        },
+        {
+          "id": 122084607616,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:22:45Z",
+          "completedAt": "2026-10-27T08:22:45Z"
+        }
+      ]
+    },
+    {
+      "id": 40473313236,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40473313236",
+      "source": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "path": ".github/workflows/verified-pages.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 122085386243,
+          "name": "prepare",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:24:52Z",
+          "completedAt": "2026-10-27T08:25:24Z"
+        },
+        {
+          "id": 122085612416,
+          "name": "Publish site 19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:25:27Z",
+          "completedAt": "2026-10-27T08:25:37Z"
+        },
+        {
+          "id": 122085693201,
+          "name": "verify_live",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:25:39Z",
+          "completedAt": "2026-10-27T08:26:30Z"
+        },
+        {
+          "id": 122086028822,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:26:31Z",
+          "completedAt": "2026-10-27T08:26:30Z"
+        }
+      ]
+    },
+    {
+      "id": 40473476999,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40473476999",
+      "source": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "path": ".github/workflows/verified-pages.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 122086029533,
+          "name": "prepare",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:26:33Z",
+          "completedAt": "2026-10-27T08:27:03Z"
+        },
+        {
+          "id": 122086239520,
+          "name": "Publish site ${{ needs.prepare.outputs.site_id }}",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:27:04Z",
+          "completedAt": "2026-10-27T08:27:03Z"
+        },
+        {
+          "id": 122086240069,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:27:04Z",
+          "completedAt": "2026-10-27T08:27:03Z"
+        },
+        {
+          "id": 122086240183,
+          "name": "verify_live",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:27:04Z",
+          "completedAt": "2026-10-27T08:27:03Z"
+        }
+      ]
+    },
+    {
+      "id": 40473793963,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40473793963",
+      "source": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "path": ".github/workflows/verified-pages.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 2,
+      "jobs": [
+        {
+          "id": 122091606669,
+          "name": "verify_live",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 2,
+          "startedAt": "2026-10-27T08:40:58Z",
+          "completedAt": "2026-10-27T08:41:48Z"
+        },
+        {
+          "id": 122091606698,
+          "name": "prepare",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 2,
+          "startedAt": "2026-10-27T08:29:00Z",
+          "completedAt": "2026-10-27T08:29:42Z"
+        },
+        {
+          "id": 122091608293,
+          "name": "Publish site 13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 2,
+          "startedAt": "2026-10-27T08:29:46Z",
+          "completedAt": "2026-10-27T08:29:55Z"
+        },
+        {
+          "id": 122091951134,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "skipped",
+          "attempt": 2,
+          "startedAt": "2026-10-27T08:41:49Z",
+          "completedAt": "2026-10-27T08:41:48Z"
+        }
+      ]
+    },
+    {
+      "id": 40472992187,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40472992187",
+      "source": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "path": ".github/workflows/production-transition.yml",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 122084342905,
+          "name": "observe",
+          "status": "completed",
+          "conclusion": "success",
+          "attempt": 1,
+          "startedAt": "2026-10-27T08:22:05Z",
+          "completedAt": "2026-10-27T08:30:09Z"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "runId": 40473313236,
+      "id": 12719902165,
+      "name": "live-release-verification",
+      "createdAt": "2026-10-27T08:26:27Z",
+      "bytes": 38824,
+      "digest": "sha256:59e6f7b7eb823f921ede4cb8e2f19cf1d68fa6003c3443649542b6bd9822921b",
+      "members": [
+        {
+          "name": "pages-live-report.json",
+          "bytes": 192562,
+          "sha256": "6da4c9fb2af6f0365c2749eb06e6357cf630be376830ba26eadd946a65b9bc71"
+        },
+        {
+          "name": "production-smoke.json",
+          "bytes": 1863,
+          "sha256": "d5b8f7cd9263056bdaf7e529c7952d9cf892b7814498251271ac34b69aecccd9"
+        }
+      ]
+    },
+    {
+      "runId": 40473793963,
+      "id": 12720980200,
+      "name": "live-release-verification",
+      "createdAt": "2026-10-27T08:41:45Z",
+      "bytes": 38871,
+      "digest": "sha256:1f6f9e3f010fa99841989a3b4a3864fa579805919bbf852172497a3133a6d72e",
+      "members": [
+        {
+          "name": "pages-live-report.json",
+          "bytes": 192562,
+          "sha256": "84b9e75857853145efdc0aeacadf99a41857cc15db33b9a5bf507012bf961ddc"
+        },
+        {
+          "name": "production-smoke.json",
+          "bytes": 1863,
+          "sha256": "992731181f3e190a42e9e6a21fb99c70c71330fd24e7695fcbcef0f55f36c569"
+        }
+      ]
+    },
+    {
+      "runId": 40472992187,
+      "id": 12718878653,
+      "name": "production-transition-eca6e88f740b13f7ae862dce3523b92a59726f37-1",
+      "createdAt": "2026-10-27T08:30:06Z",
+      "bytes": 4567,
+      "digest": "sha256:35418053c3ab86aba358fcb9f139dbc51822b12a135b0668327617cb5efadcaa",
+      "members": [
+        {
+          "name": "report.json",
+          "bytes": 78153,
+          "sha256": "d11fcf45836a968a16f39d2e24d90b0b8eb0db40e62b8690add2ecb827c7d718"
+        },
+        {
+          "name": "state.json",
+          "bytes": 334,
+          "sha256": "4688093c128c42c1e93aa38ca3140c112cf45bb44ef42c8197e01c662c3b1469"
+        },
+        {
+          "name": "observer.log",
+          "bytes": 1019,
+          "sha256": "75e8944a9389b8effa3a254fc1ae826735af0af0fefba6a7e08c71714d5cd5d4"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "source-bound controller gates authenticate and rebuild before both promotions",
+    "both exact reviewed full-site IDs deployed and all 741 files passed SHA/MIME plus native browser checks",
+    "one browser context retained IndexedDB pattern through real versioned rollback and restore; all six model workers closed",
+    "latest GitHub deployment job and live site index bind the identical restored site ID",
+    "the original four preview.8 Release assets and source tag remain unchanged"
+  ],
+  "limitations": [
+    "Only public synthetic samples; no company models, private dialect verifier or runtime semantics.",
+    "The original-root migration observer timed out after five checks. Its partial evidence is separate from the complete later versioned rollback/restore.",
+    "No repeated 1.25 GiB browser run: unchanged dependency fingerprints and authenticated original main evidence were reused."
+  ],
+  "interruptedSetup": {
+    "runId": 40473793963,
+    "attempt": 1,
+    "jobId": 122087327033,
+    "conclusion": "cancelled",
+    "startedAt": "2026-10-27T08:29:57Z",
+    "completedAt": "2026-10-27T08:38:59Z",
+    "reason": "Slow azure.archive.ubuntu.com apt downloads exceeded the 8-minute job limit; native UI smoke did not start.",
+    "failedOnlyRetryAttempt": 2,
+    "redeployed": false
+  },
+  "originalRelease": {
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.8",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+        "tree": "260b96d55966bc1d1ab9df672d2c4835fedf38fe",
+        "committedAt": "2026-10-27T15:09:30+08:00",
+        "dirty": false
+      },
+      "buildId": "017eed149449e951"
+    },
+    "assets": [
+      {
+        "name": "model-lens-public-0.2.0-preview.8-017eed149449e951.zip",
+        "bytes": 29454029,
+        "sha256": "afdb7d2728bbf3940d3dcc13356b52d33d55c1aeb697fe9ab4a7a9aa510f6614"
+      },
+      {
+        "name": "model-lens-public-0.2.0-preview.8-017eed149449e951.zip.sha256",
+        "bytes": 121,
+        "sha256": "7bec30c037b7f2e06c57510c4ef389187b5aa8f5c73ad914600d219282c3a95e"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 131944,
+        "sha256": "63c49d8ac26dc2016e556d2ab5d7ccad43362a8f755ddaebcc06356f4438cb8c"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 39863,
+        "sha256": "e4fa3724b6a0a21b2bce08080d7f688dd8760d96c12276312910f1e88b20abba"
+      }
+    ],
+    "unchanged": true
+  },
+  "preparation": {
+    "rollback": {
+      "prepared": true,
+      "promotion": true,
+      "controllerSource": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "coreSource": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "checkedAt": "2026-10-27T08:22:24.657Z",
+      "buildId": "163f38ab1dc856e4",
+      "siteId": "19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+      "siteManifestSHA256": "9385e2a219257045f8a5096f63246ed0281686cfba9c756e4c7718b8c862b526",
+      "previousSiteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+      "previousDeployment": {
+        "deploymentId": 7353171080,
+        "controllerSource": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+        "runId": 40469787584,
+        "attempt": 1,
+        "jobId": 122074042089,
+        "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+        "legacy": false
+      },
+      "history": [
+        {
+          "build": "163f38ab1dc856e4",
+          "kind": "verified-candidate"
+        },
+        {
+          "build": "017eed149449e951",
+          "kind": "github-release",
+          "releaseId": 425149789,
+          "assetId": 680831492,
+          "tag": "v0.2.0-preview.8",
+          "source": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+          "zipSHA256": "afdb7d2728bbf3940d3dcc13356b52d33d55c1aeb697fe9ab4a7a9aa510f6614",
+          "zipBytes": 29454029,
+          "manifestSHA256": "e4fa3724b6a0a21b2bce08080d7f688dd8760d96c12276312910f1e88b20abba"
+        }
+      ],
+      "gates": [
+        {
+          "kind": "core",
+          "runId": 40438427440,
+          "reused": true
+        },
+        {
+          "kind": "browser",
+          "runId": 40445983471,
+          "reused": true
+        },
+        {
+          "kind": "contract",
+          "runId": 40472431959,
+          "reused": true
+        },
+        {
+          "kind": "site",
+          "runId": 40472435489,
+          "reused": true
+        }
+      ],
+      "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7"
+    },
+    "restore": {
+      "prepared": true,
+      "promotion": true,
+      "controllerSource": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+      "coreSource": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+      "checkedAt": "2026-10-27T08:26:47.800Z",
+      "buildId": "017eed149449e951",
+      "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+      "siteManifestSHA256": "f698f6d4d6ac6bb8f24c992f590d68cc4f7d393e1ca6eae70d1fff13cf64f639",
+      "previousSiteId": "19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+      "previousDeployment": {
+        "deploymentId": 7353699017,
+        "controllerSource": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+        "runId": 40473313236,
+        "attempt": 1,
+        "jobId": 122085612416,
+        "siteId": "19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+        "legacy": false
+      },
+      "history": [
+        {
+          "build": "017eed149449e951",
+          "kind": "verified-candidate"
+        },
+        {
+          "build": "163f38ab1dc856e4",
+          "kind": "github-release",
+          "releaseId": 425024166,
+          "assetId": 680389934,
+          "tag": "v0.2.0-preview.7",
+          "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+          "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+          "zipBytes": 29454029,
+          "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+        }
+      ],
+      "gates": [
+        {
+          "kind": "core",
+          "runId": 40438427440,
+          "reused": true
+        },
+        {
+          "kind": "browser",
+          "runId": 40445983471,
+          "reused": true
+        },
+        {
+          "kind": "contract",
+          "runId": 40472431959,
+          "reused": true
+        },
+        {
+          "kind": "site",
+          "runId": 40472435489,
+          "reused": true
+        }
+      ],
+      "zipSHA256": "afdb7d2728bbf3940d3dcc13356b52d33d55c1aeb697fe9ab4a7a9aa510f6614"
+    }
+  },
+  "rollback": {
+    "runId": 40473313236,
+    "siteId": "19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.7",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+        "committedAt": "2026-10-27T12:03:57+08:00",
+        "dirty": false
+      },
+      "buildId": "163f38ab1dc856e4"
+    },
+    "files": 741,
+    "httpRetries": 0,
+    "nativeChecks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup"
+    ]
+  },
+  "restore": {
+    "runId": 40473793963,
+    "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.8",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+        "tree": "260b96d55966bc1d1ab9df672d2c4835fedf38fe",
+        "committedAt": "2026-10-27T15:09:30+08:00",
+        "dirty": false
+      },
+      "buildId": "017eed149449e951"
+    },
+    "files": 741,
+    "httpRetries": 0,
+    "nativeChecks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup"
+    ]
+  },
+  "browser": {
+    "runId": 40472992187,
+    "initialMode": "existing-versioned-default",
+    "observedInitialUpgrade": false,
+    "checks": [
+      "pinned baseline namespace tab, native TFLite and saved IndexedDB pattern",
+      "pinned baseline lazily loads custom MLIR beside the existing default",
+      "new versioned root sees original saved pattern after real upgrade",
+      "already-open candidate lazily loads TFLite after real rollback with 32px and four original matches",
+      "native child export/reopen and original pattern JSON remain valid after real rollback",
+      "restored public default and existing candidate retain version and saved pattern"
+    ],
+    "observations": [
+      {
+        "phase": "initial-ready",
+        "at": "2026-10-27T08:22:35.018Z",
+        "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+        "build": "017eed149449e951"
+      },
+      {
+        "phase": "candidate-ready",
+        "at": "2026-10-27T08:25:34.337Z",
+        "siteId": "19108abfcae13f3c3b971bfc5e81860cd8c597e5a06a3eced8ab5d18b9ddf47c",
+        "build": "163f38ab1dc856e4"
+      },
+      {
+        "phase": "rollback-verified",
+        "at": "2026-10-27T08:30:02.781Z",
+        "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+        "build": "017eed149449e951"
+      }
+    ],
+    "modelWorkers": 6,
+    "allWorkers": 9,
+    "allWorkersClosed": true,
+    "browserClosed": true,
+    "sourceUnchanged": true
+  },
+  "deployment": {
+    "deploymentId": 7353771640,
+    "controllerSource": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+    "runId": 40473793963,
+    "attempt": 1,
+    "jobId": 122087247196,
+    "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+    "legacy": false
+  },
+  "liveSite": {
+    "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+    "manifestSHA256": "f698f6d4d6ac6bb8f24c992f590d68cc4f7d393e1ca6eae70d1fff13cf64f639",
+    "current": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.8",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+        "tree": "260b96d55966bc1d1ab9df672d2c4835fedf38fe",
+        "committedAt": "2026-10-27T15:09:30+08:00",
+        "dirty": false
+      },
+      "buildId": "017eed149449e951"
+    },
+    "legacy": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.7",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+        "committedAt": "2026-10-27T12:03:57+08:00",
+        "dirty": false
+      },
+      "buildId": "163f38ab1dc856e4"
+    },
+    "retainedBuildIds": [
+      "163f38ab1dc856e4"
+    ]
+  },
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.8",
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T08:42:49.129Z"
+}

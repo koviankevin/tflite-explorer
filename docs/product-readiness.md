@@ -10,8 +10,8 @@
 | 效能標準 | 固定硬體／引擎、不同檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | Node 九筆核心效能 CI 已通過；另加入實體寫滿 1.25 GiB／21,005 OP TFLite 的八輪原生選檔、下載、重開及關閉 CI，含完整權重/custom options、pattern 正反例、整個 Chromium 程序樹 RSS、Worker V8/backing storage、實際 Worker 終止與自然 Blob URL 撤銷；已通過並保存原始報告。數小時長時間負載、其他瀏覽器及固定實體硬體 SLA 仍需補齊；受控發布已強制核對此驗收與來源相依 scope |
 | 保存及復原 | 草稿自動保存、Undo／Redo、跨分頁衝突、崩潰後恢復與格式遷移 | 已加入 IndexedDB 工作草稿、有限歷史、revision 衝突／分叉與 v1／v2 讀取；已驗證重載及兩分頁恢復。Pattern library 已加入交易合併、同名衝突副本與舊 key 保留，實際雙分頁與跨 block 保存／匯出重開通過；硬崩潰／儲存回收與公司環境仍需補齊驗收 |
 | 操作與診斷 | 新使用者完整操作流程、原文定位、鍵盤及焦點驗收、可預覽且不含模型的診斷報告 | 已加入白名單本機診斷預覽／下載、有限操作紀錄及版本缺失處理；合成敏感字串排除、Escape 保留跨 block 選取與手機版面已驗收。完整新手／鍵盤流程與公司環境仍待補 |
-| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 現有發布腳本已強制核對三項 GitHub CI、artifact digest、受測依賴 scope、原始量測與候選來源重建；完整正例與自製 manifest 負例已驗證。兩份正式 ZIP 的隔離 HTTP 升級／回退、逐檔 SHA、拒絕損壞候選及舊版 lazy import 已通過。Pages 已切換受控 workflow、main-only environment 與包含管理者的必要 PR 檢查；三項伺服器負例、修正後正式站逐檔與實際瀏覽器操作、固定來源 Release／四份資產實際下載比對均通過，詳見 [Pages 驗收](pages-deployment-verification.md)。正式站回退、資料遷移及升級時舊分頁／CDN 資產隔離仍未完成 |
+| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 受控 Pages 已強制核對四項 main CI、artifact digest、受測依賴 scope、原始量測與乾淨候選重建；main-only environment／必要 PR 檢查及錯誤整站 ID 拒絕已驗收。正式站 preview.8 發布、完整快照回退 preview.7 再恢復、兩次 741 檔 SHA／MIME 與四項原生 UI 均通過；同一 browser context 的 pattern 保存、lazy imports、32px 搜尋、子模型匯出重開和六個模型 Worker 關閉通過。固定 Release 四份原始 assets 未改，詳見 [正式切換驗收](production-transition-verification.md)。任意資料格式升降級及公司內網實際切換仍需驗收 |
 
 公開開發使用公開／合成樣本。公司模型、私有 dialect 與 compiler 留在內網；內網驗收尚未完成時不得將其標為已支援或將整個商品等級目標標為完成。
 
-版本隔離已合併 main，補齊完整快照、可信 site ID、歷史保留／中斷恢復、固定 Release 提升及 GitHub 部署權威來源核對。Main 70 項契約、實際 Release 四份資產與 API 核對、隔離 741 檔 HTTP／瀏覽器切換均已通過；正式站目前仍為已交付 preview.7。接下來須正式切換 observer 的新 main 契約、完整新站交付與正式回退，不能以 CI 綠燈取代上表尚未完成的正式驗收。來源與原始報告見 [版本隔離](versioned-site.md)。
+版本隔離、可信 site ID、歷史保留／中斷恢復、固定 Release 提升與部署權威核對已在 main。Main 74 項契約、六種隔離切換情境，以及正式站實際回退／恢復已通過，現行固定交付為 preview.8。首次原 root 遷移的觀察器因等待恢復逾時仍保留 failed 部分證據；後續完整 versioned 回退／恢復另有成功報告，不將兩輪拼成單次全程通過。最後獨立 UI 因套件鏡像過慢取消一次，只重試失敗驗證後成功，未重部署。詳見 [原始紀錄與限制](production-transition-verification.md)。上表公司實模、長時間效能、其他引擎、硬崩潰及完整鍵盤流程仍未完成，整體商品等級目標維持進行中。
