@@ -18,6 +18,7 @@ try{
     if(!raw)throw Error('Expected complete site did not become live within 90 seconds.');
     const verified=await verifyRemoteSnapshot({base:PUBLIC_SITE,raw,...trusted,onFile:item=>report.checks.push(item)});
     report.siteId=verified.site.siteId;report.siteManifestSHA256=trusted.siteManifestSHA256;report.rootEntrySHA256=verified.rootEntrySHA256;report.legacyRelease=verified.site.legacyRoot.release;report.retainedBuildIds=verified.site.retainedBuildIds;
+    report.httpRetries=verified.rootEntryAttempts-1+verified.checks.reduce((n,item)=>n+item.attempts-1,0);
     report.release=manifest.release;report.status='passed';
 }catch(error){report.error=error.message;process.exitCode=1;}
-finally{report.finishedAt=new Date().toISOString();await writeFile(path.join(process.env.RUNNER_TEMP,'pages-live-report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,files:report.checks.length,error:report.error}));}
+finally{report.finishedAt=new Date().toISOString();await writeFile(path.join(process.env.RUNNER_TEMP,'pages-live-report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,files:report.checks.length,httpRetries:report.httpRetries,error:report.error}));}

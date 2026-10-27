@@ -10,16 +10,21 @@ on:
         description: Reviewed complete new site ID from preparation
         type: string
         required: true
+      allow_versioned_start:
+        description: Start beside this already-deployed exact site, then observe real rollback and restore
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   observe:
     if: ${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 70
     env:
       EXPECTED_BUILD: ${{ inputs.expected_build_id }}
       EXPECTED_SITE_ID: ${{ inputs.expected_site_id }}
+      ALLOW_VERSIONED_START: ${{ inputs.allow_versioned_start }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -33,7 +38,7 @@ jobs:
       - run: node node_modules/playwright/cli.js install --with-deps chromium
       - name: Start persistent public observer
         run: node test/browser/transition-control.mjs start
-      - name: Confirm original tab ready before deployment
+      - name: Confirm baseline tab ready
         run: node test/browser/transition-control.mjs wait initial-ready
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

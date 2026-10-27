@@ -5,22 +5,30 @@ import {SITE_LIMITS} from './versioned-site.mjs';
 
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const hex=(value,n)=>typeof value==='string'&&new RegExp(`^[a-f0-9]{${n}}$`).test(value);
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-export async function readStaticFile(base,name,{maxBytes=SITE_LIMITS.manifestBytes,allow404=false,fetcher=fetch}={}){
+export async function readStaticFile(base,name,{maxBytes=SITE_LIMITS.manifestBytes,allow404=false,fetcher=fetch,pause=sleep}={}){
     const location=new URL(base);
     if(!['http:','https:'].includes(location.protocol)||location.username||location.password||location.search||location.hash||!location.pathname.endsWith('/')||!Number.isSafeInteger(maxBytes)||maxBytes<0||maxBytes>SITE_LIMITS.bytes)throw Error('Invalid static read destination or limit.');
     if(name)safeFile(name);
     const url=new URL(name.split('/').map(encodeURIComponent).join('/'),location);
-    const response=await fetcher(url.href,{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});
+    let response,attempt=0;
+    // Retry only temporary upstream responses, at most four attempts. Bounds,
+    // redirects, JSON, SHA and MIME failures remain hard failures.
+    for(;attempt<4;attempt++){
+        response=await fetcher(url.href,{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});
+        if(![502,503,504].includes(response.status)||attempt===3)break;
+        await response.body?.cancel();await pause(1000*2**attempt);
+    }
     if(allow404&&response.status===404){await response.body?.cancel();return null;}
-    if(!response.ok){await response.body?.cancel();throw Error(`Static HTTP ${response.status}: ${name||'/'}`);}
+    if(!response.ok){await response.body?.cancel();throw Error(`Static HTTP ${response.status}: ${name||'/'} (attempts ${attempt+1})`);}
     // A small encoded response can have more header bytes than its decoded body.
     // Bound the actual body independently; hashes always describe decoded bytes.
     const declared=response.headers.get('content-length');
     if(declared!==null&&(!/^\d+$/.test(declared)||Number(declared)>Math.max(maxBytes,1024))){await response.body?.cancel();throw Error(`Static response limit exceeded: ${name}`);}
     const chunks=[];let length=0;
     for await(const chunk of response.body){length+=chunk.length;if(length>maxBytes)throw Error(`Static body limit exceeded: ${name}`);chunks.push(chunk);}
-    return {bytes:Buffer.concat(chunks),contentType:response.headers.get('content-type')};
+    return {bytes:Buffer.concat(chunks),contentType:response.headers.get('content-type'),attempts:attempt+1};
 }
 
 function checkCore(manifest,expectedBuild){
@@ -56,12 +64,12 @@ export async function verifyRemoteSnapshot({base,raw,siteId,siteManifestSHA256,c
                 const response=await read(base,item.path,{maxBytes:item.bytes});assertStaticMime(item.path,response.contentType);
                 if(response.bytes.length!==item.bytes||sha256(response.bytes)!==item.sha256)throw Error(`Live file differs: ${item.path}`);
                 if(item.path===site.current.basePath+'release-manifest.json'&&!equal(JSON.parse(response.bytes),coreManifest))throw Error('Live namespaced core manifest differs.');
-                const check={...item,contentType:response.contentType};checks.push(check);onFile(check);
+                const check={...item,contentType:response.contentType,attempts:response.attempts??1};checks.push(check);onFile(check);
             }catch(error){failure??=error;}
         }
     }));
     if(failure)throw failure;
-    return {site,checks,rootEntrySHA256:sha256(entry.bytes)};
+    return {site,checks,rootEntrySHA256:sha256(entry.bytes),rootEntryAttempts:entry.attempts??1};
 }
 
 // The manual browser smoke can still inspect the existing pre-migration site.

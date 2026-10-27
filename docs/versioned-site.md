@@ -122,4 +122,14 @@ node scripts/compose-site.mjs --verify build/new-site
 
 接下來凍結本次來源，核對成功準備的 core ZIP／完整 Pages tar／site ID，先驗錯誤 site ID 被拒，再讓已就緒的 observer 配合實際升級／回退／恢復。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
+## 正式切換第一輪與限量 HTTP 重試
+
+[preview.8 發布 40466906051](https://github.com/koviankevin/tflite-explorer/actions/runs/40466906051) 的第三次 attempt 已完成正式站驗收與固定 Release；前兩次因不同檔案的暫時 HTTP 503 中止，沒有略過檔案雜湊。之後 [回退 preview.7 40468744645](https://github.com/koviankevin/tflite-explorer/actions/runs/40468744645) 全部成功；[恢復 preview.8 40469787584](https://github.com/koviankevin/tflite-explorer/actions/runs/40469787584) 已成功部署原本完整 site，但逐檔驗證於第 486 檔遇到 `src/diagnostics.js` 的 HTTP 503，因此該 run 仍是失敗，不能列為完整通過。
+
+第一輪 [持續觀察器 40466402819](https://github.com/koviankevin/tflite-explorer/actions/runs/40466402819) 在同一 browser context 通過前五項操作：原 root 分頁的 pattern 保存、升級後 lazy custom MLIR、新版讀取既有清單、回退後舊新版分頁 lazy TFLite／32px 搜尋，以及子模型匯出重開。25 分鐘期限在等待恢復時到期；程序關閉 browser 和七個實際 workers，但缺少最後恢復後的新分頁檢查，整份報告仍為失敗。
+
+針對已重現的 HTTP 問題，靜態讀取只對 502／503／504 以 1、2、4 秒間隔重試，總共最多四次，逐檔記錄 attempts。永久 HTTP、redirect、大小、SHA 和 MIME 錯誤仍立即失敗；未改六路併發，也不以重跑整個 deploy 處理暫時讀取問題。新增三項回歸包含真實 HTTP 驗證鏈的兩次 503 後成功、重試上限，以及恢復後錯誤內容仍被拒絕。
+
+後續完整觀察改用 60 分鐘限時。已完成首次遷移時，必須明確選擇 `allow_versioned_start` 且現行 build／site 完全符合預期，才從保留的 baseline namespace 開始，再觀察真正的回退與恢復。此模式明示沒有觀察首次升級，不拿重建分頁冒充原 root；第一輪部分證據與後續完整回退／恢復報告分開保存。此修正仍待新的 main 關卡與正式切換驗收。
+
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

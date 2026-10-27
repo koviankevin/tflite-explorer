@@ -23,7 +23,7 @@ if(command==='start'){
     for(const [key,value] of Object.entries(identity))assert.equal(record[key],value);assert.ok(Number.isSafeInteger(record.pid)&&record.pid>0);assert.match(record.birth,/^\d+$/);
     const alive=async()=>await birth(record.pid)===record.birth;
     if(command==='wait'){
-        assert.ok(['initial-ready','candidate-ready','rollback-verified','complete'].includes(phase));const deadline=record.startedAt+(phase==='initial-ready'?120000:26*60*1000);
+        assert.ok(['initial-ready','candidate-ready','rollback-verified','complete'].includes(phase));const deadline=record.startedAt+(phase==='initial-ready'?120000:61*60*1000);
         while(true){
             let state;try{state=await read('state.json');}catch(error){if(error.code!=='ENOENT')throw error;}
             if(state){for(const [key,value] of Object.entries(identity))assert.equal(state[key],value);if(state.status==='failed')throw Error(state.error||'Observer failed.');if(state.reached.includes(phase)){if(phase==='complete')assert.equal(state.status,'passed');else assert.equal(await alive(),true,'Observer exited after checkpoint.');console.log('Confirmed '+phase);break;}}
