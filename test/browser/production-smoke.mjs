@@ -10,9 +10,15 @@ import {sha256,root,within} from '../../scripts/lib/release-artifact.mjs';
 import {resolveLiveCore,readStaticFile,verifyRemoteSnapshot} from '../../scripts/lib/live-site.mjs';
 import {verifySite} from '../../scripts/lib/versioned-site.mjs';
 import {createStaticServer} from '../../scripts/serve.mjs';
+import {keyboardFlow} from './keyboard-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
+// Immutable older releases remain valid rollback targets. Every new build must
+// pass keyboard acceptance; explicit audit also exercises the two old builds.
+const keyboardAudit=process.env.KEYBOARD_AUDIT==='true';
+if(keyboardAudit){assert.equal(process.env.GITHUB_WORKFLOW,'Public site browser smoke');assert.equal(process.env.GITHUB_REF,'refs/heads/main');}
+const keyboardRequired=keyboardAudit||!['163f38ab1dc856e4','017eed149449e951'].includes(expected);
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
 let browser,context,page,readPage,releaseStartup,server;
@@ -50,7 +56,7 @@ try{
     await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){markStartupBlocked();await startupHold;}await route.continue();}});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>report.errors.push(error.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
     page.on('worker',worker=>{const item={url:worker.url(),closed:false};report.workers.push(item);worker.on('close',()=>{item.closed=true;});if(/\/model-worker\.js(?:\?|$)/.test(item.url)&&item.url!==new URL(coreBasePath+`src/model-worker.js?v=${expected}`,base).href)report.errors.push('Model worker belongs to another core namespace/build.');});
-    const cdp=await context.newCDPSession(page);readPage=async fn=>{const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});if(value.exceptionDetails)throw Error('Read-only DOM observation failed.');return value.result.value;};
+    const cdp=await context.newCDPSession(page);readPage=async (fn,...args)=>{const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(...${JSON.stringify(args)})`,returnByValue:true});if(value.exceptionDetails)throw Error('Read-only DOM observation failed.');return value.result.value;};
     await page.goto(base+'?v='+expected,{waitUntil:'domcontentloaded'});
     const documentBase=new URL(await readPage(()=>document.baseURI));documentBase.search='';documentBase.hash='';assert.equal(documentBase.href,new URL(coreBasePath,base).href,'Actual root HTML must select the expected core namespace.');
     await waitFor(()=>typeof document.querySelector('#welcome-open').onclick==='function');
@@ -65,7 +71,9 @@ try{
     let event=page.waitForEvent('download');await page.locator('#export-pattern').click();let download=await event;assert.equal(await download.failure(),null);const json=path.join(temporary,'pattern-roundtrip.json');await download.saveAs(json);await download.delete();assert.deepEqual(parsePatternFile(await readFile(json,'utf8')),[pattern]);check('native model chooser and native pattern JSON import/export');
     await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');event=page.waitForEvent('download');await page.locator('#export-match').click();download=await event;assert.equal(await download.failure(),null);const child=path.join(temporary,'submodel.tflite');await download.saveAs(child);await download.delete();
     await close();await choose(child);await ready(3);await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();check('actual TFLite submodel download, native reopen, original pattern and worker cleanup');
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    report.keyboardRequired=keyboardRequired;report.keyboardAudit=keyboardAudit;
+    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check});
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,keyboardRequired?5:3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();

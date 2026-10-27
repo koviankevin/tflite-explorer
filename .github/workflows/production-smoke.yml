@@ -5,7 +5,7 @@ on:
       scenario:
         description: Public production check or isolated versioned upgrade/rollback
         type: choice
-        options: [production, versioned]
+        options: [production, versioned, keyboard]
         default: production
       expected_build_id:
         description: Exact build ID already served by the public site
@@ -31,6 +31,7 @@ jobs:
       - run: node test/browser/production-smoke.mjs
         env:
           EXPECTED_BUILD: ${{ inputs.expected_build_id }}
+          KEYBOARD_AUDIT: ${{ inputs.scenario == 'keyboard' }}
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
