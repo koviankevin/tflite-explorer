@@ -6,7 +6,7 @@ import {root,verifyArtifact,gitSource} from './release-artifact.mjs';
 import {buildSite} from '../build.mjs';
 import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
-import {evaluateLifecycle,LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
+import {evaluateLifecycle,LIFECYCLE_POLICY,MODEL_EDIT_LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
 import {evaluateSiteBrowser} from './site-browser-policy.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -71,9 +71,13 @@ export function assertReport(report,kind,run,tree,policy){
     if(kind==='core'){
         if(report.format!=='model-lens-performance-run'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||report.referenceEnvironment!==true||stable(report.policy)!==stable(policy)||evaluatePerformanceRun(policy,report.samples).status!=='passed')throw Error('core: invalid source, policy or measurements.');
     }else if(kind==='browser'){
-        if(report.environment?.sourceCommit!==run.head_sha||report.environment.sourceTree!==tree||report.environment.sourceDirty!==false||report.browserClosed!==true||!Array.isArray(report.errors)||report.errors.length||stable(report.policy)!==stable(LIFECYCLE_POLICY)||evaluateLifecycle(report).status!=='passed')throw Error('browser: invalid source or lifecycle measurements.');
+        const lifecyclePolicy=report.policy?.version===2?MODEL_EDIT_LIFECYCLE_POLICY:LIFECYCLE_POLICY,editing=lifecyclePolicy.version===2;
+        if(report.environment?.sourceCommit!==run.head_sha||report.environment.sourceTree!==tree||report.environment.sourceDirty!==false||report.browserClosed!==true||!Array.isArray(report.errors)||report.errors.length||stable(report.policy)!==stable(lifecyclePolicy)||evaluateLifecycle(report).status!=='passed')throw Error('browser: invalid source or lifecycle measurements.');
         const workers=report.audit?.workers?.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url))||[];
-        if(workers.length!==16||workers.some(w=>w.terminated!==true||w.error||!w.audit?.calls||w.audit.violations?.length!==0||w.audit.bytes!==w.stats?.bytesRead)||!Array.isArray(report.audit?.urls)||!report.audit.urls.length||report.audit.urls.some(u=>u.revoked!==true))throw Error('browser: retained resources or missing read audit.');
+        if(workers.length!==(editing?24:16)||workers.some(w=>w.terminated!==true||w.error||!w.audit?.calls||w.audit.violations?.length!==0||w.audit.bytes!==w.stats?.bytesRead+(w.verificationReadBytes||0))||!Array.isArray(report.audit?.urls)||!report.audit.urls.length||report.audit.urls.some(u=>u.revoked!==true))throw Error('browser: retained resources or missing read audit.');
+        if(!editing&&workers.some(w=>w.verificationPasses!==undefined||w.verificationReadBytes!==undefined))throw Error('browser: edit verification cannot use the legacy lifecycle policy.');
+        if(editing&&(workers.filter(w=>w.verificationPasses===1).length!==8||workers.some(w=>w.verificationPasses!==undefined&&(w.verificationPasses!==1||!Number.isSafeInteger(w.verificationReadBytes)||w.verificationReadBytes<=0||!Number.isSafeInteger(w.verificationFileBytes)||w.verificationFileBytes<=1024**3))))throw Error('browser: missing actual candidate read audit.');
+        if(editing&&workers.some(w=>w.verificationReadBytes!==undefined&&w.verificationPasses!==1))throw Error('browser: unattributed candidate reads.');
         for(const audit of [report.audit.audit,...workers.map(w=>w.audit)])if(!audit||!Array.isArray(audit.violations)||audit.violations.length||!Number.isFinite(audit.bytes)||audit.bytes<=0||audit.bytes>LIFECYCLE_POLICY.realmReadBytes||!Number.isFinite(audit.maxRead)||audit.maxRead<=0||audit.maxRead>LIFECYCLE_POLICY.maxReadBytes)throw Error('browser: invalid or excessive native reads.');
         if(report.fixture?.sha256!=='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'||report.fixture.operators!==21005||report.fixture.bytes!==1349965216||!Number.isFinite(report.fixture.allocatedBytes)||report.fixture.allocatedBytes<report.fixture.bytes*.99)throw Error('browser: missing physical fixture evidence.');
     }else if(kind==='site'){

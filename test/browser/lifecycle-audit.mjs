@@ -24,6 +24,7 @@ export function installLifecycleAudit(worker=false) {
             this.addEventListener('message',({data})=>{
                 if(data.__lifecycleAudit)entry.audit=data.__lifecycleAudit;
                 if(data.data?.stats)entry.stats={bytesRead:data.data.stats.bytesRead,fileBytes:data.data.stats.fileBytes};
+                if(data.data?.roundTripStats){const s=data.data.roundTripStats;entry.verificationPasses=(entry.verificationPasses||0)+1;entry.verificationReadBytes=(entry.verificationReadBytes||0)+s.bytesRead;entry.verificationFileBytes=s.fileBytes;}
             });
             this.addEventListener('error',event=>{entry.error=event.message;});
         }
