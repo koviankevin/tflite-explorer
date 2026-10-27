@@ -19,7 +19,18 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     }
     async function enter(selector){await tabTo(selector);await page.keyboard.press('Enter');}
     async function choose(filename,selector='#open-model'){
-        await tabTo(selector);const event=page.waitForEvent('filechooser');await page.keyboard.press('Enter');await(await event).setFiles(filename);
+        await tabTo(selector);
+        const inspect=()=>read(s=>{const e=document.querySelector(s);return {active:document.activeElement?.id,focused:document.hasFocus(),handler:typeof e?.onclick,disabled:e?.disabled,ready:document.readyState,form:!!e?.closest('form'),activation:navigator.userActivation?.isActive};},selector);
+        const before=await inspect(),event=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');
+        try{await(await event).setFiles(filename);}
+        catch(error){
+            const after=await inspect();let space=false,foregroundEnter=false;
+            const alternative=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Space');
+            try{await(await alternative).setFiles(filename);space=true;}catch{
+                await page.bringToFront();const foreground=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');try{await(await foreground).setFiles(filename);foregroundEnter=true;}catch{}
+            }
+            console.log('[DEBUG-keyboard-enter] '+JSON.stringify({selector,before,after,space,foregroundEnter}));throw error;
+        }
     }
     async function ready(layers){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
     async function close(){
