@@ -1329,6 +1329,8 @@ new MutationObserver(() => {
     }
 }).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
 new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
+// Version metadata is independent of graph startup and must respond immediately.
+initReleaseInfo({exportFile:host.export});
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
 libraryReady=refreshStoredPatterns();
@@ -1338,7 +1340,6 @@ sessions=workspaceSessionUI({capture:captureSession,apply:applySession,ready:wor
     else {queuedDraft=record;queueWorkspace(workspace,false);}
 }});
 
-initReleaseInfo({exportFile:host.export});
 diagnosticUI({journal:diagnostics,exportFile:host.export,context:()=>({
     modelLoaded:!!model,format:model?.sourceFormat || 'none',fileBytes:file?.size,
     layers:model?.graphs.reduce((n,g)=>n+g.layers,0),scopes:model?.graphs.length,
