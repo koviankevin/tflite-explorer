@@ -1,5 +1,7 @@
 # preview.10 實際模型編輯交付
 
+本頁保留 preview.10 的固定交付；目前最新 preview.11 另有 [多選修正與正式交付紀錄](model-edit-multiselect.md)。
+
 已部署 [正式網站](https://koviankevin.github.io/tflite-explorer/) 並發布 [固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.10)，只更新 GitHub。功能包括圈選時 Alt＋拖曳平移、直接編輯所選 pattern 草稿、開啟本次匯出結果，以及 [TFLite／MLIR 實際 OP 編輯](model-editing.md)。原始模型保留，輸出成功後以新模型重新開啟。
 
 凍結來源 `478f65d6afea0484d05c200d1d51d9ecc0d7079b`、tree `8d54d773fd9772faffc4b628eba74230718e4b6f`、build `f2591e6d3d458f9f`。四項 main 驗收及原始報告見 [最終來源驗收](model-editing.md#最終來源驗收)。文件／run 索引變更後，四項執行依賴 fingerprint 均一致；prepare 重新核對 GitHub API、provider digest、原始 policy 和乾淨候選重建，沒有以版本號或舊綠燈代替來源驗證。
