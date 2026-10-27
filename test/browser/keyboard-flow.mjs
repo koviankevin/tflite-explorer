@@ -49,7 +49,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     if(await read(()=>document.querySelector('#autosave-enabled').checked)){await tabTo('#autosave-enabled');await page.keyboard.press('Space');}
     await page.keyboard.press('Control+f');assert.equal(await read(()=>document.activeElement.id),'query');await page.keyboard.press('Control+a');await page.keyboard.type('#0');
     await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
-    await option('#graph-font-size','16');await option('#graph-font-size','32');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
+    for(const size of ['16','32']){await option('#graph-font-size',size);await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');assert.equal(await read(()=>document.activeElement.id),'graph-font-size','Graph redraw must retain keyboard control focus.');}
     await tabTo('[data-kind="layers"]');await switchTab('ArrowRight','tensors');await switchTab('ArrowRight','patterns','Space');await switchTab('Home','layers');await switchTab('End','patterns','Space');await switchTab('ArrowLeft','tensors');await switchTab('ArrowRight','patterns');
     assert.equal(await read(()=>[...document.querySelectorAll('[role="tab"]')].filter(t=>t.tabIndex===0).length),1);
     assert.equal(await read(()=>{const t=document.activeElement,p=document.getElementById(t.getAttribute('aria-controls'));return p?.getAttribute('role')==='tabpanel'&&p.getAttribute('aria-labelledby')===t.id;}),true);
@@ -57,14 +57,17 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     check('keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results');
 
     await tabTo('#pick-pattern');await page.keyboard.press('Space');assert.equal(await read(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')),'true');
-    await tabTo('#target .node[role="button"][tabindex="0"]');await page.keyboard.press('Space');await until(()=>document.querySelector('#capture-count').textContent==='已選取 1 個 layers');
+    await tabTo('#target .node[role="button"][aria-label^="選取 layer #0 "]');await page.keyboard.press('Space');await until(()=>document.querySelector('#capture-count').textContent==='已選取 1 個 layers');
     await enter('#open-import');await until(()=>document.querySelector('#import-dialog').open);
     for(const key of [...Array(10).fill('Tab'),...Array(10).fill('Shift+Tab')]){await page.keyboard.press(key);assert.equal(await read(()=>!!document.activeElement?.closest('#import-dialog')),true,'Modal Tab must stay inside the dialog.');}
     await page.keyboard.press('Control+f');assert.equal(await read(()=>document.querySelector('[data-kind="patterns"]').getAttribute('aria-selected')),'true','Modal shortcut must not switch the hidden background tab.');
     for(let i=0;i<2&&await read(()=>document.querySelector('#import-dialog').open);i++)await page.keyboard.press('Escape');
     assert.equal(await read(()=>document.querySelector('#import-dialog').open),false);assert.equal(await read(()=>document.activeElement.id),'open-import');assert.equal(await read(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')),'true');assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 1 個 layers');
-    await enter('#cancel-capture');
-    check('modal Tab containment, shortcut isolation, Escape focus return and retained selected layer');
+    for(const index of [1,2]){await tabTo('#target .node[role="button"][aria-label^="選取 layer #'+index+' "]');await page.keyboard.press('Space');}
+    assert.equal(await read(()=>document.querySelector('#capture-count').textContent),'已選取 3 個 layers');await tabTo('#capture-name');await page.keyboard.press('Control+a');await page.keyboard.type('Keyboard captured RTR');await enter('#save-capture');
+    await until(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')==='false'&&document.querySelector('#result-count').textContent==='4 筆匹配路徑');
+    await tabTo('#export-pattern');const captureEvent=page.waitForEvent('download');await page.keyboard.press('Enter');const captureDownload=await captureEvent;assert.equal(await captureDownload.failure(),null);const captureFile=path.join(directory,'keyboard-captured-pattern.json');await captureDownload.saveAs(captureFile);await captureDownload.delete();const captured=parsePatternFile(await readFile(captureFile,'utf8'));assert.equal(captured.length,1);assert.equal(captured[0].name,'Keyboard captured RTR');assert.deepEqual(captured[0].nodes.map(n=>n.type),['Reshape','Transpose','Reshape']);assert.equal(captured[0].edges.length,2);
+    check('modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern');
 
     const pattern=reusablePattern('Keyboard acceptance RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),input=path.join(directory,'keyboard-pattern.json');await writeFile(input,exportPatterns([pattern]),{flag:'wx'});
     await enter('#open-import');await choose(input,'#choose-pattern-file');await until(()=>!document.querySelector('#confirm-import').disabled);await enter('#confirm-import');await until(()=>!document.querySelector('#import-dialog').open);

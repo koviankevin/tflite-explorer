@@ -5,17 +5,17 @@
   <button id="release-info-button" class="quiet" aria-haspopup="dialog">版本</button>
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉模型</button>
-  <button id="open-model" class="primary">開啟模型 <span>↗</span></button>
+  <button id="open-model" class="primary" aria-keyshortcuts="Control+O Meta+O">開啟模型 <span>↗</span></button>
   <input id="model-file" type="file" accept=".tflite,.lite,.mlir" hidden>
 </header>
 <aside id="explorer-panel" class="explorer-panel" aria-label="模型搜尋">
   <div class="panel-heading"><span>探索模型</span><span class="eyebrow">01 / EXPLORE</span></div>
   <div class="tabs" role="tablist" aria-label="搜尋類別">
-    <button role="tab" aria-selected="true" data-kind="layers">Layers <span id="layer-count">—</span></button>
-    <button role="tab" aria-selected="false" data-kind="tensors"><span id="value-kind-label">Tensors</span> <span id="tensor-count">—</span></button>
-    <button role="tab" aria-selected="false" data-kind="patterns">Pattern</button>
+    <button id="layers-tab" role="tab" aria-controls="search-controls" aria-selected="true" tabindex="0" data-kind="layers" title="左右方向鍵移動；Enter／Space 切換並搜尋">Layers <span id="layer-count">—</span></button>
+    <button id="tensors-tab" role="tab" aria-controls="search-controls" aria-selected="false" tabindex="-1" data-kind="tensors" title="左右方向鍵移動；Enter／Space 切換並搜尋"><span id="value-kind-label">Tensors</span> <span id="tensor-count">—</span></button>
+    <button id="patterns-tab" role="tab" aria-controls="search-controls" aria-selected="false" tabindex="-1" data-kind="patterns" title="左右方向鍵移動；Enter／Space 切換並搜尋">Pattern</button>
   </div>
-  <div class="search-tools">
+  <div id="search-controls" class="search-tools" role="tabpanel" aria-labelledby="layers-tab">
     <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button></div>
     <input id="workspace-file" type="file" accept=".json" hidden>
     <div class="session-tools" aria-label="本機草稿與操作歷史">
@@ -25,7 +25,7 @@
     </div>
     <p id="workspace-hint" class="hint" hidden></p>
     <button id="choose-workspace-model" class="quiet" hidden>選取模型以恢復</button>
-    <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
+    <div id="text-search"><label for="query" class="sr-only">搜尋名稱、operator 或編號</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="query" aria-keyshortcuts="Control+F Meta+F" placeholder="搜尋名稱、operator、#編號" autocomplete="off" disabled><kbd>Ctrl F</kbd></div></div>
     <div id="pattern-editor" hidden>
       <label for="saved-pattern" class="control-label">已儲存的 patterns <span>此瀏覽器</span></label><select id="saved-pattern"><option value="">選擇已儲存的 pattern…</option></select>
       <output id="pattern-library-status" class="hint" aria-live="polite">正在讀取本機 pattern 清單…</output>

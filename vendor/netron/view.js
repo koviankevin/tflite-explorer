@@ -2500,7 +2500,13 @@ view.Graph = class extends grapher.Graph {
             this._events.touchstart = (e) => this._touchStartHandler(e);
             const document = this.host.document;
             const element = document.getElementById('target');
-            element.focus();
+            // Repainting must not steal focus from an active search, toolbar,
+            // native select or modal control. Keep graph keyboard focus when
+            // the previous graph element was replaced or already owned it.
+            const active = document.activeElement;
+            if (!active || active === document.body || element.contains(active)) {
+                element.focus();
+            }
             element.addEventListener('scroll', this._events.scroll);
             element.addEventListener('wheel', this._events.wheel, { passive: false });
             element.addEventListener('pointerdown', this._events.pointerdown);
@@ -3398,6 +3404,8 @@ view.Sidebar = class {
         const element = this._element('sidebar-content');
         const container = this._element('target');
         const closeButton = this._element('sidebar-closebutton');
+        const active = this._host.document.activeElement;
+        const returnGraphFocus = !active || active === this._host.document.body || container.contains(active) || sidebar.contains(active);
         closeButton.removeEventListener('click', this._closeSidebarHandler);
         this._host.document.removeEventListener('keydown', this._closeSidebarKeyDownHandler);
         if (this._stack.length > 0) {
@@ -3436,7 +3444,9 @@ view.Sidebar = class {
             const clone = element.cloneNode(true);
             element.parentNode.replaceChild(clone, element);
             container.style.width = '100%';
-            container.focus();
+            if (returnGraphFocus) {
+                container.focus();
+            }
         }
     }
 };
