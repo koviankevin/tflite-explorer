@@ -1,6 +1,6 @@
-# 實際模型編輯：開發中
+# 實際模型編輯
 
-使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。開發分支已有模型編輯介面及合成瀏覽器驗收，**正式網站仍為 preview.9；尚待大型模型驗收、正式來源關卡及部署**。
+使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。核心與介面已合併 main，最終來源的大型模型及四關卡均通過；**正式網站仍為 preview.9，preview.10 尚待準備、審閱及部署**。完整結果見下方。
 
 ## 已完成的核心
 
@@ -25,9 +25,25 @@
 
 ## 接續必須完成
 
-1. 在超過 1 GiB／20,000 OP 的實體檔驗證修改及整份模型輸出的時間、記憶體與關閉釋放；不能以既有子模型匯出量測代替。
-2. 依既有來源綁定關卡部署 GitHub Pages，核對最終來源與正式產物，提供固定內網更新包。
-3. 公司 dialect verifier、custom kernel 和推論正確性仍須內網驗收；TFLite 任意新 OP catalog、所有 metadata 參數和完整全模型 OP diff 不在這版已驗證範圍。
+1. 依既有來源綁定關卡準備及部署 GitHub Pages，核對最終來源與正式產物，提供固定內網更新包。
+2. 公司 dialect verifier、custom kernel 和推論正確性仍須內網驗收；TFLite 任意新 OP catalog、所有 metadata 參數和完整全模型 OP diff 不在這版已驗證範圍。
+
+## 最終來源驗收
+
+受測 main 為 `d28e42fb70d0f81329dd49d08b6f5db8b136f7db`、tree `6c6956d42735b03b7247b992356df0586dfcebc5`；四個 workflow_dispatch 均成功。後續只補操作說明、原始證據及 run 選擇；prepare 仍須重新核對相依 fingerprint、API、artifact digest、原始量測與乾淨候選重建。
+
+| 關卡 | 結果 |
+| --- | --- |
+| [核心效能 40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445) | 九筆固定 policy 量測通過 |
+| [實體大檔 40503469247](https://github.com/koviankevin/tflite-explorer/actions/runs/40503469247) | 八輪新增 OP、整份匯出、直接重開、子模型匯出、原生重開、關閉與自然 URL 撤銷通過；[原始量測](results/model-edit-final-browser-2026-10-27.json) |
+| [封裝契約 40503480942](https://github.com/koviankevin/tflite-explorer/actions/runs/40503480942) | 75 項測試，零失敗／略過／取消；[原始報告](results/model-edit-final-contract-2026-10-27.json) |
+| [隔離站台 40503488236](https://github.com/koviankevin/tflite-explorer/actions/runs/40503488236) | 六種升降版切換，另有 16 項原生 UI／鍵盤操作與 21 個模型 Worker 關閉；[切換報告](results/model-edit-final-site-2026-10-27.json)、[UI 報告](results/model-edit-final-ui-2026-10-27.json) |
+
+大型 corpus 是實體寫滿、完整 readback SHA-256 的 1,349,965,216-byte／21,005 OP 合成 TFLite，每輪輸出為 1,350,445,736 bytes／21,006 OP。完整修改模型重開後仍找到 prefix 與分支 pattern 各一次；再匯出四 OP 子模型，原生選檔重開後正例一次、另一結構零次。八份完整輸出 SHA-256 均為 `6371d2132d4f1816666c04f3132ae0f395de5f54777d6adcab55f0c07ea6665b`，權重 SHA-256 與原始 1.25 GiB 權重一致；每份修改報告七個 ranges、1,342,177,328 bytes 的串流逐段比對通過，含 opaque custom options。
+
+完整修改、候選重新解析及原生下載合計約 11.5～16.0 秒／輪。整個 Chromium 程序樹的 sampled peak RSS 約 872.1 MiB（相對初始增加 391.4 MiB）；扣除兩輪 warmup，closed RSS drift 約 9.1 MiB、slope 約 -0.22 MiB／輪，main heap drift 約 303 KiB。24 個模型 Worker 全部終止，八個 source Worker 的原始加候選實際讀取各為 16,318,536 bytes，單次最多 65,536 bytes，均低於既有 16 MiB／realm 與 1 MiB／read 門檻。未強制 GC、未縮短 60 秒 URL 壽命；全部 Blob URLs 自然撤銷，整個瀏覽器最後關閉。
+
+這是 hosted Linux Chromium 八輪、500ms RSS 取樣及三個時點的 Worker V8／backing storage 量測；不能證明長時間絕不洩漏、連續峰值或公司硬體 SLA。UI 以 1366×640 和 390×844、32px 模型圖檢查 modal 版面；不是實體手機或公司 compiler／runtime 驗收。MLIR 五份合成輸出沒有權重 ranges，其 byte comparison 明列 not-applicable，未冒充權重驗證。
 
 ## 已完成的 pattern 操作驗收
 
