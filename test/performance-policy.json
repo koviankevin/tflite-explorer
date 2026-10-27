@@ -1,0 +1,27 @@
+{
+  "format": "model-lens-performance-policy",
+  "version": 1,
+  "samplesPerCase": 3,
+  "childTimeoutMs": 60000,
+  "reference": { "platform": "linux", "arch": "x64", "nodeMajor": 22, "nodeVersion": "22.23.3", "runnerImage": "ubuntu24" },
+  "cases": [
+    {
+      "id": "tflite-3001",
+      "fixture": { "kind": "virtual-tflite", "repeats": 1000, "weightBytes": 1342177280, "bytes": 1342706636, "headerSHA256": "798d97f255a101d2bb6fc0684622837ac9413d8c225400d2f26f9b10e13800cf" },
+      "limits": { "parseMs": 5000, "searchMsMax": 250, "patternMs": 5000, "cancelMs": 500, "overviewMs": 5000, "maxRSSBytes": 1073741824, "bytesRead": 33554432, "maxReadBytes": 1048576, "localNodes": 100 },
+      "expected": { "layers": 3001, "matches": 1000, "searchExact": true, "truncated": false, "cancelResponsive": true, "overviewNodes": 1001, "virtual": false }
+    },
+    {
+      "id": "tflite-21001",
+      "fixture": { "kind": "virtual-tflite", "repeats": 7000, "weightBytes": 1342177280, "bytes": 1345874636, "headerSHA256": "ff795f60566284d4ad92af5cfef852b106a7304dfdf2e07329d103766f95459f" },
+      "limits": { "parseMs": 5000, "searchMsMax": 250, "patternMs": 5000, "cancelMs": 500, "overviewMs": 5000, "maxRSSBytes": 1073741824, "bytesRead": 33554432, "maxReadBytes": 1048576, "localNodes": 100 },
+      "expected": { "layers": 21001, "matches": 7000, "searchExact": true, "truncated": false, "cancelResponsive": true, "overviewNodes": 7003, "virtual": true }
+    },
+    {
+      "id": "mlir-20010",
+      "fixture": { "kind": "generic-mlir", "hidden": 20000, "bytes": 1238572, "sha256": "d8960d0960cca7478a8c06fb67b23af2c1f81b50ec3a6085c0eac09f4ef6f936" },
+      "limits": { "parseMs": 10000, "patternMs": 5000, "exportMs": 10000, "reopenMs": 10000, "repeatExportMs": 10000, "discoveryMs": 5000, "pageMsMax": 500, "maxRSSBytes": 1073741824, "outputBytes": 16777216, "pathWorkMax": 50000, "displayHelpersMax": 512, "newMaterializationsAfterWarmup": 0 },
+      "expected": { "layers": 20010, "blocks": 6, "matches": 1, "reopenedMatches": 1, "ssaValid": true, "pathResolved": true, "cachedPageWork": 0, "cachedPageHits": 1, "exportStableAfterPaging": true }
+    }
+  ]
+}

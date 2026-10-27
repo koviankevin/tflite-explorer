@@ -1,0 +1,52 @@
+name: Core performance gate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/model-engine.js'
+      - 'src/range-stream.js'
+      - 'src/subgraph-pattern.js'
+      - 'src/pattern-utils.js'
+      - 'src/pattern-conditions.js'
+      - 'src/pattern-overview.js'
+      - 'src/overview-layout.js'
+      - 'src/mlir-*.js'
+      - 'vendor/**/*.js'
+      - 'vendor/**/*.json'
+      - 'test/fixture.mjs'
+      - 'test/performance*'
+      - 'scripts/*performance*'
+      - 'scripts/lib/performance-policy.mjs'
+      - 'scripts/large-mlir-resources.mjs'
+      - 'package*.json'
+      - '.github/workflows/performance.yml'
+permissions:
+  contents: read
+concurrency:
+  group: core-performance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+jobs:
+  measure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      PERFORMANCE_REPORT_NAME: core-performance-${{ github.run_id }}-${{ github.run_attempt }}.json
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - name: Check policy failure cases
+        run: node --test test/performance-policy.test.mjs
+      - name: Measure nine fresh processes and enforce fixed limits
+        run: node scripts/accept-performance.mjs --out "$RUNNER_TEMP/$PERFORMANCE_REPORT_NAME"
+      - name: Retain measurements and failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: core-performance-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ env.PERFORMANCE_REPORT_NAME }}
+          if-no-files-found: error
+          retention-days: 30
