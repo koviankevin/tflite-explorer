@@ -19,18 +19,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     }
     async function enter(selector){await tabTo(selector);await page.keyboard.press('Enter');}
     async function choose(filename,selector='#open-model'){
-        await tabTo(selector);
-        const inspect=()=>read(s=>{const e=document.querySelector(s);return {active:document.activeElement?.id,focused:document.hasFocus(),handler:typeof e?.onclick,disabled:e?.disabled,ready:document.readyState,form:!!e?.closest('form'),activation:navigator.userActivation?.isActive};},selector);
-        const before=await inspect(),event=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');
-        try{await(await event).setFiles(filename);}
-        catch(error){
-            const after=await inspect();let space=false,foregroundEnter=false;
-            const alternative=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Space');
-            try{await(await alternative).setFiles(filename);space=true;}catch{
-                await page.bringToFront();const foreground=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');try{await(await foreground).setFiles(filename);foregroundEnter=true;}catch{}
-            }
-            console.log('[DEBUG-keyboard-enter] '+JSON.stringify({selector,before,after,space,foregroundEnter}));throw error;
-        }
+        await tabTo(selector);const event=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');await(await event).setFiles(filename);
     }
     async function ready(layers){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
     async function close(){
@@ -38,18 +27,30 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
         try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Keyboard model worker did not close.')),5000);})]);await page.keyboard.press('Enter');await ended;}finally{clearTimeout(timer);}
         assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);
     }
-    async function option(selector,value){await tabTo(selector);await page.keyboard.press('Home');for(let i=0;i<51;i++){if(await read(s=>document.querySelector(s).value,selector)===value)return;await page.keyboard.press('ArrowDown');}throw Error('Keyboard option unavailable: '+selector);}
+    async function option(selector,value){
+        const values=await read(s=>[...document.querySelector(s).options].map(o=>o.value),selector),index=values.indexOf(value);assert.ok(index>=0&&index<51);
+        await tabTo(selector);await page.keyboard.press('Alt+ArrowDown');await page.keyboard.press('Home');for(let i=0;i<index;i++)await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');
+        await until((s,v)=>document.querySelector(s).value===v,selector,value);
+    }
     async function selectedTab(kind){assert.equal(await read(()=>document.activeElement?.dataset.kind),kind,'Arrow key must move focus to the new tab.');assert.equal(await read(k=>document.querySelector('[data-kind="'+k+'"]').getAttribute('aria-selected'),kind),'true');}
+    async function switchTab(key,kind,activate='Enter'){
+        const previous=await read(()=>document.querySelector('[role="tab"][aria-selected="true"]').dataset.kind);await page.keyboard.press(key);
+        assert.equal(await read(()=>document.activeElement?.dataset.kind),kind,'Arrow/Home/End must move tab focus.');
+        assert.equal(await read(()=>document.querySelector('[role="tab"][aria-selected="true"]').dataset.kind),previous,'Moving focus must not start another search.');await page.keyboard.press(activate);await selectedTab(kind);
+    }
 
+    // Enable Playwright's asynchronous chooser interception before navigation,
+    // rather than toggling its subscription immediately before a trusted key.
+    const intercept=()=>{};page.on('filechooser',intercept);
+    try{
     await page.goto(base,{waitUntil:'domcontentloaded'});
     await until(()=>typeof document.querySelector('#open-model').onclick==='function');
     await choose(demo);await ready(26);
     if(await read(()=>document.querySelector('#autosave-enabled').checked)){await tabTo('#autosave-enabled');await page.keyboard.press('Space');}
     await page.keyboard.press('Control+f');assert.equal(await read(()=>document.activeElement.id),'query');await page.keyboard.press('Control+a');await page.keyboard.type('#0');
     await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
-    await option('#graph-font-size','32');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
-    await tabTo('[data-kind="layers"]');await page.keyboard.press('ArrowRight');await selectedTab('tensors');
-    await page.keyboard.press('ArrowRight');await selectedTab('patterns');await page.keyboard.press('Home');await selectedTab('layers');await page.keyboard.press('End');await selectedTab('patterns');await page.keyboard.press('ArrowLeft');await selectedTab('tensors');await page.keyboard.press('ArrowRight');await selectedTab('patterns');
+    await option('#graph-font-size','16');await option('#graph-font-size','32');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
+    await tabTo('[data-kind="layers"]');await switchTab('ArrowRight','tensors');await switchTab('ArrowRight','patterns','Space');await switchTab('Home','layers');await switchTab('End','patterns','Space');await switchTab('ArrowLeft','tensors');await switchTab('ArrowRight','patterns');
     assert.equal(await read(()=>[...document.querySelectorAll('[role="tab"]')].filter(t=>t.tabIndex===0).length),1);
     assert.equal(await read(()=>{const t=document.activeElement,p=document.getElementById(t.getAttribute('aria-controls'));return p?.getAttribute('role')==='tabpanel'&&p.getAttribute('aria-labelledby')===t.id;}),true);
     await until(()=>document.querySelector('#result-count').textContent==='4 筆匹配路徑');
@@ -75,4 +76,5 @@ export async function keyboardFlow({page,read,base,demo,directory,check}){
     event=page.waitForEvent('filechooser');await page.keyboard.press('Control+o');await(await event).setFiles(child);await ready(3);await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();
     check('keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure');
     return {tabPresses,modelWorkers:2};
+    }finally{page.off('filechooser',intercept);}
 }
