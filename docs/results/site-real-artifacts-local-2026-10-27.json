@@ -1,0 +1,90 @@
+{
+  "format": "model-lens-versioned-real-artifacts",
+  "version": 1,
+  "status": "passed",
+  "source": {
+    "commit": "92a08519264022fc4fc6ce3e50abd2dc458a3c9a",
+    "tree": "f16881704beb3e6073b89cbf037d19fc9c49424d",
+    "committedAt": "2026-10-27T12:38:35+08:00",
+    "dirty": false
+  },
+  "startedAt": "2026-10-27T04:39:22.883Z",
+  "previous": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "candidate": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "92a08519264022fc4fc6ce3e50abd2dc458a3c9a",
+      "tree": "f16881704beb3e6073b89cbf037d19fc9c49424d",
+      "committedAt": "2026-10-27T12:38:35+08:00",
+      "dirty": false
+    },
+    "buildId": "4687aab4eac6e1d1"
+  },
+  "previousZipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+  "steps": [
+    {
+      "url": "src/mlir-engine.js?v=163f38ab1dc856e4",
+      "bytes": 10790,
+      "sha256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8"
+    },
+    {
+      "url": "src/mlir-engine.js?v=163f38ab1dc856e4",
+      "bytes": 10790,
+      "sha256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8"
+    },
+    {
+      "url": "versions/163f38ab1dc856e4/src/mlir-engine.js",
+      "bytes": 10790,
+      "sha256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8"
+    },
+    {
+      "url": "versions/4687aab4eac6e1d1/src/mlir-engine.js",
+      "bytes": 10790,
+      "sha256": "d117950d61f50d03b15d6da892aa4e5bca6b889ccdf39cec4fd428c5e7a06dd5"
+    },
+    {
+      "operation": "upgrade",
+      "currentBuild": "4687aab4eac6e1d1",
+      "siteId": "4b0f543d4ffea1aed13a227aa24297f6a5fdc3dee4e3a1c347099d4b16d75378",
+      "files": 741
+    },
+    {
+      "url": "src/mlir-engine.js?v=163f38ab1dc856e4",
+      "bytes": 10790,
+      "sha256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8"
+    },
+    {
+      "url": "versions/163f38ab1dc856e4/src/mlir-engine.js",
+      "bytes": 10790,
+      "sha256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8"
+    },
+    {
+      "url": "versions/4687aab4eac6e1d1/src/mlir-engine.js",
+      "bytes": 10790,
+      "sha256": "d117950d61f50d03b15d6da892aa4e5bca6b889ccdf39cec4fd428c5e7a06dd5"
+    },
+    {
+      "operation": "rollback",
+      "currentBuild": "163f38ab1dc856e4",
+      "siteId": "e35a4d33a8e14fb7077055d91effbbe41f447e6e2dec52691dcde1e0d066517c",
+      "files": 741
+    }
+  ],
+  "scope": "Isolated local static snapshots with real release payloads; no production switch, browser or data migration.",
+  "finishedAt": "2026-10-27T04:39:25.179Z"
+}

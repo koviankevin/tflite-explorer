@@ -1,0 +1,86 @@
+{
+  "format": "model-lens-published-promotion-drill",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T06:16:11.865Z",
+  "source": {
+    "commit": "78b0e3895031ef76723e35b5f435f80fd5779de9",
+    "tree": "601f19f208f717ae7618b319714d8ba2862e1151",
+    "committedAt": "2026-10-27T14:14:32+08:00",
+    "dirty": false
+  },
+  "productionChanged": false,
+  "checks": [
+    "four original bot Release assets, fixed tag/tree, provider digests and all ZIP payloads",
+    "pinned historical receipt accepted only with explicit baseline-history mode",
+    "selected existing main core/browser source scopes remain exactly equivalent; full gate authentication still required at publication"
+  ],
+  "scopes": [
+    {
+      "kind": "core",
+      "runId": 40438427440,
+      "testedCommit": "521d1b206bb9345117b340cf625493ca5c490040",
+      "candidateCommit": "78b0e3895031ef76723e35b5f435f80fd5779de9",
+      "fingerprint": "42592c65576f4b195a9cd90a802a04a477d738752940e94c2b1913be4328ea46",
+      "files": 85,
+      "sourceEquivalent": true
+    },
+    {
+      "kind": "browser",
+      "runId": 40445983471,
+      "testedCommit": "35baf490d665ceafcf795a325e1f4036dd096d98",
+      "candidateCommit": "78b0e3895031ef76723e35b5f435f80fd5779de9",
+      "fingerprint": "768b82077179d00d961c56b46d1fa5908e2624e1016fc746d162dbfccada29c8",
+      "files": 255,
+      "sourceEquivalent": true
+    }
+  ],
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "provenance": {
+    "kind": "github-published-promotion",
+    "releaseId": 425024166,
+    "assetId": 680389934,
+    "tag": "v0.2.0-preview.7",
+    "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+    "zipBytes": 29454029,
+    "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54",
+    "assets": [
+      {
+        "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip",
+        "bytes": 29454029,
+        "sha256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7"
+      },
+      {
+        "name": "model-lens-public-0.2.0-preview.7-163f38ab1dc856e4.zip.sha256",
+        "bytes": 121,
+        "sha256": "7471ecc5404b478e129c2460bdda052a3332386c0882a7cb8e9a4ef37e28c9a5"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 94018,
+        "sha256": "1cd1083d2b6919fcb40c9b39e5ca1f477459fe6d37c31a2c6aaae978f31e769a"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 39863,
+        "sha256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+      }
+    ]
+  },
+  "files": 246,
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T06:17:14.310Z"
+}

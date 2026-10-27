@@ -4,6 +4,12 @@ import {prValidationPlan} from '../scripts/lib/pr-validation-plan.mjs';
 test('documentation/evidence changes do not repeat unchanged runtime checks',()=>{
     assert.equal(prValidationPlan(['README.md','docs/new-result.json','release-evidence.json']).runtimeRequired,false);
     assert.equal(prValidationPlan(['scripts/lib/pages-release.mjs','.github/workflows/verified-pages.yml','test/pages-release.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/compose-site.mjs','scripts/lib/versioned-site.mjs','test/versioned-site.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/lib/site-browser-policy.mjs','test/site-browser-policy.test.mjs','test/browser/versioned-site.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/lib/site-history.mjs','test/site-history.test.mjs','scripts/lib/release-history.mjs','test/release-history.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/lib/live-site.mjs','test/live-site.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/lib/release-baseline.mjs','test/published-delivery.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['scripts/lib/deployment-history.mjs','test/deployment-history.test.mjs']).runtimeRequired,false);
 });
 test('runtime, shipped documents, fixtures and unknown changes keep Node/build validation',()=>{
     for(const file of ['src/app.js','vendor/netron/tflite-schema.js','scripts/build.mjs','scripts/verify-export.mjs','docs/export-reports.md','docs/results/browser-lifecycle-2026-10-27.json','test/fixture.mjs','test/model.test.mjs','new-unknown-file'])assert.equal(prValidationPlan([file]).runtimeRequired,true,file);

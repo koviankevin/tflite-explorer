@@ -1,0 +1,39 @@
+{
+  "format": "model-lens-deployment-authority-check",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T06:29:21.003Z",
+  "source": {
+    "commit": "209a53d787832a87b4d4e7230ed271b0f7ed1806",
+    "tree": "8c067d98787dcbb4de57ef260189e0b45d65d484",
+    "committedAt": "2026-10-27T14:27:56+08:00",
+    "dirty": false
+  },
+  "productionChanged": false,
+  "deployment": {
+    "deploymentId": 7350054986,
+    "controllerSource": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+    "runId": 40447776209,
+    "attempt": 1,
+    "jobId": 122003141213,
+    "siteId": null,
+    "legacy": true
+  },
+  "indexHTTP": 404,
+  "liveSite": null,
+  "legacyRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T06:29:24.805Z"
+}
