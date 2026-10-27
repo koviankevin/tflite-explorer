@@ -13,6 +13,7 @@ let generation = 0;
 let file;
 let identity;
 let editInProgress=false;
+let editWorkspace=null,editWorkspaceSerial=0;
 const send = (id, data) => postMessage({ id, data });
 const withReport=(result,args)=>{
     try {
@@ -23,6 +24,7 @@ const withReport=(result,args)=>{
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
+            editWorkspace=null;
             identity=null;
             overview=null;
             file = args.file;
@@ -37,6 +39,35 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 }, progress, dialects:mlirDialects
             });
             send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
+        } else if(action==='editWorkspaceOpen'){
+            const sourceIndex=index,sourceFile=file,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js');
+            if(index!==sourceIndex||file!==sourceFile)throw Error('模型已切換，請重新開啟編輯工作區。');
+            const snapshot=editWorkspaceSnapshot(index,args);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editWorkspaceClose'){
+            if(editWorkspace?.token===args.token)editWorkspace=null;send(id,{closed:true});
+        } else if(action==='editWorkspaceExtend'){
+            if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file)throw Error('編輯工作區已過期。');
+            const session=editWorkspace,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js'),{replayEditDraft}=await import('./model-edit-draft.js');
+            if(editWorkspace!==session)throw Error('工作區已切換，請重試。');
+            if(!Array.isArray(args.targets)||args.targets.length>32||JSON.stringify(args.commands).length>1024*1024)throw Error('加入範圍或草稿過大。');
+            const targets=[...new Map([...session.snapshot.nodes.map(n=>n.source),...args.targets].map(t=>[`${t.graph}:${t.node}`,t])).values()],snapshot=editWorkspaceSnapshot(index,{targets});
+            replayEditDraft(snapshot,args.commands);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editWorkspaceExport'){
+            if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file)throw Error('編輯工作區已過期，請重新開啟。');
+            if(editInProgress)throw Error('上一筆模型修改仍在驗證。');if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
+            editInProgress=true;const session=editWorkspace,sourceIndex=index,sourceFile=file;
+            try{
+                const {exportEditWorkspace}=await import('./model-edit-workspace.js'),result=await exportEditWorkspace(index,file,session.snapshot,args.commands,{updateSignatures:args.updateSignatures,progress:stage=>postMessage({stage})});
+                const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
+                const candidate=await openModelFile(candidateFile,{readAt:(offset,length)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(offset,offset+length))),readMetadata:async format=>{const r=await fetch(new URL(`../vendor/netron/${format}-metadata.json`,import.meta.url));if(!r.ok)throw Error('無法載入候選模型 metadata。');return r.text();},dialects:mlirDialects});
+                if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
+                else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const c of result.changes)validateTfliteModelGraph(candidate.raw,c.graph);}
+                if(index!==sourceIndex||file!==sourceFile||editWorkspace!==session){send(id,{cancelled:true});return;}
+                const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
+                const {replayEditDraft}=await import('./model-edit-draft.js'),state=replayEditDraft(session.snapshot,args.commands),targets=[...new Map(result.workspaceChanges.map(c=>{const n=state.nodes.find(n=>n.id===c.node);return [`${n.source.graph}:${n.source.node}`,n.source];})).values()];
+                try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,{...targets[0],mode:'workspace',workspaceTargets:targets},{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}catch(reason){verified.reportError=reason.message;}
+                send(id,verified);
+            }finally{editInProgress=false;}
         } else if (['modelEditTargets','modelEditInfo','modelEditValues','modelEditText','editModelOperation'].includes(action)) {
             const {operationEditTargets,operationEditInfo,operationValueChoices,operationEditText,editModelOperation}=await import('./model-operation-edit.js');
             if(action==='modelEditTargets'){send(id,operationEditTargets(index,args));return;}

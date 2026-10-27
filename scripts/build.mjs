@@ -28,7 +28,7 @@ export async function buildSite({output='dist',profile:profilePath}={}) {
             .replaceAll('href="favicon.ico"','href="vendor/netron/favicon.ico"')
             .replaceAll('href="icon.png"','href="vendor/netron/icon.png"')
             .replace('<body class="welcome spinner">',`<body class="welcome">\n${await readFile(source('src/shell.html'),'utf8')}`);
-        const styles=['app','pattern-workspace','mobile','model-visibility','typography','overview-canvas','explorer-resize','workspace','laptop','release'];
+        const styles=['app','pattern-workspace','mobile','model-visibility','typography','overview-canvas','explorer-resize','workspace','laptop','release','model-edit-workspace'];
         html=html.replace('</head>',styles.map(s=>`<link rel="stylesheet" href="src/${s}.css">`).join('\n')+'\n</head>');
         await writeFile(dest('index.html'),html);
         await writeFile(dest('.nojekyll'),'');
