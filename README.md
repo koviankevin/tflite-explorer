@@ -12,6 +12,12 @@
 
 以 Netron 的 TFLite／MLIR 解析器、模型圖及詳細資料面板為基礎，加入繁體中文搜尋工作區。支援 `.tflite`／`.lite` 與 generic 文字 `.mlir`。模型全程由瀏覽器本機處理，沒有模型上傳端點、遠端模型 URL 載入或使用遙測。
 
+## 圈選與修改模型
+
+選 pattern 時按住 **Alt＋拖曳**可平移模型，滾輪縮放；已有選取會保留。「編輯選取 pattern」把圈選轉成未儲存的 pattern 草稿，可增刪節點與連線；這項操作修改搜尋條件。匯出子模型後可按「開啟匯出結果」，直接在目前網站重新開啟。
+
+要修改實際模型，先在 Layers 或模型圖選取原始 OP，再按「編輯實際模型」。可修改接線、新增或刪除 OP，驗證並匯出整份新模型，再按「開啟修改結果」。TFLite 新增以既有 OP 為範本，可調整支援的 scalar options；MLIR 支援 generic 名稱、接線及完整 IR。保留原始模型檔，輸出前重新解析候選並驗證結構；未執行推論或公司 dialect／custom kernel verifier。操作及限制見 [實際模型編輯](docs/model-editing.md)。
+
 ## Pattern 條件與工作階段
 
 可指定 pattern 中各 OP 的 shape、dtype 與 attributes 條件，條件隨 version 3 pattern JSON 保存，仍可匯入舊版。搜尋欄可下載工作階段 JSON，或恢復此瀏覽器上次儲存；重新選取本機模型並核對結構後，還原搜尋、選取、收合、字級與 SVG／Canvas 縮放位置。新版另有本機自動草稿、Undo／Redo、未完成編輯保存及多分頁衝突保護；模型與權重不存入草稿。操作方式與限制見 [保存及復原說明](docs/workspace-recovery.md) 和 [條件與工作階段說明](docs/conditions-workspace.md)。
