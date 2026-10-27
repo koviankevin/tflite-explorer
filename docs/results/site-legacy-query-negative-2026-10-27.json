@@ -1,0 +1,59 @@
+{
+  "format": "model-lens-legacy-query-repro",
+  "version": 1,
+  "status": "failed",
+  "observedAt": "2026-10-27T04:17:49.378Z",
+  "oldRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.6",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "eb0a330865fd5d6cbf01cff9109ee5ff9f94ae61",
+      "tree": "19355d7a9bf850d8fc8f712844bfa7d84a3d4fc5",
+      "committedAt": "2026-10-27T08:55:02+08:00",
+      "dirty": false
+    },
+    "buildId": "0f8361cc44fcd547"
+  },
+  "currentRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+      "committedAt": "2026-10-27T12:03:57+08:00",
+      "dirty": false
+    },
+    "buildId": "163f38ab1dc856e4"
+  },
+  "checks": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/src/app.js?v=0f8361cc44fcd547",
+      "status": 200,
+      "expectedSHA256": "cffd5230f46a278e75c0e94a40f26598aabe09391c21e45317d4b4fc49860b5d",
+      "actualSHA256": "91fafe5a1d4b7c28a1504e3dd1f4c14ac129826f400c89f5b20a06e6072d85a8",
+      "matches": false,
+      "matchesCurrentRelease": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/src/mlir-engine.js?v=0f8361cc44fcd547",
+      "status": 200,
+      "expectedSHA256": "13b90980e071290a234a6b5ddaa80f8b6bce8a2a168036df43491129db5b8c3e",
+      "actualSHA256": "27b2e614a10b00fd4be08514fb8150f1be9f541a6dbaec0effa7c2a36f010bd8",
+      "matches": false,
+      "matchesCurrentRelease": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/vendor/netron/tflite.js?v=0f8361cc44fcd547",
+      "status": 200,
+      "expectedSHA256": "bb98244925ec04ce2cc89555816800740a7bb040d751aade69d5aefdc6381a6a",
+      "actualSHA256": "c63b2e729be55ef0c08f5ad86471f70d2de6f831c2b89317d2a4397e650505c5",
+      "matches": false,
+      "matchesCurrentRelease": true
+    }
+  ],
+  "finding": "All revalidated legacy-query files are exactly the current release bytes; query labels do not isolate stored files."
+}
