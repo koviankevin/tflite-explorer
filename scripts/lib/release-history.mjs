@@ -9,6 +9,7 @@ import {ghJSON,fileSHA256,validateDelivery,PAGES_WORKFLOW} from './pages-release
 
 const repository='repos/koviankevin/tflite-explorer/',MAX_BYTES=512*1024**2,BOT='github-actions[bot]';
 const HEX64=/^[a-f0-9]{64}$/;
+function unreleased(){const error=Error('Retained core has no complete immutable published release; interrupted publication must be resolved first.');error.code='UNRELEASED_CORE';return error;}
 function checkReference(ref){
     const allowed=['version','build','source','manifestSHA256','sha256','bytes'];
     if(!ref||typeof ref!=='object'||Array.isArray(ref)||Object.keys(ref).some(k=>!allowed.includes(k))||typeof ref.version!=='string'||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(ref.version)||typeof ref.build!=='string'||!/^[a-f0-9]{16}$/.test(ref.build)||typeof ref.source!=='string'||!/^[a-f0-9]{40}$/.test(ref.source)||typeof ref.manifestSHA256!=='string'||!HEX64.test(ref.manifestSHA256)||ref.sha256!==undefined&&(typeof ref.sha256!=='string'||!HEX64.test(ref.sha256))||ref.bytes!==undefined&&(!Number.isSafeInteger(ref.bytes)||ref.bytes<=0||ref.bytes>MAX_BYTES))throw Error('Invalid immutable release reference.');
@@ -95,10 +96,11 @@ export async function fetchReleasedCore(reference,{outputDirectory,api=ghJSON,do
     try{await lstat(output);throw Error('History output already exists.');}catch(error){if(error.code!=='ENOENT')throw error;}
     const tag='v'+reference.version;
     const [release,ref,commit]=await Promise.all([api(repository+'releases/tags/'+encodeURIComponent(tag),{allow404:true}),api(repository+'git/ref/tags/'+encodeURIComponent(tag),{allow404:true}),api(repository+'git/commits/'+reference.source)]);
-    if(!release||!ref){const error=Error('Retained core has no immutable published release; interrupted publication must be resolved first.');error.code='UNRELEASED_CORE';throw error;}
-    if(release.tag_name!==tag||release.draft!==false||release.author?.login!==BOT||!Number.isSafeInteger(release.id)||release.id<=0||ref.object?.type!=='commit'||ref.object.sha!==reference.source||commit.sha!==reference.source||!/^[a-f0-9]{40}$/.test(commit.tree?.sha||'')||!Array.isArray(release.assets)||release.assets.length>20)throw Error('Untrusted published release or Git tag/source.');
+    if(ref&&(ref.object?.type!=='commit'||ref.object.sha!==reference.source)||commit.sha!==reference.source||!/^[a-f0-9]{40}$/.test(commit.tree?.sha||'')||release&&(release.tag_name!==tag||typeof release.draft!=='boolean'||release.author?.login!==BOT||!Number.isSafeInteger(release.id)||release.id<=0||!Array.isArray(release.assets)||release.assets.length>20))throw Error('Untrusted published release or Git tag/source.');
+    if(!release||!ref||release.draft)throw unreleased();
     const zipName=`model-lens-public-${reference.version}-${reference.build}.zip`,assets=release.assets.filter(a=>a.name===zipName);
-    if(assets.length!==1)throw Error('Missing or duplicate immutable ZIP asset.');
+    if(!assets.length)throw unreleased();
+    if(assets.length!==1)throw Error('Duplicate immutable ZIP asset.');
     const asset=assets[0];
     if(!Number.isSafeInteger(asset.id)||asset.id<=0||asset.state!=='uploaded'||asset.uploader?.login!==BOT||!Number.isSafeInteger(asset.size)||asset.size<=0||asset.size>MAX_BYTES||!/^sha256:[a-f0-9]{64}$/.test(asset.digest||'')||reference.sha256!==undefined&&asset.digest!=='sha256:'+reference.sha256||reference.bytes!==undefined&&asset.size!==reference.bytes)throw Error('Release asset provenance, size or digest differs.');
     await buildEvent({event:'create_intent',operation:'fetch-release-history',path:output,kind:'temporary',producer:'scripts/lib/release-history.mjs',purpose:'Read-only verified public core for immutable namespace retention',inputs:[tag,reference.source],cleanup_condition:'Keep failed staging and immutable downloaded archives until the candidate snapshot is inspected or superseded.'});

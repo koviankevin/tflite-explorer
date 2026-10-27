@@ -68,11 +68,13 @@ node scripts/compose-site.mjs --verify build/new-site
 
 [實際下載核對](results/site-history-fetch-2026-10-27.json) 來自 clean source `a28b7dddb01d22665e235a66b68ee483eb251f56`：讀取 preview.7 的 Release `425024166`／asset `680389934`，29,454,029 bytes 的 ZIP SHA 為 `4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7`，manifest SHA 為 `856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54`，所有 246 個 core 檔案完整性通過。另有五項取得流程測試涵蓋 metadata 下載前拒絕、傳輸不符、ZIP traversal、私有發行、不同 manifest 與 Git tree。加上原有契約，本機共 37 項、零失敗／略過。
 
-沒有已發行 tag／Release 的 core 會回報 `UNRELEASED_CORE`。新增的 `fetchRetainedCore()` 只在此情況使用 `recoverPreparedCore()`：限定同一公開 repository、main 的手動 `verified-pages.yml`、同一 source commit、當次成功 prepare job 與唯一未過期 `release-delivery`。Artifact 的時間必須在該 attempt 的 prepare 期間；服務端 digest、下載 SHA／大小、四份資產、原有四關卡 receipt、live core manifest SHA、Git tree 與所有 ZIP payload 均重新核對。整個 workflow 即使在後續發布階段失敗，也只能供保留已上線 namespace，不能取代新版的四項成功發布關卡。已發布 Release 驗證失敗時不會改走恢復來源。Artifact 過期或備份缺失即拒絕新快照，保留原站台待處理，不猜測另一個版本。
+沒有已發行 tag／Release，或同一 bot／tag 的 Release 仍是 draft／缺少 ZIP 時，core 會回報 `UNRELEASED_CORE`。新增的 `fetchRetainedCore()` 只在此情況使用 `recoverPreparedCore()`：限定同一公開 repository、main 的手動 `verified-pages.yml`、同一 source commit、當次成功 prepare job 與唯一未過期 `release-delivery`。Artifact 的時間必須在該 attempt 的 prepare 期間；服務端 digest、下載 SHA／大小、四份資產、原有四關卡 receipt、live core manifest SHA、Git tree 與所有 ZIP payload 均重新核對。整個 workflow 即使在後續發布階段失敗，也只能供保留已上線 namespace，不能取代新版的四項成功發布關卡。Release／tag 來源驗證失敗或已上傳資產 digest 不符時不會改走恢復來源；draft／部分發行本身的資產也不被信任。Artifact 過期或備份缺失即拒絕新快照，保留原站台待處理，不猜測另一個版本。
 
 `scripts/lib/site-history.mjs` 的 `preparePublicSnapshot()` 已串接唯讀正式站歷史讀取、獨立取得 core 和 composer。只有 `site-manifest.json` 的實際 HTTP 404 才允許首次遷移；此時根版本必須仍是已知 preview.7 baseline。其他 HTTP 錯誤、無效 metadata 或改過 baseline 均拒絕。之後以真正現行版本及最近的 retained 順序保留兩個先前版本，baseline 永久保留；composer 不再依 build ID 字母排序打亂近期順序。已上線版本恰好是同一個重建候選時，直接使用已驗證候選，不必等待它的 Release 完成。
 
-新增本機驗收後，發布契約共 50 項、零失敗／略過，包含中斷發布恢復、錯誤來源／attempt／過期／竄改資產、歷史順序、重複準備／回退及 metadata 容量與路徑。這些是工具與契約驗收，尚不代表正式 Pages 工作流程已切換。
+本機 50 項發布契約已通過，之後另補一項 bot draft／部分發行的恢復正例，11 項 history 測試均通過；完整契約現為 51 項。涵蓋中斷發布恢復、錯誤來源／attempt／過期／竄改資產、歷史順序、重複準備／回退及 metadata 容量與路徑。這些是工具與契約驗收，尚不代表正式 Pages 工作流程已切換。
+
+[真實歷史規劃演練](results/site-history-plan-2026-10-27.json) 來源為 clean `a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7`：正式站 index 實際回應 404、根 release metadata 符合 preview.7，獨立下載的固定 ZIP／manifest／246 個檔案均核對後，組成含 741 個受管理檔案的本機快照。以該真實快照作下一輪現行 index 重複準備，site ID 維持 `3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184`；未取得候選尚不存在的 Release。開發候選 build `544a3fe021bad19a` 只供本機演練，沒有發布或覆寫 preview.7；正式站和內網均未更動。
 
 下一步仍須完成：整站 manifest／site ID 綁定、完整正式發布整合、main 的新版憑證，以及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 

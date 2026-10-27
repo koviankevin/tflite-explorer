@@ -1,0 +1,137 @@
+{
+  "format": "model-lens-site-history-drill",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T05:40:16.122Z",
+  "source": {
+    "commit": "a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7",
+    "tree": "2cf09dd103f01c2edaea0a0c79869863283bedee",
+    "committedAt": "2026-10-27T13:39:36+08:00",
+    "dirty": false
+  },
+  "network": [
+    {
+      "path": "site-manifest.json",
+      "status": 404,
+      "bytes": 0,
+      "sha256": null
+    },
+    {
+      "path": "release.json",
+      "status": 200,
+      "bytes": 339,
+      "sha256": "224daed431994b1f7ca5f1ca1aab7ac97e4ee3e9165b2f0681c469ba6a8626c8"
+    }
+  ],
+  "checks": [
+    "real public metadata, authenticated fixed release and complete composed snapshot",
+    "same already-live candidate composes identically without acquiring its unpublished Release"
+  ],
+  "productionChanged": false,
+  "candidate": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.7",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7",
+      "tree": "2cf09dd103f01c2edaea0a0c79869863283bedee",
+      "committedAt": "2026-10-27T13:39:36+08:00",
+      "dirty": false
+    },
+    "buildId": "544a3fe021bad19a"
+  },
+  "history": [
+    {
+      "build": "544a3fe021bad19a",
+      "kind": "verified-candidate"
+    },
+    {
+      "build": "163f38ab1dc856e4",
+      "kind": "github-release",
+      "releaseId": 425024166,
+      "assetId": 680389934,
+      "tag": "v0.2.0-preview.7",
+      "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+      "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+      "zipBytes": 29454029,
+      "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+    }
+  ],
+  "plan": {
+    "current": {
+      "release": {
+        "schemaVersion": 1,
+        "version": "0.2.0-preview.7",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7",
+          "tree": "2cf09dd103f01c2edaea0a0c79869863283bedee",
+          "committedAt": "2026-10-27T13:39:36+08:00",
+          "dirty": false
+        },
+        "buildId": "544a3fe021bad19a"
+      },
+      "basePath": "versions/544a3fe021bad19a/",
+      "manifestSHA256": "30d15007fa887abd74b030afb92c1cf2d4543631ce1554ce42ba9e238bb53b20"
+    },
+    "legacyRoot": {
+      "release": {
+        "schemaVersion": 1,
+        "version": "0.2.0-preview.7",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+          "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+          "committedAt": "2026-10-27T12:03:57+08:00",
+          "dirty": false
+        },
+        "buildId": "163f38ab1dc856e4"
+      },
+      "basePath": "versions/163f38ab1dc856e4/",
+      "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+    },
+    "retained": [
+      {
+        "release": {
+          "schemaVersion": 1,
+          "version": "0.2.0-preview.7",
+          "distribution": "public",
+          "extension": null,
+          "source": {
+            "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+            "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+            "committedAt": "2026-10-27T12:03:57+08:00",
+            "dirty": false
+          },
+          "buildId": "163f38ab1dc856e4"
+        },
+        "basePath": "versions/163f38ab1dc856e4/",
+        "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+      }
+    ],
+    "liveSiteId": null
+  },
+  "snapshots": [
+    {
+      "phase": "migration",
+      "siteId": "3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184",
+      "current": "544a3fe021bad19a",
+      "legacy": "163f38ab1dc856e4",
+      "retained": [
+        "163f38ab1dc856e4"
+      ],
+      "files": 741
+    },
+    {
+      "phase": "repeat",
+      "siteId": "3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184",
+      "current": "544a3fe021bad19a",
+      "files": 741
+    }
+  ],
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T05:40:41.551Z"
+}

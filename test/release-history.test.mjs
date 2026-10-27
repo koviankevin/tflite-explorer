@@ -102,6 +102,14 @@ test('prepared retention does not fall back when a published release fails authe
     assert.equal(f.downloads(),0);assert.ok(!f.calls.some(route=>route.includes('/workflows/')));
 });
 
+test('a matching bot draft or partial Release recovers retention through CI without trusting its incomplete assets',async()=>{
+    const f=await preparedFixture();
+    for(const [name,release] of [['draft',{...f.metadata.release,draft:true}],['partial',{...f.metadata.release,assets:[]}]]){
+        const result=await fetchRetainedCore(f.reference,{outputDirectory:path.join(f.temporary,name),api:async route=>route.includes('/releases/tags/')?release:f.api(route),download:f.download});assert.equal(result.provenance.retentionOnly,true);
+    }
+    assert.equal(f.downloads(),2);
+});
+
 test('prepared bytes must match the provider digest and live manifest before becoming a retained core',async()=>{
     const f=await preparedFixture();
     await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:path.join(f.temporary,'bad-transport'),api:f.api,download:async(route,file)=>writeFile(file,Buffer.alloc(f.bytes.length,1),{flag:'wx'})}),/digest/i);
