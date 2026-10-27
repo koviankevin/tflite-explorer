@@ -28,14 +28,16 @@ try{
     const demoResponse=await fetch(base+'demo.tflite?v='+expected,{signal:AbortSignal.timeout(20000)});assert.equal(demoResponse.status,200);const demoBytes=Buffer.from(await demoResponse.arrayBuffer());assert.equal(sha256(demoBytes),demoEntry.sha256);const demo=path.join(temporary,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Deployment smoke RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});
     browser=await chromium.launch({headless:true});report.chromium=browser.version();context=await browser.newContext({viewport:{width:1366,height:768},acceptDownloads:true});
-    let startupBlocked=false,startupReleased=false;
+    let markStartupBlocked,startupReleased=false;
+    const startupBlocked=new Promise(resolve=>{markStartupBlocked=resolve;});
     const startupHold=new Promise(resolve=>{releaseStartup=()=>{startupReleased=true;resolve();};});
-    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){startupBlocked=true;await startupHold;}await route.continue();}});
+    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){markStartupBlocked();await startupHold;}await route.continue();}});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>report.errors.push(error.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
     const cdp=await context.newCDPSession(page);readPage=async fn=>{const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});if(value.exceptionDetails)throw Error('Read-only DOM observation failed.');return value.result.value;};
     await page.goto(base+'?v='+expected,{waitUntil:'domcontentloaded'});
     await waitFor(()=>typeof document.querySelector('#welcome-open').onclick==='function');
-    assert.equal(startupBlocked,true,'The regression must exercise pending graph initialization.');
+    let startupTimer;
+    try{await Promise.race([startupBlocked,new Promise((_,reject)=>{startupTimer=setTimeout(()=>reject(Error('Graph initialization request was not observed.')),30000);})]);}finally{clearTimeout(startupTimer);}
     assert.equal(await readPage(()=>typeof document.querySelector('#release-info-button').onclick),'function','Version control must work while graph initialization is pending.');
     await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();releaseStartup();check('version dialog works during delayed graph initialization at the repository subpath');
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
