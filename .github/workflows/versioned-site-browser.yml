@@ -1,0 +1,31 @@
+name: Versioned static site browser acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  site-upgrade:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - run: node node_modules/playwright/cli.js install --with-deps chromium
+      - run: node test/browser/versioned-site.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: versioned-site-browser-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/versioned-site-browser.json
+            ${{ runner.temp }}/versioned-site-browser.png
+          if-no-files-found: error
+          retention-days: 30
