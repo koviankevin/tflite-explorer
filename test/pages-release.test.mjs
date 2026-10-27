@@ -6,7 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
 import {RELEASE_GATE_KINDS} from '../scripts/lib/release-test-plan.mjs';
-import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime} from '../scripts/lib/pages-release.mjs';
+import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
@@ -42,9 +42,18 @@ test('published tags and asset bytes are immutable',()=>{
     assert.throws(()=>assertVersionAvailable(manifest,assets,()=>release));
     const evidence={status:'passed',version:1,release:manifest.release,gates:[]};assert.deepEqual(immutableGateEvidence({...evidence,verifiedAt:'first',preparedDirectory:'/first'}),immutableGateEvidence({...evidence,verifiedAt:'second',preparedDirectory:'/second'}));
 });
+
+test('a matching core cannot publish an unreviewed complete site or bypass trusted site outputs',()=>{
+    const id='a'.repeat(64);assert.doesNotThrow(()=>assertExpectedSite('false','',id));assert.doesNotThrow(()=>assertExpectedSite('true',id,id));
+    for(const value of ['',undefined,'a'.repeat(16),'b'.repeat(64),[id]])assert.throws(()=>assertExpectedSite('true',value,id));
+    const changes=[w=>delete w.on.workflow_dispatch.inputs.expected_site_id,w=>w.jobs.prepare.steps[3].env.EXPECTED_SITE_ID='untrusted',w=>w.jobs.prepare.outputs.site_id='${{ inputs.expected_site_id }}',w=>w.jobs.prepare.outputs.site_manifest_sha='untrusted',w=>delete w.jobs.verify_live.steps[3].env.EXPECTED_SITE_ID,w=>w.jobs.verify_live.steps[3].env.EXPECTED_SITE_MANIFEST_SHA='untrusted',w=>delete w.jobs.verify_live.steps[6].env.EXPECTED_SITE_ID,w=>w.jobs.verify_live.steps[6].env.MODEL_LENS_SMOKE_DIRECTORY='test-results/fixture'];
+    for(const change of changes){const value=structuredClone(workflow);change(value);assert.throws(()=>validatePagesWorkflow(value));}
+});
 test('browser modules and styles require executable MIME types',()=>{
     assert.doesNotThrow(()=>assertStaticMime('src/app.js','text/javascript; charset=utf-8'));assert.doesNotThrow(()=>assertStaticMime('src/app.css','text/css'));assert.doesNotThrow(()=>assertStaticMime('tools/verify-export.mjs','application/octet-stream'));
     for(const [name,type] of [['src/app.js','application/octet-stream'],['src/app.css','text/plain'],['index.html','application/octet-stream']])assert.throws(()=>assertStaticMime(name,type));
+    assert.doesNotThrow(()=>assertStaticMime('versions/'+ 'a'.repeat(16)+'/vendor/netron/flatbuffers.js','application/javascript; charset=utf-8'));assert.doesNotThrow(()=>assertStaticMime('site-manifest.json','application/json'));
+    for(const [name,type] of [['versions/'+'a'.repeat(16)+'/src/model-worker.js','application/octet-stream'],['site-manifest.json','text/plain'],['versions/'+'a'.repeat(16)+'/release.json','text/html']])assert.throws(()=>assertStaticMime(name,type));
 });
 test('delivery consumers verify trusted output hashes, complete ZIP members and source',async()=>{
     const dir=await mkdtemp(path.join(os.tmpdir(),'pages-delivery-unit-'));

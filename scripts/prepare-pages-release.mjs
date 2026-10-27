@@ -5,7 +5,8 @@ import {buildSite} from './build.mjs';
 import {packageRelease} from './package-release.mjs';
 import {verifyArtifact,gitSource} from './lib/release-artifact.mjs';
 import {verifyReleaseGates} from './lib/release-gates.mjs';
-import {readWorkflowInventory,validateWorkflowInventory,checkDispatchContext,assertExpectedBuild,assertPagesConfiguration,assertVersionAvailable,validateDelivery,ghJSON,fileSHA256,immutableGateEvidence} from './lib/pages-release.mjs';
+import {preparePublicSnapshot} from './lib/site-history.mjs';
+import {readWorkflowInventory,validateWorkflowInventory,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertPagesConfiguration,assertVersionAvailable,validateDelivery,ghJSON,fileSHA256,immutableGateEvidence} from './lib/pages-release.mjs';
 checkDispatchContext();
 await validateWorkflowInventory(await readWorkflowInventory());
 const source=gitSource();if(source.dirty||source.commit!==process.env.GITHUB_SHA)throw Error('Wrong/dirty checkout.');
@@ -19,9 +20,12 @@ await copyFile(path.join(preparedDirectory,'release-manifest.json'),path.join(de
 await writeFile(path.join(delivery,'release-gates.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});
 const manifestSHA=await fileSHA256(path.join(delivery,'release-manifest.json')),receiptSHA=await fileSHA256(path.join(delivery,'release-gates.json'));
 const checked=await validateDelivery(delivery,{source:source.commit,build:receipt.release.buildId,manifest:manifestSHA,receipt:receiptSHA,zip:pkg.sha256});assertVersionAvailable(manifest,checked.assets);
+const snapshot=await preparePublicSnapshot({currentDirectory:preparedDirectory,outputDirectory:'build/pages-snapshot',historyDirectory:'build/pages-history'});
+assertExpectedSite(process.env.PUBLISH_SITE,process.env.EXPECTED_SITE_ID,snapshot.manifest.siteId);
+const siteManifestSHA=await fileSHA256(path.join(snapshot.directory,'site-manifest.json'));
 // Equivalent to the official Pages upload composite, with the nested upload
 // action pinned independently. Only the verified static snapshot enters this tar.
-const tar=path.join(process.env.RUNNER_TEMP,'artifact.tar');execFileSync('tar',['--hard-dereference','-cf',tar,'--directory',preparedDirectory,'.'],{windowsHide:true});
-const outputs={build_id:receipt.release.buildId,version:receipt.release.version,delivery_directory:delivery,pages_tar:tar,manifest_sha:manifestSHA,receipt_sha:receiptSHA,zip_sha:pkg.sha256};
+const tar=path.join(process.env.RUNNER_TEMP,'artifact.tar');execFileSync('tar',['--hard-dereference','-cf',tar,'--directory',snapshot.directory,'.'],{windowsHide:true});
+const outputs={build_id:receipt.release.buildId,site_id:snapshot.manifest.siteId,site_manifest_sha:siteManifestSHA,version:receipt.release.version,delivery_directory:delivery,pages_tar:tar,manifest_sha:manifestSHA,receipt_sha:receiptSHA,zip_sha:pkg.sha256};
 await appendFile(process.env.GITHUB_OUTPUT,Object.entries(outputs).map(([key,value])=>`${key}=${value}\n`).join(''));
-console.log(JSON.stringify({prepared:true,checkedAt:checkedGates.verifiedAt,buildId:receipt.release.buildId,gates:receipt.gates.map(g=>({kind:g.kind,runId:g.runId,reused:g.reused})),zipSHA256:pkg.sha256}));
+console.log(JSON.stringify({prepared:true,checkedAt:checkedGates.verifiedAt,buildId:receipt.release.buildId,siteId:snapshot.manifest.siteId,siteManifestSHA256:siteManifestSHA,previousSiteId:snapshot.plan.liveSiteId,history:snapshot.history,gates:receipt.gates.map(g=>({kind:g.kind,runId:g.runId,reused:g.reused})),zipSHA256:pkg.sha256}));

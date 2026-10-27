@@ -3,7 +3,7 @@
 此入口由 `.github/workflows/verified-pages.yml` 定義，僅接受 main 上的手動 dispatch。工作流程使用有效 YAML 的 JSON 語法，供結構契約與完整 YAML inventory 共同核對。所有其他 workflows 必須維持唯讀權限；正式寫入權限只分配給受控的部署及 Release jobs。
 
 ```text
-prepare：固定來源 → 三項成功 CI → 來源重建／逐檔比對 → ZIP／Pages tar
+prepare：固定來源 → 四項成功 CI → 來源重建／逐檔比對 → 固定 core ZIP／完整站台 Pages tar
   deploy：只提升該 tar
     verify_live：固定來源與 ZIP → 正式站全部檔案 SHA／MIME → 實際瀏覽器選檔、搜尋、pattern、子模型重開
       release：建立或核對不可覆寫的固定版本與四個下載資產
@@ -13,13 +13,13 @@ prepare：固定來源 → 三項成功 CI → 來源重建／逐檔比對 → Z
 
 ```sh
 gh workflow run verified-pages.yml --ref main -f publish=false
-# 檢查成功 prepare 的 build ID、來源及 release-delivery artifact。
-gh workflow run verified-pages.yml --ref main -f publish=true -f expected_build_id=0123456789abcdef
+# 檢查成功 prepare 的 build ID、site ID、來源及兩份 artifact。
+gh workflow run verified-pages.yml --ref main -f publish=true -f expected_build_id=0123456789abcdef -f expected_site_id=<準備階段的64位site-ID>
 ```
 
-第二個命令必須換成第一次成功準備的實際 build ID；範例值不能用於正式發布。若期間 main 移動，建置 ID 不符就停止，不會悄悄發佈另一版。預設 `publish=false`，只會建置及保存 artifacts，deploy、verify_live、release 都不執行。
+第二個命令必須換成第一次成功準備的實際 build ID 與 64 位 site ID；範例值不能用於正式發布。若期間 main 移動，或保留版本／完整站台與審閱結果不同，就停止，不會悄悄發佈另一版。預設 `publish=false`，只會建置及保存 artifacts，deploy、verify_live、release 都不執行。此整站流程目前在草稿分支，正式站仍使用上次已交付版本；實際完成狀態見 [版本隔離](versioned-site.md)。
 
-本機 `node scripts/publish-github-pages.mjs` 先核對 dist 與目前 main、三項驗收及伺服器設定，再 dispatch 同一工作流程；不再建立或推送 gh-pages commit。它回報的是 dispatch，成功上線仍須看 deploy、verify_live 及 release 的實際結果。
+本機 `node scripts/publish-github-pages.mjs --site-id <準備階段的64位site-ID>` 先核對 dist 與目前 main、四項驗收及伺服器設定，再 dispatch 同一工作流程；不再建立或推送 gh-pages commit。它回報的是 dispatch，成功上線仍須看 deploy、verify_live 及 release 的實際結果。
 
 ## 啟用入口所需設定
 

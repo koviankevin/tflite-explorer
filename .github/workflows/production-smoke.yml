@@ -54,9 +54,24 @@ jobs:
           node-version: '22.23.3'
       - run: npm ci --ignore-scripts
       - run: node node_modules/playwright/cli.js install --with-deps chromium
-      - run: node test/browser/versioned-site.mjs
+      - id: switching
+        run: node test/browser/versioned-site.mjs
         env:
           GH_TOKEN: ${{ github.token }}
+      - run: node test/browser/production-smoke.mjs
+        env:
+          MODEL_LENS_SMOKE_DIRECTORY: ${{ steps.switching.outputs.snapshot_directory }}
+          EXPECTED_BUILD: ${{ steps.switching.outputs.snapshot_build_id }}
+          EXPECTED_SITE_ID: ${{ steps.switching.outputs.snapshot_site_id }}
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: versioned-delivery-smoke-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/production-smoke.json
+            ${{ runner.temp }}/production-smoke.png
+          if-no-files-found: error
+          retention-days: 30
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

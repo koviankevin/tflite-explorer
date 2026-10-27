@@ -90,12 +90,12 @@ node scripts/serve.mjs
 
 ```powershell
 node scripts/build.mjs
-node scripts/publish-github-pages.mjs
+node scripts/publish-github-pages.mjs --site-id SITE_ID_FROM_PREPARE
 ```
 
 發布腳本以已登入的 GitHub CLI dispatch 受控工作流程，要求本機建置與目前 main 完全相同；不推送靜態分支。先用工作流程的準備模式核對 build ID，再以該 ID 發布。正式站逐檔 SHA、瀏覽器選檔／搜尋／匯出重開都成功後，才建立不可覆寫的固定版本 Release。GitHub Pages 通常公開，模型仍由訪客瀏覽器本機處理。完整步驟見 [Pages 發布](docs/pages-deployment.md)。
 
-發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的三項成功 CI。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布隔離快照；缺少必要工作或來源改變會拒絕。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
+發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的四項成功 CI。將 `SITE_ID_FROM_PREPARE` 換成成功 prepare 並審閱後的 64 位整站 ID。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布完整隔離快照；缺少必要工作、來源或站台 ID 改變會拒絕。第四關卡與整站整合目前仍在草稿分支，正式交付狀態見 [版本隔離](docs/versioned-site.md)。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
 
 Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保留，見 [保存說明](docs/pattern-library-recovery.md) 與 [驗收紀錄](docs/pattern-library-verification.md)。
 

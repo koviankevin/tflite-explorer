@@ -1,6 +1,6 @@
 # 固定版本靜態站台（開發中）
 
-此功能尚未接入 GitHub 正式發布工作流程。正式站目前仍是已驗收的 preview.7／build `163f38ab1dc856e4`；下述工具用於建立新的獨立候選目錄，不代表正式站已取得版本隔離或已完成回退驗收。
+草稿分支已將完整快照接進 prepare／HTTP 與瀏覽器驗證，尚未合併或部署。正式站目前仍是已驗收的 preview.7／build `163f38ab1dc856e4`；下述工具用於建立新的獨立候選目錄，不代表正式站已取得版本隔離或已完成回退驗收。
 
 ## 已確認的問題
 
@@ -76,6 +76,16 @@ node scripts/compose-site.mjs --verify build/new-site
 
 [真實歷史規劃演練](results/site-history-plan-2026-10-27.json) 來源為 clean `a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7`：正式站 index 實際回應 404、根 release metadata 符合 preview.7，獨立下載的固定 ZIP／manifest／246 個檔案均核對後，組成含 741 個受管理檔案的本機快照。以該真實快照作下一輪現行 index 重複準備，site ID 維持 `3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184`；未取得候選尚不存在的 Release。開發候選 build `544a3fe021bad19a` 只供本機演練，沒有發布或覆寫 preview.7；正式站和內網均未更動。
 
-下一步仍須完成：整站 manifest／site ID 綁定、完整正式發布整合、main 的新版憑證，以及正式站實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
+## 發布流程接入（待 CI／正式交付）
+
+草稿的 `prepare-pages-release.mjs` 在四關卡、來源重建與原有四份 core 資產核對後，取得歷史並組裝完整快照。Pages tar 改放完整站台；`release-delivery` 與 GitHub Release 仍只放原有 core ZIP、checksum、core manifest 及 gate receipt。`publish=true` 同時要求準備階段的 core build ID 和整站 site ID；build 相同而 retained／任一檔案不同時，也無法通過。`site_id` 與完整 `site_manifest_sha` 綁在 prepare 的可信輸出，HTTP／瀏覽器驗證不能用使用者輸入取代它們。
+
+`scripts/lib/live-site.mjs` 以可信 SHA／site ID／core manifest 核對實際 `site-manifest.json`，讀取不帶 query 的真實根入口和全站清單，檢查大小、SHA 與 MIME。現行版本使用 namespace；根 release metadata 仍是 baseline。瀏覽器 smoke 也改讀現行 namespace 的示範檔、核對實際 `document.baseURI` 與三個模型 Worker 的版本／關閉。只有獨立手動 smoke 可以檢查尚未遷移的原站；正式發布有 expected site ID，缺少 index 時必須失敗。
+
+隔離 `scenario=versioned` 另以同一新版 HTTP／瀏覽器驗證器檢查已組裝快照：先核對所有站台檔案，再做版本視窗、32px、搜尋定位、原生選檔、pattern JSON 匯入匯出及 TFLite 子模型下載重開。它只接受受控 Linux CI 和 `test-results` 下的公開完整快照，報告標示 `isolated-versioned-snapshot`；正式 deploy job 的 smoke 禁止這個本機目標。此流程不操作個人瀏覽器，不接觸公司模型。
+
+本機九份契約測試已完成 58 項、58 通過、零失敗／略過／取消。新增負例包括 core 相同但 site ID 不同、可信輸出被替換、錯版根入口、現行 namespace payload／MIME 錯誤，以及正式驗證降級到 fixture 或原始 root。隔離 CI 與完整正式交付仍待完成。
+
+下一步仍須完成：此次整合的 hosted CI、固定 Release 的正式提升／回退、main 的新版憑證，以及正式站交付實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

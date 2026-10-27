@@ -1,7 +1,7 @@
 // Hosted Linux acceptance only; never drive the user's desktop browser.
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
-import {readFile,writeFile,mkdir,mkdtemp} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,mkdtemp,appendFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {createServer} from 'node:http';
 import {once} from 'node:events';
@@ -71,6 +71,7 @@ try{
     event=candidatePage.waitForEvent('download');await candidatePage.locator('#export-pattern').click();download=await event;const patternOut=path.join(temporary,'pattern-export.json');await download.saveAs(patternOut);await download.delete();assert.deepEqual(parsePatternFile(await readFile(patternOut,'utf8')),[pattern]);check('32px pattern search, native submodel download/reopen and original pattern export after rollback');
     const rolledBack=await newPage('rolled-back',`versions/${baseline.build}/`);await version(rolledBack,baseline.build);await choose(rolledBack,path.join(previous,'demo.tflite'));await ready(rolledBack,26);await rolledBack.locator('[data-kind="patterns"]').click();await rolledBack.locator('#saved-pattern').selectOption(pattern.name);await waitFor(rolledBack,()=>document.querySelector('#result-count').textContent==='4 筆匹配路徑');await closeModel(rolledBack);check('fresh root after rollback opens the old version with its original persisted pattern');
     const end=gitSource();assert.equal(end.commit,report.source.commit);assert.equal(end.tree,report.source.tree);assert.equal(end.dirty,false);report.sourceUnchanged=true;assert.deepEqual(report.errors,[]);report.status='passed';
+    await appendFile(process.env.GITHUB_OUTPUT,`snapshot_directory=${upgraded.directory}\nsnapshot_build_id=${built.release.buildId}\nsnapshot_site_id=${upgraded.manifest.siteId}\n`);
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(lastPage)await lastPage.screenshot({path:path.join(process.env.RUNNER_TEMP,'versioned-site-browser.png')}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser){let timer;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Browser close timeout.')),10000);})]);report.browserClosed=true;}finally{clearTimeout(timer);}}if(report.workers.some(w=>!w.closed))throw Error('Retained Worker after browser shutdown.');}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
