@@ -1,22 +1,23 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile,readdir,writeFile,mkdtemp,rm} from 'node:fs/promises';
+import {readFile,writeFile,mkdtemp,rm} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
-import {validatePagesWorkflow,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence} from '../scripts/lib/pages-release.mjs';
+import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
     for(const change of [w=>w.jobs.deploy.needs=[],w=>w.jobs.deploy.if='${{ always() }}',w=>w.jobs.prepare.permissions.pages='write',w=>w.jobs.deploy.steps.push({run:'echo unchecked'}),w=>w.jobs.verify_live.needs=['prepare'],w=>w.jobs.release.if='${{ always() }}',w=>w.jobs.prepare.steps[4].with.path='dist',w=>w.jobs.verify_live.steps[3].env.EXPECTED_ZIP_SHA='untrusted',w=>w.jobs.prepare.outputs.build_id='untrusted',w=>w.on.push={},w=>w.jobs.extra={...w.jobs.deploy},w=>w.jobs.release.steps[0].with['persist-credentials']=true]){const w=structuredClone(workflow);change(w);assert.throws(()=>validatePagesWorkflow(w));}
 });
 test('all other workflows are read-only, including YAML aliases and escaped keys',async()=>{
-    const directory=new URL('../.github/workflows/',import.meta.url),inventory=await Promise.all((await readdir(directory)).filter(n=>/\.ya?ml$/.test(n)).map(async n=>({path:'.github/workflows/'+n,text:await readFile(new URL(n,directory),'utf8')})));
+    const inventory=await readWorkflowInventory();
     assert.equal(await validateWorkflowInventory(inventory),true);
     const own=inventory.find(f=>f.path.endsWith('verified-pages.yml'));
-    for(const text of ['permissions: write-all\njobs: {}','permissions: {contents: read}\njobs: {bypass: {permissions: {pages: write}}}','permissions: &bad {pages: write}\njobs: {bypass: {permissions: *bad}}','"permi\\u0073sions": write-all\njobs: {}','permissions: {contents: read}\npermissions: write-all\njobs: {}'])await assert.rejects(validateWorkflowInventory([own,{path:'.github/workflows/bypass.yml',text}]));
+    for(const text of ['permissions: write-all\njobs: {}','permissions: {contents: read}\njobs: {bypass: {permissions: {pages: write}}}','permissions: &bad {pages: write}\njobs: {bypass: {permissions: *bad}}','"permi\\u0073sions": write-all\njobs: {}','permissions: {contents: read}\npermissions: write-all\njobs: {}','permissions: {contents: read}\nshared: &bad {permissions: {pages: write}}\njobs: {bypass: {<<: *bad}}'])await assert.rejects(validateWorkflowInventory([own,{path:'.github/workflows/bypass.yml',text}]));
     assert.equal(await validateWorkflowInventory([own,{path:'.github/workflows/read.yml',text:'permissions: &safe {contents: read}\njobs: {read: {permissions: *safe}}'}]),true);
+    const temporary=await mkdtemp(path.join(os.tmpdir(),'workflow-case-unit-'));try{await writeFile(path.join(temporary,'BYPASS.YML'),'permissions: write-all\njobs: {}');const upper=await readWorkflowInventory(temporary);assert.equal(upper.length,1);await assert.rejects(validateWorkflowInventory([own,...upper]));}finally{await rm(temporary,{recursive:true,force:true});}
 });
 test('legacy Pages, wildcard/tag policies and non-main dispatches are rejected',()=>{
     const pages={build_type:'workflow'},env={deployment_branch_policy:{custom_branch_policies:true,protected_branches:false}},policies={total_count:1,branch_policies:[{name:'main',type:'branch'}]};

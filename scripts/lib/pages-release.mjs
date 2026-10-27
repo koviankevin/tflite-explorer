@@ -8,13 +8,17 @@ export const PAGES_WORKFLOW='.github/workflows/verified-pages.yml';
 export const OFFICIAL_ACTIONS=Object.freeze({checkout:'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',node:'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',upload:'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',download:'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093',deploy:'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e'});
 export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+export async function readWorkflowInventory(directory='.github/workflows'){
+    const names=(await readdir(directory)).filter(n=>/\.ya?ml$/i.test(n));
+    return Promise.all(names.map(async name=>{const filename=path.join(directory,name),info=await lstat(filename);if(!info.isFile()||info.isSymbolicLink()||info.size>1024**2)throw Error('Workflow must be a bounded regular file.');return {path:'.github/workflows/'+name,text:await readFile(filename,'utf8')};}));
+}
 export async function validateWorkflowInventory(files){
     const {parseDocument}=await import('yaml');let found=false;
     if(!files.length||files.length>100)throw Error('Invalid workflow inventory.');
     const readOnly=p=>p==='read-all'||p&&typeof p==='object'&&!Array.isArray(p)&&Object.values(p).every(value=>['read','none'].includes(value));
     for(const file of files){
         if(Buffer.byteLength(file.text)>1024**2)throw Error('Oversized workflow.');
-        const document=parseDocument(file.text,{uniqueKeys:true,version:'1.2'});if(document.errors.length||document.warnings.length)throw Error(`Malformed/unsupported workflow YAML: ${file.path}`);
+        const document=parseDocument(file.text,{uniqueKeys:true,version:'1.2',merge:true});if(document.errors.length||document.warnings.length)throw Error(`Malformed/unsupported workflow YAML: ${file.path}`);
         const value=document.toJS({maxAliasCount:50});
         if(file.path===PAGES_WORKFLOW){validatePagesWorkflow(value);found=true;}
         else if(!readOnly(value?.permissions)||Object.values(value?.jobs||{}).some(job=>job?.permissions!==undefined&&!readOnly(job.permissions)))throw Error(`Unexpected write permission outside the gated release: ${file.path}`);

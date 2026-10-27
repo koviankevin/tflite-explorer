@@ -1,13 +1,13 @@
-import {readFile,readdir,writeFile,mkdir,copyFile,appendFile} from 'node:fs/promises';
+import {writeFile,mkdir,copyFile,appendFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {buildSite} from './build.mjs';
 import {packageRelease} from './package-release.mjs';
 import {verifyArtifact,gitSource} from './lib/release-artifact.mjs';
 import {verifyReleaseGates} from './lib/release-gates.mjs';
-import {validateWorkflowInventory,checkDispatchContext,assertExpectedBuild,assertPagesConfiguration,assertVersionAvailable,validateDelivery,ghJSON,fileSHA256,immutableGateEvidence} from './lib/pages-release.mjs';
+import {readWorkflowInventory,validateWorkflowInventory,checkDispatchContext,assertExpectedBuild,assertPagesConfiguration,assertVersionAvailable,validateDelivery,ghJSON,fileSHA256,immutableGateEvidence} from './lib/pages-release.mjs';
 checkDispatchContext();
-await validateWorkflowInventory(await Promise.all((await readdir('.github/workflows')).filter(n=>/\.ya?ml$/.test(n)).map(async n=>({path:'.github/workflows/'+n,text:await readFile('.github/workflows/'+n,'utf8')}))));
+await validateWorkflowInventory(await readWorkflowInventory());
 const source=gitSource();if(source.dirty||source.commit!==process.env.GITHUB_SHA)throw Error('Wrong/dirty checkout.');
 if(process.env.PUBLISH_SITE==='true')assertPagesConfiguration(ghJSON(`repos/${process.env.GITHUB_REPOSITORY}/pages`),ghJSON(`repos/${process.env.GITHUB_REPOSITORY}/environments/github-pages`),ghJSON(`repos/${process.env.GITHUB_REPOSITORY}/environments/github-pages/deployment-branch-policies`));
 const candidate=await buildSite({output:'build/pages-candidate'});
