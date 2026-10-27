@@ -37,8 +37,9 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 }, progress, dialects:mlirDialects
             });
             send(id, { sliceView:!!index.mlir?.slicePatterns?.size, sourceFormat: index.sourceFormat, capabilities: index.capabilities, format: index.model.format, description: index.model.description, stats: index.stats, graphs: index.graphs.map((e, i) => ({ index: i, name: e.graph.name || `Subgraph ${i}`, layers: e.graph.nodes.length, tensors: e.tensors.size, cfgExport:index.mlir?.graphs[i]?.cfgExport })), operators: [...new Set(index.graphs.flatMap((entry) => operatorIndex(entry).names))].sort() });
-        } else if (['modelEditInfo','modelEditValues','modelEditText','editModelOperation'].includes(action)) {
-            const {operationEditInfo,operationValueChoices,operationEditText,editModelOperation}=await import('./model-operation-edit.js');
+        } else if (['modelEditTargets','modelEditInfo','modelEditValues','modelEditText','editModelOperation'].includes(action)) {
+            const {operationEditTargets,operationEditInfo,operationValueChoices,operationEditText,editModelOperation}=await import('./model-operation-edit.js');
+            if(action==='modelEditTargets'){send(id,operationEditTargets(index,args));return;}
             if(action==='modelEditInfo'){send(id,operationEditInfo(index,args));return;}
             if(action==='modelEditValues'){send(id,operationValueChoices(index,args));return;}
             if(action==='modelEditText'){send(id,operationEditText(index,args));return;}

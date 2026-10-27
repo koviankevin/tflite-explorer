@@ -2,15 +2,15 @@
 // local artifact; ownership checks discard responses from an old model/dialog.
 export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,downloadReport,error}) {
     const $=id=>document.getElementById(id),dialog=$('model-edit-dialog');
-    let info=null,owner=null,generation=0,choiceGeneration=0,previewGeneration=0,timer,busy=false,previewing=false,pendingExports=0,portPage=0,operands=[],replacements=[],fields={},irDrafts={};
+    let info=null,owner=null,generation=0,choiceGeneration=0,previewGeneration=0,timer,busy=false,previewing=false,pendingExports=0,portPage=0,operands=[],replacements=[],fields={},irDrafts={},targets=[];
     dialog.dataset.pendingExports='0';
     const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
     const labelled=(text,input)=>{const node=make('label',text);node.append(input);return node;};
     const live=ticket=>ticket===generation&&owner===getSource()&&dialog.open;
     const changed=()=>{$('open-edited-model').disabled=true;$('download-model-edit-report').disabled=true;$('model-edit-result').textContent='修改尚未匯出。';};
-    const release=()=>{generation++;choiceGeneration++;previewGeneration++;previewing=false;clearTimeout(timer);if(busy){busy=false;onBusy(false);}$('model-edit-form').inert=false;info=null;owner=null;operands=[];replacements=[];fields={};irDrafts={};$('model-edit-ports').replaceChildren();$('model-edit-options').replaceChildren();$('model-edit-values').replaceChildren();$('model-edit-ir').value='';$('download-model-edit-report').disabled=true;};
+    const release=(keepTargets=false)=>{generation++;choiceGeneration++;previewGeneration++;previewing=false;clearTimeout(timer);if(busy){busy=false;onBusy(false);}$('model-edit-form').inert=false;$('model-edit-form').hidden=true;info=null;owner=null;operands=[];replacements=[];fields={};irDrafts={};$('model-edit-ports').replaceChildren();$('model-edit-options').replaceChildren();$('model-edit-values').replaceChildren();$('model-edit-ir').value='';$('download-model-edit-report').disabled=true;$('open-edited-model').disabled=true;$('model-edit-back').hidden=true;if(!keepTargets){targets=[];$('model-edit-target-list').replaceChildren();$('model-edit-target-picker').hidden=true;}};
     const availability=()=>{$('export-edited-model').disabled=busy||previewing||pendingExports>0||!info;};
-    const setBusy=value=>{busy=value;availability();if(value){$('open-edited-model').disabled=true;$('download-model-edit-report').disabled=true;}$('model-edit-form').inert=value;onBusy(value);};
+    const setBusy=value=>{busy=value;availability();if(value){$('open-edited-model').disabled=true;$('download-model-edit-report').disabled=true;}$('model-edit-form').inert=value;$('model-edit-back').disabled=value;onBusy(value);};
     async function choices(){
         if(!info||!dialog.open)return;const ticket=generation,request=++choiceGeneration;
         try{const rows=await rpc('modelEditValues',{graph:info.graph,node:info.node,query:$('model-edit-value-search').value});if(!live(ticket)||request!==choiceGeneration)return;
@@ -67,7 +67,8 @@ export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,do
     $('model-edit-value-search').oninput=()=>{clearTimeout(timer);timer=setTimeout(choices,180);};
     $('model-edit-ports-previous').onclick=()=>{portPage--;ports();};$('model-edit-ports-next').onclick=()=>{portPage++;ports();};
     $('close-model-edit').onclick=()=>dialog.close();$('cancel-model-edit').onclick=()=>dialog.close();
-    dialog.addEventListener('close',release);
+    dialog.addEventListener('close',()=>release());
+    $('model-edit-back').onclick=()=>{if(!busy)showTargets();};
     $('open-edited-model').onclick=()=>{dialog.close();openResult();};
     $('download-model-edit-report').onclick=downloadReport;
     $('export-edited-model').onclick=async()=>{
@@ -87,15 +88,31 @@ export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,do
         }catch(reason){if(live(ticket)){$('model-edit-result').textContent=[reason.message,...(reason.validation?.diagnostics||[]).slice(0,10).map(d=>`${d.line?`第 ${d.line} 行 · `:''}${d.code}: ${d.message}`)].join('\n');}}
         finally{pendingExports--;dialog.dataset.pendingExports=String(pendingExports);if(owner===source&&ticket===generation)setBusy(false);else availability();}
     };
+    function showTargets(){
+        const source=owner;release(true);owner=source;availability();if(!owner||owner!==getSource())return;
+        $('model-edit-target').textContent=`已選取 ${targets.length} 個 OP，請選擇要編輯的 OP。`;
+        $('model-edit-result').textContent='每次修改一個 OP；原本框選的 layers 與模型視角會保留。';
+        $('model-edit-target-picker').hidden=false;
+        $('model-edit-target-list').replaceChildren(...targets.map(target=>{const button=make('button',`subgraph/block ${target.graph} · OP #${target.node} · ${target.name}`);button.className='quiet';button.type='button';button.dataset.modelEditTarget=`${target.graph}:${target.node}`;button.onclick=()=>loadTarget(target);return button;}));
+        $('model-edit-target-list').firstElementChild?.focus();
+    }
+    async function loadTarget(location){
+        if(busy)return;const source=owner;release(true);owner=source;if(!owner||owner!==getSource())return;const ticket=generation;
+        $('model-edit-target-picker').hidden=true;$('model-edit-back').hidden=targets.length<2;$('model-edit-back').disabled=false;
+        $('model-edit-target').textContent='讀取原始 OP…';$('model-edit-result').textContent='';availability();
+        try{const data=await rpc('modelEditInfo',location);if(!live(ticket))return;info=data;operands=info.operands.map(p=>String(p.value));replacements=info.outputs.map(()=>'');fields={};portPage=0;
+            $('model-edit-target').textContent=`${info.format.toUpperCase()} · subgraph/block ${info.graph} · OP #${info.node} · ${info.name}`;
+            $('model-edit-mode').value='replace';$('model-edit-name').value=info.name;$('model-edit-ir').value=info.text||'';$('model-edit-advanced').checked=false;$('model-edit-expose').checked=true;$('model-edit-update-signatures').checked=false;$('model-edit-delete-mode').value='reconnect';$('model-edit-value-search').value='';
+            parameters();render();$('model-edit-form').hidden=false;availability();if(targets.length>1)$('model-edit-mode').focus();await choices();
+        }catch(reason){if(live(ticket)){$('model-edit-result').textContent=reason.message;error(reason);}}
+    }
     return {
         clear(){release();if(dialog.open)dialog.close();busy=false;$('model-edit-form').inert=false;$('export-edited-model').disabled=true;$('open-edited-model').disabled=true;},
         async open(location){
             if(busy)return;release();owner=getSource();if(!owner)return;const ticket=generation;
             $('model-edit-target').textContent='讀取原始 OP…';$('model-edit-result').textContent='';$('open-edited-model').disabled=true;$('export-edited-model').disabled=true;dialog.showModal();
-            try{const data=await rpc('modelEditInfo',location);if(!live(ticket))return;info=data;operands=info.operands.map(p=>String(p.value));replacements=info.outputs.map(()=>'');fields={};portPage=0;
-                $('model-edit-target').textContent=`${info.format.toUpperCase()} · subgraph/block ${info.graph} · OP #${info.node} · ${info.name}`;
-                $('model-edit-mode').value='replace';$('model-edit-name').value=info.name;$('model-edit-ir').value=info.text||'';$('model-edit-advanced').checked=false;$('model-edit-expose').checked=true;$('model-edit-update-signatures').checked=false;$('model-edit-delete-mode').value='reconnect';$('model-edit-value-search').value='';
-                parameters();render();availability();await choices();
+            const locations=Array.isArray(location)?location:[location];
+            try{if(locations.length>1){const rows=await rpc('modelEditTargets',{targets:locations});if(!live(ticket))return;targets=rows;showTargets();}else await loadTarget(locations[0]);
             }catch(reason){if(live(ticket)){$('model-edit-result').textContent=reason.message;error(reason);}}
         }
     };

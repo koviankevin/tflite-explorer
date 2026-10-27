@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {operationEditInfo,operationValueChoices,editModelOperation} from '../src/model-operation-edit.js';
+import {operationEditTargets,operationEditInfo,operationValueChoices,editModelOperation} from '../src/model-operation-edit.js';
 import {parseModel} from '../src/model-engine.js';
 import {parseMLIR,parseMLIRFile} from '../src/mlir-engine.js';
 import {validateMLIR} from '../src/mlir-validate.js';
@@ -12,6 +12,15 @@ const tfMetadata=JSON.parse(await readFile(new URL('../vendor/netron/tflite-meta
 const mlMetadata=await readFile(new URL('../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
 const ml=text=>parseMLIR(new TextEncoder().encode(text),{metadata:mlMetadata});
 const tf=bytes=>parseModel((offset,length)=>bytes.subarray(offset,offset+length),bytes.length,tfMetadata);
+
+test('multi-selection target labels are bounded metadata with exact graph/OP identity',async()=>{
+    const original=await customFixture({external:true}),index=await tf(original.bytes);
+    const rows=operationEditTargets(index,{targets:[{graph:0,node:1},{graph:0,node:0},{graph:0,node:1}]});
+    assert.equal(rows.length,2);assert.equal(rows[0].name,'InternalSplitFoo');assert.deepEqual(rows.map(r=>[r.graph,r.node]),[[0,1],[0,0]]);
+    assert.ok(rows.every(r=>Object.keys(r).sort().join(',')==='graph,name,node'));
+    const mlir=await ml(MLIR_BRANCH);assert.equal(operationEditTargets(mlir,{targets:[{graph:0,node:0}]} )[0].name,'acme.split');
+    for(const targets of [[],Array(33).fill({graph:0,node:0}),[{graph:0,node:-1}],[{graph:0,node:900}]])assert.throws(()=>operationEditTargets(index,{targets}));
+});
 
 test('generic MLIR form changes only name/SSA tokens; add auto-renames multi-results and preserves attributes',async()=>{
     const text=MLIR_BRANCH.replace('custom op','custom op %split %left'),index=await ml(text),info=operationEditInfo(index,{graph:0,node:0});
