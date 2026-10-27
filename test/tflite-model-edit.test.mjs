@@ -80,3 +80,14 @@ test('invalid producer order, duplicate producers, constant writes, tensor indic
     assert.throws(()=>editTfliteModel(index,file,[{graph:0},{graph:0}]),/有效的模型修改|重複/);
     assert.equal(index.raw.subgraphs[0].operators.length,3);assert.equal(validateTfliteModelGraph(index.raw,0).passed,true);
 });
+
+test('interface edits remove stale TFLITE_METADATA but retain opaque runtime metadata and every buffer ID',async()=>{
+    const {model}=await customFixture();
+    const writer=new FlatbufferWriter(),root=writer.table({name:'Original model interface'},'ModelMetadata');writer.write(0,root);writer.bytes.set([77,48,48,49],4);model.buffers[2].data=writer.bytes.slice(0,writer.length);
+    model.metadata.push({name:'TFLITE_METADATA',buffer:2});
+    const file=new File([new FlatbufferWriter().finish(model,new Blob())],'metadata.tflite'),index=await parse(new Uint8Array(await file.arrayBuffer()));
+    const unchanged=editTfliteModel(index,file,[{graph:0}]);assert.ok((await reopen(unchanged)).raw.metadata.some(m=>m.name==='TFLITE_METADATA'));assert.deepEqual(unchanged.metadataChanges,[]);
+    const result=editTfliteModel(index,file,[{graph:0,outputs:[7,8]}]),after=await reopen(result);
+    assert.deepEqual(after.raw.metadata.map(m=>m.name),['internal.runtime']);assert.deepEqual([...after.raw.metadata_buffer],[2]);assert.equal(after.raw.buffers.length,index.raw.buffers.length);assert.equal(result.metadataChanges.length,1);
+    assert.ok(index.raw.metadata.some(m=>m.name==='TFLITE_METADATA'));
+});

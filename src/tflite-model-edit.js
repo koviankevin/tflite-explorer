@@ -43,7 +43,7 @@ export function editTfliteModel(index,file,plans) {
     if(index.exportUnsupportedReason)throw Error(index.exportUnsupportedReason);
     if(!Array.isArray(plans)||!plans.length||plans.length>index.raw.subgraphs.length)throw Error('請提供有效的模型修改。');
     const range=(offset,size)=>{offset=Number(offset||0n);size=Number(size||0n);if(!Number.isSafeInteger(offset)||!Number.isSafeInteger(size)||offset<0||size<0||(size&&offset<2)||offset>file.size-size)throw Error('權重或 custom options 超出來源範圍。');return {offset,size};};
-    const model={...index.raw,subgraphs:index.raw.subgraphs.slice(),signature_defs:index.raw.signature_defs.slice()},changed=new Set(),changes=[];
+    const model={...index.raw,subgraphs:index.raw.subgraphs.slice(),signature_defs:index.raw.signature_defs.slice()},changed=new Set(),changes=[];let interfaceChangedAny=false;
     const ids=(value,total,optional=false)=>{
         if(!Array.isArray(value)&&!ArrayBuffer.isView(value))throw Error('Tensor 連線必須是編號清單。');
         if(value.length>65535||Array.from(value).some(id=>!Number.isInteger(id)||(id<0?!(optional&&id===-1):id>=total)))throw Error('Tensor 連線編號超出範圍。');return Int32Array.from(value);
@@ -70,6 +70,7 @@ export function editTfliteModel(index,file,plans) {
         const graph={...original,tensors,operators,debug_metadata_index:-1};
         for(const key of ['inputs','outputs'])if(plan[key]!==undefined)graph[key]=ids(plan[key],tensors.length);
         const interfaceChanged=['inputs','outputs'].some(key=>graph[key].length!==original[key].length||graph[key].some((id,i)=>id!==original[key][i]));
+        interfaceChangedAny ||= interfaceChanged;
         if(interfaceChanged)model.signature_defs=model.signature_defs.map(signature=>{
             if(signature.subgraph_index!==plan.graph)return signature;
             if(plan.updateSignatures!==true)throw Error('模型介面變更需同步修改 signature；請明確啟用更新 signature。');
@@ -87,6 +88,16 @@ export function editTfliteModel(index,file,plans) {
         model.subgraphs[plan.graph]=graph;changes.push({graph:plan.graph,before:original.operators.length,after:operators.length,newTensors:tensors.length-original.tensors.length});
     }
     for(const graph of changed)validateTfliteModelGraph(model,graph);
+    const metadataChanges=[];
+    if(interfaceChangedAny&&index.raw.metadata.some(m=>m.name==='TFLITE_METADATA')){
+        // TFLITE_METADATA describes the old public interface. Its opaque bytes
+        // cannot be updated by guessing; remove the stale descriptor, preserve
+        // every buffer ID/data and all other custom-runtime metadata.
+        const stale=new Set(index.raw.metadata.filter(m=>m.name==='TFLITE_METADATA').map(m=>m.buffer));
+        model.metadata=index.raw.metadata.filter(m=>m.name!=='TFLITE_METADATA');const retained=new Set(model.metadata.map(m=>m.buffer));
+        model.metadata_buffer=Int32Array.from(index.raw.metadata_buffer.filter(id=>!stale.has(id)||retained.has(id)));
+        metadataChanges.push('模型介面已變更，移除描述舊介面的 TFLITE_METADATA；原始 buffer bytes／編號及其他 metadata 保留。');
+    }
     // All buffers, metadata, signatures, subgraphs and numbering are retained.
     // Only structural bytes are rebuilt; large data remains source File slices.
     model.buffers=index.raw.buffers.map((source,id)=>{const r=range(source.offset,source.size);return {...source,data:r.size?null:source.data,offset:0n,size:0n,...(r.size?{sourceRange:{...r,kind:'buffer',reference:`buffer:${id}`}}:{})};});
@@ -98,5 +109,5 @@ export function editTfliteModel(index,file,plans) {
         const r=op.customOptionsDeferred?range(op.customOptionsRange.offset,op.customOptionsRange.size):range(op.large_custom_options_offset,op.large_custom_options_size),inline=!op.customOptionsDeferred&&op.customOptionsInline;
         return {...op,custom_options:inline?op.custom_options:null,large_custom_options_offset:0n,large_custom_options_size:0n,externalRanges:[{offsetKey:'large_custom_options_offset',sizeKey:'large_custom_options_size',...r,kind:'custom-options-external',reference:`graph:${graph}:operator:${node}`}]};
     })}));
-    return {...new FlatbufferWriter().finishArtifact(model,file),changes,format:'tflite',validation:{passed:true,scope:'本機結構檢查；kernel、shape inference 與 custom runtime 尚未驗證'},verification:'structure-only'};
+    return {...new FlatbufferWriter().finishArtifact(model,file),changes,metadataChanges,format:'tflite',validation:{passed:true,scope:'本機結構檢查；kernel、shape inference 與 custom runtime 尚未驗證'},verification:'structure-only'};
 }

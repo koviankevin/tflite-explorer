@@ -22,7 +22,7 @@ export function createModelEditReport(index,file,result,candidate,args,{outputNa
     const target=outputNode===null?null:{graph:args.graph,node:outputNode,type:text(candidate.graphs[args.graph]?.graph.nodes[outputNode]?.type?.name)};
     const modification={action:args.mode,source:{graph:args.graph,node:args.node,type:text(sourceNode.type.name)},output:target,
         before:{layers:total(index),scopes:index.graphs.length,interface:before},after:{layers:total(candidate),scopes:candidate.graphs.length},
-        parameterNames:[...Object.keys(args.options||{}),...Object.keys(args.options2||{})],fullIR:!!args.advanced,
+        parameterNames:[...Object.keys(args.options||{}),...Object.keys(args.options2||{})],fullIR:!!args.advanced,metadataChanges:result.metadataChanges||[],
         mappingScope:'只列修改目標；完整 IR 或 region 修改不推測一對一 OP 對照。未提供其他 OP 的逐筆位置映射。',interfaceScope:'各顯示 block／subgraph 的介面；不等同於所有 MLIR function 的 ABI。'};
     const provenance={mode:'model-edit',ranges:result.ranges,operators:target?[{source:{graph:args.graph,node:args.node},output:{graph:target.graph,node:target.node},role:args.mode==='replace'?'modified':'cloned'}]:[],generated:[]};
     return createExportReport(index,file,{...result,provenance,modification,inputs,outputs,layers:total(candidate),tensors:candidate.graphs.reduce((n,g)=>n+g.tensors.size,0),preservedIds:!index.mlir,retainedBuffers:candidate.raw?.buffers.length},{graph:args.graph,nodes:[args.node],outputName,buildId});
