@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。最近一次受控交付與正式站操作結果見 [Pages 驗收](docs/pages-deployment-verification.md)。
+[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.8，已完成真實回退／恢復、同一瀏覽器 pattern 保存、741 檔與原生 UI 驗收，見 [切換驗收與限制](docs/production-transition-verification.md)。
 
 匯出後可從「最近匯出報告」下載來源 OP、輸入／輸出和原始資料位置對照；以本機 CLI 串流比對實際下載檔的權重／custom options，並可指定公司 MLIR compiler。報告清楚區分結構檢查、bytes 比對和未驗證的 runtime 語意，見 [匯出報告與本機驗證](docs/export-reports.md)。
 
@@ -54,7 +54,7 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 搜尋與 source SSA／dominance 檢查全在 Worker 執行；未知 branch 需 dialect adapter，無效 CFG 不會猜測接線。搜尋可取消，最多 50,000 筆、2,000,000 次候選／完整比對檢查，達限時顯示結果可能不完整。跨 block JSON 使用 version 2，保留結構節點與有類型的連線；version 1 的單 block patterns 仍可匯入。檔案不含模型／SSA 名稱、權重或原始 IR。
 
-可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的 region kind、isolation、successor operands、terminator 與自訂 verifier 可從 `src/mlir-dialect-registry.js` 接入，來源與匯出重驗共用同一 registry，無需修改搜尋器。顯示擴充、parser 替換位置、介面範例與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
+可在公司工具中用 `--mlir-print-op-generic` 輸出通用形式。內部 dialect 的 region kind、isolation、successor operands、terminator 與自訂 verifier，請透過獨立的 [profile／dialect adapter](docs/intranet-release.md) 接入，保留私有來源，不直接修改公開 registry。來源與匯出重驗共用同一 registry，無需修改搜尋器。顯示擴充、parser 替換位置、介面範例與測試方式見 [MLIR 擴充說明](docs/mlir-adapters.md)。TFLite 開檔不會載入 MLIR parser；TFLite 的 range stream 與子模型匯出保留原有方式。
 
 ## 匯出 TFLite 子模型
 
@@ -95,7 +95,7 @@ node scripts/publish-github-pages.mjs --site-id SITE_ID_FROM_PREPARE
 
 發布腳本以已登入的 GitHub CLI dispatch 受控工作流程，要求本機建置與目前 main 完全相同；不推送靜態分支。先用工作流程的準備模式核對 build ID，再以該 ID 發布。正式站逐檔 SHA、瀏覽器選檔／搜尋／匯出重開都成功後，才建立不可覆寫的固定版本 Release。GitHub Pages 通常公開，模型仍由訪客瀏覽器本機處理。完整步驟見 [Pages 發布](docs/pages-deployment.md)。
 
-發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的四項成功 CI。將 `SITE_ID_FROM_PREPARE` 換成成功 prepare 並審閱後的 64 位整站 ID。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布完整隔離快照；缺少必要工作、來源或站台 ID 改變會拒絕。第四關卡與整站整合目前仍在草稿分支，正式交付狀態見 [版本隔離](docs/versioned-site.md)。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
+發布前另需已登入的 GitHub CLI（PATH 的 `gh` 或 `GH_BIN`），以及 `release-evidence.json` 指定的四項成功 CI。將 `SITE_ID_FROM_PREPARE` 換成成功 prepare 並審閱後的 64 位整站 ID。腳本會線上核對來源／artifact、重新建置逐檔比較，再發布完整隔離快照；缺少必要工作、來源或站台 ID 改變會拒絕。四關卡、完整版本隔離和固定 Release 提升已在 main，正式交付狀態見 [版本隔離](docs/versioned-site.md) 與 [正式切換驗收](docs/production-transition-verification.md)。詳見 [發布關卡與回退](docs/release-gates.md) 及 [實際驗收](docs/release-gates-verification.md)。內網建置與封裝仍可不連外。
 
 Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保留，見 [保存說明](docs/pattern-library-recovery.md) 與 [驗收紀錄](docs/pattern-library-verification.md)。
 

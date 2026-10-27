@@ -4,6 +4,8 @@
 
 已部署的內網版可以持續跟進公開核心的改善，不需要搬回外網。內網不會自動下載或套用正式網站的新程式；每次由公司選定固定版本，完成內部驗收後才切換。
 
+目前可選 [preview.8 固定交付](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.8)，公開站的 [實際回退／恢復驗收](production-transition-verification.md) 已完成。這不取代內部模型、dialect 和 compiler／runtime 驗收。帶內部擴充時，選定核心來源 `v0.2.0-preview.8` 後以公司 profile 重新建置；不要將公開 ZIP 直接蓋過內部程式。
+
 - 原樣部署公開版：取新的固定版本 ZIP 與 checksum，照下方升級流程部署。
 - 有獨立 profile／dialect adapter：更新公開核心 checkout，沿用內部 repository 的 profile 重新建置，保留私有擴充版本與指紋紀錄。
 - 已直接修改核心：先保留目前內網來源 commit 和差異，將公開版本合併到公司分支、處理衝突；不能拿公開 ZIP 直接蓋過私有修改。可逐步把適合的 dialect 邏輯移到 adapter，以減少後續合併成本。
@@ -21,6 +23,8 @@ node scripts/package-release.mjs dist
 ```
 
 `build/releases/` 產生帶版本及 build ID 的 `.zip` 和 `.sha256`。它包含完整靜態網站、公開示範、授權、`release.json` 與逐檔 SHA-256 的 `release-manifest.json`。ZIP 不需 Node.js 即可部署到靜態 HTTP／HTTPS server；不能直接用 `file://` 開啟 module Worker。內網 server 必須正確提供 JavaScript／JSON MIME types。
+
+固定核心 ZIP 與 Pages 完整版本隔離快照是不同產物。內網原樣部署請取 Release ZIP；有私有擴充則使用自己的建置包。公開 Pages 根目錄刻意保留舊版 lazy-load 檔案及其 `release.json`，現行版本以版本視窗及 `site-manifest.json.current` 為準，不能只拿根 metadata 判斷或混貼新舊檔案。Pattern／草稿也不會跨公開站與內網 origin 自動同步，換環境先匯出 JSON。
 
 SHA-256 用於傳輸與檔案完整性核對，不等於數位簽章或公司 runtime 語意驗證。來源狀態若有未提交修改，版本視窗會明示；公開發布要求已提交來源並重新建置。
 

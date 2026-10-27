@@ -1,0 +1,51 @@
+{
+  "format": "model-lens-production-smoke",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T08:41:40.054Z",
+  "driverSourceCommit": "eca6e88f740b13f7ae862dce3523b92a59726f37",
+  "expectedBuild": "017eed149449e951",
+  "checks": [
+    "version dialog works during delayed graph initialization at the repository subpath",
+    "public demo, 32px graph, exact layer search and location",
+    "native model chooser and native pattern JSON import/export",
+    "actual TFLite submodel download, native reopen, original pattern and worker cleanup"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/017eed149449e951/vendor/netron/worker.js?v=017eed149449e951",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/017eed149449e951/src/model-worker.js?v=017eed149449e951",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/017eed149449e951/src/model-worker.js?v=017eed149449e951",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/017eed149449e951/src/model-worker.js?v=017eed149449e951",
+      "closed": true
+    }
+  ],
+  "target": "public-production",
+  "siteRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.8",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+      "tree": "260b96d55966bc1d1ab9df672d2c4835fedf38fe",
+      "committedAt": "2026-10-27T15:09:30+08:00",
+      "dirty": false
+    },
+    "buildId": "017eed149449e951"
+  },
+  "siteId": "13a9185171eb3ffb32c8b2df63b12512d2a22e65f6b9c7db64f0f7570dac17a5",
+  "coreBasePath": "versions/017eed149449e951/",
+  "chromium": "141.0.7390.37",
+  "finishedAt": "2026-10-27T08:41:44.290Z"
+}

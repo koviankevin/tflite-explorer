@@ -1,0 +1,37 @@
+{
+  "format": "model-lens-wrong-site-rejection",
+  "version": 1,
+  "status": "passed",
+  "checkedAt": "2026-10-27T07:24:12.051Z",
+  "source": {
+    "commit": "98f4aaa3dce7f6ceeedccdfd2d9449a3927f7385",
+    "tree": "260b96d55966bc1d1ab9df672d2c4835fedf38fe",
+    "committedAt": "2026-10-27T15:09:30+08:00",
+    "dirty": false
+  },
+  "runId": 40466627559,
+  "expectedBuild": "017eed149449e951",
+  "wrongSiteId": "0000000000000000000000000000000000000000000000000000000000000000",
+  "expectedGuardMatched": true,
+  "artifactCount": 0,
+  "jobs": [
+    {
+      "name": "prepare",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify_live",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Publish site ${{ needs.prepare.outputs.site_id }}",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "release",
+      "conclusion": "skipped"
+    }
+  ],
+  "unchangedDeployment": 7350054986,
+  "observerRun": 40466402819
+}
