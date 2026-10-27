@@ -113,6 +113,15 @@
   <dl id="release-fields"></dl>
   <p class="hint">版本資訊只包含程式建置與擴充版本，不含模型、權重或搜尋內容。內網更新時可用來核對安裝的版本。</p>
   <button id="download-release-info" class="quiet" disabled>下載版本資訊</button>
+  <button id="open-diagnostics" class="quiet">本機診斷報告</button>
+</dialog>
+<dialog id="diagnostic-dialog" aria-labelledby="diagnostic-title">
+  <div class="import-heading"><h2 id="diagnostic-title">本機診斷報告</h2><button id="close-diagnostics" class="icon-button" aria-label="關閉診斷報告">×</button></div>
+  <p class="hint">先預覽，再自行下載。只包含程式版本、瀏覽器種類、粗略規模與操作分類；不含模型檔名、OP／SSA 名稱、搜尋／pattern 內容、權重、屬性、私有 dialect 資訊或原始錯誤訊息。診斷內容不會上傳。</p>
+  <output id="diagnostic-summary" role="status"></output>
+  <div class="diagnostic-actions"><button id="refresh-diagnostics" class="quiet">更新預覽</button><button id="clear-diagnostics" class="quiet">清除本次操作紀錄</button><button id="download-diagnostics" class="primary" disabled>下載預覽 JSON</button></div>
+  <pre id="diagnostic-preview" tabindex="0" aria-label="診斷 JSON 預覽"></pre>
+  <p class="hint">紀錄最多 64 筆，只留在本分頁記憶體，重新整理即清除。未量測整個瀏覽器／Worker 記憶體；操作紀錄不等同於模型相容性或下載完成證明。</p>
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>

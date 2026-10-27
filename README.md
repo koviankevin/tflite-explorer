@@ -95,6 +95,8 @@ node scripts/publish-github-pages.mjs
 
 Pattern 清單支援多分頁交易合併、同名衝突副本及舊版資料保留，見 [保存說明](docs/pattern-library-recovery.md) 與 [驗收紀錄](docs/pattern-library-verification.md)。
 
+右上角「版本 → 本機診斷報告」可預覽及下載不含模型名稱／內容的操作紀錄，見 [診斷說明](docs/diagnostics.md) 與 [驗收紀錄](docs/diagnostics-verification.md)。
+
 ## 功能
 
 - 常駐 Layers／Tensors 清單；名稱不分大小寫、operator 類型搜尋，`#123` 或純數字精確比對編號。

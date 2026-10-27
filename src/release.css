@@ -10,3 +10,9 @@
 #release-fields dt{color:var(--muted)}#release-fields dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
 #release-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#release-dialog h2{font-size:20px;margin:0}
 @media(max-width:480px){#release-fields{grid-template-columns:1fr;gap:4px}#release-fields dd{margin-bottom:12px}#release-dialog{padding:16px}}
+#diagnostic-dialog{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:22px;background:var(--paper);color:var(--ink)}
+#diagnostic-dialog::backdrop{background:#142a2466}
+#diagnostic-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#diagnostic-dialog h2{font-size:20px;margin:0}
+.diagnostic-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}#diagnostic-summary{display:block;line-height:1.7;overflow-wrap:anywhere}
+#diagnostic-preview{padding:12px;border:1px solid var(--line);border-radius:6px;max-height:45dvh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.6 ui-monospace,Consolas,monospace;user-select:text}
+@media(max-width:480px){#diagnostic-dialog{padding:16px}.diagnostic-actions button{flex:1 1 auto}}
