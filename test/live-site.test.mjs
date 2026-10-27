@@ -37,6 +37,34 @@ test('full-site HTTP verification reads the real root and every namespaced/legac
     finally{await f.close();}
 });
 
+test('one temporarily unavailable namespaced worker recovers without restarting full-site verification',async()=>{
+    const f=await serverFixture(),delays=[];let failures=0;
+    try{
+        const flaky=f.prefix+'src/model-worker.js',read=(base,name,options)=>readStaticFile(base,name,{...options,pause:async ms=>delays.push(ms),fetcher:async(url,settings)=>name===flaky&&failures++<2?new Response('temporarily unavailable',{status:503}):fetch(url,settings)});
+        const verified=await verifyRemoteSnapshot({base:f.base,raw:f.raw,...f.trusted,read});assert.equal(verified.checks.length,f.site.files.length);assert.equal(failures,3);assert.deepEqual(delays,[1000,2000]);assert.equal(verified.checks.find(c=>c.path===flaky).attempts,3);
+    }finally{await f.close();}
+});
+
+test('temporary upstream retries are bounded and permanent HTTP responses are never retried',async()=>{
+    const base='https://example.invalid/tool/';
+    for(const status of [502,503,504,400,401,403,404,410,429]){
+        let requests=0;const delays=[];
+        await assert.rejects(readStaticFile(base,'worker.js',{pause:async ms=>delays.push(ms),fetcher:async()=>{requests++;return new Response('unavailable',{status});}}),new RegExp(String(status)));
+        const transient=[502,503,504].includes(status);assert.equal(requests,transient?4:1);assert.deepEqual(delays,transient?[1000,2000,4000]:[]);
+    }
+});
+
+test('a recovered response with bad SHA or MIME still fails on its first successful HTTP body',async()=>{
+    const f=await serverFixture(),flaky=f.prefix+'src/model-worker.js';
+    try{
+        for(const [override,reason] of [[{bytes:f.files.get(flaky),type:'application/octet-stream'},/MIME/],[{bytes:Buffer.alloc(f.files.get(flaky).length,120)},/differs/]]){
+            let requests=0;const delays=[];f.overrides.set(flaky,override);
+            const read=(base,name,options)=>readStaticFile(base,name,{...options,pause:async ms=>delays.push(ms),fetcher:async(url,settings)=>name===flaky&&requests++===0?new Response('unavailable',{status:503}):fetch(url,settings)});
+            await assert.rejects(verifyRemoteSnapshot({base:f.base,raw:f.raw,...f.trusted,read}),reason);assert.equal(requests,2);assert.deepEqual(delays,[1000]);f.overrides.clear();
+        }
+    }finally{await f.close();}
+});
+
 test('wrong full-site outputs cannot authorize a different snapshot even when the core build matches',()=>{
     const f=fixture();
     for(const change of [v=>v.siteId='0'.repeat(64),v=>v.siteManifestSHA256='0'.repeat(64),v=>v.coreManifestSHA256='0'.repeat(64),v=>v.coreManifest={...v.coreManifest,release:{...v.coreManifest.release,buildId:'9'.repeat(16)}}]){const trusted=structuredClone(f.trusted);change(trusted);assert.throws(()=>bindLiveSnapshot(f.raw,trusted));}
@@ -72,7 +100,7 @@ test('static responses are bounded and cannot redirect or downgrade other HTTP f
     const base='https://example.invalid/tool/';
     const fetcher=response=>async(url,options)=>{assert.ok(url.startsWith(base));assert.equal(options.redirect,'error');assert.equal(options.cache,'no-store');return response;};
     assert.equal(await readStaticFile(base,'site-manifest.json',{allow404:true,fetcher:fetcher(new Response('missing',{status:404}))}),null);
-    await assert.rejects(readStaticFile(base,'site-manifest.json',{allow404:true,fetcher:fetcher(new Response('error',{status:503}))}),/503/);
+    await assert.rejects(readStaticFile(base,'site-manifest.json',{allow404:true,pause:async()=>{},fetcher:fetcher(new Response('error',{status:503}))}),/503/);
     await assert.rejects(readStaticFile(base,'large',{maxBytes:5,fetcher:fetcher(new Response('123456'))}),/limit/);
     await assert.rejects(readStaticFile(base,'large',{maxBytes:5,fetcher:fetcher(new Response('small',{headers:{'content-length':'2000'}}))}),/limit/);
     await assert.rejects(readStaticFile(base,'../escape',{fetcher:async()=>assert.fail('must reject before network')}));
