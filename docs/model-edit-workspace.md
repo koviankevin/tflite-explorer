@@ -35,4 +35,13 @@
 | [contract 40558833474](https://github.com/koviankevin/tflite-explorer/actions/runs/40558833474) | [76 項通過](results/preview12-main-contract-2026-10-28.json)，零失敗／略過／取消；含安裝器限制與完整性拒絕案例 |
 | [site 40558838921](https://github.com/koviankevin/tflite-explorer/actions/runs/40558838921) | [六種隔離切換](results/preview12-main-site-2026-10-28.json)與 [19 項原生 UI](results/preview12-main-ui-2026-10-28.json)成功，27 個模型 Worker 關閉 |
 
-[四項 provider／fingerprint 核對](results/preview12-gates-review-2026-10-28.json)通過，原生 UI 另有 [provider digest／版面核對](results/preview12-main-ui-review-2026-10-28.json)。八輪前兩輪暖機後，RSS 漂移約 11.6 MiB、每輪斜率約 0.75 MiB、取樣峰值約 889.7 MiB，維持原始門檻與 60 秒自然 URL 壽命；完整輸出每輪 SHA-256 一致，7 段共 1,342,177,328 bytes 權重／options 逐段比對成功。正式網站與固定 Release 尚待本次受控發布完成。結構檢查、合成資料 bytes 比對與有限八輪量測不代表公司 compiler／runtime、數值等價、其他瀏覽器或數小時操作已驗證；商品等級未完成項目仍見 [工作清單](product-readiness.md)。
+[四項 provider／fingerprint 核對](results/preview12-gates-review-2026-10-28.json)通過，原生 UI 另有 [provider digest／版面核對](results/preview12-main-ui-review-2026-10-28.json)。八輪前兩輪暖機後，RSS 漂移約 11.6 MiB、每輪斜率約 0.75 MiB、取樣峰值約 889.7 MiB，維持原始門檻與 60 秒自然 URL 壽命；完整輸出每輪 SHA-256 一致，7 段共 1,342,177,328 bytes 權重／options 逐段比對成功。正式網站與固定 Release 已完成以下受控發布及獨立核對。結構檢查、合成資料 bytes 比對與有限八輪量測不代表公司 compiler／runtime、數值等價、其他瀏覽器或數小時操作已驗證；商品等級未完成項目仍見 [工作清單](product-readiness.md)。
+
+## 已發布 preview.12
+
+- [正式網站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.12)，build `52d46a06925bd391`。
+- 固定來源 `2bfacb746476b34f17e43f32a677616b443ffb9f`，tree `e1bbe58f67b8e0924409b81d57103d1ee78ff723`；本次交付後僅補說明文件，不改寫已發布產物。
+- [準備 40561368107](https://github.com/koviankevin/tflite-explorer/actions/runs/40561368107)及 [獨立準備核對](results/preview12-prepared-review-2026-10-28.json)通過，才以精確 build／site ID 送出 [發布 40561724699](https://github.com/koviankevin/tflite-explorer/actions/runs/40561724699)。prepare／deploy／verify_live／release 全部成功。
+- [正式 HTTP 報告](results/preview12-live-http-2026-10-28.json)：1,269 檔實際 SHA／MIME 與候選一致。Site ID `b686d4a33adb2b5f310965bd18b99d99282c4d325915666458c016c3cdb049fc`，manifest SHA-256 `6127a0728c615ef323f5d57122a8e1875ba87b2ba58f27bac9b9feda8f3549a6`；永久 legacy root preview.7 保留，另外保留 preview.11／preview.10。
+- [正式原生報告](results/preview12-live-ui-2026-10-28.json)：19 項操作、11 份實際改模匯出／報告、27 個模型 Worker 關閉；[手機長名稱截圖](results/preview12-live-mobile-2026-10-28.png)與已檢視的合格版面 PNG bytes 完全相同。TFLite 權重／options 實際比對通過；兩份新增 MLIR fixture 沒有權重，bytes 比對標為 not-applicable。
+- [最終獨立核對](results/preview12-publication-review-2026-10-28.json)：四份 Release 資產實際下載，逐份 bytes／SHA 均與原準備包相同。ZIP `model-lens-public-0.2.0-preview.12-52d46a06925bd391.zip` 為 29,607,972 bytes，SHA-256 `0f25e9d5424cdc42425106eefd37f3649c744e35900e5b75c0eef0373af25bac`。Deployment `7367213646`／job `122392578180`／attempt 1 與整站身分、獨立 root SHA `d483b9aabe56535785620f1d4506e50ca6c87b226f0b8d15272d96306b5cd7c0` 一致。

@@ -1,0 +1,161 @@
+{
+  "format": "model-lens-prepared-snapshot-review",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T18:36:24.539Z",
+  "source": {
+    "commit": "2bfacb746476b34f17e43f32a677616b443ffb9f",
+    "tree": "e1bbe58f67b8e0924409b81d57103d1ee78ff723",
+    "committedAt": "2026-10-28T02:35:11+08:00",
+    "dirty": false
+  },
+  "runId": 40561368107,
+  "artifacts": [
+    {
+      "name": "github-pages",
+      "id": 12761041080,
+      "bytes": 19284721,
+      "digest": "sha256:25219514a6711fc51970e942f1ecb69dd2bbec701ba274a29572d2e60812eabe"
+    },
+    {
+      "name": "release-delivery",
+      "id": 12762275505,
+      "bytes": 3914033,
+      "digest": "sha256:d065cbd56a902bff95232c9e135aaa9af51b35ec075baf031fef6ded91a0940a"
+    }
+  ],
+  "prepared": {
+    "prepared": true,
+    "promotion": false,
+    "controllerSource": "2bfacb746476b34f17e43f32a677616b443ffb9f",
+    "coreSource": "2bfacb746476b34f17e43f32a677616b443ffb9f",
+    "checkedAt": "2026-10-27T18:35:40.341Z",
+    "buildId": "52d46a06925bd391",
+    "siteId": "b686d4a33adb2b5f310965bd18b99d99282c4d325915666458c016c3cdb049fc",
+    "siteManifestSHA256": "6127a0728c615ef323f5d57122a8e1875ba87b2ba58f27bac9b9feda8f3549a6",
+    "previousSiteId": "8925441b0b077a824f4a24f4a695d73863be75989412d937c0c12027d9f10733",
+    "previousDeployment": {
+      "deploymentId": 7364421446,
+      "controllerSource": "23913d50b9404889b6ff91ae8980545df06e3278",
+      "runId": 40542578996,
+      "attempt": 1,
+      "jobId": 122325038196,
+      "siteId": "8925441b0b077a824f4a24f4a695d73863be75989412d937c0c12027d9f10733",
+      "legacy": false
+    },
+    "history": [
+      {
+        "build": "52d46a06925bd391",
+        "kind": "verified-candidate"
+      },
+      {
+        "build": "163f38ab1dc856e4",
+        "kind": "github-release",
+        "releaseId": 425024166,
+        "assetId": 680389934,
+        "tag": "v0.2.0-preview.7",
+        "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+        "zipBytes": 29454029,
+        "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+      },
+      {
+        "build": "cc9492eba3dff776",
+        "kind": "github-release",
+        "releaseId": 425736985,
+        "assetId": 682229764,
+        "tag": "v0.2.0-preview.11",
+        "source": "23913d50b9404889b6ff91ae8980545df06e3278",
+        "zipSHA256": "a0b61a099e347d08090b4863db59c18680eea42ff9a3f151017661646a9ebd41",
+        "zipBytes": 29543782,
+        "manifestSHA256": "d4094ee07cc8c6eb617aacce782962d66e7c7f1cca8b6b3f7e3743a7f007bc1b"
+      },
+      {
+        "build": "f2591e6d3d458f9f",
+        "kind": "github-release",
+        "releaseId": 425581073,
+        "assetId": 681868966,
+        "tag": "v0.2.0-preview.10",
+        "source": "478f65d6afea0484d05c200d1d51d9ecc0d7079b",
+        "zipSHA256": "4093a71fff94593dad3f87d228db49d870c4497520a4f5e0a388378de8a5fea2",
+        "zipBytes": 29538925,
+        "manifestSHA256": "a011e7aaff9ae307ca911275c59d911bd7dfcb25bedd61e52f71356421d729a9"
+      }
+    ],
+    "gates": [
+      {
+        "kind": "core",
+        "runId": 40503475445,
+        "reused": true
+      },
+      {
+        "kind": "browser",
+        "runId": 40558827707,
+        "reused": true
+      },
+      {
+        "kind": "contract",
+        "runId": 40558833474,
+        "reused": true
+      },
+      {
+        "kind": "site",
+        "runId": 40558838921,
+        "reused": true
+      }
+    ],
+    "zipSHA256": "0f25e9d5424cdc42425106eefd37f3649c744e35900e5b75c0eef0373af25bac"
+  },
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.12",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "2bfacb746476b34f17e43f32a677616b443ffb9f",
+      "tree": "e1bbe58f67b8e0924409b81d57103d1ee78ff723",
+      "committedAt": "2026-10-28T02:35:11+08:00",
+      "dirty": false
+    },
+    "buildId": "52d46a06925bd391"
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-0.2.0-preview.12-52d46a06925bd391.zip",
+      "bytes": 29607972,
+      "sha256": "0f25e9d5424cdc42425106eefd37f3649c744e35900e5b75c0eef0373af25bac"
+    },
+    {
+      "name": "model-lens-public-0.2.0-preview.12-52d46a06925bd391.zip.sha256",
+      "bytes": 122,
+      "sha256": "e60b1ae380f7ba963dcc6dc3b9e8579ada84014af9caf9cd1c8f587f489036f0"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 140608,
+      "sha256": "0bba7ebebe57128609614f2f6b016fb17d134209cd7f341b3ecab5dd1eaa0ad1"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 42097,
+      "sha256": "bc963606ca8c3b8d11fc6123edbf5cf50b4a81660bf7dc057c9700bf6b13af20"
+    }
+  ],
+  "site": {
+    "siteId": "b686d4a33adb2b5f310965bd18b99d99282c4d325915666458c016c3cdb049fc",
+    "manifestSHA256": "6127a0728c615ef323f5d57122a8e1875ba87b2ba58f27bac9b9feda8f3549a6",
+    "current": "52d46a06925bd391",
+    "legacy": "163f38ab1dc856e4",
+    "retainedBuildIds": [
+      "cc9492eba3dff776",
+      "f2591e6d3d458f9f"
+    ],
+    "files": 1269
+  },
+  "directories": {
+    "pages": "build/qa/prepared-40561368107-editor/pages",
+    "delivery": "build/qa/prepared-40561368107-editor/delivery"
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-27T18:36:58.727Z"
+}
