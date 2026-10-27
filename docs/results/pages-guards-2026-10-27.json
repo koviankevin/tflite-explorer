@@ -1,0 +1,91 @@
+{
+  "format": "model-lens-pages-guards",
+  "version": 1,
+  "status": "passed",
+  "observedAt": "2026-10-27T03:49:14.770Z",
+  "repository": "koviankevin/tflite-explorer",
+  "configuration": {
+    "before": {
+      "buildType": "legacy",
+      "allowedBranches": [
+        "gh-pages"
+      ],
+      "mainProtection": null
+    },
+    "after": {
+      "buildType": "workflow",
+      "allowedBranches": [
+        "main"
+      ],
+      "requiredChecks": [
+        {
+          "context": "release-contract",
+          "app_id": 15368
+        },
+        {
+          "context": "node-and-build",
+          "app_id": 15368
+        }
+      ],
+      "strict": true,
+      "enforceAdmins": true,
+      "allowForcePushes": false,
+      "allowDeletions": false,
+      "httpsEnforced": true
+    }
+  },
+  "negativeCases": {
+    "wrongBuild": {
+      "runId": 40445115478,
+      "source": "95a6371c7d3827fef67964aa037d42bcf2d92d27",
+      "expectedBuild": "0000000000000000",
+      "actualBuild": "6d8e1b037cf298c0",
+      "reason": "Publish needs the exact build ID from a successful dry run.",
+      "jobs": [
+        {
+          "name": "prepare",
+          "conclusion": "failure"
+        },
+        {
+          "name": "verify_live",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "deploy",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "release",
+          "conclusion": "skipped"
+        }
+      ],
+      "artifacts": 0
+    },
+    "uncheckedMain": {
+      "probe": "f404892e590e350641f1ccbfadb7cab9f5bbe588",
+      "tree": "11503bbc2eb214cb248bbdfc80e78f096d788269",
+      "before": "95a6371c7d3827fef67964aa037d42bcf2d92d27",
+      "after": "95a6371c7d3827fef67964aa037d42bcf2d92d27",
+      "exitCode": 1,
+      "stderr": "remote: error: GH006: Protected branch update failed for refs/heads/main.        \nremote: \nremote: - 2 of 2 required status checks are expected.        \nTo https://github.com/koviankevin/tflite-explorer.git\n ! [remote rejected] f404892e590e350641f1ccbfadb7cab9f5bbe588 -> main (protected branch hook declined)\nerror: failed to push some refs to 'https://github.com/koviankevin/tflite-explorer.git'\n"
+    },
+    "legacyBranch": {
+      "probe": "ad737327acb3a54dcbbc6b6b2db380fa83bc123c",
+      "tree": "10650a7f02871c4db83844edaed61f25a73d64f3",
+      "before": "5ae7e9e27fb1d6a27056440cd5f72ecec5adefa7",
+      "beforeDeployment": 7349696141,
+      "afterDeployment": 7349696141,
+      "runs": 0,
+      "startedAt": "2026-10-27T03:46:32.985Z",
+      "observedAt": "2026-10-27T03:48:07.995Z",
+      "observationMs": 95010
+    }
+  },
+  "rawLocalSHA256": {
+    "before.json": "fa357a598140e24d0b4c0e2d38e52e95670d130ee5d8284dbbfd1938252fac48",
+    "after-pages.json": "fcd3a63c4d9b91aadbb82fe7e747d7e313d2b0d59c38fa1cd9125377604cf825",
+    "main-protection.json": "ba13d42a4a564f1adb815acb032b79c6f8ab6902d99ce2f01c4c8bbc6592790f",
+    "unchecked-main-probe.json": "b476126d5c6aa549d710f1c3dde1ce7b3a720b0d1ceeef4c88349ce2435a602a",
+    "legacy-branch-probe.json": "2dab9d04974fbdfc0c02c12f29b775b1160bb435add0c855e11dc0adfc57246f"
+  }
+}
