@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {editWorkspaceSnapshot,exportEditWorkspace} from '../src/model-edit-workspace.js';
 import {modelEditDraft,replayEditDraft,editChanges,editWireReason} from '../src/model-edit-draft.js';
 import {parseModel} from '../src/model-engine.js';
-import {parseMLIR} from '../src/mlir-engine.js';
+import {parseMLIR,parseMLIRFile} from '../src/mlir-engine.js';
 import {validateMLIR} from '../src/mlir-validate.js';
 import {customFixture} from './custom-fixture.mjs';
 import {MLIR_CFG_DIAMOND,MLIR_CFG_LOOP,MLIR_BRANCH} from './mlir-fixture.mjs';
@@ -58,4 +58,7 @@ for(const format of ['tflite','mlir'])test(`${format} workspace report describes
 });
 test('repeated large quantization ports stop before serializing a large snapshot',async()=>{
  const f=await fixture(),g=f.index.raw.subgraphs[0];g.tensors[1].quantization={scale:new Float32Array(16384),zero_point:new BigInt64Array(1)};g.operators[0].inputs=new Int32Array(200).fill(1);assert.throws(()=>editWorkspaceSnapshot(f.index,{targets:[{graph:0,node:0}]}),/4 MiB/);
+});
+test('cloned MLIR weight OP preserves each deferred payload as original File slices',async()=>{
+ const hex='Ab0123'.repeat(5000),text=`%weight = "company.weight"() {value = dense<"0x${hex}"> : tensor<15000xi8>} : () -> tensor<15000xi8>\n%use = "company.use"(%weight) : (tensor<15000xi8>) -> tensor<15000xi8>`,file=new File([text],'weights.mlir'),index=await parseMLIRFile(file,{metadata:mm}),snapshot=editWorkspaceSnapshot(index,{targets:[{graph:0,node:0}]}),d=modelEditDraft(snapshot);assert.equal(index.mlir.payloads.length,1);file.arrayBuffer=()=>{throw Error('Whole File read forbidden');};d.apply({kind:'clone',node:'op:0:0',side:'after'});const result=await exportEditWorkspace(index,file,snapshot,d.commands);assert.equal(result.ranges.length,2);assert.equal((await result.blob.text()).split(hex).length-1,2);const after=await parseMLIRFile(result.blob,{metadata:mm});assert.deepEqual(validateMLIR(after).diagnostics,[]);assert.equal(after.mlir.payloads.length,2);
 });
