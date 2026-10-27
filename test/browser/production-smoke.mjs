@@ -10,7 +10,7 @@ assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'l
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
 const base='https://koviankevin.github.io/tflite-explorer/',reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[]};
-let browser,context,page,readPage;
+let browser,context,page,readPage,releaseStartup;
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 async function waitFor(fn){const until=Date.now()+30000;while(!await readPage(fn)){if(Date.now()>until)throw Error(`DOM timeout: ${fn}`);await wait(100);}}
@@ -28,10 +28,16 @@ try{
     const demoResponse=await fetch(base+'demo.tflite?v='+expected,{signal:AbortSignal.timeout(20000)});assert.equal(demoResponse.status,200);const demoBytes=Buffer.from(await demoResponse.arrayBuffer());assert.equal(sha256(demoBytes),demoEntry.sha256);const demo=path.join(temporary,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Deployment smoke RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});
     browser=await chromium.launch({headless:true});report.chromium=browser.version();context=await browser.newContext({viewport:{width:1366,height:768},acceptDownloads:true});
-    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else await route.continue();});
+    let startupBlocked=false,startupReleased=false;
+    const startupHold=new Promise(resolve=>{releaseStartup=()=>{startupReleased=true;resolve();};});
+    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){startupBlocked=true;await startupHold;}await route.continue();}});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>report.errors.push(error.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
     const cdp=await context.newCDPSession(page);readPage=async fn=>{const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});if(value.exceptionDetails)throw Error('Read-only DOM observation failed.');return value.result.value;};
-    await page.goto(base+'?v='+expected);await page.locator('#welcome-open').waitFor();await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();check('real module startup and matching version dialog at the repository subpath');
+    await page.goto(base+'?v='+expected,{waitUntil:'domcontentloaded'});
+    await waitFor(()=>typeof document.querySelector('#welcome-open').onclick==='function');
+    assert.equal(startupBlocked,true,'The regression must exercise pending graph initialization.');
+    assert.equal(await readPage(()=>typeof document.querySelector('#release-info-button').onclick),'function','Version control must work while graph initialization is pending.');
+    await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();releaseStartup();check('version dialog works during delayed graph initialization at the repository subpath');
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
     await page.locator('#query').fill('#0');await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);check('public demo, 32px graph, exact layer search and location');
     await close();await choose(demo);await ready(26);await page.locator('[data-kind="patterns"]').click();await waitFor(()=>document.querySelector('#result-count').textContent==='4 筆匹配路徑');
@@ -42,6 +48,7 @@ try{
     assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
+    releaseStartup?.();
     try{await context?.close();if(browser){let timer;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Browser close timeout.')),10000);})]);}finally{clearTimeout(timer);}}}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:report.checks,error:report.error}));
 }
