@@ -1,16 +1,16 @@
 // The dialog edits a request, not the live model. A successful result is a new
 // local artifact; ownership checks discard responses from an old model/dialog.
-export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,error}) {
+export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,downloadReport,error}) {
     const $=id=>document.getElementById(id),dialog=$('model-edit-dialog');
     let info=null,owner=null,generation=0,choiceGeneration=0,previewGeneration=0,timer,busy=false,previewing=false,pendingExports=0,portPage=0,operands=[],replacements=[],fields={},irDrafts={};
     dialog.dataset.pendingExports='0';
     const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
     const labelled=(text,input)=>{const node=make('label',text);node.append(input);return node;};
     const live=ticket=>ticket===generation&&owner===getSource()&&dialog.open;
-    const changed=()=>{$('open-edited-model').disabled=true;$('model-edit-result').textContent='修改尚未匯出。';};
-    const release=()=>{generation++;choiceGeneration++;previewGeneration++;previewing=false;clearTimeout(timer);if(busy){busy=false;onBusy(false);}$('model-edit-form').inert=false;info=null;owner=null;operands=[];replacements=[];fields={};irDrafts={};$('model-edit-ports').replaceChildren();$('model-edit-options').replaceChildren();$('model-edit-values').replaceChildren();$('model-edit-ir').value='';};
+    const changed=()=>{$('open-edited-model').disabled=true;$('download-model-edit-report').disabled=true;$('model-edit-result').textContent='修改尚未匯出。';};
+    const release=()=>{generation++;choiceGeneration++;previewGeneration++;previewing=false;clearTimeout(timer);if(busy){busy=false;onBusy(false);}$('model-edit-form').inert=false;info=null;owner=null;operands=[];replacements=[];fields={};irDrafts={};$('model-edit-ports').replaceChildren();$('model-edit-options').replaceChildren();$('model-edit-values').replaceChildren();$('model-edit-ir').value='';$('download-model-edit-report').disabled=true;};
     const availability=()=>{$('export-edited-model').disabled=busy||previewing||pendingExports>0||!info;};
-    const setBusy=value=>{busy=value;availability();if(value)$('open-edited-model').disabled=true;$('model-edit-form').inert=value;onBusy(value);};
+    const setBusy=value=>{busy=value;availability();if(value){$('open-edited-model').disabled=true;$('download-model-edit-report').disabled=true;}$('model-edit-form').inert=value;onBusy(value);};
     async function choices(){
         if(!info||!dialog.open)return;const ticket=generation,request=++choiceGeneration;
         try{const rows=await rpc('modelEditValues',{graph:info.graph,node:info.node,query:$('model-edit-value-search').value});if(!live(ticket)||request!==choiceGeneration)return;
@@ -69,6 +69,7 @@ export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,er
     $('close-model-edit').onclick=()=>dialog.close();$('cancel-model-edit').onclick=()=>dialog.close();
     dialog.addEventListener('close',release);
     $('open-edited-model').onclick=()=>{dialog.close();openResult();};
+    $('download-model-edit-report').onclick=downloadReport;
     $('export-edited-model').onclick=async()=>{
         if(!info||busy||previewing||pendingExports||owner!==getSource())return;
         const invalid=[...$('model-edit-form').querySelectorAll('input:invalid')].find(n=>!n.closest('[hidden], [inert]')&&n.getClientRects().length);if(invalid){invalid.reportValidity();return;}
@@ -77,10 +78,12 @@ export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,er
         const name=source.name.replace(/(?:-edited)?\.[^.]+$/,'')+`-edited.${info.format==='mlir'?'mlir':'tflite'}`;
         pendingExports++;dialog.dataset.pendingExports=String(pendingExports);onStart();setBusy(true);$('model-edit-result').textContent='在本機建立候選並檢查整份模型…';
         try{
-            const result=await rpc('editModelOperation',args);if(!live(ticket))return;
-            await onExport(result,name);if(!live(ticket))return;
+            const result=await rpc('editModelOperation',{...args,outputName:name});if(!live(ticket))return;
+            await onExport(result,name,source);if(!live(ticket))return;
             $('model-edit-result').textContent=`修改模型下載已啟動。${result.validation.scope}。已重新解析輸出；未執行推論或公司 dialect／custom kernel verifier。`;
             $('open-edited-model').disabled=false;
+            $('download-model-edit-report').disabled=!result.report;
+            if(result.reportError)$('model-edit-result').textContent+=`\n修改報告無法產生：${result.reportError}`;
         }catch(reason){if(live(ticket)){$('model-edit-result').textContent=[reason.message,...(reason.validation?.diagnostics||[]).slice(0,10).map(d=>`${d.line?`第 ${d.line} 行 · `:''}${d.code}: ${d.message}`)].join('\n');}}
         finally{pendingExports--;dialog.dataset.pendingExports=String(pendingExports);if(owner===source&&ticket===generation)setBusy(false);else availability();}
     };

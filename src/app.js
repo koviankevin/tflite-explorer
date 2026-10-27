@@ -30,7 +30,7 @@ window.addEventListener('error',event=>diagnostics.record('global','error',event
 window.addEventListener('unhandledrejection',event=>diagnostics.record('global','error',event.reason));
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
-const modelEditor=modelEditUI({rpc,getSource:()=>file,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');await host.export(name,result.blob);exportedModels.remember(result.blob,name);},openResult:()=>$('open-export-model').click(),error:reason=>report(reason)});
+const modelEditor=modelEditUI({rpc,getSource:()=>file,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;

@@ -53,7 +53,10 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
             else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const change of result.changes)validateTfliteModelGraph(candidate.raw,change.graph);}
             if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
-            send(id,{...result,roundTrip:true});
+            const verified={...result,roundTrip:true};
+            try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,args,{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}
+            catch(reason){verified.reportError=reason.message;}
+            send(id,verified);
             } finally {editInProgress=false;}
         } else if (action === 'workspaceIdentity') {
             const {workspaceIdentity}=await import('./workspace.js');
