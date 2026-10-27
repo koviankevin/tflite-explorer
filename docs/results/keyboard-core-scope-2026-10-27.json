@@ -1,0 +1,14 @@
+{
+  "source": {
+    "commit": "b2f6ac1b4ae6a45506ccb05048b18bc74527b0ac",
+    "tree": "366632ef9f0cda175ff8cca6505680b01435ee8e",
+    "committedAt": "2026-10-27T17:36:57+08:00",
+    "dirty": false
+  },
+  "kind": "core",
+  "previousRun": 40438427440,
+  "previousFingerprint": "42592c65576f4b195a9cd90a802a04a477d738752940e94c2b1913be4328ea46",
+  "fingerprint": "42592c65576f4b195a9cd90a802a04a477d738752940e94c2b1913be4328ea46",
+  "unchanged": true,
+  "files": 85
+}
