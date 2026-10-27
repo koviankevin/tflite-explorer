@@ -10,6 +10,7 @@ test('documentation/evidence changes do not repeat unchanged runtime checks',()=
     assert.equal(prValidationPlan(['scripts/lib/live-site.mjs','test/live-site.test.mjs']).runtimeRequired,false);
     assert.equal(prValidationPlan(['scripts/lib/release-baseline.mjs','test/published-delivery.test.mjs']).runtimeRequired,false);
     assert.equal(prValidationPlan(['scripts/lib/deployment-history.mjs','test/deployment-history.test.mjs']).runtimeRequired,false);
+    assert.equal(prValidationPlan(['test/browser/production-transition.mjs','test/browser/transition-control.mjs']).runtimeRequired,false);
 });
 test('runtime, shipped documents, fixtures and unknown changes keep Node/build validation',()=>{
     for(const file of ['src/app.js','vendor/netron/tflite-schema.js','scripts/build.mjs','scripts/verify-export.mjs','docs/export-reports.md','docs/results/browser-lifecycle-2026-10-27.json','test/fixture.mjs','test/model.test.mjs','new-unknown-file'])assert.equal(prValidationPlan([file]).runtimeRequired,true,file);

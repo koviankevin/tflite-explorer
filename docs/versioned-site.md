@@ -1,6 +1,6 @@
 # 固定版本靜態站台（開發中）
 
-草稿分支已將完整快照接進 prepare／HTTP 與瀏覽器驗證，尚未合併或部署。正式站目前仍是已驗收的 preview.7／build `163f38ab1dc856e4`；下述工具用於建立新的獨立候選目錄，不代表正式站已取得版本隔離或已完成回退驗收。
+完整快照的 prepare／HTTP 與瀏覽器驗證已合併 main，尚未部署。正式站目前仍是已驗收的 preview.7／build `163f38ab1dc856e4`；下述工具用於建立新的獨立候選目錄，不代表正式站已取得版本隔離或已完成回退驗收。
 
 ## 已確認的問題
 
@@ -108,6 +108,16 @@ node scripts/compose-site.mjs --verify build/new-site
 
 固定 Release helper 的 [隔離 CI 40459962581](https://github.com/koviankevin/tflite-explorer/actions/runs/40459962581) 也完成 [六項切換情境](results/site-promotion-browser-2026-10-27.json) 與 [741 檔 HTTP／四項原生 UI 驗收](results/site-promotion-http-smoke-2026-10-27.json)。此後的 authority 改動由 70 項契約及上述實際 API 核對驗收；正式發布仍需新 main 的 site／contract 憑證。所有演練均未切換正式站或公司內網。
 
-下一步仍須完成：提升來源的 hosted CI 與實際固定資產取得、main 的新版憑證，以及正式站交付／回退實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
+## Main 關卡與正式切換觀察器
+
+合併來源 `5eb92764d4512313c9fe995d0ed518328d803f1d` 的 [main 契約 40462048941](https://github.com/koviankevin/tflite-explorer/actions/runs/40462048941) 已通過 70 項、零失敗／略過／取消；[原始報告](results/site-main-contract-2026-10-27.json) 記錄精確來源與 tree。[main site 關卡 40462052121](https://github.com/koviankevin/tflite-explorer/actions/runs/40462052121) 也已通過 [六項切換情境](results/site-main-browser-2026-10-27.json) 及 [741 檔 HTTP／四項原生 UI 驗收](results/site-main-http-smoke-2026-10-27.json)。這是可驗來源的 main 證據，尚未切換正式站。
+
+新增唯讀 `production-transition.yml` 與隔離 Linux CI observer，預計在真實 Pages 更新期間保留同一個 browser context：原有 root tab 就緒後才允許升級；候選 namespace tab 就緒後才允許回退；驗證舊 tab 在回退後的 lazy TFLite／32px／pattern／子模型重開後，才允許恢復新版。最後重新開啟新版，核對同一整站 ID 與既有 IndexedDB pattern，關閉六個模型 Worker 及 browser。Observer 不執行 deploy API，只請求本站 GET，模型只用固定公開範例。
+
+`transition-control.mjs` 在同一 CI job 的 steps 間保留 Node/browser，使用來源／run／attempt 與 Linux process start time 核對存活；checkpoint 以原子 JSON 寫入，由官方 upload-artifact 提供可觀察階段。PID 消失或狀態 failed 會停止，不重啟或把舊檔當成活程序。Always cleanup 僅處理同一來源與 start time 的 CI process。它和 browser driver 都拒絕在一般本機環境執行，不操作個人瀏覽器；artifact 不含選入／匯出的模型檔。
+
+此 observer 尚待實際正式切換執行；新增一項語法／CI 隔離拒絕契約後總數為 71。新的 workflow／driver 會使 contract scope 改變，因此合併後需新 main 契約；既有 site／core／大檔 browser 只在相依 scope 仍相同且 GitHub 原始憑證有效時重用。
+
+下一步仍須完成：71 項 main 契約、憑證索引、準備產物與錯誤 site ID 負例，以及正式站升級／回退／恢復實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
