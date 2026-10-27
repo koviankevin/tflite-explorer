@@ -42,6 +42,13 @@ test('real static paths retain legacy and versioned lazy assets through upgrade 
     }finally{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
 });
 
+test('recent retention order survives composition independently of lexical build IDs',async()=>{
+    const temporary=await fixture(),legacy=await core(temporary,'0'.repeat(16)),current=await core(temporary,'c'.repeat(16)),recent=await core(temporary,'f'.repeat(16)),older=await core(temporary,'a'.repeat(16));
+    const snapshot=await composeSite({currentDirectory:current,legacyDirectory:legacy,retainedDirectories:[recent,older],outputDirectory:path.join(temporary,'ordered')});
+    assert.deepEqual(snapshot.manifest.retainedBuildIds,['f'.repeat(16),'a'.repeat(16)]);assert.deepEqual((await verifySite(snapshot.directory)).retainedBuildIds,snapshot.manifest.retainedBuildIds);
+    assert.equal(snapshot.manifest.versions.length,4);assert.equal(snapshot.manifest.legacyRoot.release.buildId,'0'.repeat(16));
+});
+
 test('staging rejects tampering without overwriting an existing site or input',async()=>{
     const temporary=await fixture(),old=await core(temporary,'c'.repeat(16)),next=await core(temporary,'d'.repeat(16)),out=path.join(temporary,'site');
     await composeSite({currentDirectory:next,legacyDirectory:old,retainedDirectories:[old],outputDirectory:out});

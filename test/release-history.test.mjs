@@ -5,7 +5,8 @@ import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {root,writeManifest,sha256} from '../scripts/lib/release-artifact.mjs';
 import {packageRelease} from '../scripts/package-release.mjs';
-import {fetchReleasedCore} from '../scripts/lib/release-history.mjs';
+import {fetchReleasedCore,recoverPreparedCore,fetchRetainedCore} from '../scripts/lib/release-history.mjs';
+import {RELEASE_GATE_KINDS} from '../scripts/lib/release-test-plan.mjs';
 
 async function fixture({internal=false}={}){
     await mkdir(path.join(root,'test-results'),{recursive:true});const temporary=await mkdtemp(path.join(root,'test-results','release-history-')),core=path.join(temporary,'source');await mkdir(path.join(core,'src'),{recursive:true});
@@ -52,4 +53,66 @@ test('a self-consistent archive cannot substitute private content, another manif
     const privateFixture=await fixture({internal:true});await assert.rejects(fetchReleasedCore(privateFixture.reference,{outputDirectory:path.join(privateFixture.temporary,'private'),api:privateFixture.api,download:privateFixture.download}),/內網|private/i);
     const f=await fixture();await assert.rejects(fetchReleasedCore({...f.reference,manifestSHA256:'0'.repeat(64)},{outputDirectory:path.join(f.temporary,'manifest'),api:f.api,download:f.download}),/manifest/i);
     f.metadata.commit.tree.sha='c'.repeat(40);await assert.rejects(fetchReleasedCore(f.reference,{outputDirectory:path.join(f.temporary,'tree'),api:f.api,download:f.download}),/tree|來源/i);
+});
+
+async function preparedFixture(){
+    const f=await fixture(),delivery=path.join(f.temporary,'delivery');await mkdir(delivery);
+    const manifestBytes=await readFile(path.join(f.core,'release-manifest.json')),manifest=JSON.parse(manifestBytes),zipName=`model-lens-public-${f.reference.version}-${f.reference.build}.zip`;
+    await writeFile(path.join(delivery,zipName),f.bytes);await writeFile(path.join(delivery,zipName+'.sha256'),`${f.reference.sha256}  ${zipName}\n`);await writeFile(path.join(delivery,'release-manifest.json'),manifestBytes);
+    await writeFile(path.join(delivery,'release-gates.json'),JSON.stringify({format:'model-lens-release-evidence',version:1,status:'passed',repository:'koviankevin/tflite-explorer',release:manifest.release,gates:RELEASE_GATE_KINDS.map(kind=>({kind}))}));
+    const python=process.env.PYTHON_BIN||(process.platform==='win32'?'python':'python3'),archive=path.join(f.temporary,'prepared.zip');
+    execFileSync(python,['-I','-c',"import sys,zipfile,pathlib\nwith zipfile.ZipFile(sys.argv[1],'w') as z:\n for p in sorted(pathlib.Path(sys.argv[2]).iterdir()):z.write(p,p.name)",archive,delivery],{windowsHide:true});
+    const bytes=await readFile(archive),run={id:31,path:'.github/workflows/verified-pages.yml',event:'workflow_dispatch',head_branch:'main',head_sha:f.reference.source,status:'completed',conclusion:'failure',run_attempt:2,repository:{id:42,full_name:'koviankevin/tflite-explorer'},head_repository:{id:42,full_name:'koviankevin/tflite-explorer'}};
+    const job={name:'prepare',run_id:run.id,run_attempt:2,head_sha:run.head_sha,status:'completed',conclusion:'success',started_at:'2026-10-27T01:00:00Z',completed_at:'2026-10-27T01:01:00Z'};
+    const artifact={id:7,name:'release-delivery',size_in_bytes:bytes.length,digest:'sha256:'+sha256(bytes),expired:false,created_at:'2026-10-27T01:00:40Z',expires_at:'2099-01-01T00:00:00Z',workflow_run:{id:31,head_branch:'main',head_sha:run.head_sha,repository_id:42,head_repository_id:42}};
+    const calls=[];let downloads=0;
+    const api=async route=>{
+        calls.push(route);assert.ok(route.startsWith('repos/koviankevin/tflite-explorer/'));
+        if(route.includes('/releases/tags/'))return null;if(route.includes('/git/'))return f.api(route);
+        if(route.includes('/workflows/'))return {total_count:1,workflow_runs:[structuredClone(run)]};
+        if(route.endsWith('/runs/31'))return run;
+        if(route.includes('/attempts/')){assert.ok(route.includes('/attempts/'+run.run_attempt+'/'));return {total_count:1,jobs:[job]};}
+        if(route.includes('/artifacts?'))return {total_count:1,artifacts:[artifact]};
+        throw Error('Unexpected recovery API route.');
+    };
+    const download=async(route,file,limit)=>{downloads++;assert.equal(route,'repos/koviankevin/tflite-explorer/actions/artifacts/7/zip');assert.equal(limit,artifact.size_in_bytes);await writeFile(file,bytes,{flag:'wx'});};
+    return {...f,delivery,bytes,run,job,artifact,api,download,calls,downloads:()=>downloads};
+}
+
+test('interrupted publication can retain its exact live namespace from the successful prepare attempt',async()=>{
+    const f=await preparedFixture(),result=await fetchRetainedCore(f.reference,{outputDirectory:path.join(f.temporary,'recovered'),api:f.api,download:f.download});
+    assert.equal(result.manifest.release.buildId,f.reference.build);assert.equal(result.provenance.retentionOnly,true);assert.equal(result.provenance.runId,31);assert.equal(result.provenance.attempt,2);assert.equal(result.provenance.artifactDigest,f.artifact.digest);assert.equal(f.downloads(),1);
+    assert.equal(await readFile(path.join(result.directory,'src/app.js'),'utf8'),'throw Error("must never execute retained code");');
+    assert.ok(f.calls.some(route=>route.includes('/attempts/2/jobs')));
+    await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:result.directory,api:f.api,download:f.download}),/exist/i);assert.equal(f.downloads(),1);
+});
+
+test('retention refuses another run/source/attempt, expired artifacts and incomplete preparation before download',async()=>{
+    const f=await preparedFixture(),original={run:structuredClone(f.run),job:structuredClone(f.job),artifact:structuredClone(f.artifact)};
+    const changes=[x=>x.run.head_repository.id=99,x=>x.run.head_sha='c'.repeat(40),x=>x.run.event='pull_request',x=>x.run.head_branch='feature',x=>x.run.path='other.yml',x=>x.job.run_attempt=1,x=>x.job.run_id=32,x=>x.job.head_sha='c'.repeat(40),x=>x.job.conclusion='failure',x=>x.artifact.expired=true,x=>x.artifact.expires_at='2000-01-01T00:00:00Z',x=>x.artifact.created_at='2026-10-26T01:00:00Z',x=>x.artifact.created_at='2026-10-27T01:02:00Z',x=>x.artifact.digest=null,x=>x.artifact.workflow_run.head_repository_id=99,x=>x.artifact.workflow_run.head_sha='c'.repeat(40)];
+    for(const [i,change] of changes.entries()){
+        for(const key of Object.keys(original))Object.assign(f[key],structuredClone(original[key]));change(f);
+        const output=path.join(f.temporary,'rejected-'+i);await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:output,api:f.api,download:f.download}));await assert.rejects(lstat(output),error=>error.code==='ENOENT');
+    }
+    assert.equal(f.downloads(),0);
+});
+
+test('prepared retention does not fall back when a published release fails authentication',async()=>{
+    const f=await preparedFixture();await assert.rejects(fetchRetainedCore(f.reference,{outputDirectory:path.join(f.temporary,'no-fallback'),api:async route=>route.includes('/releases/tags/')?{...f.metadata.release,author:{login:'someone'}}:f.api(route),download:f.download}),/Untrusted/i);
+    assert.equal(f.downloads(),0);assert.ok(!f.calls.some(route=>route.includes('/workflows/')));
+});
+
+test('prepared bytes must match the provider digest and live manifest before becoming a retained core',async()=>{
+    const f=await preparedFixture();
+    await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:path.join(f.temporary,'bad-transport'),api:f.api,download:async(route,file)=>writeFile(file,Buffer.alloc(f.bytes.length,1),{flag:'wx'})}),/digest/i);
+    await assert.rejects(recoverPreparedCore({...f.reference,manifestSHA256:'0'.repeat(64)},{outputDirectory:path.join(f.temporary,'bad-manifest'),api:f.api,download:f.download}),/hash/i);
+    await assert.rejects(lstat(path.join(f.temporary,'bad-manifest','core')),e=>e.code==='ENOENT');
+    f.metadata.commit.tree.sha='c'.repeat(40);await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:path.join(f.temporary,'bad-tree'),api:f.api,download:f.download}),/tree/i);
+});
+
+test('authenticated delivery archives still reject extra entries before extraction',async()=>{
+    const f=await preparedFixture(),python=process.env.PYTHON_BIN||(process.platform==='win32'?'python':'python3');
+    const bytes=execFileSync(python,['-I','-c','import sys,io,zipfile\nz=zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read())); b=io.BytesIO()\nwith zipfile.ZipFile(b,"w") as out:\n for n in z.namelist():out.writestr(n,z.read(n))\n out.writestr("unexpected.js","throw Error()")\nsys.stdout.buffer.write(b.getvalue())'],{input:f.bytes,windowsHide:true});
+    Object.assign(f.artifact,{size_in_bytes:bytes.length,digest:'sha256:'+sha256(bytes)});
+    const output=path.join(f.temporary,'extra');await assert.rejects(recoverPreparedCore(f.reference,{outputDirectory:output,api:f.api,download:async(route,file)=>writeFile(file,bytes,{flag:'wx'})}),/archive/i);assert.deepEqual(await readdir(path.join(output,'delivery')),[]);
 });

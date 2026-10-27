@@ -96,7 +96,9 @@ export async function composeSite({currentDirectory,retainedDirectories=[],legac
     const currentId=add(current);
     for(const directory of retainedDirectories){const source=await descriptor(directory),id=add(source);if(id!==currentId&&!retained.includes(id))retained.push(id);}
     if(retained.length+1>SITE_LIMITS.versions)throw Error('Retained version limit exceeded.');
-    add(legacy);retained.sort();
+    // Callers list the most recently active version first. Preserve that order
+    // so a later update can evict the oldest recent version deterministically.
+    add(legacy);
     const versions=[...sources.values()].sort((a,b)=>a.manifest.release.buildId<b.manifest.release.buildId?-1:1);
     for(const source of versions)if(source.manifest.release.distribution!==current.manifest.release.distribution)throw Error('Cannot mix release distributions.');
     const html=rootHTML(await readIndex(current),currentId),planned=planFiles(versions,legacy,html);budget(planned);

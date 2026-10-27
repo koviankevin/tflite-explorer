@@ -2,6 +2,14 @@
 
 公開核心與公司 dialect 分開管理。公司資料不放進公開 repository；不再修改 `src/mlir-dialect-registry.js` 接入私有程式。這是受信任的本機建置擴充，不接受模型內 JavaScript 或遠端 adapter URL。
 
+已部署的內網版可以持續跟進公開核心的改善，不需要搬回外網。內網不會自動下載或套用正式網站的新程式；每次由公司選定固定版本，完成內部驗收後才切換。
+
+- 原樣部署公開版：取新的固定版本 ZIP 與 checksum，照下方升級流程部署。
+- 有獨立 profile／dialect adapter：更新公開核心 checkout，沿用內部 repository 的 profile 重新建置，保留私有擴充版本與指紋紀錄。
+- 已直接修改核心：先保留目前內網來源 commit 和差異，將公開版本合併到公司分支、處理衝突；不能拿公開 ZIP 直接蓋過私有修改。可逐步把適合的 dialect 邏輯移到 adapter，以減少後續合併成本。
+
+Adapter 介面版本檢查可以阻止已知不相容的建置，但不能保證公司 dialect 的所有語意仍正確。公開功能修正、搜尋／繪圖效能與匯出改善仍須用內部實際模型和 compiler／runtime 驗收；這些資料和執行結果不需上傳公開 GitHub。
+
 ## 公開版部署包
 
 建置本身使用 Node.js 22 以上及 Git checkout，不依賴 npm 套件或網際網路。原始碼 ZIP 沒有 Git metadata，應改用 Git checkout，或直接取已建好的部署 ZIP。測試另外需要專案 dev dependencies；ZIP 驗收使用 Python 3 的標準 `zipfile`。
