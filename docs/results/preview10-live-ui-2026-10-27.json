@@ -1,0 +1,416 @@
+{
+  "format": "model-lens-production-smoke",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-27T14:39:12.562Z",
+  "driverSourceCommit": "478f65d6afea0484d05c200d1d51d9ecc0d7079b",
+  "expectedBuild": "f2591e6d3d458f9f",
+  "checks": [
+    "version dialog works during delayed graph initialization at the repository subpath",
+    "public demo, 32px graph, exact layer search and location",
+    "native model chooser and native pattern JSON import/export",
+    "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+    "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+    "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+    "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+    "keyboard native pattern import, saved selection, search and exact JSON export",
+    "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+    "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+    "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+    "loop-custom: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+    "actual branch MLIR model edit, custom attributes, SSA/control validation, pattern positive/negative, export/direct reopen and worker closure",
+    "actual loop MLIR model edit, custom attributes, SSA/control validation, pattern positive/negative, export/direct reopen and worker closure"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/vendor/netron/worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/vendor/netron/worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/vendor/netron/worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/vendor/netron/worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/vendor/netron/worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/f2591e6d3d458f9f/src/model-worker.js?v=f2591e6d3d458f9f",
+      "closed": true
+    }
+  ],
+  "target": "public-production",
+  "siteRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.10",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "478f65d6afea0484d05c200d1d51d9ecc0d7079b",
+      "tree": "8d54d773fd9772faffc4b628eba74230718e4b6f",
+      "committedAt": "2026-10-27T22:33:12+08:00",
+      "dirty": false
+    },
+    "buildId": "f2591e6d3d458f9f"
+  },
+  "siteId": "b7c453c93b54b285f01b3cc8f51b1556b5b08215e0c448da4b6a10a833ea5e2b",
+  "coreBasePath": "versions/f2591e6d3d458f9f/",
+  "chromium": "141.0.7390.37",
+  "keyboardRequired": true,
+  "keyboardAudit": false,
+  "selectionToolsRequired": true,
+  "keyboard": {
+    "tabPresses": 666,
+    "modelWorkers": 3
+  },
+  "mlirSelection": {
+    "cases": [
+      {
+        "name": "branch-join-custom",
+        "originalLayers": 7,
+        "operators": 7,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 390,
+            "height": 844,
+            "viewport": 390,
+            "editor": 366,
+            "inner": 366
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      },
+      {
+        "name": "loop-custom",
+        "originalLayers": 4,
+        "operators": 4,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 390,
+            "height": 844,
+            "viewport": 390,
+            "editor": 366,
+            "inner": 366
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      }
+    ],
+    "modelWorkers": 4,
+    "editorBounds": {
+      "nodes": 256,
+      "edges": 500,
+      "first": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "255",
+        "page": "上一頁下一頁第 1／21 頁 · 245 條連線"
+      },
+      "second": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "267",
+        "page": "上一頁下一頁第 2／21 頁 · 245 條連線"
+      },
+      "last": {
+        "rows": 6,
+        "options": 1777,
+        "elements": 2864,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 246 條連線"
+      },
+      "removed": {
+        "rows": 5,
+        "options": 1487,
+        "elements": 2561,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 245 條連線"
+      }
+    }
+  },
+  "modelEditing": {
+    "cases": [
+      {
+        "format": "tflite",
+        "added": 1,
+        "removed": 1,
+        "parameter": 3,
+        "weights": "identical",
+        "customOptions": "identical",
+        "invalidRewire": "rejected",
+        "danglingRemoval": "rejected",
+        "cancelledCandidate": "discarded",
+        "newBoundary": [
+          1,
+          2,
+          7,
+          8
+        ]
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "renamed": "company.changed_branch",
+        "added": 1,
+        "removed": 1,
+        "ssa": "passed",
+        "controlFlow": "passed",
+        "patternAfterRemoval": 1,
+        "dominanceNegative": "not-applicable"
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "renamed": "company.changed_loop",
+        "added": 0,
+        "removed": 1,
+        "ssa": "passed",
+        "controlFlow": "passed",
+        "patternAfterRemoval": 0,
+        "dominanceNegative": "rejected"
+      }
+    ],
+    "modelWorkers": 11,
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      }
+    ],
+    "tfliteParserRequests": [],
+    "receipts": [
+      {
+        "output": "model-edit-1.tflite",
+        "sha256": "8d87438c027745516221fdfddb97a5f884b5a2406025af3215e3ff4d4d31cc29",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-2.tflite",
+        "sha256": "caf3b06970e0f0059c157ba6e672ea96f8a3f85d1fc501f078fa045b023313da",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-3.tflite",
+        "sha256": "8e315ac82b6f8d61bf42e7a3e08f951e7729c2cea36a5f162b996c7828456f8d",
+        "byteRanges": 3,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-4.mlir",
+        "sha256": "b9c57d03263ad2a175d10ae24ab65a09b79efffc2840112fb576be808d404303",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-5.mlir",
+        "sha256": "83d780d39b9efdf9709bc6003ccae1c0b1ecd2ce07c255387977480f05e04401",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-6.mlir",
+        "sha256": "413a6d76579f78a7bf1b5516d68c7348f604cdd5515bffc22bc4a65960d10160",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-7.mlir",
+        "sha256": "25d3d06ffbfa7c4ebb102aeab81eed26c719e86028abdf1a8dfb836b802385b7",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-8.mlir",
+        "sha256": "c5a66f1fea9901dace36fa54b230744b01bc2f0ccf8e9289823d40bd68b534e3",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      }
+    ]
+  },
+  "finishedAt": "2026-10-27T14:39:41.377Z"
+}

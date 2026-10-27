@@ -4,7 +4,7 @@
 
 已部署的內網版可以持續跟進公開核心的改善，不需要搬回外網。內網不會自動下載或套用正式網站的新程式；每次由公司選定固定版本，完成內部驗收後才切換。
 
-目前可選 [preview.9 固定交付](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.9)，已完成 [原生鍵盤、大檔與正式交付驗收](keyboard-acceptance.md)；前次 [實際回退／恢復驗收](production-transition-verification.md) 也保留原始紀錄。這不取代內部模型、dialect 和 compiler／runtime 驗收。帶內部擴充時，選定核心來源 `v0.2.0-preview.9` 後以公司 profile 重新建置；不要將公開 ZIP 直接蓋過內部程式。
+目前可選 [preview.10 固定交付](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.10)，已完成 [實際模型編輯、原生操作、大檔與正式交付驗收](model-editing-delivery.md)；前次 [實際回退／恢復驗收](production-transition-verification.md) 也保留原始紀錄。這不取代內部模型、dialect 和 compiler／runtime 驗收。帶內部擴充時，選定核心來源 `v0.2.0-preview.10` 後以公司 profile 重新建置；不要將公開 ZIP 直接蓋過內部程式。
 
 - 原樣部署公開版：取新的固定版本 ZIP 與 checksum，照下方升級流程部署。
 - 有獨立 profile／dialect adapter：更新公開核心 checkout，沿用內部 repository 的 profile 重新建置，保留私有擴充版本與指紋紀錄。

@@ -1,6 +1,6 @@
 # 實際模型編輯
 
-使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。核心與介面已合併 main，最終來源的大型模型及四關卡均通過；**正式網站仍為 preview.9，preview.10 尚待準備、審閱及部署**。完整結果見下方。
+使用者已確認要修改實際模型並重新匯出，範圍包含 TFLite 與文字 MLIR。這不是修改搜尋 pattern。核心與介面已合併 main，最終來源的大型模型及四關卡均通過；**preview.10 已部署 GitHub Pages，正式站與固定 Release 驗收通過**。見 [交付與原始證據](model-editing-delivery.md)。
 
 ## 已完成的核心
 
@@ -23,10 +23,9 @@
 
 涵蓋 TFLite 新增／參數修改／custom OP 刪除、錯誤接線與懸空輸出拒絕、進行中候選取消；MLIR 分支／匯合／迴圈、custom attributes 保留、dominance 負例、OP 新增／刪除後的 pattern 正反例。1366×640 與 390×844 在 32px 模型圖下無水平溢出，模型編輯 modal 的 Tab 邊界及 Escape 焦點還原通過。全部為公開合成資料、hosted Linux Chromium；不是正式站、實體手機或公司工具驗收。其後過期 metadata 修正另有針對性 Node 驗證，最終發布仍須核對新來源。
 
-## 接續必須完成
+## 仍須內網驗收的範圍
 
-1. 依既有來源綁定關卡準備及部署 GitHub Pages，核對最終來源與正式產物，提供固定內網更新包。
-2. 公司 dialect verifier、custom kernel 和推論正確性仍須內網驗收；TFLite 任意新 OP catalog、所有 metadata 參數和完整全模型 OP diff 不在這版已驗證範圍。
+公司 dialect verifier、custom kernel 和推論正確性仍須內網驗收；TFLite 任意新 OP catalog、所有 metadata 參數和完整全模型 OP diff 不在這版已驗證範圍。
 
 ## 最終來源驗收
 
