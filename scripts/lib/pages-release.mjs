@@ -5,9 +5,10 @@ import {spawnSync,execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {safeFile,sha256} from './release-artifact.mjs';
 import {RELEASE_GATE_KINDS} from './release-test-plan.mjs';
+import {LEGACY_DELIVERY} from './release-baseline.mjs';
 export const PAGES_WORKFLOW='.github/workflows/verified-pages.yml';
 export const OFFICIAL_ACTIONS=Object.freeze({checkout:'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',node:'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',upload:'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',download:'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093',deploy:'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e'});
-export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
+export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 export async function readWorkflowInventory(directory='.github/workflows'){
     const names=(await readdir(directory)).filter(n=>/\.ya?ml$/i.test(n));
@@ -45,14 +46,16 @@ export function validatePagesWorkflow(w){
     if(!w.jobs.prepare.steps.some(s=>s.run==='node scripts/prepare-pages-release.mjs')||!w.jobs.verify_live.steps.some(s=>s.run==='node scripts/verify-pages-live.mjs')||!w.jobs.release.steps.some(s=>s.run==='node scripts/publish-release-bundle.mjs'))throw Error('Required verification entry missing.');
     const p=w.jobs.prepare.steps;
     if(p[2].run!=='npm ci --ignore-scripts'||p[3].id!=='prepare'||p[3].run!=='node scripts/prepare-pages-release.mjs'||p[4].uses!==OFFICIAL_ACTIONS.upload||p[4].with?.name!=='github-pages'||p[4].with.path!=='${{ steps.prepare.outputs.pages_tar }}'||p[5].uses!==OFFICIAL_ACTIONS.upload||p[5].with?.name!=='release-delivery'||p[5].with.path!=='${{ steps.prepare.outputs.delivery_directory }}')throw Error('Pages must upload only the prepared tar and bundle.');
-    for(const key of ['build_id','site_id','site_manifest_sha','version','manifest_sha','receipt_sha','zip_sha'])if(w.jobs.prepare.outputs?.[key]!==`\${{ steps.prepare.outputs.${key} }}`)throw Error('Release outputs must come from the gate.');
+    for(const key of ['build_id','core_source','promotion','site_id','site_manifest_sha','version','manifest_sha','receipt_sha','zip_sha'])if(w.jobs.prepare.outputs?.[key]!==`\${{ steps.prepare.outputs.${key} }}`)throw Error('Release outputs must come from the gate.');
     if(w.on.workflow_dispatch.inputs.expected_build_id?.type!=='string'||w.on.workflow_dispatch.inputs.expected_site_id?.type!=='string'||p[3].env?.EXPECTED_BUILD!=='${{ inputs.expected_build_id }}'||p[3].env?.EXPECTED_SITE_ID!=='${{ inputs.expected_site_id }}'||p[3].env?.PUBLISH_SITE!=='${{ inputs.publish }}')throw Error('Publish must bind both reviewed core and full-site IDs.');
+    if(w.on.workflow_dispatch.inputs.promote_version?.type!=='string'||w.on.workflow_dispatch.inputs.promote_version.default!==''||p[3].env?.PROMOTE_VERSION!=='${{ inputs.promote_version }}')throw Error('Immutable promotion must be explicit and default to disabled.');
     for(const [name,script] of [['verify_live','node scripts/verify-pages-live.mjs'],['release','node scripts/publish-release-bundle.mjs']]){
         const steps=w.jobs[name].steps;
         if(steps[2].uses!==OFFICIAL_ACTIONS.download||!equal(steps[2].with,{name:'release-delivery',path:'build/pages-delivery'})||steps[3].run!==script)throw Error('Release consumers must read the current gated bundle.');
-        for(const [key,value] of Object.entries({EXPECTED_BUILD:'build_id',EXPECTED_MANIFEST_SHA:'manifest_sha',EXPECTED_RECEIPT_SHA:'receipt_sha',EXPECTED_ZIP_SHA:'zip_sha'}))if(steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Missing trusted delivery hash output.');
+        for(const [key,value] of Object.entries({EXPECTED_BUILD:'build_id',EXPECTED_CORE_SOURCE:'core_source',EXPECTED_MANIFEST_SHA:'manifest_sha',EXPECTED_RECEIPT_SHA:'receipt_sha',EXPECTED_ZIP_SHA:'zip_sha'}))if(steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Missing trusted delivery hash/source output.');
     }
     for(const [key,value] of Object.entries({EXPECTED_SITE_ID:'site_id',EXPECTED_SITE_MANIFEST_SHA:'site_manifest_sha'}))if(w.jobs.verify_live.steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Live verification requires the prepared full-site identity.');
+    if(w.jobs.verify_live.steps[3].env?.CORE_PROMOTION!=='${{ needs.prepare.outputs.promotion }}')throw Error('Historical core validation must use the trusted prepare mode.');
     const smoke=w.jobs.verify_live.steps;if(smoke[4].run!=='npm ci --ignore-scripts'||smoke[5].run!=='node node_modules/playwright/cli.js install --with-deps chromium'||smoke[6].run!=='node test/browser/production-smoke.mjs'||!equal(smoke[6].env,{EXPECTED_BUILD:'${{ needs.prepare.outputs.build_id }}',EXPECTED_SITE_ID:'${{ needs.prepare.outputs.site_id }}'}))throw Error('Live browser smoke cannot be omitted or use another build/site.');
     return true;
 }
@@ -61,6 +64,7 @@ export function assertPagesConfiguration(pages,environment,policies){
 }
 export function checkDispatchContext(env=process.env){
     if(env.GITHUB_ACTIONS!=='true'||env.GITHUB_EVENT_NAME!=='workflow_dispatch'||env.GITHUB_REF!=='refs/heads/main'||env.GITHUB_REPOSITORY!=='koviankevin/tflite-explorer'||!/^[a-f0-9]{40}$/.test(env.GITHUB_SHA||'')||!['true','false'].includes(env.PUBLISH_SITE))throw Error('Only a main-branch workflow_dispatch may prepare this release.');
+    const promotion=env.PROMOTE_VERSION??'';if(typeof promotion!=='string'||promotion!==''&&(promotion.length>128||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(promotion)))throw Error('Promotion must name an exact immutable version.');
 }
 export function assertExpectedBuild(publish,expected,actual){if(publish==='true'&&(!/^[a-f0-9]{16}$/.test(expected||'')||expected!==actual))throw Error('Publish needs the exact build ID from a successful dry run.');}
 export function assertExpectedSite(publish,expected,actual){if(publish==='true'&&(typeof expected!=='string'||!/^[a-f0-9]{64}$/.test(expected)||expected!==actual))throw Error('Publish needs the exact complete site ID from a successful dry run.');}
@@ -84,13 +88,16 @@ export function assertVersionAvailable(manifest,assets,api=ghJSON){
     return {tag,exists:true,url:release.html_url};
 }
 export async function fileSHA256(filename){const h=createHash('sha256');for await(const chunk of createReadStream(filename))h.update(chunk);return h.digest('hex');}
-export async function validateDelivery(directory,expected){
+export function deliveryGateKinds(expected,{allowBaselineHistory=false}={}){
+    return allowBaselineHistory===true&&Object.entries(LEGACY_DELIVERY).every(([key,value])=>expected?.[key]===value)?RELEASE_GATE_KINDS.filter(kind=>kind!=='site'):RELEASE_GATE_KINDS;
+}
+export async function validateDelivery(directory,expected,{allowBaselineHistory=false}={}){
     for(const [key,pattern] of Object.entries({source:/^[a-f0-9]{40}$/,build:/^[a-f0-9]{16}$/,manifest:/^[a-f0-9]{64}$/,receipt:/^[a-f0-9]{64}$/,zip:/^[a-f0-9]{64}$/}))if(!pattern.test(expected?.[key]||''))throw Error(`Missing trusted ${key} output.`);
     const names=await readdir(directory);for(const name of names){safeFile(name);const info=await lstat(path.join(directory,name));if(!info.isFile()||info.isSymbolicLink())throw Error('Delivery entries must be regular files.');}
     const manifestBytes=await readFile(path.join(directory,'release-manifest.json')),receiptBytes=await readFile(path.join(directory,'release-gates.json'));
     if(manifestBytes.length>4*1024**2||receiptBytes.length>4*1024**2||sha256(manifestBytes)!==expected.manifest||sha256(receiptBytes)!==expected.receipt)throw Error('Delivery metadata hash mismatch.');
     const manifest=JSON.parse(manifestBytes),receipt=JSON.parse(receiptBytes),r=manifest.release;
-    if(r?.distribution!=='public'||r.extension||r.source?.dirty!==false||r.source.commit!==expected.source||r.buildId!==expected.build||receipt.format!=='model-lens-release-evidence'||receipt.version!==1||receipt.status!=='passed'||!equal(receipt.release,r)||!equal(receipt.gates?.map(g=>g.kind),RELEASE_GATE_KINDS))throw Error('Delivery is not the verified public candidate.');
+    if(r?.distribution!=='public'||r.extension||r.source?.dirty!==false||r.source.commit!==expected.source||r.buildId!==expected.build||receipt.format!=='model-lens-release-evidence'||receipt.version!==1||receipt.status!=='passed'||!equal(receipt.release,r)||!equal(receipt.gates?.map(g=>g.kind),deliveryGateKinds(expected,{allowBaselineHistory})))throw Error('Delivery is not the verified public candidate.');
     const zipName=`model-lens-public-${r.version}-${r.buildId}.zip`,allowed=[zipName,zipName+'.sha256','release-manifest.json','release-gates.json'].sort();if(!equal([...names].sort(),allowed))throw Error('Unexpected/missing delivery files.');
     const zip=path.join(directory,zipName),size=(await lstat(zip)).size;if(size>512*1024**2||await fileSHA256(zip)!==expected.zip)throw Error('ZIP hash/size mismatch.');
     const checksum=await readFile(zip+'.sha256','utf8');if(checksum!==`${expected.zip}  ${zipName}\n`)throw Error('Checksum sidecar differs.');
@@ -100,4 +107,4 @@ export async function validateDelivery(directory,expected){
     const assets=[];for(const name of allowed){const p=path.join(directory,name);assets.push({name,bytes:(await lstat(p)).size,sha256:await fileSHA256(p)});}
     return {manifest,receipt,zip,assets};
 }
-export function expectedDelivery(env=process.env){return {source:env.GITHUB_SHA,build:env.EXPECTED_BUILD,manifest:env.EXPECTED_MANIFEST_SHA,receipt:env.EXPECTED_RECEIPT_SHA,zip:env.EXPECTED_ZIP_SHA};}
+export function expectedDelivery(env=process.env){return {source:env.EXPECTED_CORE_SOURCE||env.GITHUB_SHA,build:env.EXPECTED_BUILD,manifest:env.EXPECTED_MANIFEST_SHA,receipt:env.EXPECTED_RECEIPT_SHA,zip:env.EXPECTED_ZIP_SHA};}

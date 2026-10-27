@@ -1,4 +1,5 @@
-import {mkdir,lstat,readFile} from 'node:fs/promises';
+import {mkdir,lstat,readFile,copyFile} from 'node:fs/promises';
+import {constants} from 'node:fs';
 import {createWriteStream} from 'node:fs';
 import {spawn,execFileSync} from 'node:child_process';
 import {Transform} from 'node:stream';
@@ -115,4 +116,38 @@ export async function fetchReleasedCore(reference,{outputDirectory,api=ghJSON,do
     const provenance={kind:'github-release',releaseId:release.id,assetId:asset.id,tag,source:reference.source,zipSHA256:archiveSHA,zipBytes:asset.size,manifestSHA256:reference.manifestSHA256};
     await buildEvent({event:'verified',operation:'fetch-release-history',path:output,buildId:reference.build,...provenance});
     return {directory,manifest,manifestSHA256:reference.manifestSHA256,provenance};
+}
+
+// Promotion uses only a complete immutable Release. CI recovery is deliberately
+// absent here; an interrupted or draft publication is never a rollback target.
+export async function fetchPublishedDelivery(version,{outputDirectory,api=ghJSON,download=streamAsset}={}){
+    if(typeof version!=='string'||version.length>128||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(version)||typeof outputDirectory!=='string'||!outputDirectory.trim())throw Error('A fixed published version and fresh delivery directory are required.');
+    const output=await buildDestination(outputDirectory);
+    try{await lstat(output);throw Error('Published delivery output already exists.');}catch(error){if(error.code!=='ENOENT')throw error;}
+    const tag='v'+version,[release,ref]=await Promise.all([api(repository+'releases/tags/'+encodeURIComponent(tag),{allow404:true}),api(repository+'git/ref/tags/'+encodeURIComponent(tag),{allow404:true})]);
+    if(!release||release.tag_name!==tag||release.draft!==false||release.author?.login!==BOT||!Number.isSafeInteger(release.id)||release.id<=0||ref?.object?.type!=='commit'||typeof ref.object.sha!=='string'||!/^[a-f0-9]{40}$/.test(ref.object.sha)||!Array.isArray(release.assets)||release.assets.length!==4||new Set(release.assets.map(a=>a.id)).size!==4||new Set(release.assets.map(a=>a.name)).size!==4)throw Error('Promotion requires a complete bot Release and immutable source tag.');
+    for(const asset of release.assets)if(!Number.isSafeInteger(asset.id)||asset.id<=0||asset.state!=='uploaded'||asset.uploader?.login!==BOT||!Number.isSafeInteger(asset.size)||asset.size<=0||asset.size>(asset.name.endsWith('.zip')?MAX_BYTES:asset.name.endsWith('.sha256')?1024:4*1024**2)||!/^sha256:[a-f0-9]{64}$/.test(asset.digest||''))throw Error('Promotion asset provenance, size or digest differs.');
+    const manifestAsset=release.assets.find(a=>a.name==='release-manifest.json');if(!manifestAsset)throw Error('Published core manifest is missing.');
+    await buildEvent({event:'create_intent',operation:'fetch-published-delivery',path:output,kind:'temporary',producer:'scripts/lib/release-history.mjs',purpose:'Immutable public Release selected for explicit promotion/rollback',inputs:[tag,ref.object.sha],cleanup_condition:'Retain the authenticated original four assets and failed staging for review.'});
+    await mkdir(path.dirname(output),{recursive:true});await mkdir(output);const deliveryDirectory=path.join(output,'delivery');await mkdir(deliveryDirectory);
+    async function getAsset(asset){
+        const file=path.join(deliveryDirectory,asset.name);await download(repository+'releases/assets/'+asset.id,file,asset.size);const info=await lstat(file);
+        if(!info.isFile()||info.isSymbolicLink()||info.size!==asset.size||'sha256:'+await fileSHA256(file)!==asset.digest)throw Error('Published delivery download size/digest mismatch.');return file;
+    }
+    const manifestFile=await getAsset(manifestAsset),manifestSHA256=manifestAsset.digest.slice(7),manifest=JSON.parse(await readFile(manifestFile,'utf8')),r=manifest.release;
+    if(r?.version!==version||r.source?.commit!==ref.object.sha)throw Error('Published manifest does not name its fixed version/tag.');
+    const zipName=`model-lens-public-${version}-${r.buildId}.zip`,names=[zipName,zipName+'.sha256','release-manifest.json','release-gates.json'];
+    if(release.assets.some(a=>!names.includes(a.name)))throw Error('Published delivery contains unexpected assets.');
+    const zipAsset=release.assets.find(a=>a.name===zipName),reference={version,build:r.buildId,source:ref.object.sha,manifestSHA256,sha256:zipAsset.digest.slice(7),bytes:zipAsset.size};checkReference(reference);
+    const core=await fetchReleasedCore(reference,{outputDirectory:path.join(output,'verified-core'),api,download});
+    await copyFile(path.join(path.dirname(core.directory),zipName),path.join(deliveryDirectory,zipName),constants.COPYFILE_EXCL);
+    for(const name of [zipName+'.sha256','release-gates.json'])await getAsset(release.assets.find(a=>a.name===name));
+    const expected={source:reference.source,build:reference.build,manifest:manifestSHA256,receipt:release.assets.find(a=>a.name==='release-gates.json').digest.slice(7),zip:reference.sha256};
+    const checked=await validateDelivery(deliveryDirectory,expected,{allowBaselineHistory:true});
+    if(checked.receipt.repository!=='koviankevin/tflite-explorer')throw Error('Published evidence belongs to another repository.');
+    const [confirmedRelease,confirmedTag]=await Promise.all([api(repository+'releases/tags/'+encodeURIComponent(tag)),api(repository+'git/ref/tags/'+encodeURIComponent(tag))]);
+    if(confirmedRelease.id!==release.id||confirmedRelease.tag_name!==tag||confirmedRelease.draft!==false||confirmedRelease.author?.login!==BOT||confirmedTag.object?.type!=='commit'||confirmedTag.object.sha!==reference.source||confirmedRelease.assets?.length!==4||checked.assets.some(a=>!confirmedRelease.assets.some(b=>b.name===a.name&&b.state==='uploaded'&&b.uploader?.login===BOT&&b.size===a.bytes&&b.digest==='sha256:'+a.sha256)))throw Error('Published version changed while preparing promotion.');
+    const provenance={...core.provenance,kind:'github-published-promotion',assets:checked.assets};
+    await buildEvent({event:'verified',operation:'fetch-published-delivery',path:output,buildId:r.buildId,source:reference.source});
+    return {...core,deliveryDirectory,receipt:checked.receipt,assets:checked.assets,expected,provenance};
 }

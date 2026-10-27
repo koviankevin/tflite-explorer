@@ -76,7 +76,7 @@ node scripts/compose-site.mjs --verify build/new-site
 
 [真實歷史規劃演練](results/site-history-plan-2026-10-27.json) 來源為 clean `a79d5f3573fcde820e3c097a8c74a5b7dd9a28a7`：正式站 index 實際回應 404、根 release metadata 符合 preview.7，獨立下載的固定 ZIP／manifest／246 個檔案均核對後，組成含 741 個受管理檔案的本機快照。以該真實快照作下一輪現行 index 重複準備，site ID 維持 `3d8a1c0ce497a79eddfa9086c65973b45235644b984138da35e8cfaab6458184`；未取得候選尚不存在的 Release。開發候選 build `544a3fe021bad19a` 只供本機演練，沒有發布或覆寫 preview.7；正式站和內網均未更動。
 
-## 發布流程接入（待 CI／正式交付）
+## 發布流程接入（草稿已測，待正式交付）
 
 草稿的 `prepare-pages-release.mjs` 在四關卡、來源重建與原有四份 core 資產核對後，取得歷史並組裝完整快照。Pages tar 改放完整站台；`release-delivery` 與 GitHub Release 仍只放原有 core ZIP、checksum、core manifest 及 gate receipt。`publish=true` 同時要求準備階段的 core build ID 和整站 site ID；build 相同而 retained／任一檔案不同時，也無法通過。`site_id` 與完整 `site_manifest_sha` 綁在 prepare 的可信輸出，HTTP／瀏覽器驗證不能用使用者輸入取代它們。
 
@@ -84,8 +84,18 @@ node scripts/compose-site.mjs --verify build/new-site
 
 隔離 `scenario=versioned` 另以同一新版 HTTP／瀏覽器驗證器檢查已組裝快照：先核對所有站台檔案，再做版本視窗、32px、搜尋定位、原生選檔、pattern JSON 匯入匯出及 TFLite 子模型下載重開。它只接受受控 Linux CI 和 `test-results` 下的公開完整快照，報告標示 `isolated-versioned-snapshot`；正式 deploy job 的 smoke 禁止這個本機目標。此流程不操作個人瀏覽器，不接觸公司模型。
 
-本機九份契約測試已完成 58 項、58 通過、零失敗／略過／取消。新增負例包括 core 相同但 site ID 不同、可信輸出被替換、錯版根入口、現行 namespace payload／MIME 錯誤，以及正式驗證降級到 fixture 或原始 root。隔離 CI 與完整正式交付仍待完成。
+整合來源 `520dc04d1ddab38908de25ad00de5e5efdbc7c4e` 的 [CI 40458488426](https://github.com/koviankevin/tflite-explorer/actions/runs/40458488426) 已通過六項跨版本情境，以及新版完整 HTTP／原生選檔 smoke。後者逐檔核對 741 個檔案，四項 UI 情境全通過，三個模型 Worker 均關閉；見 [切換原始報告](results/site-integration-browser-2026-10-27.json) 與 [完整 HTTP／smoke 原始報告](results/site-integration-http-smoke-2026-10-27.json)。同來源的 [正式站唯讀驗收 40458772476](https://github.com/koviankevin/tflite-explorer/actions/runs/40458772476) 也通過四項操作，仍顯示實際 preview.7／build `163f38ab1dc856e4`；[報告](results/site-integration-public-smoke-2026-10-27.json) 明確標示 `public-production`，不把隔離結果冒充正式站升級成功。
 
-下一步仍須完成：此次整合的 hosted CI、固定 Release 的正式提升／回退、main 的新版憑證，以及正式站交付實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
+[契約 CI 40458476528](https://github.com/koviankevin/tflite-explorer/actions/runs/40458476528) 為 58 項、58 通過、零失敗／略過／取消；[原始報告](results/site-integration-contract-2026-10-27.json) 的 PR merge tree 與上述來源相同。後續另補固定版本提升／回退，最新本機十份契約為 64 項、64 通過、零失敗／略過／取消。新增負例包括 core 相同但 site ID 不同、可信輸出被替換、錯版根入口、現行 namespace payload／MIME 錯誤，以及正式驗證降級到 fixture 或原始 root。新的提升流程仍需新來源的 CI 與完整正式交付。
+
+## 固定 Release 提升／回退
+
+`fetchPublishedDelivery()` 只接受完整、已發行、由 bot 產生／上傳且 tag 固定來源的四份資產；逐份核對 provider digest，另核對 core manifest、來源 Git tree、ZIP CRC／所有 payload 與原始 gate receipt。輸出保留原始四份 bytes，不重新封裝或重寫歷史憑證。缺少、draft、部分發行或已失效的資產不能拿來提升；此路徑不使用供保留 namespace 的 CI recovery。
+
+手動工作流程可用 `promote_version` 選擇固定已發布版本。控制程式本身仍須先通過目前四項來源綁定關卡，再取得舊 core 組裝新完整快照；prepare 輸出分開記錄 controller／core source 及 promotion mode。提升也要求乾跑的 build ID 和完整 site ID，套用相同 HTTP／瀏覽器正式驗收，但不執行會建立 Release 的 job。回退保留較新版 namespace；恢復新版也使用其原始 Release，不在已存在的版本號下重新建置另一份 core。
+
+唯一舊三關卡例外限於 `release-baseline.mjs` 固定的 preview.7：只有明確的歷史提升模式，且來源、build、core manifest SHA、ZIP SHA 和原 receipt SHA 五項全部完全一致，才接受原有三關卡憑證。任一不同仍要求四關卡，新候選的預設驗證完全不放寬。例外不豁免目前控制程式的四關卡，也不代表已完成正式站回退或資料格式遷移。
+
+下一步仍須完成：提升來源的 hosted CI 與實際固定資產取得、main 的新版憑證，以及正式站交付／回退實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。

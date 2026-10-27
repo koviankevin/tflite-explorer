@@ -5,7 +5,8 @@ import {PUBLIC_SITE} from './lib/site-history.mjs';
 import {readStaticFile,bindLiveSnapshot,verifyRemoteSnapshot} from './lib/live-site.mjs';
 const report={format:'model-lens-live-release',version:2,status:'failed',startedAt:new Date().toISOString(),checks:[]};
 try{
-    const expected=expectedDelivery(),{manifest}=await validateDelivery('build/pages-delivery',expected);
+    if(!['true','false'].includes(process.env.CORE_PROMOTION))throw Error('Missing trusted promotion mode.');
+    const expected=expectedDelivery(),{manifest}=await validateDelivery('build/pages-delivery',expected,{allowBaselineHistory:process.env.CORE_PROMOTION==='true'});
     const trusted={siteId:process.env.EXPECTED_SITE_ID,siteManifestSHA256:process.env.EXPECTED_SITE_MANIFEST_SHA,coreManifestSHA256:expected.manifest,coreManifest:manifest};
     for(const key of ['siteId','siteManifestSHA256'])if(typeof trusted[key]!=='string'||!/^[a-f0-9]{64}$/.test(trusted[key]))throw Error('Missing trusted full-site outputs.');
     const until=Date.now()+90000;let raw;

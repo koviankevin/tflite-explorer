@@ -1,4 +1,5 @@
-export const SITE_BASELINE=Object.freeze({version:'0.2.0-preview.7',build:'163f38ab1dc856e4',source:'a0c0f702e310b53fc6baa3a05a57dbb5ca79b887',sha256:'4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7',bytes:29454029});
+import {SITE_BASELINE} from './release-baseline.mjs';
+export {SITE_BASELINE};
 export const SITE_CHECKS=Object.freeze([
     'original legacy tab, native TFLite and persisted pattern before switching',
     'legacy and namespaced old tabs lazily load custom MLIR after upgrade with their original version',

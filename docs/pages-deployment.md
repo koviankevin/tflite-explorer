@@ -39,6 +39,18 @@ Release 證據集合移除每次查核時間及本機快照目錄，保留固定
 
 工作流程的 Pages artifact 保留七天、交付／驗收 artifact 保留三十天；成功的 GitHub Release 下載檔另行保留。過期或未完成的 CI 證據不能用本機 passed JSON 替代。若正式站逐檔核對失敗，Release 不會建立；目前尚無自動回退，應依實際原因修復或使用已驗收版本處理。此入口也不代表瀏覽器資料可反向遷移。
 
+## 提升已發布版本（草稿流程）
+
+`promote_version` 留空時建立新 core；指定例如 `0.2.0-preview.7` 時，只取得該已發布版本的完整四份原始資產。控制程式先驗目前四關卡，再驗 bot／tag／來源／digest／ZIP，不接受 draft 或不完整發行，也不使用中斷恢復資料作提升目標。
+
+```sh
+gh workflow run verified-pages.yml --ref main -f publish=false -f promote_version=0.2.0-preview.7
+# 審閱此次完整快照後，填入這次的 build ID 與 site ID。
+gh workflow run verified-pages.yml --ref main -f publish=true -f promote_version=0.2.0-preview.7 -f expected_build_id=163f38ab1dc856e4 -f expected_site_id=SITE_ID_FROM_THIS_PREPARATION
+```
+
+提升不改原始 Release／tag／receipt，不執行 Release 建立 job。Core source 使用 prepare 的可信輸出，與目前 controller source 分開。舊 preview.7 原有三關卡只在五項固定來源／雜湊全符且明確提升時接受；新候選仍要求四關卡。完整站台會保留較新版本資產，不能將舊 ZIP 單獨覆蓋上線。此程式介面尚待合併、main 證據與正式回退演練，命令不表示正式流程已完成切換。
+
 公司內網仍依 [內網升級流程](intranet-release.md) 保留私有 dialect 設定後重新建置；一般建置／封裝不需連到 GitHub。此流程只管理公開 GitHub 正式站，不同步 Sites。
 
 實際伺服器切換、發布負例與正式瀏覽器發現的問題，記錄於 [驗收說明](pages-deployment-verification.md)；以該次實際狀態區分已驗證與尚待完成。

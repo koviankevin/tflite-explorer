@@ -2,11 +2,11 @@ import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 import {verifyArtifact,buildDestination,safeFile,sha256} from './release-artifact.mjs';
 import {SITE_LIMITS,composeSite} from './versioned-site.mjs';
-import {SITE_BASELINE} from './site-browser-policy.mjs';
+import {SITE_BASELINE,BASELINE_MANIFEST_SHA256} from './release-baseline.mjs';
 import {fetchRetainedCore} from './release-history.mjs';
 
 export const PUBLIC_SITE='https://koviankevin.github.io/tflite-explorer/';
-export const BASELINE_MANIFEST_SHA256='856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54';
+export {BASELINE_MANIFEST_SHA256};
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const hex=(value,length)=>typeof value==='string'&&new RegExp(`^[a-f0-9]{${length}}$`).test(value);
 const keys=(value,expected)=>value&&typeof value==='object'&&!Array.isArray(value)&&equal(Object.keys(value).sort(),[...expected].sort());

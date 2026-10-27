@@ -6,7 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {sha256} from '../scripts/lib/release-artifact.mjs';
 import {RELEASE_GATE_KINDS} from '../scripts/lib/release-test-plan.mjs';
-import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime} from '../scripts/lib/pages-release.mjs';
+import {validatePagesWorkflow,readWorkflowInventory,validateWorkflowInventory,assertPagesConfiguration,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertVersionAvailable,validateDelivery,fileSHA256,immutableGateEvidence,assertStaticMime,expectedDelivery} from '../scripts/lib/pages-release.mjs';
 const workflow=JSON.parse(await readFile(new URL('../.github/workflows/verified-pages.yml',import.meta.url),'utf8'));
 test('Pages write permission is reachable only through the successful gate artifact',()=>{
     assert.equal(validatePagesWorkflow(workflow),true);
@@ -41,6 +41,14 @@ test('published tags and asset bytes are immutable',()=>{
     assert.throws(()=>assertVersionAvailable(manifest,assets,route=>route.includes('/git/ref/')?{object:{type:'commit',sha:'d'.repeat(40)}}:release));
     assert.throws(()=>assertVersionAvailable(manifest,assets,()=>release));
     const evidence={status:'passed',version:1,release:manifest.release,gates:[]};assert.deepEqual(immutableGateEvidence({...evidence,verifiedAt:'first',preparedDirectory:'/first'}),immutableGateEvidence({...evidence,verifiedAt:'second',preparedDirectory:'/second'}));
+});
+
+test('promotion keeps controller and core sources separate and cannot rewrite an old Release',()=>{
+    const env={GITHUB_ACTIONS:'true',GITHUB_EVENT_NAME:'workflow_dispatch',GITHUB_REF:'refs/heads/main',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_SHA:'a'.repeat(40),PUBLISH_SITE:'false',PROMOTE_VERSION:'0.2.0-preview.7',EXPECTED_CORE_SOURCE:'b'.repeat(40)};
+    assert.doesNotThrow(()=>checkDispatchContext(env));assert.equal(expectedDelivery(env).source,env.EXPECTED_CORE_SOURCE);assert.equal(expectedDelivery({GITHUB_SHA:env.GITHUB_SHA}).source,env.GITHUB_SHA);
+    for(const value of ['latest','v0.2.0-preview.7','../1.2.3',['1.2.3']])assert.throws(()=>checkDispatchContext({...env,PROMOTE_VERSION:value}));
+    const changes=[w=>delete w.on.workflow_dispatch.inputs.promote_version,w=>w.on.workflow_dispatch.inputs.promote_version.default='0.2.0-preview.7',w=>w.jobs.prepare.steps[3].env.PROMOTE_VERSION='untrusted',w=>w.jobs.prepare.outputs.core_source='${{ inputs.promote_version }}',w=>w.jobs.prepare.outputs.promotion='true',w=>w.jobs.verify_live.steps[3].env.EXPECTED_CORE_SOURCE='${{ github.sha }}',w=>w.jobs.verify_live.steps[3].env.CORE_PROMOTION='true',w=>w.jobs.release.if="${{ inputs.publish && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"];
+    for(const change of changes){const value=structuredClone(workflow);change(value);assert.throws(()=>validatePagesWorkflow(value));}
 });
 
 test('a matching core cannot publish an unreviewed complete site or bypass trusted site outputs',()=>{
