@@ -118,6 +118,8 @@ node scripts/compose-site.mjs --verify build/new-site
 
 此 observer 尚待實際正式切換執行；新增一項語法／CI 隔離拒絕契約後總數為 71。新的 workflow／driver 會使 contract scope 改變，因此合併後需新 main 契約；既有 site／core／大檔 browser 只在相依 scope 仍相同且 GitHub 原始憑證有效時重用。
 
-下一步仍須完成：71 項 main 契約、憑證索引、準備產物與錯誤 site ID 負例，以及正式站升級／回退／恢復實測。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
+觀察器已合併來源 `0b7b447c7930bfb6c2c23899ca9b2cd223bf510d`，[main 契約 40464314481](https://github.com/koviankevin/tflite-explorer/actions/runs/40464314481) 已實際通過 71 項、零失敗／略過／取消，來源期間 clean 且未變，見 [原始報告](results/site-transition-main-contract-2026-10-27.json)。[四關卡來源核對](results/preview8-selected-scopes-2026-10-27.json) 確認 core `40438427440`、實體大檔 browser `40445983471`、contract `40464314481` 與 site `40462052121` 全是成功 main dispatch，其受測相依 fingerprint 與該候選完全一致。索引已選入這四筆；正式 prepare 仍須重新驗證 API、artifact digest／原始 policy 及乾淨來源重建，索引本身不是通過憑證。
+
+接下來凍結本次來源，核對成功準備的 core ZIP／完整 Pages tar／site ID，先驗錯誤 site ID 被拒，再讓已就緒的 observer 配合實際升級／回退／恢復。完成前不宣稱已解決正式站舊分頁／CDN 相容性或正式發布恢復，完整商品等級工作仍維持未完成。
 
 技術依據：[module 的相對 URL](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta)、[HTTP 快取](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[GitHub Release asset 的唯讀取得](https://docs.github.com/en/rest/releases/assets#get-a-release-asset)、[GitHub Pages 站台容量限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)。512 MiB 是這個工具採用的本機預算，並非 GitHub 的容量上限。
