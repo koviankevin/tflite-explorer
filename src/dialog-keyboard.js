@@ -10,6 +10,9 @@ export function dialogKeyboard(dialog) {
         // collapsed details, disabled fields and hidden controls must not trap.
         const controls=[...dialog.querySelectorAll('button,input,select,textarea,a[href],summary,[tabindex]')].filter(element=>{
             if(element.tabIndex<0||element.matches(':disabled')||element.closest('[inert]')||!element.getClientRects().length)return false;
+            for(let parent=element.parentElement;parent&&parent!==dialog;parent=parent.parentElement){
+                if(parent.tagName==='DETAILS'&&!parent.open&&!Array.from(parent.children).find(child=>child.tagName==='SUMMARY')?.contains(element))return false;
+            }
             const visibility=dialog.ownerDocument.defaultView.getComputedStyle(element).visibility;
             return visibility!=='hidden'&&visibility!=='collapse';
         });
