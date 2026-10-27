@@ -210,7 +210,7 @@ function reset() {
     disposeVirtualOverview();
     exportBusy = false; $('validation-dialog').close();exportReports.clear();
     ++queryGeneration; ++renderGeneration;
-    stopWorker(); model = null; file = null; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
+    stopWorker(); model = null; file = null; $('model-file').value=''; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
     pickedNodes=new Set();pickedGraph=0;cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
