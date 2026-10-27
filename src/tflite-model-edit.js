@@ -73,6 +73,7 @@ export function editTfliteModel(index,file,plans) {
             if(plan.updateSignatures!==true)throw Error('模型介面變更需同步修改 signature；請明確啟用更新 signature。');
             const next={...signature};
             for(const key of ['inputs','outputs']){
+                if(graph[key].length===original[key].length&&graph[key].every((id,i)=>id===original[key][i]))continue;
                 const old=new Map(signature[key].map(m=>[m.tensor_index,m.name])),used=new Set();
                 next[key]=Array.from(graph[key],tensor_index=>{
                     let name=old.get(tensor_index)||`tensor_${tensor_index}`,suffix=1;const base=name;
