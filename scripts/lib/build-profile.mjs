@@ -5,7 +5,7 @@ export async function copyWebTree(directory,target,{include=()=>true}={}) {
     for(const name of await filesIn(directory)) {
         if(!include(name))continue;
         if(/\.(tflite|lite|mlir|onnx|bin|pt|pth|h5|safetensors)$/i.test(name))throw new Error(`網頁來源含模型或權重：${name}；請移到部署來源以外。`);
-        if(!/\.(js|css|html|json|svg|png|ico|woff2?|ttf|txt|md)$/i.test(name) && path.basename(name)!=='LICENSE')continue;
+        if(!/\.(js|wasm|css|html|json|svg|png|ico|woff2?|ttf|txt|md)$/i.test(name) && path.basename(name)!=='LICENSE')continue;
         if(name.split('/').some(p=>p.startsWith('.')))throw new Error(`網頁來源含隱藏項目：${name}`);
         if(name.startsWith('internal-dialects/'))throw new Error('私有 dialect 請透過獨立的 --profile 目錄接入。');
         await mkdir(path.dirname(path.join(target,name)),{recursive:true});await cp(path.join(directory,name),path.join(target,name));

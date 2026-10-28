@@ -17,3 +17,5 @@
 LiteRT 來源、精確 npm integrity、原始檔 hashes、Apache-2.0 LICENSE 與 NOTICE 保留於 `vendor/litert/2.6.0/`。公開 runtime 不包含公司的 custom kernels。此功能與公司 runtime 相容性、任意 builtin 組合皆可執行及整體商品等級完成是不同的驗收範圍。
 
 本機實際 CPU WASM 已驗證 ADD 的 `[1,2] + [3,4] = [4,6]`、raw 多輸入、ZIP bytes，以及不合法 broadcast／output shape 的失敗。Hosted 原生選檔／下載、14 吋 32px、取消與正式部署證據尚待本次 CI；未完成前不列為已交付。
+
+首次候選 [40697650768](https://github.com/koviankevin/tflite-explorer/actions/runs/40697650768) 的既有 29 項操作通過，但新 runtime 初始化失敗：部署來源格式白名單未複製 `.wasm`，請求取得 404 文字。保留失敗，不以 Node 原始碼成功代替打包後的瀏覽器成功。新增實際打包回歸在修正前以 ENOENT 失敗、修正後通過；產物 verifier 另拒絕刪去 WASM 後重新製作的完整 manifest。版本子路徑下的實際 Worker／官方 loader 也在 Node VM 以打包檔重現失敗，修正後成功執行；瀏覽器重測仍需取得後續證據。

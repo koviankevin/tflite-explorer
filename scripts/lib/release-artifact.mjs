@@ -67,6 +67,12 @@ export async function verifyArtifact(directory,{publicOnly=false,expectedCommit,
         if(bytes.length!==row.bytes || sha256(bytes)!==row.sha256)throw new Error(`部署完整性檢查失敗：${row.path}`);
     }
     if(!['index.html','src/app.js','src/model-worker.js','release.json','LICENSE','LICENSE-Netron.txt'].every(n=>actual.includes(n)))throw new Error('部署缺少必要檔案或授權。');
+    if(actual.includes('src/tflite-runtime-worker.js')){
+        const base='vendor/litert/2.6.0/',required=['core.js','wasm-utils.js','litert_wasm_compat_internal.js','litert_wasm_compat_internal.wasm','provenance.json','LICENSE','NOTICE.txt'];
+        if(required.some(n=>!actual.includes(base+n)))throw Error('部署缺少 LiteRT WASM、載入器或授權；無法提供本機執行檢查。');
+        const provenance=JSON.parse(await readFile(path.join(directory,base+'provenance.json'),'utf8')),entry=provenance.files?.find(f=>f.path==='litert_wasm_compat_internal.wasm'),bytes=await readFile(path.join(directory,base+'litert_wasm_compat_internal.wasm'));
+        if(!entry||bytes.length!==entry.bytes||sha256(bytes)!==entry.sha256||!bytes.subarray(0,8).equals(Buffer.from([0,97,115,109,1,0,0,0])))throw Error('部署的 LiteRT WASM 與固定來源不符。');
+    }
     if(JSON.stringify(JSON.parse(await readFile(path.join(directory,'release.json'),'utf8')))!==JSON.stringify(release))throw new Error('版本資訊與部署清單不符。');
     return manifest;
 }
