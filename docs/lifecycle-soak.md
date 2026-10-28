@@ -28,4 +28,13 @@
 
 ## 共用 runner 的原八輪模式
 
-[40664660763](https://github.com/koviankevin/tflite-explorer/actions/runs/40664660763) 已成功；來源 `da70c88a9be134ea035bc728bbc56604420aa5a6`、tree `bf6c80ffcaed98926590625046e014780ed58f66`。原始 [八輪報告](results/soak-shared-eight-cycles-2026-10-28.json)與 [provider／來源相依核對](results/soak-shared-eight-review-2026-10-28.json)通過；24 個模型 Worker、八次完整原模型指紋、權重／custom options、完整模型及子模型重開皆核對。RSS drift 8,658,944 bytes、斜率 1,422,833.37 bytes／輪、取樣峰值 1,010,462,720 bytes，符合原門檻。這確認新增 soak 分支沒有破壞原模式；兩小時 run `40664650666` 仍在執行，不能把八輪成功當成兩小時成功。
+[40664660763](https://github.com/koviankevin/tflite-explorer/actions/runs/40664660763) 已成功；來源 `da70c88a9be134ea035bc728bbc56604420aa5a6`、tree `bf6c80ffcaed98926590625046e014780ed58f66`。原始 [八輪報告](results/soak-shared-eight-cycles-2026-10-28.json)與 [provider／來源相依核對](results/soak-shared-eight-review-2026-10-28.json)通過；24 個模型 Worker、八次完整原模型指紋、權重／custom options、完整模型及子模型重開皆核對。RSS drift 8,658,944 bytes、斜率 1,422,833.37 bytes／輪、取樣峰值 1,010,462,720 bytes，符合原門檻。這確認新增 soak 分支沒有破壞原模式；兩小時 run `40664650666` 的首次失敗另列如下，不能把八輪成功當成兩小時成功。
+
+
+## 首次長測失敗：第二十一份草稿
+
+[40664650666](https://github.com/koviankevin/tflite-explorer/actions/runs/40664650666) 已在第二十一輪等待自動保存時失敗，未達兩小時。原始 [失敗報告](results/soak-first-failure-2026-10-28.json)及 [provider digest／CRC／來源核對](results/soak-first-failure-review-2026-10-28.json)保留 failed。二十輪完整模型／子模型已下載、比對及重開；21 個完整原檔指紋都成功並終止，讀取保護無違規，故不能把這次失敗寫成指紋未完成或記憶體門檻失敗。最後一個模型 Worker 的 terminate 呼叫旗標維持原 false，實際關閉／cleanup 事件另存，未改寫。
+
+根因是長測每次建立新草稿，卻未處理網站既有的 20 份保留上限。以實際 editRecoverySession／nextEditRecovery 的快速案例重現：前 20 份保存成功，第 21 份回報上限、未虛報已保存、既有歷史不變；下載可解析備份、移除指定舊稿後明確 retry，可保存新稿並保留另外十九份。回歸案例在 `test/edit-recovery.test.mjs`，不依賴大型模型或增加 timeout。
+
+後續長測必須走真正 UI 的備份、移除已備份且屬於本次測試的舊稿、重試流程，保持 20 份保護與原有所有時間／記憶體門檻，不直接清空 IndexedDB、重啟瀏覽器或把二十輪當成兩小時。完整新 run 尚待實作及驗證；商品等級目標仍未完成。
