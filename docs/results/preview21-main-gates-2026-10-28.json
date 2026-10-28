@@ -1,0 +1,4984 @@
+{
+  "authentication": "passed",
+  "source": {
+    "commit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+    "tree": "1d10aeb91bd569580bccf2e48c0bc587256ca9d0",
+    "committedAt": "2026-10-28T23:33:07+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "calls": [
+    {
+      "route": "repos/koviankevin/tflite-explorer/git/commits/b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+      "file": "metadata-1.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40700051621",
+      "file": "metadata-2.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40700051621/jobs?per_page=100",
+      "file": "metadata-3.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40700051621/artifacts?per_page=100",
+      "file": "metadata-4.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/artifacts/12820479272/zip",
+      "file": "artifact-5.zip"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717132364",
+      "file": "metadata-6.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717132364/jobs?per_page=100",
+      "file": "metadata-7.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717132364/artifacts?per_page=100",
+      "file": "metadata-8.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/artifacts/12829572133/zip",
+      "file": "artifact-9.zip"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717138628",
+      "file": "metadata-10.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717138628/jobs?per_page=100",
+      "file": "metadata-11.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717138628/artifacts?per_page=100",
+      "file": "metadata-12.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/artifacts/12827813558/zip",
+      "file": "artifact-13.zip"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717145009",
+      "file": "metadata-14.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717145009/jobs?per_page=100",
+      "file": "metadata-15.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/runs/40717145009/artifacts?per_page=100",
+      "file": "metadata-16.json"
+    },
+    {
+      "route": "repos/koviankevin/tflite-explorer/actions/artifacts/12829765500/zip",
+      "file": "artifact-17.zip"
+    }
+  ],
+  "receipt": {
+    "preparedDirectory": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\gate-rebuild-5mNC8J\\site",
+    "format": "model-lens-release-gates",
+    "version": 1,
+    "status": "passed",
+    "verifiedAt": "2026-10-28T15:47:20.900Z",
+    "repository": "koviankevin/tflite-explorer",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.21",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+        "tree": "1d10aeb91bd569580bccf2e48c0bc587256ca9d0",
+        "committedAt": "2026-10-28T23:33:07+08:00",
+        "dirty": false
+      },
+      "buildId": "197b3c6d31d49392"
+    },
+    "reproducibleManifestSHA256": "2d4bbd0ce341c5aa1948ec124b28efe8202a2e9e9fc068dcdaab60a1e32d0f7d",
+    "gates": [
+      {
+        "kind": "core",
+        "runId": 40700051621,
+        "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621",
+        "testedCommit": "2b93eb536d0216e404115abd71a6bd6adac739b2",
+        "artifactId": 12820479272,
+        "artifactDigest": "sha256:06e88c8aae0be3f08b872bbe6ab7328e2dd0f4b8013b8633dc1157eca713fda5",
+        "reportSHA256": "500173b762f13ef27f98a7361ba494ef7ba3e341e8bde87b232c9b3d068dc0aa",
+        "scopeFingerprint": "d25a85aa0caf6999326ea9a4b45298714960c89f9d3146dfe888350f1e4dd01a",
+        "scopeFiles": [
+          {
+            "path": ".github/workflows/performance.yml",
+            "gitBlob": "975cd60b6bb8190b9ffcc30c33bad380f9e1ed88"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "e1ead4b49468f01917619e407698e88cf75425dccb057fd86a8da8317975924c"
+          },
+          {
+            "path": "package.json",
+            "sha256": "fe2f524d8d06afd95537ca80104c04e9ff6ca22093df1defd804e9651115b8af"
+          },
+          {
+            "path": "scripts/accept-performance.mjs",
+            "gitBlob": "86fba6cc27cb80dd0eacfeb944165c0eb7f0948e"
+          },
+          {
+            "path": "scripts/large-mlir-resources.mjs",
+            "gitBlob": "b2f9d9c57602d20198f38c1e8ba001e0d1446ca6"
+          },
+          {
+            "path": "scripts/lib/performance-policy.mjs",
+            "gitBlob": "a591af35e8a67acadc5eec8eaf943a9e0a77127b"
+          },
+          {
+            "path": "scripts/measure-performance.mjs",
+            "gitBlob": "9cbc719c5be70413b066ead4733927e9924e1e23"
+          },
+          {
+            "path": "src/mlir-combined-graph.js",
+            "gitBlob": "d7f24cb87a6300ce9fa8653b4c1118c5e5c12d01"
+          },
+          {
+            "path": "src/mlir-connection-index.js",
+            "gitBlob": "4e2e8e004e695ba03e99141fbeb7c59263792f15"
+          },
+          {
+            "path": "src/mlir-connection-view.js",
+            "gitBlob": "97c9765c20462e62d43345caff9aabffe34af720"
+          },
+          {
+            "path": "src/mlir-dialects.js",
+            "gitBlob": "b2db13d01bc25ab699155656a3a7181a65c66b7d"
+          },
+          {
+            "path": "src/mlir-engine.js",
+            "gitBlob": "c9c79f5df9bb28251885da57bf9002a3272d6ce8"
+          },
+          {
+            "path": "src/mlir-export-provenance.js",
+            "gitBlob": "dcb2ce5cdd6c2232731fc5ddd5c90b5f9e37543e"
+          },
+          {
+            "path": "src/mlir-export.js",
+            "gitBlob": "a4342f414323cefbe2105f819fc519977773aedc"
+          },
+          {
+            "path": "src/mlir-file.js",
+            "gitBlob": "cec48572ccb93552bf86c1c42d4c66fa6ab9259e"
+          },
+          {
+            "path": "src/mlir-ir.js",
+            "gitBlob": "f50be08e9282577ad054e535808f24dc1efbe0f8"
+          },
+          {
+            "path": "src/mlir-pattern-projection.js",
+            "gitBlob": "feeba58711115a3da5d846af74c42d7b5d3ea635"
+          },
+          {
+            "path": "src/mlir-pattern-spec.js",
+            "gitBlob": "97b808518b0d9248bff1240d8cbb8c27d938dc1b"
+          },
+          {
+            "path": "src/mlir-pattern.js",
+            "gitBlob": "81ed47e5d24004002ce5d2bbd5cbfbcd86acabc8"
+          },
+          {
+            "path": "src/mlir-slice-graph.js",
+            "gitBlob": "9d7f5a9933556a3041787aee5c18f9ccf1edb678"
+          },
+          {
+            "path": "src/mlir-slice.js",
+            "gitBlob": "2a3f0d3fdd87167fd643cb5dc95d94ccc41d14f8"
+          },
+          {
+            "path": "src/mlir-types.js",
+            "gitBlob": "67cd259e1485510032da7555027419f032dce35b"
+          },
+          {
+            "path": "src/mlir-validate.js",
+            "gitBlob": "72d8b674a74d22a8da03bf220d410caa848fea2d"
+          },
+          {
+            "path": "src/model-engine.js",
+            "gitBlob": "13f9e3c0e8b8ff526b04ec2fa6e37cbad8d623ea"
+          },
+          {
+            "path": "src/overview-layout.js",
+            "gitBlob": "f1edd5b3e6914469f16d7dda903ca2fe9be32c5a"
+          },
+          {
+            "path": "src/pattern-conditions.js",
+            "gitBlob": "50880976e1a0d394e3c9eb529e7d98fa7185a6f4"
+          },
+          {
+            "path": "src/pattern-overview.js",
+            "gitBlob": "5de99f245ac8e7350e4fdc3a69f659c37f416c19"
+          },
+          {
+            "path": "src/pattern-utils.js",
+            "gitBlob": "7964874c737bc9d2e5638d43a1d1d9ab628c1303"
+          },
+          {
+            "path": "src/range-stream.js",
+            "gitBlob": "951af0f0dc91fdc4be2d4e6e5943112f90ba7bf0"
+          },
+          {
+            "path": "src/subgraph-pattern.js",
+            "gitBlob": "4e5eb399a22da15f5533d0e6fd7e381da8500fae"
+          },
+          {
+            "path": "test/fixture.mjs",
+            "gitBlob": "f2b62ba3f4dfe9c420d7ad009f61cbaef66063b6"
+          },
+          {
+            "path": "test/performance-fixtures.mjs",
+            "gitBlob": "94741439143842549f2dd80b901ff261edceb8a0"
+          },
+          {
+            "path": "test/performance-policy.json",
+            "gitBlob": "e809e8571dbc88d396d1e2e6966dc9d5668bfdf4"
+          },
+          {
+            "path": "vendor/litert/2.6.0/provenance.json",
+            "gitBlob": "56a5641c311a742726861b6ac5364670df6b6a42"
+          },
+          {
+            "path": "vendor/netron/acuity-metadata.json",
+            "gitBlob": "fb138f1e4505542f51eaf993bdc6a1665789bb77"
+          },
+          {
+            "path": "vendor/netron/armnn-metadata.json",
+            "gitBlob": "1538afa5c3e3934d9a32af58d76076447946cb17"
+          },
+          {
+            "path": "vendor/netron/base.js",
+            "gitBlob": "63191c9a4710e169dd9d905bd72866f14af954f7"
+          },
+          {
+            "path": "vendor/netron/bigdl-metadata.json",
+            "gitBlob": "d42b79c7e68b2c69adb9fa41ab79a944f2ca9ccc"
+          },
+          {
+            "path": "vendor/netron/caffe-metadata.json",
+            "gitBlob": "3d7c1927eec68dffde58d2302b94d599e1734365"
+          },
+          {
+            "path": "vendor/netron/caffe2-metadata.json",
+            "gitBlob": "47b29c825f338176bef2a7822e1805a582e6b028"
+          },
+          {
+            "path": "vendor/netron/circle-metadata.json",
+            "gitBlob": "76e82c6ba1d9c381bb8137ac4e1cfac2a50321f0"
+          },
+          {
+            "path": "vendor/netron/cntk-metadata.json",
+            "gitBlob": "dbb77ab5ebd0659256398c80a3b8447047ce5bb7"
+          },
+          {
+            "path": "vendor/netron/coreml-metadata.json",
+            "gitBlob": "1a5ff686f034b38b34af06265a3bc24c99a90e5a"
+          },
+          {
+            "path": "vendor/netron/darknet-metadata.json",
+            "gitBlob": "c5b171bfaa0d0a22575c66aa3c620b0d52c99263"
+          },
+          {
+            "path": "vendor/netron/dl4j-metadata.json",
+            "gitBlob": "4965893a0dfc4ef82a0e085e4f75fe054c83315e"
+          },
+          {
+            "path": "vendor/netron/dlc-metadata.json",
+            "gitBlob": "9cb6471dcd4406f50fdd441120950156182a8292"
+          },
+          {
+            "path": "vendor/netron/dnn-metadata.json",
+            "gitBlob": "2e0f4b2a434f049bd3b8f376d72e0109e9e397c6"
+          },
+          {
+            "path": "vendor/netron/espdl-metadata.json",
+            "gitBlob": "01ad405719c20224407885f17afb91e1d5a8cd30"
+          },
+          {
+            "path": "vendor/netron/espresso-metadata.json",
+            "gitBlob": "f4c718388a64dacae74f2093e1b93a84e9f93c62"
+          },
+          {
+            "path": "vendor/netron/flatbuffers.js",
+            "gitBlob": "dabdb7804b227771c4e2f6639f57a4b20ceaf46e"
+          },
+          {
+            "path": "vendor/netron/flexbuffers.js",
+            "gitBlob": "fdbee2659412e26e8cdabfc9d970ae4fd99a2481"
+          },
+          {
+            "path": "vendor/netron/flux-metadata.json",
+            "gitBlob": "32960f8ced39dd5eade0f15d41e275b2dc8d4c70"
+          },
+          {
+            "path": "vendor/netron/gguf-metadata.json",
+            "gitBlob": "52fdd4a18c0c86fd90b41826f0a3339e4a8debb2"
+          },
+          {
+            "path": "vendor/netron/hailo-metadata.json",
+            "gitBlob": "05752d7b481c077e625a61cd72e16cdd7fa1c2f7"
+          },
+          {
+            "path": "vendor/netron/kann-metadata.json",
+            "gitBlob": "ba202ab0f23450c014d076e7ef75ecc0f578e173"
+          },
+          {
+            "path": "vendor/netron/keras-metadata.json",
+            "gitBlob": "c771639dc33c4dc4ccfb097739a6f8d1f73bf5b2"
+          },
+          {
+            "path": "vendor/netron/lasagne-metadata.json",
+            "gitBlob": "b3f40a4cea66496b685ed7de3cad1a89e48bbc2e"
+          },
+          {
+            "path": "vendor/netron/megengine-metadata.json",
+            "gitBlob": "3fb7dae1504eb717648d0f7714fa6cc2feda17fe"
+          },
+          {
+            "path": "vendor/netron/mindir-metadata.json",
+            "gitBlob": "a8f4b2c60a29d281ccd84790b56b94710ca01d12"
+          },
+          {
+            "path": "vendor/netron/mlir-metadata.json",
+            "gitBlob": "29f52f62fe19ccbc2889f9b178e5e6c41b459ea3"
+          },
+          {
+            "path": "vendor/netron/mlir.js",
+            "gitBlob": "6cb85248df090b0f94f46c1da8893e3cdc3ea3a5"
+          },
+          {
+            "path": "vendor/netron/mlnet-metadata.json",
+            "gitBlob": "005c177d076fa4513f2c09675f0348c22d25f3b2"
+          },
+          {
+            "path": "vendor/netron/mnn-metadata.json",
+            "gitBlob": "39c3f44f4b23132b020877e0f510119b99b623aa"
+          },
+          {
+            "path": "vendor/netron/mslite-metadata.json",
+            "gitBlob": "38bb81b60bc44ebc2e15db3cb355ef47d5645fdd"
+          },
+          {
+            "path": "vendor/netron/mxnet-metadata.json",
+            "gitBlob": "8d271c9e75635a13606e6a8f7535005559d87059"
+          },
+          {
+            "path": "vendor/netron/ncnn-metadata.json",
+            "gitBlob": "30621c3db3609a89f40474222e7fb259189b0272"
+          },
+          {
+            "path": "vendor/netron/nnabla-metadata.json",
+            "gitBlob": "7a2ff8f5bf6716919431597737e511e5ebe808e3"
+          },
+          {
+            "path": "vendor/netron/om-metadata.json",
+            "gitBlob": "e458ec146beac052a25e50ef8e0c6179cf8bfdf6"
+          },
+          {
+            "path": "vendor/netron/onednn-metadata.json",
+            "gitBlob": "f204b0b0c6d9e5db1703df9212c6bdcfe8281dc9"
+          },
+          {
+            "path": "vendor/netron/onnx-metadata.json",
+            "gitBlob": "6748d98e5f47445aa7b982a773b1d5692a478e40"
+          },
+          {
+            "path": "vendor/netron/openvino-metadata.json",
+            "gitBlob": "cdddbe28eb3b861b6c138f630d3e7d2bb601743f"
+          },
+          {
+            "path": "vendor/netron/paddle-metadata.json",
+            "gitBlob": "65b297fdd0f565a060fc5a54dc077dd51f486f27"
+          },
+          {
+            "path": "vendor/netron/pytorch-metadata.json",
+            "gitBlob": "034cbbdabc1c2aff3952b04da47ca7e55c872c73"
+          },
+          {
+            "path": "vendor/netron/qnn-metadata.json",
+            "gitBlob": "25f1145f5f89f3f9e6567da6ab3e154f9ead5f53"
+          },
+          {
+            "path": "vendor/netron/rknn-metadata.json",
+            "gitBlob": "d1c47976df3707993fab081e452b61684f87a8cb"
+          },
+          {
+            "path": "vendor/netron/sklearn-metadata.json",
+            "gitBlob": "4166b19ecd7e24aa64d6f602663630dd039228cd"
+          },
+          {
+            "path": "vendor/netron/tengine-metadata.json",
+            "gitBlob": "67af19558ace31c36224905a5c4152fc4757d0bb"
+          },
+          {
+            "path": "vendor/netron/text.js",
+            "gitBlob": "27a06da76b7c1efb908a0c78cb701c8521a14cb5"
+          },
+          {
+            "path": "vendor/netron/tf-metadata.json",
+            "gitBlob": "320cebfd2b1e2f56e423fc23ab409231b4cccbf3"
+          },
+          {
+            "path": "vendor/netron/tflite-metadata.json",
+            "gitBlob": "aff7136e01a576a2e8bdb5384908bdd7c3251d32"
+          },
+          {
+            "path": "vendor/netron/tflite-schema.js",
+            "gitBlob": "f9a681d111663b20f7c3f75f0877579e56b7f030"
+          },
+          {
+            "path": "vendor/netron/tflite.js",
+            "gitBlob": "ecca54baed6a6ba912ea377ac0c8d553a68fa4dd"
+          },
+          {
+            "path": "vendor/netron/tnn-metadata.json",
+            "gitBlob": "80c5c3757601de306dac4c1cdc5c04502b328e5f"
+          },
+          {
+            "path": "vendor/netron/torch-metadata.json",
+            "gitBlob": "3a67732b613a854eacea4ce43dae13cf8a2e6312"
+          },
+          {
+            "path": "vendor/netron/tosa-metadata.json",
+            "gitBlob": "77d208cab0bdba9225f11d75cdc04cab4ddda2de"
+          },
+          {
+            "path": "vendor/netron/uff-metadata.json",
+            "gitBlob": "ad9f28a035eb7966bb66b301b4d051e258a1d901"
+          },
+          {
+            "path": "vendor/netron/zip.js",
+            "gitBlob": "1e5370a7782296d4961d082468ad6fa89980d072"
+          }
+        ],
+        "reused": true
+      },
+      {
+        "kind": "browser",
+        "runId": 40717132364,
+        "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40717132364",
+        "testedCommit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+        "artifactId": 12829572133,
+        "artifactDigest": "sha256:8f1de1db25f0db6c47cb37288d9a4556acff45e7cba958d4ebd40ae7c7a2df95",
+        "reportSHA256": "2e11012485526b9b858fe4997dd1be442059a0c35bdca62a15f7055d9554f48d",
+        "scopeFingerprint": "a087034e3db00b64f37ba152cd1a0d5bca70e1589cb1a6857c187ed38d7b522a",
+        "scopeFiles": [
+          {
+            "path": ".github/workflows/browser-lifecycle.yml",
+            "gitBlob": "ac35e9709402fc7000be952c4c4b1f539b8ce520"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "e1ead4b49468f01917619e407698e88cf75425dccb057fd86a8da8317975924c"
+          },
+          {
+            "path": "package.json",
+            "sha256": "fe2f524d8d06afd95537ca80104c04e9ff6ca22093df1defd804e9651115b8af"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "gitBlob": "670104630c39710a80526cce0bede233e1d904c8"
+          },
+          {
+            "path": "scripts/install-browser.mjs",
+            "gitBlob": "0c44bc77d9fc65d12db5412b5cf482f3e6e5e48d"
+          },
+          {
+            "path": "scripts/lib/build-profile.mjs",
+            "gitBlob": "77d9b359592cb937e558b3b04894edc67ba139cb"
+          },
+          {
+            "path": "scripts/lib/release-artifact.mjs",
+            "gitBlob": "56db40570d1155ee23178590d816076d5b657918"
+          },
+          {
+            "path": "scripts/serve.mjs",
+            "gitBlob": "3ce386d4f5054d3c684a3b14316f7de113c71bd6"
+          },
+          {
+            "path": "scripts/verify-export.mjs",
+            "gitBlob": "5c3108139f61f3aa79e675f04b6f930a63de15ce"
+          },
+          {
+            "path": "src/app.css",
+            "gitBlob": "1f978e14eb8d510a1265648ee572d671b2f57b0a"
+          },
+          {
+            "path": "src/app.js",
+            "gitBlob": "707b4358fc45b786e297d745209c76308c0ec488"
+          },
+          {
+            "path": "src/diagnostics-ui.js",
+            "gitBlob": "e0199d8e0e073c75942c6fed19540382796a19fa"
+          },
+          {
+            "path": "src/diagnostics.js",
+            "gitBlob": "d497dba705c603a7945037a5f6652ff03e67c269"
+          },
+          {
+            "path": "src/dialog-keyboard.js",
+            "gitBlob": "6e3d667016b66cfcd005c4f3fd8929b0e376bdb5"
+          },
+          {
+            "path": "src/edit-recovery-fingerprint.js",
+            "gitBlob": "705fcf9063c9eed3c7f0d83e2f538e573aff6849"
+          },
+          {
+            "path": "src/edit-recovery-lifecycle.js",
+            "gitBlob": "ae30016defd6025926572ace5fbb08a28662b851"
+          },
+          {
+            "path": "src/edit-recovery-session.js",
+            "gitBlob": "8967bd523862e9f317ed3bb390714731a1f34871"
+          },
+          {
+            "path": "src/edit-recovery-store.js",
+            "gitBlob": "5de9fee146decbc3f341c306ee321be2c9490574"
+          },
+          {
+            "path": "src/edit-recovery-ui.js",
+            "gitBlob": "ee9be28296b037ade07209592336e2bca1ae666a"
+          },
+          {
+            "path": "src/edit-recovery-worker.js",
+            "gitBlob": "d1c8b399fe603a0f2c9cc6dbbeed81ff967bc202"
+          },
+          {
+            "path": "src/explorer-resize.css",
+            "gitBlob": "77e05f9755c077f7458680adc25dddb7f7e7e5fd"
+          },
+          {
+            "path": "src/explorer-resize.js",
+            "gitBlob": "be73a77af2dd0bf2f6c14c2c962af5154d4d900e"
+          },
+          {
+            "path": "src/export-report-ui.js",
+            "gitBlob": "274e3669d3c6c7d868f8f20cc1533105d78dd0a9"
+          },
+          {
+            "path": "src/export-report.js",
+            "gitBlob": "a781fb08db643a493238be4ee2b46d76d40f701a"
+          },
+          {
+            "path": "src/exported-model-ui.js",
+            "gitBlob": "b57065f78665a19546460ab4dbc460cf4cc190fb"
+          },
+          {
+            "path": "src/file-fingerprint.js",
+            "gitBlob": "e4e2b3022db89206e6cbfceb09a8160b837c04b0"
+          },
+          {
+            "path": "src/flatbuffer-writer.js",
+            "gitBlob": "0fecbc099ae48b4ef9e17325dd0c91a64ccdbf37"
+          },
+          {
+            "path": "src/hydrate.js",
+            "gitBlob": "bf32e202973bcecf7d6108461a69bbe98bfb6a66"
+          },
+          {
+            "path": "src/laptop.css",
+            "gitBlob": "8a67a22d9ecda568b09238aec705ed315fd38cca"
+          },
+          {
+            "path": "src/mlir-combined-graph.js",
+            "gitBlob": "d7f24cb87a6300ce9fa8653b4c1118c5e5c12d01"
+          },
+          {
+            "path": "src/mlir-connection-index.js",
+            "gitBlob": "4e2e8e004e695ba03e99141fbeb7c59263792f15"
+          },
+          {
+            "path": "src/mlir-connection-view.js",
+            "gitBlob": "97c9765c20462e62d43345caff9aabffe34af720"
+          },
+          {
+            "path": "src/mlir-dialect-contract.js",
+            "gitBlob": "b0fadac912de6fe2d978d78ea71f3d61fa0d5bf9"
+          },
+          {
+            "path": "src/mlir-dialect-registry.js",
+            "gitBlob": "3f64eda72d5113fdd33c3ca6f8bae3388e4181d1"
+          },
+          {
+            "path": "src/mlir-dialects.js",
+            "gitBlob": "b2db13d01bc25ab699155656a3a7181a65c66b7d"
+          },
+          {
+            "path": "src/mlir-engine.js",
+            "gitBlob": "c9c79f5df9bb28251885da57bf9002a3272d6ce8"
+          },
+          {
+            "path": "src/mlir-export-provenance.js",
+            "gitBlob": "dcb2ce5cdd6c2232731fc5ddd5c90b5f9e37543e"
+          },
+          {
+            "path": "src/mlir-export.js",
+            "gitBlob": "a4342f414323cefbe2105f819fc519977773aedc"
+          },
+          {
+            "path": "src/mlir-file.js",
+            "gitBlob": "cec48572ccb93552bf86c1c42d4c66fa6ab9259e"
+          },
+          {
+            "path": "src/mlir-ir.js",
+            "gitBlob": "f50be08e9282577ad054e535808f24dc1efbe0f8"
+          },
+          {
+            "path": "src/mlir-model-edit.js",
+            "gitBlob": "3dd2b7c0a5b8c56030d82dfbba76215700b94fa8"
+          },
+          {
+            "path": "src/mlir-pattern-edit.js",
+            "gitBlob": "4bdd7e88407234886759ebc5de5891038ffc401e"
+          },
+          {
+            "path": "src/mlir-pattern-editor.js",
+            "gitBlob": "82dfcae991dc794eba13efcd8fbb0a6a7ee17e65"
+          },
+          {
+            "path": "src/mlir-pattern-projection.js",
+            "gitBlob": "feeba58711115a3da5d846af74c42d7b5d3ea635"
+          },
+          {
+            "path": "src/mlir-pattern-spec.js",
+            "gitBlob": "97b808518b0d9248bff1240d8cbb8c27d938dc1b"
+          },
+          {
+            "path": "src/mlir-pattern.js",
+            "gitBlob": "81ed47e5d24004002ce5d2bbd5cbfbcd86acabc8"
+          },
+          {
+            "path": "src/mlir-slice-graph.js",
+            "gitBlob": "9d7f5a9933556a3041787aee5c18f9ccf1edb678"
+          },
+          {
+            "path": "src/mlir-slice.js",
+            "gitBlob": "2a3f0d3fdd87167fd643cb5dc95d94ccc41d14f8"
+          },
+          {
+            "path": "src/mlir-types.js",
+            "gitBlob": "67cd259e1485510032da7555027419f032dce35b"
+          },
+          {
+            "path": "src/mlir-validate.js",
+            "gitBlob": "72d8b674a74d22a8da03bf220d410caa848fea2d"
+          },
+          {
+            "path": "src/mobile.css",
+            "gitBlob": "6944e6c29a5b6524ca0f5c0ceb7d2bc2dc51d91d"
+          },
+          {
+            "path": "src/model-adapters.js",
+            "gitBlob": "e11e11f9ff39f9438e00d71beb26f33d6eeb5ffb"
+          },
+          {
+            "path": "src/model-edit-draft.js",
+            "gitBlob": "6d9a33c0e1f292ca97f70e361f276b2bd77635cc"
+          },
+          {
+            "path": "src/model-edit-new-ops-ui.js",
+            "gitBlob": "f7c17f687ea293596d7cb7490db8844145810494"
+          },
+          {
+            "path": "src/model-edit-policy.js",
+            "gitBlob": "49dffd42e04dfd27a7cccf63b419d4866195db46"
+          },
+          {
+            "path": "src/model-edit-report.js",
+            "gitBlob": "531eae94fd9008431839b0d0d1127bcb2a582e4c"
+          },
+          {
+            "path": "src/model-edit-session.js",
+            "gitBlob": "db161cc17367fa171cd39b3ec9396bb520380971"
+          },
+          {
+            "path": "src/model-edit-ui.js",
+            "gitBlob": "798b55e3ba74d0610eda43c705246c235c58587b"
+          },
+          {
+            "path": "src/model-edit-workspace-ui.js",
+            "gitBlob": "1cda22bc19b25c985464c907604b396cd82d3f4c"
+          },
+          {
+            "path": "src/model-edit-workspace.css",
+            "gitBlob": "bd1ac504d5c2045382e367509d7627bdb8ecf6d1"
+          },
+          {
+            "path": "src/model-edit-workspace.js",
+            "gitBlob": "631348ff26c78c82e2f03e46ed7ab7dd803c0380"
+          },
+          {
+            "path": "src/model-engine.js",
+            "gitBlob": "13f9e3c0e8b8ff526b04ec2fa6e37cbad8d623ea"
+          },
+          {
+            "path": "src/model-formats.js",
+            "gitBlob": "8dd3f230e050fd17abc41eadbdada74a9f05f9b0"
+          },
+          {
+            "path": "src/model-operation-edit.js",
+            "gitBlob": "07d4f74cbaaf859bc2cab1cf8ccf8c0ed7e4399a"
+          },
+          {
+            "path": "src/model-tabs.css",
+            "gitBlob": "64254ed43cfbffdf3e3c3830f9f8e21904d21847"
+          },
+          {
+            "path": "src/model-tabs.js",
+            "gitBlob": "dd676c8c5097bb088c37e48af569c0810b2782d6"
+          },
+          {
+            "path": "src/model-visibility.css",
+            "gitBlob": "2803f1e58d71bb5a7151353a8c24dfabd3dc823f"
+          },
+          {
+            "path": "src/model-worker.js",
+            "gitBlob": "cba31747ac38a5b84d91caa4fa9238a05a387ff9"
+          },
+          {
+            "path": "src/overview-canvas.css",
+            "gitBlob": "4534ac855da360e69e2cfa4a7e9ef9404309f548"
+          },
+          {
+            "path": "src/overview-canvas.js",
+            "gitBlob": "b1edd26707808a477fbccf0b1282c6f9886d735f"
+          },
+          {
+            "path": "src/overview-layout.js",
+            "gitBlob": "f1edd5b3e6914469f16d7dda903ca2fe9be32c5a"
+          },
+          {
+            "path": "src/pattern-condition-editor.js",
+            "gitBlob": "ba6b35ebac5de6567b67bc203eb1d80ca02c91e2"
+          },
+          {
+            "path": "src/pattern-conditions.js",
+            "gitBlob": "50880976e1a0d394e3c9eb529e7d98fa7185a6f4"
+          },
+          {
+            "path": "src/pattern-fold.js",
+            "gitBlob": "e6b68fce96857f09fc420e62d72cab0e0fd15b16"
+          },
+          {
+            "path": "src/pattern-library.js",
+            "gitBlob": "6f91df06eafef5f17caa4fba27533bb46be75680"
+          },
+          {
+            "path": "src/pattern-overview.js",
+            "gitBlob": "5de99f245ac8e7350e4fdc3a69f659c37f416c19"
+          },
+          {
+            "path": "src/pattern-selection.js",
+            "gitBlob": "c3730f09e351be17d5f87df383b10b8b256d62a9"
+          },
+          {
+            "path": "src/pattern-store.js",
+            "gitBlob": "df29b0b8d9b7e288c5d9d06dc72e31a3768b051f"
+          },
+          {
+            "path": "src/pattern-utils.js",
+            "gitBlob": "7964874c737bc9d2e5638d43a1d1d9ab628c1303"
+          },
+          {
+            "path": "src/pattern-workspace.css",
+            "gitBlob": "6d3b8ab017b185609385a01df494ad9f3f8ab87a"
+          },
+          {
+            "path": "src/range-stream.js",
+            "gitBlob": "951af0f0dc91fdc4be2d4e6e5943112f90ba7bf0"
+          },
+          {
+            "path": "src/rectangle-selection.js",
+            "gitBlob": "b41245e2dbeba7f7fdc36e0458b89696ec3e34c2"
+          },
+          {
+            "path": "src/release-info.js",
+            "gitBlob": "5c9e4a9f8cc863341262d2da7dc9f6db455cc317"
+          },
+          {
+            "path": "src/release.css",
+            "gitBlob": "d14bc108f905d812dccd5c168555f5acda5664a7"
+          },
+          {
+            "path": "src/resize-in-frame.js",
+            "gitBlob": "d8bdc3abddf9b4bd6cca2e694e9e63319599ed40"
+          },
+          {
+            "path": "src/shell.html",
+            "gitBlob": "f42215d21b5d80649d73568a1996e9e2d5481bfb"
+          },
+          {
+            "path": "src/subgraph-pattern.js",
+            "gitBlob": "4e5eb399a22da15f5533d0e6fd7e381da8500fae"
+          },
+          {
+            "path": "src/svg-viewport.js",
+            "gitBlob": "81157dea91cc19d8e74d93b4c42b93c355c87c99"
+          },
+          {
+            "path": "src/tensor-random.js",
+            "gitBlob": "ed3fb4cb68b86a16a239be8653dd0325c04c07ac"
+          },
+          {
+            "path": "src/tflite-export.js",
+            "gitBlob": "6c67fc102bd9e99da0389cb65f7b0136acc29c28"
+          },
+          {
+            "path": "src/tflite-model-edit.js",
+            "gitBlob": "05a50924ea96938484e72a8b2c82bb715e589c50"
+          },
+          {
+            "path": "src/tflite-new-ops.js",
+            "gitBlob": "5eff7853488dfe79b239648099fb0bdf3ec0baee"
+          },
+          {
+            "path": "src/tflite-op-options.js",
+            "gitBlob": "f33b6cb6a0c1963258abea4457e86afb27850ae6"
+          },
+          {
+            "path": "src/tflite-runtime-archive.js",
+            "gitBlob": "7e4811539e4fa6fc2810fa136d6fbca70aab374c"
+          },
+          {
+            "path": "src/tflite-runtime-client.js",
+            "gitBlob": "04ae5278eb46b8c9515b820b3a713501957a8bd9"
+          },
+          {
+            "path": "src/tflite-runtime-execute.js",
+            "gitBlob": "8983e0f11941638dca7effba92e47ce8844c9f3f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs-ui.js",
+            "gitBlob": "fdab7d062f4d91b3c17d0734d10079edffeaba5f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs.js",
+            "gitBlob": "da3056ca9b34e7e6689b5317605f2ace0c5f5f99"
+          },
+          {
+            "path": "src/tflite-runtime-policy.js",
+            "gitBlob": "0415c4cce0e371799ebb2802b37e9684c95615b7"
+          },
+          {
+            "path": "src/tflite-runtime-report.js",
+            "gitBlob": "b3d16ec2d47fa5f7d2e3fa79d6c0d568b305e4dd"
+          },
+          {
+            "path": "src/tflite-runtime-worker.js",
+            "gitBlob": "6b784d7b35903c864518e86e7565bf168c3ab6c7"
+          },
+          {
+            "path": "src/tflite-shape-inference.js",
+            "gitBlob": "160864a01ef970d3fefb288bf8a74c8e24a1919c"
+          },
+          {
+            "path": "src/typography.css",
+            "gitBlob": "fed5bf28628c2401c3529c274f8c6f62cbf717f6"
+          },
+          {
+            "path": "src/workspace-drafts.js",
+            "gitBlob": "d265d061300112b244b2bc166c7202a4713c0f7c"
+          },
+          {
+            "path": "src/workspace-history.js",
+            "gitBlob": "972a72bb11ded16bf9380168f37def135dd58837"
+          },
+          {
+            "path": "src/workspace-session-ui.js",
+            "gitBlob": "5b95b494e21c319b9bd312569d8809d138de1198"
+          },
+          {
+            "path": "src/workspace-session.js",
+            "gitBlob": "7f6112d43ddf48feead034bdf7cea0cfb3f25d04"
+          },
+          {
+            "path": "src/workspace.css",
+            "gitBlob": "59b19e76f9e21d361d386f152b385bf0db1d6a40"
+          },
+          {
+            "path": "src/workspace.js",
+            "gitBlob": "3cf3b9bdf248576e4429127421324e317bfea2d1"
+          },
+          {
+            "path": "test/browser/lifecycle-audit.mjs",
+            "gitBlob": "7a6aaf4a2aae09644952d072f001e29f3e3926fe"
+          },
+          {
+            "path": "test/browser/lifecycle-policy.mjs",
+            "gitBlob": "c28adc030be6a4cca37f53ed65f56f9431466e70"
+          },
+          {
+            "path": "test/browser/lifecycle-soak-policy.mjs",
+            "gitBlob": "a27c6c20587614c4d9a1b90dd850af0afe4bd1c7"
+          },
+          {
+            "path": "test/browser/model-lifecycle.mjs",
+            "gitBlob": "800298272324908e13367d7acafeec295e0b5953"
+          },
+          {
+            "path": "test/browser/owned-processes.mjs",
+            "gitBlob": "affbe11f4e11c5e6fe7979ee1e9402432f5fea27"
+          },
+          {
+            "path": "test/browser/soak-recovery-preflight.mjs",
+            "gitBlob": "b110a11301fa4be959590bc928d996c3ed2d34f7"
+          },
+          {
+            "path": "test/browser/soak-recovery.mjs",
+            "gitBlob": "eec803052c1f61bdb80886df7ddbdd29c8419102"
+          },
+          {
+            "path": "test/browser/worker-heap.mjs",
+            "gitBlob": "7311f06cb8bbe2bba0dee5fc629d2e8c6e14a6a2"
+          },
+          {
+            "path": "test/custom-fixture.mjs",
+            "gitBlob": "bef151e76b72de77fb7dbb6fd53dadf19733cb86"
+          },
+          {
+            "path": "test/fixture.mjs",
+            "gitBlob": "f2b62ba3f4dfe9c420d7ad009f61cbaef66063b6"
+          },
+          {
+            "path": "test/mlir-fixture.mjs",
+            "gitBlob": "43ee657e5c4b910d8106a3e7bf67290907ae65cf"
+          },
+          {
+            "path": "test/physical-tflite-fixture.mjs",
+            "gitBlob": "ff9470bb9a2c8808440dd61200af8d118c9b1b7c"
+          },
+          {
+            "path": "vendor/litert/2.6.0/LICENSE",
+            "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+          },
+          {
+            "path": "vendor/litert/2.6.0/NOTICE.txt",
+            "gitBlob": "05a4a7704fa2e5e6a5d94873343c85bcf61d48a5"
+          },
+          {
+            "path": "vendor/litert/2.6.0/core.js",
+            "gitBlob": "a0cf4e4886969c625fa3a7759da8c18e472ed1cc"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+            "gitBlob": "f4a95a33cbbc458f90b4dc5296df1e6d834d43ec"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+            "gitBlob": "ae0217d011d041d333eeee6e3adcf918815295b8"
+          },
+          {
+            "path": "vendor/litert/2.6.0/provenance.json",
+            "gitBlob": "56a5641c311a742726861b6ac5364670df6b6a42"
+          },
+          {
+            "path": "vendor/litert/2.6.0/wasm-utils.js",
+            "gitBlob": "b9e6039ba5ef25c4e7a75c4ab0ee71fa6f1adb45"
+          },
+          {
+            "path": "vendor/netron/LICENSE",
+            "gitBlob": "c1d7e2e3af73c5b6a3e0fbad011afee3d3509f05"
+          },
+          {
+            "path": "vendor/netron/__init__.py",
+            "gitBlob": "8f5a6752c151e69be0eb64a5a6bf5f8518a1cf55"
+          },
+          {
+            "path": "vendor/netron/acuity-metadata.json",
+            "gitBlob": "fb138f1e4505542f51eaf993bdc6a1665789bb77"
+          },
+          {
+            "path": "vendor/netron/acuity.js",
+            "gitBlob": "483c75b2625975ba7ce389244b66cf6b95b24333"
+          },
+          {
+            "path": "vendor/netron/app.js",
+            "gitBlob": "79e181bfee2773ca9d87c93e368b6b041a252ef3"
+          },
+          {
+            "path": "vendor/netron/armnn-metadata.json",
+            "gitBlob": "1538afa5c3e3934d9a32af58d76076447946cb17"
+          },
+          {
+            "path": "vendor/netron/armnn-schema.js",
+            "gitBlob": "26f65cc37957acc7f01bd73db9c83681fec7850b"
+          },
+          {
+            "path": "vendor/netron/armnn.js",
+            "gitBlob": "8e08bf80503c0f18354ce840e90d3df0e8f820a9"
+          },
+          {
+            "path": "vendor/netron/barracuda.js",
+            "gitBlob": "e0548742b0030966d700f64a5865abf8aa7a0217"
+          },
+          {
+            "path": "vendor/netron/base.js",
+            "gitBlob": "63191c9a4710e169dd9d905bd72866f14af954f7"
+          },
+          {
+            "path": "vendor/netron/bigdl-metadata.json",
+            "gitBlob": "d42b79c7e68b2c69adb9fa41ab79a944f2ca9ccc"
+          },
+          {
+            "path": "vendor/netron/bigdl-proto.js",
+            "gitBlob": "6569289ab396ad59928f7c7207cfa68d4e3c82d9"
+          },
+          {
+            "path": "vendor/netron/bigdl.js",
+            "gitBlob": "1569d03009e725a36a6d1352f18c33f6c7baab92"
+          },
+          {
+            "path": "vendor/netron/browser.js",
+            "gitBlob": "93cbfdf9da8655f6d9980420e5f3c85f9009fa55"
+          },
+          {
+            "path": "vendor/netron/caffe-metadata.json",
+            "gitBlob": "3d7c1927eec68dffde58d2302b94d599e1734365"
+          },
+          {
+            "path": "vendor/netron/caffe-proto.js",
+            "gitBlob": "9b8d99fe43e0e1d1a9a50c836afe5d1eac934376"
+          },
+          {
+            "path": "vendor/netron/caffe.js",
+            "gitBlob": "7d89f1a47f2a8f71391a45961f1949ec920ff7b0"
+          },
+          {
+            "path": "vendor/netron/caffe2-metadata.json",
+            "gitBlob": "47b29c825f338176bef2a7822e1805a582e6b028"
+          },
+          {
+            "path": "vendor/netron/caffe2-proto.js",
+            "gitBlob": "ebfc04413acf31e4330b32e591cfd2caa3fa36a7"
+          },
+          {
+            "path": "vendor/netron/caffe2.js",
+            "gitBlob": "6e3a2089690a1db14d0019a90461168f0307a6b1"
+          },
+          {
+            "path": "vendor/netron/catboost-schema.js",
+            "gitBlob": "8335914a1662e6aca80086f52216e7f970945b9d"
+          },
+          {
+            "path": "vendor/netron/catboost.js",
+            "gitBlob": "e058f69c3efdfa6e8eb34d95ef34aa0e32bcbe78"
+          },
+          {
+            "path": "vendor/netron/circle-metadata.json",
+            "gitBlob": "76e82c6ba1d9c381bb8137ac4e1cfac2a50321f0"
+          },
+          {
+            "path": "vendor/netron/circle-schema.js",
+            "gitBlob": "397e8928b820572ad36b1daa8e1a94d1bbc48547"
+          },
+          {
+            "path": "vendor/netron/circle.js",
+            "gitBlob": "9b7b05da70b5e656a622573bf04e9db70a75bb19"
+          },
+          {
+            "path": "vendor/netron/cntk-metadata.json",
+            "gitBlob": "dbb77ab5ebd0659256398c80a3b8447047ce5bb7"
+          },
+          {
+            "path": "vendor/netron/cntk-proto.js",
+            "gitBlob": "4912e831ef7ac179663d4617f8c686e87a4d6055"
+          },
+          {
+            "path": "vendor/netron/cntk.js",
+            "gitBlob": "d2e1a985ad94148def420d7cfee9956473ae35b0"
+          },
+          {
+            "path": "vendor/netron/coreml-metadata.json",
+            "gitBlob": "1a5ff686f034b38b34af06265a3bc24c99a90e5a"
+          },
+          {
+            "path": "vendor/netron/coreml-proto.js",
+            "gitBlob": "7fb2256a7d3c20f44576a1cc71db5945a104a069"
+          },
+          {
+            "path": "vendor/netron/coreml.js",
+            "gitBlob": "7a4813b4718975150edcb7b0d1ce0dd45d3a7ed3"
+          },
+          {
+            "path": "vendor/netron/dagre.js",
+            "gitBlob": "2c3b578b19ec9ad3a1d6a3c34d987613e0f3c9b9"
+          },
+          {
+            "path": "vendor/netron/darknet-metadata.json",
+            "gitBlob": "c5b171bfaa0d0a22575c66aa3c620b0d52c99263"
+          },
+          {
+            "path": "vendor/netron/darknet.js",
+            "gitBlob": "51690f668a35f8e89c43b60d49ed1ca857407d6e"
+          },
+          {
+            "path": "vendor/netron/desktop.mjs",
+            "gitBlob": "1da044b49d20620e189c438cd8baeb59417be0d3"
+          },
+          {
+            "path": "vendor/netron/dl4j-metadata.json",
+            "gitBlob": "4965893a0dfc4ef82a0e085e4f75fe054c83315e"
+          },
+          {
+            "path": "vendor/netron/dl4j.js",
+            "gitBlob": "24a4a83862434a1570e005809b4cc6ba92fbe362"
+          },
+          {
+            "path": "vendor/netron/dlc-metadata.json",
+            "gitBlob": "9cb6471dcd4406f50fdd441120950156182a8292"
+          },
+          {
+            "path": "vendor/netron/dlc-schema.js",
+            "gitBlob": "3b66ae11ee734d0d06b985291738c1d6b560040b"
+          },
+          {
+            "path": "vendor/netron/dlc.js",
+            "gitBlob": "2c0a4d4a6426bd177ed1de00e7432adac935be57"
+          },
+          {
+            "path": "vendor/netron/dnn-metadata.json",
+            "gitBlob": "2e0f4b2a434f049bd3b8f376d72e0109e9e397c6"
+          },
+          {
+            "path": "vendor/netron/dnn-proto.js",
+            "gitBlob": "d44888bfd8d1040ddd52b719e621088fd6993d14"
+          },
+          {
+            "path": "vendor/netron/dnn.js",
+            "gitBlob": "0dd94238e75da6265c234b59166dcaf6a2e4e672"
+          },
+          {
+            "path": "vendor/netron/dot.js",
+            "gitBlob": "5141f77d1e82b596b961ec74452c02972d194565"
+          },
+          {
+            "path": "vendor/netron/espdl-metadata.json",
+            "gitBlob": "01ad405719c20224407885f17afb91e1d5a8cd30"
+          },
+          {
+            "path": "vendor/netron/espdl-schema.js",
+            "gitBlob": "0447faea875a7d5f92a5d69afd56ed85287d8b5f"
+          },
+          {
+            "path": "vendor/netron/espdl.js",
+            "gitBlob": "61608542f5f66521326d0f4d17a8bb4f7e7204c1"
+          },
+          {
+            "path": "vendor/netron/espresso-metadata.json",
+            "gitBlob": "f4c718388a64dacae74f2093e1b93a84e9f93c62"
+          },
+          {
+            "path": "vendor/netron/espresso.js",
+            "gitBlob": "fef2a14382d864ede99ffe6ee04e87f211e9e385"
+          },
+          {
+            "path": "vendor/netron/executorch-schema.js",
+            "gitBlob": "a822a3e47c108162efef4f48addab69cc84d636a"
+          },
+          {
+            "path": "vendor/netron/executorch.js",
+            "gitBlob": "c300a79dc082dff9ee6187e3a0bdd0e59233833c"
+          },
+          {
+            "path": "vendor/netron/favicon.ico",
+            "gitBlob": "c30ac5a9b11e3ab802e35348aa94adb004a5b9ea"
+          },
+          {
+            "path": "vendor/netron/flatbuffers.js",
+            "gitBlob": "dabdb7804b227771c4e2f6639f57a4b20ceaf46e"
+          },
+          {
+            "path": "vendor/netron/flax.js",
+            "gitBlob": "53daa8f1ee46bf3a02fc69f6862051307eb0f111"
+          },
+          {
+            "path": "vendor/netron/flexbuffers.js",
+            "gitBlob": "fdbee2659412e26e8cdabfc9d970ae4fd99a2481"
+          },
+          {
+            "path": "vendor/netron/flux-metadata.json",
+            "gitBlob": "32960f8ced39dd5eade0f15d41e275b2dc8d4c70"
+          },
+          {
+            "path": "vendor/netron/flux.js",
+            "gitBlob": "c9dcc650ef5ee9567204bc638f5f8652916a6b19"
+          },
+          {
+            "path": "vendor/netron/gguf-metadata.json",
+            "gitBlob": "52fdd4a18c0c86fd90b41826f0a3339e4a8debb2"
+          },
+          {
+            "path": "vendor/netron/gguf.js",
+            "gitBlob": "6c6903501d4ac2a5270dd86d70c4d70e0d7a5ccf"
+          },
+          {
+            "path": "vendor/netron/grapher.css",
+            "gitBlob": "b0d233886e3e5c63ddd293a9596f14328ab4e111"
+          },
+          {
+            "path": "vendor/netron/grapher.js",
+            "gitBlob": "bea6d7c772406418e87b995d120a89a6a273e7bc"
+          },
+          {
+            "path": "vendor/netron/hailo-metadata.json",
+            "gitBlob": "05752d7b481c077e625a61cd72e16cdd7fa1c2f7"
+          },
+          {
+            "path": "vendor/netron/hailo.js",
+            "gitBlob": "080c402594440556d330f0d4126989095bfad6ce"
+          },
+          {
+            "path": "vendor/netron/hdf5.js",
+            "gitBlob": "d6fe3757d8c18361ad2ae344e3b5a3826af20573"
+          },
+          {
+            "path": "vendor/netron/hickle.js",
+            "gitBlob": "0284e0af43316625b8600abe9ad9e46a624ad5ce"
+          },
+          {
+            "path": "vendor/netron/icon.png",
+            "gitBlob": "75a1a0a6a04333b4aa936e5c76380996124e7045"
+          },
+          {
+            "path": "vendor/netron/imgdnn.js",
+            "gitBlob": "ddf0b2a80aa39f6e6670a89221a7df08625723de"
+          },
+          {
+            "path": "vendor/netron/index.html",
+            "gitBlob": "7cf21e6d576cab7e9c6e6c530d3c489d38db144c"
+          },
+          {
+            "path": "vendor/netron/index.js",
+            "gitBlob": "49066d6710224563f98a68e2b50778388191ec96"
+          },
+          {
+            "path": "vendor/netron/jax-schema.js",
+            "gitBlob": "e5d1606235b3fc9adbedd48a4a0b37b2d444aa49"
+          },
+          {
+            "path": "vendor/netron/jax.js",
+            "gitBlob": "707bc31050d70d97cb2b7b2eeea71d77e926f589"
+          },
+          {
+            "path": "vendor/netron/json.js",
+            "gitBlob": "3e7f831bf5442947561a75e0d86ff05ef465f992"
+          },
+          {
+            "path": "vendor/netron/kann-metadata.json",
+            "gitBlob": "ba202ab0f23450c014d076e7ef75ecc0f578e173"
+          },
+          {
+            "path": "vendor/netron/kann-schema.js",
+            "gitBlob": "49d83c42cdabc3c2433383f39ca11f21978a1159"
+          },
+          {
+            "path": "vendor/netron/kann.js",
+            "gitBlob": "730d61d01bf72b897bd961addceadd8fca50cea1"
+          },
+          {
+            "path": "vendor/netron/keras-metadata.json",
+            "gitBlob": "c771639dc33c4dc4ccfb097739a6f8d1f73bf5b2"
+          },
+          {
+            "path": "vendor/netron/keras-proto.js",
+            "gitBlob": "c76048607a2b5e7bacc500c2b0c4e781af581d87"
+          },
+          {
+            "path": "vendor/netron/keras.js",
+            "gitBlob": "86e80491e9477faae63d4a527ba7195c175ed55c"
+          },
+          {
+            "path": "vendor/netron/kmodel.js",
+            "gitBlob": "ae561f532f854357fdf7e77283289e3a74cc7cfd"
+          },
+          {
+            "path": "vendor/netron/lasagne-metadata.json",
+            "gitBlob": "b3f40a4cea66496b685ed7de3cad1a89e48bbc2e"
+          },
+          {
+            "path": "vendor/netron/lasagne.js",
+            "gitBlob": "5b9f087033718cb534e5f805d040ec89b9a25dad"
+          },
+          {
+            "path": "vendor/netron/lightgbm.js",
+            "gitBlob": "c3733f376630e70b69da1c340be0a5f635ddddbd"
+          },
+          {
+            "path": "vendor/netron/litertlm-proto.js",
+            "gitBlob": "7ea2a645bda764eff8bd3f23b0ccee128d81a9ea"
+          },
+          {
+            "path": "vendor/netron/litertlm-schema.js",
+            "gitBlob": "957ef9f8a60c148c0600ece2385556e375312874"
+          },
+          {
+            "path": "vendor/netron/litertlm.js",
+            "gitBlob": "1ec8ee8fff9d13e72e992351ff0f564d541d0991"
+          },
+          {
+            "path": "vendor/netron/mediapipe.js",
+            "gitBlob": "c3cc136a210257e404e229fb6d853e9a15c6cd46"
+          },
+          {
+            "path": "vendor/netron/megengine-metadata.json",
+            "gitBlob": "3fb7dae1504eb717648d0f7714fa6cc2feda17fe"
+          },
+          {
+            "path": "vendor/netron/megengine-schema.js",
+            "gitBlob": "dbc17de6756b210469fc176de0e71babb85244f8"
+          },
+          {
+            "path": "vendor/netron/megengine.js",
+            "gitBlob": "e6fddd8fa7a4bbd9a3ff0811e509d941788efcee"
+          },
+          {
+            "path": "vendor/netron/message.js",
+            "gitBlob": "fd478ad13644d74fd10b111cf6b36d2c2a7790cb"
+          },
+          {
+            "path": "vendor/netron/mindir-metadata.json",
+            "gitBlob": "a8f4b2c60a29d281ccd84790b56b94710ca01d12"
+          },
+          {
+            "path": "vendor/netron/mindir-proto.js",
+            "gitBlob": "6b3ca24a2269ec499726f2503ead12d2cc8160d8"
+          },
+          {
+            "path": "vendor/netron/mindir.js",
+            "gitBlob": "6cee79b5f78eed994ee7cd901e4468bee3e64378"
+          },
+          {
+            "path": "vendor/netron/mlir-metadata.json",
+            "gitBlob": "29f52f62fe19ccbc2889f9b178e5e6c41b459ea3"
+          },
+          {
+            "path": "vendor/netron/mlir.js",
+            "gitBlob": "6cb85248df090b0f94f46c1da8893e3cdc3ea3a5"
+          },
+          {
+            "path": "vendor/netron/mlnet-metadata.json",
+            "gitBlob": "005c177d076fa4513f2c09675f0348c22d25f3b2"
+          },
+          {
+            "path": "vendor/netron/mlnet.js",
+            "gitBlob": "4cf830a96291b8ac001ae8bd98b11110adca038e"
+          },
+          {
+            "path": "vendor/netron/mnn-metadata.json",
+            "gitBlob": "39c3f44f4b23132b020877e0f510119b99b623aa"
+          },
+          {
+            "path": "vendor/netron/mnn-schema.js",
+            "gitBlob": "2d769c788b67d502a7a131c0ccd6487aacb80c13"
+          },
+          {
+            "path": "vendor/netron/mnn.js",
+            "gitBlob": "92700e3b0b3becfb070c7b99bc929d2f8dc65fad"
+          },
+          {
+            "path": "vendor/netron/mslite-metadata.json",
+            "gitBlob": "38bb81b60bc44ebc2e15db3cb355ef47d5645fdd"
+          },
+          {
+            "path": "vendor/netron/mslite-schema.js",
+            "gitBlob": "65434cc902ff237fb0d343f01ebc9b4739b268ea"
+          },
+          {
+            "path": "vendor/netron/mslite.js",
+            "gitBlob": "824f2f31f1a0e79c294f43fe39f751038ca9fd22"
+          },
+          {
+            "path": "vendor/netron/mxnet-metadata.json",
+            "gitBlob": "8d271c9e75635a13606e6a8f7535005559d87059"
+          },
+          {
+            "path": "vendor/netron/mxnet.js",
+            "gitBlob": "d2c49a1019e103410adba94fbcf8c1cc07d1e9d3"
+          },
+          {
+            "path": "vendor/netron/ncnn-metadata.json",
+            "gitBlob": "30621c3db3609a89f40474222e7fb259189b0272"
+          },
+          {
+            "path": "vendor/netron/ncnn.js",
+            "gitBlob": "a124ea260d8c7dd5f810679ee972ca5686746913"
+          },
+          {
+            "path": "vendor/netron/nnabla-metadata.json",
+            "gitBlob": "7a2ff8f5bf6716919431597737e511e5ebe808e3"
+          },
+          {
+            "path": "vendor/netron/nnabla-proto.js",
+            "gitBlob": "b790d52c6b3f182080dec05060a15ee5f8845ae1"
+          },
+          {
+            "path": "vendor/netron/nnabla.js",
+            "gitBlob": "8d2dab05e95abd291f9d0df24d987977b50c76f8"
+          },
+          {
+            "path": "vendor/netron/nnc.js",
+            "gitBlob": "0b84b640e3c568018e858b2014f54b44e5fed918"
+          },
+          {
+            "path": "vendor/netron/nnef.js",
+            "gitBlob": "acc39de0018b9fac9ef24ea562060781ca893e94"
+          },
+          {
+            "path": "vendor/netron/node.js",
+            "gitBlob": "fe64172b58c92cd2d5823f7559639f523ac32008"
+          },
+          {
+            "path": "vendor/netron/numpy.js",
+            "gitBlob": "839d614f9cfdff6ebab316a14a6c29b269755537"
+          },
+          {
+            "path": "vendor/netron/om-metadata.json",
+            "gitBlob": "e458ec146beac052a25e50ef8e0c6179cf8bfdf6"
+          },
+          {
+            "path": "vendor/netron/om-proto.js",
+            "gitBlob": "66415d675032c4802e237cbe479c85546b0946de"
+          },
+          {
+            "path": "vendor/netron/om.js",
+            "gitBlob": "4f4a41ccaa6fd4a206e057297d83d1e72eae3f91"
+          },
+          {
+            "path": "vendor/netron/onednn-metadata.json",
+            "gitBlob": "f204b0b0c6d9e5db1703df9212c6bdcfe8281dc9"
+          },
+          {
+            "path": "vendor/netron/onednn.js",
+            "gitBlob": "f1fad7e8589bd5009a6b4c978d680c20fed16aa9"
+          },
+          {
+            "path": "vendor/netron/onnx-metadata.json",
+            "gitBlob": "6748d98e5f47445aa7b982a773b1d5692a478e40"
+          },
+          {
+            "path": "vendor/netron/onnx-proto.js",
+            "gitBlob": "feeab4484849b4fb2606c228449ad0ba1fd3ea98"
+          },
+          {
+            "path": "vendor/netron/onnx-schema.js",
+            "gitBlob": "cc13009998d758119f1997140f4781ae46df64cf"
+          },
+          {
+            "path": "vendor/netron/onnx.js",
+            "gitBlob": "54707b5c1ae75b210576a258a860532b410c9c35"
+          },
+          {
+            "path": "vendor/netron/onnx.py",
+            "gitBlob": "90d4a93f7a83e5aca290e42be664162de684c62c"
+          },
+          {
+            "path": "vendor/netron/openvino-metadata.json",
+            "gitBlob": "cdddbe28eb3b861b6c138f630d3e7d2bb601743f"
+          },
+          {
+            "path": "vendor/netron/openvino.js",
+            "gitBlob": "dcfe2922321adc0294aa2d1a9eab4d3696b5af0e"
+          },
+          {
+            "path": "vendor/netron/paddle-metadata.json",
+            "gitBlob": "65b297fdd0f565a060fc5a54dc077dd51f486f27"
+          },
+          {
+            "path": "vendor/netron/paddle-proto.js",
+            "gitBlob": "f101d165da22a3ead3ba864f77c88d0a00894759"
+          },
+          {
+            "path": "vendor/netron/paddle-schema.js",
+            "gitBlob": "858ca39692155fbccc1b4501e1a15e91f0856a6b"
+          },
+          {
+            "path": "vendor/netron/paddle.js",
+            "gitBlob": "2f0dbce2730cabdca788aba5bf32f693cf4be6d5"
+          },
+          {
+            "path": "vendor/netron/pickle.js",
+            "gitBlob": "90b44d539c750544e04011a7f75d43ef20b6f9b4"
+          },
+          {
+            "path": "vendor/netron/protobuf.js",
+            "gitBlob": "ec0637e347619f5ea204aa43e201a20a17df7c4c"
+          },
+          {
+            "path": "vendor/netron/python.js",
+            "gitBlob": "cfeca8e2e0a869af66ace715b7354090f1059ed7"
+          },
+          {
+            "path": "vendor/netron/pytorch-metadata.json",
+            "gitBlob": "034cbbdabc1c2aff3952b04da47ca7e55c872c73"
+          },
+          {
+            "path": "vendor/netron/pytorch-proto.js",
+            "gitBlob": "594d23d2542c4c3350fa58dbf3345de80be46fc8"
+          },
+          {
+            "path": "vendor/netron/pytorch-schema.js",
+            "gitBlob": "8aab3a468490eb15341b41c6854f2b2ef4bab483"
+          },
+          {
+            "path": "vendor/netron/pytorch.js",
+            "gitBlob": "5fecfc256574f5fda1d9d9264a2cd25416d88682"
+          },
+          {
+            "path": "vendor/netron/pytorch.py",
+            "gitBlob": "38a9ee55496a46c29a94e510ccb76dc02b229554"
+          },
+          {
+            "path": "vendor/netron/qnn-metadata.json",
+            "gitBlob": "25f1145f5f89f3f9e6567da6ab3e154f9ead5f53"
+          },
+          {
+            "path": "vendor/netron/qnn.js",
+            "gitBlob": "385e49952f682a32a02e7506be96fc49dec18787"
+          },
+          {
+            "path": "vendor/netron/rknn-metadata.json",
+            "gitBlob": "d1c47976df3707993fab081e452b61684f87a8cb"
+          },
+          {
+            "path": "vendor/netron/rknn-schema.js",
+            "gitBlob": "4c297bf4f1bbc06323484a0f7d7307b87130954e"
+          },
+          {
+            "path": "vendor/netron/rknn.js",
+            "gitBlob": "e4b693f5e0cfc153555fa7f85ac88dd6acfc0bc6"
+          },
+          {
+            "path": "vendor/netron/safetensors.js",
+            "gitBlob": "ba0eccfe804d482e33b721c47e69050d49690cc2"
+          },
+          {
+            "path": "vendor/netron/sentencepiece-proto.js",
+            "gitBlob": "695eff958c81dde796abae7b5127c1286746f15b"
+          },
+          {
+            "path": "vendor/netron/sentencepiece.js",
+            "gitBlob": "558560c30d7a3019bd78f3cdd9466f1a952242df"
+          },
+          {
+            "path": "vendor/netron/server.py",
+            "gitBlob": "d4409bbbd30bb91f9fb4477dd1a60855740462fd"
+          },
+          {
+            "path": "vendor/netron/sklearn-metadata.json",
+            "gitBlob": "4166b19ecd7e24aa64d6f602663630dd039228cd"
+          },
+          {
+            "path": "vendor/netron/sklearn.js",
+            "gitBlob": "93dd195df6867d0e9730aef225feb834db2c2295"
+          },
+          {
+            "path": "vendor/netron/tar.js",
+            "gitBlob": "59cdb9e288b7ec8bd7e68c70a17fd3aa25adedc4"
+          },
+          {
+            "path": "vendor/netron/tengine-metadata.json",
+            "gitBlob": "67af19558ace31c36224905a5c4152fc4757d0bb"
+          },
+          {
+            "path": "vendor/netron/tengine.js",
+            "gitBlob": "ff8ab0ef1f3960e519b936d760c28eb17fb53050"
+          },
+          {
+            "path": "vendor/netron/tensorrt.js",
+            "gitBlob": "5987525172d001ee05d8cdb42b17aba7f49fb8b6"
+          },
+          {
+            "path": "vendor/netron/text.js",
+            "gitBlob": "27a06da76b7c1efb908a0c78cb701c8521a14cb5"
+          },
+          {
+            "path": "vendor/netron/tf-metadata.json",
+            "gitBlob": "320cebfd2b1e2f56e423fc23ab409231b4cccbf3"
+          },
+          {
+            "path": "vendor/netron/tf-proto.js",
+            "gitBlob": "e64ddf164084e37b460b2e5c83ec65b8de10362b"
+          },
+          {
+            "path": "vendor/netron/tf.js",
+            "gitBlob": "bab88b6e9db9d1c7e2fcf117dccb93c835104c9a"
+          },
+          {
+            "path": "vendor/netron/tflite-metadata.json",
+            "gitBlob": "aff7136e01a576a2e8bdb5384908bdd7c3251d32"
+          },
+          {
+            "path": "vendor/netron/tflite-schema.js",
+            "gitBlob": "f9a681d111663b20f7c3f75f0877579e56b7f030"
+          },
+          {
+            "path": "vendor/netron/tflite.js",
+            "gitBlob": "ecca54baed6a6ba912ea377ac0c8d553a68fa4dd"
+          },
+          {
+            "path": "vendor/netron/tnn-metadata.json",
+            "gitBlob": "80c5c3757601de306dac4c1cdc5c04502b328e5f"
+          },
+          {
+            "path": "vendor/netron/tnn.js",
+            "gitBlob": "fab060c6701a5a6509db3996a32dff2d89b7702a"
+          },
+          {
+            "path": "vendor/netron/torch-metadata.json",
+            "gitBlob": "3a67732b613a854eacea4ce43dae13cf8a2e6312"
+          },
+          {
+            "path": "vendor/netron/torch.js",
+            "gitBlob": "e082851b250e2158bbddfddc73347f561ba19743"
+          },
+          {
+            "path": "vendor/netron/tosa-metadata.json",
+            "gitBlob": "77d208cab0bdba9225f11d75cdc04cab4ddda2de"
+          },
+          {
+            "path": "vendor/netron/tosa-schema.js",
+            "gitBlob": "c00394e0b8c7b984b4da87444dc6d33ed02f4b22"
+          },
+          {
+            "path": "vendor/netron/tosa.js",
+            "gitBlob": "d20a51b69177ea7d338327d97c1e6988f951b276"
+          },
+          {
+            "path": "vendor/netron/transformers.js",
+            "gitBlob": "57f39fc802c2c9c8fb35a1db840b35b51eccc468"
+          },
+          {
+            "path": "vendor/netron/tvm.js",
+            "gitBlob": "3a98dcfa2d9d1cd99bf0ca9308a314ad0577c07a"
+          },
+          {
+            "path": "vendor/netron/uff-metadata.json",
+            "gitBlob": "ad9f28a035eb7966bb66b301b4d051e258a1d901"
+          },
+          {
+            "path": "vendor/netron/uff-proto.js",
+            "gitBlob": "72d8a1a147ebc357c37b26e7fc78a34e98754958"
+          },
+          {
+            "path": "vendor/netron/uff.js",
+            "gitBlob": "9d0d3e92b42a29a79e8e4f8f8b43c414fe534b3a"
+          },
+          {
+            "path": "vendor/netron/view.js",
+            "gitBlob": "876d2033c8c14df0662c74490d498f496393c811"
+          },
+          {
+            "path": "vendor/netron/weka.js",
+            "gitBlob": "fe848e4bf7f5d232873f7b16888068c2e34e4562"
+          },
+          {
+            "path": "vendor/netron/worker.js",
+            "gitBlob": "a66220b01174f332ea496110d598de20262315db"
+          },
+          {
+            "path": "vendor/netron/xgboost.js",
+            "gitBlob": "e32acc11d937a2e4054dc36e79b376ef5fd15d84"
+          },
+          {
+            "path": "vendor/netron/xml.js",
+            "gitBlob": "bc7ba9bc13dafac93ee2a5229cc199e6853979f9"
+          },
+          {
+            "path": "vendor/netron/xmodel-proto.js",
+            "gitBlob": "6955959597febff16ad89a7b7c3066abfd4eef31"
+          },
+          {
+            "path": "vendor/netron/xmodel.js",
+            "gitBlob": "96924582097b8bbb17b7c0faea5502f0b629ec66"
+          },
+          {
+            "path": "vendor/netron/zip.js",
+            "gitBlob": "1e5370a7782296d4961d082468ad6fa89980d072"
+          }
+        ],
+        "reused": false
+      },
+      {
+        "kind": "contract",
+        "runId": 40717138628,
+        "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40717138628",
+        "testedCommit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+        "artifactId": 12827813558,
+        "artifactDigest": "sha256:ee1b409f7a587503bedf54ddaa3a1584e07bbc97e15819469f593e03be24e373",
+        "reportSHA256": "47b66b8fc4d1f44d68905c8005c0589b3467217f3af19ae6e3d77c679a308c74",
+        "scopeFingerprint": "4cbe5cd2968cab5677db3c48dbd6e0afc7ef58e9e12892b4aac981c67bb13e13",
+        "scopeFiles": [
+          {
+            "path": ".github/workflows/blob-control.yml",
+            "gitBlob": "8c3712bf4e19ae9451547ff57c48cf1c62daffbe"
+          },
+          {
+            "path": ".github/workflows/browser-lifecycle.yml",
+            "gitBlob": "ac35e9709402fc7000be952c4c4b1f539b8ce520"
+          },
+          {
+            "path": ".github/workflows/browser-soak.yml",
+            "gitBlob": "63ea1943a7e2b120c131b6112d667ef61f668982"
+          },
+          {
+            "path": ".github/workflows/desktop-engines.yml",
+            "gitBlob": "253f245091deda5aed723a9635f1b90422cfe8b9"
+          },
+          {
+            "path": ".github/workflows/desktop-physical.yml",
+            "gitBlob": "2166d444dcf3f60032e149bd22f79f984719dc4d"
+          },
+          {
+            "path": ".github/workflows/large-browser.yml",
+            "gitBlob": "c79dcc6e697cb5abb803dd6af1fce728e8d69e91"
+          },
+          {
+            "path": ".github/workflows/large-edit-draft.yml",
+            "gitBlob": "1e8e5b830b0028ee4cb3a1284df37f784c0a5820"
+          },
+          {
+            "path": ".github/workflows/large-mlir.yml",
+            "gitBlob": "cd5f27ee2dcf90717d3fdf3c753248923ad71808"
+          },
+          {
+            "path": ".github/workflows/performance.yml",
+            "gitBlob": "975cd60b6bb8190b9ffcc30c33bad380f9e1ed88"
+          },
+          {
+            "path": ".github/workflows/pr-validation.yml",
+            "gitBlob": "f4e0c7521a04d0a9c4cae0dc5e6dc4ba540312bb"
+          },
+          {
+            "path": ".github/workflows/production-smoke.yml",
+            "gitBlob": "d9e199ac9887b624cb62a55ff8b7aef7fa8401f1"
+          },
+          {
+            "path": ".github/workflows/production-transition.yml",
+            "gitBlob": "ba763af05e9f78e8f2703068101e1c6a3cc400cd"
+          },
+          {
+            "path": ".github/workflows/release-contract.yml",
+            "gitBlob": "f4dbfcefa6bbef61c84577f451833d8785f3cc3b"
+          },
+          {
+            "path": ".github/workflows/verified-pages.yml",
+            "gitBlob": "376c62f2f68777e73aca195a1e05bc2f76759b58"
+          },
+          {
+            "path": "docs/results/browser-lifecycle-2026-10-27.json",
+            "gitBlob": "3d1cb1d24c17e9aa04d502c3012de786b8a37bfe"
+          },
+          {
+            "path": "docs/results/site-browser-2026-10-27.json",
+            "gitBlob": "58e4f3da51351a0252f7a6552c5238ebd512b0c5"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "e1ead4b49468f01917619e407698e88cf75425dccb057fd86a8da8317975924c"
+          },
+          {
+            "path": "package.json",
+            "sha256": "fe2f524d8d06afd95537ca80104c04e9ff6ca22093df1defd804e9651115b8af"
+          },
+          {
+            "path": "scripts/accept-large-mlir.mjs",
+            "gitBlob": "c91bae7a9446f041b2ffd39799552372b3847fb7"
+          },
+          {
+            "path": "scripts/accept-performance.mjs",
+            "gitBlob": "86fba6cc27cb80dd0eacfeb944165c0eb7f0948e"
+          },
+          {
+            "path": "scripts/accept-release-contract.mjs",
+            "gitBlob": "72d4109fe81d948e400cdee5cb67d55b38fb777f"
+          },
+          {
+            "path": "scripts/benchmark.mjs",
+            "gitBlob": "a7730b700628a365923a789fbf93341b322378cd"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "gitBlob": "670104630c39710a80526cce0bede233e1d904c8"
+          },
+          {
+            "path": "scripts/compose-site.mjs",
+            "gitBlob": "345b022a1df0f10ead8484b4bce97c67a6dbd2fd"
+          },
+          {
+            "path": "scripts/drill-release-rollback.mjs",
+            "gitBlob": "89de6505795268d3cbbc2c7aaebcac63a6f31a30"
+          },
+          {
+            "path": "scripts/inspect.mjs",
+            "gitBlob": "51457c3d1dbc0bb5a4da297675e4a8b5419f4acf"
+          },
+          {
+            "path": "scripts/install-blob-engine.mjs",
+            "gitBlob": "2c25d7b488eeb8023df8c2139cc9e1cb6186e418"
+          },
+          {
+            "path": "scripts/install-browser.mjs",
+            "gitBlob": "0c44bc77d9fc65d12db5412b5cf482f3e6e5e48d"
+          },
+          {
+            "path": "scripts/install-desktop-engine.mjs",
+            "gitBlob": "0b980fe3b57f64b0474d78ffb7feb273fb85fcf6"
+          },
+          {
+            "path": "scripts/install-physical-engine.mjs",
+            "gitBlob": "2ccc15e3971a2cf089196b97e0758b6a18087cf0"
+          },
+          {
+            "path": "scripts/large-mlir-fixture.mjs",
+            "gitBlob": "d48a79b1ea97e170d12acdf7f47210860f589218"
+          },
+          {
+            "path": "scripts/large-mlir-resources.mjs",
+            "gitBlob": "b2f9d9c57602d20198f38c1e8ba001e0d1446ca6"
+          },
+          {
+            "path": "scripts/lib/build-profile.mjs",
+            "gitBlob": "77d9b359592cb937e558b3b04894edc67ba139cb"
+          },
+          {
+            "path": "scripts/lib/deployment-history.mjs",
+            "gitBlob": "c8df41f9dfcc67db544231c4eeb300d2200c0daf"
+          },
+          {
+            "path": "scripts/lib/desktop-engine-policy.mjs",
+            "gitBlob": "1a43580d9c17e098198f02be1a477ffd05e1c4da"
+          },
+          {
+            "path": "scripts/lib/desktop-engine-target.mjs",
+            "gitBlob": "2027b7c04854ce6f637bbf877547fa0181137a6e"
+          },
+          {
+            "path": "scripts/lib/desktop-physical-policy.mjs",
+            "gitBlob": "718a185977e4e15be153eeb91379244e6de00ea0"
+          },
+          {
+            "path": "scripts/lib/live-site.mjs",
+            "gitBlob": "16a625b3d0c594e5176154b294d5375f1897f489"
+          },
+          {
+            "path": "scripts/lib/pages-release.mjs",
+            "gitBlob": "7f3914df83c809d40eb5a084ccd4f378e7e8c3a1"
+          },
+          {
+            "path": "scripts/lib/performance-policy.mjs",
+            "gitBlob": "a591af35e8a67acadc5eec8eaf943a9e0a77127b"
+          },
+          {
+            "path": "scripts/lib/pr-validation-plan.mjs",
+            "gitBlob": "fc90f1732a565675b1f45ce5264e0e1ff9feaad6"
+          },
+          {
+            "path": "scripts/lib/release-artifact.mjs",
+            "gitBlob": "56db40570d1155ee23178590d816076d5b657918"
+          },
+          {
+            "path": "scripts/lib/release-baseline.mjs",
+            "gitBlob": "fb90efa50b637e8f192398b2fb41700ecaa96017"
+          },
+          {
+            "path": "scripts/lib/release-gates.mjs",
+            "gitBlob": "c89adf561cfa6960bb8c6232e794b6be51ee7758"
+          },
+          {
+            "path": "scripts/lib/release-history.mjs",
+            "gitBlob": "c880c1825645c4ffede7621c99841df8546486a1"
+          },
+          {
+            "path": "scripts/lib/release-test-plan.mjs",
+            "gitBlob": "0c29d643073cf9d6c3a973aa34900d060b27595f"
+          },
+          {
+            "path": "scripts/lib/site-browser-policy.mjs",
+            "gitBlob": "2ce362719a641589de1c854197d6ce698a169df7"
+          },
+          {
+            "path": "scripts/lib/site-history.mjs",
+            "gitBlob": "0799ba1896a39c910e363a09e0ec25a4dd6f6360"
+          },
+          {
+            "path": "scripts/lib/versioned-site.mjs",
+            "gitBlob": "4e234e356234d04adc81312f36a3f130f7fe9f34"
+          },
+          {
+            "path": "scripts/measure-performance.mjs",
+            "gitBlob": "9cbc719c5be70413b066ead4733927e9924e1e23"
+          },
+          {
+            "path": "scripts/package-release.mjs",
+            "gitBlob": "8efd86bc41ecd661a5e1e6fc94a4ac35cd0ad142"
+          },
+          {
+            "path": "scripts/plan-pr-validation.mjs",
+            "gitBlob": "261f7d2950e51220a39a75c75d38ae39c41e8900"
+          },
+          {
+            "path": "scripts/prepare-pages-release.mjs",
+            "gitBlob": "c4eb1914f52e05763aa746dbbe534ca6df8225bf"
+          },
+          {
+            "path": "scripts/publish-github-pages.mjs",
+            "gitBlob": "240965e97022437ea34c64586ec0fd07299e1475"
+          },
+          {
+            "path": "scripts/publish-release-bundle.mjs",
+            "gitBlob": "7fc004f7bb7dae4e521436c582ba375b7d22e405"
+          },
+          {
+            "path": "scripts/serve.mjs",
+            "gitBlob": "3ce386d4f5054d3c684a3b14316f7de113c71bd6"
+          },
+          {
+            "path": "scripts/verify-export.mjs",
+            "gitBlob": "5c3108139f61f3aa79e675f04b6f930a63de15ce"
+          },
+          {
+            "path": "scripts/verify-large-mlir.mjs",
+            "gitBlob": "4fd5e1aeb9e6d4983741c64a32071e3eed8325a0"
+          },
+          {
+            "path": "scripts/verify-pages-live.mjs",
+            "gitBlob": "a600475969bcc5c243906bf1c82a665d43d3eba3"
+          },
+          {
+            "path": "scripts/verify-release-gates.mjs",
+            "gitBlob": "b290a7df61487160105d68efba70f9239fca2321"
+          },
+          {
+            "path": "scripts/verify-release.mjs",
+            "gitBlob": "57587a5d1b85d2459519ad4c46b661708cf6ead4"
+          },
+          {
+            "path": "src/app.css",
+            "gitBlob": "1f978e14eb8d510a1265648ee572d671b2f57b0a"
+          },
+          {
+            "path": "src/app.js",
+            "gitBlob": "707b4358fc45b786e297d745209c76308c0ec488"
+          },
+          {
+            "path": "src/diagnostics-ui.js",
+            "gitBlob": "e0199d8e0e073c75942c6fed19540382796a19fa"
+          },
+          {
+            "path": "src/diagnostics.js",
+            "gitBlob": "d497dba705c603a7945037a5f6652ff03e67c269"
+          },
+          {
+            "path": "src/dialog-keyboard.js",
+            "gitBlob": "6e3d667016b66cfcd005c4f3fd8929b0e376bdb5"
+          },
+          {
+            "path": "src/edit-recovery-fingerprint.js",
+            "gitBlob": "705fcf9063c9eed3c7f0d83e2f538e573aff6849"
+          },
+          {
+            "path": "src/edit-recovery-lifecycle.js",
+            "gitBlob": "ae30016defd6025926572ace5fbb08a28662b851"
+          },
+          {
+            "path": "src/edit-recovery-session.js",
+            "gitBlob": "8967bd523862e9f317ed3bb390714731a1f34871"
+          },
+          {
+            "path": "src/edit-recovery-store.js",
+            "gitBlob": "5de9fee146decbc3f341c306ee321be2c9490574"
+          },
+          {
+            "path": "src/edit-recovery-ui.js",
+            "gitBlob": "ee9be28296b037ade07209592336e2bca1ae666a"
+          },
+          {
+            "path": "src/edit-recovery-worker.js",
+            "gitBlob": "d1c8b399fe603a0f2c9cc6dbbeed81ff967bc202"
+          },
+          {
+            "path": "src/explorer-resize.css",
+            "gitBlob": "77e05f9755c077f7458680adc25dddb7f7e7e5fd"
+          },
+          {
+            "path": "src/explorer-resize.js",
+            "gitBlob": "be73a77af2dd0bf2f6c14c2c962af5154d4d900e"
+          },
+          {
+            "path": "src/export-report-ui.js",
+            "gitBlob": "274e3669d3c6c7d868f8f20cc1533105d78dd0a9"
+          },
+          {
+            "path": "src/export-report.js",
+            "gitBlob": "a781fb08db643a493238be4ee2b46d76d40f701a"
+          },
+          {
+            "path": "src/exported-model-ui.js",
+            "gitBlob": "b57065f78665a19546460ab4dbc460cf4cc190fb"
+          },
+          {
+            "path": "src/file-fingerprint.js",
+            "gitBlob": "e4e2b3022db89206e6cbfceb09a8160b837c04b0"
+          },
+          {
+            "path": "src/flatbuffer-writer.js",
+            "gitBlob": "0fecbc099ae48b4ef9e17325dd0c91a64ccdbf37"
+          },
+          {
+            "path": "src/hydrate.js",
+            "gitBlob": "bf32e202973bcecf7d6108461a69bbe98bfb6a66"
+          },
+          {
+            "path": "src/laptop.css",
+            "gitBlob": "8a67a22d9ecda568b09238aec705ed315fd38cca"
+          },
+          {
+            "path": "src/mlir-combined-graph.js",
+            "gitBlob": "d7f24cb87a6300ce9fa8653b4c1118c5e5c12d01"
+          },
+          {
+            "path": "src/mlir-connection-index.js",
+            "gitBlob": "4e2e8e004e695ba03e99141fbeb7c59263792f15"
+          },
+          {
+            "path": "src/mlir-connection-view.js",
+            "gitBlob": "97c9765c20462e62d43345caff9aabffe34af720"
+          },
+          {
+            "path": "src/mlir-dialect-contract.js",
+            "gitBlob": "b0fadac912de6fe2d978d78ea71f3d61fa0d5bf9"
+          },
+          {
+            "path": "src/mlir-dialect-registry.js",
+            "gitBlob": "3f64eda72d5113fdd33c3ca6f8bae3388e4181d1"
+          },
+          {
+            "path": "src/mlir-dialects.js",
+            "gitBlob": "b2db13d01bc25ab699155656a3a7181a65c66b7d"
+          },
+          {
+            "path": "src/mlir-engine.js",
+            "gitBlob": "c9c79f5df9bb28251885da57bf9002a3272d6ce8"
+          },
+          {
+            "path": "src/mlir-export-provenance.js",
+            "gitBlob": "dcb2ce5cdd6c2232731fc5ddd5c90b5f9e37543e"
+          },
+          {
+            "path": "src/mlir-export.js",
+            "gitBlob": "a4342f414323cefbe2105f819fc519977773aedc"
+          },
+          {
+            "path": "src/mlir-file.js",
+            "gitBlob": "cec48572ccb93552bf86c1c42d4c66fa6ab9259e"
+          },
+          {
+            "path": "src/mlir-ir.js",
+            "gitBlob": "f50be08e9282577ad054e535808f24dc1efbe0f8"
+          },
+          {
+            "path": "src/mlir-model-edit.js",
+            "gitBlob": "3dd2b7c0a5b8c56030d82dfbba76215700b94fa8"
+          },
+          {
+            "path": "src/mlir-pattern-edit.js",
+            "gitBlob": "4bdd7e88407234886759ebc5de5891038ffc401e"
+          },
+          {
+            "path": "src/mlir-pattern-editor.js",
+            "gitBlob": "82dfcae991dc794eba13efcd8fbb0a6a7ee17e65"
+          },
+          {
+            "path": "src/mlir-pattern-projection.js",
+            "gitBlob": "feeba58711115a3da5d846af74c42d7b5d3ea635"
+          },
+          {
+            "path": "src/mlir-pattern-spec.js",
+            "gitBlob": "97b808518b0d9248bff1240d8cbb8c27d938dc1b"
+          },
+          {
+            "path": "src/mlir-pattern.js",
+            "gitBlob": "81ed47e5d24004002ce5d2bbd5cbfbcd86acabc8"
+          },
+          {
+            "path": "src/mlir-slice-graph.js",
+            "gitBlob": "9d7f5a9933556a3041787aee5c18f9ccf1edb678"
+          },
+          {
+            "path": "src/mlir-slice.js",
+            "gitBlob": "2a3f0d3fdd87167fd643cb5dc95d94ccc41d14f8"
+          },
+          {
+            "path": "src/mlir-types.js",
+            "gitBlob": "67cd259e1485510032da7555027419f032dce35b"
+          },
+          {
+            "path": "src/mlir-validate.js",
+            "gitBlob": "72d8b674a74d22a8da03bf220d410caa848fea2d"
+          },
+          {
+            "path": "src/mobile.css",
+            "gitBlob": "6944e6c29a5b6524ca0f5c0ceb7d2bc2dc51d91d"
+          },
+          {
+            "path": "src/model-adapters.js",
+            "gitBlob": "e11e11f9ff39f9438e00d71beb26f33d6eeb5ffb"
+          },
+          {
+            "path": "src/model-edit-draft.js",
+            "gitBlob": "6d9a33c0e1f292ca97f70e361f276b2bd77635cc"
+          },
+          {
+            "path": "src/model-edit-new-ops-ui.js",
+            "gitBlob": "f7c17f687ea293596d7cb7490db8844145810494"
+          },
+          {
+            "path": "src/model-edit-policy.js",
+            "gitBlob": "49dffd42e04dfd27a7cccf63b419d4866195db46"
+          },
+          {
+            "path": "src/model-edit-report.js",
+            "gitBlob": "531eae94fd9008431839b0d0d1127bcb2a582e4c"
+          },
+          {
+            "path": "src/model-edit-session.js",
+            "gitBlob": "db161cc17367fa171cd39b3ec9396bb520380971"
+          },
+          {
+            "path": "src/model-edit-ui.js",
+            "gitBlob": "798b55e3ba74d0610eda43c705246c235c58587b"
+          },
+          {
+            "path": "src/model-edit-workspace-ui.js",
+            "gitBlob": "1cda22bc19b25c985464c907604b396cd82d3f4c"
+          },
+          {
+            "path": "src/model-edit-workspace.css",
+            "gitBlob": "bd1ac504d5c2045382e367509d7627bdb8ecf6d1"
+          },
+          {
+            "path": "src/model-edit-workspace.js",
+            "gitBlob": "631348ff26c78c82e2f03e46ed7ab7dd803c0380"
+          },
+          {
+            "path": "src/model-engine.js",
+            "gitBlob": "13f9e3c0e8b8ff526b04ec2fa6e37cbad8d623ea"
+          },
+          {
+            "path": "src/model-formats.js",
+            "gitBlob": "8dd3f230e050fd17abc41eadbdada74a9f05f9b0"
+          },
+          {
+            "path": "src/model-operation-edit.js",
+            "gitBlob": "07d4f74cbaaf859bc2cab1cf8ccf8c0ed7e4399a"
+          },
+          {
+            "path": "src/model-tabs.css",
+            "gitBlob": "64254ed43cfbffdf3e3c3830f9f8e21904d21847"
+          },
+          {
+            "path": "src/model-tabs.js",
+            "gitBlob": "dd676c8c5097bb088c37e48af569c0810b2782d6"
+          },
+          {
+            "path": "src/model-visibility.css",
+            "gitBlob": "2803f1e58d71bb5a7151353a8c24dfabd3dc823f"
+          },
+          {
+            "path": "src/model-worker.js",
+            "gitBlob": "cba31747ac38a5b84d91caa4fa9238a05a387ff9"
+          },
+          {
+            "path": "src/overview-canvas.css",
+            "gitBlob": "4534ac855da360e69e2cfa4a7e9ef9404309f548"
+          },
+          {
+            "path": "src/overview-canvas.js",
+            "gitBlob": "b1edd26707808a477fbccf0b1282c6f9886d735f"
+          },
+          {
+            "path": "src/overview-layout.js",
+            "gitBlob": "f1edd5b3e6914469f16d7dda903ca2fe9be32c5a"
+          },
+          {
+            "path": "src/pattern-condition-editor.js",
+            "gitBlob": "ba6b35ebac5de6567b67bc203eb1d80ca02c91e2"
+          },
+          {
+            "path": "src/pattern-conditions.js",
+            "gitBlob": "50880976e1a0d394e3c9eb529e7d98fa7185a6f4"
+          },
+          {
+            "path": "src/pattern-fold.js",
+            "gitBlob": "e6b68fce96857f09fc420e62d72cab0e0fd15b16"
+          },
+          {
+            "path": "src/pattern-library.js",
+            "gitBlob": "6f91df06eafef5f17caa4fba27533bb46be75680"
+          },
+          {
+            "path": "src/pattern-overview.js",
+            "gitBlob": "5de99f245ac8e7350e4fdc3a69f659c37f416c19"
+          },
+          {
+            "path": "src/pattern-selection.js",
+            "gitBlob": "c3730f09e351be17d5f87df383b10b8b256d62a9"
+          },
+          {
+            "path": "src/pattern-store.js",
+            "gitBlob": "df29b0b8d9b7e288c5d9d06dc72e31a3768b051f"
+          },
+          {
+            "path": "src/pattern-utils.js",
+            "gitBlob": "7964874c737bc9d2e5638d43a1d1d9ab628c1303"
+          },
+          {
+            "path": "src/pattern-workspace.css",
+            "gitBlob": "6d3b8ab017b185609385a01df494ad9f3f8ab87a"
+          },
+          {
+            "path": "src/range-stream.js",
+            "gitBlob": "951af0f0dc91fdc4be2d4e6e5943112f90ba7bf0"
+          },
+          {
+            "path": "src/rectangle-selection.js",
+            "gitBlob": "b41245e2dbeba7f7fdc36e0458b89696ec3e34c2"
+          },
+          {
+            "path": "src/release-info.js",
+            "gitBlob": "5c9e4a9f8cc863341262d2da7dc9f6db455cc317"
+          },
+          {
+            "path": "src/release.css",
+            "gitBlob": "d14bc108f905d812dccd5c168555f5acda5664a7"
+          },
+          {
+            "path": "src/resize-in-frame.js",
+            "gitBlob": "d8bdc3abddf9b4bd6cca2e694e9e63319599ed40"
+          },
+          {
+            "path": "src/shell.html",
+            "gitBlob": "f42215d21b5d80649d73568a1996e9e2d5481bfb"
+          },
+          {
+            "path": "src/subgraph-pattern.js",
+            "gitBlob": "4e5eb399a22da15f5533d0e6fd7e381da8500fae"
+          },
+          {
+            "path": "src/svg-viewport.js",
+            "gitBlob": "81157dea91cc19d8e74d93b4c42b93c355c87c99"
+          },
+          {
+            "path": "src/tensor-random.js",
+            "gitBlob": "ed3fb4cb68b86a16a239be8653dd0325c04c07ac"
+          },
+          {
+            "path": "src/tflite-export.js",
+            "gitBlob": "6c67fc102bd9e99da0389cb65f7b0136acc29c28"
+          },
+          {
+            "path": "src/tflite-model-edit.js",
+            "gitBlob": "05a50924ea96938484e72a8b2c82bb715e589c50"
+          },
+          {
+            "path": "src/tflite-new-ops.js",
+            "gitBlob": "5eff7853488dfe79b239648099fb0bdf3ec0baee"
+          },
+          {
+            "path": "src/tflite-op-options.js",
+            "gitBlob": "f33b6cb6a0c1963258abea4457e86afb27850ae6"
+          },
+          {
+            "path": "src/tflite-runtime-archive.js",
+            "gitBlob": "7e4811539e4fa6fc2810fa136d6fbca70aab374c"
+          },
+          {
+            "path": "src/tflite-runtime-client.js",
+            "gitBlob": "04ae5278eb46b8c9515b820b3a713501957a8bd9"
+          },
+          {
+            "path": "src/tflite-runtime-execute.js",
+            "gitBlob": "8983e0f11941638dca7effba92e47ce8844c9f3f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs-ui.js",
+            "gitBlob": "fdab7d062f4d91b3c17d0734d10079edffeaba5f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs.js",
+            "gitBlob": "da3056ca9b34e7e6689b5317605f2ace0c5f5f99"
+          },
+          {
+            "path": "src/tflite-runtime-policy.js",
+            "gitBlob": "0415c4cce0e371799ebb2802b37e9684c95615b7"
+          },
+          {
+            "path": "src/tflite-runtime-report.js",
+            "gitBlob": "b3d16ec2d47fa5f7d2e3fa79d6c0d568b305e4dd"
+          },
+          {
+            "path": "src/tflite-runtime-worker.js",
+            "gitBlob": "6b784d7b35903c864518e86e7565bf168c3ab6c7"
+          },
+          {
+            "path": "src/tflite-shape-inference.js",
+            "gitBlob": "160864a01ef970d3fefb288bf8a74c8e24a1919c"
+          },
+          {
+            "path": "src/typography.css",
+            "gitBlob": "fed5bf28628c2401c3529c274f8c6f62cbf717f6"
+          },
+          {
+            "path": "src/workspace-drafts.js",
+            "gitBlob": "d265d061300112b244b2bc166c7202a4713c0f7c"
+          },
+          {
+            "path": "src/workspace-history.js",
+            "gitBlob": "972a72bb11ded16bf9380168f37def135dd58837"
+          },
+          {
+            "path": "src/workspace-session-ui.js",
+            "gitBlob": "5b95b494e21c319b9bd312569d8809d138de1198"
+          },
+          {
+            "path": "src/workspace-session.js",
+            "gitBlob": "7f6112d43ddf48feead034bdf7cea0cfb3f25d04"
+          },
+          {
+            "path": "src/workspace.css",
+            "gitBlob": "59b19e76f9e21d361d386f152b385bf0db1d6a40"
+          },
+          {
+            "path": "src/workspace.js",
+            "gitBlob": "3cf3b9bdf248576e4429127421324e317bfea2d1"
+          },
+          {
+            "path": "test/blob-control.test.mjs",
+            "gitBlob": "12a32faf9b37984a73474f0389cd49b807c20903"
+          },
+          {
+            "path": "test/browser-lifecycle.test.mjs",
+            "gitBlob": "3fbf407b0204cda3f8f666bc2f6da8e72e6058a3"
+          },
+          {
+            "path": "test/browser/README.md",
+            "gitBlob": "021ca7f7e968e811ff908984e0d79a8bd51bba7c"
+          },
+          {
+            "path": "test/browser/blob-control-program.mjs",
+            "gitBlob": "5d818e718700c521faf8a5cc24cb4fff9ea8d2d6"
+          },
+          {
+            "path": "test/browser/blob-control.mjs",
+            "gitBlob": "c812f1476ddd658ddced6793a6ee05575d3d0450"
+          },
+          {
+            "path": "test/browser/desktop-chooser-reader.mjs",
+            "gitBlob": "1949588530865f5c34e4201a87bbcd98bd08aa00"
+          },
+          {
+            "path": "test/browser/desktop-dom-reader.mjs",
+            "gitBlob": "28e55351ba1519fb0353b2def43e59a5af999474"
+          },
+          {
+            "path": "test/browser/desktop-engines.mjs",
+            "gitBlob": "bfb6a98b792c92c92782391c531f702d76d88b24"
+          },
+          {
+            "path": "test/browser/desktop-physical.mjs",
+            "gitBlob": "4da0541c83421dc8f0db52ec1e3519fb7374daa8"
+          },
+          {
+            "path": "test/browser/edit-draft-chooser.mjs",
+            "gitBlob": "f266737a5a127db3bfcb9e531734b6d1f8bcdecc"
+          },
+          {
+            "path": "test/browser/edit-recovery-flow.mjs",
+            "gitBlob": "34843e1b8eb0f1384b18a114793a22d0f8dc7a88"
+          },
+          {
+            "path": "test/browser/edit-workspace-flow.mjs",
+            "gitBlob": "5894cc6cefd998e9419c9042c6b212866c397178"
+          },
+          {
+            "path": "test/browser/keyboard-flow.mjs",
+            "gitBlob": "22d9b143be8f3296378ee906635a364a027ce0b8"
+          },
+          {
+            "path": "test/browser/large-edit-draft.mjs",
+            "gitBlob": "57b567bd42348252bbfaaa0acd96fc84ac2d5f6b"
+          },
+          {
+            "path": "test/browser/large-file.mjs",
+            "gitBlob": "071d49dc98f00a6e591bd1073b8d9384c2ba000a"
+          },
+          {
+            "path": "test/browser/large-workspace.mjs",
+            "gitBlob": "be209488246bbb763bb96370f8a32c8add49d28f"
+          },
+          {
+            "path": "test/browser/lifecycle-audit.mjs",
+            "gitBlob": "7a6aaf4a2aae09644952d072f001e29f3e3926fe"
+          },
+          {
+            "path": "test/browser/lifecycle-dom-proof.mjs",
+            "gitBlob": "35f2924d3bc7750fa05388f16a97a116f6f215db"
+          },
+          {
+            "path": "test/browser/lifecycle-policy.mjs",
+            "gitBlob": "c28adc030be6a4cca37f53ed65f56f9431466e70"
+          },
+          {
+            "path": "test/browser/lifecycle-soak-policy.mjs",
+            "gitBlob": "a27c6c20587614c4d9a1b90dd850af0afe4bd1c7"
+          },
+          {
+            "path": "test/browser/make-long-label-fixture.mjs",
+            "gitBlob": "8a758c2685fd50db6f34f2832b2a824c48da9565"
+          },
+          {
+            "path": "test/browser/manual-draft-audit.mjs",
+            "gitBlob": "4e9ccf7fe2fc2005e881150fc8ba3f0c4e1899f0"
+          },
+          {
+            "path": "test/browser/mlir-keyboard-flow.mjs",
+            "gitBlob": "2eaace263fdb7028585fe43bfd72ab69aeaaa0cb"
+          },
+          {
+            "path": "test/browser/mlir-selection-flow.mjs",
+            "gitBlob": "360d089514d6c8ed871638332c8fd34cdf5af9c0"
+          },
+          {
+            "path": "test/browser/model-edit-flow.mjs",
+            "gitBlob": "ed75d04a8e303b777f7d1a097527683070fbf344"
+          },
+          {
+            "path": "test/browser/model-lifecycle.mjs",
+            "gitBlob": "800298272324908e13367d7acafeec295e0b5953"
+          },
+          {
+            "path": "test/browser/model-tabs-flow.mjs",
+            "gitBlob": "279f09e0bebf73f7a80db51728b57842bb357a0e"
+          },
+          {
+            "path": "test/browser/operator-label-bounds.js",
+            "gitBlob": "c835ed29ecd54fdd338f5c80dd54773b28475e78"
+          },
+          {
+            "path": "test/browser/owned-processes.mjs",
+            "gitBlob": "affbe11f4e11c5e6fe7979ee1e9402432f5fea27"
+          },
+          {
+            "path": "test/browser/pattern-delete-flow.mjs",
+            "gitBlob": "1bafdbf2ccc7fa881e094f32a95cdf1853a6be64"
+          },
+          {
+            "path": "test/browser/physical-download.mjs",
+            "gitBlob": "cc89ee4ee496d406795fc4a71ca3bea234567fac"
+          },
+          {
+            "path": "test/browser/portable-edit-flow.mjs",
+            "gitBlob": "1523120c56fe66ee3e149f7017cd715f7338b3fe"
+          },
+          {
+            "path": "test/browser/process-memory-profile.mjs",
+            "gitBlob": "14dd14551b761feb585c7499beb283fd9c1e6f82"
+          },
+          {
+            "path": "test/browser/production-smoke.mjs",
+            "gitBlob": "5ab173d416bb5f5c02ff1c1476fecad15f28295b"
+          },
+          {
+            "path": "test/browser/production-transition.mjs",
+            "gitBlob": "a76d25f7bbdce75683600524d241eb87c5dd8a47"
+          },
+          {
+            "path": "test/browser/results/2026-10-23-chromium.json",
+            "gitBlob": "c39ff93128cb488c1f4c4036a2a9fb8933311e80"
+          },
+          {
+            "path": "test/browser/results/2026-10-24-chromium.json",
+            "gitBlob": "28cdf031003ee19f47e779dd076dfb60354e11ce"
+          },
+          {
+            "path": "test/browser/results/2026-10-24-github-chromium.json",
+            "gitBlob": "bb569bdf01456970930f53bc4baf26e9a59664f6"
+          },
+          {
+            "path": "test/browser/results/conditions-workspace-2026-10-25.json",
+            "gitBlob": "f0d41a7d154231187e3ef44e931791ce56b087c4"
+          },
+          {
+            "path": "test/browser/results/conditions-workspace-2026-10-25.log",
+            "gitBlob": "e32d76484518bf7740fb58f06739e700047d7de7"
+          },
+          {
+            "path": "test/browser/results/conditions-workspace-node-2026-10-25.log",
+            "gitBlob": "c7f0df8e41e27bb8ec1505dcdbdbf0e4a81566f9"
+          },
+          {
+            "path": "test/browser/results/conditions-workspace-preflight-2026-10-25.json",
+            "gitBlob": "5bd727f60527ad027efa5d224f278b72beb24a52"
+          },
+          {
+            "path": "test/browser/soak-recovery-preflight.mjs",
+            "gitBlob": "b110a11301fa4be959590bc928d996c3ed2d34f7"
+          },
+          {
+            "path": "test/browser/soak-recovery.mjs",
+            "gitBlob": "eec803052c1f61bdb80886df7ddbdd29c8419102"
+          },
+          {
+            "path": "test/browser/tflite-control-edit-flow.mjs",
+            "gitBlob": "7263928b106eddb362ac95e068abf99f9d272adc"
+          },
+          {
+            "path": "test/browser/tflite-runtime-flow.mjs",
+            "gitBlob": "29bf74aaf6227205094fd22d10b35c48313c2195"
+          },
+          {
+            "path": "test/browser/transition-control.mjs",
+            "gitBlob": "e189c2f579d9d74f2bdc7ec5b4bae1dd8f81b3a1"
+          },
+          {
+            "path": "test/browser/versioned-site.mjs",
+            "gitBlob": "3a7fc0a681a6b3d0112822c408be0f070da990b7"
+          },
+          {
+            "path": "test/browser/worker-heap.mjs",
+            "gitBlob": "7311f06cb8bbe2bba0dee5fc629d2e8c6e14a6a2"
+          },
+          {
+            "path": "test/custom-export.test.mjs",
+            "gitBlob": "a45a6460ebc2188a4a591a4780ba31ee9bfbca1f"
+          },
+          {
+            "path": "test/custom-fixture.mjs",
+            "gitBlob": "bef151e76b72de77fb7dbb6fd53dadf19733cb86"
+          },
+          {
+            "path": "test/deployment-history.test.mjs",
+            "gitBlob": "cc1a09f5906086ec04dbfedf053de6d99d490634"
+          },
+          {
+            "path": "test/desktop-chooser-reader.test.mjs",
+            "gitBlob": "7865bbdc2c57ba17c4a27aef2582212db5b9a217"
+          },
+          {
+            "path": "test/desktop-dom-reader.test.mjs",
+            "gitBlob": "5fb853b16aa3d14f26ea6d16da6e379d6ca9f243"
+          },
+          {
+            "path": "test/desktop-engine-policy.test.mjs",
+            "gitBlob": "a427c7daa85fb709b1deca31a37f2244e43666dc"
+          },
+          {
+            "path": "test/desktop-engine-target.test.mjs",
+            "gitBlob": "5485eed8bb80a1608242bec6209cca9c8087187e"
+          },
+          {
+            "path": "test/desktop-physical.test.mjs",
+            "gitBlob": "36ab176884c9a9ad6d774df15aaafa97233836ee"
+          },
+          {
+            "path": "test/diagnostics.test.mjs",
+            "gitBlob": "e340713d5a3b1dc6cde8ddd9120a93c1b03f7991"
+          },
+          {
+            "path": "test/edit-recovery-fingerprint.test.mjs",
+            "gitBlob": "1fc9ce86e9b7a1e8b0ae1f520cef5d21175b41a5"
+          },
+          {
+            "path": "test/edit-recovery-lifecycle.test.mjs",
+            "gitBlob": "5730d8b2202a7bb4348d86c5f18cff054a0234b7"
+          },
+          {
+            "path": "test/edit-recovery.test.mjs",
+            "gitBlob": "3dd7ffbeec3ffe702794d41d15ed50734e945f28"
+          },
+          {
+            "path": "test/edit-workspace-selection.test.mjs",
+            "gitBlob": "70d7540047990518a18ff649ba5edfab1009ebc0"
+          },
+          {
+            "path": "test/export-report.test.mjs",
+            "gitBlob": "a0961341350478d2788e043c28b8e098031fa55f"
+          },
+          {
+            "path": "test/exported-model-ui.test.mjs",
+            "gitBlob": "e9145f0667e53c9f52780ec569ed4c5dd6344802"
+          },
+          {
+            "path": "test/fixture.mjs",
+            "gitBlob": "f2b62ba3f4dfe9c420d7ad009f61cbaef66063b6"
+          },
+          {
+            "path": "test/fixtures/legacy-wrapped-loop.mlir",
+            "gitBlob": "f9c5ee702356861c0d5b8f04dffaea740c9b994e"
+          },
+          {
+            "path": "test/hydrate.test.mjs",
+            "gitBlob": "97141ad4582e22c24d51a83ce2bda86ddc286bd4"
+          },
+          {
+            "path": "test/large-mlir-resources.test.mjs",
+            "gitBlob": "a148b0bf03387af74e4ac864829b1a8c033e6e0b"
+          },
+          {
+            "path": "test/lifecycle-dom-proof.test.mjs",
+            "gitBlob": "b4d78d3f13693b40e99a280aed4d5a50113c0128"
+          },
+          {
+            "path": "test/lifecycle-soak.test.mjs",
+            "gitBlob": "067643cf442fe3532ed9bfb015e20d7db22b6210"
+          },
+          {
+            "path": "test/live-site.test.mjs",
+            "gitBlob": "190bf966ee845b4d47e6189890db36a0ba406fc0"
+          },
+          {
+            "path": "test/make-large-fixture.mjs",
+            "gitBlob": "dcd29bfaba27b8b644f83e4b57000a24cdbadb37"
+          },
+          {
+            "path": "test/manual-draft-audit.test.mjs",
+            "gitBlob": "67db27b53efe8594eaee65478fe38724dab7064a"
+          },
+          {
+            "path": "test/mlir-cfg.test.mjs",
+            "gitBlob": "20d2bc2f6a18a5d128433ced02190ff414065bb3"
+          },
+          {
+            "path": "test/mlir-compiler.test.mjs",
+            "gitBlob": "2b425330fb44fdf78b174988e525c1c960639b8f"
+          },
+          {
+            "path": "test/mlir-connection-pages.test.mjs",
+            "gitBlob": "ea7f1b67e602c8efc15e0e2bd8639c085a9b3c20"
+          },
+          {
+            "path": "test/mlir-cross-block.test.mjs",
+            "gitBlob": "a001e2ff6481daba987dc982e81e4be1ec10096e"
+          },
+          {
+            "path": "test/mlir-export.test.mjs",
+            "gitBlob": "e35eff87553a1023a1434b5e144312056365e3b0"
+          },
+          {
+            "path": "test/mlir-file.test.mjs",
+            "gitBlob": "dfe7a1c660fe4778e9ebe8db2462129b5c59de12"
+          },
+          {
+            "path": "test/mlir-fixture.mjs",
+            "gitBlob": "43ee657e5c4b910d8106a3e7bf67290907ae65cf"
+          },
+          {
+            "path": "test/mlir-keyboard-fixture.mjs",
+            "gitBlob": "2de3cddfbe0a5980ffbba5d98395b40dd9cd686e"
+          },
+          {
+            "path": "test/mlir-keyboard-fixture.test.mjs",
+            "gitBlob": "4214bc9fb92cb652650db4508320bbbd3de479a7"
+          },
+          {
+            "path": "test/mlir-layout.test.mjs",
+            "gitBlob": "92943fd885b2e1040d573becae56b5acb11d7019"
+          },
+          {
+            "path": "test/mlir-model-edit.test.mjs",
+            "gitBlob": "d6f34f0771cfea0b482c7055072374642a2501e6"
+          },
+          {
+            "path": "test/mlir-pattern-edit.test.mjs",
+            "gitBlob": "0862f3e610ca6b7431d055af3617c90626a0f604"
+          },
+          {
+            "path": "test/mlir-projection.test.mjs",
+            "gitBlob": "d744a42fd7239b1f8235289fe5b3493fd10eecd7"
+          },
+          {
+            "path": "test/mlir-reexport.test.mjs",
+            "gitBlob": "c5d4cce1d0c7ca55ab5881934fd25ac837208255"
+          },
+          {
+            "path": "test/mlir-slice-graph.test.mjs",
+            "gitBlob": "27267a50291bae6ff8883d1abca3266ea2674248"
+          },
+          {
+            "path": "test/mlir-slice.test.mjs",
+            "gitBlob": "b02c91e5700ec39276eaaa39b1a2e3b938e3ed71"
+          },
+          {
+            "path": "test/mlir-validate.test.mjs",
+            "gitBlob": "b5b0d21096e0fc57fadb8ec76e009030744fd28b"
+          },
+          {
+            "path": "test/mlir.test.mjs",
+            "gitBlob": "6b508b3778921673ad3cc2a1d79c444b7505e6cb"
+          },
+          {
+            "path": "test/model-edit-policy.test.mjs",
+            "gitBlob": "2865b7d9aa66704e9d1fc33bec934aea9e883f08"
+          },
+          {
+            "path": "test/model-edit-report.test.mjs",
+            "gitBlob": "e16945c0a1e4f31c8c7f36d4f7b2a308577a5108"
+          },
+          {
+            "path": "test/model-edit-selection.test.mjs",
+            "gitBlob": "f36730872d447620e5e64497971a1f97e80aab8a"
+          },
+          {
+            "path": "test/model-edit-session.test.mjs",
+            "gitBlob": "db463f00e3d6f226110219a1e8b114c57e8d9dec"
+          },
+          {
+            "path": "test/model-edit-workspace.test.mjs",
+            "gitBlob": "c9d37710792c5d3c9b8ce6ca181d452b697288f3"
+          },
+          {
+            "path": "test/model-operation-edit.test.mjs",
+            "gitBlob": "e144d8d046faf4e45b12dbaaa2f317b6201651d4"
+          },
+          {
+            "path": "test/model-tabs.test.mjs",
+            "gitBlob": "64dfd70703f427ba321400bb3e4139e6a5dfd9a9"
+          },
+          {
+            "path": "test/model.test.mjs",
+            "gitBlob": "0791a692224c24c29a5acd4ff59d544749e00caa"
+          },
+          {
+            "path": "test/overview-canvas.test.mjs",
+            "gitBlob": "9a08eef612f7d54f256c215d6311d014b77923d3"
+          },
+          {
+            "path": "test/overview-viewport.test.mjs",
+            "gitBlob": "7a8b4d742deb332a779b02d6596bb7e5879ab401"
+          },
+          {
+            "path": "test/owned-processes.test.mjs",
+            "gitBlob": "6b4f2db650f08578551552f53463ee53a5804e36"
+          },
+          {
+            "path": "test/pages-release.test.mjs",
+            "gitBlob": "2f4436995bf1b4c918f6ba8fd37be3900c162980"
+          },
+          {
+            "path": "test/pattern-conditions.test.mjs",
+            "gitBlob": "f12acbfce37bdb799c3564002325c0137b9b2e30"
+          },
+          {
+            "path": "test/pattern-fold.test.mjs",
+            "gitBlob": "635b343639a1fb9835556e629b57d5a288f9edff"
+          },
+          {
+            "path": "test/pattern-library.test.mjs",
+            "gitBlob": "b9bcbd32831ce82390b509abbaed75a435f479a3"
+          },
+          {
+            "path": "test/pattern-overview.test.mjs",
+            "gitBlob": "8c55e303d8f6e46a82a991ef9ac2821af9ec6738"
+          },
+          {
+            "path": "test/pattern-selection.test.mjs",
+            "gitBlob": "d27bace6ca03eac9a72d24a2619eecc3a9c2b613"
+          },
+          {
+            "path": "test/pattern-store.test.mjs",
+            "gitBlob": "b3b7f05e5db0affb6c0f8a818e167d2baa48e9b3"
+          },
+          {
+            "path": "test/performance-fixtures.mjs",
+            "gitBlob": "94741439143842549f2dd80b901ff261edceb8a0"
+          },
+          {
+            "path": "test/performance-policy.json",
+            "gitBlob": "e809e8571dbc88d396d1e2e6966dc9d5668bfdf4"
+          },
+          {
+            "path": "test/performance-policy.test.mjs",
+            "gitBlob": "2ae4bd950cf525ec522e763a5374f47a97394912"
+          },
+          {
+            "path": "test/performance.test.mjs",
+            "gitBlob": "a61bb26276e79bbd2129f193622a0d397d20aeba"
+          },
+          {
+            "path": "test/physical-fixture.test.mjs",
+            "gitBlob": "00be80300459129aecdb53df8395959ba678f299"
+          },
+          {
+            "path": "test/physical-tflite-fixture.mjs",
+            "gitBlob": "ff9470bb9a2c8808440dd61200af8d118c9b1b7c"
+          },
+          {
+            "path": "test/pr-validation.test.mjs",
+            "gitBlob": "9baf82df84d68cc85bd5e0098539c769391861a4"
+          },
+          {
+            "path": "test/published-delivery.test.mjs",
+            "gitBlob": "ff87b06adacd0ef1d9f63e3b9abb9bc4317eb44d"
+          },
+          {
+            "path": "test/recovery-read-audit.test.mjs",
+            "gitBlob": "8b8dc366a5deb76cf12d1fb0de7e05ac7f6644ff"
+          },
+          {
+            "path": "test/rectangle-selection.test.mjs",
+            "gitBlob": "015df92da2f5d7532ec50f1500281b63f84f4f7e"
+          },
+          {
+            "path": "test/release-gates.test.mjs",
+            "gitBlob": "5a67db1f5acfa609471e8859ec12eaa2a61af99e"
+          },
+          {
+            "path": "test/release-history.test.mjs",
+            "gitBlob": "2b94d8bfee9823e15a334c00ad71b309dade6696"
+          },
+          {
+            "path": "test/release.test.mjs",
+            "gitBlob": "15550f176ffc7e9fcc2beda3089a79754c1bc7bb"
+          },
+          {
+            "path": "test/resize-in-frame.test.mjs",
+            "gitBlob": "5be72e448cdb1629c54dcfa3783788ee813c819a"
+          },
+          {
+            "path": "test/runtime-fixture.mjs",
+            "gitBlob": "409b75869a3790ca9c0fb39999a7dfd0ee911193"
+          },
+          {
+            "path": "test/runtime-packaging.test.mjs",
+            "gitBlob": "b03b7a148884c17b79391eb67e02c70c5a4358ca"
+          },
+          {
+            "path": "test/site-browser-policy.test.mjs",
+            "gitBlob": "1af08e3019db40190f5f1baee47a879963532dce"
+          },
+          {
+            "path": "test/site-history.test.mjs",
+            "gitBlob": "aa5918ba910a050321de0a7cbc801c4c72a49aae"
+          },
+          {
+            "path": "test/subgraph.test.mjs",
+            "gitBlob": "05f0dc966a0bc4b79e221475a1a15404e3a7fea3"
+          },
+          {
+            "path": "test/svg-viewport.test.mjs",
+            "gitBlob": "9fcca696c4f1ed60fa056e8474603c2d057b19fb"
+          },
+          {
+            "path": "test/tensor-random.test.mjs",
+            "gitBlob": "f1b355b67b3303ede50825425f6b8d43002cb4bf"
+          },
+          {
+            "path": "test/tflite-control-fixture.mjs",
+            "gitBlob": "359755e6ba8d35f07789f09a6e740d801059061c"
+          },
+          {
+            "path": "test/tflite-export.test.mjs",
+            "gitBlob": "6fcfb704203a3a836c7cf5b5832e5d604f339102"
+          },
+          {
+            "path": "test/tflite-model-edit.test.mjs",
+            "gitBlob": "6740bf8359778447a120d693e361b62b758eeef1"
+          },
+          {
+            "path": "test/tflite-runtime-inputs.test.mjs",
+            "gitBlob": "c1b17abd51af19f18c3297b6c6fa09d52dd0e583"
+          },
+          {
+            "path": "test/tflite-runtime.test.mjs",
+            "gitBlob": "ca181e9c936fadf5315a0169e078b6a1f4401107"
+          },
+          {
+            "path": "test/tflite-shape-inference.test.mjs",
+            "gitBlob": "ff6b7cd55f52101af9b87387b886050bbc763ad7"
+          },
+          {
+            "path": "test/versioned-site.test.mjs",
+            "gitBlob": "29d129e005030bbf6a7fee435e64e4020e816d8c"
+          },
+          {
+            "path": "test/workspace-session.test.mjs",
+            "gitBlob": "d7c19e24c2f3ca567510df1fab65b32e1931c196"
+          },
+          {
+            "path": "test/workspace.test.mjs",
+            "gitBlob": "c52f26241963961e06d7b05ba9047fe0e58c43a8"
+          },
+          {
+            "path": "vendor/litert/2.6.0/LICENSE",
+            "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+          },
+          {
+            "path": "vendor/litert/2.6.0/NOTICE.txt",
+            "gitBlob": "05a4a7704fa2e5e6a5d94873343c85bcf61d48a5"
+          },
+          {
+            "path": "vendor/litert/2.6.0/core.js",
+            "gitBlob": "a0cf4e4886969c625fa3a7759da8c18e472ed1cc"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+            "gitBlob": "f4a95a33cbbc458f90b4dc5296df1e6d834d43ec"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+            "gitBlob": "ae0217d011d041d333eeee6e3adcf918815295b8"
+          },
+          {
+            "path": "vendor/litert/2.6.0/provenance.json",
+            "gitBlob": "56a5641c311a742726861b6ac5364670df6b6a42"
+          },
+          {
+            "path": "vendor/litert/2.6.0/wasm-utils.js",
+            "gitBlob": "b9e6039ba5ef25c4e7a75c4ab0ee71fa6f1adb45"
+          },
+          {
+            "path": "vendor/netron/LICENSE",
+            "gitBlob": "c1d7e2e3af73c5b6a3e0fbad011afee3d3509f05"
+          },
+          {
+            "path": "vendor/netron/__init__.py",
+            "gitBlob": "8f5a6752c151e69be0eb64a5a6bf5f8518a1cf55"
+          },
+          {
+            "path": "vendor/netron/acuity-metadata.json",
+            "gitBlob": "fb138f1e4505542f51eaf993bdc6a1665789bb77"
+          },
+          {
+            "path": "vendor/netron/acuity.js",
+            "gitBlob": "483c75b2625975ba7ce389244b66cf6b95b24333"
+          },
+          {
+            "path": "vendor/netron/app.js",
+            "gitBlob": "79e181bfee2773ca9d87c93e368b6b041a252ef3"
+          },
+          {
+            "path": "vendor/netron/armnn-metadata.json",
+            "gitBlob": "1538afa5c3e3934d9a32af58d76076447946cb17"
+          },
+          {
+            "path": "vendor/netron/armnn-schema.js",
+            "gitBlob": "26f65cc37957acc7f01bd73db9c83681fec7850b"
+          },
+          {
+            "path": "vendor/netron/armnn.js",
+            "gitBlob": "8e08bf80503c0f18354ce840e90d3df0e8f820a9"
+          },
+          {
+            "path": "vendor/netron/barracuda.js",
+            "gitBlob": "e0548742b0030966d700f64a5865abf8aa7a0217"
+          },
+          {
+            "path": "vendor/netron/base.js",
+            "gitBlob": "63191c9a4710e169dd9d905bd72866f14af954f7"
+          },
+          {
+            "path": "vendor/netron/bigdl-metadata.json",
+            "gitBlob": "d42b79c7e68b2c69adb9fa41ab79a944f2ca9ccc"
+          },
+          {
+            "path": "vendor/netron/bigdl-proto.js",
+            "gitBlob": "6569289ab396ad59928f7c7207cfa68d4e3c82d9"
+          },
+          {
+            "path": "vendor/netron/bigdl.js",
+            "gitBlob": "1569d03009e725a36a6d1352f18c33f6c7baab92"
+          },
+          {
+            "path": "vendor/netron/browser.js",
+            "gitBlob": "93cbfdf9da8655f6d9980420e5f3c85f9009fa55"
+          },
+          {
+            "path": "vendor/netron/caffe-metadata.json",
+            "gitBlob": "3d7c1927eec68dffde58d2302b94d599e1734365"
+          },
+          {
+            "path": "vendor/netron/caffe-proto.js",
+            "gitBlob": "9b8d99fe43e0e1d1a9a50c836afe5d1eac934376"
+          },
+          {
+            "path": "vendor/netron/caffe.js",
+            "gitBlob": "7d89f1a47f2a8f71391a45961f1949ec920ff7b0"
+          },
+          {
+            "path": "vendor/netron/caffe2-metadata.json",
+            "gitBlob": "47b29c825f338176bef2a7822e1805a582e6b028"
+          },
+          {
+            "path": "vendor/netron/caffe2-proto.js",
+            "gitBlob": "ebfc04413acf31e4330b32e591cfd2caa3fa36a7"
+          },
+          {
+            "path": "vendor/netron/caffe2.js",
+            "gitBlob": "6e3a2089690a1db14d0019a90461168f0307a6b1"
+          },
+          {
+            "path": "vendor/netron/catboost-schema.js",
+            "gitBlob": "8335914a1662e6aca80086f52216e7f970945b9d"
+          },
+          {
+            "path": "vendor/netron/catboost.js",
+            "gitBlob": "e058f69c3efdfa6e8eb34d95ef34aa0e32bcbe78"
+          },
+          {
+            "path": "vendor/netron/circle-metadata.json",
+            "gitBlob": "76e82c6ba1d9c381bb8137ac4e1cfac2a50321f0"
+          },
+          {
+            "path": "vendor/netron/circle-schema.js",
+            "gitBlob": "397e8928b820572ad36b1daa8e1a94d1bbc48547"
+          },
+          {
+            "path": "vendor/netron/circle.js",
+            "gitBlob": "9b7b05da70b5e656a622573bf04e9db70a75bb19"
+          },
+          {
+            "path": "vendor/netron/cntk-metadata.json",
+            "gitBlob": "dbb77ab5ebd0659256398c80a3b8447047ce5bb7"
+          },
+          {
+            "path": "vendor/netron/cntk-proto.js",
+            "gitBlob": "4912e831ef7ac179663d4617f8c686e87a4d6055"
+          },
+          {
+            "path": "vendor/netron/cntk.js",
+            "gitBlob": "d2e1a985ad94148def420d7cfee9956473ae35b0"
+          },
+          {
+            "path": "vendor/netron/coreml-metadata.json",
+            "gitBlob": "1a5ff686f034b38b34af06265a3bc24c99a90e5a"
+          },
+          {
+            "path": "vendor/netron/coreml-proto.js",
+            "gitBlob": "7fb2256a7d3c20f44576a1cc71db5945a104a069"
+          },
+          {
+            "path": "vendor/netron/coreml.js",
+            "gitBlob": "7a4813b4718975150edcb7b0d1ce0dd45d3a7ed3"
+          },
+          {
+            "path": "vendor/netron/dagre.js",
+            "gitBlob": "2c3b578b19ec9ad3a1d6a3c34d987613e0f3c9b9"
+          },
+          {
+            "path": "vendor/netron/darknet-metadata.json",
+            "gitBlob": "c5b171bfaa0d0a22575c66aa3c620b0d52c99263"
+          },
+          {
+            "path": "vendor/netron/darknet.js",
+            "gitBlob": "51690f668a35f8e89c43b60d49ed1ca857407d6e"
+          },
+          {
+            "path": "vendor/netron/desktop.mjs",
+            "gitBlob": "1da044b49d20620e189c438cd8baeb59417be0d3"
+          },
+          {
+            "path": "vendor/netron/dl4j-metadata.json",
+            "gitBlob": "4965893a0dfc4ef82a0e085e4f75fe054c83315e"
+          },
+          {
+            "path": "vendor/netron/dl4j.js",
+            "gitBlob": "24a4a83862434a1570e005809b4cc6ba92fbe362"
+          },
+          {
+            "path": "vendor/netron/dlc-metadata.json",
+            "gitBlob": "9cb6471dcd4406f50fdd441120950156182a8292"
+          },
+          {
+            "path": "vendor/netron/dlc-schema.js",
+            "gitBlob": "3b66ae11ee734d0d06b985291738c1d6b560040b"
+          },
+          {
+            "path": "vendor/netron/dlc.js",
+            "gitBlob": "2c0a4d4a6426bd177ed1de00e7432adac935be57"
+          },
+          {
+            "path": "vendor/netron/dnn-metadata.json",
+            "gitBlob": "2e0f4b2a434f049bd3b8f376d72e0109e9e397c6"
+          },
+          {
+            "path": "vendor/netron/dnn-proto.js",
+            "gitBlob": "d44888bfd8d1040ddd52b719e621088fd6993d14"
+          },
+          {
+            "path": "vendor/netron/dnn.js",
+            "gitBlob": "0dd94238e75da6265c234b59166dcaf6a2e4e672"
+          },
+          {
+            "path": "vendor/netron/dot.js",
+            "gitBlob": "5141f77d1e82b596b961ec74452c02972d194565"
+          },
+          {
+            "path": "vendor/netron/espdl-metadata.json",
+            "gitBlob": "01ad405719c20224407885f17afb91e1d5a8cd30"
+          },
+          {
+            "path": "vendor/netron/espdl-schema.js",
+            "gitBlob": "0447faea875a7d5f92a5d69afd56ed85287d8b5f"
+          },
+          {
+            "path": "vendor/netron/espdl.js",
+            "gitBlob": "61608542f5f66521326d0f4d17a8bb4f7e7204c1"
+          },
+          {
+            "path": "vendor/netron/espresso-metadata.json",
+            "gitBlob": "f4c718388a64dacae74f2093e1b93a84e9f93c62"
+          },
+          {
+            "path": "vendor/netron/espresso.js",
+            "gitBlob": "fef2a14382d864ede99ffe6ee04e87f211e9e385"
+          },
+          {
+            "path": "vendor/netron/executorch-schema.js",
+            "gitBlob": "a822a3e47c108162efef4f48addab69cc84d636a"
+          },
+          {
+            "path": "vendor/netron/executorch.js",
+            "gitBlob": "c300a79dc082dff9ee6187e3a0bdd0e59233833c"
+          },
+          {
+            "path": "vendor/netron/favicon.ico",
+            "gitBlob": "c30ac5a9b11e3ab802e35348aa94adb004a5b9ea"
+          },
+          {
+            "path": "vendor/netron/flatbuffers.js",
+            "gitBlob": "dabdb7804b227771c4e2f6639f57a4b20ceaf46e"
+          },
+          {
+            "path": "vendor/netron/flax.js",
+            "gitBlob": "53daa8f1ee46bf3a02fc69f6862051307eb0f111"
+          },
+          {
+            "path": "vendor/netron/flexbuffers.js",
+            "gitBlob": "fdbee2659412e26e8cdabfc9d970ae4fd99a2481"
+          },
+          {
+            "path": "vendor/netron/flux-metadata.json",
+            "gitBlob": "32960f8ced39dd5eade0f15d41e275b2dc8d4c70"
+          },
+          {
+            "path": "vendor/netron/flux.js",
+            "gitBlob": "c9dcc650ef5ee9567204bc638f5f8652916a6b19"
+          },
+          {
+            "path": "vendor/netron/gguf-metadata.json",
+            "gitBlob": "52fdd4a18c0c86fd90b41826f0a3339e4a8debb2"
+          },
+          {
+            "path": "vendor/netron/gguf.js",
+            "gitBlob": "6c6903501d4ac2a5270dd86d70c4d70e0d7a5ccf"
+          },
+          {
+            "path": "vendor/netron/grapher.css",
+            "gitBlob": "b0d233886e3e5c63ddd293a9596f14328ab4e111"
+          },
+          {
+            "path": "vendor/netron/grapher.js",
+            "gitBlob": "bea6d7c772406418e87b995d120a89a6a273e7bc"
+          },
+          {
+            "path": "vendor/netron/hailo-metadata.json",
+            "gitBlob": "05752d7b481c077e625a61cd72e16cdd7fa1c2f7"
+          },
+          {
+            "path": "vendor/netron/hailo.js",
+            "gitBlob": "080c402594440556d330f0d4126989095bfad6ce"
+          },
+          {
+            "path": "vendor/netron/hdf5.js",
+            "gitBlob": "d6fe3757d8c18361ad2ae344e3b5a3826af20573"
+          },
+          {
+            "path": "vendor/netron/hickle.js",
+            "gitBlob": "0284e0af43316625b8600abe9ad9e46a624ad5ce"
+          },
+          {
+            "path": "vendor/netron/icon.png",
+            "gitBlob": "75a1a0a6a04333b4aa936e5c76380996124e7045"
+          },
+          {
+            "path": "vendor/netron/imgdnn.js",
+            "gitBlob": "ddf0b2a80aa39f6e6670a89221a7df08625723de"
+          },
+          {
+            "path": "vendor/netron/index.html",
+            "gitBlob": "7cf21e6d576cab7e9c6e6c530d3c489d38db144c"
+          },
+          {
+            "path": "vendor/netron/index.js",
+            "gitBlob": "49066d6710224563f98a68e2b50778388191ec96"
+          },
+          {
+            "path": "vendor/netron/jax-schema.js",
+            "gitBlob": "e5d1606235b3fc9adbedd48a4a0b37b2d444aa49"
+          },
+          {
+            "path": "vendor/netron/jax.js",
+            "gitBlob": "707bc31050d70d97cb2b7b2eeea71d77e926f589"
+          },
+          {
+            "path": "vendor/netron/json.js",
+            "gitBlob": "3e7f831bf5442947561a75e0d86ff05ef465f992"
+          },
+          {
+            "path": "vendor/netron/kann-metadata.json",
+            "gitBlob": "ba202ab0f23450c014d076e7ef75ecc0f578e173"
+          },
+          {
+            "path": "vendor/netron/kann-schema.js",
+            "gitBlob": "49d83c42cdabc3c2433383f39ca11f21978a1159"
+          },
+          {
+            "path": "vendor/netron/kann.js",
+            "gitBlob": "730d61d01bf72b897bd961addceadd8fca50cea1"
+          },
+          {
+            "path": "vendor/netron/keras-metadata.json",
+            "gitBlob": "c771639dc33c4dc4ccfb097739a6f8d1f73bf5b2"
+          },
+          {
+            "path": "vendor/netron/keras-proto.js",
+            "gitBlob": "c76048607a2b5e7bacc500c2b0c4e781af581d87"
+          },
+          {
+            "path": "vendor/netron/keras.js",
+            "gitBlob": "86e80491e9477faae63d4a527ba7195c175ed55c"
+          },
+          {
+            "path": "vendor/netron/kmodel.js",
+            "gitBlob": "ae561f532f854357fdf7e77283289e3a74cc7cfd"
+          },
+          {
+            "path": "vendor/netron/lasagne-metadata.json",
+            "gitBlob": "b3f40a4cea66496b685ed7de3cad1a89e48bbc2e"
+          },
+          {
+            "path": "vendor/netron/lasagne.js",
+            "gitBlob": "5b9f087033718cb534e5f805d040ec89b9a25dad"
+          },
+          {
+            "path": "vendor/netron/lightgbm.js",
+            "gitBlob": "c3733f376630e70b69da1c340be0a5f635ddddbd"
+          },
+          {
+            "path": "vendor/netron/litertlm-proto.js",
+            "gitBlob": "7ea2a645bda764eff8bd3f23b0ccee128d81a9ea"
+          },
+          {
+            "path": "vendor/netron/litertlm-schema.js",
+            "gitBlob": "957ef9f8a60c148c0600ece2385556e375312874"
+          },
+          {
+            "path": "vendor/netron/litertlm.js",
+            "gitBlob": "1ec8ee8fff9d13e72e992351ff0f564d541d0991"
+          },
+          {
+            "path": "vendor/netron/mediapipe.js",
+            "gitBlob": "c3cc136a210257e404e229fb6d853e9a15c6cd46"
+          },
+          {
+            "path": "vendor/netron/megengine-metadata.json",
+            "gitBlob": "3fb7dae1504eb717648d0f7714fa6cc2feda17fe"
+          },
+          {
+            "path": "vendor/netron/megengine-schema.js",
+            "gitBlob": "dbc17de6756b210469fc176de0e71babb85244f8"
+          },
+          {
+            "path": "vendor/netron/megengine.js",
+            "gitBlob": "e6fddd8fa7a4bbd9a3ff0811e509d941788efcee"
+          },
+          {
+            "path": "vendor/netron/message.js",
+            "gitBlob": "fd478ad13644d74fd10b111cf6b36d2c2a7790cb"
+          },
+          {
+            "path": "vendor/netron/mindir-metadata.json",
+            "gitBlob": "a8f4b2c60a29d281ccd84790b56b94710ca01d12"
+          },
+          {
+            "path": "vendor/netron/mindir-proto.js",
+            "gitBlob": "6b3ca24a2269ec499726f2503ead12d2cc8160d8"
+          },
+          {
+            "path": "vendor/netron/mindir.js",
+            "gitBlob": "6cee79b5f78eed994ee7cd901e4468bee3e64378"
+          },
+          {
+            "path": "vendor/netron/mlir-metadata.json",
+            "gitBlob": "29f52f62fe19ccbc2889f9b178e5e6c41b459ea3"
+          },
+          {
+            "path": "vendor/netron/mlir.js",
+            "gitBlob": "6cb85248df090b0f94f46c1da8893e3cdc3ea3a5"
+          },
+          {
+            "path": "vendor/netron/mlnet-metadata.json",
+            "gitBlob": "005c177d076fa4513f2c09675f0348c22d25f3b2"
+          },
+          {
+            "path": "vendor/netron/mlnet.js",
+            "gitBlob": "4cf830a96291b8ac001ae8bd98b11110adca038e"
+          },
+          {
+            "path": "vendor/netron/mnn-metadata.json",
+            "gitBlob": "39c3f44f4b23132b020877e0f510119b99b623aa"
+          },
+          {
+            "path": "vendor/netron/mnn-schema.js",
+            "gitBlob": "2d769c788b67d502a7a131c0ccd6487aacb80c13"
+          },
+          {
+            "path": "vendor/netron/mnn.js",
+            "gitBlob": "92700e3b0b3becfb070c7b99bc929d2f8dc65fad"
+          },
+          {
+            "path": "vendor/netron/mslite-metadata.json",
+            "gitBlob": "38bb81b60bc44ebc2e15db3cb355ef47d5645fdd"
+          },
+          {
+            "path": "vendor/netron/mslite-schema.js",
+            "gitBlob": "65434cc902ff237fb0d343f01ebc9b4739b268ea"
+          },
+          {
+            "path": "vendor/netron/mslite.js",
+            "gitBlob": "824f2f31f1a0e79c294f43fe39f751038ca9fd22"
+          },
+          {
+            "path": "vendor/netron/mxnet-metadata.json",
+            "gitBlob": "8d271c9e75635a13606e6a8f7535005559d87059"
+          },
+          {
+            "path": "vendor/netron/mxnet.js",
+            "gitBlob": "d2c49a1019e103410adba94fbcf8c1cc07d1e9d3"
+          },
+          {
+            "path": "vendor/netron/ncnn-metadata.json",
+            "gitBlob": "30621c3db3609a89f40474222e7fb259189b0272"
+          },
+          {
+            "path": "vendor/netron/ncnn.js",
+            "gitBlob": "a124ea260d8c7dd5f810679ee972ca5686746913"
+          },
+          {
+            "path": "vendor/netron/nnabla-metadata.json",
+            "gitBlob": "7a2ff8f5bf6716919431597737e511e5ebe808e3"
+          },
+          {
+            "path": "vendor/netron/nnabla-proto.js",
+            "gitBlob": "b790d52c6b3f182080dec05060a15ee5f8845ae1"
+          },
+          {
+            "path": "vendor/netron/nnabla.js",
+            "gitBlob": "8d2dab05e95abd291f9d0df24d987977b50c76f8"
+          },
+          {
+            "path": "vendor/netron/nnc.js",
+            "gitBlob": "0b84b640e3c568018e858b2014f54b44e5fed918"
+          },
+          {
+            "path": "vendor/netron/nnef.js",
+            "gitBlob": "acc39de0018b9fac9ef24ea562060781ca893e94"
+          },
+          {
+            "path": "vendor/netron/node.js",
+            "gitBlob": "fe64172b58c92cd2d5823f7559639f523ac32008"
+          },
+          {
+            "path": "vendor/netron/numpy.js",
+            "gitBlob": "839d614f9cfdff6ebab316a14a6c29b269755537"
+          },
+          {
+            "path": "vendor/netron/om-metadata.json",
+            "gitBlob": "e458ec146beac052a25e50ef8e0c6179cf8bfdf6"
+          },
+          {
+            "path": "vendor/netron/om-proto.js",
+            "gitBlob": "66415d675032c4802e237cbe479c85546b0946de"
+          },
+          {
+            "path": "vendor/netron/om.js",
+            "gitBlob": "4f4a41ccaa6fd4a206e057297d83d1e72eae3f91"
+          },
+          {
+            "path": "vendor/netron/onednn-metadata.json",
+            "gitBlob": "f204b0b0c6d9e5db1703df9212c6bdcfe8281dc9"
+          },
+          {
+            "path": "vendor/netron/onednn.js",
+            "gitBlob": "f1fad7e8589bd5009a6b4c978d680c20fed16aa9"
+          },
+          {
+            "path": "vendor/netron/onnx-metadata.json",
+            "gitBlob": "6748d98e5f47445aa7b982a773b1d5692a478e40"
+          },
+          {
+            "path": "vendor/netron/onnx-proto.js",
+            "gitBlob": "feeab4484849b4fb2606c228449ad0ba1fd3ea98"
+          },
+          {
+            "path": "vendor/netron/onnx-schema.js",
+            "gitBlob": "cc13009998d758119f1997140f4781ae46df64cf"
+          },
+          {
+            "path": "vendor/netron/onnx.js",
+            "gitBlob": "54707b5c1ae75b210576a258a860532b410c9c35"
+          },
+          {
+            "path": "vendor/netron/onnx.py",
+            "gitBlob": "90d4a93f7a83e5aca290e42be664162de684c62c"
+          },
+          {
+            "path": "vendor/netron/openvino-metadata.json",
+            "gitBlob": "cdddbe28eb3b861b6c138f630d3e7d2bb601743f"
+          },
+          {
+            "path": "vendor/netron/openvino.js",
+            "gitBlob": "dcfe2922321adc0294aa2d1a9eab4d3696b5af0e"
+          },
+          {
+            "path": "vendor/netron/paddle-metadata.json",
+            "gitBlob": "65b297fdd0f565a060fc5a54dc077dd51f486f27"
+          },
+          {
+            "path": "vendor/netron/paddle-proto.js",
+            "gitBlob": "f101d165da22a3ead3ba864f77c88d0a00894759"
+          },
+          {
+            "path": "vendor/netron/paddle-schema.js",
+            "gitBlob": "858ca39692155fbccc1b4501e1a15e91f0856a6b"
+          },
+          {
+            "path": "vendor/netron/paddle.js",
+            "gitBlob": "2f0dbce2730cabdca788aba5bf32f693cf4be6d5"
+          },
+          {
+            "path": "vendor/netron/pickle.js",
+            "gitBlob": "90b44d539c750544e04011a7f75d43ef20b6f9b4"
+          },
+          {
+            "path": "vendor/netron/protobuf.js",
+            "gitBlob": "ec0637e347619f5ea204aa43e201a20a17df7c4c"
+          },
+          {
+            "path": "vendor/netron/python.js",
+            "gitBlob": "cfeca8e2e0a869af66ace715b7354090f1059ed7"
+          },
+          {
+            "path": "vendor/netron/pytorch-metadata.json",
+            "gitBlob": "034cbbdabc1c2aff3952b04da47ca7e55c872c73"
+          },
+          {
+            "path": "vendor/netron/pytorch-proto.js",
+            "gitBlob": "594d23d2542c4c3350fa58dbf3345de80be46fc8"
+          },
+          {
+            "path": "vendor/netron/pytorch-schema.js",
+            "gitBlob": "8aab3a468490eb15341b41c6854f2b2ef4bab483"
+          },
+          {
+            "path": "vendor/netron/pytorch.js",
+            "gitBlob": "5fecfc256574f5fda1d9d9264a2cd25416d88682"
+          },
+          {
+            "path": "vendor/netron/pytorch.py",
+            "gitBlob": "38a9ee55496a46c29a94e510ccb76dc02b229554"
+          },
+          {
+            "path": "vendor/netron/qnn-metadata.json",
+            "gitBlob": "25f1145f5f89f3f9e6567da6ab3e154f9ead5f53"
+          },
+          {
+            "path": "vendor/netron/qnn.js",
+            "gitBlob": "385e49952f682a32a02e7506be96fc49dec18787"
+          },
+          {
+            "path": "vendor/netron/rknn-metadata.json",
+            "gitBlob": "d1c47976df3707993fab081e452b61684f87a8cb"
+          },
+          {
+            "path": "vendor/netron/rknn-schema.js",
+            "gitBlob": "4c297bf4f1bbc06323484a0f7d7307b87130954e"
+          },
+          {
+            "path": "vendor/netron/rknn.js",
+            "gitBlob": "e4b693f5e0cfc153555fa7f85ac88dd6acfc0bc6"
+          },
+          {
+            "path": "vendor/netron/safetensors.js",
+            "gitBlob": "ba0eccfe804d482e33b721c47e69050d49690cc2"
+          },
+          {
+            "path": "vendor/netron/sentencepiece-proto.js",
+            "gitBlob": "695eff958c81dde796abae7b5127c1286746f15b"
+          },
+          {
+            "path": "vendor/netron/sentencepiece.js",
+            "gitBlob": "558560c30d7a3019bd78f3cdd9466f1a952242df"
+          },
+          {
+            "path": "vendor/netron/server.py",
+            "gitBlob": "d4409bbbd30bb91f9fb4477dd1a60855740462fd"
+          },
+          {
+            "path": "vendor/netron/sklearn-metadata.json",
+            "gitBlob": "4166b19ecd7e24aa64d6f602663630dd039228cd"
+          },
+          {
+            "path": "vendor/netron/sklearn.js",
+            "gitBlob": "93dd195df6867d0e9730aef225feb834db2c2295"
+          },
+          {
+            "path": "vendor/netron/tar.js",
+            "gitBlob": "59cdb9e288b7ec8bd7e68c70a17fd3aa25adedc4"
+          },
+          {
+            "path": "vendor/netron/tengine-metadata.json",
+            "gitBlob": "67af19558ace31c36224905a5c4152fc4757d0bb"
+          },
+          {
+            "path": "vendor/netron/tengine.js",
+            "gitBlob": "ff8ab0ef1f3960e519b936d760c28eb17fb53050"
+          },
+          {
+            "path": "vendor/netron/tensorrt.js",
+            "gitBlob": "5987525172d001ee05d8cdb42b17aba7f49fb8b6"
+          },
+          {
+            "path": "vendor/netron/text.js",
+            "gitBlob": "27a06da76b7c1efb908a0c78cb701c8521a14cb5"
+          },
+          {
+            "path": "vendor/netron/tf-metadata.json",
+            "gitBlob": "320cebfd2b1e2f56e423fc23ab409231b4cccbf3"
+          },
+          {
+            "path": "vendor/netron/tf-proto.js",
+            "gitBlob": "e64ddf164084e37b460b2e5c83ec65b8de10362b"
+          },
+          {
+            "path": "vendor/netron/tf.js",
+            "gitBlob": "bab88b6e9db9d1c7e2fcf117dccb93c835104c9a"
+          },
+          {
+            "path": "vendor/netron/tflite-metadata.json",
+            "gitBlob": "aff7136e01a576a2e8bdb5384908bdd7c3251d32"
+          },
+          {
+            "path": "vendor/netron/tflite-schema.js",
+            "gitBlob": "f9a681d111663b20f7c3f75f0877579e56b7f030"
+          },
+          {
+            "path": "vendor/netron/tflite.js",
+            "gitBlob": "ecca54baed6a6ba912ea377ac0c8d553a68fa4dd"
+          },
+          {
+            "path": "vendor/netron/tnn-metadata.json",
+            "gitBlob": "80c5c3757601de306dac4c1cdc5c04502b328e5f"
+          },
+          {
+            "path": "vendor/netron/tnn.js",
+            "gitBlob": "fab060c6701a5a6509db3996a32dff2d89b7702a"
+          },
+          {
+            "path": "vendor/netron/torch-metadata.json",
+            "gitBlob": "3a67732b613a854eacea4ce43dae13cf8a2e6312"
+          },
+          {
+            "path": "vendor/netron/torch.js",
+            "gitBlob": "e082851b250e2158bbddfddc73347f561ba19743"
+          },
+          {
+            "path": "vendor/netron/tosa-metadata.json",
+            "gitBlob": "77d208cab0bdba9225f11d75cdc04cab4ddda2de"
+          },
+          {
+            "path": "vendor/netron/tosa-schema.js",
+            "gitBlob": "c00394e0b8c7b984b4da87444dc6d33ed02f4b22"
+          },
+          {
+            "path": "vendor/netron/tosa.js",
+            "gitBlob": "d20a51b69177ea7d338327d97c1e6988f951b276"
+          },
+          {
+            "path": "vendor/netron/transformers.js",
+            "gitBlob": "57f39fc802c2c9c8fb35a1db840b35b51eccc468"
+          },
+          {
+            "path": "vendor/netron/tvm.js",
+            "gitBlob": "3a98dcfa2d9d1cd99bf0ca9308a314ad0577c07a"
+          },
+          {
+            "path": "vendor/netron/uff-metadata.json",
+            "gitBlob": "ad9f28a035eb7966bb66b301b4d051e258a1d901"
+          },
+          {
+            "path": "vendor/netron/uff-proto.js",
+            "gitBlob": "72d8a1a147ebc357c37b26e7fc78a34e98754958"
+          },
+          {
+            "path": "vendor/netron/uff.js",
+            "gitBlob": "9d0d3e92b42a29a79e8e4f8f8b43c414fe534b3a"
+          },
+          {
+            "path": "vendor/netron/view.js",
+            "gitBlob": "876d2033c8c14df0662c74490d498f496393c811"
+          },
+          {
+            "path": "vendor/netron/weka.js",
+            "gitBlob": "fe848e4bf7f5d232873f7b16888068c2e34e4562"
+          },
+          {
+            "path": "vendor/netron/worker.js",
+            "gitBlob": "a66220b01174f332ea496110d598de20262315db"
+          },
+          {
+            "path": "vendor/netron/xgboost.js",
+            "gitBlob": "e32acc11d937a2e4054dc36e79b376ef5fd15d84"
+          },
+          {
+            "path": "vendor/netron/xml.js",
+            "gitBlob": "bc7ba9bc13dafac93ee2a5229cc199e6853979f9"
+          },
+          {
+            "path": "vendor/netron/xmodel-proto.js",
+            "gitBlob": "6955959597febff16ad89a7b7c3066abfd4eef31"
+          },
+          {
+            "path": "vendor/netron/xmodel.js",
+            "gitBlob": "96924582097b8bbb17b7c0faea5502f0b629ec66"
+          },
+          {
+            "path": "vendor/netron/zip.js",
+            "gitBlob": "1e5370a7782296d4961d082468ad6fa89980d072"
+          }
+        ],
+        "reused": false
+      },
+      {
+        "kind": "site",
+        "runId": 40717145009,
+        "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40717145009",
+        "testedCommit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+        "artifactId": 12829765500,
+        "artifactDigest": "sha256:49c17d52a8cdfcce18624e92d68e717c73811f9d06515fce00371350e54e6621",
+        "reportSHA256": "ef33ccec22b96ca5a2faff8009a39dc939c66094153aa03cb9ea6d65b3d7ac1e",
+        "scopeFingerprint": "148bd0ee9b5b128717f30505a0a46676053a69113299f571f5cda8c355473de5",
+        "scopeFiles": [
+          {
+            "path": ".github/workflows/production-smoke.yml",
+            "gitBlob": "d9e199ac9887b624cb62a55ff8b7aef7fa8401f1"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "e1ead4b49468f01917619e407698e88cf75425dccb057fd86a8da8317975924c"
+          },
+          {
+            "path": "package.json",
+            "sha256": "fe2f524d8d06afd95537ca80104c04e9ff6ca22093df1defd804e9651115b8af"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "gitBlob": "670104630c39710a80526cce0bede233e1d904c8"
+          },
+          {
+            "path": "scripts/install-browser.mjs",
+            "gitBlob": "0c44bc77d9fc65d12db5412b5cf482f3e6e5e48d"
+          },
+          {
+            "path": "scripts/lib/build-profile.mjs",
+            "gitBlob": "77d9b359592cb937e558b3b04894edc67ba139cb"
+          },
+          {
+            "path": "scripts/lib/deployment-history.mjs",
+            "gitBlob": "c8df41f9dfcc67db544231c4eeb300d2200c0daf"
+          },
+          {
+            "path": "scripts/lib/live-site.mjs",
+            "gitBlob": "16a625b3d0c594e5176154b294d5375f1897f489"
+          },
+          {
+            "path": "scripts/lib/pages-release.mjs",
+            "gitBlob": "7f3914df83c809d40eb5a084ccd4f378e7e8c3a1"
+          },
+          {
+            "path": "scripts/lib/release-artifact.mjs",
+            "gitBlob": "56db40570d1155ee23178590d816076d5b657918"
+          },
+          {
+            "path": "scripts/lib/release-baseline.mjs",
+            "gitBlob": "fb90efa50b637e8f192398b2fb41700ecaa96017"
+          },
+          {
+            "path": "scripts/lib/release-history.mjs",
+            "gitBlob": "c880c1825645c4ffede7621c99841df8546486a1"
+          },
+          {
+            "path": "scripts/lib/release-test-plan.mjs",
+            "gitBlob": "0c29d643073cf9d6c3a973aa34900d060b27595f"
+          },
+          {
+            "path": "scripts/lib/site-browser-policy.mjs",
+            "gitBlob": "2ce362719a641589de1c854197d6ce698a169df7"
+          },
+          {
+            "path": "scripts/lib/site-history.mjs",
+            "gitBlob": "0799ba1896a39c910e363a09e0ec25a4dd6f6360"
+          },
+          {
+            "path": "scripts/lib/versioned-site.mjs",
+            "gitBlob": "4e234e356234d04adc81312f36a3f130f7fe9f34"
+          },
+          {
+            "path": "scripts/serve.mjs",
+            "gitBlob": "3ce386d4f5054d3c684a3b14316f7de113c71bd6"
+          },
+          {
+            "path": "scripts/verify-export.mjs",
+            "gitBlob": "5c3108139f61f3aa79e675f04b6f930a63de15ce"
+          },
+          {
+            "path": "src/app.css",
+            "gitBlob": "1f978e14eb8d510a1265648ee572d671b2f57b0a"
+          },
+          {
+            "path": "src/app.js",
+            "gitBlob": "707b4358fc45b786e297d745209c76308c0ec488"
+          },
+          {
+            "path": "src/diagnostics-ui.js",
+            "gitBlob": "e0199d8e0e073c75942c6fed19540382796a19fa"
+          },
+          {
+            "path": "src/diagnostics.js",
+            "gitBlob": "d497dba705c603a7945037a5f6652ff03e67c269"
+          },
+          {
+            "path": "src/dialog-keyboard.js",
+            "gitBlob": "6e3d667016b66cfcd005c4f3fd8929b0e376bdb5"
+          },
+          {
+            "path": "src/edit-recovery-fingerprint.js",
+            "gitBlob": "705fcf9063c9eed3c7f0d83e2f538e573aff6849"
+          },
+          {
+            "path": "src/edit-recovery-lifecycle.js",
+            "gitBlob": "ae30016defd6025926572ace5fbb08a28662b851"
+          },
+          {
+            "path": "src/edit-recovery-session.js",
+            "gitBlob": "8967bd523862e9f317ed3bb390714731a1f34871"
+          },
+          {
+            "path": "src/edit-recovery-store.js",
+            "gitBlob": "5de9fee146decbc3f341c306ee321be2c9490574"
+          },
+          {
+            "path": "src/edit-recovery-ui.js",
+            "gitBlob": "ee9be28296b037ade07209592336e2bca1ae666a"
+          },
+          {
+            "path": "src/edit-recovery-worker.js",
+            "gitBlob": "d1c8b399fe603a0f2c9cc6dbbeed81ff967bc202"
+          },
+          {
+            "path": "src/explorer-resize.css",
+            "gitBlob": "77e05f9755c077f7458680adc25dddb7f7e7e5fd"
+          },
+          {
+            "path": "src/explorer-resize.js",
+            "gitBlob": "be73a77af2dd0bf2f6c14c2c962af5154d4d900e"
+          },
+          {
+            "path": "src/export-report-ui.js",
+            "gitBlob": "274e3669d3c6c7d868f8f20cc1533105d78dd0a9"
+          },
+          {
+            "path": "src/export-report.js",
+            "gitBlob": "a781fb08db643a493238be4ee2b46d76d40f701a"
+          },
+          {
+            "path": "src/exported-model-ui.js",
+            "gitBlob": "b57065f78665a19546460ab4dbc460cf4cc190fb"
+          },
+          {
+            "path": "src/file-fingerprint.js",
+            "gitBlob": "e4e2b3022db89206e6cbfceb09a8160b837c04b0"
+          },
+          {
+            "path": "src/flatbuffer-writer.js",
+            "gitBlob": "0fecbc099ae48b4ef9e17325dd0c91a64ccdbf37"
+          },
+          {
+            "path": "src/hydrate.js",
+            "gitBlob": "bf32e202973bcecf7d6108461a69bbe98bfb6a66"
+          },
+          {
+            "path": "src/laptop.css",
+            "gitBlob": "8a67a22d9ecda568b09238aec705ed315fd38cca"
+          },
+          {
+            "path": "src/mlir-combined-graph.js",
+            "gitBlob": "d7f24cb87a6300ce9fa8653b4c1118c5e5c12d01"
+          },
+          {
+            "path": "src/mlir-connection-index.js",
+            "gitBlob": "4e2e8e004e695ba03e99141fbeb7c59263792f15"
+          },
+          {
+            "path": "src/mlir-connection-view.js",
+            "gitBlob": "97c9765c20462e62d43345caff9aabffe34af720"
+          },
+          {
+            "path": "src/mlir-dialect-contract.js",
+            "gitBlob": "b0fadac912de6fe2d978d78ea71f3d61fa0d5bf9"
+          },
+          {
+            "path": "src/mlir-dialect-registry.js",
+            "gitBlob": "3f64eda72d5113fdd33c3ca6f8bae3388e4181d1"
+          },
+          {
+            "path": "src/mlir-dialects.js",
+            "gitBlob": "b2db13d01bc25ab699155656a3a7181a65c66b7d"
+          },
+          {
+            "path": "src/mlir-engine.js",
+            "gitBlob": "c9c79f5df9bb28251885da57bf9002a3272d6ce8"
+          },
+          {
+            "path": "src/mlir-export-provenance.js",
+            "gitBlob": "dcb2ce5cdd6c2232731fc5ddd5c90b5f9e37543e"
+          },
+          {
+            "path": "src/mlir-export.js",
+            "gitBlob": "a4342f414323cefbe2105f819fc519977773aedc"
+          },
+          {
+            "path": "src/mlir-file.js",
+            "gitBlob": "cec48572ccb93552bf86c1c42d4c66fa6ab9259e"
+          },
+          {
+            "path": "src/mlir-ir.js",
+            "gitBlob": "f50be08e9282577ad054e535808f24dc1efbe0f8"
+          },
+          {
+            "path": "src/mlir-model-edit.js",
+            "gitBlob": "3dd2b7c0a5b8c56030d82dfbba76215700b94fa8"
+          },
+          {
+            "path": "src/mlir-pattern-edit.js",
+            "gitBlob": "4bdd7e88407234886759ebc5de5891038ffc401e"
+          },
+          {
+            "path": "src/mlir-pattern-editor.js",
+            "gitBlob": "82dfcae991dc794eba13efcd8fbb0a6a7ee17e65"
+          },
+          {
+            "path": "src/mlir-pattern-projection.js",
+            "gitBlob": "feeba58711115a3da5d846af74c42d7b5d3ea635"
+          },
+          {
+            "path": "src/mlir-pattern-spec.js",
+            "gitBlob": "97b808518b0d9248bff1240d8cbb8c27d938dc1b"
+          },
+          {
+            "path": "src/mlir-pattern.js",
+            "gitBlob": "81ed47e5d24004002ce5d2bbd5cbfbcd86acabc8"
+          },
+          {
+            "path": "src/mlir-slice-graph.js",
+            "gitBlob": "9d7f5a9933556a3041787aee5c18f9ccf1edb678"
+          },
+          {
+            "path": "src/mlir-slice.js",
+            "gitBlob": "2a3f0d3fdd87167fd643cb5dc95d94ccc41d14f8"
+          },
+          {
+            "path": "src/mlir-types.js",
+            "gitBlob": "67cd259e1485510032da7555027419f032dce35b"
+          },
+          {
+            "path": "src/mlir-validate.js",
+            "gitBlob": "72d8b674a74d22a8da03bf220d410caa848fea2d"
+          },
+          {
+            "path": "src/mobile.css",
+            "gitBlob": "6944e6c29a5b6524ca0f5c0ceb7d2bc2dc51d91d"
+          },
+          {
+            "path": "src/model-adapters.js",
+            "gitBlob": "e11e11f9ff39f9438e00d71beb26f33d6eeb5ffb"
+          },
+          {
+            "path": "src/model-edit-draft.js",
+            "gitBlob": "6d9a33c0e1f292ca97f70e361f276b2bd77635cc"
+          },
+          {
+            "path": "src/model-edit-new-ops-ui.js",
+            "gitBlob": "f7c17f687ea293596d7cb7490db8844145810494"
+          },
+          {
+            "path": "src/model-edit-policy.js",
+            "gitBlob": "49dffd42e04dfd27a7cccf63b419d4866195db46"
+          },
+          {
+            "path": "src/model-edit-report.js",
+            "gitBlob": "531eae94fd9008431839b0d0d1127bcb2a582e4c"
+          },
+          {
+            "path": "src/model-edit-session.js",
+            "gitBlob": "db161cc17367fa171cd39b3ec9396bb520380971"
+          },
+          {
+            "path": "src/model-edit-ui.js",
+            "gitBlob": "798b55e3ba74d0610eda43c705246c235c58587b"
+          },
+          {
+            "path": "src/model-edit-workspace-ui.js",
+            "gitBlob": "1cda22bc19b25c985464c907604b396cd82d3f4c"
+          },
+          {
+            "path": "src/model-edit-workspace.css",
+            "gitBlob": "bd1ac504d5c2045382e367509d7627bdb8ecf6d1"
+          },
+          {
+            "path": "src/model-edit-workspace.js",
+            "gitBlob": "631348ff26c78c82e2f03e46ed7ab7dd803c0380"
+          },
+          {
+            "path": "src/model-engine.js",
+            "gitBlob": "13f9e3c0e8b8ff526b04ec2fa6e37cbad8d623ea"
+          },
+          {
+            "path": "src/model-formats.js",
+            "gitBlob": "8dd3f230e050fd17abc41eadbdada74a9f05f9b0"
+          },
+          {
+            "path": "src/model-operation-edit.js",
+            "gitBlob": "07d4f74cbaaf859bc2cab1cf8ccf8c0ed7e4399a"
+          },
+          {
+            "path": "src/model-tabs.css",
+            "gitBlob": "64254ed43cfbffdf3e3c3830f9f8e21904d21847"
+          },
+          {
+            "path": "src/model-tabs.js",
+            "gitBlob": "dd676c8c5097bb088c37e48af569c0810b2782d6"
+          },
+          {
+            "path": "src/model-visibility.css",
+            "gitBlob": "2803f1e58d71bb5a7151353a8c24dfabd3dc823f"
+          },
+          {
+            "path": "src/model-worker.js",
+            "gitBlob": "cba31747ac38a5b84d91caa4fa9238a05a387ff9"
+          },
+          {
+            "path": "src/overview-canvas.css",
+            "gitBlob": "4534ac855da360e69e2cfa4a7e9ef9404309f548"
+          },
+          {
+            "path": "src/overview-canvas.js",
+            "gitBlob": "b1edd26707808a477fbccf0b1282c6f9886d735f"
+          },
+          {
+            "path": "src/overview-layout.js",
+            "gitBlob": "f1edd5b3e6914469f16d7dda903ca2fe9be32c5a"
+          },
+          {
+            "path": "src/pattern-condition-editor.js",
+            "gitBlob": "ba6b35ebac5de6567b67bc203eb1d80ca02c91e2"
+          },
+          {
+            "path": "src/pattern-conditions.js",
+            "gitBlob": "50880976e1a0d394e3c9eb529e7d98fa7185a6f4"
+          },
+          {
+            "path": "src/pattern-fold.js",
+            "gitBlob": "e6b68fce96857f09fc420e62d72cab0e0fd15b16"
+          },
+          {
+            "path": "src/pattern-library.js",
+            "gitBlob": "6f91df06eafef5f17caa4fba27533bb46be75680"
+          },
+          {
+            "path": "src/pattern-overview.js",
+            "gitBlob": "5de99f245ac8e7350e4fdc3a69f659c37f416c19"
+          },
+          {
+            "path": "src/pattern-selection.js",
+            "gitBlob": "c3730f09e351be17d5f87df383b10b8b256d62a9"
+          },
+          {
+            "path": "src/pattern-store.js",
+            "gitBlob": "df29b0b8d9b7e288c5d9d06dc72e31a3768b051f"
+          },
+          {
+            "path": "src/pattern-utils.js",
+            "gitBlob": "7964874c737bc9d2e5638d43a1d1d9ab628c1303"
+          },
+          {
+            "path": "src/pattern-workspace.css",
+            "gitBlob": "6d3b8ab017b185609385a01df494ad9f3f8ab87a"
+          },
+          {
+            "path": "src/range-stream.js",
+            "gitBlob": "951af0f0dc91fdc4be2d4e6e5943112f90ba7bf0"
+          },
+          {
+            "path": "src/rectangle-selection.js",
+            "gitBlob": "b41245e2dbeba7f7fdc36e0458b89696ec3e34c2"
+          },
+          {
+            "path": "src/release-info.js",
+            "gitBlob": "5c9e4a9f8cc863341262d2da7dc9f6db455cc317"
+          },
+          {
+            "path": "src/release.css",
+            "gitBlob": "d14bc108f905d812dccd5c168555f5acda5664a7"
+          },
+          {
+            "path": "src/resize-in-frame.js",
+            "gitBlob": "d8bdc3abddf9b4bd6cca2e694e9e63319599ed40"
+          },
+          {
+            "path": "src/shell.html",
+            "gitBlob": "f42215d21b5d80649d73568a1996e9e2d5481bfb"
+          },
+          {
+            "path": "src/subgraph-pattern.js",
+            "gitBlob": "4e5eb399a22da15f5533d0e6fd7e381da8500fae"
+          },
+          {
+            "path": "src/svg-viewport.js",
+            "gitBlob": "81157dea91cc19d8e74d93b4c42b93c355c87c99"
+          },
+          {
+            "path": "src/tensor-random.js",
+            "gitBlob": "ed3fb4cb68b86a16a239be8653dd0325c04c07ac"
+          },
+          {
+            "path": "src/tflite-export.js",
+            "gitBlob": "6c67fc102bd9e99da0389cb65f7b0136acc29c28"
+          },
+          {
+            "path": "src/tflite-model-edit.js",
+            "gitBlob": "05a50924ea96938484e72a8b2c82bb715e589c50"
+          },
+          {
+            "path": "src/tflite-new-ops.js",
+            "gitBlob": "5eff7853488dfe79b239648099fb0bdf3ec0baee"
+          },
+          {
+            "path": "src/tflite-op-options.js",
+            "gitBlob": "f33b6cb6a0c1963258abea4457e86afb27850ae6"
+          },
+          {
+            "path": "src/tflite-runtime-archive.js",
+            "gitBlob": "7e4811539e4fa6fc2810fa136d6fbca70aab374c"
+          },
+          {
+            "path": "src/tflite-runtime-client.js",
+            "gitBlob": "04ae5278eb46b8c9515b820b3a713501957a8bd9"
+          },
+          {
+            "path": "src/tflite-runtime-execute.js",
+            "gitBlob": "8983e0f11941638dca7effba92e47ce8844c9f3f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs-ui.js",
+            "gitBlob": "fdab7d062f4d91b3c17d0734d10079edffeaba5f"
+          },
+          {
+            "path": "src/tflite-runtime-inputs.js",
+            "gitBlob": "da3056ca9b34e7e6689b5317605f2ace0c5f5f99"
+          },
+          {
+            "path": "src/tflite-runtime-policy.js",
+            "gitBlob": "0415c4cce0e371799ebb2802b37e9684c95615b7"
+          },
+          {
+            "path": "src/tflite-runtime-report.js",
+            "gitBlob": "b3d16ec2d47fa5f7d2e3fa79d6c0d568b305e4dd"
+          },
+          {
+            "path": "src/tflite-runtime-worker.js",
+            "gitBlob": "6b784d7b35903c864518e86e7565bf168c3ab6c7"
+          },
+          {
+            "path": "src/tflite-shape-inference.js",
+            "gitBlob": "160864a01ef970d3fefb288bf8a74c8e24a1919c"
+          },
+          {
+            "path": "src/typography.css",
+            "gitBlob": "fed5bf28628c2401c3529c274f8c6f62cbf717f6"
+          },
+          {
+            "path": "src/workspace-drafts.js",
+            "gitBlob": "d265d061300112b244b2bc166c7202a4713c0f7c"
+          },
+          {
+            "path": "src/workspace-history.js",
+            "gitBlob": "972a72bb11ded16bf9380168f37def135dd58837"
+          },
+          {
+            "path": "src/workspace-session-ui.js",
+            "gitBlob": "5b95b494e21c319b9bd312569d8809d138de1198"
+          },
+          {
+            "path": "src/workspace-session.js",
+            "gitBlob": "7f6112d43ddf48feead034bdf7cea0cfb3f25d04"
+          },
+          {
+            "path": "src/workspace.css",
+            "gitBlob": "59b19e76f9e21d361d386f152b385bf0db1d6a40"
+          },
+          {
+            "path": "src/workspace.js",
+            "gitBlob": "3cf3b9bdf248576e4429127421324e317bfea2d1"
+          },
+          {
+            "path": "test/browser/edit-draft-chooser.mjs",
+            "gitBlob": "f266737a5a127db3bfcb9e531734b6d1f8bcdecc"
+          },
+          {
+            "path": "test/browser/edit-recovery-flow.mjs",
+            "gitBlob": "34843e1b8eb0f1384b18a114793a22d0f8dc7a88"
+          },
+          {
+            "path": "test/browser/edit-workspace-flow.mjs",
+            "gitBlob": "5894cc6cefd998e9419c9042c6b212866c397178"
+          },
+          {
+            "path": "test/browser/keyboard-flow.mjs",
+            "gitBlob": "22d9b143be8f3296378ee906635a364a027ce0b8"
+          },
+          {
+            "path": "test/browser/mlir-keyboard-flow.mjs",
+            "gitBlob": "2eaace263fdb7028585fe43bfd72ab69aeaaa0cb"
+          },
+          {
+            "path": "test/browser/mlir-selection-flow.mjs",
+            "gitBlob": "360d089514d6c8ed871638332c8fd34cdf5af9c0"
+          },
+          {
+            "path": "test/browser/model-edit-flow.mjs",
+            "gitBlob": "ed75d04a8e303b777f7d1a097527683070fbf344"
+          },
+          {
+            "path": "test/browser/model-tabs-flow.mjs",
+            "gitBlob": "279f09e0bebf73f7a80db51728b57842bb357a0e"
+          },
+          {
+            "path": "test/browser/pattern-delete-flow.mjs",
+            "gitBlob": "1bafdbf2ccc7fa881e094f32a95cdf1853a6be64"
+          },
+          {
+            "path": "test/browser/portable-edit-flow.mjs",
+            "gitBlob": "1523120c56fe66ee3e149f7017cd715f7338b3fe"
+          },
+          {
+            "path": "test/browser/production-smoke.mjs",
+            "gitBlob": "5ab173d416bb5f5c02ff1c1476fecad15f28295b"
+          },
+          {
+            "path": "test/browser/tflite-control-edit-flow.mjs",
+            "gitBlob": "7263928b106eddb362ac95e068abf99f9d272adc"
+          },
+          {
+            "path": "test/browser/tflite-runtime-flow.mjs",
+            "gitBlob": "29bf74aaf6227205094fd22d10b35c48313c2195"
+          },
+          {
+            "path": "test/browser/versioned-site.mjs",
+            "gitBlob": "3a7fc0a681a6b3d0112822c408be0f070da990b7"
+          },
+          {
+            "path": "test/custom-fixture.mjs",
+            "gitBlob": "bef151e76b72de77fb7dbb6fd53dadf19733cb86"
+          },
+          {
+            "path": "test/fixture.mjs",
+            "gitBlob": "f2b62ba3f4dfe9c420d7ad009f61cbaef66063b6"
+          },
+          {
+            "path": "test/mlir-fixture.mjs",
+            "gitBlob": "43ee657e5c4b910d8106a3e7bf67290907ae65cf"
+          },
+          {
+            "path": "test/mlir-keyboard-fixture.mjs",
+            "gitBlob": "2de3cddfbe0a5980ffbba5d98395b40dd9cd686e"
+          },
+          {
+            "path": "test/runtime-fixture.mjs",
+            "gitBlob": "409b75869a3790ca9c0fb39999a7dfd0ee911193"
+          },
+          {
+            "path": "test/tflite-control-fixture.mjs",
+            "gitBlob": "359755e6ba8d35f07789f09a6e740d801059061c"
+          },
+          {
+            "path": "vendor/litert/2.6.0/LICENSE",
+            "gitBlob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+          },
+          {
+            "path": "vendor/litert/2.6.0/NOTICE.txt",
+            "gitBlob": "05a4a7704fa2e5e6a5d94873343c85bcf61d48a5"
+          },
+          {
+            "path": "vendor/litert/2.6.0/core.js",
+            "gitBlob": "a0cf4e4886969c625fa3a7759da8c18e472ed1cc"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+            "gitBlob": "f4a95a33cbbc458f90b4dc5296df1e6d834d43ec"
+          },
+          {
+            "path": "vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+            "gitBlob": "ae0217d011d041d333eeee6e3adcf918815295b8"
+          },
+          {
+            "path": "vendor/litert/2.6.0/provenance.json",
+            "gitBlob": "56a5641c311a742726861b6ac5364670df6b6a42"
+          },
+          {
+            "path": "vendor/litert/2.6.0/wasm-utils.js",
+            "gitBlob": "b9e6039ba5ef25c4e7a75c4ab0ee71fa6f1adb45"
+          },
+          {
+            "path": "vendor/netron/LICENSE",
+            "gitBlob": "c1d7e2e3af73c5b6a3e0fbad011afee3d3509f05"
+          },
+          {
+            "path": "vendor/netron/__init__.py",
+            "gitBlob": "8f5a6752c151e69be0eb64a5a6bf5f8518a1cf55"
+          },
+          {
+            "path": "vendor/netron/acuity-metadata.json",
+            "gitBlob": "fb138f1e4505542f51eaf993bdc6a1665789bb77"
+          },
+          {
+            "path": "vendor/netron/acuity.js",
+            "gitBlob": "483c75b2625975ba7ce389244b66cf6b95b24333"
+          },
+          {
+            "path": "vendor/netron/app.js",
+            "gitBlob": "79e181bfee2773ca9d87c93e368b6b041a252ef3"
+          },
+          {
+            "path": "vendor/netron/armnn-metadata.json",
+            "gitBlob": "1538afa5c3e3934d9a32af58d76076447946cb17"
+          },
+          {
+            "path": "vendor/netron/armnn-schema.js",
+            "gitBlob": "26f65cc37957acc7f01bd73db9c83681fec7850b"
+          },
+          {
+            "path": "vendor/netron/armnn.js",
+            "gitBlob": "8e08bf80503c0f18354ce840e90d3df0e8f820a9"
+          },
+          {
+            "path": "vendor/netron/barracuda.js",
+            "gitBlob": "e0548742b0030966d700f64a5865abf8aa7a0217"
+          },
+          {
+            "path": "vendor/netron/base.js",
+            "gitBlob": "63191c9a4710e169dd9d905bd72866f14af954f7"
+          },
+          {
+            "path": "vendor/netron/bigdl-metadata.json",
+            "gitBlob": "d42b79c7e68b2c69adb9fa41ab79a944f2ca9ccc"
+          },
+          {
+            "path": "vendor/netron/bigdl-proto.js",
+            "gitBlob": "6569289ab396ad59928f7c7207cfa68d4e3c82d9"
+          },
+          {
+            "path": "vendor/netron/bigdl.js",
+            "gitBlob": "1569d03009e725a36a6d1352f18c33f6c7baab92"
+          },
+          {
+            "path": "vendor/netron/browser.js",
+            "gitBlob": "93cbfdf9da8655f6d9980420e5f3c85f9009fa55"
+          },
+          {
+            "path": "vendor/netron/caffe-metadata.json",
+            "gitBlob": "3d7c1927eec68dffde58d2302b94d599e1734365"
+          },
+          {
+            "path": "vendor/netron/caffe-proto.js",
+            "gitBlob": "9b8d99fe43e0e1d1a9a50c836afe5d1eac934376"
+          },
+          {
+            "path": "vendor/netron/caffe.js",
+            "gitBlob": "7d89f1a47f2a8f71391a45961f1949ec920ff7b0"
+          },
+          {
+            "path": "vendor/netron/caffe2-metadata.json",
+            "gitBlob": "47b29c825f338176bef2a7822e1805a582e6b028"
+          },
+          {
+            "path": "vendor/netron/caffe2-proto.js",
+            "gitBlob": "ebfc04413acf31e4330b32e591cfd2caa3fa36a7"
+          },
+          {
+            "path": "vendor/netron/caffe2.js",
+            "gitBlob": "6e3a2089690a1db14d0019a90461168f0307a6b1"
+          },
+          {
+            "path": "vendor/netron/catboost-schema.js",
+            "gitBlob": "8335914a1662e6aca80086f52216e7f970945b9d"
+          },
+          {
+            "path": "vendor/netron/catboost.js",
+            "gitBlob": "e058f69c3efdfa6e8eb34d95ef34aa0e32bcbe78"
+          },
+          {
+            "path": "vendor/netron/circle-metadata.json",
+            "gitBlob": "76e82c6ba1d9c381bb8137ac4e1cfac2a50321f0"
+          },
+          {
+            "path": "vendor/netron/circle-schema.js",
+            "gitBlob": "397e8928b820572ad36b1daa8e1a94d1bbc48547"
+          },
+          {
+            "path": "vendor/netron/circle.js",
+            "gitBlob": "9b7b05da70b5e656a622573bf04e9db70a75bb19"
+          },
+          {
+            "path": "vendor/netron/cntk-metadata.json",
+            "gitBlob": "dbb77ab5ebd0659256398c80a3b8447047ce5bb7"
+          },
+          {
+            "path": "vendor/netron/cntk-proto.js",
+            "gitBlob": "4912e831ef7ac179663d4617f8c686e87a4d6055"
+          },
+          {
+            "path": "vendor/netron/cntk.js",
+            "gitBlob": "d2e1a985ad94148def420d7cfee9956473ae35b0"
+          },
+          {
+            "path": "vendor/netron/coreml-metadata.json",
+            "gitBlob": "1a5ff686f034b38b34af06265a3bc24c99a90e5a"
+          },
+          {
+            "path": "vendor/netron/coreml-proto.js",
+            "gitBlob": "7fb2256a7d3c20f44576a1cc71db5945a104a069"
+          },
+          {
+            "path": "vendor/netron/coreml.js",
+            "gitBlob": "7a4813b4718975150edcb7b0d1ce0dd45d3a7ed3"
+          },
+          {
+            "path": "vendor/netron/dagre.js",
+            "gitBlob": "2c3b578b19ec9ad3a1d6a3c34d987613e0f3c9b9"
+          },
+          {
+            "path": "vendor/netron/darknet-metadata.json",
+            "gitBlob": "c5b171bfaa0d0a22575c66aa3c620b0d52c99263"
+          },
+          {
+            "path": "vendor/netron/darknet.js",
+            "gitBlob": "51690f668a35f8e89c43b60d49ed1ca857407d6e"
+          },
+          {
+            "path": "vendor/netron/desktop.mjs",
+            "gitBlob": "1da044b49d20620e189c438cd8baeb59417be0d3"
+          },
+          {
+            "path": "vendor/netron/dl4j-metadata.json",
+            "gitBlob": "4965893a0dfc4ef82a0e085e4f75fe054c83315e"
+          },
+          {
+            "path": "vendor/netron/dl4j.js",
+            "gitBlob": "24a4a83862434a1570e005809b4cc6ba92fbe362"
+          },
+          {
+            "path": "vendor/netron/dlc-metadata.json",
+            "gitBlob": "9cb6471dcd4406f50fdd441120950156182a8292"
+          },
+          {
+            "path": "vendor/netron/dlc-schema.js",
+            "gitBlob": "3b66ae11ee734d0d06b985291738c1d6b560040b"
+          },
+          {
+            "path": "vendor/netron/dlc.js",
+            "gitBlob": "2c0a4d4a6426bd177ed1de00e7432adac935be57"
+          },
+          {
+            "path": "vendor/netron/dnn-metadata.json",
+            "gitBlob": "2e0f4b2a434f049bd3b8f376d72e0109e9e397c6"
+          },
+          {
+            "path": "vendor/netron/dnn-proto.js",
+            "gitBlob": "d44888bfd8d1040ddd52b719e621088fd6993d14"
+          },
+          {
+            "path": "vendor/netron/dnn.js",
+            "gitBlob": "0dd94238e75da6265c234b59166dcaf6a2e4e672"
+          },
+          {
+            "path": "vendor/netron/dot.js",
+            "gitBlob": "5141f77d1e82b596b961ec74452c02972d194565"
+          },
+          {
+            "path": "vendor/netron/espdl-metadata.json",
+            "gitBlob": "01ad405719c20224407885f17afb91e1d5a8cd30"
+          },
+          {
+            "path": "vendor/netron/espdl-schema.js",
+            "gitBlob": "0447faea875a7d5f92a5d69afd56ed85287d8b5f"
+          },
+          {
+            "path": "vendor/netron/espdl.js",
+            "gitBlob": "61608542f5f66521326d0f4d17a8bb4f7e7204c1"
+          },
+          {
+            "path": "vendor/netron/espresso-metadata.json",
+            "gitBlob": "f4c718388a64dacae74f2093e1b93a84e9f93c62"
+          },
+          {
+            "path": "vendor/netron/espresso.js",
+            "gitBlob": "fef2a14382d864ede99ffe6ee04e87f211e9e385"
+          },
+          {
+            "path": "vendor/netron/executorch-schema.js",
+            "gitBlob": "a822a3e47c108162efef4f48addab69cc84d636a"
+          },
+          {
+            "path": "vendor/netron/executorch.js",
+            "gitBlob": "c300a79dc082dff9ee6187e3a0bdd0e59233833c"
+          },
+          {
+            "path": "vendor/netron/favicon.ico",
+            "gitBlob": "c30ac5a9b11e3ab802e35348aa94adb004a5b9ea"
+          },
+          {
+            "path": "vendor/netron/flatbuffers.js",
+            "gitBlob": "dabdb7804b227771c4e2f6639f57a4b20ceaf46e"
+          },
+          {
+            "path": "vendor/netron/flax.js",
+            "gitBlob": "53daa8f1ee46bf3a02fc69f6862051307eb0f111"
+          },
+          {
+            "path": "vendor/netron/flexbuffers.js",
+            "gitBlob": "fdbee2659412e26e8cdabfc9d970ae4fd99a2481"
+          },
+          {
+            "path": "vendor/netron/flux-metadata.json",
+            "gitBlob": "32960f8ced39dd5eade0f15d41e275b2dc8d4c70"
+          },
+          {
+            "path": "vendor/netron/flux.js",
+            "gitBlob": "c9dcc650ef5ee9567204bc638f5f8652916a6b19"
+          },
+          {
+            "path": "vendor/netron/gguf-metadata.json",
+            "gitBlob": "52fdd4a18c0c86fd90b41826f0a3339e4a8debb2"
+          },
+          {
+            "path": "vendor/netron/gguf.js",
+            "gitBlob": "6c6903501d4ac2a5270dd86d70c4d70e0d7a5ccf"
+          },
+          {
+            "path": "vendor/netron/grapher.css",
+            "gitBlob": "b0d233886e3e5c63ddd293a9596f14328ab4e111"
+          },
+          {
+            "path": "vendor/netron/grapher.js",
+            "gitBlob": "bea6d7c772406418e87b995d120a89a6a273e7bc"
+          },
+          {
+            "path": "vendor/netron/hailo-metadata.json",
+            "gitBlob": "05752d7b481c077e625a61cd72e16cdd7fa1c2f7"
+          },
+          {
+            "path": "vendor/netron/hailo.js",
+            "gitBlob": "080c402594440556d330f0d4126989095bfad6ce"
+          },
+          {
+            "path": "vendor/netron/hdf5.js",
+            "gitBlob": "d6fe3757d8c18361ad2ae344e3b5a3826af20573"
+          },
+          {
+            "path": "vendor/netron/hickle.js",
+            "gitBlob": "0284e0af43316625b8600abe9ad9e46a624ad5ce"
+          },
+          {
+            "path": "vendor/netron/icon.png",
+            "gitBlob": "75a1a0a6a04333b4aa936e5c76380996124e7045"
+          },
+          {
+            "path": "vendor/netron/imgdnn.js",
+            "gitBlob": "ddf0b2a80aa39f6e6670a89221a7df08625723de"
+          },
+          {
+            "path": "vendor/netron/index.html",
+            "gitBlob": "7cf21e6d576cab7e9c6e6c530d3c489d38db144c"
+          },
+          {
+            "path": "vendor/netron/index.js",
+            "gitBlob": "49066d6710224563f98a68e2b50778388191ec96"
+          },
+          {
+            "path": "vendor/netron/jax-schema.js",
+            "gitBlob": "e5d1606235b3fc9adbedd48a4a0b37b2d444aa49"
+          },
+          {
+            "path": "vendor/netron/jax.js",
+            "gitBlob": "707bc31050d70d97cb2b7b2eeea71d77e926f589"
+          },
+          {
+            "path": "vendor/netron/json.js",
+            "gitBlob": "3e7f831bf5442947561a75e0d86ff05ef465f992"
+          },
+          {
+            "path": "vendor/netron/kann-metadata.json",
+            "gitBlob": "ba202ab0f23450c014d076e7ef75ecc0f578e173"
+          },
+          {
+            "path": "vendor/netron/kann-schema.js",
+            "gitBlob": "49d83c42cdabc3c2433383f39ca11f21978a1159"
+          },
+          {
+            "path": "vendor/netron/kann.js",
+            "gitBlob": "730d61d01bf72b897bd961addceadd8fca50cea1"
+          },
+          {
+            "path": "vendor/netron/keras-metadata.json",
+            "gitBlob": "c771639dc33c4dc4ccfb097739a6f8d1f73bf5b2"
+          },
+          {
+            "path": "vendor/netron/keras-proto.js",
+            "gitBlob": "c76048607a2b5e7bacc500c2b0c4e781af581d87"
+          },
+          {
+            "path": "vendor/netron/keras.js",
+            "gitBlob": "86e80491e9477faae63d4a527ba7195c175ed55c"
+          },
+          {
+            "path": "vendor/netron/kmodel.js",
+            "gitBlob": "ae561f532f854357fdf7e77283289e3a74cc7cfd"
+          },
+          {
+            "path": "vendor/netron/lasagne-metadata.json",
+            "gitBlob": "b3f40a4cea66496b685ed7de3cad1a89e48bbc2e"
+          },
+          {
+            "path": "vendor/netron/lasagne.js",
+            "gitBlob": "5b9f087033718cb534e5f805d040ec89b9a25dad"
+          },
+          {
+            "path": "vendor/netron/lightgbm.js",
+            "gitBlob": "c3733f376630e70b69da1c340be0a5f635ddddbd"
+          },
+          {
+            "path": "vendor/netron/litertlm-proto.js",
+            "gitBlob": "7ea2a645bda764eff8bd3f23b0ccee128d81a9ea"
+          },
+          {
+            "path": "vendor/netron/litertlm-schema.js",
+            "gitBlob": "957ef9f8a60c148c0600ece2385556e375312874"
+          },
+          {
+            "path": "vendor/netron/litertlm.js",
+            "gitBlob": "1ec8ee8fff9d13e72e992351ff0f564d541d0991"
+          },
+          {
+            "path": "vendor/netron/mediapipe.js",
+            "gitBlob": "c3cc136a210257e404e229fb6d853e9a15c6cd46"
+          },
+          {
+            "path": "vendor/netron/megengine-metadata.json",
+            "gitBlob": "3fb7dae1504eb717648d0f7714fa6cc2feda17fe"
+          },
+          {
+            "path": "vendor/netron/megengine-schema.js",
+            "gitBlob": "dbc17de6756b210469fc176de0e71babb85244f8"
+          },
+          {
+            "path": "vendor/netron/megengine.js",
+            "gitBlob": "e6fddd8fa7a4bbd9a3ff0811e509d941788efcee"
+          },
+          {
+            "path": "vendor/netron/message.js",
+            "gitBlob": "fd478ad13644d74fd10b111cf6b36d2c2a7790cb"
+          },
+          {
+            "path": "vendor/netron/mindir-metadata.json",
+            "gitBlob": "a8f4b2c60a29d281ccd84790b56b94710ca01d12"
+          },
+          {
+            "path": "vendor/netron/mindir-proto.js",
+            "gitBlob": "6b3ca24a2269ec499726f2503ead12d2cc8160d8"
+          },
+          {
+            "path": "vendor/netron/mindir.js",
+            "gitBlob": "6cee79b5f78eed994ee7cd901e4468bee3e64378"
+          },
+          {
+            "path": "vendor/netron/mlir-metadata.json",
+            "gitBlob": "29f52f62fe19ccbc2889f9b178e5e6c41b459ea3"
+          },
+          {
+            "path": "vendor/netron/mlir.js",
+            "gitBlob": "6cb85248df090b0f94f46c1da8893e3cdc3ea3a5"
+          },
+          {
+            "path": "vendor/netron/mlnet-metadata.json",
+            "gitBlob": "005c177d076fa4513f2c09675f0348c22d25f3b2"
+          },
+          {
+            "path": "vendor/netron/mlnet.js",
+            "gitBlob": "4cf830a96291b8ac001ae8bd98b11110adca038e"
+          },
+          {
+            "path": "vendor/netron/mnn-metadata.json",
+            "gitBlob": "39c3f44f4b23132b020877e0f510119b99b623aa"
+          },
+          {
+            "path": "vendor/netron/mnn-schema.js",
+            "gitBlob": "2d769c788b67d502a7a131c0ccd6487aacb80c13"
+          },
+          {
+            "path": "vendor/netron/mnn.js",
+            "gitBlob": "92700e3b0b3becfb070c7b99bc929d2f8dc65fad"
+          },
+          {
+            "path": "vendor/netron/mslite-metadata.json",
+            "gitBlob": "38bb81b60bc44ebc2e15db3cb355ef47d5645fdd"
+          },
+          {
+            "path": "vendor/netron/mslite-schema.js",
+            "gitBlob": "65434cc902ff237fb0d343f01ebc9b4739b268ea"
+          },
+          {
+            "path": "vendor/netron/mslite.js",
+            "gitBlob": "824f2f31f1a0e79c294f43fe39f751038ca9fd22"
+          },
+          {
+            "path": "vendor/netron/mxnet-metadata.json",
+            "gitBlob": "8d271c9e75635a13606e6a8f7535005559d87059"
+          },
+          {
+            "path": "vendor/netron/mxnet.js",
+            "gitBlob": "d2c49a1019e103410adba94fbcf8c1cc07d1e9d3"
+          },
+          {
+            "path": "vendor/netron/ncnn-metadata.json",
+            "gitBlob": "30621c3db3609a89f40474222e7fb259189b0272"
+          },
+          {
+            "path": "vendor/netron/ncnn.js",
+            "gitBlob": "a124ea260d8c7dd5f810679ee972ca5686746913"
+          },
+          {
+            "path": "vendor/netron/nnabla-metadata.json",
+            "gitBlob": "7a2ff8f5bf6716919431597737e511e5ebe808e3"
+          },
+          {
+            "path": "vendor/netron/nnabla-proto.js",
+            "gitBlob": "b790d52c6b3f182080dec05060a15ee5f8845ae1"
+          },
+          {
+            "path": "vendor/netron/nnabla.js",
+            "gitBlob": "8d2dab05e95abd291f9d0df24d987977b50c76f8"
+          },
+          {
+            "path": "vendor/netron/nnc.js",
+            "gitBlob": "0b84b640e3c568018e858b2014f54b44e5fed918"
+          },
+          {
+            "path": "vendor/netron/nnef.js",
+            "gitBlob": "acc39de0018b9fac9ef24ea562060781ca893e94"
+          },
+          {
+            "path": "vendor/netron/node.js",
+            "gitBlob": "fe64172b58c92cd2d5823f7559639f523ac32008"
+          },
+          {
+            "path": "vendor/netron/numpy.js",
+            "gitBlob": "839d614f9cfdff6ebab316a14a6c29b269755537"
+          },
+          {
+            "path": "vendor/netron/om-metadata.json",
+            "gitBlob": "e458ec146beac052a25e50ef8e0c6179cf8bfdf6"
+          },
+          {
+            "path": "vendor/netron/om-proto.js",
+            "gitBlob": "66415d675032c4802e237cbe479c85546b0946de"
+          },
+          {
+            "path": "vendor/netron/om.js",
+            "gitBlob": "4f4a41ccaa6fd4a206e057297d83d1e72eae3f91"
+          },
+          {
+            "path": "vendor/netron/onednn-metadata.json",
+            "gitBlob": "f204b0b0c6d9e5db1703df9212c6bdcfe8281dc9"
+          },
+          {
+            "path": "vendor/netron/onednn.js",
+            "gitBlob": "f1fad7e8589bd5009a6b4c978d680c20fed16aa9"
+          },
+          {
+            "path": "vendor/netron/onnx-metadata.json",
+            "gitBlob": "6748d98e5f47445aa7b982a773b1d5692a478e40"
+          },
+          {
+            "path": "vendor/netron/onnx-proto.js",
+            "gitBlob": "feeab4484849b4fb2606c228449ad0ba1fd3ea98"
+          },
+          {
+            "path": "vendor/netron/onnx-schema.js",
+            "gitBlob": "cc13009998d758119f1997140f4781ae46df64cf"
+          },
+          {
+            "path": "vendor/netron/onnx.js",
+            "gitBlob": "54707b5c1ae75b210576a258a860532b410c9c35"
+          },
+          {
+            "path": "vendor/netron/onnx.py",
+            "gitBlob": "90d4a93f7a83e5aca290e42be664162de684c62c"
+          },
+          {
+            "path": "vendor/netron/openvino-metadata.json",
+            "gitBlob": "cdddbe28eb3b861b6c138f630d3e7d2bb601743f"
+          },
+          {
+            "path": "vendor/netron/openvino.js",
+            "gitBlob": "dcfe2922321adc0294aa2d1a9eab4d3696b5af0e"
+          },
+          {
+            "path": "vendor/netron/paddle-metadata.json",
+            "gitBlob": "65b297fdd0f565a060fc5a54dc077dd51f486f27"
+          },
+          {
+            "path": "vendor/netron/paddle-proto.js",
+            "gitBlob": "f101d165da22a3ead3ba864f77c88d0a00894759"
+          },
+          {
+            "path": "vendor/netron/paddle-schema.js",
+            "gitBlob": "858ca39692155fbccc1b4501e1a15e91f0856a6b"
+          },
+          {
+            "path": "vendor/netron/paddle.js",
+            "gitBlob": "2f0dbce2730cabdca788aba5bf32f693cf4be6d5"
+          },
+          {
+            "path": "vendor/netron/pickle.js",
+            "gitBlob": "90b44d539c750544e04011a7f75d43ef20b6f9b4"
+          },
+          {
+            "path": "vendor/netron/protobuf.js",
+            "gitBlob": "ec0637e347619f5ea204aa43e201a20a17df7c4c"
+          },
+          {
+            "path": "vendor/netron/python.js",
+            "gitBlob": "cfeca8e2e0a869af66ace715b7354090f1059ed7"
+          },
+          {
+            "path": "vendor/netron/pytorch-metadata.json",
+            "gitBlob": "034cbbdabc1c2aff3952b04da47ca7e55c872c73"
+          },
+          {
+            "path": "vendor/netron/pytorch-proto.js",
+            "gitBlob": "594d23d2542c4c3350fa58dbf3345de80be46fc8"
+          },
+          {
+            "path": "vendor/netron/pytorch-schema.js",
+            "gitBlob": "8aab3a468490eb15341b41c6854f2b2ef4bab483"
+          },
+          {
+            "path": "vendor/netron/pytorch.js",
+            "gitBlob": "5fecfc256574f5fda1d9d9264a2cd25416d88682"
+          },
+          {
+            "path": "vendor/netron/pytorch.py",
+            "gitBlob": "38a9ee55496a46c29a94e510ccb76dc02b229554"
+          },
+          {
+            "path": "vendor/netron/qnn-metadata.json",
+            "gitBlob": "25f1145f5f89f3f9e6567da6ab3e154f9ead5f53"
+          },
+          {
+            "path": "vendor/netron/qnn.js",
+            "gitBlob": "385e49952f682a32a02e7506be96fc49dec18787"
+          },
+          {
+            "path": "vendor/netron/rknn-metadata.json",
+            "gitBlob": "d1c47976df3707993fab081e452b61684f87a8cb"
+          },
+          {
+            "path": "vendor/netron/rknn-schema.js",
+            "gitBlob": "4c297bf4f1bbc06323484a0f7d7307b87130954e"
+          },
+          {
+            "path": "vendor/netron/rknn.js",
+            "gitBlob": "e4b693f5e0cfc153555fa7f85ac88dd6acfc0bc6"
+          },
+          {
+            "path": "vendor/netron/safetensors.js",
+            "gitBlob": "ba0eccfe804d482e33b721c47e69050d49690cc2"
+          },
+          {
+            "path": "vendor/netron/sentencepiece-proto.js",
+            "gitBlob": "695eff958c81dde796abae7b5127c1286746f15b"
+          },
+          {
+            "path": "vendor/netron/sentencepiece.js",
+            "gitBlob": "558560c30d7a3019bd78f3cdd9466f1a952242df"
+          },
+          {
+            "path": "vendor/netron/server.py",
+            "gitBlob": "d4409bbbd30bb91f9fb4477dd1a60855740462fd"
+          },
+          {
+            "path": "vendor/netron/sklearn-metadata.json",
+            "gitBlob": "4166b19ecd7e24aa64d6f602663630dd039228cd"
+          },
+          {
+            "path": "vendor/netron/sklearn.js",
+            "gitBlob": "93dd195df6867d0e9730aef225feb834db2c2295"
+          },
+          {
+            "path": "vendor/netron/tar.js",
+            "gitBlob": "59cdb9e288b7ec8bd7e68c70a17fd3aa25adedc4"
+          },
+          {
+            "path": "vendor/netron/tengine-metadata.json",
+            "gitBlob": "67af19558ace31c36224905a5c4152fc4757d0bb"
+          },
+          {
+            "path": "vendor/netron/tengine.js",
+            "gitBlob": "ff8ab0ef1f3960e519b936d760c28eb17fb53050"
+          },
+          {
+            "path": "vendor/netron/tensorrt.js",
+            "gitBlob": "5987525172d001ee05d8cdb42b17aba7f49fb8b6"
+          },
+          {
+            "path": "vendor/netron/text.js",
+            "gitBlob": "27a06da76b7c1efb908a0c78cb701c8521a14cb5"
+          },
+          {
+            "path": "vendor/netron/tf-metadata.json",
+            "gitBlob": "320cebfd2b1e2f56e423fc23ab409231b4cccbf3"
+          },
+          {
+            "path": "vendor/netron/tf-proto.js",
+            "gitBlob": "e64ddf164084e37b460b2e5c83ec65b8de10362b"
+          },
+          {
+            "path": "vendor/netron/tf.js",
+            "gitBlob": "bab88b6e9db9d1c7e2fcf117dccb93c835104c9a"
+          },
+          {
+            "path": "vendor/netron/tflite-metadata.json",
+            "gitBlob": "aff7136e01a576a2e8bdb5384908bdd7c3251d32"
+          },
+          {
+            "path": "vendor/netron/tflite-schema.js",
+            "gitBlob": "f9a681d111663b20f7c3f75f0877579e56b7f030"
+          },
+          {
+            "path": "vendor/netron/tflite.js",
+            "gitBlob": "ecca54baed6a6ba912ea377ac0c8d553a68fa4dd"
+          },
+          {
+            "path": "vendor/netron/tnn-metadata.json",
+            "gitBlob": "80c5c3757601de306dac4c1cdc5c04502b328e5f"
+          },
+          {
+            "path": "vendor/netron/tnn.js",
+            "gitBlob": "fab060c6701a5a6509db3996a32dff2d89b7702a"
+          },
+          {
+            "path": "vendor/netron/torch-metadata.json",
+            "gitBlob": "3a67732b613a854eacea4ce43dae13cf8a2e6312"
+          },
+          {
+            "path": "vendor/netron/torch.js",
+            "gitBlob": "e082851b250e2158bbddfddc73347f561ba19743"
+          },
+          {
+            "path": "vendor/netron/tosa-metadata.json",
+            "gitBlob": "77d208cab0bdba9225f11d75cdc04cab4ddda2de"
+          },
+          {
+            "path": "vendor/netron/tosa-schema.js",
+            "gitBlob": "c00394e0b8c7b984b4da87444dc6d33ed02f4b22"
+          },
+          {
+            "path": "vendor/netron/tosa.js",
+            "gitBlob": "d20a51b69177ea7d338327d97c1e6988f951b276"
+          },
+          {
+            "path": "vendor/netron/transformers.js",
+            "gitBlob": "57f39fc802c2c9c8fb35a1db840b35b51eccc468"
+          },
+          {
+            "path": "vendor/netron/tvm.js",
+            "gitBlob": "3a98dcfa2d9d1cd99bf0ca9308a314ad0577c07a"
+          },
+          {
+            "path": "vendor/netron/uff-metadata.json",
+            "gitBlob": "ad9f28a035eb7966bb66b301b4d051e258a1d901"
+          },
+          {
+            "path": "vendor/netron/uff-proto.js",
+            "gitBlob": "72d8a1a147ebc357c37b26e7fc78a34e98754958"
+          },
+          {
+            "path": "vendor/netron/uff.js",
+            "gitBlob": "9d0d3e92b42a29a79e8e4f8f8b43c414fe534b3a"
+          },
+          {
+            "path": "vendor/netron/view.js",
+            "gitBlob": "876d2033c8c14df0662c74490d498f496393c811"
+          },
+          {
+            "path": "vendor/netron/weka.js",
+            "gitBlob": "fe848e4bf7f5d232873f7b16888068c2e34e4562"
+          },
+          {
+            "path": "vendor/netron/worker.js",
+            "gitBlob": "a66220b01174f332ea496110d598de20262315db"
+          },
+          {
+            "path": "vendor/netron/xgboost.js",
+            "gitBlob": "e32acc11d937a2e4054dc36e79b376ef5fd15d84"
+          },
+          {
+            "path": "vendor/netron/xml.js",
+            "gitBlob": "bc7ba9bc13dafac93ee2a5229cc199e6853979f9"
+          },
+          {
+            "path": "vendor/netron/xmodel-proto.js",
+            "gitBlob": "6955959597febff16ad89a7b7c3066abfd4eef31"
+          },
+          {
+            "path": "vendor/netron/xmodel.js",
+            "gitBlob": "96924582097b8bbb17b7c0faea5502f0b629ec66"
+          },
+          {
+            "path": "vendor/netron/zip.js",
+            "gitBlob": "1e5370a7782296d4961d082468ad6fa89980d072"
+          }
+        ],
+        "reused": false
+      }
+    ]
+  }
+}

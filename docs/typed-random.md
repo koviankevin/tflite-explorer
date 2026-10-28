@@ -16,4 +16,12 @@ float16 測試輸入另受瀏覽器 Float16Array 支援及有限範圍 ±65,504 
 
 型別合法不代表 OP 語意或模型效果正確。索引、token ID、shape tensor、axis、permutation、stride／padding 等需符合對應運算的規則；亂數不會改動這些 OP 屬性。訓練過的權重應從既有相容 OP 複製或由模型提供。interpreter 僅在手動點選時執行一次，沒有自動推論或準確率保證。
 
-本機已驗證 11 種權重／輸入 dtype 的完整允許範圍、有限值、固定上界、非法範圍、seed 與舊 bytes 相容性；草稿／匯出重開與實際 CPU WASM 回歸也通過。新版 hosted 原生操作及正式部署尚待驗證，不以 Node 結果代替。
+本機已驗證 11 種權重／輸入 dtype 的完整允許範圍、有限值、固定上界、非法範圍、seed 與舊 bytes 相容性；草稿／匯出重開與實際 CPU WASM 回歸也通過。
+
+## Preview.21 候選驗收
+
+候選來源 `b0f7fe13a315a96d40687c93dae98e2a7da3eaad`／tree `1d10aeb91bd569580bccf2e48c0bc587256ca9d0`，本機乾淨重建及 hosted 原生網站的 build 都是 `197b3c6d31d49392`，292 個核心檔。[四關卡獨立核對](results/preview21-main-gates-2026-10-28.json)已完成 provider／digest／ZIP CRC、來源相依及原始政策檢查：core 沿用 [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)，實際 fingerprint 未變；新八輪 [40717132364](https://github.com/koviankevin/tflite-explorer/actions/runs/40717132364)、contract [40717138628](https://github.com/koviankevin/tflite-explorer/actions/runs/40717138628)、site [40717145009](https://github.com/koviankevin/tflite-explorer/actions/runs/40717145009)成功。
+
+[原始候選操作](results/preview21-ui-candidate-2026-10-28.json)、[provider 核對](results/preview21-ui-candidate-2026-10-28-review.json)與 [完整原始 ZIP](results/preview21-ui-candidate-2026-10-28.zip)保留。30 項主要操作及七種 runtime 情境通過，36 個模型與四個 runtime Workers 全部關閉，沒有 page error。新增原生案例從新增 MUL 的表單產生合法權重、拒絕超出 float32 範圍的測試輸入且不啟動 WASM，再以合法資料執行，實際 ADD／MUL 輸出與下載 IO ZIP 的 bytes、CRC 及 seed 一致。14 吋 1366×640／1280×640、32px 流程仍通過，沒有測手機。
+
+這是公開合成案例的候選結果；正式 preview.21 部署仍待受控發布確認，也不代表公司 kernel、準確率、其他引擎的大檔峰值或新版數小時負載已通過。

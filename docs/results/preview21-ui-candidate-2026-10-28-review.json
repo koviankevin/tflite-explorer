@@ -1,0 +1,36 @@
+{
+  "authentication": "passed",
+  "source": {
+    "commit": "b0f7fe13a315a96d40687c93dae98e2a7da3eaad",
+    "tree": "1d10aeb91bd569580bccf2e48c0bc587256ca9d0",
+    "committedAt": "2026-10-28T23:33:07+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40717145009,
+  "attempt": 1,
+  "jobId": 122917816163,
+  "artifactId": 12827864928,
+  "artifactDigest": "sha256:a63217e55a32bb5937ee3582b828cd653665efa343b3f3b1c3f75a747536101d",
+  "rawSHA256": "b2ec2b4c5a4c27f392075289869b899fbee08701b839cf259261a1fcef39a27c",
+  "rawBytes": 247623,
+  "build": "197b3c6d31d49392",
+  "topChecks": 30,
+  "modelWorkers": 36,
+  "modelWorkersClosed": true,
+  "runtimeCases": [
+    "opening/editing/exporting never starts interpreter or downloads runtime",
+    "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes and exact candidate report",
+    "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values",
+    "manual cancellation closes Worker and clears stale input/output after draft changes",
+    "invalid kernel broadcast is reported as failed",
+    "unregistered custom kernel is explicitly unverified without starting WASM",
+    "a signature targeting a different subgraph cannot be reported as a primary-model pass"
+  ],
+  "runtimeWorkers": 4,
+  "runtimeWorkersClosed": true,
+  "manualDownloads": 6,
+  "sameOriginRuntimeAssetGETs": 16,
+  "errors": [],
+  "scope": "Hosted Chromium candidate, synthetic data, native gestures and actual CPU/ZIP assertions; not company model or numerical accuracy acceptance"
+}
