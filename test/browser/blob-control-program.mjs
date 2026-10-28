@@ -1,8 +1,10 @@
 // Standalone diagnostic harness, never shipped in the application. Drive each
 // API transition by a visible button; export only scalar status, not file data.
 export const BLOB_CONTROL_PREFIX_BYTES=8268412;
-export function installBlobControlWorker(scope,{prefixBytes=65536,memoryParts=null}={}){
+export function installBlobControlWorker(scope,{prefixBytes=65536,memoryParts=null,prefixStorage='memory'}={}){
     if(![65536,8268412].includes(prefixBytes))throw Error('Unknown control prefix size.');
+    if(!['memory','response-blob'].includes(prefixStorage))throw Error('Unknown prefix storage.');
+    if(prefixStorage==='response-blob'&&typeof scope.Response!=='function')throw Error('Response is required for this prefix control.');
     let file,blob,candidate;const stats={inputBytes:0,blobBytes:0,readBytes:0,maxRead:0,builds:0,readbacks:0,boundaryReads:0,shares:0,prefixPartCount:0,maxPrefixPartBytes:0};
     const read=(source,start,end)=>{
         const length=end-start;if(length<0||length>65536||stats.readBytes+length>16*1024**2)throw Error('Bounded control read exceeded.');
@@ -13,8 +15,13 @@ export function installBlobControlWorker(scope,{prefixBytes=65536,memoryParts=nu
             if(file||blob||!data.file||!Number.isSafeInteger(data.file.size)||data.file.size<=1024**3||typeof data.file.slice!=='function')throw Error('Expected one physical large source.');
             file=data.file;stats.inputBytes=file.size;const prefix=new Uint8Array(prefixBytes);
             for(let offset=0;offset<prefixBytes;offset+=65536)prefix.set(new Uint8Array(read(file,offset,Math.min(prefixBytes,offset+65536))),offset);
-            const prefixParts=memoryParts?memoryParts(prefix,scope.Blob):[prefix];stats.prefixPartCount=prefixParts.length;stats.maxPrefixPartBytes=Math.max(...prefixParts.map(p=>p.byteLength??p.size));
-            blob=new scope.Blob([...prefixParts,file.slice(prefixBytes)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
+            const publish=prefixParts=>{
+                stats.prefixPartCount=prefixParts.length;stats.maxPrefixPartBytes=Math.max(...prefixParts.map(p=>p.byteLength??p.size));
+                blob=new scope.Blob([...prefixParts,file.slice(prefixBytes)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
+            };
+            // Convert only the bounded metadata prefix, never the >1 GiB body.
+            if(prefixStorage==='response-blob')return new scope.Response(new scope.Blob([prefix],{type:'application/octet-stream'})).blob().then(part=>publish([part])).catch(error=>scope.postMessage({stage:'error',error:error.message}));
+            publish(memoryParts?memoryParts(prefix,scope.Blob):[prefix]);
         }else if(data.action==='readback'){
             if(!blob||candidate)throw Error('Unexpected readback order.');candidate=new scope.File([blob],'control.tflite');
             read(candidate,0,64);read(candidate,candidate.size-64,candidate.size);stats.readbacks++;scope.postMessage({stage:'readback',stats:{...stats}});

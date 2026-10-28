@@ -150,3 +150,11 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 `FlatbufferWriter` 改由共用 `memoryBlobParts` 將超過 64 KiB 的序列化結構區包成各自獨立的 64 KiB Blob，再與原本來源 File slices 合成；小結構區沿用原方式。序列化 table、offset、range 對照及權重切片都保持原樣，沒有磁碟暫存、強制 GC、提早撤銷 URL 或提高上限。
 
 第五版控制在相同大 prefix／相同 bytes 下使用這個實際修正 helper，記錄 prefix parts 數量及最大大小，供 Firefox 原生測量。真實 writer 回歸先在舊版因多 MiB 記憶體 part 失敗，修正後原 fixture header SHA `dd3531a96a0148db3a3a02fd94524dbb6f96b4123630b36a2b43ef172c25d826` 保持相同。59 項相關 Node 檢查通過，涵蓋分段 byte 相等、writer、custom options、64-bit 外部 offset、量化、報告串流對照、權重、草稿與匯出重開；這還不是原生記憶體或正式部署成功，preview.22 須通過後續控制、實際八輪及受控發布。
+
+### 分段仍不足，繼續隔離 prefix 的 Blob 表示
+
+[40734255325](https://github.com/koviankevin/tflite-explorer/actions/runs/40734255325) 來源 `ee8437bd5828b6230d8cb874cdbf84bef84d67f6`，第五版使用 127 個各自獨立的記憶體 Blob，最大 65,536 bytes。[原始 ZIP](results/blob-chunk-firefox-2026-10-29.zip)與[獨立核對](results/blob-chunk-firefox-review-2026-10-29.json)證明完整原始檔 SHA、分頁及跨邊界讀取、60 秒自然撤銷、Worker 與 owned 程序清理保持有效。建立 Object URL 的 RSS 檢查點降至 1,312,296,960 bytes，但原生下載整段峰值仍為 2,256,601,088 bytes；自然 URL 撤銷檢查點仍約 1.94 GiB。分段只改變配置的量與時機，不能當成修正完成或通過應用上限，preview.22 不因此發布。
+
+第六版控制回到單一相同大小 prefix，僅先經由 `new Response(new Blob([prefix])).blob()` 轉換，再與原檔切片合成。只轉換 8,268,412 bytes 結構區，沒有對整份權重執行 Response／arrayBuffer；不建立網路 request 或應用持久化快取。Mozilla 的 [MutableBlobStorage 原始碼](https://raw.githubusercontent.com/mozilla-firefox/firefox/main/dom/file/MutableBlobStorage.cpp)有可轉暫存檔的 Blob 路徑，這只是本次實驗動機；不能推定目前鎖定引擎一定使用該路徑。報告版本為 6，明確記錄 `memoryPolicy.kind=response-prefix-blob`，必須量實際 RSS 才能判斷。
+
+新增兩項回歸先在舊版因過早發布 `built`、忽略轉換錯誤而失敗；修正後與所有權、實體 fixture 共 25 項相關 Node 檢查通過。新檢查驗證轉換只收到結構區、完成後才發布混合 Blob、錯誤不會變成可下載成功、任意 storage 選項及缺少 Response 均拒絕。最大單次／累計讀取、完整下載 SHA、取樣、自然撤銷、RSS 上限及原應用功能測試政策均未調整。第六版與實際應用八輪結果尚待驗證。
