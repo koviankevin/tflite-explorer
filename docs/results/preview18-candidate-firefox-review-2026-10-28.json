@@ -1,0 +1,116 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "engine": "firefox",
+  "runId": 40657306719,
+  "attempt": 1,
+  "source": {
+    "commit": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+    "tree": "c0f5bb9e79ebba2997213f8297b7249af9f3f790",
+    "committedAt": "2026-10-28T16:30:31+08:00",
+    "dirty": false
+  },
+  "jobId": 122711366447,
+  "artifactId": 12801694638,
+  "providerDigest": "sha256:b5aa013d3ad9db64ff15049d05710cbaac4265dc40b96ff5f6c6a4f6a793144b",
+  "reportSHA256": "de9b92fa74672b0498822908c775a088dbcf1376a30ca9e7e28bf894ea5ea61a",
+  "browserVersion": "142.0.1",
+  "target": "candidate",
+  "build": "7a1360672134b564",
+  "siteId": null,
+  "coreSource": {
+    "commit": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+    "tree": "c0f5bb9e79ebba2997213f8297b7249af9f3f790",
+    "committedAt": "2026-10-28T16:30:31+08:00",
+    "dirty": false
+  },
+  "staticFiles": 275,
+  "otherWorkerCloseEvents": [
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/src/edit-recovery-worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/src/edit-recovery-worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/src/edit-recovery-worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/src/edit-recovery-worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/src/edit-recovery-worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:38953/tflite-explorer/vendor/netron/worker.js?v=7a1360672134b564",
+      "closed": false
+    }
+  ],
+  "checks": [
+    "public demo: local worker, 32px graph, exact layer lookup and location",
+    "actual file chooser and native pattern import/export preserve the structural query",
+    "TFLite submodel downloads and reopens with exactly one original pattern match",
+    "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+    "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+    "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+    "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+    "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+    "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+    "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+    "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+    "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+    "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once"
+  ],
+  "modelWorkers": 21,
+  "errors": [],
+  "directory": "build/qa/desktop-40657306719-firefox-final/firefox"
+}

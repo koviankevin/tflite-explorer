@@ -1,0 +1,84 @@
+{
+  "status": "passed",
+  "source": {
+    "commit": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+    "tree": "c0f5bb9e79ebba2997213f8297b7249af9f3f790",
+    "committedAt": "2026-10-28T16:30:31+08:00",
+    "dirty": false
+  },
+  "runs": {
+    "core": 40503475445,
+    "browser": 40657311396,
+    "contract": 40657631071,
+    "site": 40657635679
+  },
+  "rows": [
+    {
+      "kind": "core",
+      "id": 40503475445,
+      "status": "passed",
+      "head": "d28e42fb70d0f81329dd49d08b6f5db8b136f7db",
+      "artifactId": 12733912585,
+      "artifactDigest": "sha256:ac19712bdba79b2f4d5db48951f9300f01c502fa74852fe693d1aa4cb145fe83",
+      "reportSHA256": "cc251f058464a8ba4bd0470d68321d48bb8622c861e7552cf0c51311acf35e93",
+      "fingerprint": "cf77c1b1377b55cf36fcba0c536e97bfdb391f10eec37f3830a0eb1a1ad1b7c8",
+      "files": 86,
+      "summary": 9
+    },
+    {
+      "kind": "browser",
+      "id": 40657311396,
+      "status": "passed",
+      "head": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+      "artifactId": 12802452721,
+      "artifactDigest": "sha256:a4f50fa7a762f8afb8fe69830de7296da1d8f23a64a80c0ed9990e600aae9fa3",
+      "reportSHA256": "e3bf1e31c06096113ad6be330aadd2ecd8a46808a1b9fab18318769ae2a0c76b",
+      "fingerprint": "610860e6d274226510830e7e48091e3c07618d837515f5df51d72ee388116a0d",
+      "files": 286,
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 1047639.7714285714,
+        "rssDriftBytes": 7118848,
+        "mainHeapDriftBytes": 126892,
+        "sampledPeakRssBytes": 999694336,
+        "sampledPeakGrowthBytes": 476282880
+      }
+    },
+    {
+      "kind": "contract",
+      "id": 40657631071,
+      "status": "passed",
+      "head": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+      "artifactId": 12802431113,
+      "artifactDigest": "sha256:fdeb68709b15e193895ea49da67df327b7ba458ccb14f642d0682558e1644b03",
+      "reportSHA256": "fd7b9f0392f5c9cba09aaa60c6904d44b3b1406dbde7b539e68435c3841d539a",
+      "fingerprint": "b2a6e6d6ae7e34652c6b5b8018cf030d129931978a3758559f3560e8554d6268",
+      "files": 442,
+      "summary": {
+        "tests": 76,
+        "pass": 76,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    },
+    {
+      "kind": "site",
+      "id": 40657635679,
+      "status": "passed",
+      "head": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+      "artifactId": 12803340777,
+      "artifactDigest": "sha256:8ce62a10c3f7dd7a5a0e27813d152dafce3d5eaa7ced176345165912ac86ab2d",
+      "reportSHA256": "2440ddf09854f0446831cf1b3bf069a936f62fb63a3bb9b4de8a16f3bd9a5284",
+      "fingerprint": "25a6443eb312fb7c358cad014bc429d676f65aaacbf8adebbb4bf96d97dd6188",
+      "files": 306,
+      "summary": {
+        "modelWorkers": 7,
+        "requests": 510,
+        "scenarios": 6,
+        "snapshots": 3
+      }
+    }
+  ],
+  "sourceUnchanged": true
+}

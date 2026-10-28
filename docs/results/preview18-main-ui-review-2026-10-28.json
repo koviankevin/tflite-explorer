@@ -1,0 +1,609 @@
+{
+  "status": "passed",
+  "runId": 40657635679,
+  "source": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+  "artifactId": 12803430688,
+  "digest": "sha256:8743a94b856923c5d7c34e18d0d232fc053f33e8923bf0ee201347a94be91d60",
+  "reportSHA256": "ba8122b368a76884a3328822d9e9a82c0c3400d1501798d0228ba8d38f042eb5",
+  "checks": 29,
+  "workers": 32,
+  "mlirKeyboard": {
+    "cases": [
+      {
+        "kind": "diamond",
+        "width": 1366,
+        "height": 640,
+        "sourceOperators": 1608,
+        "selectedOperators": 7,
+        "blocks": 4,
+        "font": 32,
+        "capsule": {
+          "id": "pattern:match:0",
+          "kind": "pattern",
+          "text": "展開 pattern：Keyboard CFG diamond #1 · 7 OP · 點開 · pattern:match:0",
+          "width": 482.15625,
+          "height": 41,
+          "left": 354,
+          "top": 517,
+          "right": 836.15625,
+          "bottom": 558,
+          "target": {
+            "left": 344,
+            "top": 204,
+            "right": 1366,
+            "bottom": 610
+          },
+          "clip": "auto",
+          "outline": "solid",
+          "controls": 1,
+          "documentWidth": 1366,
+          "viewport": 1366
+        },
+        "focused": {
+          "id": "scope:0:b1:n0",
+          "kind": "operator",
+          "text": "選取 layer：block/subgraph 1 · #0 · company.custom_long_name_with_attributes · scope:0:b1:n0",
+          "width": 631.625,
+          "height": 41,
+          "left": 354,
+          "top": 517,
+          "right": 985.625,
+          "bottom": 558,
+          "target": {
+            "left": 344,
+            "top": 427,
+            "right": 1366,
+            "bottom": 610
+          },
+          "clip": "auto",
+          "outline": "solid",
+          "controls": 7,
+          "documentWidth": 1366,
+          "viewport": 1366
+        },
+        "beforePan": "02d8b029bd4e3aa6724790cd60e8c916b8a2b8da76573d56a9e979b565942d26",
+        "afterPan": "63712da46dc08dfb4e882b8e405b85463f87a7232d0d9ea22f0e56e8cbf49d8f",
+        "selected": "已選取 7 個 layers · 4 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+        "exportedBytes": 4019,
+        "exportedSSA": "passed",
+        "oldPatternMatches": 1,
+        "capturedPatternMatches": 1,
+        "reopenedMatches": 1
+      },
+      {
+        "kind": "loop",
+        "width": 1280,
+        "height": 640,
+        "sourceOperators": 1605,
+        "selectedOperators": 4,
+        "blocks": 3,
+        "font": 32,
+        "capsule": {
+          "id": "pattern:match:0",
+          "kind": "pattern",
+          "text": "展開 pattern：Keyboard CFG loop #1 · 4 OP · 點開 · pattern:match:0",
+          "width": 454.921875,
+          "height": 41,
+          "left": 354,
+          "top": 517,
+          "right": 808.921875,
+          "bottom": 558,
+          "target": {
+            "left": 344,
+            "top": 204,
+            "right": 1280,
+            "bottom": 610
+          },
+          "clip": "auto",
+          "outline": "solid",
+          "controls": 1,
+          "documentWidth": 1280,
+          "viewport": 1280
+        },
+        "focused": {
+          "id": "scope:0:b2:n0",
+          "kind": "operator",
+          "text": "選取 layer：block/subgraph 2 · #0 · func.return · scope:0:b2:n0",
+          "width": 418.640625,
+          "height": 41,
+          "left": 354,
+          "top": 517,
+          "right": 772.640625,
+          "bottom": 558,
+          "target": {
+            "left": 344,
+            "top": 427,
+            "right": 1280,
+            "bottom": 610
+          },
+          "clip": "auto",
+          "outline": "solid",
+          "controls": 4,
+          "documentWidth": 1280,
+          "viewport": 1280
+        },
+        "beforePan": "220b390979c18c210e24471f8a399d260521c55ccc378f368f7251c23b596587",
+        "afterPan": "06158246f890b7398f03b36627dbd5fc52584fb293760a618fd77190d86569b4",
+        "selected": "已選取 4 個 layers · 3 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+        "exportedBytes": 3210,
+        "exportedSSA": "passed",
+        "oldPatternMatches": 1,
+        "capturedPatternMatches": 1,
+        "reopenedMatches": 1
+      }
+    ],
+    "modelWorkers": 5,
+    "tabPresses": 1705,
+    "validation": {
+      "code": "SSA_UNDEFINED",
+      "nativeTabBoundary": true,
+      "shortcutIsolation": true,
+      "escape": true,
+      "buttonDismiss": true,
+      "focusReturned": true,
+      "selectionPreserved": true,
+      "downloads": 0
+    },
+    "nativeOptions": [
+      {
+        "selector": "#saved-pattern",
+        "requested": "Keyboard CFG diamond",
+        "actual": "Keyboard CFG diamond",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "32",
+        "actual": "32",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "16",
+        "actual": "16",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "32",
+        "actual": "32",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#mlir-export-scope",
+        "requested": "slice",
+        "actual": "slice",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#saved-pattern",
+        "requested": "Keyboard CFG loop",
+        "actual": "Keyboard CFG loop",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "32",
+        "actual": "32",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "16",
+        "actual": "16",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#graph-font-size",
+        "requested": "32",
+        "actual": "32",
+        "strategy": "popup Home/ArrowDown/Enter"
+      },
+      {
+        "selector": "#mlir-export-scope",
+        "requested": "slice",
+        "actual": "slice",
+        "strategy": "popup Home/ArrowDown/Enter"
+      }
+    ]
+  },
+  "workspace": {
+    "cases": [
+      {
+        "format": "tflite",
+        "nativeClick": true,
+        "nativeDrag": true,
+        "autoOutput": 10,
+        "undoRedo": true,
+        "draftSurvivesModeSwitch": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "pattern": 1
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 113,
+        "bottom": 610,
+        "headerBottom": 113,
+        "rootHeight": 497,
+        "graphVisibleHeight": 257.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "left": 0,
+        "right": 1280,
+        "top": 113,
+        "bottom": 610,
+        "headerBottom": 113,
+        "rootHeight": 497,
+        "graphVisibleHeight": 257.5,
+        "overflowNames": 0
+      }
+    ],
+    "receipts": [
+      {
+        "output": "workspace-result-1.tflite",
+        "sha256": "b77084f0c33da9f7157cc4c7fbc5b728448c46e826719f84e45c78c1939e9ed7",
+        "byteRanges": 4,
+        "byteStatus": "passed"
+      }
+    ],
+    "modelWorkers": 2
+  },
+  "control": {
+    "cases": [
+      {
+        "format": "tflite",
+        "graph": 0,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      },
+      {
+        "format": "tflite",
+        "graph": 4,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      }
+    ],
+    "modelWorkers": 7,
+    "layouts": [
+      {
+        "name": "main-if-while-custom",
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "rootHeight": 497,
+        "visible": 257.5,
+        "overflow": 0
+      },
+      {
+        "name": "while-body-custom",
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "rootHeight": 497,
+        "visible": 257.5,
+        "overflow": 0
+      }
+    ],
+    "receipts": [
+      {
+        "graph": 0,
+        "outputSHA256": "ad44c4017f0a444952846223f91219720e980f15bbb88bf86347800a07020472",
+        "byteStatus": "passed",
+        "ranges": 7
+      },
+      {
+        "graph": 4,
+        "outputSHA256": "f49c84e0aed572ca994b20045cea97f25ee64361c4ea936cdd9b086fda42bcf0",
+        "byteStatus": "passed",
+        "ranges": 7
+      }
+    ],
+    "mlir": {
+      "editingHidden": true,
+      "legacyDraftRejected": true,
+      "searchPreserved": true
+    }
+  },
+  "patternDelete": {
+    "cases": [
+      {
+        "selectedDelete": true,
+        "queryRetained": true,
+        "peerUpdated": true,
+        "undoConflictCopy": true,
+        "exactRestore": true,
+        "unrelatedPreserved": true
+      },
+      {
+        "lastItemDelete": true,
+        "reloadEmpty": true,
+        "noResurrection": true,
+        "laptopDelete": true,
+        "persistedUnrelated": true
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1280,
+        "documentWidth": 1280,
+        "left": 49.765625,
+        "right": 127.765625,
+        "height": 34
+      }
+    ],
+    "workers": [
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true
+      }
+    ],
+    "errors": [],
+    "contextClosed": true
+  },
+  "modelTabs": {
+    "workers": [
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true
+      }
+    ],
+    "errors": [],
+    "layouts": [
+      {
+        "width": 1366,
+        "documentWidth": 1366,
+        "left": 18,
+        "right": 1348
+      },
+      {
+        "width": 1280,
+        "documentWidth": 1280,
+        "left": 18,
+        "right": 1262
+      }
+    ],
+    "receipt": {
+      "outputSHA256": "ae4c2e94c67328a1eb2d401abe9764f087d270785f00522327ef1ef7667b7f84",
+      "ranges": 4
+    },
+    "cases": {
+      "separateExportTab": true,
+      "originalSelection": true,
+      "editHistory": true,
+      "viewRestored": true,
+      "childQuery": true,
+      "inactiveDirtyGuard": true,
+      "oneActiveWorker": true,
+      "closeReleases": true,
+      "keyboard": true
+    },
+    "contextClosed": true
+  },
+  "editRecovery": {
+    "cases": [
+      {
+        "browserSigkill": true,
+        "persistentProfile": true,
+        "noUnloadSave": true,
+        "originalKeyPreserved": true,
+        "wrongFileRejected": true,
+        "history": true,
+        "redo": true,
+        "font": 32,
+        "view": true
+      },
+      {
+        "sharedIdb": true,
+        "peerConflict": true,
+        "paused": true,
+        "forkPreservesBoth": true,
+        "fullExport": true,
+        "weights": true,
+        "customOptions": true,
+        "reopened": 4,
+        "deletedNotResurrected": true
+      }
+    ],
+    "errors": [],
+    "workers": [
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": false,
+        "browserGeneration": 1,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": false,
+        "browserGeneration": 1,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/edit-recovery-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 1,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/edit-recovery-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/vendor/netron/worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/edit-recovery-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      },
+      {
+        "url": "http://127.0.0.1:41279/tflite-explorer/versions/7a1360672134b564/src/model-worker.js?v=7a1360672134b564",
+        "closed": true,
+        "browserGeneration": 2,
+        "processTerminated": true
+      }
+    ],
+    "receipts": [
+      {
+        "outputSHA256": "c6b27bc0f8f7f4d4172e9fe00d1f73e3d83a27529527f4aa3386ba1f6718e3f8",
+        "ranges": 4
+      }
+    ],
+    "processClosures": [
+      {
+        "rootPid": 3486,
+        "pids": [
+          3486,
+          3488,
+          3489,
+          3504,
+          3506,
+          3516
+        ],
+        "browserGeneration": 1,
+        "method": "SIGKILL",
+        "allTerminated": true
+      },
+      {
+        "rootPid": 3557,
+        "pids": [
+          3557,
+          3559,
+          3560,
+          3575,
+          3577,
+          3590,
+          3622
+        ],
+        "browserGeneration": 2,
+        "method": "normal-close",
+        "allTerminated": true
+      }
+    ],
+    "contextClosed": true
+  },
+  "directory": "build/qa/smoke-40657635679-preview18-main"
+}
