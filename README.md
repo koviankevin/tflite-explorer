@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.21](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.21)／build `c4346bf8617a020e`。新增 OP 權重與手動執行 input 共用依 dtype 的合法亂數、範圍提示及安全預設，float 只產生有限值、整數不越界、bool 為 0／1；舊草稿 seed bytes 保持相容。已完成正式站 30 項原生操作、七種 runtime 情境、14 吋 32px、完整網站與固定包核對，見 [型別亂數及正式交付](docs/typed-random.md)。逐 input raw `.bin`、零值及 input／output `.bin`＋JSON 保存仍可使用；開檔、編輯與一般匯出不自動執行，限制見 [手動執行](docs/tflite-runtime.md)。
+目前固定正式版為 [preview.22](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.22)／build `04aa44009821ed92`。改善大型 TFLite 匯出時 Firefox 的記憶體配置；三引擎實體 1.25 GiB／21,005 OP 八輪、新應用 80 輪／約 2 小時 12 分長測、正式站 1,373 檔、30 項原生操作、七種 runtime 情境及四份固定下載均已核對。成功部署保持原紀錄，只經授權補跑一次失敗的正式驗證；原失敗與未知原因仍保留，見 [正式交付與範圍](docs/desktop-physical.md#preview22-正式交付)。型別合法亂數、raw `.bin` 及手動 input／output 保存仍保留，見 [手動執行](docs/tflite-runtime.md)及[型別亂數歷史驗收](docs/typed-random.md)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

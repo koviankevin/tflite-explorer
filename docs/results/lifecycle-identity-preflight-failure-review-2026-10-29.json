@@ -1,0 +1,25 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "8d71184bc5211c4735912c4f9db9c40c52e9c02b",
+    "tree": "b24ccec5c1cfdd545fd6168797abe92032b03137",
+    "committedAt": "2026-10-29T03:02:46+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40750776324,
+  "attempt": 1,
+  "jobId": 123036556147,
+  "artifactId": 12844180573,
+  "digest": "sha256:2a60d8173d45928b4faac8e7527b7e828232e2828b462d23ef3b7431d44fb449",
+  "rawSHA256": "e086092a98b49cf6ddc549aa64df5f763b1def5f4eba90c1d32b28bee8aea408",
+  "rawBytes": 1648,
+  "classification": "test producer resource preflight ReferenceError, before fixture/browser/model work",
+  "reportEnvironmentRecorded": false,
+  "reportBuildRecorded": false,
+  "cycles": 0,
+  "samples": 0,
+  "error": "ReferenceError: optionalRead is not defined\n    at file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:140:54",
+  "errors": []
+}

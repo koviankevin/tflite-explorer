@@ -1,0 +1,38 @@
+{
+  "purpose": "Remove only failed verification temporary artifact to prevent upload-artifact same-name conflict on one bounded failed-job retry",
+  "source": {
+    "commit": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b",
+    "tree": "532ba368190049617f3fe379a8aae75107792030",
+    "committedAt": "2026-10-29T01:58:57+08:00",
+    "dirty": false
+  },
+  "originalRun": 40741440704,
+  "originalAttempt": 1,
+  "artifact": {
+    "id": 12838738699,
+    "node_id": "MDg6QXJ0aWZhY3QxMjgzODczODY5OQ==",
+    "name": "live-release-verification",
+    "size_in_bytes": 210225,
+    "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12838738699",
+    "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12838738699/zip",
+    "expired": false,
+    "digest": "sha256:4456eeda05942382cd8bf8e18e79972e917f77fd506b7fe6906beb9b3d6af332",
+    "created_at": "2026-10-28T18:05:56Z",
+    "updated_at": "2026-10-28T18:05:56Z",
+    "expires_at": "2026-11-27T18:05:56Z",
+    "workflow_run": {
+      "id": 40741440704,
+      "repository_id": 1428663853,
+      "head_repository_id": 1428663853,
+      "head_branch": "main",
+      "head_sha": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b"
+    }
+  },
+  "failedJob": 123004682042,
+  "archiveCommit": "d6a0d2be828eb2473ce697ff1a635f219835a07a",
+  "archivePath": "docs/results/preview22-startup-failure-2026-10-29.zip",
+  "archiveSHA256": "4456eeda05942382cd8bf8e18e79972e917f77fd506b7fe6906beb9b3d6af332",
+  "diagnosticRun": 40745643509,
+  "reason": "Same deployed application passes independently enriched startup and all 30 operations. Original timeout remains unattributed; preserve failure and do not change application, limits or successful deployment.",
+  "deletedAt": "2026-10-28T23:35:13.199Z"
+}

@@ -4,11 +4,11 @@
 
 這是指定較早來源／單一 Hosted Chromium 的結果；不代表 preview.20 新增手動 WASM／IO 的兩小時記憶體、其他引擎或公司實模已驗收。此長測與常規四項部署關卡分開，發布不必等待兩小時。下方早期失敗與修正過程保留，不以成功覆寫。
 
-新的 prefix-only 匯出記憶體修正已啟動 [40747440147](https://github.com/koviankevin/tflite-explorer/actions/runs/40747440147)，固定來源 `4ec5802f6af7aed3086ea516b24868bc43d41df3`。這一輪仍在執行，不能用歷史 80 輪或目前八輪成功代替最終長測結果；它不部署網站，不是發布的前置等待，也不會取消或重啟來換取成功。
+新的 prefix-only 匯出記憶體修正已完成 [40747440147](https://github.com/koviankevin/tflite-explorer/actions/runs/40747440147)，固定來源 `4ec5802f6af7aed3086ea516b24868bc43d41df3`，80 輪／約 2 小時 12 分，見下方完整核對。它與正式部署分開，沒有取消、縮短或重啟來換取成功。
 
 ### 程序識別與報告核對範圍
 
-執行中的 `4ec5802` 量測沿用既有 Chromium 根 PID 與當下 descendants 的 RSS，關閉時驗證根程序已消失。它沒有保存各 PID 的啟動時間與歷次所有權，因此不能宣稱已獨立追蹤每個被重新掛接的 orphan，或逐一證明全部已觀察子程序的清理；原生模型 Worker close 與 V8／backing checkpoints 仍照原規則收集。
+已完成的 `4ec5802` 量測沿用既有 Chromium 根 PID 與當下 descendants 的 RSS，關閉時驗證根程序已消失。它沒有保存各 PID 的啟動時間與歷次所有權，因此不能宣稱已獨立追蹤每個被重新掛接的 orphan，或逐一證明全部已觀察子程序的清理；原生模型 Worker close 與 V8／backing checkpoints 仍照原規則收集。
 
 後續 CI producer 改用與桌面八輪共用的 `OwnedProcessTree`：以每次 launch 的隨機環境標記辨識本測試 Node 直接啟動的根程序，只讀這些直接子程序的環境；以 PID＋start ticks 保留已觀察的 descendants，重新掛接後仍計入 RSS，PID 重用不會採用成原程序。正常關閉後至多等待十秒並保留全部已觀察 identities／remaining；有殘留或讀取不明就失敗，不以根 PID 已消失代表全部清理成功。失敗清理也逐一重新核對 identity，不能對其他程序送出 signal。未在取樣間觀察到的短命程序與共享頁重算限制仍存在。
 
@@ -39,7 +39,7 @@
 
 新增門檻的 Node 正負例檢查短時、空等、跳時、低頻取樣、晚期損壞匯出／未釋放 Worker、放寬 policy、跨批次累積，以及八輪能放過的緩慢長期 RSS 成長。這些證明判定器可拒絕不合格證據，不代表真實瀏覽器已通過。初次實際結果將另記錄，保留失敗而不改動原門檻。
 
-此報告不能代替公司實模／私有 runtime、MLIR 數小時負載、Firefox／WebKit 的 >1 GiB 程序記憶體、固定實體硬體 SLA、OS 斷電或無限期不洩漏。正式網站與固定 Release 仍是已驗收的 preview.18；本輪只有測試與文件，未更新應用程式。
+此報告不能代替公司實模／私有 runtime、MLIR 數小時負載、Firefox／WebKit 的 >1 GiB 程序記憶體、固定實體硬體 SLA、OS 斷電或無限期不洩漏。上述早期紀錄對應 preview.18；現行固定版本以 [README](../README.md) 為準。
 
 
 ## 共用 runner 的原八輪模式
@@ -84,3 +84,24 @@
 原八輪模式 [40679388661](https://github.com/koviankevin/tflite-explorer/actions/runs/40679388661) 已通過 provider／依賴 scope／原始量測核對；來源 `7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417`，見 [原始報告](results/retention-shared-eight-cycles-2026-10-28.json)與 [核對收據](results/retention-shared-eight-review-2026-10-28.json)。RSS 漂移 28,155,904 bytes、斜率 1,271,632.46 bytes／輪、峰值成長 479,506,432 bytes；24 模型／八完整指紋 Worker、權重／options 與匯出重開完成。這是該來源八輪成功，不能當作任何未完成的兩小時或後續修改來源的發布憑證。
 
 兩小時長測是獨立手動 CI，沒有加入 GitHub Pages 部署前置。一般更新依受影響功能選測，未變的來源相依結果可沿用；記憶體／快取／Worker 的長期穩定性驗收另計，不要求每次排版或文字部署都等待兩小時。
+
+## Prefix-only 修正的長測結果
+
+[40747440147](https://github.com/koviankevin/tflite-explorer/actions/runs/40747440147) 的[原始 provider ZIP](results/soak-prefix22-final-2026-10-29.zip)及[獨立核對](results/soak-prefix22-final-review-2026-10-29.json)通過。受測來源 `4ec5802f6af7aed3086ea516b24868bc43d41df3`／build `6cc234a24507f0d5` 與正式 preview.22 應用程式相同，commit／build metadata 不同；不將測試 build 當成另一個正式部署。核對前後來源乾淨不變，provider digest／ZIP CRC／原始 JSON SHA、全部 policies、每個八輪批次及整段兩小時均重新判定。
+
+| 項目 | 實際結果 |
+| --- | ---: |
+| 有效操作時間 | 7,926,338.796 ms，約 2 小時 12 分 |
+| 完整輪次／量測輪次／八輪批次 | 80／78／10 |
+| 關閉 RSS 長期斜率 | 7,045,185.835 bytes／小時 |
+| 最大關閉 RSS 漂移 | 30,478,336 bytes |
+| 最大關閉 main heap 漂移 | 1,400,756 bytes |
+| 平均／最大取樣間距 | 489.039／1,011.664 ms |
+
+240 個模型與 80 個完整原檔指紋 Workers、所有原生 Worker close、每輪完整／局部下載固定 hash、權重與 custom options、pattern 正負例、逐 realm 讀取上限與自然 URL 撤銷核對通過。小型 22-session 容量預檢另完整核對其 own-process 清理，不能代替主要 1.25 GiB 負載。主要長測的 RSS／root closure 仍是上節舊取樣範圍，不冒稱逐 PID orphan 證據或 Worker 連續 heap 峰值；本工作也沒有呼叫手動 interpreter。
+
+### 新程序識別 producer 的前置錯誤
+
+[40750776324](https://github.com/koviankevin/tflite-explorer/actions/runs/40750776324)，來源 `8d71184bc5211c4735912c4f9db9c40c52e9c02b`，在 resource preflight 因 `optionalRead is not defined` 失敗，零輪、零個記憶體樣本；[原始 ZIP](results/lifecycle-identity-preflight-failure-2026-10-29.zip)與[認證紀錄](results/lifecycle-identity-preflight-failure-review-2026-10-29.json)保留。這是量測程式重構時漏留資源預檢共用 helper，沒有啟動模型／瀏覽器負載，不能寫成應用記憶體失敗或成功。
+
+已恢復原 helper。以原始 preflight source 在無瀏覽器的合成資源環境重播，先重現相同 ReferenceError，修正後五項檢查通過：cgroup 限量、缺少 cgroup／max 回退、RAM 不足及磁碟不足。原門檻與 read behavior 不變；新的程序識別實體八輪仍待驗證。正式網站與 Release 的 source 固定在 `e654829`，不受此 CI-only 修正影響。
