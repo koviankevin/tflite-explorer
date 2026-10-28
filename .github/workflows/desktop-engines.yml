@@ -2,14 +2,24 @@ name: Desktop engine compatibility
 on:
   workflow_dispatch:
     inputs:
+      target:
+        description: Exact production release or freshly built public candidate
+        type: choice
+        options: [production, candidate]
+        default: production
+      engine:
+        description: Desktop engine to verify
+        type: choice
+        options: [all, firefox, webkit]
+        default: all
       expected_build_id:
-        description: Exact build ID already served by public production
+        description: Exact public production build ID (leave empty for candidate)
         type: string
-        required: true
+        required: false
       expected_site_id:
-        description: Exact complete site ID already served by public production
+        description: Exact complete production site ID (leave empty for candidate)
         type: string
-        required: true
+        required: false
 permissions:
   contents: read
 jobs:
@@ -20,9 +30,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        engine: [firefox, webkit]
+        engine: ${{ fromJSON(inputs.engine == 'firefox' && '["firefox"]' || inputs.engine == 'webkit' && '["webkit"]' || '["firefox","webkit"]') }}
     env:
       DESKTOP_ENGINE: ${{ matrix.engine }}
+      DESKTOP_TARGET: ${{ inputs.target }}
       EXPECTED_BUILD: ${{ inputs.expected_build_id }}
       EXPECTED_SITE_ID: ${{ inputs.expected_site_id }}
     steps:

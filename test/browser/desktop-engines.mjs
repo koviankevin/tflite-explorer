@@ -7,7 +7,8 @@ import path from 'node:path';
 import {once} from 'node:events';
 import {desktopEngineSettings} from '../../scripts/lib/desktop-engine-policy.mjs';
 import {gitSource,sha256} from '../../scripts/lib/release-artifact.mjs';
-import {resolveLiveCore,readStaticFile,verifyRemoteSnapshot} from '../../scripts/lib/live-site.mjs';
+import {readStaticFile} from '../../scripts/lib/live-site.mjs';
+import {openDesktopTarget} from '../../scripts/lib/desktop-engine-target.mjs';
 import {reusablePattern,exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
 import {editWorkspaceFlow} from './edit-workspace-flow.mjs';
 import {portableEditFlow} from './portable-edit-flow.mjs';
@@ -16,18 +17,17 @@ import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
 import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 
-const {engine,base,expectedBuild,expectedSiteId}=desktopEngineSettings(process.env,process.platform);
-const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],errorDetails:[],failedRequests:[],workers:[],requests:[],browserClosed:false};
+const settings=desktopEngineSettings(process.env,process.platform),{engine}=settings;
+const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,target:settings.target,source:gitSource(),checks:[],errors:[],errorDetails:[],failedRequests:[],workers:[],requests:[],browserClosed:false};
 const reportPath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.json`),imagePath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.png`);
-let browser,context,page,readDOM,phase='startup';
+let browser,context,page,readDOM,target,phase='startup';
 const check=name=>{report.checks.push(name);console.log(`PASS ${engine}: ${name}`);};
 try{
     assert.equal(report.source.dirty,false,'Compatibility driver source must be committed.');
-    const resolved=await resolveLiveCore({base,expectedBuild,expectedSiteId}),{manifest,coreBasePath}=resolved;
-    report.release=manifest.release;report.coreBasePath=coreBasePath;
-    const raw=(await readStaticFile(base,'site-manifest.json')).bytes;
-    const verified=await verifyRemoteSnapshot({base,raw,siteId:expectedSiteId,siteManifestSHA256:sha256(raw),coreManifestSHA256:resolved.manifestSHA256,coreManifest:manifest});
-    report.staticVerification={siteId:verified.site.siteId,manifestSHA256:sha256(raw),coreManifestSHA256:resolved.manifestSHA256,rootEntrySHA256:verified.rootEntrySHA256,files:verified.checks.length};
+    target=await openDesktopTarget(settings,report.source);
+    const {base,expectedBuild,expectedSiteId,manifest,coreBasePath}=target;
+    report.expectedBuild=expectedBuild;report.expectedSiteId=expectedSiteId;report.base=base;
+    report.release=manifest.release;report.coreBasePath=coreBasePath;report.staticVerification=target.staticVerification;
     const directory=await mkdtemp(path.join(process.env.RUNNER_TEMP,`desktop-${engine}-`)),demoEntry=manifest.files.find(f=>f.path==='demo.tflite');assert.ok(demoEntry&&demoEntry.bytes<1024**2);
     const demoBytes=(await readStaticFile(base,coreBasePath+demoEntry.path,{maxBytes:demoEntry.bytes})).bytes;assert.equal(sha256(demoBytes),demoEntry.sha256);
     const demo=path.join(directory,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
@@ -76,11 +76,12 @@ try{
     phase='mlir-keyboard';report.mlirKeyboard=await mlirKeyboardFlow({page,read,base,directory,check});
     const workers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));report.modelWorkers=workers.length;
     assert.equal(workers.length,3+report.editWorkspace.modelWorkers+report.portableEdit.modelWorkers+report.controlEdit.modelWorkers+report.mlirKeyboard.modelWorkers);assert.ok(workers.every(w=>w.closed));assert.deepEqual(report.errors,[]);
-    const after=await resolveLiveCore({base,expectedBuild,expectedSiteId});assert.equal(after.manifestSHA256,resolved.manifestSHA256);assert.equal(sha256((await readStaticFile(base,'site-manifest.json')).bytes),sha256(raw));
+    await target.verifyUnchanged();
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);
     await copyFile(path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';
 }catch(error){report.error=error.stack||String(error);if(error.mlirKeyboard)report.mlirKeyboard=error.mlirKeyboard;process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
+    try{await target?.close();}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({engine,status:report.status,checks:report.checks,error:report.error}));
 }

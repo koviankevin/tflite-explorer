@@ -4,7 +4,14 @@ import {desktopEngineSettings,DESKTOP_ENGINE_BASE} from '../scripts/lib/desktop-
 
 const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Desktop engine compatibility',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',DESKTOP_ENGINE:'firefox',EXPECTED_BUILD:'b279d3ea3f3d7ec5',EXPECTED_SITE_ID:'b68ad1da9211af5c8b39309954148f95131be0cea23508f166d028ec829340f1'};
 test('desktop compatibility pins public production and explicit immutable identities',()=>{
-    for(const engine of ['firefox','webkit'])assert.deepEqual(desktopEngineSettings({...env,DESKTOP_ENGINE:engine},'linux'),{engine,expectedBuild:env.EXPECTED_BUILD,expectedSiteId:env.EXPECTED_SITE_ID,base:DESKTOP_ENGINE_BASE});
+    for(const engine of ['firefox','webkit'])assert.deepEqual(desktopEngineSettings({...env,DESKTOP_ENGINE:engine},'linux'),{engine,target:'production',expectedBuild:env.EXPECTED_BUILD,expectedSiteId:env.EXPECTED_SITE_ID,base:DESKTOP_ENGINE_BASE});
+});
+test('candidate checks require fresh identities while retaining the same hosted-main boundary',()=>{
+    const candidate={...env,DESKTOP_TARGET:'candidate',EXPECTED_BUILD:'',EXPECTED_SITE_ID:''};
+    assert.deepEqual(desktopEngineSettings(candidate,'linux'),{engine:'firefox',target:'candidate',expectedBuild:null,expectedSiteId:null,base:null});
+    assert.throws(()=>desktopEngineSettings({...candidate,EXPECTED_BUILD:env.EXPECTED_BUILD},'linux'));
+    assert.throws(()=>desktopEngineSettings({...candidate,GITHUB_REF:'refs/heads/other'},'linux'));
+    assert.throws(()=>desktopEngineSettings({...candidate,DESKTOP_TARGET:'https://other.example'},'linux'));
 });
 test('desktop acceptance rejects local, foreign, PR, unpinned and arbitrary-engine execution before launching a browser',()=>{
     for(const [key,value] of Object.entries({GITHUB_ACTIONS:'false',GITHUB_REPOSITORY:'other/repo',GITHUB_WORKFLOW:'other',GITHUB_REF:'refs/pull/1/merge',GITHUB_EVENT_NAME:'push',DESKTOP_ENGINE:'../../chromium',EXPECTED_BUILD:'latest',EXPECTED_SITE_ID:''}))assert.throws(()=>desktopEngineSettings({...env,[key]:value},'linux'),key);
