@@ -5,8 +5,9 @@ import {selectionRectangle} from './pattern-selection.js';
 // state. The model and export selections remain in the existing model Worker.
 export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{},changed=()=>{}}) {
     const doc=target.ownerDocument,canvas=doc.createElement('canvas'),counter=doc.createElement('output'),accessible=doc.createElement('div');
-    canvas.className='overview-canvas';canvas.tabIndex=0;canvas.setAttribute('role','img');canvas.setAttribute('aria-label','全模型虛擬總覽；拖曳平移，滾輪縮放，方向鍵移動，Home 顯示全圖，Enter 開啟選取節點');
-    counter.className='overview-viewport-count';counter.setAttribute('aria-live','polite');accessible.className='sr-only';accessible.setAttribute('aria-label','視窗內節點');
+    const help='方向鍵平移，＋／－縮放，Home 顯示全圖；Tab 到節點，Enter／Space 操作';
+    canvas.className='overview-canvas';canvas.tabIndex=0;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`全模型虛擬總覽；拖曳平移，滾輪縮放；${help}`);
+    counter.className='overview-viewport-count';counter.setAttribute('aria-live','polite');accessible.className='overview-node-controls';accessible.setAttribute('aria-label','視窗內節點');
     target.replaceChildren(canvas,counter,accessible);target.classList.add('virtual-overview');target.scrollLeft=0;target.scrollTop=0;
     const camera=new OverviewCamera(target.clientWidth,target.clientHeight),nodes=new Map(layout.nodes.map(n=>[n.identifier,n])),nodeIndex=spatialIndex(layout.nodes),edgeIndex=spatialIndex(layout.edges),ctx=canvas.getContext('2d');
     let picked=new Set(selected),captured=new Set(),picking=false,frame=0,destroyed=false,drag=null,lastButtons='',hover=null;
@@ -16,7 +17,14 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
     const inside=rect=>{const a=camera.world(rect.left,rect.top),b=camera.world(rect.right,rect.bottom);if(rect.right<=rect.left || rect.bottom<=rect.top)return[];
         return nodeIndex.query({minX:a.x,minY:a.y,maxX:b.x,maxY:b.y}).filter(n=>n.diagramKind==='operator' && n.maxX>a.x && n.minX<b.x && n.maxY>a.y && n.minY<b.y);};
     const cancel=()=>{const previous=drag;drag=null;if(previous && canvas.hasPointerCapture(previous.id))canvas.releasePointerCapture(previous.id);if(previous)schedule();};
-    const choose=n=>{if(picking && n.diagramKind==='operator')capture([n],{toggle:true});else activate(n);};
+    const choose=(n,keyboard=false)=>{
+        if(picking && n.diagramKind==='operator'){capture([n],{toggle:true});return;}
+        const focused=doc.activeElement,pending=activate(n);
+        // Expanding a capsule replaces this Canvas. Restore keyboard focus only
+        // when the old control was removed and the user has not moved elsewhere.
+        if(keyboard&&pending?.then)pending.then(next=>{if(destroyed&&!focused.isConnected&&doc.activeElement===doc.body&&next?.isConnected&&target.contains(next))next.focus({preventScroll:true});}).catch(()=>{});
+    };
+    const label=n=>`${n.diagramKind==='pattern'?'展開 pattern':picking&&n.diagramKind==='operator'?'選取 layer':'查看節點'}：${Number.isInteger(n.sourceGraph)?`block/subgraph ${n.sourceGraph} · `:''}${Number.isInteger(n.sourceNode)?`#${n.sourceNode} · `:''}${n.type?.name || n.name || n.identifier} · ${n.identifier}`;
     const draw=()=>{frame=0;if(destroyed)return;const ratio=Math.min(devicePixelRatio || 1,2),width=target.clientWidth,height=target.clientHeight;
         if(width!==camera.width || height!==camera.height){cancel();camera.pan((width-camera.width)/2,(height-camera.height)/2);camera.width=width;camera.height=height;}
         if(canvas.width!==Math.round(width*ratio) || canvas.height!==Math.round(height*ratio)){canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);}
@@ -27,18 +35,20 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
             ctx.strokeStyle=e.kind==='control'?'#377cac':'#80988b';ctx.lineWidth=(e.kind==='control'?1.8:1)/camera.zoom;ctx.setLineDash(e.kind==='control'&&detail?[6/camera.zoom,4/camera.zoom]:[]);ctx.stroke();ctx.setLineDash([]);
             if(detail){const end=p[3],before=p[2],angle=Math.atan2(end.y-before.y,end.x-before.x),length=6/camera.zoom;ctx.beginPath();ctx.moveTo(end.x,end.y);ctx.lineTo(end.x-length*Math.cos(angle-.45),end.y-length*Math.sin(angle-.45));ctx.lineTo(end.x-length*Math.cos(angle+.45),end.y-length*Math.sin(angle+.45));ctx.closePath();ctx.fillStyle=e.kind==='control'?'#377cac':'#80988b';ctx.fill();}
         }
+        const focused=accessible.contains(doc.activeElement)?doc.activeElement.dataset.overviewNode:null;
         for(const n of visible){const match=picked.has(n.identifier),selected=picking && (captured.has(n.identifier) || preview.has(n.identifier));ctx.fillStyle=selected?'#c8f0dc':match?'#ffe08a':n.diagramKind==='pattern'?'#18745d':n.diagramKind==='operator'?'#f5faf4':'#e6edf3';ctx.fillRect(n.x,n.y,n.width,n.height);ctx.strokeStyle=selected?'#18745d':match?'#a44700':n.diagramKind==='pattern'?'#0b5341':'#7f9889';ctx.lineWidth=(selected?4:match?3:1)/camera.zoom;ctx.strokeRect(n.x,n.y,n.width,n.height);
+            if(n.identifier===focused){const gap=5/camera.zoom;ctx.strokeStyle='#164c89';ctx.lineWidth=3/camera.zoom;ctx.strokeRect(n.x-gap,n.y-gap,n.width+2*gap,n.height+2*gap);}
             if(detail){ctx.save();ctx.beginPath();ctx.rect(n.x+6,n.y+4,n.width-12,n.height-8);ctx.clip();ctx.fillStyle=n.diagramKind==='pattern'&&!match?'#fff':'#193b2b';ctx.font=`600 ${layout.font}px sans-serif`;const label=n.type?.name || n.name || n.identifier;const text=label.length>60?label.slice(0,57)+'…':label;ctx.fillText(text,n.x+12,n.y+layout.font+10);ctx.font=`${Math.max(12,layout.font*.72)}px sans-serif`;const info=n.diagramKind==='pattern'?n.name:`${n.sourceGraph===undefined?'邊界':`block/subgraph ${n.sourceGraph}`} · ${n.sourceNode===undefined?n.name:`#${n.sourceNode} · ${n.name || ''}`}`;ctx.fillText(info,n.x+12,n.y+n.height-12);ctx.restore();}
         }
         // A screen reader gets a bounded set of real controls, not a 20k-node
         // DOM. Search can always focus any off-screen occurrence by identifier.
         const buttons=(detail?visible.filter(n=>picked.has(n.identifier)).concat(visible.filter(n=>!picked.has(n.identifier))):visible.filter(n=>picked.has(n.identifier))).slice(0,100),signature=picking+'|'+buttons.map(n=>n.identifier).join('|');
-        if(signature!==lastButtons && !accessible.contains(doc.activeElement)){lastButtons=signature;accessible.replaceChildren(...buttons.map(n=>{const button=doc.createElement('button');button.textContent=`${n.diagramKind==='pattern'?'展開 pattern':picking&&n.diagramKind==='operator'?'選取 layer':'查看節點'}：${n.name || n.type?.name} · ${n.identifier}`;button.dataset.overviewNode=n.identifier;button.onfocus=()=>controller.focus([n.identifier]);button.onclick=()=>choose(n);return button;}));}
-        for(const button of accessible.children)if(picking)button.setAttribute('aria-pressed',String(captured.has(button.dataset.overviewNode)));else button.removeAttribute('aria-pressed');
+        if(signature!==lastButtons && !accessible.contains(doc.activeElement)){lastButtons=signature;accessible.replaceChildren(...buttons.map(n=>{const button=doc.createElement('button');button.dataset.overviewNode=n.identifier;button.dataset.overviewKind=n.diagramKind || '';button.onfocus=()=>{cancel();camera.focus([n]);schedule();};button.onclick=e=>choose(n,e?.detail===0);return button;}));}
+        for(const button of accessible.children){const node=nodes.get(button.dataset.overviewNode),text=label(node);if(button.textContent!==text){button.textContent=text;button.title=text;}if(picking&&node.diagramKind==='operator')button.setAttribute('aria-pressed',String(captured.has(button.dataset.overviewNode)));else button.removeAttribute('aria-pressed');}
         if(box){ctx.setTransform(ratio,0,0,ratio,0,0);ctx.fillStyle='#18745d22';ctx.fillRect(box.left,box.top,box.right-box.left,box.bottom-box.top);ctx.strokeStyle='#18745d';ctx.lineWidth=2;ctx.strokeRect(box.left,box.top,box.right-box.left,box.bottom-box.top);ctx.font='14px sans-serif';ctx.fillStyle='#103d30';ctx.fillText(`框選 ${preview.size} 個 layers`,box.left+6,box.top+18);}
         canvas.dataset.selectionCount=String(captured.size);canvas.dataset.marqueeCount=String(preview.size);
-        canvas.dataset.renderedNodes=String(visible.length);canvas.dataset.totalNodes=String(layout.nodes.length);canvas.dataset.renderedEdges=String(edges.length);canvas.dataset.zoom=String(camera.zoom);
-        const percent=camera.zoom*100;counter.textContent=`視窗繪製 ${visible.length.toLocaleString()} / ${layout.nodes.length.toLocaleString()} 節點 · ${edges.length.toLocaleString()} 連線 · ${percent<.1?percent.toPrecision(2):percent.toFixed(1)}%${detail?'':' · 縮放可看 OP 名稱'}`;changed({visible:visible.length,total:layout.nodes.length,zoom:camera.zoom});
+        canvas.dataset.renderedNodes=String(visible.length);canvas.dataset.totalNodes=String(layout.nodes.length);canvas.dataset.renderedEdges=String(edges.length);canvas.dataset.zoom=String(camera.zoom);canvas.dataset.focusedNode=focused || '';
+        const percent=camera.zoom*100;counter.textContent=`視窗繪製 ${visible.length.toLocaleString()} / ${layout.nodes.length.toLocaleString()} 節點 · ${edges.length.toLocaleString()} 連線 · ${percent<.1?percent.toPrecision(2):percent.toFixed(1)}%${detail?'':' · 縮放可看 OP 名稱'}${doc.activeElement===canvas?' · Tab 到節點，Enter／Space 操作':''}`;changed({visible:visible.length,total:layout.nodes.length,zoom:camera.zoom});
     };
     const point=e=>{const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
     const hit=p=>{const v=camera.world(p.x,p.y);return nodeIndex.query({minX:v.x,maxX:v.x,minY:v.y,maxY:v.y}).at(-1);};
@@ -48,7 +58,9 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
     canvas.addEventListener('pointerup',e=>{if(!drag || drag.id!==e.pointerId)return;drag.last=point(e);const moved=drag.moved,mode=drag.mode,hits=moved&&mode==='box'?inside(rectangle()):null;cancel();if(hits){capture(hits,{toggle:false});return;}if(!moved){const n=hit(point(e));if(n){picked=new Set([n.identifier]);schedule();choose(n);}}});
     canvas.addEventListener('pointercancel',cancel);canvas.addEventListener('lostpointercapture',cancel);
     canvas.addEventListener('dblclick',e=>{if(!hit(point(e)))controller.fit();});
-    canvas.addEventListener('keydown',e=>{const step=80;if(e.key==='Home'){controller.fit();}else if(e.key==='+' || e.key==='='){controller.zoom(1.4);}else if(e.key==='-'){controller.zoom(1/1.4);}else if(e.key==='Enter'){const n=nodes.get([...picked][0]);if(n)choose(n);}else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){cancel();camera.pan(e.key==='ArrowLeft'?step:e.key==='ArrowRight'?-step:0,e.key==='ArrowUp'?step:e.key==='ArrowDown'?-step:0);schedule();}else return;e.preventDefault();e.stopPropagation();});
+    const navigate=(e,activatePicked)=>{if(e.altKey||e.ctrlKey||e.metaKey||e.isComposing)return;if(!activatePicked&&(e.key==='Enter'||e.key===' ')){e.stopPropagation();return;}const step=80;if(e.key==='Home'){controller.fit();}else if(e.key==='+' || e.key==='='){controller.zoom(1.4);}else if(e.key==='-'){controller.zoom(1/1.4);}else if(activatePicked&&(e.key==='Enter'||e.key===' ')){const n=nodes.get([...picked][0]);if(n)choose(n,true);}else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){cancel();camera.pan(e.key==='ArrowLeft'?step:e.key==='ArrowRight'?-step:0,e.key==='ArrowUp'?step:e.key==='ArrowDown'?-step:0);schedule();}else return;e.preventDefault();e.stopPropagation();};
+    canvas.addEventListener('keydown',e=>navigate(e,true));accessible.addEventListener('keydown',e=>navigate(e,false));canvas.addEventListener('focus',schedule);canvas.addEventListener('blur',schedule);
+    accessible.addEventListener('keyup',e=>{if(e.key==='Enter'||e.key===' ')e.stopPropagation();});
     const escape=e=>{if(e.key==='Escape' && drag){cancel();e.preventDefault();e.stopImmediatePropagation();}};
     doc.addEventListener('keydown',escape,true);doc.addEventListener('scroll',cancel,true);doc.defaultView.addEventListener('blur',cancel);doc.defaultView.addEventListener('resize',cancel);
     const observer=new ResizeObserver(schedule);observer.observe(target);
@@ -61,7 +73,7 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
         focus(ids,zoom){cancel();const selected=ids.map(id=>nodes.get(id)).filter(Boolean);picked=new Set(ids);camera.focus(selected,zoom);schedule();},
         zoom(factor){cancel();camera.zoomAt(factor);schedule();},
         fit(){cancel();camera.fit(layout);schedule();},
-        setPicking(enabled,ids=[]){cancel();picking=enabled;captured=new Set(ids);canvas.style.cursor=picking?'crosshair':'grab';canvas.setAttribute('aria-label',picking?'圈選 pattern；拖曳框選原始 OP，Alt＋拖曳平移，點選切換，Esc 取消選框':'全模型虛擬總覽；拖曳平移，滾輪縮放，方向鍵移動，Home 顯示全圖，Enter 開啟選取節點');schedule();},
+        setPicking(enabled,ids=[]){cancel();picking=enabled;captured=new Set(ids);canvas.style.cursor=picking?'crosshair':'grab';canvas.setAttribute('aria-label',picking?`圈選 pattern；拖曳框選原始 OP，Alt＋拖曳平移；${help}，Esc 取消選框`:`全模型虛擬總覽；拖曳平移，滾輪縮放；${help}`);schedule();},
         visibleLayers(){return inside({left:0,top:0,right:camera.width,bottom:camera.height});},
         dispose(){cancel();destroyed=true;observer.disconnect();cancelAnimationFrame(frame);doc.removeEventListener('keydown',escape,true);doc.removeEventListener('scroll',cancel,true);doc.defaultView.removeEventListener('blur',cancel);doc.defaultView.removeEventListener('resize',cancel);target.classList.remove('virtual-overview');target.replaceChildren();}
     };

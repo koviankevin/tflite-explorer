@@ -736,7 +736,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
     finally { if (generation === renderGeneration) { $('target').setAttribute('aria-busy', 'false'); refreshPatternFold(); } }
 }
 async function activateOverviewNode(node) {
-    if(node.diagramKind==='pattern'){await activatePatternNode(node);return;}
+    if(node.diagramKind==='pattern'){const source=file,query=queryGeneration;await activatePatternNode(node);if(file===source&&query===queryGeneration&&overviewMode&&virtualOverview)return $('target').querySelector('.overview-canvas');return;}
     if(pickingPattern){if(node.diagramKind==='operator')commitCanvasLayers([node],{toggle:true});else status('這是控制流程／邊界顯示標記，未加入 pattern；請選取原始 OP。');return;}
     if(node.diagramKind!=='operator')return;
     const controller=virtualOverview,generation=renderGeneration;
@@ -893,7 +893,7 @@ function refreshPickedNodes() {
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。鍵盤 Tab 到節點，Enter／Space 切換；方向鍵平移，＋／－縮放。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
     $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;

@@ -19,6 +19,7 @@ import {tfliteControlEditFlow} from './tflite-control-edit-flow.mjs';
 import {patternDeleteFlow} from './pattern-delete-flow.mjs';
 import {modelTabsFlow} from './model-tabs-flow.mjs';
 import {editRecoveryFlow} from './edit-recovery-flow.mjs';
+import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -33,6 +34,7 @@ const portableEditRequired=editWorkspaceRequired&&expected!=='52d46a06925bd391';
 const tfliteEditingOnlyRequired=portableEditRequired&&expected!=='c659375441a01f98';
 const consolidatedEditorRequired=tfliteEditingOnlyRequired&&expected!=='d182aeed5d8f2901';
 const editRecoveryRequired=consolidatedEditorRequired&&expected!=='dbf8955ac378a73a';
+const mlirKeyboardRequired=editRecoveryRequired&&expected!=='855f8ca810f04f4d';
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
 let browser,context,page,readPage,releaseStartup,server;
@@ -95,7 +97,8 @@ try{
     if(portableEditRequired)report.portableEdit=await portableEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired});
     report.tfliteEditingOnlyRequired=tfliteEditingOnlyRequired;if(tfliteEditingOnlyRequired)report.tfliteControlEdit=await tfliteControlEditFlow({page,read:readPage,base,directory:temporary,check});
     report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}report.editRecoveryRequired=editRecoveryRequired;if(editRecoveryRequired)report.editRecovery=await editRecoveryFlow({page,read:readPage,base,directory:temporary,check});
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check});
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)),previousWorkers=tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3;assert.equal(modelWorkers.length,previousWorkers+(mlirKeyboardRequired?5:0));assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();
