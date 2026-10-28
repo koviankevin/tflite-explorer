@@ -1,0 +1,21 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {desktopPhysicalSettings,evaluateDesktopPhysical,DESKTOP_PHYSICAL_POLICY as policy} from '../scripts/lib/desktop-physical-policy.mjs';
+const MiB=1024**2,env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Desktop physical model lifecycle',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',DESKTOP_ENGINE:'firefox'};
+function good(){return {format:'model-lens-desktop-physical',version:1,engine:'firefox',policy,source:{dirty:false},sourceUnchanged:true,viewport:{width:1280,height:640},measurementEndedMs:560000,measurements:{browser:'owned-process-tree-rss',worker:'included-in-owned-process-rss',workerIsolateHeap:null,mainHeap:null},fixture:{weightSHA256:'a'.repeat(64),bytes:1349965216,editFingerprint:'c'.repeat(64)},errors:[],browserClosed:true,processCleanup:{allReaped:true,identities:[{pid:1,startTicks:'1'}],remaining:[]},
+    cycles:Array.from({length:8},(_,i)=>({cycle:i+1,startedMs:i*70000,endedMs:(i+1)*70000,font:32,editFont:32,weightVerified:true,optionsVerified:true,patternSourceMatches:1,patternReopenMatches:1,negativePatternMatches:0,fileInputEmpty:true,liveModelWorkers:0,activeBlobUrls:0,closedRssBytes:300*MiB,rssCheckpoints:['source','edited-model','reopen'].map(phase=>({phase,rssBytes:600*MiB,processes:4})),modelEdit:{workspaceNative:true,sourceOperators:21005,outputOperators:21006,readbackOperators:21006,roundTrip:true,bytes:1350445736,weightVerified:true,optionsVerified:true,weightSHA256:'a'.repeat(64),prefixMatches:1,branchMatches:1,byteComparison:'passed',comparedBytes:1342177328,byteRanges:7,sha256:'b'.repeat(64)},recovery:{complete:true,bytes:1349965216,fingerprint:'c'.repeat(64),maxRead:MiB,violations:[]}})),samples:Array.from({length:561},(_,i)=>({elapsedMs:i*1000,rssBytes:300*MiB})),workers:Array.from({length:32},(_,i)=>({url:'http://localhost/src/'+(i%4===3?'edit-recovery-worker.js':'model-worker.js'),closed:true}))};}
+test('physical engines reject local, non-main, non-manual, foreign and arbitrary-engine execution',()=>{
+    for(const engine of ['firefox','webkit'])assert.equal(desktopPhysicalSettings({...env,DESKTOP_ENGINE:engine},'linux').engine,engine);
+    for(const [key,value] of Object.entries({GITHUB_ACTIONS:'false',GITHUB_WORKFLOW:'other',GITHUB_REF:'refs/pull/1/merge',GITHUB_EVENT_NAME:'push',GITHUB_REPOSITORY:'other/repo',DESKTOP_ENGINE:'chromium'}))assert.throws(()=>desktopPhysicalSettings({...env,[key]:value},'linux'));
+    assert.throws(()=>desktopPhysicalSettings(env,'win32'));assert.throws(()=>desktopPhysicalSettings(env,'darwin'));
+});
+test('complete eight-cycle aggregate RSS evidence passes without inventing unavailable isolate heaps',()=>{
+    for(const engine of ['firefox','webkit']){const r=good();r.engine=engine;assert.equal(evaluateDesktopPhysical(r).status,'passed');}
+    const r=good();r.measurements.workerIsolateHeap=0;assert.ok(evaluateDesktopPhysical(r).issues.includes('misrepresented-worker-memory'));
+});
+test('physical gate rejects damaged late exports, missing worker/reap evidence, font, source and timing gaps',()=>{
+    for(const mutate of [r=>r.cycles.pop(),r=>r.cycles[7].optionsVerified=false,r=>r.cycles[7].modelEdit.byteComparison='not-run',r=>r.cycles[7].rssCheckpoints.pop(),r=>r.cycles[7].recovery.complete=false,r=>r.cycles[7].font=16,r=>r.cycles[7].endedMs=r.cycles[7].startedMs+59999,r=>r.workers[31].closed=false,r=>r.processCleanup.allReaped=false,r=>r.processCleanup.remaining=[{}],r=>r.sourceUnchanged=false,r=>r.policy={...policy,browserPeakGrowthBytes:Infinity},r=>r.samples.splice(10,11),r=>r.samples=r.samples.slice(0,-2),r=>r.measurementEndedMs+=6000]){const r=good();mutate(r);assert.equal(evaluateDesktopPhysical(r).status,'failed');}
+});
+test('physical gate preserves original RSS slope, drift and cold-baseline peak limits and sampling density',()=>{
+    for(const [mutate,issue] of [[r=>r.cycles.forEach((c,i)=>c.closedRssBytes+=i*17*MiB),'closed-rss-slope'],[r=>r.cycles.slice(2).forEach(c=>c.closedRssBytes+=129*MiB),'closed-rss-drift'],[r=>r.samples[3].rssBytes+=policy.browserPeakGrowthBytes+1,'browser-peak-growth'],[r=>r.samples=r.samples.filter((_,i)=>i%2===0),'sparse-process-rss']]){const r=good();mutate(r);assert.ok(evaluateDesktopPhysical(r).issues.includes(issue),issue);}
+});
