@@ -67,3 +67,13 @@ Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 M
 完整原始報告以不變的 provider ZIP 保存，減少純數值重複資料的儲存量：[Firefox 原始 ZIP](results/desktop-profile-firefox-2026-10-28.zip)、[WebKit 原始 ZIP](results/desktop-profile-webkit-2026-10-28.zip)。解壓後是各自唯一的 `desktop-physical-firefox.json`／`desktop-physical-webkit.json`，原 bytes／SHA 與 [完整來源核對及相位摘要](results/desktop-profile-review-2026-10-28.json)一致，沒有刪除取樣或改寫旗標。authentication passed 與 acceptance failed 分開保留。
 
 另修正離線分類複核的 PID namespace 邊界：純資料驗證不把歷史 browser PID 與目前讀報告的 Node PID 比較；實際 live capture 仍排除自己的 Node 程序。相同實作在不同 VM reviewer PID 中先重現誤拒，修正後通過，既有這次分類摘要重新計算保持相同。這不改 live capture 的允許集合、RSS 判定或既有測量結果，無須因此重跑未變的八輪工作量。
+
+## 單次 File／Blob 控制案例
+
+`blob-control.yml` 是另一個唯讀、手動 hosted Linux CI，只接受 main／本 repository 與固定 Firefox／WebKit 引擎。不修改應用，也不成為 Pages 部署前置。它重建相同實體公開 fixture，獨立開啟瀏覽器，用原生選檔及明確按鈕分開量：Worker 建立 Blob、Worker File 小範圍讀回、傳回 main、建立 URL、原生下載、main File 包裝、清理參照及原本 60 秒自然 URL 撤銷。每段都有 500ms 程序樹 RSS 與分類，保留讀取時差及缺失欄位。
+
+控制 Blob 由原檔真正的前 64 KiB 加上其餘原檔切片組成，輸出應與原檔逐 byte 相同。Worker 只讀 65,536+64+64 bytes，每次及累計都有配置前上限；下載後在 Node 以 1 MiB 分塊重算完整 SHA，必須等於實際 1,349,965,216 bytes fixture 的固定原 SHA。沒有用零值稀疏權重、小檔或跳過完整下載代替實體資料。只有報告上傳，模型、控制下載及自行建立的暫存資料皆在使用後清理。
+
+這是用來分離原生 API 的診斷，不執行應用的模型編輯、pattern 或八輪記憶體驗收。報告明確使用 `diagnosticOnly: true`、`memoryAcceptance: not-evaluated`、`completed/failed`，不以控制案例的綠燈代替原本失敗的 RSS 門檻。故意保留各階段 alias，再明確清理以觀察變化；不強制 GC、不重啟中途瀏覽器、不縮短 URL timer。Native Worker close、完整輸出、乾淨來源及 owned PID/start ticks 清理仍須成功。
+
+17 項相關 Node 檢查已通過，涵蓋相同 worker/page callback、>1 GiB 虛擬範圍的配置前讀取保護、操作順序、固定 60 秒 timer、所有權及實體 fixture 產生器；真實控制量測仍待 CI 執行，尚不能宣稱已找出配置來源。
