@@ -157,4 +157,14 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 
 第六版控制回到單一相同大小 prefix，僅先經由 `new Response(new Blob([prefix])).blob()` 轉換，再與原檔切片合成。只轉換 8,268,412 bytes 結構區，沒有對整份權重執行 Response／arrayBuffer；不建立網路 request 或應用持久化快取。Mozilla 的 [MutableBlobStorage 原始碼](https://raw.githubusercontent.com/mozilla-firefox/firefox/main/dom/file/MutableBlobStorage.cpp)有可轉暫存檔的 Blob 路徑，這只是本次實驗動機；不能推定目前鎖定引擎一定使用該路徑。報告版本為 6，明確記錄 `memoryPolicy.kind=response-prefix-blob`，必須量實際 RSS 才能判斷。
 
-新增兩項回歸先在舊版因過早發布 `built`、忽略轉換錯誤而失敗；修正後與所有權、實體 fixture 共 25 項相關 Node 檢查通過。新檢查驗證轉換只收到結構區、完成後才發布混合 Blob、錯誤不會變成可下載成功、任意 storage 選項及缺少 Response 均拒絕。最大單次／累計讀取、完整下載 SHA、取樣、自然撤銷、RSS 上限及原應用功能測試政策均未調整。第六版與實際應用八輪結果尚待驗證。
+新增兩項回歸先在舊版因過早發布 `built`、忽略轉換錯誤而失敗；修正後與所有權、實體 fixture 共 25 項相關 Node 檢查通過。新檢查驗證轉換只收到結構區、完成後才發布混合 Blob、錯誤不會變成可下載成功、任意 storage 選項及缺少 Response 均拒絕。最大單次／累計讀取、完整下載 SHA、取樣、自然撤銷、RSS 上限及原應用功能測試政策均未調整。
+
+### Prefix-only Response 對照與實際匯出候選
+
+[第六版 40735769423](https://github.com/koviankevin/tflite-explorer/actions/runs/40735769423)，來源 `7687b1d26507ae92d051173204cf5b29c67f7050`，已完成 Firefox 對照。[原始 ZIP](results/blob-response-firefox-2026-10-29.zip)與[獨立核對](results/blob-response-firefox-review-2026-10-29.json)包含完整原始 bytes／provider digest／CRC、固定來源、完整 1,349,965,216 bytes 下載 SHA、所有取樣與自然清理核對。最大單次 65,536、累計 8,268,604 bytes、60 秒 URL、Worker 與 owned 程序規則保持相同。
+
+整段 RSS 峰值為 745,517,056 bytes（約 711 MiB）；Object URL 檢查點 691,933,184，下載檢查點 692,662,272，下載相位峰值 698,347,520 bytes。這次不再出現原來約 1.25 GiB 的配置增量，但仍是單一診斷，沒有聲稱實際應用八輪已通過或直接證明原生暫存檔的實作。
+
+實際候選保留同步 writer／既有 export API，使用 WeakMap 在同一個 Worker 內記錄 Blob 的結構區長度，不讓快取持有模型。送出 TFLite 子模型、編輯工作區或進階 OP 編輯結果前，僅對超過 64 KiB 的新結構區執行本機 Response 轉換，再與原 Blob 的其餘切片組合；先完成轉換，再驗證候選及回傳下載結果。小型結構與 MLIR 原樣通過，轉換失敗回報原因，不用較高記憶體方式偷偷重試。沒有 fetch、模型上傳、OPFS 或應用持久化暫存，也沒有讀取完整權重。
+
+48 項相關 Node 檢查通過：兩種真實 writer（完整模型／custom 子模型）的結構區準備、所有 output bytes／provenance 保持相同、權重與 custom options 重開、重複準備冪等、缺少 API／轉換失敗／短寫拒絕，以及原有量化、64-bit offsets、草稿、報告與控制子圖。新增測試調整公開 fixture 的 OP 數，確保完整與局部兩種 header 都實際超過 64 KiB，不以小模型誤當大型路徑。接著仍須跑實際八輪與必要發布關卡；正式站尚未改成這個候選。

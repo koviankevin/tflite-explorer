@@ -7,6 +7,7 @@ import {foldPatternSnapshot} from './pattern-fold.js';
 import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
 import {createExportReport} from './export-report.js';
 import {assertModelEditAction} from './model-edit-policy.js';
+import {prepareExportResult} from './blob-memory-parts.js';
 let index;
 let overview;
 let results = [];
@@ -84,7 +85,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             if(editInProgress)throw Error('上一筆模型修改仍在驗證。');if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
             editInProgress=true;const session=editWorkspace,sourceIndex=index,sourceFile=file;
             try{
-                const {exportEditWorkspace}=await import('./model-edit-workspace.js'),result=await exportEditWorkspace(index,file,session.snapshot,args.commands,{updateSignatures:args.updateSignatures,progress:stage=>postMessage({stage})});
+                const {exportEditWorkspace}=await import('./model-edit-workspace.js'),result=await prepareExportResult(await exportEditWorkspace(index,file,session.snapshot,args.commands,{updateSignatures:args.updateSignatures,progress:stage=>postMessage({stage})}));
                 const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
                 const candidate=await openModelFile(candidateFile,{readAt:(offset,length)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(offset,offset+length))),readMetadata:async format=>{const r=await fetch(new URL(`../vendor/netron/${format}-metadata.json`,import.meta.url));if(!r.ok)throw Error('無法載入候選模型 metadata。');return r.text();},dialects:mlirDialects});
                 if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
@@ -105,7 +106,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             if(editInProgress)throw Error('上一筆模型修改仍在驗證，請稍後再試。');
             editInProgress=true;
             try {
-            const sourceIndex=index,sourceFile=file,result=await editModelOperation(sourceIndex,sourceFile,args,{progress:stage=>postMessage({stage})});
+            const sourceIndex=index,sourceFile=file,result=await prepareExportResult(await editModelOperation(sourceIndex,sourceFile,args,{progress:stage=>postMessage({stage})}));
             // Verify actual serialized bytes before offering a download. The
             // candidate is local to this request; never replace the live index.
             const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
@@ -124,7 +125,9 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
-            send(id, withReport(exportTflite(index, args.graph, args.nodes, file),args));
+            const sourceIndex=index,sourceFile=file,result=await prepareExportResult(exportTflite(index,args.graph,args.nodes,file));
+            if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
+            send(id,withReport(result,args));
         } else if (action === 'exportMLIR') {
             const { exportMLIR } = await import('./mlir-export.js');
             send(id, withReport(await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}),args));
