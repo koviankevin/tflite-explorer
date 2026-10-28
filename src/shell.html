@@ -21,7 +21,7 @@
     <div class="workspace-actions" aria-label="工作階段"><button id="save-workspace" class="text-button" disabled>儲存工作階段</button><button id="open-workspace" class="text-button">恢復檔案</button><button id="last-workspace" class="text-button" disabled>恢復上次儲存</button><button id="export-report-button" class="text-button" aria-haspopup="dialog" hidden>最近匯出報告</button></div>
     <input id="workspace-file" type="file" accept=".json" hidden>
     <div class="session-tools" aria-label="本機草稿與操作歷史">
-      <div class="session-actions"><button id="undo-workspace" class="text-button" disabled title="Ctrl／⌘ Z（輸入框保留文字復原）">復原</button><button id="redo-workspace" class="text-button" disabled title="Ctrl／⌘ Shift Z 或 Ctrl Y">重做</button><button id="open-drafts" class="text-button" aria-haspopup="dialog">本機草稿</button><label><input id="autosave-enabled" type="checkbox" checked disabled>自動儲存</label></div>
+      <div class="session-actions"><button id="undo-workspace" class="text-button" disabled title="Ctrl／⌘ Z（輸入框保留文字復原）">復原</button><button id="redo-workspace" class="text-button" disabled title="Ctrl／⌘ Shift Z 或 Ctrl Y">重做</button><button id="open-drafts" class="text-button" aria-haspopup="dialog">探索草稿</button><label><input id="autosave-enabled" type="checkbox" checked disabled>自動儲存</label></div>
       <p id="draft-status" role="status">開啟模型後開始保存本機草稿。</p>
       <button id="resume-draft-prompt" class="text-button" hidden>選擇草稿以恢復</button><button id="fork-draft" class="text-button" hidden>另開草稿，保留原版本</button>
     </div>
@@ -127,7 +127,7 @@
   <details class="draft-removal"><summary>移除本機編輯草稿</summary><label><input id="remove-edit-recovery-confirm" type="checkbox">我已保留所需備份，確定移除所選草稿及上次成功版本</label><button id="remove-edit-recovery" class="quiet" disabled>移除所選編輯草稿</button></details>
 </dialog>
 <dialog id="draft-dialog" class="import-dialog" aria-labelledby="draft-title">
-  <div class="import-heading"><h2 id="draft-title">本機草稿</h2><button id="close-drafts" class="icon-button" aria-label="關閉本機草稿">×</button></div>
+  <div class="import-heading"><h2 id="draft-title">探索草稿</h2><button id="close-drafts" class="icon-button" aria-label="關閉探索草稿">×</button></div>
   <label for="draft-list">選擇已儲存的工作階段</label><select id="draft-list"></select><p id="draft-description"></p>
   <p class="hint">僅保存操作狀態、模型名稱與結構指紋，不保存模型或權重。Undo／Redo 為本分頁歷史；草稿保留最近一次及上次成功版本。瀏覽器可能清除網站資料，重要工作請下載 JSON 備份。</p>
   <div class="import-actions"><button id="download-draft" class="quiet" disabled>下載草稿 JSON</button><button id="restore-draft" class="primary" disabled>恢復這份草稿</button></div>
