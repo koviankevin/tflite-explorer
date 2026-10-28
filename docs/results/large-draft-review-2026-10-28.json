@@ -1,0 +1,100 @@
+{
+  "status": "passed",
+  "runId": 40639097683,
+  "head": "f0d61a99dc95e260973dd0b92e6af623218aff95",
+  "testedCommit": "811218764db052c27f7feeec9d43d55563f74303",
+  "testedTree": "c6335248539515cab7e50b23ed11584f7910c803",
+  "runConclusion": "success",
+  "jobId": 122652796879,
+  "jobConclusion": "success",
+  "artifactId": 12794024186,
+  "artifactDigest": "sha256:74add7393240d6e5222157216e9c4df75763b3d7e3737ceb06585a1ba3f42ef3",
+  "reportSHA256": "d19a4fc0a308b8db0add431d30063a430157eb7cd212e2b411b302aecf965871",
+  "reportStatus": "passed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied",
+    "fresh native original File restores JSON history, redo and view at 1280×640 / 32px; editing continues",
+    "restored full TFLite reopens at 21,006 OP, all source weight/custom-option ranges match and both original patterns remain unique",
+    "exact full identity coverage, original parser limits, main responsiveness, bounded RSS/Worker heaps and all four native Worker closes"
+  ],
+  "error": null,
+  "measurements": {
+    "save": {
+      "name": "manual-json-save",
+      "startedAt": 2084.9000000000233,
+      "ticks": 185,
+      "maxGapMs": 63.60000000000582,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 11319.100000000006,
+      "elapsedMs": 9272.599999999977
+    },
+    "restore": {
+      "name": "manual-json-restore",
+      "startedAt": 13143.900000000023,
+      "ticks": 182,
+      "maxGapMs": 94.10000000000582,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 22219.100000000006,
+      "elapsedMs": 9083.799999999988
+    },
+    "cancellation": {
+      "responseMs": 32,
+      "name": "cancelled-restore",
+      "startedAt": 11493.5,
+      "ticks": 15,
+      "maxGapMs": 82.5,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 12219.100000000006,
+      "elapsedMs": 746.5,
+      "readsStopped": true,
+      "partialBytes": 7340032,
+      "noChangesApplied": true
+    },
+    "export": {
+      "name": "restored-full-model-export",
+      "startedAt": 22274.800000000017,
+      "ticks": 345,
+      "maxGapMs": 64.10000000000582,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 39469.20000000001,
+      "elapsedMs": 17216.399999999994
+    },
+    "memory": {
+      "baselineRssBytes": 505442304,
+      "peakRssBytes": 899080192,
+      "peakGrowthBytes": 393637888
+    },
+    "workerHeaps": [
+      {
+        "phase": "after-manual-save",
+        "targetId": "E1E855CED055FFB92BFD7EFEE0DCB4D7",
+        "usedSize": 57055700,
+        "totalSize": 59781120,
+        "embedderHeapUsedSize": 377160,
+        "backingStorageSize": 23175361
+      },
+      {
+        "phase": "restored-and-edited",
+        "targetId": "5EE6392336BB2C68F1E568CD73ED4A5B",
+        "usedSize": 58843176,
+        "totalSize": 63623168,
+        "embedderHeapUsedSize": 503344,
+        "backingStorageSize": 9131413
+      },
+      {
+        "phase": "exported-model-reopened",
+        "targetId": "A1AADF21F6133C08A066C5F9C3D88A98",
+        "usedSize": 87452796,
+        "totalSize": 137682944,
+        "embedderHeapUsedSize": 761816,
+        "backingStorageSize": 15996242
+      }
+    ]
+  }
+}

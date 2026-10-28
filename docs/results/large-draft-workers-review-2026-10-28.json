@@ -1,0 +1,22 @@
+{
+  "status": "failed",
+  "runId": 40638626480,
+  "head": "dbe28c73883e3afa641a1952d269577b2c57308b",
+  "testedCommit": "a97e56ad2770cea4a893565b25476f35d2e1bcee",
+  "testedTree": "cf492a4d8d4e75341c3636112a202e8df8dcb3a9",
+  "runConclusion": "failure",
+  "jobId": 122651314636,
+  "jobConclusion": "failure",
+  "artifactId": 12793998760,
+  "artifactDigest": "sha256:145c081ea3264f55631345e5f622a9b5b92f034fae7ac7f63132312c3af7e5ac",
+  "reportSHA256": "b25e9dceabdac16142565bc0760e56a4a306d8cef50ffa194437a4e759a53219",
+  "reportStatus": "failed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied",
+    "fresh native original File restores JSON history, redo and view at 1280×640 / 32px; editing continues",
+    "restored full TFLite reopens at 21,006 OP, all source weight/custom-option ranges match and both original patterns remain unique"
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(report.workerEvents.every(w=>w.closed))\n\n    at file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-edit-draft.mjs:95:330"
+}
