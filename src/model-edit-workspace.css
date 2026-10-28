@@ -7,4 +7,4 @@
 
 #edit-new-ops details {margin:10px 0;border:1px solid var(--line);border-radius:8px;padding:8px}#edit-new-ops summary {cursor:pointer;font-weight:600}#edit-new-ops label {display:flex;flex-direction:column;gap:4px;margin:8px 0}#edit-new-ops input,#edit-new-ops select {width:100%;min-width:0;box-sizing:border-box}#edit-new-ops input[type=checkbox] {width:auto;align-self:flex-start}#edit-new-ops select {text-overflow:ellipsis}
 
-#edit-wire-status,#edit-wire-status[hidden]{display:flex;box-sizing:border-box;height:46px;min-height:46px;flex-shrink:0;overflow:auto;padding:6px 16px}#edit-wire-status[hidden]{visibility:hidden;background:transparent}#edit-viewport{cursor:grab}#edit-viewport:active{cursor:grabbing}
+#edit-wire-status,#edit-wire-status[hidden]{display:flex;box-sizing:border-box;height:46px;min-height:46px;flex-shrink:0;overflow:auto;padding:6px 16px}#edit-wire-status[hidden]{display:flex!important;visibility:hidden;background:transparent}#edit-viewport{cursor:grab}#edit-viewport:active{cursor:grabbing}
