@@ -17,9 +17,9 @@ import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 
 const {engine,base,expectedBuild,expectedSiteId}=desktopEngineSettings(process.env,process.platform);
-const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],workers:[],requests:[],browserClosed:false};
+const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],errorDetails:[],failedRequests:[],workers:[],requests:[],browserClosed:false};
 const reportPath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.json`),imagePath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.png`);
-let browser,context,page,readDOM;
+let browser,context,page,readDOM,phase='startup';
 const check=name=>{report.checks.push(name);console.log(`PASS ${engine}: ${name}`);};
 try{
     assert.equal(report.source.dirty,false,'Compatibility driver source must be committed.');
@@ -36,6 +36,7 @@ try{
     report.chooserObservation=(await installDesktopChooserReader()).evidence;
     browser=await ({firefox,webkit}[engine]).launch({headless:true});report.browserVersion=browser.version();
     context=await browser.newContext({viewport:{width:1366,height:640},acceptDownloads:true});
+    context.on('requestfailed',r=>{if(report.failedRequests.length<50)report.failedRequests.push({phase,url:r.url(),resource:r.resourceType(),reason:r.failure()?.errorText,at:new Date().toISOString()});});
     await context.route('**/*',async route=>{const r=route.request(),u=new URL(r.url());if(['blob:','data:'].includes(u.protocol)){await route.continue();return;}const allowed=r.method()==='GET'&&r.url().startsWith(base);report.requests.push({method:r.method(),url:r.url(),allowed});if(!allowed){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else await route.continue();});
     // A separate blank document proves that the pinned engine can expose a
     // native chooser before attributing any production failure to the app.
@@ -52,7 +53,7 @@ try{
     // Keep a listener before navigation, so the first real chooser cannot race
     // the waitForEvent() subscription immediately preceding a fast click.
     report.chooserEvents=0;page.on('filechooser',()=>{report.chooserEvents++;});
-    page.on('pageerror',e=>report.errors.push(e.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
+    page.on('pageerror',e=>{report.errors.push(e.message);if(report.errorDetails.length<50)report.errorDetails.push({phase,message:e.message,stack:e.stack,at:new Date().toISOString(),lastCheck:report.checks.at(-1),pageURL:page.url(),workers:report.workers.filter(w=>!w.closed).map(w=>w.url)});});page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
     page.on('worker',worker=>{const item={url:worker.url(),closed:false};report.workers.push(item);worker.on('close',()=>{item.closed=true;});if(/\/model-worker\.js(?:\?|$)/.test(item.url)&&item.url!==new URL(coreBasePath+`src/model-worker.js?v=${expectedBuild}`,base).href)report.errors.push('Worker belongs to another build namespace.');});
     // Each observation is a fixed, source-controlled DOM expression. Never
     // evaluate app APIs, mutate selection or generate a file inside the page.
@@ -69,16 +70,16 @@ try{
     await choose(demo);await ready(26);await page.locator('[data-kind="patterns"]').click();await page.locator('#open-import').click();await choose(patternFile,'#choose-pattern-file');await page.locator('#confirm-import').click();await until(()=>!document.querySelector('#import-dialog').open);await page.locator('#saved-pattern').selectOption(pattern.name);await until(()=>document.querySelector('#result-count').textContent==='4 筆匹配路徑');
     const json=await download('#export-pattern','pattern-roundtrip.json');assert.deepEqual(parsePatternFile(await readFile(json,'utf8')),[pattern]);check('actual file chooser and native pattern import/export preserve the structural query');
     await page.locator('.result-item').first().click();await ready();const child=await download('#export-match','submodel.tflite');await close();await choose(child);await ready(3);await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await page.locator('.result-item').click();await ready();await close();check('TFLite submodel downloads and reopens with exactly one original pattern match');
-    report.editWorkspace=await editWorkspaceFlow({page,read,base,directory,check,allowMlir:false});
-    report.portableEdit=await portableEditFlow({page,read,base,directory,check,allowMlir:false});
-    report.controlEdit=await tfliteControlEditFlow({page,read,base,directory,check});
-    report.mlirKeyboard=await mlirKeyboardFlow({page,read,base,directory,check});
-    const workers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));report.modelWorkers=workers.length;
+    phase='edit-workspace';report.editWorkspace=await editWorkspaceFlow({page,read,base,directory,check,allowMlir:false});
+    phase='portable-edit';report.portableEdit=await portableEditFlow({page,read,base,directory,check,allowMlir:false});
+    phase='control-edit';report.controlEdit=await tfliteControlEditFlow({page,read,base,directory,check});
+    phase='mlir-keyboard';report.mlirKeyboard=await mlirKeyboardFlow({page,read,base,directory,check});
+    const workers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));report.modelWorkers=workers.length;
     assert.equal(workers.length,3+report.editWorkspace.modelWorkers+report.portableEdit.modelWorkers+report.controlEdit.modelWorkers+report.mlirKeyboard.modelWorkers);assert.ok(workers.every(w=>w.closed));assert.deepEqual(report.errors,[]);
     const after=await resolveLiveCore({base,expectedBuild,expectedSiteId});assert.equal(after.manifestSHA256,resolved.manifestSHA256);assert.equal(sha256((await readStaticFile(base,'site-manifest.json')).bytes),sha256(raw));
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);
     await copyFile(path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';
-}catch(error){report.error=error.stack||String(error);process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+}catch(error){report.error=error.stack||String(error);if(error.mlirKeyboard)report.mlirKeyboard=error.mlirKeyboard;process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({engine,status:report.status,checks:report.checks,error:report.error}));
