@@ -14,6 +14,7 @@ import {portableEditFlow} from './portable-edit-flow.mjs';
 import {tfliteControlEditFlow} from './tflite-control-edit-flow.mjs';
 import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
 import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
+import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 
 const {engine,base,expectedBuild,expectedSiteId}=desktopEngineSettings(process.env,process.platform);
 const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],workers:[],requests:[],browserClosed:false};
@@ -32,6 +33,7 @@ try{
     const demo=path.join(directory,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Desktop engine RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(directory,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});
     await registerDOMReader(selectors);
+    report.chooserObservation=(await installDesktopChooserReader()).evidence;
     browser=await ({firefox,webkit}[engine]).launch({headless:true});report.browserVersion=browser.version();
     context=await browser.newContext({viewport:{width:1366,height:640},acceptDownloads:true});
     await context.route('**/*',async route=>{const r=route.request(),u=new URL(r.url());if(['blob:','data:'].includes(u.protocol)){await route.continue();return;}const allowed=r.method()==='GET'&&r.url().startsWith(base);report.requests.push({method:r.method(),url:r.url(),allowed});if(!allowed){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else await route.continue();});
@@ -39,14 +41,13 @@ try{
     // native chooser before attributing any production failure to the app.
     const probe=await context.newPage();probe.on('filechooser',()=>{});
     try{
-        await probe.setContent('<input id="probe-file" type="file" hidden><button id="probe-open" onclick="document.getElementById(\'probe-file\').click()">Choose</button>');
-        const chosen=probe.waitForEvent('filechooser');await probe.locator('#probe-open').click();await(await chosen).setFiles(demo);assert.match(await probe.locator('#probe-file').inputValue(),/demo\.tflite$/);report.nativeChooserProbe='passed';
+        report.nativeChooserProbe=[];
+        for(const disabledEval of [false,true]){
+            await probe.setContent('<input id="probe-file" type="file" hidden><button id="probe-open" onclick="document.getElementById(\'probe-file\').click()">Choose</button>'+(disabledEval?'<script>window.eval=()=>{throw Error("window.eval() not supported.")};</script>':''));
+            const chosen=probe.waitForEvent('filechooser');await probe.locator('#probe-open').click();await(await chosen).setFiles(demo);assert.match(await probe.locator('#probe-file').inputValue(),/demo\.tflite$/);report.nativeChooserProbe.push({disabledEval,status:'passed'});
+        }
     }finally{await probe.close();}
-    // Temporary [DEBUG-desktop-native] listeners only observe click routing.
-    // They never prevent defaults, alter handlers or touch the model API.
-    await context.addInitScript(()=>{for(const capture of [true,false])document.addEventListener('click',event=>{if(!['open-model','welcome-open','model-file'].includes(event.target?.id))return;console.info('[DEBUG-desktop-native]'+JSON.stringify({target:event.target.id,capture,trusted:event.isTrusted,detail:event.detail,prevented:event.defaultPrevented,activation:navigator.userActivation?.isActive??null}));},capture);});
     page=await context.newPage();page.setDefaultTimeout(30000);
-    report.nativeClicks=[];page.on('console',message=>{const text=message.text();if(text.startsWith('[DEBUG-desktop-native]')&&report.nativeClicks.length<30)report.nativeClicks.push(JSON.parse(text.slice('[DEBUG-desktop-native]'.length)));});
     // Interception is enabled over an asynchronous browser protocol message.
     // Keep a listener before navigation, so the first real chooser cannot race
     // the waitForEvent() subscription immediately preceding a fast click.
