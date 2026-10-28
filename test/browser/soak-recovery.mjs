@@ -88,6 +88,13 @@ export async function savedDraftRows(read){
     assert.equal(new Set(found.map(r=>r.key)).size,found.length);return found;
 }
 
+export async function observeRecoveryStatus(read){
+    const state=await read(()=>{const status=document.querySelector('#edit-recovery-status');return {message:status.textContent,error:status.getAttribute('data-error')};});
+    assert.ok(state&&typeof state.message==='string'&&['true','false'].includes(state.error),'Missing recovery status snapshot.');
+    const saved=state.message.startsWith('已保存本機編輯草稿');assert.ok(!(saved&&state.error==='true'),'Conflicting recovery status snapshot.');
+    return saved||state.error==='true'?state.message:null;
+}
+
 export function createSoakRecovery({page,read,directory,fixture}){
     const ledger=new SoakRecoveryLedger(fixture),wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));let serial=0;
     async function until(fn,timeout=30000){const deadline=Date.now()+timeout;for(;;){const value=await fn();if(value)return value;if(Date.now()>deadline)throw Error('Timed out waiting for the real saved-draft UI.');await wait(100);}}
@@ -104,7 +111,7 @@ export function createSoakRecovery({page,read,directory,fixture}){
         try{await download.saveAs(file);assert.ok((await stat(file)).size<=EDIT_DRAFT_LIMIT);return inspectSoakBackup(await readFile(file,'utf8'),fixture);}
         finally{await download.delete();await rm(file,{force:true});}
     }
-    async function settledStatus(){return until(async()=>{const status=page.locator('#edit-recovery-status'),message=await status.textContent();return message.startsWith('已保存本機編輯草稿')||await status.getAttribute('data-error')==='true'?message:null;},90000);}
+    async function settledStatus(){return until(()=>observeRecoveryStatus(read),90000);}
     return {
         async ensureSaved(entry){
             const message=await settledStatus();entry.recoveryStorage={version:1,capacity:null};if(message.startsWith('已保存本機編輯草稿'))return;

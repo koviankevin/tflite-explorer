@@ -56,3 +56,13 @@
 原始 [failed 報告](results/soak-capacity-list-failure-2026-10-28.json)及 [provider digest／CRC／來源核對](results/soak-capacity-list-review-2026-10-28.json)已保存：前 20 份最終備份已下載，開始第 21 次；21 個模型及 21 個指紋 Worker 全部 close，owned 程序全數正常結束，沒有 page error。測量區間為零輪／零時間，不能宣稱任何兩小時結果。
 
 從實際 `rows` 抽出的相同逐筆讀取，在會於讀取中移除最後一項的快速 Node 案例先重現失敗；改為一次同步 DOM snapshot，再於 Node 核對 keys／revision，案例通過，下一次 snapshot 能正常觀察到 19 項。只使用既有 Chromium CDP 的唯讀 DOM 觀察，不呼叫應用 API、不更動模型或繞過確認移除。原始失敗仍保留；修正後需取得新的真實前測／兩小時結果，不能因單元案例通過就重標舊 run。
+
+## v2 重測：第二十五輪保存狀態觀察
+
+[40680745057](https://github.com/koviankevin/tflite-explorer/actions/runs/40680745057) 於 12:13 UTC 提前失敗，未滿兩小時。GitHub 日誌顯示 22 次快速前測通過，24 輪完整大檔操作完成；第二十五輪保存狀態把稍早的「背景核對原模型 100%」文字，與稍後更新的 error 旗標混在一起。當時 `textContent` 與 `getAttribute` 是分別 await 的兩次觀察，不能作為單一保存狀態。
+
+抽出實際相同讀取後，快速測試先重現回傳舊進度文字的失敗；改為一次同步 DOM snapshot 取得文字與旗標，再於 Node 分類。舊進度／非錯誤會繼續等，完整容量錯誤才允許既有備份／移除／retry，其他錯誤仍失敗；缺少旗標或「已保存」同時帶錯誤也直接拒絕。36 項相關 Node 檢查通過，不增加 timeout、不改保存內容或放寬兩小時門檻。修正後仍需新的真實長測，原失敗不改標。
+
+原八輪模式 [40679388661](https://github.com/koviankevin/tflite-explorer/actions/runs/40679388661) 已通過 provider／依賴 scope／原始量測核對；來源 `7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417`，見 [原始報告](results/retention-shared-eight-cycles-2026-10-28.json)與 [核對收據](results/retention-shared-eight-review-2026-10-28.json)。RSS 漂移 28,155,904 bytes、斜率 1,271,632.46 bytes／輪、峰值成長 479,506,432 bytes；24 模型／八完整指紋 Worker、權重／options 與匯出重開完成。這是該來源八輪成功，不能當作任何未完成的兩小時或後續修改來源的發布憑證。
+
+兩小時長測是獨立手動 CI，沒有加入 GitHub Pages 部署前置。一般更新依受影響功能選測，未變的來源相依結果可沿用；記憶體／快取／Worker 的長期穩定性驗收另計，不要求每次排版或文字部署都等待兩小時。
