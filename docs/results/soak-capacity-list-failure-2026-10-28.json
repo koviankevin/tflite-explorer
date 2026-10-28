@@ -1,0 +1,956 @@
+{
+  "status": "failed",
+  "startedAt": "2026-10-28T11:22:35.184Z",
+  "policy": {
+    "version": 2,
+    "cycles": 8,
+    "warmupCycles": 2,
+    "sampleIntervalMs": 500,
+    "urlReleaseTimeoutMs": 80000,
+    "settleSamples": 5,
+    "maxReadBytes": 1048576,
+    "realmReadBytes": 16777216,
+    "browserPeakGrowthBytes": 805306368,
+    "closedRssDriftBytes": 134217728,
+    "closedRssSlopeBytesPerCycle": 16777216,
+    "closedMainHeapDriftBytes": 33554432,
+    "modelWorkerUsedBytes": 536870912,
+    "modelWorkerBackingBytes": 536870912
+  },
+  "cycles": [],
+  "samples": [],
+  "checks": [
+    "dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256"
+  ],
+  "limitations": [
+    "At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.",
+    "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+    "Summed /proc RSS includes Chromium descendants and can double-count shared pages; 500ms sampling can miss spikes.",
+    "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+    "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer."
+  ],
+  "format": "model-lens-lifecycle-soak",
+  "version": 2,
+  "soakPolicy": {
+    "version": 1,
+    "minActiveMs": 7200000,
+    "maxActiveMs": 9000000,
+    "minCycles": 64,
+    "maxCycles": 128,
+    "batchCycles": 8,
+    "maxCycleMs": 300000,
+    "maxIntercycleGapMs": 5000,
+    "maxSampleGapMs": 10000,
+    "maxMeanSampleMs": 1000,
+    "closedRssSlopeBytesPerHour": 16777216
+  },
+  "recoveryPolicy": {
+    "version": 1,
+    "capacity": 20,
+    "backupLimitBytes": 262144,
+    "commands": 2,
+    "font": 32
+  },
+  "soak": {
+    "activeDurationMs": 0,
+    "viewport": {
+      "width": 1280,
+      "height": 640
+    }
+  },
+  "workerClosures": [],
+  "environment": {
+    "platform": "linux",
+    "release": "6.17.0-1022-azure",
+    "node": "v22.23.3",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "cpus": 4,
+    "totalMemory": 16766414848,
+    "availableMemoryBytes": 15231315968,
+    "memoryLimit": null,
+    "memoryCurrent": null,
+    "tempFreeBytes": 90863022080,
+    "imageVersion": "20261023.334.3",
+    "runId": "40679379293",
+    "sourceCommit": "7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417",
+    "sourceTree": "e69bd29513b9d9371616772f36f16e43ffb1a77a",
+    "sourceDirty": false
+  },
+  "fixture": {
+    "file": "/tmp/model-lens-lifecycle-IZpKbC/physical-1_25GiB.tflite",
+    "bytes": 1349965216,
+    "payloadOffset": 7787936,
+    "weightBytes": 1342177280,
+    "operators": 21005,
+    "tensors": 21011,
+    "repeats": 7000,
+    "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "readbackSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+    "allocatedBytes": 1349971968,
+    "writeMethod": "Sequential dense nonzero 4MiB chunks, fsync, full SHA-256 readback; no sparse/truncate",
+    "editFingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734"
+  },
+  "build": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.18",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417",
+      "tree": "e69bd29513b9d9371616772f36f16e43ffb1a77a",
+      "committedAt": "2026-10-28T19:21:31+08:00",
+      "dirty": false
+    },
+    "buildId": "04ac40c86b8c4434"
+  },
+  "recoveryPreflight": {
+    "status": "failed",
+    "cycles": [
+      {
+        "cycle": 1,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "16b48575d3dd60de35771260d8dc2dde",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 2,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "183dbc415ec23e5d4d62ced3d9e898b7",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 3,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "6eff981bcac9c352174f9160c2713a47",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 4,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "f47bbf7334a96eb1dc0191b67800a441",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 5,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "41821c5d6fb5d4acb9f5a3974aeee685",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 6,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "eb058952189dc216c0687cf5cdc40b2e",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 7,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "9b9deb5bc1c09c08e5dc136feaf63414",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 8,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "290f38633f68028be65603a667882f8a",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 9,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "a5f788564b533a7ed57ef6a19e1c268f",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 10,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "8a9f6fa97e61dc70663007fa07bb6e96",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 11,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "897cba785d633188d8a8a61fd703c1c9",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 12,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "ecc06d41191b21c6b37d7c2110bfaa7e",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 13,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "fc1af056cdfb4aea6ada8be0aba0c3d2",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 14,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "1257424d4bb2294b4f9b34de7029d745",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 15,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "e75a4f831bd748d34201f77ddcd65947",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 16,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "1dbb8067550f410475fb4ceaf2166be7",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "1dbb8067550f410475fb4ceaf2166be7",
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 17,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "a4e9fee5f3acf08966d3572d529bd153",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "a4e9fee5f3acf08966d3572d529bd153",
+            "1dbb8067550f410475fb4ceaf2166be7",
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 18,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "71ef669135d27b204fed63c2daac1a84",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "71ef669135d27b204fed63c2daac1a84",
+            "a4e9fee5f3acf08966d3572d529bd153",
+            "1dbb8067550f410475fb4ceaf2166be7",
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 19,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "ae27f1bae094015e34b69a51ddb9119d",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "ae27f1bae094015e34b69a51ddb9119d",
+            "71ef669135d27b204fed63c2daac1a84",
+            "a4e9fee5f3acf08966d3572d529bd153",
+            "1dbb8067550f410475fb4ceaf2166be7",
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 20,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null,
+          "savedKey": "e16ca09322fc44adef3b7d46bf0a6ea7",
+          "backup": {
+            "downloaded": true,
+            "parsed": true,
+            "bytes": 966,
+            "sha256": "af45fd9a28ad45ee83d6fbc9fd10bf5a85f3bfb698f886a727ebe699b0f5c143",
+            "sourceBytes": 3256,
+            "sourceFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273",
+            "commands": 2,
+            "font": 32
+          },
+          "retainedKeys": [
+            "e16ca09322fc44adef3b7d46bf0a6ea7",
+            "ae27f1bae094015e34b69a51ddb9119d",
+            "71ef669135d27b204fed63c2daac1a84",
+            "a4e9fee5f3acf08966d3572d529bd153",
+            "1dbb8067550f410475fb4ceaf2166be7",
+            "e75a4f831bd748d34201f77ddcd65947",
+            "1257424d4bb2294b4f9b34de7029d745",
+            "fc1af056cdfb4aea6ada8be0aba0c3d2",
+            "ecc06d41191b21c6b37d7c2110bfaa7e",
+            "897cba785d633188d8a8a61fd703c1c9",
+            "8a9f6fa97e61dc70663007fa07bb6e96",
+            "a5f788564b533a7ed57ef6a19e1c268f",
+            "290f38633f68028be65603a667882f8a",
+            "9b9deb5bc1c09c08e5dc136feaf63414",
+            "eb058952189dc216c0687cf5cdc40b2e",
+            "41821c5d6fb5d4acb9f5a3974aeee685",
+            "f47bbf7334a96eb1dc0191b67800a441",
+            "6eff981bcac9c352174f9160c2713a47",
+            "183dbc415ec23e5d4d62ced3d9e898b7",
+            "16b48575d3dd60de35771260d8dc2dde"
+          ]
+        }
+      },
+      {
+        "cycle": 21,
+        "recoveryStorage": {
+          "version": 1,
+          "capacity": null
+        }
+      }
+    ],
+    "workers": [
+      {
+        "url": "http://127.0.0.1:41019/vendor/netron/worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/model-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:41019/src/edit-recovery-worker.js?v=04ac40c86b8c4434",
+        "closed": true
+      }
+    ],
+    "errors": [],
+    "recoveryPolicy": {
+      "version": 1,
+      "capacity": 20,
+      "backupLimitBytes": 262144,
+      "commands": 2,
+      "font": 32
+    },
+    "viewport": {
+      "width": 1280,
+      "height": 640
+    },
+    "fixture": {
+      "file": "/tmp/model-lens-lifecycle-IZpKbC/recovery-preflight.tflite",
+      "bytes": 3256,
+      "editFingerprint": "4147c6a4a4d412eb38dc923abca24491ca91830e4095eb38e8a031be11f30273"
+    },
+    "error": "locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#edit-recovery-list option').nth(19)\n\n    at rows (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:87:92)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:107\n    at async until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:84:98)\n    at async Object.ensureSaved (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:77)\n    at async recoveryCapacityPreflight (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery-preflight.mjs:41:13)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:156:75",
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3436,
+          "startTicks": "8708"
+        },
+        {
+          "pid": 3438,
+          "startTicks": "8710"
+        },
+        {
+          "pid": 3439,
+          "startTicks": "8710"
+        },
+        {
+          "pid": 3455,
+          "startTicks": "8712"
+        },
+        {
+          "pid": 3468,
+          "startTicks": "8732"
+        },
+        {
+          "pid": 3480,
+          "startTicks": "8747"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true
+    },
+    "browserClosed": true
+  },
+  "error": "locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#edit-recovery-list option').nth(19)\n\n    at rows (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:87:92)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:107\n    at async until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:84:98)\n    at async Object.ensureSaved (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:77)\n    at async recoveryCapacityPreflight (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery-preflight.mjs:41:13)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:156:75",
+  "browserClosed": true,
+  "errors": [],
+  "finishedAt": "2026-10-28T11:23:56.413Z"
+}

@@ -27,4 +27,4 @@
 Preview.16 的完整大型原模型自動指紋（八輪各最多 1 MiB／次）及瀏覽器程序強制終止後恢復已通過，見 [完整恢復交付](edit-recovery.md)。後續已補上 1.25 GiB 手動 JSON 下載／原生重選恢復、取消、32px 視角及 Redo、實際整份匯出重開與權重／custom options／pattern 驗收，見 [大型手動草稿驗收](large-edit-draft.md)。這不代替公司實模、其他引擎、OS 斷電、固定實體硬體 SLA 或數小時負載。
 
 
-Firefox／WebKit 另加入 [實體 1.25 GiB 八輪程序 RSS 驗收](desktop-physical.md)，同一瀏覽器實際完整改模、子模型匯出重開、權重／options 比對與原生 Worker close；初次結果仍待執行，不由判定器單元測試或既有小模型功能流程推論大檔合格。共用 runner 的原八輪已完成來源相依及 provider 核對，見 [實際證據](lifecycle-soak.md#共用-runner-的原八輪模式)；兩小時長測另計。
+Firefox／WebKit 另加入 [實體 1.25 GiB 八輪程序 RSS 驗收](desktop-physical.md)。實際重測已完成八輪完整改模、子模型匯出重開、權重／options 比對與原生 Worker close；兩個引擎都因 RSS 峰值成長超過既定上限而失敗，不能由功能成功推論記憶體合格。原始 provider 認證與失敗數據已保存，下一步定位匯出相位的資源來源。共用 Chromium runner 的原八輪已完成來源相依及 provider 核對，見 [實際證據](lifecycle-soak.md#共用-runner-的原八輪模式)；修正容量流程後的新八輪與兩小時長測另計。

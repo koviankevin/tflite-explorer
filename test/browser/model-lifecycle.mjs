@@ -161,10 +161,10 @@ try{
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
-    if(soak)draftRecovery=createSoakRecovery({page,directory:temporary,fixture:report.fixture});
     if(soak)page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
     browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
+    if(soak)draftRecovery=createSoakRecovery({page,read:readPage,directory:temporary,fixture:report.fixture});
     await page.goto(base);await page.locator('#welcome-open').waitFor();phase='baseline';await sample();
     timer=setInterval(()=>{if(sampling)return;sampling=true;pending=sample().catch(error=>errors.push(`Sampler: ${error.message}`)).finally(()=>{sampling=false;});},policy.sampleIntervalMs);
     const patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns(patterns));

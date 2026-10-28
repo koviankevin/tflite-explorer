@@ -1,0 +1,2 @@
+# Keep authenticated report bytes stable when checking out on Windows or Linux.
+/docs/results/*.json text eol=lf

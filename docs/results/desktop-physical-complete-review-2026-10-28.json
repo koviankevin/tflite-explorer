@@ -1,0 +1,441 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "f972517374869dcc36bb9654a09638d8656d4273",
+    "tree": "e69bd29513b9d9371616772f36f16e43ffb1a77a",
+    "committedAt": "2026-10-28T19:18:50+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "source": {
+        "commit": "e157eecfd317d8bff0236ff7981c1a5da0d57784",
+        "tree": "5e2cc451734025bde2f4a9e03df2e40edf8715e9",
+        "committedAt": "2026-10-28T18:58:24+08:00",
+        "dirty": false
+      },
+      "runId": 40676323150,
+      "attempt": 1,
+      "jobId": 122775565648,
+      "artifactId": 12810219954,
+      "digest": "sha256:871076bbf8f61b66530bf5b239e5e449dc17ca72cd33ad38c1ab60edb9a622eb",
+      "rawSHA256": "17b60776f3c756470d081c1abde5fca3fdd361ab739078a886f74df81a59b914",
+      "rawBytes": 323744,
+      "build": "9d49909371cffa07",
+      "coreFiles": 275,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "isolated lifecycle metadata request succeeds before large-model actions",
+        "native pattern JSON chooser, download and exact structure round trip",
+        "eight native full-edit/cut/reopen/close cycles, full weights/options, fingerprints, positive and negative patterns"
+      ],
+      "cycles": 8,
+      "completedCycles": 8,
+      "observedOnly": {
+        "sampledPeakRssBytes": 4213723136,
+        "peakGrowthBytes": 3405914112
+      },
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 8262802.285714285,
+        "rssDriftBytes": 35713024,
+        "sampledPeakRssBytes": 4213723136,
+        "sampledPeakGrowthBytes": 3405914112,
+        "meanSampleMs": 479.22410447518695,
+        "maxSampleGapMs": 527.7411809999976
+      },
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 3170,
+          "startTicks": "5243"
+        },
+        "parentPid": 3144,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 3170,
+            "startTicks": "5243"
+          },
+          {
+            "pid": 3226,
+            "startTicks": "5284"
+          },
+          {
+            "pid": 3228,
+            "startTicks": "5285"
+          },
+          {
+            "pid": 3243,
+            "startTicks": "5293"
+          },
+          {
+            "pid": 3252,
+            "startTicks": "5293"
+          },
+          {
+            "pid": 3323,
+            "startTicks": "5355"
+          },
+          {
+            "pid": 3339,
+            "startTicks": "5372"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/vendor/netron/worker.js?v=9d49909371cffa07",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:37871/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "source": {
+        "commit": "e157eecfd317d8bff0236ff7981c1a5da0d57784",
+        "tree": "5e2cc451734025bde2f4a9e03df2e40edf8715e9",
+        "committedAt": "2026-10-28T18:58:24+08:00",
+        "dirty": false
+      },
+      "runId": 40676323150,
+      "attempt": 1,
+      "jobId": 122775566242,
+      "artifactId": 12811038722,
+      "digest": "sha256:584b71424779fdaa168544982f96e31151a834882af136b65d13de87abc3629d",
+      "rawSHA256": "190e12c9afd42f97c215be63468d95dd99d38292b0e17536fb7d24e2ea776dcf",
+      "rawBytes": 419073,
+      "build": "9d49909371cffa07",
+      "coreFiles": 275,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "isolated lifecycle metadata request succeeds before large-model actions",
+        "native pattern JSON chooser, download and exact structure round trip",
+        "eight native full-edit/cut/reopen/close cycles, full weights/options, fingerprints, positive and negative patterns"
+      ],
+      "cycles": 8,
+      "completedCycles": 8,
+      "observedOnly": {
+        "sampledPeakRssBytes": 1524629504,
+        "peakGrowthBytes": 816934912
+      },
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 10014485.942857143,
+        "rssDriftBytes": 26128384,
+        "sampledPeakRssBytes": 1524629504,
+        "sampledPeakGrowthBytes": 816934912,
+        "meanSampleMs": 479.14409213986016,
+        "maxSampleGapMs": 543.9245879999944
+      },
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 5116,
+          "startTicks": "8269"
+        },
+        "parentPid": 5094,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 5116,
+            "startTicks": "8269"
+          },
+          {
+            "pid": 5122,
+            "startTicks": "8270"
+          },
+          {
+            "pid": 5140,
+            "startTicks": "8310"
+          },
+          {
+            "pid": 5183,
+            "startTicks": "8686"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/vendor/netron/worker.js?v=9d49909371cffa07",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/edit-recovery-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33985/tflite-explorer/src/model-worker.js?v=9d49909371cffa07",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    }
+  ]
+}

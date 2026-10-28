@@ -4,6 +4,8 @@ import {LIFECYCLE_SOAK_POLICY as soak,assertSoakExecution,needsSoakCycle,evaluat
 import {MODEL_EDIT_LIFECYCLE_POLICY as memory} from './browser/lifecycle-policy.mjs';
 import {SOAK_RECOVERY_POLICY,SOAK_CAPACITY_MESSAGE,SoakRecoveryLedger,inspectSoakBackup,evaluateSoakRecovery} from './browser/soak-recovery.mjs';
 import {exportEditSession} from '../src/model-edit-session.js';
+import {runInNewContext} from 'node:vm';
+import {savedDraftRows} from './browser/soak-recovery.mjs';
 
 const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Physical model two-hour soak',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',LIFECYCLE_MODE:'soak'};
 const MiB=1024**2;
@@ -88,4 +90,11 @@ test('soak v2 requires backup, ownership, unchanged retention, explicit capacity
 
 test('small real capacity preflight cannot substitute for duration or omit workers/process cleanup',()=>{
     for(const mutate of [r=>delete r.recoveryPreflight,r=>r.recoveryPreflight.status='running',r=>r.recoveryPreflight.cycles.pop(),r=>r.recoveryPreflight.cycles[21].cycle=1,r=>r.recoveryPreflight.evaluation.status='failed',r=>r.recoveryPreflight.workers.pop(),r=>r.recoveryPreflight.workers[5].closed=false,r=>r.recoveryPreflight.processCleanup.remaining.push({pid:123,startTicks:'456'}),r=>r.recoveryPreflight.processCleanup.allReaped=false,r=>r.recoveryPreflight.browserClosed=false,r=>r.recoveryPreflight.errors.push('error'),r=>r.soak.activeDurationMs=1]){const r=good();mutate(r);assert.equal(evaluateLifecycleSoak(r).status,'failed');}
+});
+
+test('saved-draft observation stays atomic while the UI replaces twenty options with nineteen',async()=>{
+    const initial=Array.from({length:20},(_,i)=>({value:(i+1).toString(16).padStart(32,'0'),textContent:`synthetic · v${i+1}`}));let options=[...initial],reads=0;
+    const read=async fn=>{reads++;const snapshot=JSON.parse(JSON.stringify(runInNewContext('('+fn.toString()+')()',{document:{querySelectorAll:()=>options}})));options=options.slice(0,19);return snapshot;};
+    assert.deepEqual(await savedDraftRows(read),initial.map((o,i)=>({key:o.value,revision:i+1})));
+    assert.equal(reads,1);assert.equal((await savedDraftRows(read)).length,19);assert.equal(reads,2);
 });

@@ -79,13 +79,19 @@ export function validRecoveryPreflight(r){
     return models.length===22&&identities.length===22&&[...models,...identities].every(w=>w.closed===true)&&cleanup?.allReaped===true&&Array.isArray(cleanup.remaining)&&cleanup.remaining.length===0&&Array.isArray(cleanup.identities)&&cleanup.identities.length>0&&cleanup.identities.every(p=>Number.isSafeInteger(p?.pid)&&p.pid>0&&/^\d+$/.test(p.startTicks));
 }
 
-export function createSoakRecovery({page,directory,fixture}){
+export async function savedDraftRows(read){
+    // One synchronous DOM observation: a save/remove refresh can replace every
+    // option between protocol calls, so count + nth reads are not a snapshot.
+    const options=await read(()=>[...document.querySelectorAll('#edit-recovery-list option')].map(o=>({key:o.value,label:o.textContent})));
+    assert.ok(Array.isArray(options)&&options.length<=EDIT_RECOVERY_COUNT);
+    const found=options.map(o=>{assert.ok(key(o.key)&&typeof o.label==='string');const revision=Number(o.label.match(/ · v(\d+)$/)?.[1]);assert.ok(Number.isSafeInteger(revision)&&revision>0);return {key:o.key,revision};});
+    assert.equal(new Set(found.map(r=>r.key)).size,found.length);return found;
+}
+
+export function createSoakRecovery({page,read,directory,fixture}){
     const ledger=new SoakRecoveryLedger(fixture),wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));let serial=0;
     async function until(fn,timeout=30000){const deadline=Date.now()+timeout;for(;;){const value=await fn();if(value)return value;if(Date.now()>deadline)throw Error('Timed out waiting for the real saved-draft UI.');await wait(100);}}
-    async function rows(){
-        const options=page.locator('#edit-recovery-list option'),n=await options.count();assert.ok(n<=EDIT_RECOVERY_COUNT);
-        const found=[];for(let i=0;i<n;i++){const option=options.nth(i),value=await option.getAttribute('value'),label=await option.textContent();assert.ok(key(value));const revision=Number(label.match(/ · v(\d+)$/)?.[1]);assert.ok(Number.isSafeInteger(revision)&&revision>0);found.push({key:value,revision});}return found;
-    }
+    const rows=()=>savedDraftRows(read);
     const keys=found=>found.map(r=>r.key);
     async function manager(){
         await page.locator('#open-edit-draft').click();await until(async()=>await page.locator('#edit-recovery-description').textContent()!=='讀取本機編輯草稿…');

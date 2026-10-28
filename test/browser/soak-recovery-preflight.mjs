@@ -30,7 +30,7 @@ export async function recoveryCapacityPreflight({base,directory,report}){
         const read=async fn=>{const r=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});assert.equal(r.exceptionDetails,undefined);return r.result.value;};
         async function until(fn){const end=Date.now()+30000;while(!await read(fn)){assert.ok(Date.now()<end,'Small-model recovery preflight timed out.');await wait(75);}}
         await page.goto(base);await until(()=>typeof document.querySelector('#open-edit-draft').onclick==='function');
-        const recovery=createSoakRecovery({page,directory,fixture:report.fixture});
+        const recovery=createSoakRecovery({page,read,directory,fixture:report.fixture});
         for(let cycle=1;cycle<=22;cycle++){
             const entry={cycle};report.cycles.push(entry);const chooser=page.waitForEvent('filechooser');await page.locator('#open-model').click();await(await chooser).setFiles(source);
             await until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')==='false'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false');

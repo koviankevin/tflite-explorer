@@ -30,3 +30,18 @@ RSS 可能重複計入 shared pages，kernel RSS 計數亦非同步且非精確�
 這是觀察傳輸的世界選擇錯誤。後續以專用 `contentScript` selector 在隔離世界直接派送唯一的觀察事件，從未插入文件的 output 讀取同一份白名單資料；不改 Netron、CSP 或 window.eval。每次先移除前次 metadata attribute，未取得新回應就失敗，不能用舊快照冒充成功。VM 的主世界／隔離世界共用 DOM 測試在原 dispatch 路徑先失敗，修正後通過，並確認主世界 eval 保持停用、回應遺失不會重用資料、註冊明確設定 contentScript。真實引擎仍需重跑；新增開模型前的觀察傳輸 preflight，不能拿單元測試代替。
 
 未完成階段的原始 RSS 仍保留：Firefox 取樣峰值 2,826,616,832 bytes，相對基準成長 2,008,670,208 bytes，已超過事先固定的 768 MiB 成長門檻；WebKit 分別為 1,402,253,312／705,003,520 bytes。這是第一輪部分操作的觀察值，不能宣稱八輪合格或證明持續洩漏；修正觀察器後仍沿用原門檻，並追查 Firefox 的資源來源。兩者正常關閉後，所有已追蹤 PID/start identity 均消失，未強制清理。Worker 的原始事件不改寫，沒有獨立 isolate heap 數值。
+
+## 完整八輪重測：功能通過、RSS 峰值不合格
+
+[40676323150](https://github.com/koviankevin/tflite-explorer/actions/runs/40676323150) 已於 2026-10-28 11:11 UTC 結束，受測來源 `e157eecfd317d8bff0236ff7981c1a5da0d57784`、候選 build `9d49909371cffa07`／275 核心檔。Firefox 142.0.1 與 WebKit 26.0 都完成八輪完整編輯、>1 GiB 子模型匯出重開、完整權重／custom options／固定輸出 SHA、原檔指紋、pattern 正反例；每個引擎的 24 個模型及八個指紋 Worker 都收到原生 close，沒有 page error，所有已追蹤 PID/start identity 正常結束，未強制清理。隔離觀察器修正已由這次實際執行確認。
+
+兩個 job 的最終狀態仍為 failure，唯一判定項都是 `browser-peak-growth`；不能寫成八輪驗收通過。
+
+| 引擎 | 取樣 RSS 峰值 bytes | 相對最初基準成長 bytes | 暖機後關閉漂移 bytes | 關閉斜率 bytes／輪 |
+| --- | ---: | ---: | ---: | ---: |
+| Firefox | 4,213,723,136 | 3,405,914,112 | 35,713,024 | 8,262,802.29 |
+| WebKit | 1,524,629,504 | 816,934,912 | 26,128,384 | 10,014,485.94 |
+
+峰值成長上限仍為 805,306,368 bytes（768 MiB）。Firefox 的最大取樣發生在子模型匯出相位，WebKit 在完整模型匯出相位；這是相位關聯，尚不足以把原因歸給 Blob、引擎內部複製或應用持有參照。關閉漂移／斜率在八輪門檻內，只能描述這次有限區間；仍需進一步定位峰值資源，不調高上限、重設基準或將 summed RSS 換成較小數值取得綠燈。
+
+原始 [Firefox 報告](results/desktop-physical-firefox-cycles-2026-10-28.json)、[WebKit 報告](results/desktop-physical-webkit-cycles-2026-10-28.json)與 [provider digest／CRC／來源核對](results/desktop-physical-complete-review-2026-10-28.json)均保存。完整報告已重新計算原判定並核對來源、job／attempt、固定 fixture、native chooser、核心檔 HTTP 身分與程序清理；authentication passed 與 acceptance failed 分開標示。這次受測應用與正式 preview.18 的程式相同，只有測試工具／證據變動，未再次部署。
