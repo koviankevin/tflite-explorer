@@ -1,0 +1,82 @@
+{
+  "status": "partial-evidence-only",
+  "acceptance": "failed",
+  "runId": 40680745057,
+  "testedSource": "f6cd667ffb411117fdb52d31a6f275b21ffa6ab6",
+  "reviewSHA256": "3ade08fca2a069520633e6cc6269a142f3406806262f9736ea69bc41fabae99c",
+  "rawSHA256": "89f837effd16ffed981f1ca16a57c83d8810ba91748fd265f9f9ce496f4150f9",
+  "cyclesStarted": 25,
+  "completedCycles": 24,
+  "incompleteCycle": 25,
+  "completedDurationMs": 2316265.375054,
+  "preflightValid": true,
+  "retention": {
+    "status": "passed",
+    "issues": [],
+    "saved": 24,
+    "removed": 4,
+    "retained": 20
+  },
+  "batches": [
+    {
+      "firstCycle": 1,
+      "lastCycle": 8,
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -1105217.8285714285,
+        "rssDriftBytes": 17301504,
+        "mainHeapDriftBytes": 656312,
+        "sampledPeakRssBytes": 977936384,
+        "sampledPeakGrowthBytes": 475283456
+      }
+    },
+    {
+      "firstCycle": 9,
+      "lastCycle": 16,
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 2813600.9142857143,
+        "rssDriftBytes": 17321984,
+        "mainHeapDriftBytes": -185252,
+        "sampledPeakRssBytes": 977936384,
+        "sampledPeakGrowthBytes": 475283456
+      }
+    },
+    {
+      "firstCycle": 17,
+      "lastCycle": 24,
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 1994166.857142857,
+        "rssDriftBytes": -4182016,
+        "mainHeapDriftBytes": -38124,
+        "sampledPeakRssBytes": 977936384,
+        "sampledPeakGrowthBytes": 475283456
+      }
+    }
+  ],
+  "nativeWorkers": {
+    "models": 73,
+    "modelsClosed": 73,
+    "identities": 25,
+    "identitiesClosed": 25
+  },
+  "recoveryAudits": {
+    "count": 25,
+    "complete": 25,
+    "terminateCalls": 25
+  },
+  "modelTerminateCalls": {
+    "count": 73,
+    "terminated": 72
+  },
+  "browserClosed": true,
+  "errors": [],
+  "note": "The prior review measuredCycles field counts started entries, including incomplete cycle 25. Only 24 complete cycles and three eight-cycle batches are established; no two-hour acceptance or completed final unchanged-source check."
+}

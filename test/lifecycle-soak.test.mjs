@@ -5,7 +5,7 @@ import {MODEL_EDIT_LIFECYCLE_POLICY as memory} from './browser/lifecycle-policy.
 import {SOAK_RECOVERY_POLICY,SOAK_CAPACITY_MESSAGE,SoakRecoveryLedger,inspectSoakBackup,evaluateSoakRecovery} from './browser/soak-recovery.mjs';
 import {exportEditSession} from '../src/model-edit-session.js';
 import {runInNewContext} from 'node:vm';
-import {savedDraftRows} from './browser/soak-recovery.mjs';
+import {savedDraftRows,observeRecoveryStatus} from './browser/soak-recovery.mjs';
 
 const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Physical model two-hour soak',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',LIFECYCLE_MODE:'soak'};
 const MiB=1024**2;
@@ -97,4 +97,15 @@ test('saved-draft observation stays atomic while the UI replaces twenty options 
     const read=async fn=>{reads++;const snapshot=JSON.parse(JSON.stringify(runInNewContext('('+fn.toString()+')()',{document:{querySelectorAll:()=>options}})));options=options.slice(0,19);return snapshot;};
     assert.deepEqual(await savedDraftRows(read),initial.map((o,i)=>({key:o.value,revision:i+1})));
     assert.equal(reads,1);assert.equal((await savedDraftRows(read)).length,19);assert.equal(reads,2);
+});
+
+test('recovery status never combines old fingerprint progress with a new capacity-error flag',async()=>{
+    let state={message:'背景核對原模型 100% · 完成保存前請保留此分頁',error:false};
+    const next={message:SOAK_CAPACITY_MESSAGE,error:true},element={get textContent(){return state.message;},getAttribute:()=>String(state.error)};
+    const read=async fn=>{const snapshot=JSON.parse(JSON.stringify(runInNewContext('('+fn.toString()+')()',{document:{querySelector:()=>element}})));state=next;return snapshot;};
+    assert.equal(await observeRecoveryStatus(read),null);
+    assert.equal(await observeRecoveryStatus(read),SOAK_CAPACITY_MESSAGE);
+    assert.equal(await observeRecoveryStatus(async()=>({message:'已保存本機編輯草稿 · 第 1 版',error:'false'})),'已保存本機編輯草稿 · 第 1 版');
+    assert.equal(await observeRecoveryStatus(async()=>({message:'quota denied',error:'true'})),'quota denied');
+    for(const value of [null,{message:'pending',error:null},{message:'已保存本機編輯草稿',error:'true'}])await assert.rejects(observeRecoveryStatus(async()=>value));
 });

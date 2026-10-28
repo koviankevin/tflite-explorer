@@ -2,6 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {parseProcProcess,OwnedProcessTree,findOwnedBrowserRoot} from './browser/owned-processes.mjs';
 import {parseProcessMemory,createProcessMemoryProbe,summarizeMemoryProfile} from './browser/process-memory-profile.mjs';
+import {readFileSync} from 'node:fs';
+import {runInNewContext} from 'node:vm';
 const row=(pid,parent,rssBytes=100,startTicks=String(pid),state='S')=>({pid,parent,rssBytes,startTicks,state});
 
 test('process identity parser handles spaces and parentheses in comm without confusing start time or RSS',()=>{
@@ -78,4 +80,15 @@ test('profile summaries reject altered gate anchors, totals, identities and hidd
         const m=structuredClone(observed);mutate(m);assert.throws(()=>summarizeMemoryProfile({format:'model-lens-proc-memory',version:1,samples:[m]},[anchor()]));
     }
     assert.throws(()=>summarizeMemoryProfile({format:'model-lens-proc-memory',version:1,samples:[]},[anchor()]));
+});
+
+test('offline memory summaries accept historical browser IDs in a different reviewer PID namespace',async()=>{
+    const probe=createProcessMemoryProbe({now:()=>20,readText:async file=>file.endsWith('/status')?status():procStat(12)}),observed=await probe.capture([{pid:12,startTicks:'12'}],anchor());
+    const profile={format:'model-lens-proc-memory',version:1,samples:[observed]},source=readFileSync(new URL('./browser/process-memory-profile.mjs',import.meta.url),'utf8').replace(/^import [^\r\n]+\r?$/gm,'').replace(/^export /gm,'');
+    for(const reviewerPid of [9999,12]){
+        const evaluate=runInNewContext(source+'\n;summarizeMemoryProfile;',{process:{pid:reviewerPid}});
+        assert.equal(evaluate(profile,[anchor()]).completeObservations,1);
+    }
+    let reads=0;const live=createProcessMemoryProbe({now:()=>20,readText:async()=>{reads++;return '';}});
+    await assert.rejects(live.capture([{pid:process.pid,startTicks:'1'}],anchor()));assert.equal(reads,0,'The live producer still must reject its own Node process.');
 });

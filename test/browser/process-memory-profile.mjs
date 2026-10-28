@@ -13,13 +13,13 @@ export function parseProcessMemory(status){
     const name=status.match(/^Name:\s*([^\r\n]*)/m)?.[1]?.trim();
     return {name:name&&/^[a-zA-Z0-9_.() -]{1,64}$/.test(name)?name:null,rssBytes:bytes('VmRSS'),anonymousBytes:bytes('RssAnon'),fileBytes:bytes('RssFile'),sharedBytes:bytes('RssShmem')};
 }
-const validIdentity=p=>p&&Number.isSafeInteger(p.pid)&&p.pid>1&&p.pid!==process.pid&&typeof p.startTicks==='string'&&/^\d+$/.test(p.startTicks);
+const validIdentity=p=>p&&Number.isSafeInteger(p.pid)&&p.pid>1&&typeof p.startTicks==='string'&&/^\d+$/.test(p.startTicks);
 const memoryFields=['rssBytes','anonymousBytes','fileBytes','sharedBytes'];
 export function createProcessMemoryProbe({readText,now=()=>performance.now()}={}){
     if(!readText){if(process.platform!=='linux')throw Error('Process memory profiling is restricted to isolated Linux CI.');readText=file=>readFile(file,'utf8');}
     let captures=0;
     return {async capture(identities,anchor){
-        if(!Array.isArray(identities)||!identities.length||identities.length>128||!identities.every(validIdentity)||new Set(identities.map(p=>p.pid)).size!==identities.length)throw Error('Missing bounded owned-process identities.');
+        if(!Array.isArray(identities)||!identities.length||identities.length>128||!identities.every(validIdentity)||identities.some(p=>p.pid===process.pid)||new Set(identities.map(p=>p.pid)).size!==identities.length)throw Error('Missing bounded owned-process identities.');
         if(!anchor||!Number.isFinite(anchor.elapsedMs)||anchor.elapsedMs<0||!Number.isFinite(anchor.rssBytes)||anchor.rssBytes<=0||typeof anchor.phase!=='string'||!/^[a-z0-9-]{1,80}$/.test(anchor.phase))throw Error('Missing original RSS sample anchor.');
         if(++captures>4000)throw Error('Process memory observation budget exceeded.');
         const observedStartMs=now();

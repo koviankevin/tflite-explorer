@@ -1,0 +1,77 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "6719cce120bbfa92bc54503f5e90cb806b1678ce",
+    "tree": "d47d85d1e77b3e19e3a1b84a8915c502bb3285a1",
+    "committedAt": "2026-10-28T20:25:34+08:00",
+    "dirty": false
+  },
+  "testedSource": {
+    "commit": "f6cd667ffb411117fdb52d31a6f275b21ffa6ab6",
+    "tree": "963f7a028e15c0fc91869f36cace29f5f08f31f5"
+  },
+  "run": {
+    "id": 40680745057,
+    "attempt": 1,
+    "jobId": 122790525295,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40680745057",
+    "startedAt": "2026-10-28T11:32:33Z",
+    "completedAt": "2026-10-28T12:13:00Z"
+  },
+  "artifact": {
+    "id": 12815031379,
+    "digest": "sha256:1057d6a3b781cb5da8020f9c64070870ae98dd91dfb1b1262c1b1c1179634239",
+    "rawSHA256": "89f837effd16ffed981f1ca16a57c83d8810ba91748fd265f9f9ce496f4150f9",
+    "rawBytes": 1065523
+  },
+  "error": "AssertionError [ERR_ASSERTION]: An unrelated save error must fail the workload without removing drafts.\n+ actual - expected\n\n+ '背景核對原模型 100% · 完成保存前請保留此分頁'\n- '編輯草稿尚未保存：已達 20 份本機編輯草稿上限；請先下載並移除不需要的草稿。'\n\n    at Object.ensureSaved (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:111:20)\n    at async editWholeModel (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:134:50)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:188:27",
+  "errors": [],
+  "measuredCycles": 25,
+  "activeDurationMs": 2316265.375054,
+  "preflight": {
+    "status": "passed",
+    "cyclesStarted": 22,
+    "completedDraftBackups": 22,
+    "models": {
+      "created": 22,
+      "closed": 22
+    },
+    "identities": {
+      "created": 22,
+      "closed": 22
+    },
+    "browserClosed": true,
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3641,
+          "startTicks": "7747"
+        },
+        {
+          "pid": 3643,
+          "startTicks": "7749"
+        },
+        {
+          "pid": 3644,
+          "startTicks": "7749"
+        },
+        {
+          "pid": 3658,
+          "startTicks": "7750"
+        },
+        {
+          "pid": 3672,
+          "startTicks": "7776"
+        },
+        {
+          "pid": 3686,
+          "startTicks": "7790"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true
+    },
+    "errors": []
+  }
+}

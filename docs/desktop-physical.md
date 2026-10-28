@@ -55,3 +55,15 @@ RSS 可能重複計入 shared pages，kernel RSS 計數亦非同步且非精確�
 每筆分類都錨定原有 RSS sample 的時間／相位／數值，另記後續讀取的起訖、各程序數值及與原 RSS 的差額。分類取樣不是同一瞬間，kernel RSS 計數亦可能非同步，不能把差額校正成零；分類合計不取代事先固定的 RSS 判定。原本取樣密度及缺口要求仍適用，讀取額外欄位的負擔也留在實測中。缺失欄位使完整分類數下降，不能宣稱已量到；沒有偽造獨立 Worker heap 或使用較小的 PSS 取得綠燈。
 
 Node 正負例檢查單位／真正的零／未知值、只讀已確認 PID、讀取途中 PID 重用、權限失敗、時間／相位／RSS 錨點、合計及差額不可被改寫。完整真實引擎分類尚待執行及 provider 核對；只新增測試工具，正式站不需重新發布。
+
+## 分類實測：匿名記憶體增量的位置
+
+[40683234690](https://github.com/koviankevin/tflite-explorer/actions/runs/40683234690) 已完成八輪並核對 provider digest／CRC、來源 `c64657e6549d7924b650c046a5299658b01c2278`、候選 build `d06fb216d4a7d3c1`、275 核心檔 HTTP 身分及原判定。Firefox 1463 筆分類、WebKit 1486 筆，全部有完整欄位，沒有已退出或 PID 重用的分類缺口；最慢額外讀取分別約 34ms／91ms，原取樣密度及最大缺口仍在門檻內。每個引擎的八輪功能、完整 payload、權重／options、pattern 正反例及 24 模型／八指紋 Worker close 均完成，所有 owned 程序正常結束，errors 為空。
+
+兩個 job 仍只有 `browser-peak-growth` 失敗：Firefox 峰值 4,100,616,192 bytes／增量 3,261,558,784 bytes；WebKit 峰值 1,503,100,928／增量 806,187,008 bytes。上限維持 805,306,368 bytes，WebKit 即使只超出 880,640 bytes，仍保留 failure，不重新量到較低值就宣稱修好。
+
+Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 MiB，最初約 227.2 MiB；全體共享欄位約 5 MiB、檔案映射約 428→452 MiB。第一次完整匯出已使根程序匿名記憶體升至約 1843.9 MiB，子模型匯出又升高。這將主要增量定位到根程序的匿名區域，較不支持主要只是共享欄位重複加總的解釋；仍須獨立 File／Blob／Worker 傳遞／URL／下載控制案例，不能由數字直接斷定哪個 API 複製資料。WebKit 的主要增量則在 WPEWebProcess，匿名記憶體最初約 214.2 MiB、峰值附近約 950.3 MiB，共享欄位約 6.3 MiB。
+
+完整原始報告以不變的 provider ZIP 保存，減少純數值重複資料的儲存量：[Firefox 原始 ZIP](results/desktop-profile-firefox-2026-10-28.zip)、[WebKit 原始 ZIP](results/desktop-profile-webkit-2026-10-28.zip)。解壓後是各自唯一的 `desktop-physical-firefox.json`／`desktop-physical-webkit.json`，原 bytes／SHA 與 [完整來源核對及相位摘要](results/desktop-profile-review-2026-10-28.json)一致，沒有刪除取樣或改寫旗標。authentication passed 與 acceptance failed 分開保留。
+
+另修正離線分類複核的 PID namespace 邊界：純資料驗證不把歷史 browser PID 與目前讀報告的 Node PID 比較；實際 live capture 仍排除自己的 Node 程序。相同實作在不同 VM reviewer PID 中先重現誤拒，修正後通過，既有這次分類摘要重新計算保持相同。這不改 live capture 的允許集合、RSS 判定或既有測量結果，無須因此重跑未變的八輪工作量。
