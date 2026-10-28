@@ -2,17 +2,17 @@
 
 同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再進入「編輯工作區」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
 
-點來源輸出端，再點目標輸入端即可接線；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。第一版以既有 OP 為範本，沒有任意 OP catalog 或自動 shape inference。
+點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，型別／shape／量化參考原始 tensor，沒有自動 shape inference。CUSTOM 的 code／options 請從現有 custom OP 複製。
 
 右側顯示選取 OP 的 ports、變更預覽與接線問題。支援復原／重做、清除草稿、刪除和恢復 OP；TFLite 可明確將刪除後仍被使用的輸出提升為模型 inputs，或將新增 OP 輸出加入模型 outputs。型別／shape／量化不相容、同 block 後向接線會拒絕；跨 block 的完整 SSA／dominance 於匯出時驗證。MLIR 控制流程以藍色虛線顯示，基礎工作區保留 terminators、successors 與 regions。
 
 空白草稿可開啟「進階單一 OP 表單」修改名稱、scalar options 或完整 generic IR。這項操作與工作區草稿分開產生候選；已有未匯出草稿時先保留於工作區。
 
-工作區只載入最多 64 個原始 OP 的選取與直接相鄰範圍，連同新增 OP 最多 96 個、128 步操作、4,096 個值；ports 分頁顯示。可返回探索選取其他 OP，再按「加入探索選取」，保留原有草稿。模型和權重維持在本機 Worker／原始 File，進出工作區不重新讀取模型或繪製全模型。
+工作區只載入最多 64 個原始 OP 的選取與直接相鄰範圍，連同新增 OP 最多 96 個、128 步操作、4,096 個值；ports 分頁顯示。可返回探索選取其他 OP，再回到編輯模式會自動同步新選取，也可按「同步圖上選取」；原有接線與復原／重做歷史保留。模型和權重維持在本機 Worker／原始 File，進出工作區不重新讀取模型或繪製全模型。
 
 「驗證並匯出模型」一次匯出整份修改模型，保留未改動 scopes／subgraphs；重新解析實際候選 bytes，通過 TFLite 結構或 MLIR 型別／SSA／控制流程／dominance 檢查後才開始下載。可直接「開啟修改結果」，或下載含變更預覽、介面及資料範圍的修改報告。尚未執行推論、數值等價或公司 compiler／custom runtime 語意驗證。
 
-編輯草稿只保存在目前分頁記憶體，切換探索／編輯會保留；關閉或更換模型、離開頁面前會提示未匯出的變更。探索工作階段 JSON／自動草稿不包含模型編輯命令。匯出後請保存新模型與報告。
+使用「儲存編輯草稿」下載 JSON；換電腦或瀏覽器後按右上「匯入草稿」，再選取原模型。保存命令、接線、復原／重做、字級與視角；不包含原模型或權重。首次儲存／恢復會以 1 MiB 區塊讀完整原檔，核對版本化 SHA-256 chunk chain（不是標準整檔 SHA-256），可取消。同大小、同名但權重不同的模型也會拒絕；檔名改變但 bytes 相同可恢復。草稿上限 256 KiB、128 步命令。探索工作階段 JSON／自動草稿另行保存，不包含模型編輯命令。
 
 本機工作區 12 項測試通過，包含 21,004 OP 有限範圍、提前 metadata 限量、實際 TFLite weights／custom options、deferred MLIR 權重複製與報告。Hosted Chromium 的 19 項原生操作已通過，27 個模型 Worker 關閉；含點選／拖曳接線、自動輸出、復原／重做、TFLite 下載重開，以及分支／匯合／迴圈 custom MLIR 的 SSA、控制流程和 pattern 搜尋。
 
@@ -45,3 +45,9 @@
 - [正式 HTTP 報告](results/preview12-live-http-2026-10-28.json)：1,269 檔實際 SHA／MIME 與候選一致。Site ID `b686d4a33adb2b5f310965bd18b99d99282c4d325915666458c016c3cdb049fc`，manifest SHA-256 `6127a0728c615ef323f5d57122a8e1875ba87b2ba58f27bac9b9feda8f3549a6`；永久 legacy root preview.7 保留，另外保留 preview.11／preview.10。
 - [正式原生報告](results/preview12-live-ui-2026-10-28.json)：19 項操作、11 份實際改模匯出／報告、27 個模型 Worker 關閉；[手機長名稱截圖](results/preview12-live-mobile-2026-10-28.png)與已檢視的合格版面 PNG bytes 完全相同。TFLite 權重／options 實際比對通過；兩份新增 MLIR fixture 沒有權重，bytes 比對標為 not-applicable。
 - [最終獨立核對](results/preview12-publication-review-2026-10-28.json)：四份 Release 資產實際下載，逐份 bytes／SHA 均與原準備包相同。ZIP `model-lens-public-0.2.0-preview.12-52d46a06925bd391.zip` 為 29,607,972 bytes，SHA-256 `0f25e9d5424cdc42425106eefd37f3649c744e35900e5b75c0eef0373af25bac`。Deployment `7367213646`／job `122392578180`／attempt 1 與整站身分、獨立 root SHA `d483b9aabe56535785620f1d4506e50ca6c87b226f0b8d15272d96306b5cd7c0` 一致。
+
+## 補齊權重與驗證範圍
+
+新增 TFLite OP 的輸入可沿用現有 tensor，或以原始 tensor 的 dtype、shape 與量化參數產生亂數權重。固定 seed、範圍和 xorshift32-v1 演算法隨草稿保存，重開可產生相同 bytes；不隨機修改 stride、padding、axis 等結構參數。支援已知 shape 的數值／boolean dense tensor；不支援動態 shape、sparse、字串／complex／float16。整數／量化範圍使用 raw integer 值；單個 tensor 16 MiB、整次匯出 32 MiB，超出前拒絕配置。
+
+匯出檢查完整索引、producer 順序、介面／signature、subgraph 引用，檢查新 OP 的參數型別／列舉／正值規則、port 數量，以及已實作的二元運算 dtype／broadcast、reshape 元素數。這不是完整 TFLite kernel verifier：卷積／量化運算等其他 shape 與數值規則、版本支援、custom kernel、推論結果仍須以目標 runtime 驗證；網站明示此範圍。未知 runtime 語意不標為已驗證。

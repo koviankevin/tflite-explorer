@@ -1,5 +1,6 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {FlatbufferWriter,tableFields} from './flatbuffer-writer.js';
+import {builtinSettings,checkBuiltinPorts,randomTensorInfo} from './tflite-new-ops.js';
 
 function optionsPatch(source,changes) {
     if(!source||!changes||typeof changes!=='object'||Array.isArray(changes))throw Error('此 OP 沒有可修改的 builtin options。');
@@ -42,8 +43,9 @@ export function editTfliteModel(index,file,plans) {
     if(!index?.raw)throw Error('此模型不是 TFLite。');
     if(index.exportUnsupportedReason)throw Error(index.exportUnsupportedReason);
     if(!Array.isArray(plans)||!plans.length||plans.length>index.raw.subgraphs.length)throw Error('請提供有效的模型修改。');
+    if(plans.reduce((sum,p)=>sum+(p?.tensors||[]).reduce((n,t)=>n+(t?.data?.byteLength||0),0),0)>32*1024**2)throw Error('新增權重總量超過 32 MiB。');
     const range=(offset,size)=>{offset=Number(offset||0n);size=Number(size||0n);if(!Number.isSafeInteger(offset)||!Number.isSafeInteger(size)||offset<0||size<0||(size&&offset<2)||offset>file.size-size)throw Error('權重或 custom options 超出來源範圍。');return {offset,size};};
-    const model={...index.raw,subgraphs:index.raw.subgraphs.slice(),signature_defs:index.raw.signature_defs.slice()},changed=new Set(),changes=[];let interfaceChangedAny=false;
+    const model={...index.raw,subgraphs:index.raw.subgraphs.slice(),signature_defs:index.raw.signature_defs.slice(),operator_codes:index.raw.operator_codes.slice(),buffers:index.raw.buffers.slice()},changed=new Set(),changes=[];let interfaceChangedAny=false;
     const ids=(value,total,optional=false)=>{
         if(!Array.isArray(value)&&!ArrayBuffer.isView(value))throw Error('Tensor 連線必須是編號清單。');
         if(value.length>65535||Array.from(value).some(id=>!Number.isInteger(id)||(id<0?!(optional&&id===-1):id>=total)))throw Error('Tensor 連線編號超出範圍。');return Int32Array.from(value);
@@ -54,17 +56,18 @@ export function editTfliteModel(index,file,plans) {
         const original=index.raw.subgraphs[plan.graph];if(!Number.isInteger(plan.graph)||!original||changed.has(plan.graph))throw Error('Subgraph 不存在或重複修改。');changed.add(plan.graph);
         const tensors=original.tensors.slice();
         if(plan.tensors!==undefined&&(!Array.isArray(plan.tensors)||plan.tensors.length>1024))throw Error('單次最多新增 1024 個 result tensors。');
-        for(const fresh of plan.tensors||[]){if(!fresh||typeof fresh!=='object'||Object.keys(fresh).some(key=>!['like','name'].includes(key)))throw Error('新 tensor 修改欄位無效。');const source=original.tensors[fresh.like];if(!Number.isInteger(fresh.like)||!source||typeof fresh.name!=='string'||fresh.name.length>256)throw Error('新 tensor 需要有效的參考 tensor 與名稱。');tensors.push({...source,name:fresh.name,buffer:0,external_buffer:0,is_variable:false,sparsity:null});}
+        for(const fresh of plan.tensors||[]){if(!fresh||typeof fresh!=='object'||Object.keys(fresh).some(key=>!['like','name','data'].includes(key)))throw Error('新 tensor 修改欄位無效。');const source=original.tensors[fresh.like];if(!Number.isInteger(fresh.like)||!source||typeof fresh.name!=='string'||fresh.name.length>256)throw Error('新 tensor 需要有效的參考 tensor 與名稱。');let buffer=0;if(fresh.data!==undefined){if(!(fresh.data instanceof Uint8Array)||fresh.data.length>16*1024**2)throw Error('新權重資料無效或超過 16 MiB。');if(fresh.data.length!==randomTensorInfo(source,{seed:1,min:0,max:0}).bytes)throw Error('新權重資料長度與 dtype／shape 不符。');buffer=model.buffers.length;model.buffers.push({data:fresh.data,offset:0n,size:0n});}tensors.push({...source,name:fresh.name,buffer,external_buffer:0,is_variable:false,sparsity:null});}
         if(plan.operators!==undefined&&!Array.isArray(plan.operators))throw Error('OP 修改必須是清單。');
         if(plan.operators?.length>original.operators.length+4096)throw Error('單次最多新增 4096 個 OP。');
         const entries=plan.operators||original.operators.map((_,template)=>({template}));
         const operators=entries.map(entry=>{
             const source=original.operators[entry.template];if(!Number.isInteger(entry.template)||!source)throw Error('找不到原始 OP 範本。');
             const op={...source,debug_metadata_index:-1};
-            for(const key of Object.keys(entry))if(!['template','inputs','outputs','intermediates','options','options2'].includes(key))throw Error('未知的 OP 修改欄位：'+key);
+            for(const key of Object.keys(entry))if(!['template','inputs','outputs','intermediates','options','options2','builtin'].includes(key))throw Error('未知的 OP 修改欄位：'+key);
             for(const key of ['inputs','outputs','intermediates'])if(entry[key]!==undefined)op[key]=ids(entry[key],tensors.length,key==='inputs');
             if(entry.options!==undefined)op.builtin_options=optionsPatch(source.builtin_options,entry.options);
             if(entry.options2!==undefined)op.builtin_options_2=optionsPatch(source.builtin_options_2,entry.options2);
+            if(entry.builtin){const {info,options}=builtinSettings(entry.builtin.code,entry.builtin.settings),version=entry.builtin.version;if(!Number.isInteger(version)||version<1||version>100)throw Error('OP version 無效。');let id=model.operator_codes.findIndex(c=>c.builtin_code===info.code&&c.version===version&&!c.custom_code);if(id<0){id=model.operator_codes.length;model.operator_codes.push({builtin_code:info.code,deprecated_builtin_code:Math.min(info.code,127),custom_code:null,version});}Object.assign(op,{opcode_index:id,builtin_options:null,builtin_options_2:null,custom_options:null,large_custom_options_offset:0n,large_custom_options_size:0n,mutating_variable_inputs:[],intermediates:[],customOptionsInline:false,customOptionsDeferred:false,customOptionsRange:null});op[info.group]=options;checkBuiltinPorts(info.code,Array.from(op.inputs,id=>tensors[id]),Array.from(op.outputs,id=>tensors[id]),options);}
             return op;
         });
         const graph={...original,tensors,operators,debug_metadata_index:-1};
@@ -100,7 +103,7 @@ export function editTfliteModel(index,file,plans) {
     }
     // All buffers, metadata, signatures, subgraphs and numbering are retained.
     // Only structural bytes are rebuilt; large data remains source File slices.
-    model.buffers=index.raw.buffers.map((source,id)=>{const r=range(source.offset,source.size);return {...source,data:r.size?null:source.data,offset:0n,size:0n,...(r.size?{sourceRange:{...r,kind:'buffer',reference:`buffer:${id}`}}:{})};});
+    model.buffers=model.buffers.map((source,id)=>{const r=range(source.offset,source.size);return {...source,data:r.size?null:source.data,offset:0n,size:0n,...(r.size?{sourceRange:{...r,kind:'buffer',reference:`buffer:${id}`}}:{})};});
     model.subgraphs=model.subgraphs.map((g,graph)=>({...g,operators:g.operators.map((source,node)=>{
         let op=source;
         if(!op.customOptionsInline&&!op.custom_options?.length)op={...op,custom_options:null};

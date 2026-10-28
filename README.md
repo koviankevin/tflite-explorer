@@ -16,7 +16,7 @@
 
 選 pattern 時按住 **Alt＋拖曳**可平移模型，滾輪縮放；已有選取會保留。「編輯選取 pattern」把圈選轉成未儲存的 pattern 草稿，可增刪節點與連線；這項操作修改搜尋條件。匯出子模型後可按「開啟匯出結果」，直接在目前網站重新開啟。
 
-右上可切換「探索模型／編輯模型」，圖上方與框選工具列也有「編輯工作區」入口。可直接點選或拖曳 ports 接線，複製新增 OP 時自動建立 output tensor／SSA，支援多步變更預覽與復原／重做。草稿保留在目前分頁記憶體，切換模式不清除；詳見 [獨立模型編輯工作區](docs/model-edit-workspace.md)。「進階 OP 表單」保留原有逐個參數／完整 IR 編輯；選取多個 OP 後先開啟清單，選一個原始 OP 再編輯，其餘選取與視角保留。可修改接線、新增或刪除 OP，驗證並匯出整份新模型，再按「開啟修改結果」。TFLite 新增以既有 OP 為範本，可調整支援的 scalar options；MLIR 支援 generic 名稱、接線及完整 IR。保留原始模型檔，輸出前重新解析候選並驗證結構；未執行推論或公司 dialect／custom kernel verifier。操作及限制見 [實際模型編輯](docs/model-editing.md)。
+右上可切換「探索模型／編輯模型」，圖上方與框選工具列也有「編輯工作區」入口。可直接點選或拖曳 ports 接線，複製新增 OP 時自動建立 output tensor／SSA，支援多步變更預覽與復原／重做。草稿可下載 JSON，換電腦後匯入並重新選原模型，完整檔案指紋核對後恢復接線、復原／重做與視角；切換模式不清除。新增 TFLite OP 可複製現有 OP 或選內建 catalog，缺少權重可用固定 seed 產生並檢查支援的規則；詳見 [獨立模型編輯工作區](docs/model-edit-workspace.md)。「進階 OP 表單」保留原有逐個參數／完整 IR 編輯；選取多個 OP 後先開啟清單，選一個原始 OP 再編輯，其餘選取與視角保留。可修改接線、新增或刪除 OP，驗證並匯出整份新模型，再按「開啟修改結果」。TFLite 新增以既有 OP 為範本，可調整支援的 scalar options；MLIR 支援 generic 名稱、接線及完整 IR。保留原始模型檔，輸出前重新解析候選並驗證結構；未執行推論或公司 dialect／custom kernel verifier。操作及限制見 [實際模型編輯](docs/model-editing.md)。
 
 ## Pattern 條件與工作階段
 

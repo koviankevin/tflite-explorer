@@ -14,6 +14,12 @@ let file;
 let identity;
 let editInProgress=false;
 let editWorkspace=null,editWorkspaceSerial=0;
+let editIdentity=null,editDraftJob=0;
+async function draftFingerprint(sourceFile,job){
+    if(editIdentity?.file===sourceFile)return editIdentity.value;
+    const {editFileFingerprint}=await import('./model-edit-session.js'),value=await editFileFingerprint(sourceFile,{cancelled:()=>file!==sourceFile||job!==editDraftJob,progress:(done,total)=>postMessage({stage:`本機核對完整原模型 ${Math.round(done/Math.max(1,total)*100)}%（不會上傳）`,editDraft:true})});
+    if(file!==sourceFile||job!==editDraftJob)throw Error('已取消原模型核對。');editIdentity={file:sourceFile,value};return value;
+}
 const send = (id, data) => postMessage({ id, data });
 const withReport=(result,args)=>{
     try {
@@ -24,6 +30,7 @@ const withReport=(result,args)=>{
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
         if (action === 'open') {
+            editIdentity=null;editDraftJob++;
             editWorkspace=null;
             identity=null;
             overview=null;
@@ -43,15 +50,30 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const sourceIndex=index,sourceFile=file,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js');
             if(index!==sourceIndex||file!==sourceFile)throw Error('模型已切換，請重新開啟編輯工作區。');
             const snapshot=editWorkspaceSnapshot(index,args);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editBuiltinCatalog'){
+            if(!index?.raw)throw Error('OP 選單適用於 TFLite 模型。');
+            const {builtinCatalog}=await import('./tflite-new-ops.js'),response=await fetch(new URL('../vendor/netron/tflite-metadata.json',import.meta.url));if(!response.ok)throw Error('無法載入 OP 定義。');send(id,builtinCatalog(await response.json()));
         } else if(action==='editWorkspaceClose'){
             if(editWorkspace?.token===args.token)editWorkspace=null;send(id,{closed:true});
         } else if(action==='editWorkspaceExtend'){
             if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file)throw Error('編輯工作區已過期。');
-            const session=editWorkspace,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js'),{replayEditDraft}=await import('./model-edit-draft.js');
+            const session=editWorkspace,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js'),{modelEditDraft}=await import('./model-edit-draft.js');
             if(editWorkspace!==session)throw Error('工作區已切換，請重試。');
             if(!Array.isArray(args.targets)||args.targets.length>32||JSON.stringify(args.commands).length>1024*1024)throw Error('加入範圍或草稿過大。');
             const targets=[...new Map([...session.snapshot.nodes.map(n=>n.source),...args.targets].map(t=>[`${t.graph}:${t.node}`,t])).values()],snapshot=editWorkspaceSnapshot(index,{targets});
-            replayEditDraft(snapshot,args.commands);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+            modelEditDraft(snapshot,args.commands,args.redo||[]);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editDraftCancel'){
+            editDraftJob++;send(id,{cancelled:true});
+        } else if(action==='editDraftSave'||action==='editDraftRestore'){
+            const sourceFile=file,sourceIndex=index,session=editWorkspace,job=++editDraftJob;
+            const {createEditSession,restoreEditSession,cleanEditSession}=await import('./model-edit-session.js');
+            if(action==='editDraftSave'&&(!session||session.token!==args.token))throw Error('編輯工作區已過期。');
+            const document=action==='editDraftRestore'?cleanEditSession(args.document):null;
+            if(document&&(document.source.bytes!==sourceFile.size||document.source.format!==(index.mlir?'mlir':'tflite')))throw Error('原模型格式或大小不符，請重新選擇草稿的原模型。');
+            const fingerprint=await draftFingerprint(sourceFile,job);
+            if(index!==sourceIndex||file!==sourceFile||job!==editDraftJob||editWorkspace!==session)throw Error('模型或工作區已切換，未套用草稿。');
+            if(action==='editDraftSave'){const document=await createEditSession(file,session.snapshot,args,fingerprint);if(job!==editDraftJob||file!==sourceFile)throw Error('已取消草稿儲存。');send(id,document);}
+            else {const restored=await restoreEditSession(index,file,document,fingerprint);if(job!==editDraftJob||file!==sourceFile||editWorkspace!==session)throw Error('模型已切換，未套用草稿。');editWorkspace={index,file,snapshot:restored.snapshot,token:++editWorkspaceSerial};send(id,{snapshot:{...restored.snapshot,token:editWorkspace.token},saved:restored.saved});}
         } else if(action==='editWorkspaceExport'){
             if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file)throw Error('編輯工作區已過期，請重新開啟。');
             if(editInProgress)throw Error('上一筆模型修改仍在驗證。');if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
