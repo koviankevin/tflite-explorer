@@ -41,3 +41,11 @@ Preview.19 已以來源 `9109ad74b02feb56c813205da1ba0f3a0e700111`／build `a417
 Preview.20 候選來源 `6894850777a03074132cc1feea6c932ef20adeba`／tree `a5719e28709067d44f24bd7cbc1f9414abb8f08c`，build `e4f6ad92496e19b0`、291 個核心檔。四關卡 [獨立 provider／digest／CRC／原始政策／相依核對](results/preview20-main-gates-2026-10-28.json)通過：core 沿用 [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)，其實際相依 fingerprint 未變；新 browser [40705658510](https://github.com/koviankevin/tflite-explorer/actions/runs/40705658510)、contract [40705665776](https://github.com/koviankevin/tflite-explorer/actions/runs/40705665776)、site [40705653002](https://github.com/koviankevin/tflite-explorer/actions/runs/40705653002)成功。
 
 [原始候選操作](results/preview20-ui-candidate-2026-10-28.json)、[核對](results/preview20-ui-candidate-2026-10-28-review.json)與 [provider ZIP](results/preview20-ui-candidate-2026-10-28.zip)保留；30 項主檢查及六種 runtime 情境通過，新增跨 subgraph signature 明確未驗證且零新 runtime Worker，其他 raw .bin／IO ZIP／取消／錯誤／custom 情境維持。36 個模型及三個 runtime Workers 全部關閉，零 pageerror。這是新版候選證據，正式 preview.20 部署尚待受控發布確認；兩小時較早版本的長測另列，不冒充本來源的長測。
+
+## Preview.20 正式交付
+
+正式固定來源為 `dfe824290c02c9028d4d550132547714db5bb0e4`／tree `50bd00a70c0aa007681d2c3d33727e9ce14571a6`，build `198292d7511b0f2d`。[準備 40709384112](https://github.com/koviankevin/tflite-explorer/actions/runs/40709384112) 的 [完整 Pages tar／固定 ZIP 獨立核對](results/preview20-prepared-review-2026-10-28.json)成功後，以精確 build／site ID 執行 [發布 40710364198](https://github.com/koviankevin/tflite-explorer/actions/runs/40710364198)，prepare／deploy／verify_live／release 全成功，attempt 1。
+
+[正式交付獨立核對](results/preview20-publication-review-2026-10-28.json)確認正式站 1,354 檔、root／MIME／所有 SHA 與原準備 snapshot 一致；30 項原生操作含六種 runtime 情境通過，36 個模型及三個 runtime Workers 關閉，八份編輯匯出收據與四份 [固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.20) 實際下載 bytes 均符合原準備包。部署權威 run／job／site ID 及獨立 root 也一致。
+
+操作為「編輯模型」→ 右側「檢查能否執行（選用）」→ 每個 input 選 raw .bin、零值或亂數 → 手動執行 →「下載測試 input／output」。開檔、一般匯出不自動執行；資料仍全程本機。執行最多 30 秒，可取消；128 MiB 模型、16 MiB IO、custom kernel／動態 shape／signature 及精度限制仍適用。正式 14 吋 1366×640／1280×640、32px 流程已驗證；沒有測手機。

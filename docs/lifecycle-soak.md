@@ -1,5 +1,9 @@
 # 大模型兩小時負載驗收
 
+較早來源 `e899839331256e60bf28d610bb0061f2f747c95d`（preview.18 應用）已完成 [40688292088](https://github.com/koviankevin/tflite-explorer/actions/runs/40688292088) 的 80 輪／約 2 小時 7 分長測，獨立核對通過；見 [完整核對](results/soak-e899-final-review-2026-10-28.json)及 [原始 provider ZIP](results/soak-e899-final-2026-10-28.zip)。有效操作時間 7,645,653.56 ms、78 輪量測／兩輪 warmup、十個八輪批次；240 個模型及 80 個指紋 Workers 皆完整核對。最大關閉後 RSS 漂移 40,505,344 bytes、長期斜率 6,856,362.92 bytes／小時，符合原門檻；權重、options、完整指紋與 pattern 正反例通過，取樣及原始來源不變。
+
+這是指定較早來源／單一 Hosted Chromium 的結果；不代表 preview.20 新增手動 WASM／IO 的兩小時記憶體、其他引擎或公司實模已驗收。此長測與常規四項部署關卡分開，發布不必等待兩小時。下方早期失敗與修正過程保留，不以成功覆寫。
+
 這是新增的手動 CI，尚未執行成功時不能寫成長時間驗收完成。`.github/workflows/browser-soak.yml` 只允許此 repository 的 main／workflow_dispatch、Ubuntu 24.04 hosted runner，權限只有 contents: read。它不部署網站、不操作個人瀏覽器，也不接受公司模型、外部 URL、較小 fixture、縮短時間或放寬記憶體的輸入。
 
 沿用 [八輪生命週期](browser-lifecycle-gate.md)的實際 1,349,965,216 bytes／21,005 OP TFLite，完整非零權重寫入、fsync 與讀回 SHA；同一個 Chromium、context 和頁面持續至少兩小時。每輪都以原生選檔開啟、搜尋 prefix／分支匯合 pattern、實際編輯原始 OP、匯出完整模型與 >1 GiB 子模型、重開、比對權重及 custom options、驗證 pattern 正反例，再關閉模型。每輪重新完整核對原模型指紋。已下載的當輪檔案在使用後刪除，只有目前測試產生的隔離暫存檔會清理。
