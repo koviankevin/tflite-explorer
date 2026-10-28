@@ -21,7 +21,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     async function choose(filename,selector='#open-model'){
         await tabTo(selector);const event=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');await(await event).setFiles(filename);
     }
-    async function ready(layers){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
+    async function ready(layers){await until(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
     async function close(){
         const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);await tabTo('#close-model');let timer;
         try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Keyboard model worker did not close.')),5000);})]);await page.keyboard.press('Enter');await ended;}finally{clearTimeout(timer);}

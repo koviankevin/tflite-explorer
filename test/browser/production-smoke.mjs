@@ -38,7 +38,7 @@ const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 async function waitFor(fn){const until=Date.now()+30000;while(!await readPage(fn)){if(Date.now()>until)throw Error(`DOM timeout: ${fn}`);await wait(100);}}
 async function choose(file,button='#open-model'){const event=page.waitForEvent('filechooser');await page.locator(button).click();await (await event).setFiles(file);}
-async function ready(layers){await waitFor(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');assert.equal(await page.locator('#layer-count').textContent(),String(layers));}
+async function ready(layers){await waitFor(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');assert.equal(await page.locator('#layer-count').textContent(),String(layers));}
 async function close(){
     const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;
     try{const event=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Model worker close timeout.')),5000);})]);await page.locator('#close-model').click();await event;}finally{clearTimeout(timer);}

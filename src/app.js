@@ -1171,6 +1171,7 @@ async function captureModelTab(){
 function renderModelTabs(state){
     $('model-tabs').hidden=!state.tabs.length;
     $('model-tabs').setAttribute('aria-busy',String(state.busy));
+    if(!state.busy)sessions?.change();
     for(const selector of ['#explorer-panel','#target','#edit-workspace','.graph-bar','#capture-toolbar','.model-modes','#open-model','#close-model']){const node=document.querySelector(selector);if(node)node.inert=state.busy;}
     $('model-tab-list').replaceChildren(...state.tabs.map(item=>{
         const group=document.createElement('div');group.className='model-tab';const tab=document.createElement('button');tab.type='button';tab.id=`model-tab-${item.id}`;tab.dataset.modelTab=String(item.id);tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(item.id===state.current));tab.tabIndex=item.id===state.current?0:-1;tab.textContent=item.name;tab.title=`${item.name}（背景分頁切回時重新讀取本機檔案）`;tab.disabled=state.busy;tab.onclick=async()=>{await tabs.activate(item.id);$(`model-tab-${item.id}`)?.focus();};
@@ -1301,6 +1302,7 @@ document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer?.files[0]) openFile(e.dataTransfer.files[0]); });
 document.addEventListener('keydown', (e) => {
     if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
+    if(tabs.busy)return;
     if(editWorkspace.active){if(editWorkspace.handleKey(e))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
