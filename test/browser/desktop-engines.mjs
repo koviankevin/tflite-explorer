@@ -1,7 +1,7 @@
 // The browser runs only on the hosted Linux runner. Gestures, chooser and
 // download events use Playwright's browser protocol; evaluation only reads DOM.
 import assert from 'node:assert/strict';
-import {firefox,webkit} from 'playwright';
+import {firefox,webkit,selectors} from 'playwright';
 import {readFile,writeFile,mkdtemp,copyFile} from 'node:fs/promises';
 import path from 'node:path';
 import {once} from 'node:events';
@@ -13,6 +13,7 @@ import {editWorkspaceFlow} from './edit-workspace-flow.mjs';
 import {portableEditFlow} from './portable-edit-flow.mjs';
 import {tfliteControlEditFlow} from './tflite-control-edit-flow.mjs';
 import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
+import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 
 const {engine,base,expectedBuild,expectedSiteId}=desktopEngineSettings(process.env,process.platform);
 const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],workers:[],requests:[],browserClosed:false};
@@ -30,6 +31,7 @@ try{
     const demoBytes=(await readStaticFile(base,coreBasePath+demoEntry.path,{maxBytes:demoEntry.bytes})).bytes;assert.equal(sha256(demoBytes),demoEntry.sha256);
     const demo=path.join(directory,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Desktop engine RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(directory,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});
+    await registerDOMReader(selectors);
     browser=await ({firefox,webkit}[engine]).launch({headless:true});report.browserVersion=browser.version();
     context=await browser.newContext({viewport:{width:1366,height:640},acceptDownloads:true});
     await context.route('**/*',async route=>{const r=route.request(),u=new URL(r.url());if(['blob:','data:'].includes(u.protocol)){await route.continue();return;}const allowed=r.method()==='GET'&&r.url().startsWith(base);report.requests.push({method:r.method(),url:r.url(),allowed});if(!allowed){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else await route.continue();});
@@ -38,7 +40,7 @@ try{
     page.on('worker',worker=>{const item={url:worker.url(),closed:false};report.workers.push(item);worker.on('close',()=>{item.closed=true;});if(/\/model-worker\.js(?:\?|$)/.test(item.url)&&item.url!==new URL(coreBasePath+`src/model-worker.js?v=${expectedBuild}`,base).href)report.errors.push('Worker belongs to another build namespace.');});
     // Each observation is a fixed, source-controlled DOM expression. Never
     // evaluate app APIs, mutate selection or generate a file inside the page.
-    const read=(fn,...args)=>page.evaluate(`(${fn.toString()})(...${JSON.stringify(args)})`);
+    const read=desktopDOMReader(page);
     const until=async(fn,...args)=>{const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Desktop DOM timeout: '+fn);await new Promise(r=>setTimeout(r,75));}};
     const ready=async count=>{await until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');if(count!==undefined)assert.equal(await page.locator('#layer-count').textContent(),String(count));};
     const choose=async(file,selector='#open-model')=>{const event=page.waitForEvent('filechooser');await page.locator(selector).click();await(await event).setFiles(file);};

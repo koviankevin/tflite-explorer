@@ -4,8 +4,10 @@
 
 工作流程只有手動入口、`contents: read` 權限，僅允許此 repository 的 main／Hosted Linux runner。先逐檔核對正式站 SHA／MIME 及 root，再啟動獨立瀏覽器；結束時再次核對正式 site／core 身分，並保存 driver Git tree、實際引擎版本、原始操作報告及截圖。模型只有原始公開合成 fixtures，所有非 GET 或站外請求都拒絕。沒有部署、重跑正式發布或操作個人瀏覽器。
 
-選檔、下載、點擊、拖曳及鍵盤透過瀏覽器 protocol 操作，頁面 evaluate 僅唯讀觀察 DOM，不呼叫 app 內部 API。沿用既有 TFLite 接線／自動 tensor／Undo／Redo、草稿保存與同大小錯誤原檔拒絕、IF／WHILE／custom OP 編輯匯出，以及 MLIR 分支／匯合／迴圈 Canvas 鍵盤驗收；重新解析實際下載的檔案並比對權重、custom options、SSA／dominance 及 pattern。每個模型 Worker 必須收到 close。
+選檔、下載、點擊、拖曳及鍵盤透過瀏覽器 protocol 操作，觀察器透過 [contentScript selector](https://playwright.dev/docs/api/class-selectors#selectors-register) 的隔離環境唯讀查看共同 DOM；JSON 結果使用未插入文件的 output 傳回，不改動網站 DOM、不呼叫 app 內部 API，也不解除 Netron 對 window.eval 的停用。沿用既有 TFLite 接線／自動 tensor／Undo／Redo、草稿保存與同大小錯誤原檔拒絕、IF／WHILE／custom OP 編輯匯出，以及 MLIR 分支／匯合／迴圈 Canvas 鍵盤驗收；重新解析實際下載的檔案並比對權重、custom options、SSA／dominance 及 pattern。每個模型 Worker 必須收到 close。
 
 首次新增 workflow 的程式與來源檢查完成後，仍須實際 dispatch 並查看兩個引擎的原始結果；不能把工作流程存在、Node 測試成功或 Chromium 綠燈寫成 Firefox／WebKit 通過。實際驗收紀錄會在本頁補入，失敗亦保留。
 
 實作使用 [Playwright 的固定瀏覽器安裝](https://playwright.dev/docs/browsers)、[file chooser](https://playwright.dev/docs/api/class-filechooser) 與 [download](https://playwright.dev/docs/api/class-download) 介面；Linux WebKit 驗收與實體 Safari 分開記錄。
+
+第一輪 [40649465652](https://github.com/koviankevin/tflite-explorer/actions/runs/40649465652) 的兩個引擎已安裝，逐檔正式站驗證完成，之後在初始 DOM 觀察即遇到 Netron 停用 window.eval。這是觀察器衝突，尚未進入模型操作；[Firefox](results/desktop-firefox-observer-failure-2026-10-28.json)／[WebKit](results/desktop-webkit-observer-failure-2026-10-28.json) 及 [provider digest／CRC／來源核對](results/desktop-observer-failure-review-2026-10-28.json)保留失敗。改用隔離 selector 不改寫正式站，不以此推斷應用功能成功或失敗。
