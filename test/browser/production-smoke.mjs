@@ -16,6 +16,8 @@ import {modelEditFlow} from './model-edit-flow.mjs';
 import {editWorkspaceFlow} from './edit-workspace-flow.mjs';
 import {portableEditFlow} from './portable-edit-flow.mjs';
 import {tfliteControlEditFlow} from './tflite-control-edit-flow.mjs';
+import {patternDeleteFlow} from './pattern-delete-flow.mjs';
+import {modelTabsFlow} from './model-tabs-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -28,6 +30,7 @@ const selectionToolsRequired=!['163f38ab1dc856e4','017eed149449e951','35c75cab9f
 const editWorkspaceRequired=selectionToolsRequired&&!['f2591e6d3d458f9f','cc9492eba3dff776'].includes(expected);
 const portableEditRequired=editWorkspaceRequired&&expected!=='52d46a06925bd391';
 const tfliteEditingOnlyRequired=portableEditRequired&&expected!=='c659375441a01f98';
+const consolidatedEditorRequired=tfliteEditingOnlyRequired&&expected!=='d182aeed5d8f2901';
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
 let browser,context,page,readPage,releaseStartup,server;
@@ -85,10 +88,11 @@ try{
     report.selectionToolsRequired=selectionToolsRequired;
     if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired});
     if(selectionToolsRequired)report.mlirSelection=await mlirSelectionFlow({page,read:readPage,base,directory:temporary,check});
-    if(selectionToolsRequired)report.modelEditing=await modelEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired});
+    if(selectionToolsRequired)report.modelEditing=await modelEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired,workspaceEntry:consolidatedEditorRequired});
     if(editWorkspaceRequired)report.editWorkspace=await editWorkspaceFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired});
     if(portableEditRequired)report.portableEdit=await portableEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired});
     report.tfliteEditingOnlyRequired=tfliteEditingOnlyRequired;if(tfliteEditingOnlyRequired)report.tfliteControlEdit=await tfliteControlEditFlow({page,read:readPage,base,directory:temporary,check});
+    report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}
     const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));assert.equal(modelWorkers.length,tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3);assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{

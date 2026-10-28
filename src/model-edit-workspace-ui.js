@@ -137,6 +137,17 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getGrap
     window.addEventListener('beforeunload',e=>{if(api.hasUnexported){e.preventDefault();e.returnValue='';}});
     const api={
         get active(){return active;},get hasUnexported(){return !!draft&&(changes().length>0||draft.canRedo)&&exported!==signature()&&savedDraft!==historySignature();},
+        captureTab(){
+            if(busy)throw Error('請等待編輯、匯出或草稿核對完成後再切換分頁。');
+            if(!snapshot||!draft)return null;
+            return structuredClone({targets:snapshot.nodes.map(n=>n.source),selectedScope:snapshot.selected,history:draft.history,selected,armed,active,dirty:api.hasUnexported,zoom,font:$('edit-font').value,left:viewport.scrollLeft,top:viewport.scrollTop,pages:[...pages],exported,savedDraft,updateSignatures:$('edit-signatures').checked});
+        },
+        async restoreTab(state){
+            if(!state)return;if(!supportsModelEditing(getFormat()))throw Error(TFLITE_EDIT_MESSAGE);
+            owner=getSource();const ticket=++generation;setBusy(true);
+            try{const next=await rpc('editWorkspaceOpen',{targets:state.targets,includeNeighbours:false});if(!live(ticket))return;next.selected=state.selectedScope;const restored=modelEditDraft(next,state.history.commands,state.history.redo);snapshot=next;draft=restored;selected=state.selected;armed=state.armed;zoom=state.zoom;pages=new Map(state.pages);exported=state.exported;exportedToken=null;savedDraft=state.savedDraft;$('edit-font').value=state.font;root.style.setProperty('--edit-font',`${state.font}px`);$('edit-signatures').checked=state.updateSignatures;mode(state.active);render();await new Promise(resolve=>requestAnimationFrame(resolve));if(!live(ticket))return;if(state.active)layout();viewport.scrollLeft=state.left;viewport.scrollTop=state.top;message('已恢復此分頁的編輯草稿、接線、復原／重做與視角。');}
+            finally{if(live(ticket))setBusy(false);}
+        },
         progress(text){if(draftTask){message(text);banner(text);}},
         async restorePending(){
             if(!pendingDraft||!getSource()||busy)return;const document=pendingDraft;owner=getSource();const ticket=++generation;draftTask=true;setBusy(true);banner('正在本機核對原模型與草稿；尚未套用變更。');
