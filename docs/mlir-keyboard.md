@@ -1,6 +1,6 @@
 # MLIR／Canvas 鍵盤操作與驗收（preview.17）
 
-本版 preview.17 修正 Canvas 的可見鍵盤焦點與 MLIR 檢查對話框返回焦點，以下主分支原生驗收與四關卡已通過。封裝不等於已部署；正式交付以固定 GitHub Release 及網站右上「版本」為準，發布結果另行記錄。
+preview.17 已正式發布，build `b279d3ea3f3d7ec5`。Canvas 可見鍵盤焦點、跨 block 選取與 MLIR 檢查對話框返回焦點，已通過主分支、完整封裝及正式站對應版本驗收。固定來源及實際下載核對見本頁正式交付紀錄。
 
 Canvas 聚焦時顯示鍵盤提示：方向鍵平移、＋／－縮放、Home 顯示全圖、Tab 到節點，Enter／Space 查看或切換圈選。焦點所在的 OP 有藍色外框，圖面下方顯示目前控制項及 block／OP 編號。長名稱可換行，控制項不超過 100px 高，完整文字保留於可及名稱與 title。節點清單仍最多 100 個；不為 20,000 個 OP 建立完整 DOM。
 
@@ -28,3 +28,16 @@ Tab 聚焦只移動畫面，不改變搜尋匹配或圈選集合；圈選狀態�
 前置失敗保持原狀：[檢查對話框焦點失敗](results/preview17-validation-focus-failure-2026-10-28.json)／[provider 核對](results/preview17-validation-focus-review-2026-10-28.json)指出關閉後仍在 `close-validation`；[測試 tabs 操作失敗](results/preview17-roving-tab-failure-2026-10-28.json)／[provider 核對](results/preview17-roving-tab-review-2026-10-28.json)改用手動 roving tabs 的 End＋Enter；[capsule 焦點交接失敗](results/preview17-capsule-focus-failure-2026-10-28.json)／[provider 核對](results/preview17-capsule-focus-review-2026-10-28.json)確認需從 Netron 圖面容器交回新 Canvas。對話框及 capsule 是應用修正，tabs 是測試方式修正，沒有跳過必要流程或放寬效能上限。
 
 本輪證明所列功能流程可透過鍵盤完成，未宣稱所有快捷鍵、最短操作步數、螢幕閱讀器或全站無障礙已合格。公司實模／compiler／runtime、其他引擎、固定實體硬體 SLA、OS 斷電、數小時負載及完整新手流程仍待驗收。
+
+
+## 正式交付
+
+- [正式網站](https://koviankevin.github.io/tflite-explorer/)與 [固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.17)為 preview.17／build `b279d3ea3f3d7ec5`。凍結來源 `8f374e20ec4acb29d3434eadf81daebf02523e2d`、tree `b328a1f287869679fd755c30b1065cc624365325`；後續僅更新交付文件，不改寫既有固定產物。
+- [準備 40646144406](https://github.com/koviankevin/tflite-explorer/actions/runs/40646144406)後，獨立 [完整部署包審查](results/preview17-prepared-review-2026-10-28.json)與 [凍結來源四關卡指紋](results/preview17-frozen-gates-review-2026-10-28.json)通過，再以精確 build／site ID 執行 [正式發布 40646847623](https://github.com/koviankevin/tflite-explorer/actions/runs/40646847623)。prepare／deploy／verify_live／release 全成功，attempt 1。
+- [正式 HTTP 原始紀錄](results/preview17-live-http-2026-10-28.json)核對 1,310 檔 SHA／MIME；site ID `b68ad1da9211af5c8b39309954148f95131be0cea23508f166d028ec829340f1`、manifest SHA-256 `498973cab32d3d2efb22cdbaa97e4a34f92a860b4507ae674b9f147256b97747`、root SHA-256 `b273ae773de533d651bc59308395bed365fcff710260ba5b439216b1524ff54d`。保留 preview.16／preview.15 及永久 preview.7 legacy root。
+- [正式版本原生報告](results/preview17-live-ui-2026-10-28.json)29 項通過，包含本頁所列 MLIR modal、1,608／1,605 OP Canvas、跨四／三 blocks 的鍵盤選取、16→32px、pan／zoom、pattern JSON、局部 MLIR 下載重開及舊／新 pattern 各一筆；32 個主 context 模型 Worker 全 close。既有六個模型分頁 context Worker、兩個編輯恢復 owned process trees、八份 TFLite 編輯匯出收據亦通過。此項與正式 HTTP 逐檔同源比對共同構成正式版本驗收，不使用使用者個人瀏覽器或公司模型。
+- [1280×640／32px 正式版本焦點畫面](results/preview17-live-canvas-keyboard-2026-10-28.png)已視覺檢查，SHA-256 `68fbe072c501878230063a80dd864a8849b92388224ebe576af068762b00425e`。不測手機；頁面與焦點控制項無水平溢出。
+- [固定 Release 核對](results/preview17-fixed-release-2026-10-28.json)及 [最終獨立交付審查](results/preview17-publication-review-2026-10-28.json)通過：四份實際下載均與原準備包 bytes／SHA 一致。`model-lens-public-0.2.0-preview.17-b279d3ea3f3d7ec5.zip` 為 29,716,711 bytes／273 核心檔案，SHA-256 `50c9d6e7c8b4121e5e5fda4a9c0298520992d649436d031166802073fef3b0f0`。
+- 權威 Deployment `7379157250`／job `122677794922`／run `40646847623` 與來源、完整 site ID 及未加 query 的實際 root 一致。
+
+此功能與交付驗收完成不代表整個商品等級目標完成。公司實模／compiler／runtime、其他引擎、固定實體硬體 SLA、OS 斷電、數小時負載、其他鍵盤／螢幕閱讀器及完整新手流程仍需另外驗收。
