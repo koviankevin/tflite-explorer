@@ -193,6 +193,7 @@ try{
         if(soak){entry.activeEndMs=activeElapsed();report.soak.activeDurationMs=entry.activeEndMs;if(cycle%policy.cycles===0)await persistReport();}
         console.log(`PASS cycle ${cycle}/${soak?'two-hour soak':policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
     }
+    if(soak){clearInterval(timer);await pending;report.soak.activeDurationMs=activeElapsed();}
     report.audit=await readPage(()=>globalThis.__lifecycle);
     assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,report.cycles.length*3);
     assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,report.cycles.length);
