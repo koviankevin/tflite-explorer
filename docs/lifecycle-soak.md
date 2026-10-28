@@ -15,7 +15,7 @@
 - 最初兩輪暖機後，以實際時間計算的關閉 RSS 線性斜率最多 16 MiB／小時。
 - 所有後續關閉樣本的三筆滾動中位數，相對最初暖機基準，RSS 最多增加 128 MiB、main heap 最多增加 32 MiB；不能在新批次重設基準來隱藏累積，也不能以最後恢復掩蓋中途增加。
 - 沿用每 500ms 的整個 owned Chromium 程序樹 RSS 及 main heap 取樣；實際平均間距最多 1,000ms、任一缺口最多 10,000ms，開始／結束也必須有樣本覆蓋。原始間距、相位和數值均保存，未取到的峰值不宣稱已測得。
-- 任一輪缺少完整權重／options、原檔指紋、三個模型 Worker 檢查點、下載重開或清理證據，都使整輪失敗。中途 crash、未完成、超時、source dirty／改動、晚期失敗及關閉失敗均不可算通過。
+- 任一輪缺少完整權重／options、原檔指紋、三個模型 Worker 檢查點、下載重開或清理證據，都使整輪失敗。除應用 terminate 呼叫紀錄之外，另收集原生 Worker close；每輪的三個模型 Worker 與一個完整指紋 Worker 都必須收到真正的 close，未收到的其他 Worker 事件保留原 false。中途 crash、未完成、超時、source dirty／改動、晚期失敗及關閉失敗均不可算通過。
 
 每八輪原子保存一次數值 checkpoint，結束另存最終報告；只有報告上傳，不上傳模型。報告記錄 source commit/tree、實際 build／引擎版本、runner 硬體、每輪與取樣數據、失敗原因及 cleanup。獨立核對時仍須確認 workflow/job/attempt、provider artifact digest／CRC、受測來源與原始所有數據，不能只看 passed 字串或仍為 running 的 checkpoint。
 

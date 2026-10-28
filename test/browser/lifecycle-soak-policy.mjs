@@ -27,6 +27,8 @@ export function evaluateLifecycleSoak(report){
     require(r.sourceUnchanged===true&&r.environment?.sourceDirty===false,'missing-clean-unchanged-source');
     require(cycles.length>=p.minCycles&&cycles.length<=p.maxCycles&&cycles.length%p.batchCycles===0,'missing-soak-cycles');
     require(same(r.soak?.viewport,{width:1280,height:640})&&cycles.every(c=>c?.font===32&&c?.editFont===32),'missing-laptop-32px');
+    const native=Array.isArray(r.workerClosures)?r.workerClosures:[],models=native.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w?.url||'')),identities=native.filter(w=>/\/edit-recovery-worker\.js(?:\?|$)/.test(w?.url||''));
+    require(models.length===cycles.length*3&&identities.length===cycles.length&&[...models,...identities].every(w=>w.closed===true),'missing-native-worker-closures');
     const elapsed=r.soak?.activeDurationMs;
     require(Number.isFinite(elapsed)&&elapsed>=p.minActiveMs&&elapsed<=p.maxActiveMs,'missing-two-hour-duration');
     const objects=cycles.every(c=>c&&typeof c==='object');

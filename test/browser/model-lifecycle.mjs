@@ -32,7 +32,7 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
-if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:1,soakPolicy:LIFECYCLE_SOAK_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}}});
+if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:1,soakPolicy:LIFECYCLE_SOAK_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
@@ -158,6 +158,7 @@ try{
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
+    if(soak)page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
     browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
     await page.goto(base);await page.locator('#welcome-open').waitFor();phase='baseline';await sample();
