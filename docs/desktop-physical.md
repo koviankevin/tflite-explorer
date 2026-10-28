@@ -85,3 +85,13 @@ Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 M
 第二版控制只在原本的 Worker File 首尾讀取之後、傳回主執行緒之前，增加一次 `[65,504, 65,568)` 的 64 bytes 讀取。這個範圍跨過原本 65,536 bytes typed prefix 與其餘原檔 File slice 的接點；第一版首尾讀取都沒有跨過它。額外相位為 `worker-boundary-read`，報告版本提升為 2，累計讀取由 65,664 增加至 65,728 bytes。Blob、下載內容與完整 SHA、取樣、參照保存、60 秒 URL timer 及程序清理保持相同。若這個微小讀取觸發大幅配置，才有證據進一步查組合 Blob 的讀取行為；若沒有，就不能把原因歸給它。
 
 新 Node 測試先在缺少 boundary 動作的原版失敗，再驗證實際 Worker/page callbacks 的固定讀取範圍、一次性與順序限制；18 項相關檢查通過。真實引擎的第二版控制仍待 hosted CI。沒有修改應用或原記憶體門檻，也不要求重新部署正式站。
+
+### Firefox 跨邊界控制結果：沒有重現大幅配置
+
+[40714224427](https://github.com/koviankevin/tflite-explorer/actions/runs/40714224427) 已完成 Firefox 單一引擎的第二版控制。來源 `9c273a8a4beb68a4bdaca4e458d96c08e3f70a38`／tree `0f2d02a20a5d48d2dc8b81d9340fe8ed63fb2c4f`，與 PR 的受測內容一致；Node/build [40713815293](https://github.com/koviankevin/tflite-explorer/actions/runs/40713815293) 和 contract [40713815146](https://github.com/koviankevin/tflite-explorer/actions/runs/40713815146) 通過後沿用，沒有再跑不變的應用關卡。
+
+跨接點讀取前的 owned 程序樹 RSS 為 725,778,432 bytes，讀取後為 698,527,744 bytes；補充分類的匿名記憶體為 294,674,432 → 265,916,416 bytes，該相位原始 RSS 取樣峰值 704,753,664 bytes。這次沒有重現原應用約 1.25 GiB 級別的額外配置，不能把單一組合邊界讀取判為原因；數值下降也不代表這個讀取會節省記憶體。這只檢查單一 64 bytes 跨接點讀取，沒有證明所有 Blob 結構、讀取模式或另一引擎的行為。
+
+原生下載仍為完整 1,349,965,216 bytes，SHA 與固定實體 fixture 相同；累計 Worker 讀取 65,728 bytes、最大單次 65,536 bytes。唯一 Worker 原生 close、60 秒自然 URL 撤銷、乾淨來源及全部已知 owned PID/start identity 清理通過，沒有 page error。完整 [provider ZIP](results/blob-boundary-firefox-2026-10-28.zip) 與 [provider digest／ZIP CRC／來源、相位及完整 bytes 的獨立核對](results/blob-boundary-firefox-review-2026-10-28.json) 保留；原始 `blob-control-firefox.json` 在 ZIP 中，沒有刪減取樣。
+
+這是排除一個簡單重現條件的診斷進展，不是應用八輪 RSS 驗收成功，也沒有因此調整上限或重新部署。下一個單變量是原應用在觸發下載後立即包裝輸出 File，控制案例目前則等原生下載完成才包裝；此差異仍未測，不能先改應用宣稱修正。
