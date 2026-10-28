@@ -77,3 +77,11 @@ Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 M
 這是用來分離原生 API 的診斷，不執行應用的模型編輯、pattern 或八輪記憶體驗收。報告明確使用 `diagnosticOnly: true`、`memoryAcceptance: not-evaluated`、`completed/failed`，不以控制案例的綠燈代替原本失敗的 RSS 門檻。故意保留各階段 alias，再明確清理以觀察變化；不強制 GC、不重啟中途瀏覽器、不縮短 URL timer。Native Worker close、完整輸出、乾淨來源及 owned PID/start ticks 清理仍須成功。
 
 17 項相關 Node 檢查已通過，涵蓋相同 worker/page callback、>1 GiB 虛擬範圍的配置前讀取保護、操作順序、固定 60 秒 timer、所有權及實體 fixture 產生器；真實控制量測仍待 CI 執行，尚不能宣稱已找出配置來源。
+
+### 跨組合邊界的單變量控制
+
+第一版控制 [40691244307](https://github.com/koviankevin/tflite-explorer/actions/runs/40691244307) 已完成兩個引擎的原生下載、完整固定 SHA、Worker close、自然 URL 撤銷及 owned 程序清理；沒有重現應用的高峰。這是診斷結果，不是八輪記憶體驗收通過。原始八輪報告以同一判定器離線重播，兩個引擎仍都只有 `browser-peak-growth` 失敗。
+
+第二版控制只在原本的 Worker File 首尾讀取之後、傳回主執行緒之前，增加一次 `[65,504, 65,568)` 的 64 bytes 讀取。這個範圍跨過原本 65,536 bytes typed prefix 與其餘原檔 File slice 的接點；第一版首尾讀取都沒有跨過它。額外相位為 `worker-boundary-read`，報告版本提升為 2，累計讀取由 65,664 增加至 65,728 bytes。Blob、下載內容與完整 SHA、取樣、參照保存、60 秒 URL timer 及程序清理保持相同。若這個微小讀取觸發大幅配置，才有證據進一步查組合 Blob 的讀取行為；若沒有，就不能把原因歸給它。
+
+新 Node 測試先在缺少 boundary 動作的原版失敗，再驗證實際 Worker/page callbacks 的固定讀取範圍、一次性與順序限制；18 項相關檢查通過。真實引擎的第二版控制仍待 hosted CI。沒有修改應用或原記憶體門檻，也不要求重新部署正式站。
