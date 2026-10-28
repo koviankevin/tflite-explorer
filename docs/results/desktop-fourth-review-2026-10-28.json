@@ -1,0 +1,78 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "runId": 40652472716,
+      "attempt": 1,
+      "source": {
+        "commit": "b2e416a49b0a7703b0c594b9bba6d0cd4dd5c5e0",
+        "tree": "032f948767e0440f16442fb2200e13997a33d26a",
+        "committedAt": "2026-10-28T15:48:28+08:00",
+        "dirty": false
+      },
+      "jobId": 122695556791,
+      "artifactId": 12800122068,
+      "providerDigest": "sha256:9230093b574ffcfc230ac8cbe5da9fe8bc56939ede471f2274c2968dc3e8d84b",
+      "reportSHA256": "b2128ac1d7702583b9d9a6b7ca249f9450cb3fb7e58eb9338c037c6277c474c1",
+      "browserVersion": "142.0.1",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected"
+      ],
+      "error": "Error: MLIR keyboard cannot reach #open-model\n    at tabTo (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:17:222)\n    at async choose (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:20:60)\n    at async start (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:26:359)\n    at async mlirKeyboardFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:36:129)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:75:25",
+      "errors": [],
+      "directory": "build/qa/desktop-40652472716-fourth-round/firefox"
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "runId": 40652472716,
+      "attempt": 1,
+      "source": {
+        "commit": "b2e416a49b0a7703b0c594b9bba6d0cd4dd5c5e0",
+        "tree": "032f948767e0440f16442fb2200e13997a33d26a",
+        "committedAt": "2026-10-28T15:48:28+08:00",
+        "dirty": false
+      },
+      "jobId": 122695557358,
+      "artifactId": 12799902332,
+      "providerDigest": "sha256:fa4c9b16defc9d378c23016cdaad2ebf208cb1c2577ba6f9cd2034d149a52e2f",
+      "reportSHA256": "43f9972e22df641f8f91c61e08cafbebf4a606f9b973ebd9b06f254bc7513bca",
+      "browserVersion": "26.0",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once"
+      ],
+      "error": "TypeError: w.url is not a function\n    at file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:76:80\n    at Array.filter (<anonymous>)\n    at file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:76:34",
+      "errors": [
+        "/koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-worker.js?v=b279d3ea3f3d7ec5 due to access control checks.",
+        "/koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-worker.js?v=b279d3ea3f3d7ec5 due to access control checks.",
+        "ResizeObserver loop completed with undelivered notifications.",
+        "ResizeObserver loop completed with undelivered notifications."
+      ],
+      "directory": "build/qa/desktop-40652472716-fourth-round/webkit"
+    }
+  ]
+}

@@ -14,7 +14,15 @@ export async function mlirKeyboardFlow({page,read,base,directory,check}){
     assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_ACTIONS,'true');
     const report={cases:[],modelWorkers:0,tabPresses:0},wait=ms=>new Promise(r=>setTimeout(r,ms)),hash=b=>createHash('sha256').update(b).digest('hex');
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('MLIR keyboard wait: '+fn);await wait(75);}}
-    async function tabTo(selector,reverse=false){for(let i=0;i<400;i++){if(await read(s=>document.activeElement?.matches(s),selector))return;await page.keyboard.press(reverse?'Shift+Tab':'Tab');report.tabPresses++;}throw Error('MLIR keyboard cannot reach '+selector);}
+    async function tabTo(selector,reverse=false){
+        // Firefox can move focus into browser chrome at the end of a document.
+        // Use the native direction toward the target instead of assuming that
+        // another forward Tab will wrap back into this page in every engine.
+        reverse=reverse||await read(s=>{const a=document.activeElement,t=document.querySelector(s);return !!(a&&a!==document.body&&t&&(a.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_PRECEDING));},selector);
+        const trail=[];
+        for(let i=0;i<400;i++){const state=await read(s=>({matched:!!document.activeElement?.matches(s),active:document.activeElement?.id||document.activeElement?.tagName,documentFocus:document.hasFocus()}),selector);if(state.matched)return;if(trail.length<32&&!trail.some(t=>t.active===state.active&&t.documentFocus===state.documentFocus))trail.push(state);await page.keyboard.press(reverse?'Shift+Tab':'Tab');report.tabPresses++;}
+        report.keyboardFailure={selector,reverse,trail};throw Error('MLIR keyboard cannot reach '+selector);
+    }
     async function enter(selector,reverse=false){await tabTo(selector,reverse);await page.keyboard.press('Enter');}
     async function type(selector,text){await tabTo(selector);await page.keyboard.press('Control+a');await page.keyboard.type(text);}
     async function choose(filename,selector='#open-model'){await tabTo(selector);const event=page.waitForEvent('filechooser');await page.keyboard.press('Enter');await(await event).setFiles(filename);}
@@ -63,5 +71,5 @@ export async function mlirKeyboardFlow({page,read,base,directory,check}){
             check(`${kind}: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once`);
         }
         assert.equal(report.modelWorkers,5);return report;
-    }finally{page.off('filechooser',intercept);}
+    }catch(error){error.mlirKeyboard=report;throw error;}finally{page.off('filechooser',intercept);}
 }
