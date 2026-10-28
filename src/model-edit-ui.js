@@ -1,6 +1,7 @@
 // The dialog edits a request, not the live model. A successful result is a new
 // local artifact; ownership checks discard responses from an old model/dialog.
-export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,downloadReport,error}) {
+import {supportsModelEditing,TFLITE_EDIT_MESSAGE} from './model-edit-policy.js';
+export function modelEditUI({rpc,getSource,getFormat,onStart,onBusy,onExport,openResult,downloadReport,error}) {
     const $=id=>document.getElementById(id),dialog=$('model-edit-dialog');
     let info=null,owner=null,generation=0,choiceGeneration=0,previewGeneration=0,timer,busy=false,previewing=false,pendingExports=0,portPage=0,operands=[],replacements=[],fields={},irDrafts={},targets=[];
     dialog.dataset.pendingExports='0';
@@ -109,6 +110,7 @@ export function modelEditUI({rpc,getSource,onStart,onBusy,onExport,openResult,do
     return {
         clear(){release();if(dialog.open)dialog.close();busy=false;$('model-edit-form').inert=false;$('export-edited-model').disabled=true;$('open-edited-model').disabled=true;},
         async open(location){
+            if(!supportsModelEditing(getFormat()))throw Error(TFLITE_EDIT_MESSAGE);
             if(busy)return;release();owner=getSource();if(!owner)return;const ticket=generation;
             $('model-edit-target').textContent='讀取原始 OP…';$('model-edit-result').textContent='';$('open-edited-model').disabled=true;$('export-edited-model').disabled=true;dialog.showModal();
             const locations=Array.isArray(location)?location:[location];

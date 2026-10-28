@@ -1,8 +1,9 @@
 import {modelEditDraft,editChanges,editIssues,editWireReason,editTemplateReason,editPosition} from './model-edit-draft.js';
 import {EDIT_DRAFT_LIMIT,parseEditSession,exportEditSession} from './model-edit-session.js';
 import {editNewOpsUI} from './model-edit-new-ops-ui.js';
+import {supportsModelEditing,TFLITE_EDIT_MESSAGE} from './model-edit-policy.js';
 const NS='http://www.w3.org/2000/svg';
-export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
+export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
     const $=id=>document.getElementById(id),root=$('edit-workspace'),viewport=$('edit-viewport'),world=$('edit-world'),svg=$('edit-links');
     let owner=null,snapshot=null,draft=null,active=false,busy=false,generation=0,selected=null,armed=null,zoom=1,exported='',exportedToken=null,pages=new Map(),frame=0,gesture=null,exploreScroll=null;
     const signature=()=>JSON.stringify({commands:draft?.commands,updateSignatures:$('edit-signatures').checked});
@@ -115,7 +116,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,chooseMo
     $('edit-add-selection').onclick=()=>extend(getTargets());
     $('edit-template').onchange=()=>{if($('edit-template').value)apply({kind:'template',node:selected,template:$('edit-template').value});};
     $('open-edit-draft').onclick=()=>{$('edit-draft-file').value='';$('edit-draft-file').click();};
-    $('edit-draft-file').onchange=async()=>{const file=$('edit-draft-file').files[0];$('edit-draft-file').value='';if(!file)return;try{if(file.size>EDIT_DRAFT_LIMIT)throw Error('編輯草稿不得超過 256 KiB。');pendingDraft=parseEditSession(await file.text());banner(`請重新選取原模型「${pendingDraft.source.name}」。會核對完整檔案指紋，模型／權重不在草稿內。`);}catch(e){pendingDraft=null;banner(e.message);}};
+    $('edit-draft-file').onchange=async()=>{const file=$('edit-draft-file').files[0];$('edit-draft-file').value='';if(!file)return;try{if(file.size>EDIT_DRAFT_LIMIT)throw Error('編輯草稿不得超過 256 KiB。');const candidate=parseEditSession(await file.text());if(candidate.source.format!=='tflite')throw Error('模型編輯草稿僅支援 TFLite，不會套用 MLIR 編輯草稿。');pendingDraft=candidate;banner(`請重新選取原模型「${pendingDraft.source.name}」。會核對完整檔案指紋，模型／權重不在草稿內。`);}catch(e){pendingDraft=null;banner(e.message);}};
     $('choose-edit-draft-model').onclick=chooseModel;
     $('cancel-edit-draft').onclick=()=>{pendingDraft=null;$('edit-draft-banner').hidden=true;if(draftTask){generation++;draftTask=false;rpc('editDraftCancel').catch(()=>{});setBusy(false);message('已取消草稿核對，保留原有編輯。');}};
     $('save-edit-draft').onclick=async()=>{
@@ -146,6 +147,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getTargets,getGraph,chooseMo
         enable(value){$('edit-mode').disabled=!value;},
         reset(){generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;selected=null;armed=null;exported='';exportedToken=null;savedDraft='';draftTask=false;newOps.reset();$('edit-signatures').checked=false;pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;onBusy(false);$('edit-mode').disabled=true;},
         async open(){
+            if(!supportsModelEditing(getFormat())){message(TFLITE_EDIT_MESSAGE);return;}
             if(!getSource())return;if(owner===getSource()&&draft){mode(true);const missing=getTargets().filter(t=>!snapshot.nodes.some(n=>n.source.graph===t.graph&&n.source.node===t.node));if(missing.length)await extend(missing);return;}
             owner=getSource();const ticket=++generation;mode(true);root.scrollTo(0,0);setBusy(true);message('載入編輯範圍（模型與權重保留本機）…');
             try{const next=await rpc('editWorkspaceOpen',{targets:getTargets(),graph:getGraph()});if(!live(ticket))return;snapshot=next;draft=modelEditDraft(next);selected=next.selected[0];pages.clear();zoom=1;exported='';$('edit-font').value=$('graph-font-size').value;root.style.setProperty('--edit-font',`${$('edit-font').value}px`);render();message('點來源輸出端，再點目標輸入端接線。藍色虛線是保留的控制流程；新增輸出自動建立。');requestAnimationFrame(()=>$('edit-fit').click());}

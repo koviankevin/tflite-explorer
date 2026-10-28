@@ -2,7 +2,7 @@
   <a class="brand" href="./" aria-label="模鏡首頁"><span class="brand-icon" aria-hidden="true">⌘</span><span><strong style="font-size:20px;letter-spacing:3px">模鏡</strong><small>MODEL LENS · TFLITE EXPLORER</small></span></a>
   <div class="file-summary"><span id="file-name">尚未開啟模型</span><span id="file-stats">從模型結構，找到你要的連接。</span></div>
   <span class="privacy"><i></i>本機處理</span>
-  <nav class="model-modes" aria-label="模型工作區"><button id="explore-mode" aria-pressed="true">探索模型</button><button id="edit-mode" aria-pressed="false" disabled>編輯模型</button><button id="open-edit-draft">匯入草稿</button></nav><input id="edit-draft-file" type="file" accept=".json,application/json" hidden>
+  <nav class="model-modes" aria-label="模型工作區（實際編輯僅支援 TFLite）"><button id="explore-mode" aria-pressed="true">探索模型</button><button id="edit-mode" aria-pressed="false" disabled>編輯模型</button><button id="open-edit-draft">匯入草稿</button></nav><input id="edit-draft-file" type="file" accept=".json,application/json" hidden>
   <button id="release-info-button" class="quiet" aria-haspopup="dialog">版本</button>
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉模型</button>
@@ -88,7 +88,7 @@
   <footer class="edit-footer"><label id="edit-signatures-field" hidden><input id="edit-signatures" type="checkbox">介面變更時同步更新 signatures</label><span>模型全程在本機處理 · 先驗證，再匯出整份模型</span><button id="save-edit-draft" class="quiet" disabled>儲存編輯草稿</button><button id="edit-export" class="primary" disabled>驗證並匯出模型</button><button id="edit-open-result" class="quiet" disabled>開啟修改結果</button><button id="edit-download-report" class="quiet" disabled>下載修改報告</button></footer>
 </section>
 <dialog id="model-edit-dialog" aria-labelledby="model-edit-title">
-  <div class="import-heading"><h2 id="model-edit-title">編輯實際模型</h2><button id="close-model-edit" class="icon-button" aria-label="關閉模型編輯">×</button></div>
+  <div class="import-heading"><h2 id="model-edit-title">編輯實際 TFLite 模型</h2><button id="close-model-edit" class="icon-button" aria-label="關閉模型編輯">×</button></div>
   <p id="model-edit-target"></p><p class="hint">產生修改後的整份模型，原始檔案保持不變。先在本機驗證並下載，再開啟結果繼續編輯；這裡不會修改搜尋 pattern。</p>
   <section id="model-edit-target-picker" aria-label="選擇已框選的 OP" hidden><div id="model-edit-target-list"></div></section>
   <button id="model-edit-back" class="quiet" hidden>放棄目前欄位，選擇其他已選 OP</button>

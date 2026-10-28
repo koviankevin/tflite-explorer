@@ -10,7 +10,7 @@ assert.ok(start>=0&&end>start);
 function click(overrides={}){
     const {clickId='open-model-editor',...state}=overrides;
     const button={},calls=[],notices=[],elements={'open-model-editor':button,'edit-capture-model':{},'capture-cfg':{checked:false}};
-    const context={model:{},exportBusy:false,editWorkspace:{hasUnexported:false,open:()=>{}},detailLocation:null,pickingPattern:true,pickedNodes:new Set([2,3]),pickedGraph:0,selection:null,captureSelections:()=>[],report:reason=>{throw reason;},notice:t=>notices.push(t),$:id=>elements[id],modelEditor:{open:async x=>calls.push(x)},...state};
+    const context={model:{sourceFormat:'tflite'},exportBusy:false,editWorkspace:{hasUnexported:false,open:()=>{}},detailLocation:null,pickingPattern:true,pickedNodes:new Set([2,3]),pickedGraph:0,selection:null,captureSelections:()=>[],report:reason=>{throw reason;},notice:t=>notices.push(t),$:id=>elements[id],modelEditor:{open:async x=>calls.push(x)},...state};
     vm.runInNewContext(source.slice(targetsStart,targetsEnd)+source.slice(start,end),context);context.$('open-model-editor').click=()=>context.$('open-model-editor').onclick();context.$(clickId).onclick();
     return {calls:JSON.parse(JSON.stringify(calls)),notices};
 }
@@ -30,3 +30,5 @@ test('single selected OP still opens, absent selection reports why instead of ex
 });
 test('contextual model edit button uses the same selected OPs',()=>assert.deepEqual(click({clickId:'edit-capture-model'}).calls,[[{graph:0,node:2},{graph:0,node:3}]]));
 test('an unexported graph draft is kept instead of opening a competing form',()=>{let opened=0;const result=click({editWorkspace:{hasUnexported:true,open:()=>opened++}});assert.equal(opened,1);assert.deepEqual(result.calls,[]);});
+
+test('MLIR selections cannot open the actual editor',()=>{const result=click({model:{sourceFormat:'mlir'}});assert.equal(result.calls.length,0);assert.match(result.notices[0],/僅支援 TFLite/);});
