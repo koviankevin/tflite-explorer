@@ -24,19 +24,22 @@ export function installBlobControlWorker(scope){
     }catch(error){scope.postMessage({stage:'error',error:error.message});}};
 }
 
-export function installBlobControlPage(){
-    const $=id=>document.getElementById(id),actions=['build','readback','boundary','share','url','download','wrap','clear'];let source,worker,blob,wrapped,url,stats={},stage='initial',revoked=false,urlCreatedAt=null,urlRevokedAt=null;
-    function update(value){stage=value;$('state').textContent=JSON.stringify({stage,revoked,urlCreatedAt,urlRevokedAt,bytes:source?.size||blob?.size||wrapped?.size||0,stats});for(const id of actions)$(id).disabled=true;const next={selected:'build',built:'readback',readback:'boundary',boundary:'share',shared:'url',url:'download',downloaded:'wrap',wrapped:'clear'}[value];if(next)$(next).disabled=false;}
+export function installBlobControlPage({fileWrap='after-download'}={}){
+    if(!['after-download','during-download'].includes(fileWrap))throw Error('Unknown File wrap timing.');
+    const $=id=>document.getElementById(id),actions=['build','readback','boundary','share','url','download','wrap','clear'];let source,worker,blob,wrapped,url,stats={},stage='initial',revoked=false,urlCreatedAt=null,urlRevokedAt=null,downloadClickedAt=null,fileWrappedAt=null,wraps=0;const operationOrder=[];
+    function update(value){stage=value;$('state').textContent=JSON.stringify({stage,fileWrap,downloadClickedAt,fileWrappedAt,wraps,operationOrder,revoked,urlCreatedAt,urlRevokedAt,bytes:source?.size||blob?.size||wrapped?.size||0,stats});for(const id of actions)$(id).disabled=true;const next={selected:'build',built:'readback',readback:'boundary',boundary:'share',shared:'url',url:'download',downloaded:'wrap',wrapped:'clear'}[value];if(next)$(next).disabled=false;}
+    function wrap(){if(wrapped||wraps)throw Error('Control File is already wrapped.');wrapped=new File([blob],'blob-control.tflite',{type:blob.type});fileWrappedAt=performance.now();wraps++;operationOrder.push('file-wrap');update('wrapped');}
     $('choose').onclick=()=>$('file').click();$('file').onchange=()=>{if(source||worker)throw Error('Control source already selected.');source=$('file').files[0];update('selected');};
     $('build').onclick=()=>{worker=new Worker('/worker.js',{type:'module'});worker.onerror=()=>update('error');worker.onmessage=({data})=>{if(data.stage==='error'){update('error');return;}stats=data.stats;if(data.blob)blob=data.blob;update(data.stage);};worker.postMessage({action:'build',file:source});};
     $('readback').onclick=()=>worker.postMessage({action:'readback'});$('boundary').onclick=()=>worker.postMessage({action:'boundary'});$('share').onclick=()=>worker.postMessage({action:'share'});
     $('url').onclick=()=>{url=URL.createObjectURL(blob);const selected=url;urlCreatedAt=performance.now();setTimeout(()=>{URL.revokeObjectURL(selected);revoked=true;urlRevokedAt=performance.now();if(stage==='cleared')update('revoked');},60000);update('url');};
-    $('download').onclick=()=>{const link=document.createElement('a');link.href=url;link.download='blob-control.tflite';document.body.append(link);link.click();link.remove();update('downloaded');};
-    $('wrap').onclick=()=>{wrapped=new File([blob],'blob-control.tflite',{type:blob.type});update('wrapped');};
+    $('download').onclick=async()=>{const link=document.createElement('a');link.href=url;link.download='blob-control.tflite';document.body.append(link);downloadClickedAt=performance.now();operationOrder.push('download-click');link.click();link.remove();if(fileWrap==='during-download'){await Promise.resolve();wrap();}else update('downloaded');};
+    $('wrap').onclick=wrap;
     $('clear').onclick=()=>{worker.terminate();worker=null;source=null;blob=null;wrapped=null;url=null;$('file').value='';update(revoked?'revoked':'cleared');};update('initial');
 }
 
 export function blobControlSettings(env,platform){
     if(platform!=='linux'||env.GITHUB_ACTIONS!=='true'||env.GITHUB_REPOSITORY!=='koviankevin/tflite-explorer'||env.GITHUB_WORKFLOW!=='Physical File Blob control'||env.GITHUB_REF!=='refs/heads/main'||env.GITHUB_EVENT_NAME!=='workflow_dispatch'||!['firefox','webkit'].includes(env.DESKTOP_ENGINE))throw Error('Blob control is restricted to this repository on hosted manual main CI.');
-    return {engine:env.DESKTOP_ENGINE};
+    const fileWrap=env.BLOB_CONTROL_FILE_WRAP??'during-download';if(!['after-download','during-download'].includes(fileWrap))throw Error('Unknown File wrap timing.');
+    return {engine:env.DESKTOP_ENGINE,fileWrap};
 }

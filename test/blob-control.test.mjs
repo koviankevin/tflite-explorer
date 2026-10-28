@@ -18,6 +18,25 @@ function virtualFile(){
 }
 const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Physical File Blob control',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',DESKTOP_ENGINE:'firefox'};
 
+test('during-download wraps exactly once in the callback continuation after the native link click',async()=>{
+    const v=virtualFile(),events=[],elements=new Map(['choose','file','build','readback','boundary','share','url','download','wrap','clear','state'].map(id=>[id,{id,disabled:false,textContent:'',value:'',files:[]}])) ,timers=[];let now=0;
+    class MainFile extends v.File{constructor(...args){super(...args);events.push('wrap');}}
+    class Worker{constructor(){this.scope={...v,postMessage:data=>this.onmessage({data})};installBlobControlWorker(this.scope);}postMessage(data){this.scope.onmessage({data});}terminate(){}}
+    const document={getElementById:id=>elements.get(id),createElement:()=>({click(){events.push('download');},remove(){}}),body:{append(){}}};
+    runInNewContext('('+installBlobControlPage.toString()+')({fileWrap:"during-download"})',{document,Worker,File:MainFile,URL:{createObjectURL:()=> 'blob:control',revokeObjectURL(){}},performance:{now:()=>++now},setTimeout:(fn,ms)=>timers.push({fn,ms})});
+    const state=()=>JSON.parse(elements.get('state').textContent);elements.get('file').files=[v.file];elements.get('file').onchange();for(const id of ['build','readback','boundary','share','url'])elements.get(id).onclick();
+    assert.deepEqual(events,[]);const pending=elements.get('download').onclick();assert.deepEqual(events,['download']);await pending;assert.equal(state().stage,'wrapped');assert.deepEqual(events,['download','wrap']);
+    assert.equal(elements.get('wrap').disabled,true);assert.equal(elements.get('clear').disabled,false);assert.equal(state().fileWrap,'during-download');assert.deepEqual(state().operationOrder,['download-click','file-wrap']);assert.equal(state().wraps,1);assert.ok(state().fileWrappedAt>=state().downloadClickedAt);
+    assert.equal(state().stats.readBytes,65728);assert.equal(timers.length,1);assert.equal(timers[0].ms,60000);
+    assert.throws(()=>elements.get('wrap').onclick(),/already wrapped/);assert.deepEqual(events,['download','wrap']);
+});
+
+test('wrap timing is a closed diagnostic choice, not a free-form page or CI option',()=>{
+    assert.equal(blobControlSettings({...env,BLOB_CONTROL_FILE_WRAP:'during-download'},'linux').fileWrap,'during-download');
+    assert.throws(()=>blobControlSettings({...env,BLOB_CONTROL_FILE_WRAP:'later'},'linux'),/timing/);
+    assert.throws(()=>installBlobControlPage({fileWrap:'later'}),/timing/);
+});
+
 test('boundary probe reads exactly sixty-four bytes across the typed-prefix/File boundary, once and before sharing',()=>{
     const v=virtualFile(),messages=[],scope={...v,postMessage:m=>messages.push(m)};installBlobControlWorker(scope);
     scope.onmessage({data:{action:'build',file:v.file}});scope.onmessage({data:{action:'readback'}});
@@ -34,7 +53,7 @@ test('boundary probe reads exactly sixty-four bytes across the typed-prefix/File
 });
 
 test('standalone Blob control rejects non-hosted, non-main, non-manual and unknown engine execution',()=>{
-    assert.deepEqual(blobControlSettings(env,'linux'),{engine:'firefox'});assert.equal(blobControlSettings({...env,DESKTOP_ENGINE:'webkit'},'linux').engine,'webkit');
+    assert.deepEqual(blobControlSettings(env,'linux'),{engine:'firefox',fileWrap:'during-download'});assert.equal(blobControlSettings({...env,DESKTOP_ENGINE:'webkit'},'linux').engine,'webkit');
     for(const [name,value] of Object.entries({GITHUB_ACTIONS:'false',GITHUB_REPOSITORY:'other/repo',GITHUB_WORKFLOW:'other',GITHUB_REF:'refs/pull/1/merge',GITHUB_EVENT_NAME:'push',DESKTOP_ENGINE:'chromium'}))assert.throws(()=>blobControlSettings({...env,[name]:value},'linux'));
     for(const platform of ['win32','darwin'])assert.throws(()=>blobControlSettings(env,platform));
 });
