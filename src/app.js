@@ -940,7 +940,7 @@ $('mlir-export-scope').onchange=refreshPickedNodes;
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes, selections) {
     if (!canExportSubmodel() || exportBusy) return;
-    const sourceFile = file;
+    const sourceFile = file,opener=document.activeElement;
     const mlir = model.capabilities.mlirExport;
     exportBusy = true;
     exportedModels.clear();
@@ -973,12 +973,13 @@ async function downloadSubmodel(graph, nodes, selections) {
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
     } catch (error) {
         if(file!==sourceFile) return;
-        if(error.validation) showValidation(error.validation);
+        if(error.validation) showValidation(error.validation,opener);
         else report(error);
     }
     finally { if(file===sourceFile) { exportBusy=false;refreshPickedNodes(); $('export-match').disabled = !canExportSubmodel() || selection?.kind !== 'patterns'; } }
 }
-function showValidation(validation) {
+function showValidation(validation,opener) {
+    const dialog=$('validation-dialog'),source=file;
     $('validation-stage').textContent = `${validation.stage}的檢查未通過，未下載檔案。請依下列位置修正後重新開啟。`;
     $('validation-errors').replaceChildren(...validation.diagnostics.map(item=> {
         const row=element('li');
@@ -988,7 +989,11 @@ function showValidation(validation) {
         if(item.excerpt) row.append(element('pre','',item.excerpt));
         return row;
     }));
-    $('validation-dialog').showModal();
+    // The export control was disabled during async validation, so native dialog
+    // restoration can retain focus on its now-hidden close button. Restore the
+    // original live control after close, without stealing a later user focus.
+    dialog.addEventListener('close',()=>{const active=document.activeElement;if(file===source&&opener?.isConnected&&!opener.disabled&&(active===document.body||dialog.contains(active)||active===opener))opener.focus({preventScroll:true});},{once:true});
+    dialog.showModal();
     status('MLIR 語法／SSA 檢查未通過，已停止匯出。');
 }
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
