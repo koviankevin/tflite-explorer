@@ -1170,6 +1170,8 @@ async function captureModelTab(){
 }
 function renderModelTabs(state){
     $('model-tabs').hidden=!state.tabs.length;
+    $('model-tabs').setAttribute('aria-busy',String(state.busy));
+    for(const selector of ['#explorer-panel','#target','#edit-workspace','.graph-bar','#capture-toolbar','.model-modes','#open-model','#close-model']){const node=document.querySelector(selector);if(node)node.inert=state.busy;}
     $('model-tab-list').replaceChildren(...state.tabs.map(item=>{
         const group=document.createElement('div');group.className='model-tab';const tab=document.createElement('button');tab.type='button';tab.id=`model-tab-${item.id}`;tab.dataset.modelTab=String(item.id);tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(item.id===state.current));tab.tabIndex=item.id===state.current?0:-1;tab.textContent=item.name;tab.title=`${item.name}（背景分頁切回時重新讀取本機檔案）`;tab.disabled=state.busy;tab.onclick=async()=>{await tabs.activate(item.id);$(`model-tab-${item.id}`)?.focus();};
         const close=document.createElement('button');close.type='button';close.className='close-model-tab';close.textContent='×';close.setAttribute('aria-label',`關閉 ${item.name}`);close.disabled=state.busy;close.onclick=()=>tabs.close(item.id).catch(report);group.append(tab,close);return group;
