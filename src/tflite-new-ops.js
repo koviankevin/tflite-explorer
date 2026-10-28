@@ -1,6 +1,7 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {tableFields} from './flatbuffer-writer.js';
 import {TFLITE_OPTIONS,TFLITE_PORTS} from './tflite-op-options.js';
+import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom} from './tensor-random.js';
 const normalize=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
 const optionNames=Object.keys(schema).filter(k=>k.endsWith('Options')&&schema[k].decode);
 const types2=new Set([...schema.BuiltinOptions2.decode.toString().matchAll(/tflite\.(\w+)\.decode/g)].map(m=>m[1]));
@@ -56,7 +57,7 @@ const numeric={0:['Float32Array',4],2:['Int32Array',4],3:['Uint8Array',1],4:['Bi
 export function randomTensorInfo(tensor,{seed,min=-.05,max=.05}){
     const kind=numeric[tensor?.type],dims=Array.from(tensor?.shape||[]);if(!kind||tensor.sparsity||tensor.shape_signature?.some(n=>n<0)||dims.some(n=>!Number.isSafeInteger(n)||n<0))throw Error('亂數需要已知 shape 的數值／boolean dense tensor；不支援動態維度或 sparse。');
     const count=dims.reduce((n,x)=>n*x,1);if(!Number.isSafeInteger(count)||count*kind[1]>RANDOM_TENSOR_LIMIT)throw Error('單個亂數 tensor 超過 16 MiB，請縮小 shape 或沿用現有權重。');
-    if(!Number.isInteger(seed)||seed<0||seed>4294967295||!Number.isFinite(min)||!Number.isFinite(max)||min>max||Math.abs(min)>1e6||Math.abs(max)>1e6)throw Error('亂數 seed／範圍無效。');
+    validateRandomRange(TFLITE_RANDOM_DTYPES[tensor.type],{seed,min,max});
     const q=tensor.quantization;if(q){if(q.scale?.some(x=>!Number.isFinite(x)||x<=0)||q.scale?.length>1&&q.scale.length!==dims[q.quantized_dimension]||q.zero_point?.length&&q.zero_point.length!==q.scale?.length)throw Error('量化 scale、zero point 或 channel 維度不合法。');}
     const ranges={2:[-2147483648,2147483647],3:[0,255],6:[0,1],7:[-32768,32767],9:[-128,127],12:[0,Number.MAX_SAFE_INTEGER],15:[0,4294967295],16:[0,65535],4:[Number.MIN_SAFE_INTEGER,Number.MAX_SAFE_INTEGER]};
     const r=ranges[tensor.type];if(r&&(min<r[0]||max>r[1]||!Number.isInteger(min)||!Number.isInteger(max)))throw Error('整數／量化 tensor 的亂數範圍需為 dtype 可表示的整數。');
@@ -64,8 +65,8 @@ export function randomTensorInfo(tensor,{seed,min=-.05,max=.05}){
     return {count,kind,range:r,bytes:count*kind[1],seed,min,max};
 }
 export function randomTensor(tensor,spec){
-    const {count,kind,range:r,seed,min,max}=randomTensorInfo(tensor,spec),bytes=new Uint8Array(count*kind[1]),view=new DataView(bytes.buffer);let state=seed||0x9e3779b9;
+    const {count,kind,seed,min,max}=randomTensorInfo(tensor,spec),bytes=new Uint8Array(count*kind[1]),view=new DataView(bytes.buffer),next=seededRandom(TFLITE_RANDOM_DTYPES[tensor.type],{seed,min,max});
     const setters={0:'setFloat32',2:'setInt32',3:'setUint8',4:'setBigInt64',6:'setUint8',7:'setInt16',9:'setInt8',10:'setFloat64',12:'setBigUint64',15:'setUint32',16:'setUint16'};
-    for(let i=0;i<count;i++){state^=state<<13;state^=state>>>17;state^=state<<5;const unit=(state>>>0)/4294967296,v=r?Math.floor(min+unit*(max-min+1)):min+unit*(max-min);view[setters[tensor.type]](i*kind[1],kind[0].includes('Big')?BigInt(v):v,true);}
+    for(let i=0;i<count;i++){const v=next();view[setters[tensor.type]](i*kind[1],kind[0].includes('Big')?BigInt(v):v,true);}
     return bytes;
 }
