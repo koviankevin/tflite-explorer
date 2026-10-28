@@ -6,9 +6,9 @@ export const editRecoveryId=()=>Array.from(crypto.getRandomValues(new Uint32Arra
 // returning its asynchronous preparation; no model, File or DOM is stored here.
 export function editRecoverySession({store,capture,changed=()=>{},enabled=true,owner=editRecoveryId(),delay=600}){
     const tabs=new WeakMap();
-    let current=null,timer=null,message=enabled?'開始編輯後，自動保存會先核對完整原模型。':'編輯自動保存已暫停。';
+    let current=null,timer=null,suspended=false,message=enabled?'開始編輯後，自動保存會先核對完整原模型。':'編輯自動保存已暫停。';
     const emit=()=>changed({message,enabled,attached:!!current,touched:!!current?.sequence,saving:!!current?.work,saved:!!current?.revision,conflict:!!current?.conflict,failed:!!current?.failure});
-    const schedule=()=>{clearTimeout(timer);if(current&&enabled&&!current.failure&&!current.conflict)timer=setTimeout(()=>{timer=null;flush();},delay);};
+    const schedule=()=>{clearTimeout(timer);if(!suspended&&current&&enabled&&!current.failure&&!current.conflict)timer=setTimeout(()=>{timer=null;flush();},delay);};
     const prepare=()=>{try{return Promise.resolve(capture()).then(document=>({document}),error=>({error}));}catch(error){return Promise.resolve({error});}};
     async function persist(binding,prepared,sequence){
         const result=await prepared;if(result.error)throw result.error;
@@ -29,7 +29,7 @@ export function editRecoverySession({store,capture,changed=()=>{},enabled=true,o
             if(current===binding){if(!binding.failure&&!binding.conflict){message=!enabled?'編輯自動保存已暫停。':binding.savedSequence===binding.sequence&&binding.revision?`已保存本機編輯草稿 · ${new Date(binding.savedAt).toLocaleTimeString()} · 第 ${binding.revision} 版`:'新的編輯待保存…';if(binding.savedSequence!==binding.sequence)schedule();}emit();}
         });return task;
     }
-    function flush(){clearTimeout(timer);timer=null;const binding=current;if(!binding||!enabled||!binding.sequence||binding.conflict||binding.failure)return Promise.resolve();if(binding.work)return binding.work;
+    function flush(){clearTimeout(timer);timer=null;const binding=current;if(suspended)return binding?.work||Promise.resolve();if(!binding||!enabled||!binding.sequence||binding.conflict||binding.failure)return Promise.resolve();if(binding.work)return binding.work;
         message='正在準備本機編輯草稿；完整模型核對在背景執行…';return queue(binding,prepare(),binding.sequence);
     }
     emit();return {
@@ -41,8 +41,10 @@ export function editRecoverySession({store,capture,changed=()=>{},enabled=true,o
         change(){if(!current)return;current.sequence++;if(enabled&&!current.failure&&!current.conflict){message=current.work?'背景保存中；新的編輯待保存…':'新的編輯待保存…';schedule();}emit();},
         progress(done,total){if(current?.work&&!current.failure&&!current.conflict){message=`背景核對原模型 ${Math.round(done/Math.max(1,total)*100)}% · 完成保存前請保留此分頁`;emit();}},
         flush,
+        suspend(){suspended=true;clearTimeout(timer);timer=null;},
+        resume(){if(!suspended)return;suspended=false;if(current&&current.savedSequence!==current.sequence)schedule();},
         detach(){clearTimeout(timer);timer=null;const binding=current;if(!binding)return Promise.resolve();let task=binding.work||Promise.resolve();
-            if(enabled&&binding.sequence&&!binding.failure&&!binding.conflict&&binding.savedSequence!==binding.sequence)task=queue(binding,prepare(),binding.sequence);
+            if(!suspended&&enabled&&binding.sequence&&!binding.failure&&!binding.conflict&&binding.savedSequence!==binding.sequence)task=queue(binding,prepare(),binding.sequence);
             current=null;message='開始編輯後，自動保存會先核對完整原模型。';emit();return task;
         },
         setEnabled(value){enabled=!!value;clearTimeout(timer);timer=null;message=current?.conflict?'這份編輯草稿有跨分頁衝突；請另存副本。':current?.failure?`編輯草稿尚未保存：${current.failure.message}`:enabled?'編輯自動保存已啟用。':'編輯自動保存已暫停；既有本機草稿保留。';emit();if(enabled&&current?.sequence)schedule();},

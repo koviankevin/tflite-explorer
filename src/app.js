@@ -2,6 +2,7 @@ import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
+import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
 import {initReleaseInfo} from './release-info.js';
@@ -1187,7 +1188,7 @@ $('model-tab-list').addEventListener('keydown',event=>{
     if(event.ctrlKey||event.metaKey||event.altKey)return;const items=[...$('model-tab-list').querySelectorAll('[role=tab]')],index=items.indexOf(event.target);if(index<0)return;const next=event.key==='ArrowRight'?(index+1)%items.length:event.key==='ArrowLeft'?(index+items.length-1)%items.length:event.key==='Home'?0:event.key==='End'?items.length-1:-1;if(next<0)return;event.preventDefault();event.stopPropagation();items.forEach((tab,i)=>{tab.tabIndex=i===next?0:-1;});items[next].focus();
 });
 $('model-tab-list').addEventListener('focusout',event=>{if(!$('model-tab-list').contains(event.relatedTarget))for(const tab of $('model-tab-list').querySelectorAll('[role=tab]'))tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;});
-new ResizeObserver(entries=>document.documentElement.style.setProperty('--head',`${Math.ceil(entries[0].borderBoxSize?.[0]?.blockSize||document.querySelector('.app-header').getBoundingClientRect().height)}px`)).observe(document.querySelector('.app-header'));
+resizeInFrame(document.querySelector('.app-header'),()=>document.documentElement.style.setProperty('--head',`${Math.ceil(document.querySelector('.app-header').getBoundingClientRect().height)}px`));
 window.addEventListener('beforeunload',event=>{if(tabs.hasUnexported){event.preventDefault();event.returnValue='';}});
 $('cancel-load').onclick = ()=>tabs.cancel(); $('close-model').onclick = ()=>tabs.closeAll();
 document.querySelectorAll('[data-kind]').forEach((button) => button.onclick = () => setKind(button.dataset.kind));
@@ -1459,7 +1460,7 @@ new MutationObserver(() => {
         requestAnimationFrame(()=>{if(generation!==renderGeneration || !document.body.classList.contains('details-open'))return;const entry=renderedNodes.find(e=>e.node===node || e.node.identifier===node.identifier);if(entry?.element)view.target?.scrollTo([entry.element]);});
     }
 }).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
-new ResizeObserver(()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`)).observe($('capture-toolbar'));
+resizeInFrame($('capture-toolbar'),()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`));
 // Version metadata is independent of graph startup and must respond immediately.
 initReleaseInfo({exportFile:host.export});
 const viewReady = view.start().then(() => { reset(); renderPattern(); });

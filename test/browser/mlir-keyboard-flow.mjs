@@ -27,7 +27,17 @@ export async function mlirKeyboardFlow({page,read,base,directory,check}){
     async function type(selector,text){await tabTo(selector);await page.keyboard.press('Control+a');await page.keyboard.type(text);}
     async function choose(filename,selector='#open-model'){await tabTo(selector);const event=page.waitForEvent('filechooser');await page.keyboard.press('Enter');await(await event).setFiles(filename);}
     async function ready(count){await until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');if(count!==undefined)assert.equal(Number((await read(()=>document.querySelector('#layer-count').textContent)).replaceAll(',','')),count);}
-    async function option(selector,value){const values=await read(s=>[...document.querySelector(s).options].map(o=>o.value),selector),i=values.indexOf(value);assert.ok(i>=0&&i<100);await tabTo(selector);await page.keyboard.press('Alt+ArrowDown');await page.keyboard.press('Home');for(let n=0;n<i;n++)await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');await until((s,v)=>document.querySelector(s).value===v,selector,value);}
+    async function option(selector,value){
+        const values=await read(s=>[...document.querySelector(s).options].map(o=>o.value),selector),i=values.indexOf(value);assert.ok(i>=0&&i<100);await tabTo(selector);
+        const firefox=page.context().browser().browserType().name()==='firefox';
+        // Gecko commits closed-select keyboard changes directly. Its native
+        // popup Home/Enter behavior differs from Chromium/WebKit's popup.
+        if(!firefox)await page.keyboard.press('Alt+ArrowDown');
+        await page.keyboard.press('Home');for(let n=0;n<i;n++)await page.keyboard.press('ArrowDown');
+        if(!firefox)await page.keyboard.press('Enter');
+        (report.nativeOptions??=[]).push({selector,requested:value,actual:await read(s=>document.querySelector(s).value,selector),strategy:firefox?'closed Home/ArrowDown':'popup Home/ArrowDown/Enter'});
+        await until((s,v)=>document.querySelector(s).value===v,selector,value);
+    }
     async function workerClosed(action){const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;try{const closed=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('MLIR keyboard model Worker retained')),5000);})]);await action();await closed;}finally{clearTimeout(timer);}}
     async function close(){await workerClosed(()=>enter('#close-model'));assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);}
     async function download(selector,name){await tabTo(selector);const event=page.waitForEvent('download');await page.keyboard.press('Enter');const d=await event;assert.equal(await d.failure(),null);const file=path.join(directory,name);await d.saveAs(file);await d.delete();return file;}
