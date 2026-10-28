@@ -42,3 +42,16 @@ export class OwnedProcessTree {
     }
     remaining(rows){return rows.filter(row=>this.#known.has(key(row))).map(row=>({...row}));}
 }
+
+// After a normal browser close, wait only for identities observed as owned.
+// This never adopts a new/reused PID and never signals any process.
+export async function waitOwnedProcessExit(tree,{readTable=readProcessTable,wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),now=()=>performance.now(),timeoutMs=10000}={}){
+    if(!(tree instanceof OwnedProcessTree)||!Number.isInteger(timeoutMs)||timeoutMs<0||timeoutMs>10000)throw Error('Invalid owned cleanup observation.');
+    const started=now();let remaining=[],observations=0;
+    for(let slot=0;slot<=Math.ceil(timeoutMs/100);slot++){
+        remaining=tree.remaining(await readTable());observations++;
+        if(!remaining.length||now()-started>=timeoutMs||slot===Math.ceil(timeoutMs/100))break;
+        await wait(100);
+    }
+    return {identities:tree.identities,remaining,allReaped:remaining.length===0,observations};
+}

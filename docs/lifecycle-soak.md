@@ -4,6 +4,18 @@
 
 這是指定較早來源／單一 Hosted Chromium 的結果；不代表 preview.20 新增手動 WASM／IO 的兩小時記憶體、其他引擎或公司實模已驗收。此長測與常規四項部署關卡分開，發布不必等待兩小時。下方早期失敗與修正過程保留，不以成功覆寫。
 
+新的 prefix-only 匯出記憶體修正已啟動 [40747440147](https://github.com/koviankevin/tflite-explorer/actions/runs/40747440147)，固定來源 `4ec5802f6af7aed3086ea516b24868bc43d41df3`。這一輪仍在執行，不能用歷史 80 輪或目前八輪成功代替最終長測結果；它不部署網站，不是發布的前置等待，也不會取消或重啟來換取成功。
+
+### 程序識別與報告核對範圍
+
+執行中的 `4ec5802` 量測沿用既有 Chromium 根 PID 與當下 descendants 的 RSS，關閉時驗證根程序已消失。它沒有保存各 PID 的啟動時間與歷次所有權，因此不能宣稱已獨立追蹤每個被重新掛接的 orphan，或逐一證明全部已觀察子程序的清理；原生模型 Worker close 與 V8／backing checkpoints 仍照原規則收集。
+
+後續 CI producer 改用與桌面八輪共用的 `OwnedProcessTree`：以每次 launch 的隨機環境標記辨識本測試 Node 直接啟動的根程序，只讀這些直接子程序的環境；以 PID＋start ticks 保留已觀察的 descendants，重新掛接後仍計入 RSS，PID 重用不會採用成原程序。正常關閉後至多等待十秒並保留全部已觀察 identities／remaining；有殘留或讀取不明就失敗，不以根 PID 已消失代表全部清理成功。失敗清理也逐一重新核對 identity，不能對其他程序送出 signal。未在取樣間觀察到的短命程序與共享頁重算限制仍存在。
+
+31 項相關 Node 檢查通過，新增測試包括根程序消失後仍存活的 orphan、同 PID 被外部程序重用、固定時間內未釋放、觀察權限錯誤及不合法的等待預算；原長度、64 輪／八輪分批、讀取／RSS／Worker／Blob URL 門檻完全保留。只有測試量測與清理證據改變，應用與工作流程未變；新的實體八輪驗證尚待完成，不把新增 producer 的能力倒算到舊報告。
+
+另以既有 provider ZIP digest／原始 JSON SHA／CRC 校準獨立核對器，重算歷史 80 輪，並確認晚期輸出 hash、Worker 終止、完整原檔指紋、讀取上限或有效時長被竄改時都拒絕，見 [離線校準紀錄](results/soak-review-calibration-2026-10-29.json)。這是核對工具的正負例校準，沒有重新執行瀏覽器，也不是 `4ec5802` 的最終成功證據。
+
 這是新增的手動 CI，尚未執行成功時不能寫成長時間驗收完成。`.github/workflows/browser-soak.yml` 只允許此 repository 的 main／workflow_dispatch、Ubuntu 24.04 hosted runner，權限只有 contents: read。它不部署網站、不操作個人瀏覽器，也不接受公司模型、外部 URL、較小 fixture、縮短時間或放寬記憶體的輸入。
 
 沿用 [八輪生命週期](browser-lifecycle-gate.md)的實際 1,349,965,216 bytes／21,005 OP TFLite，完整非零權重寫入、fsync 與讀回 SHA；同一個 Chromium、context 和頁面持續至少兩小時。每輪都以原生選檔開啟、搜尋 prefix／分支匯合 pattern、實際編輯原始 OP、匯出完整模型與 >1 GiB 子模型、重開、比對權重及 custom options、驗證 pattern 正反例，再關閉模型。每輪重新完整核對原模型指紋。已下載的當輪檔案在使用後刪除，只有目前測試產生的隔離暫存檔會清理。

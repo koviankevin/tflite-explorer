@@ -1,0 +1,19 @@
+{
+  "purpose": "Offline calibration only; not a new browser run or current-source soak acceptance",
+  "historicalSource": "e899839331256e60bf28d610bb0061f2f747c95d",
+  "originalZIPDigest": "sha256:813af9c2db7e178be1b101e555ae7ad58f21a6ac148c888b861328dedc10c68d",
+  "originalRawSHA256": "8d658b4785118d6cb0d966ffa20104ee073cae418b7057d0b99e5fd07297f5c5",
+  "positiveCycles": 80,
+  "negativeCasesRejected": [
+    "last full payload hash",
+    "retained model worker",
+    "late original fingerprint",
+    "unbounded model read",
+    "insufficient active duration"
+  ],
+  "limitations": [
+    "Main long-run RSS records the current Chromium root and descendants; it does not persist start-identity/orphan PID sets. Root closure is verified, not independent all-descendant reaping.",
+    "Worker V8 used/backing values are checkpoints, not a continuous isolate peak.",
+    "No optional manual runtime inference is invoked by this large-file soak."
+  ]
+}
