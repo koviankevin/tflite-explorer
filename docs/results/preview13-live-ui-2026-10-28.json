@@ -1,0 +1,702 @@
+{
+  "format": "model-lens-production-smoke",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-28T01:01:28.562Z",
+  "driverSourceCommit": "ab3db8050c4c3db096793f9bedf0890ae96463a3",
+  "expectedBuild": "c659375441a01f98",
+  "checks": [
+    "version dialog works during delayed graph initialization at the repository subpath",
+    "public demo, 32px graph, exact layer search and location",
+    "native model chooser and native pattern JSON import/export",
+    "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+    "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+    "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+    "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+    "keyboard native pattern import, saved selection, search and exact JSON export",
+    "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+    "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+    "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+    "loop-custom: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+    "actual branch MLIR model edit, custom attributes, SSA/control validation, pattern positive/negative, export/direct reopen and worker closure",
+    "actual loop MLIR model edit, custom attributes, SSA/control validation, pattern positive/negative, export/direct reopen and worker closure",
+    "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px mobile layout, verified TFLite export/reopen and pattern",
+    "independent branch custom MLIR graph wiring, fresh SSA, preview, 32px layout, control flow and verified export/reopen/pattern",
+    "independent loop custom MLIR graph wiring, fresh SSA, preview, 32px layout, control flow and verified export/reopen/pattern",
+    "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+    "portable loop/custom MLIR draft restores on a fresh page, exports fresh SSA and preserves control flow"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/vendor/netron/worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/c659375441a01f98/src/model-worker.js?v=c659375441a01f98",
+      "closed": true
+    }
+  ],
+  "target": "public-production",
+  "siteRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.13",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "ab3db8050c4c3db096793f9bedf0890ae96463a3",
+      "tree": "5a2a2832ac7eb762b4edd048a4d57ebc742cd56f",
+      "committedAt": "2026-10-28T08:56:30+08:00",
+      "dirty": false
+    },
+    "buildId": "c659375441a01f98"
+  },
+  "siteId": "31bfb4137e3c8ab7fa23feee39e8a02a6b2417dea3118cd54e798aad62d34487",
+  "coreBasePath": "versions/c659375441a01f98/",
+  "chromium": "141.0.7390.37",
+  "keyboardRequired": true,
+  "keyboardAudit": false,
+  "selectionToolsRequired": true,
+  "keyboard": {
+    "tabPresses": 755,
+    "modelWorkers": 3
+  },
+  "mlirSelection": {
+    "cases": [
+      {
+        "name": "branch-join-custom",
+        "originalLayers": 7,
+        "operators": 7,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 390,
+            "height": 844,
+            "viewport": 390,
+            "editor": 366,
+            "inner": 366
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      },
+      {
+        "name": "loop-custom",
+        "originalLayers": 4,
+        "operators": 4,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 390,
+            "height": 844,
+            "viewport": 390,
+            "editor": 366,
+            "inner": 366
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      }
+    ],
+    "modelWorkers": 4,
+    "editorBounds": {
+      "nodes": 256,
+      "edges": 500,
+      "first": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "255",
+        "page": "上一頁下一頁第 1／21 頁 · 245 條連線"
+      },
+      "second": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "267",
+        "page": "上一頁下一頁第 2／21 頁 · 245 條連線"
+      },
+      "last": {
+        "rows": 6,
+        "options": 1777,
+        "elements": 2864,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 246 條連線"
+      },
+      "removed": {
+        "rows": 5,
+        "options": 1487,
+        "elements": 2561,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 245 條連線"
+      }
+    }
+  },
+  "modelEditing": {
+    "cases": [
+      {
+        "format": "tflite",
+        "added": 1,
+        "removed": 1,
+        "parameter": 3,
+        "weights": "identical",
+        "customOptions": "identical",
+        "invalidRewire": "rejected",
+        "danglingRemoval": "rejected",
+        "cancelledCandidate": "discarded",
+        "newBoundary": [
+          1,
+          2,
+          7,
+          8
+        ]
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "renamed": "company.changed_branch",
+        "added": 1,
+        "removed": 1,
+        "ssa": "passed",
+        "controlFlow": "passed",
+        "patternAfterRemoval": 1,
+        "dominanceNegative": "not-applicable"
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "renamed": "company.changed_loop",
+        "added": 0,
+        "removed": 1,
+        "ssa": "passed",
+        "controlFlow": "passed",
+        "patternAfterRemoval": 0,
+        "dominanceNegative": "rejected"
+      }
+    ],
+    "modelWorkers": 11,
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 135.40625,
+        "bottom": 504.59375,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 187.40625,
+        "bottom": 656.578125,
+        "scroll": 354,
+        "client": 354
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 17,
+        "right": 373,
+        "top": 12,
+        "bottom": 832,
+        "scroll": 354,
+        "client": 354
+      }
+    ],
+    "multiSelection": [
+      {
+        "format": "tflite",
+        "nativeMarquee": true,
+        "targets": [
+          {
+            "key": "0:1",
+            "label": "subgraph/block 0 · OP #1 · InternalSplitFoo"
+          },
+          {
+            "key": "0:2",
+            "label": "subgraph/block 0 · OP #2 · ADD"
+          }
+        ],
+        "staleTargetExcluded": true,
+        "selectionPreserved": true,
+        "cameraPreserved": true
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "targets": 7,
+        "blocks": 4,
+        "selectionPreserved": true
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "targets": 4,
+        "blocks": 3,
+        "selectionPreserved": true
+      }
+    ],
+    "tfliteParserRequests": [],
+    "receipts": [
+      {
+        "output": "model-edit-1.tflite",
+        "sha256": "8d87438c027745516221fdfddb97a5f884b5a2406025af3215e3ff4d4d31cc29",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-2.tflite",
+        "sha256": "caf3b06970e0f0059c157ba6e672ea96f8a3f85d1fc501f078fa045b023313da",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-3.tflite",
+        "sha256": "8e315ac82b6f8d61bf42e7a3e08f951e7729c2cea36a5f162b996c7828456f8d",
+        "byteRanges": 3,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-4.mlir",
+        "sha256": "b9c57d03263ad2a175d10ae24ab65a09b79efffc2840112fb576be808d404303",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-5.mlir",
+        "sha256": "83d780d39b9efdf9709bc6003ccae1c0b1ecd2ce07c255387977480f05e04401",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-6.mlir",
+        "sha256": "413a6d76579f78a7bf1b5516d68c7348f604cdd5515bffc22bc4a65960d10160",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-7.mlir",
+        "sha256": "25d3d06ffbfa7c4ebb102aeab81eed26c719e86028abdf1a8dfb836b802385b7",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-8.mlir",
+        "sha256": "c5a66f1fea9901dace36fa54b230744b01bc2f0ccf8e9289823d40bd68b534e3",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable",
+        "nativeCompiler": "not-run"
+      }
+    ]
+  },
+  "editWorkspace": {
+    "cases": [
+      {
+        "format": "tflite",
+        "nativeClick": true,
+        "nativeDrag": true,
+        "autoOutput": 10,
+        "undoRedo": true,
+        "draftSurvivesModeSwitch": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "pattern": 1
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "blocks": 4,
+        "ssa": "passed",
+        "controlEdges": 4,
+        "pattern": 1
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "blocks": 3,
+        "ssa": "passed",
+        "controlEdges": 3,
+        "pattern": 1
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      }
+    ],
+    "receipts": [
+      {
+        "output": "workspace-result-1.tflite",
+        "sha256": "b77084f0c33da9f7157cc4c7fbc5b728448c46e826719f84e45c78c1939e9ed7",
+        "byteRanges": 4,
+        "byteStatus": "passed"
+      },
+      {
+        "output": "workspace-result-4.mlir",
+        "sha256": "66aa3621d3d5cef11059c44d0aa8969dd415694cfb63c63cfbee81ae8b8af0bd",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable"
+      },
+      {
+        "output": "workspace-result-7.mlir",
+        "sha256": "cf7cbb0ca198b5c4ab7d90ee798d5ff35517a5c39760ba604f4901992990d9ae",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable"
+      }
+    ],
+    "modelWorkers": 6
+  },
+  "portableEdit": {
+    "cases": [
+      {
+        "format": "tflite",
+        "scope": 3,
+        "clone": 1,
+        "catalog": "MUL",
+        "randomSeed": 123,
+        "wrongOriginalRejected": true,
+        "redo": true,
+        "view": true,
+        "mousePan": true,
+        "wheelZoom": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 4
+      },
+      {
+        "format": "mlir",
+        "loop": true,
+        "ssa": "passed",
+        "freshPage": true
+      }
+    ],
+    "modelWorkers": 7
+  },
+  "finishedAt": "2026-10-28T01:02:14.600Z"
+}

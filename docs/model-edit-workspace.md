@@ -72,3 +72,15 @@
 [四項關卡獨立核對](results/preview13-gates-review-2026-10-28.json)通過，所有測試來源相依 fingerprint 與候選一致。八輪實體模型報告見 [完整原始紀錄](results/preview13-main-browser-2026-10-28.json)及 [provider 核對](results/preview13-main-browser-review-2026-10-28.json)：24 模型 Worker 終止，60 秒自然 Blob URL 釋放、每 realm 1 MiB／累計 16 MiB 原有讀取限制不變；原檔 21,005 OP、編輯範圍 2 原始 OP＋1 複製 OP，完整候選 21,006 OP。暖機後 RSS drift 13,639,680 bytes、每輪斜率約 1.96 MiB，取樣峰值 929,910,784 bytes。每輪完整輸出 1,350,445,736 bytes、SHA-256 `76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045`，7 段共 1,342,177,328 bytes 權重／custom options 比對一致。這個八輪量測沒有執行草稿完整檔案 fingerprint；其分段讀取、完整 bytes 覆蓋與取消另有 Node 測試和小型原生草稿驗收，不宣稱已量測 1 GiB 草稿雜湊效能。
 
 [Main 原生驗收](results/preview13-main-ui-2026-10-28.json)及 [provider 核對](results/preview13-main-ui-review-2026-10-28.json)成功。接下來 prepare 與正式發布仍需在固定乾淨來源重新核對完整產物；本段尚不宣稱正式站已切換。
+
+## 已發布 preview.13
+
+- [正式網站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.13)，build `c659375441a01f98`。
+- 固定來源 `ab3db8050c4c3db096793f9bedf0890ae96463a3`、tree `5a2a2832ac7eb762b4edd048a4d57ebc742cd56f`；交付後只有說明文件變更，不改寫已發布產物。
+- [準備 40611975862](https://github.com/koviankevin/tflite-explorer/actions/runs/40611975862)與 [獨立準備核對](results/preview13-prepared-review-2026-10-28.json)通過，才以精確 build／site ID 送出 [發布 40612246970](https://github.com/koviankevin/tflite-explorer/actions/runs/40612246970)。prepare／deploy／verify_live／release 全部成功。
+- [正式 HTTP 報告](results/preview13-live-http-2026-10-28.json)逐檔核對全部 1,277 檔 SHA／MIME。Site ID `31bfb4137e3c8ab7fa23feee39e8a02a6b2417dea3118cd54e798aad62d34487`，manifest SHA-256 `07dbb60173d1c4a68efabf477a59c2f52757d811af440e95ed11417981e3557a`；保留永久 legacy root preview.7，以及 preview.12／preview.11。
+- [正式原生報告](results/preview13-live-ui-2026-10-28.json)21 項通過、34 個模型 Worker 全關閉。含實際三 OP 選取同步、複製／接線、MUL options、seed 權重、草稿下載／重新選原模型與指紋負例、redo／視角恢復、原生 Alt 拖曳／滾輪縮放，以及 TFLite／MLIR 下載重開。原有 pattern 搜尋與分支／匯合／迴圈 SSA／控制流程亦通過。
+- [正式手機 PNG](results/preview13-live-mobile-2026-10-28.png)已檢視，與 PR 合格的 32px 長名稱／分支圖截圖 bytes 完全相同，SHA-256 `1a92055e9ecb41507ca7b8188f81e96caaae7561efc17138d20d8044ed551fbc`。
+- [最終獨立核對](results/preview13-publication-review-2026-10-28.json)成功。四份 Release 資產實際下載，bytes／SHA 均和原準備包一致。ZIP `model-lens-public-0.2.0-preview.13-c659375441a01f98.zip` 為 29,670,840 bytes、264 個核心檔案，SHA-256 `0a9b720b476e70bc3f0a660c3a6d36220e0c29008bd2f1f6e2bc8f041f4ec643`。Deployment `7374318664`／job `122566585918`／attempt 1，正式 root SHA-256 `740f037df930d60eec3d6ee13992251c81fd2d7f390b5700d221ccbd0b6834d1` 與整站身分一致。
+
+驗收涵蓋 Hosted Chromium 與合成模型的有限八輪量測，尚未證明公司 runtime、完整 kernel／量化語意、其他瀏覽器、1 GiB 草稿 fingerprint 的實測效能或數小時使用；商品等級工作清單仍保留這些項目。
