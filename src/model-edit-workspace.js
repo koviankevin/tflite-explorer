@@ -3,13 +3,14 @@ import {typeSpelling} from './mlir-types.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {operationEditText} from './model-operation-edit.js';
 import {EDIT_LIMITS,replayEditDraft,editChanges,editIssues,editPosition} from './model-edit-draft.js';
+import {randomTensor,randomTensorInfo} from './tflite-new-ops.js';
 const opId=(graph,node)=>`op:${graph}:${node}`;
 const text=value=>String(value??'').slice(0,1024);
 const normalized=(value,budget={count:0,depth:0})=>{if(++budget.count>65536||budget.depth>64)throw Error('Tensor metadata 過大，請使用進階表單。');budget.depth++;let result;try{result=typeof value==='bigint'?String(value):Array.isArray(value)||ArrayBuffer.isView(value)?Array.from(value,v=>normalized(v,budget)):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,normalized(value[k],budget)])):value;}finally{budget.depth--;}return result;};
 const tfSignature=t=>{if([t.shape,t.shape_signature].some(v=>v?.length>128)||['min','max','scale','zero_point'].some(k=>t.quantization?.[k]?.length>16384))throw Error('Tensor 型別／量化 metadata 過大，請使用進階表單。');const s=JSON.stringify(normalized(Object.fromEntries(['type','shape','shape_signature','quantization','sparsity'].map(k=>[k,t[k]]))));if(s.length>128*1024)throw Error('Tensor metadata 過大，請縮小編輯範圍。');return s;};
 
 // Select a bounded edit scope once. Payloads/IR text never enter this snapshot.
-export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
+export function editWorkspaceSnapshot(index,{targets,graph=0,includeNeighbours=true}={}){
     const format=index.mlir?'mlir':'tflite',all=index.graphs;
     if(!targets?.length)targets=all[graph]?.graph.nodes.length?[{graph,node:0}]:[];
     if(!Array.isArray(targets)||!targets.length||targets.length>EDIT_LIMITS.originals)throw Error('編輯範圍最多容納 64 個原始 OP。');
@@ -31,7 +32,7 @@ export function editWorkspaceSnapshot(index,{targets,graph=0}={}){
     // One direct neighbourhood pass; never expand recursively through a big model.
     const inputs=new Set(originals.flatMap(loc=>rawPorts(loc,true).inputs)),outputs=new Set(originals.flatMap(loc=>rawPorts(loc,true).outputs));
     const graphs=new Set(index.mlir?all.map((_,i)=>i):originals.map(t=>t.graph));
-    for(const graph of graphs)for(let node=0;node<all[graph].graph.nodes.length&&selected.size<EDIT_LIMITS.originals;node++){
+    if(includeNeighbours)for(const graph of graphs)for(let node=0;node<all[graph].graph.nodes.length&&selected.size<EDIT_LIMITS.originals;node++){
         const loc={graph,node},id=opId(graph,node);if(selected.has(id))continue;const p=rawPorts(loc);
         if(p&&(p.inputs.some(k=>outputs.has(k))||p.outputs.some(k=>inputs.has(k))))selected.set(id,loc);
     }
@@ -79,13 +80,18 @@ export async function exportEditWorkspace(index,file,snapshot,commands,{updateSi
     const active=state.nodes.filter(n=>!n.removed),value=id=>{const v=state.values.get(id);if(!v)throw Error('找不到接線來源。');return v;};
     if(!index.mlir){
         const {editTfliteModel}=await import('./tflite-model-edit.js'),plans=[];
+        const generatedValues=[...new Set(active.flatMap(n=>n.inputs.map(p=>p.value)))].map(value).filter(v=>v.generated);
+        if(generatedValues.reduce((sum,v)=>sum+randomTensorInfo(index.raw.subgraphs[v.graph].tensors[v.tensor],v.generated).bytes,0)>32*1024**2)throw Error('整次匯出的亂數權重超過 32 MiB。');
         for(const graph of new Set(changes.map(c=>state.nodes.find(n=>n.id===c.node).source.graph))){
             const g=index.raw.subgraphs[graph],scope=state.nodes.filter(n=>n.source.graph===graph),byOriginal=new Map(scope.filter(n=>!n.fresh).map(n=>[n.source.node,n])),newIds=new Map(),tensors=[];
             const clones=active.filter(n=>n.fresh&&n.source.graph===graph).sort((a,b)=>editPosition(state,a)-editPosition(state,b));
-            for(const clone of clones)for(const [slot,port] of clone.outputs.entries()){newIds.set(port.value,g.tensors.length+tensors.length);tensors.push({like:g.operators[clone.source.node].outputs[slot],name:value(port.value).name});}
-            const tensor=id=>{const v=value(id);if(v.graph!==graph)throw Error('不能跨 TFLite subgraph 接線。');return v.fresh?newIds.get(id):v.tensor;};
+            for(const clone of clones)for(const [slot,port] of clone.outputs.entries()){newIds.set(port.value,g.tensors.length+tensors.length);tensors.push({like:clone.builtin?value(clone.builtin.outputLike[slot]).tensor:g.operators[clone.source.node].outputs[slot],name:value(port.value).name});}
+            const generated=[...new Set(active.filter(n=>n.source.graph===graph).flatMap(n=>n.inputs.map(p=>p.value)))].map(value).filter(v=>v.generated);
+            if(generated.reduce((sum,v)=>sum+randomTensorInfo(g.tensors[v.tensor],v.generated).bytes,0)>32*1024**2)throw Error('單次產生的亂數權重超過 32 MiB，請沿用現有權重或分次編輯。');
+            for(const v of generated){newIds.set(v.id,g.tensors.length+tensors.length);tensors.push({like:v.tensor,name:v.name,data:randomTensor(g.tensors[v.tensor],v.generated)});}
+            const tensor=id=>{const v=value(id);if(v.graph!==graph)throw Error('不能跨 TFLite subgraph 接線。');return v.fresh||v.generated?newIds.get(id):v.tensor;};
             const entries=[];for(let node=0;node<g.operators.length;node++){
-                const append=side=>{for(const clone of clones.filter(c=>c.anchor.node===node&&c.anchor.side===side))entries.push({template:clone.source.node,inputs:clone.inputs.map(p=>tensor(p.value)),outputs:clone.outputs.map(p=>tensor(p.value))});};
+                const append=side=>{for(const clone of clones.filter(c=>c.anchor.node===node&&c.anchor.side===side))entries.push({template:clone.source.node,inputs:clone.inputs.map(p=>tensor(p.value)),outputs:clone.outputs.map(p=>tensor(p.value)),...(clone.builtin?{builtin:clone.builtin}:{})});};
                 append('before');const current=byOriginal.get(node);if(!current?.removed)entries.push(current?{template:node,inputs:current.inputs.map(p=>tensor(p.value))}:{template:node});append('after');
             }
             const boundary=scope.filter(n=>n.removed&&n.boundary&&!n.fresh).flatMap(n=>n.outputs.map(p=>tensor(p.value))).filter(id=>g.outputs.includes(id)||entries.some(e=>(e.inputs||g.operators[e.template].inputs).includes(id)));
