@@ -1,4 +1,5 @@
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
+import {memoryBlobParts} from './blob-memory-parts.js';
 
 // The pinned generated decoder is the schema authority. Interpret its field
 // declarations, never execute generated source or infer field types from values.
@@ -99,6 +100,6 @@ export class FlatbufferWriter {
             this.write(range.offsetAt, offset, 'setBigUint64'); this.write(range.sizeAt, range.size, 'setBigUint64'); offset += range.size;
         }
         for (const range of this.ranges) if (!Number.isSafeInteger(range.offset) || !Number.isSafeInteger(range.size) || range.offset < 0 || range.size < 0 || range.offset > file.size - range.size) throw new Error('資料對照範圍超出來源檔案。');
-        return { blob: new Blob([this.bytes.slice(0, this.length), ...parts], { type: 'application/octet-stream' }), ranges: this.ranges.map(({offset, size, outputOffset, kind, reference})=>({sourceOffset:offset, outputOffset, bytes:size, kind, reference})) };
+        return { blob: new Blob([...memoryBlobParts(this.bytes.slice(0, this.length)), ...parts], { type: 'application/octet-stream' }), ranges: this.ranges.map(({offset, size, outputOffset, kind, reference})=>({sourceOffset:offset, outputOffset, bytes:size, kind, reference})) };
     }
 }

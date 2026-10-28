@@ -138,3 +138,15 @@ Object URL 後的 RSS 697,057,280 → 下載完成後 700,764,160 bytes，該相
 Worker 按 64 KiB 頁面填入 prefix，最大實際單次讀取仍為 65,536 bytes。為容納這個結構區，控制程式的累計讀取預算由原簡單案例的 1 MiB 改為應用既有的 16 MiB realm 預算，預期實際為 8,268,604 bytes；應用本身的任何讀取／RSS 門檻都沒有改動。控制報告版本為 4，另記錄 `readPolicy`；跨接點讀取跟隨實際 prefix 邊界。舊 64 KiB helper 的讀取範圍仍有回歸檢查，不開放任意大小配置。
 
 22 項相關 Node 檢查通過，新增大 prefix 測試先在舊版以 65,536 而非 8,268,412 bytes 失敗，再檢查分頁讀取、完整虛擬來源大小與非法 prefix 拒絕。包裝時機、原生下載及完整 SHA、500ms 取樣、60 秒自然撤銷與所有權清理保留。真實 Firefox 實測尚待完成，不能以這些 Node 檢查當成記憶體問題修正。
+
+### 大 prefix 重現 Object URL 相位的配置
+
+[40730432530](https://github.com/koviankevin/tflite-explorer/actions/runs/40730432530) 的第四版控制已完成，來源 `17bb484ce1aa563852b1a814b2d47d9e329e5836`。[原始 ZIP](results/blob-header-firefox-2026-10-29.zip)與 [provider digest／CRC／來源、完整 SHA 及分類核對](results/blob-header-firefox-review-2026-10-29.json)保留。原實體檔的全部 1,349,965,216 bytes SHA 仍相同，累計讀取 8,268,604 bytes、最大單次 65,536 bytes，Worker／自然 URL／owned 程序清理通過。
+
+Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢查點仍約 680～711 MiB；建立 Object URL 後升至 2,068,127,744 bytes，匿名記憶體約 1.51 GiB。下載相位及整段控制最高 2,733,449,216 bytes。相較於前述 64 KiB prefix 的低峰，這重現了大型記憶體 prefix／File 混合 Blob 在 Object URL 相位的配置增量，沒有藉由 JavaScript 讀完整權重。
+
+### 分段記憶體 Blob 的修正候選
+
+`FlatbufferWriter` 改由共用 `memoryBlobParts` 將超過 64 KiB 的序列化結構區包成各自獨立的 64 KiB Blob，再與原本來源 File slices 合成；小結構區沿用原方式。序列化 table、offset、range 對照及權重切片都保持原樣，沒有磁碟暫存、強制 GC、提早撤銷 URL 或提高上限。
+
+第五版控制在相同大 prefix／相同 bytes 下使用這個實際修正 helper，記錄 prefix parts 數量及最大大小，供 Firefox 原生測量。真實 writer 回歸先在舊版因多 MiB 記憶體 part 失敗，修正後原 fixture header SHA `dd3531a96a0148db3a3a02fd94524dbb6f96b4123630b36a2b43ef172c25d826` 保持相同。59 項相關 Node 檢查通過，涵蓋分段 byte 相等、writer、custom options、64-bit 外部 offset、量化、報告串流對照、權重、草稿與匯出重開；這還不是原生記憶體或正式部署成功，preview.22 須通過後續控制、實際八輪及受控發布。
