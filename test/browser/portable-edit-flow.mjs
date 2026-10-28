@@ -1,3 +1,4 @@
+import {chooseEditDraft} from './edit-draft-chooser.mjs';
 // Native chooser/download and real pointer controls, hosted Linux only.
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -17,7 +18,7 @@ export async function portableEditFlow({page,read,base,directory,check,allowMlir
  async function choose(file,button='#open-model'){const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);if(button!=='#open-edit-draft')report.modelWorkers++;await ready();}
  async function download(button,extension){const event=page.waitForEvent('download');await page.locator(button).click();const d=await event;assert.equal(await d.failure(),null);const filename=path.join(directory,`portable-${++serial}.${extension}`);await d.saveAs(filename);await d.delete();return filename;}
  async function open(){await page.locator('#edit-mode').click();await until(()=>document.body.classList.contains('editing-model')&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');}
- async function importDraft(file){const event=page.waitForEvent('filechooser');await page.locator('#open-edit-draft').click();await(await event).setFiles(file);await until(()=>!document.querySelector('#choose-edit-draft-model').hidden);}
+ async function importDraft(file){await chooseEditDraft(page,file);await until(()=>!document.querySelector('#choose-edit-draft-model').hidden);}
  async function fresh(){await page.goto('about:blank');await page.goto(base,{waitUntil:'domcontentloaded'});await until(()=>typeof document.querySelector('#open-edit-draft').onclick==='function'&&typeof document.querySelector('#autosave-enabled').onchange==='function'&&!document.querySelector('#autosave-enabled').disabled);}
  const payload=(bytes,b)=>bytes.subarray(Number(b.offset),Number(b.offset+b.size));
  const dialog=d=>d.accept();page.on('dialog',dialog);

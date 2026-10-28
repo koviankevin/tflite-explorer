@@ -14,7 +14,8 @@ import {writePhysicalFixture,PHYSICAL_OPTIONS,PHYSICAL_WEIGHT_BYTES,PHYSICAL_SOU
 import {parseModel} from '../../src/model-engine.js';
 import {exportPatterns,reusablePattern,parsePatternFile} from '../../src/pattern-library.js';
 import {createStaticServer} from '../../scripts/serve.mjs';
-import {installLifecycleAudit} from './lifecycle-audit.mjs';
+import {installLifecycleAudit,installRecoveryReadAudit} from './lifecycle-audit.mjs';
+import {editFileFingerprint} from '../../src/model-edit-session.js';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
@@ -27,7 +28,7 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
     'Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.',
     'Summed /proc RSS includes Chromium descendants and can double-count shared pages; 500ms sampling can miss spikes.',
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
-    'Native read guards reject >1MiB calls or >16MiB per realm before allocation. No forced garbage collection or shortened URL timer.'
+    'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
@@ -108,6 +109,9 @@ async function verifyDownload(filename,kind,fullEdit=false){
     return {bytes:offset,sha256:whole.digest('hex'),weightSHA256,readBytes,maxRead,operators:graph.operators.length,inputs:[...graph.inputs],outputs:[...graph.outputs],weightVerified:true,optionsVerified:true};
 }
 
+async function sourceFingerprint(filename){
+    const fd=openSync(filename,'r');try{const size=fstatSync(fd).size;return await editFileFingerprint({size,slice(start,end){assert.ok(end-start<=1024**2);return {async arrayBuffer(){const bytes=new Uint8Array(end-start);assert.equal(readSync(fd,bytes,0,bytes.length,start),bytes.length);return bytes.buffer;}};}});}finally{closeSync(fd);}
+}
 async function editWholeModel(cycle,entry,hashes){
     phase=`cycle-${cycle}-edit-source`;
     await page.locator('[data-kind="layers"]').click();await page.locator('#scope').selectOption('current');await page.locator('#query').fill('#0');
@@ -119,6 +123,8 @@ async function editWholeModel(cycle,entry,hashes){
     const full=path.join(temporary,`cycle-${cycle}-full.tflite`);await download.saveAs(full);await download.delete();await waitFor(()=>!document.querySelector('#edit-open-result').disabled);
     const exportMs=Date.now()-started;event=page.waitForEvent('download');await page.locator('#edit-download-report').click();download=await event;assert.equal(await download.failure(),null);const reportFile=full+'.report.json';await download.saveAs(reportFile);await download.delete();
     const proof=JSON.parse(await readFile(reportFile,'utf8'));assert.equal(proof.provenance.mode,'model-edit');assert.equal(proof.checks.find(c=>c.id==='serialized-roundtrip').status,'passed');assert.equal(proof.modification.before.layers,21005);assert.equal(proof.modification.after.layers,21006);
+    phase=`cycle-${cycle}-edit-recovery`;await waitFor(()=>document.querySelector('#edit-recovery-status').textContent.startsWith('已保存本機編輯草稿'),90000);
+    const recovery=await readPage(()=>globalThis.__lifecycle.workers.filter(w=>w.recoveryAudit?.complete).at(-1)?.recoveryAudit);assert.equal(recovery.fingerprint,report.fixture.editFingerprint);assert.equal(recovery.bytes,report.fixture.bytes);assert.ok(recovery.maxRead<=1024**2);entry.recovery=recovery;
     const before=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(before);let deadline;
     try{const ended=Promise.race([once(before,'close'),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Original edit Worker did not close.')),5000);})]);await page.locator('#edit-open-result').click();await ended;}finally{clearTimeout(deadline);}
     await ready(21006);await page.locator('[data-kind="patterns"]').click();await match(patterns[0].name,1);await match(patterns[1].name,1);
@@ -134,7 +140,7 @@ try{
     const available=memoryLimit&&memoryLimit!=='max'?Number(memoryLimit)-Number(memoryCurrent):os.freemem();assert.ok(available>=4*1024**3,'Need 4 GiB available RAM.');assert.ok(disk.bavail*disk.bsize>=8*1024**3,'Need 8 GiB free disk.');
     report.environment={platform:os.platform(),release:os.release(),node:process.version,cpu:os.cpus()[0]?.model,cpus:os.cpus().length,totalMemory:os.totalmem(),availableMemoryBytes:available,memoryLimit,memoryCurrent,tempFreeBytes:disk.bavail*disk.bsize,imageVersion:process.env.ImageVersion||null,runId:process.env.GITHUB_RUN_ID||null,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceTree:execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),sourceDirty:Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())};assert.equal(report.environment.sourceDirty,false);
     temporary=await mkdtemp(path.join(os.tmpdir(),'model-lens-lifecycle-'));phase='physical-fixture';
-    report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));
+    report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));report.fixture.editFingerprint=await sourceFingerprint(report.fixture.file);
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
     execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
@@ -143,6 +149,7 @@ try{
     context=await browser.newContext({viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
     await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
+    await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
     browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
@@ -178,6 +185,7 @@ try{
     assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,24);
     assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,8);
     for(const entry of report.audit.workers){assert.equal(entry.error,undefined);if(/\/model-worker\.js(?:\?|$)/.test(entry.url)){assert.equal(entry.terminated,true);assert.ok(entry.audit?.bytes>0);assert.equal(entry.audit.bytes,entry.stats.bytesRead+(entry.verificationReadBytes||0));}}
+    const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,8);assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check('eight full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers');
     for(const audit of [report.audit.audit,...report.audit.workers.map(w=>w.audit).filter(Boolean)]){assert.deepEqual(audit.violations,[]);assert.ok(audit.maxRead<=policy.maxReadBytes&&audit.bytes<=policy.realmReadBytes);}
     assert.deepEqual(errors,[]);report.evaluation=evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check('eight physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits');report.status='passed';
 }catch(error){report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
