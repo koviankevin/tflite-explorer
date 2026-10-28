@@ -4,6 +4,8 @@
 
 工作流程只有手動入口、`contents: read` 權限，僅允許此 repository 的 main／Hosted Linux runner。先逐檔核對正式站 SHA／MIME 及 root，再啟動獨立瀏覽器；結束時再次核對正式 site／core 身分，並保存 driver Git tree、實際引擎版本、原始操作報告及截圖。模型只有原始公開合成 fixtures，所有非 GET 或站外請求都拒絕。沒有部署、重跑正式發布或操作個人瀏覽器。
 
+`target=production` 保留完整正式站的 build／site ID 核對；`target=candidate` 在乾淨 main 來源建立 public profile 的獨立候選，逐一核對檔案與實際 HTTP root／SHA／MIME，僅綁定 runner 的 127.0.0.1 隨機 port，沿用 `/tflite-explorer/` 子路徑執行完全相同的操作。候選的 build ID 只能來自當次完整建置，不能代入正式站 ID 或外部 URL；結束時重驗檔案及 source 未變，並關閉伺服器。報告明確分開 `candidate-core` 與 `production-site`，候選成功不代表正式部署成功。`engine` 可選 all／firefox／webkit，方便只重驗受影響的引擎。
+
 選檔、下載、點擊、拖曳及鍵盤透過瀏覽器 protocol 操作，觀察器透過 [contentScript selector](https://playwright.dev/docs/api/class-selectors#selectors-register) 的隔離環境唯讀查看共同 DOM；JSON 結果使用未插入文件的 output 傳回，不改動網站 DOM、不呼叫 app 內部 API，也不解除 Netron 對 window.eval 的停用。沿用既有 TFLite 接線／自動 tensor／Undo／Redo、草稿保存與同大小錯誤原檔拒絕、IF／WHILE／custom OP 編輯匯出，以及 MLIR 分支／匯合／迴圈 Canvas 鍵盤驗收；重新解析實際下載的檔案並比對權重、custom options、SSA／dominance 及 pattern。每個模型 Worker 必須收到 close。
 
 首次新增 workflow 的程式與來源檢查完成後，仍須實際 dispatch 並查看兩個引擎的原始結果；不能把工作流程存在、Node 測試成功或 Chromium 綠燈寫成 Firefox／WebKit 通過。實際驗收紀錄會在本頁補入，失敗亦保留。
