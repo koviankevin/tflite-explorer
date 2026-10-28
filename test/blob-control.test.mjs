@@ -39,6 +39,26 @@ test('the real export memory-parts helper bounds each large control component wh
     assert.equal(result.stats.readBytes,8268604);assert.ok(v.constructors.slice(0,127).every(p=>p.length===1&&p[0].byteLength<=65536));assert.equal(v.constructors[127].at(-1).size,PHYSICAL_SOURCE_BYTES-8268412);
 });
 
+test('Response prefix conversion consumes only bounded metadata and finishes before publishing the mixed body',async()=>{
+    const v=virtualFile(),messages=[],bodies=[],prefix=8268412,converted=Object.assign(Object.create(v.Blob.prototype),{size:prefix,type:'application/octet-stream'});
+    class Response{constructor(body){bodies.push(body);}async blob(){return converted;}}
+    const scope={...v,Response,postMessage:m=>messages.push(m)};installBlobControlWorker(scope,{prefixBytes:prefix,prefixStorage:'response-blob'});
+    const pending=scope.onmessage({data:{action:'build',file:v.file}});assert.equal(messages.length,0);await pending;
+    assert.equal(bodies.length,1);assert.equal(bodies[0].size,prefix);assert.equal(v.constructors[0][0].byteLength,prefix);assert.equal(v.constructors[1][0],converted);
+    assert.equal(v.constructors[1][1].size,PHYSICAL_SOURCE_BYTES-prefix);assert.equal(messages.at(-1).stage,'built');
+    assert.equal(messages.at(-1).stats.prefixPartCount,1);assert.equal(messages.at(-1).stats.maxPrefixPartBytes,prefix);
+    for(const action of ['readback','boundary','share'])scope.onmessage({data:{action}});
+    assert.equal(messages.at(-1).blob.size,PHYSICAL_SOURCE_BYTES);assert.equal(messages.at(-1).stats.readBytes,prefix+192);assert.equal(messages.at(-1).stats.maxRead,65536);
+});
+
+test('Response conversion failure is reported before any mixed body is shared',async()=>{
+    const v=virtualFile(),messages=[];class Response{async blob(){throw Error('prefix conversion failed');}}
+    const scope={...v,Response,postMessage:m=>messages.push(m)};installBlobControlWorker(scope,{prefixBytes:8268412,prefixStorage:'response-blob'});
+    await scope.onmessage({data:{action:'build',file:v.file}});assert.deepEqual(messages,[{stage:'error',error:'prefix conversion failed'}]);assert.equal(v.constructors.length,1);
+    for(const prefixStorage of ['arbitrary',null])assert.throws(()=>installBlobControlWorker(v,{prefixStorage}),/storage/);
+    assert.throws(()=>installBlobControlWorker(v,{prefixStorage:'response-blob'}),/Response/);
+});
+
 test('during-download wraps exactly once in the callback continuation after the native link click',async()=>{
     const v=virtualFile(),events=[],elements=new Map(['choose','file','build','readback','boundary','share','url','download','wrap','clear','state'].map(id=>[id,{id,disabled:false,textContent:'',value:'',files:[]}])) ,timers=[];let now=0;
     class MainFile extends v.File{constructor(...args){super(...args);events.push('wrap');}}
