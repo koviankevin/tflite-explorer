@@ -33,3 +33,11 @@ LiteRT 來源、精確 npm integrity、原始檔 hashes、Apache-2.0 LICENSE 與
 額外實際 CPU 測試確認：LiteRT 的預設 signature 可以指向 subgraph 1；同樣的 dtype／shape 不能證明正在檢查主 subgraph 0。因此僅接受沒有顯式 signatures，或唯一、完整且順序明確對應主 subgraph 0 的 signature；多 signatures、其他目標、部分介面、重排或重複名稱一律在讀取模型 body／啟動 WASM 前標為未能驗證。一般探索、編輯及結構匯出不受影響。後續可另外加入明確的 signature 選擇與 tensor 對應，但本版不猜測。
 
 新回歸在修正前以錯誤的 eligible=true 失敗，修正後拒絕這些歧義且不讀 body；唯一主 signature 的實際 CPU 執行仍通過。preview.19 固定版本不覆寫，修正以 preview.20 另行發布；正式部署證據待補。
+
+## Preview.19 固定發布與 preview.20 修正候選
+
+Preview.19 已以來源 `9109ad74b02feb56c813205da1ba0f3a0e700111`／build `a417b012ff88996d` 固定發布；[40703563130](https://github.com/koviankevin/tflite-explorer/actions/runs/40703563130) 的 prepare／deploy／verify_live／release 全成功，attempt 1。[獨立正式核對](results/preview19-publication-review-2026-10-28.json)確認 1,336 檔及 root／MIME、30 項原生操作、35 個模型及三個 runtime Workers 關閉、四份實際 Release 下載與原準備 bytes 一致。後續發現的 signature 對應防護以新版本修正，未覆寫此固定 tag。
+
+Preview.20 候選來源 `6894850777a03074132cc1feea6c932ef20adeba`／tree `a5719e28709067d44f24bd7cbc1f9414abb8f08c`，build `e4f6ad92496e19b0`、291 個核心檔。四關卡 [獨立 provider／digest／CRC／原始政策／相依核對](results/preview20-main-gates-2026-10-28.json)通過：core 沿用 [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)，其實際相依 fingerprint 未變；新 browser [40705658510](https://github.com/koviankevin/tflite-explorer/actions/runs/40705658510)、contract [40705665776](https://github.com/koviankevin/tflite-explorer/actions/runs/40705665776)、site [40705653002](https://github.com/koviankevin/tflite-explorer/actions/runs/40705653002)成功。
+
+[原始候選操作](results/preview20-ui-candidate-2026-10-28.json)、[核對](results/preview20-ui-candidate-2026-10-28-review.json)與 [provider ZIP](results/preview20-ui-candidate-2026-10-28.zip)保留；30 項主檢查及六種 runtime 情境通過，新增跨 subgraph signature 明確未驗證且零新 runtime Worker，其他 raw .bin／IO ZIP／取消／錯誤／custom 情境維持。36 個模型及三個 runtime Workers 全部關閉，零 pageerror。這是新版候選證據，正式 preview.20 部署尚待受控發布確認；兩小時較早版本的長測另列，不冒充本來源的長測。
