@@ -18,9 +18,11 @@ export async function mlirKeyboardFlow({page,read,base,directory,check}){
         // Firefox can move focus into browser chrome at the end of a document.
         // Use the native direction toward the target instead of assuming that
         // another forward Tab will wrap back into this page in every engine.
-        reverse=reverse||await read(s=>{const a=document.activeElement,t=document.querySelector(s);return !!(a&&a!==document.body&&t&&(a.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_PRECEDING));},selector);
+        const forceReverse=reverse;
+        const firefox=page.context().browser().browserType().name()==='firefox';
+        if(!firefox)reverse=reverse||await read(s=>{const a=document.activeElement,t=document.querySelector(s);return !!(a&&a!==document.body&&t&&(a.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_PRECEDING));},selector);
         const trail=[];
-        for(let i=0;i<400;i++){const state=await read(s=>({matched:!!document.activeElement?.matches(s),active:document.activeElement?.id||document.activeElement?.tagName,documentFocus:document.hasFocus()}),selector);if(state.matched)return;if(trail.length<32&&!trail.some(t=>t.active===state.active&&t.documentFocus===state.documentFocus))trail.push(state);await page.keyboard.press(reverse?'Shift+Tab':'Tab');report.tabPresses++;}
+        for(let i=0;i<400;i++){const state=await read(s=>{const a=document.activeElement,t=document.querySelector(s);return {matched:!!a?.matches(s),active:a?.id||a?.tagName,documentFocus:document.hasFocus(),targetBeforeActive:!!(a&&a!==document.body&&t&&(a.compareDocumentPosition(t)&Node.DOCUMENT_POSITION_PRECEDING))};},selector);if(state.matched)return;if(firefox)reverse=forceReverse||state.targetBeforeActive;if(trail.length<32&&!trail.some(t=>t.active===state.active&&t.documentFocus===state.documentFocus))trail.push({...state,reverse});await page.keyboard.press(reverse?'Shift+Tab':'Tab');report.tabPresses++;}
         report.keyboardFailure={selector,reverse,trail};throw Error('MLIR keyboard cannot reach '+selector);
     }
     async function enter(selector,reverse=false){await tabTo(selector,reverse);await page.keyboard.press('Enter');}
