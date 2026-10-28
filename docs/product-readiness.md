@@ -25,3 +25,6 @@
 其他桌面引擎已通過 Hosted Linux Firefox 142.0.1／WebKit 26.0 的正式站各十三項唯讀功能驗收，包含 TFLite 接線、草稿、IF／WHILE／custom 匯出及 MLIR SSA／Canvas／pattern，見 [preview.18 正式交付](desktop-fixes.md)。先前 recovery Worker／ResizeObserver 應用錯誤已修正，Firefox 原生鍵盤 driver 差異也已核對。這不代替其他引擎 1 GiB／程序記憶體、數小時量測或公司環境；全部早期失敗在 [桌面診斷](desktop-engines.md)保留。
 
 Preview.16 的完整大型原模型自動指紋（八輪各最多 1 MiB／次）及瀏覽器程序強制終止後恢復已通過，見 [完整恢復交付](edit-recovery.md)。後續已補上 1.25 GiB 手動 JSON 下載／原生重選恢復、取消、32px 視角及 Redo、實際整份匯出重開與權重／custom options／pattern 驗收，見 [大型手動草稿驗收](large-edit-draft.md)。這不代替公司實模、其他引擎、OS 斷電、固定實體硬體 SLA 或數小時負載。
+
+
+Firefox／WebKit 另加入 [實體 1.25 GiB 八輪程序 RSS 驗收](desktop-physical.md)，同一瀏覽器實際完整改模、子模型匯出重開、權重／options 比對與原生 Worker close；初次結果仍待執行，不由判定器單元測試或既有小模型功能流程推論大檔合格。共用 runner 的原八輪已完成來源相依及 provider 核對，見 [實際證據](lifecycle-soak.md#共用-runner-的原八輪模式)；兩小時長測另計。

@@ -24,3 +24,8 @@
 新增門檻的 Node 正負例檢查短時、空等、跳時、低頻取樣、晚期損壞匯出／未釋放 Worker、放寬 policy、跨批次累積，以及八輪能放過的緩慢長期 RSS 成長。這些證明判定器可拒絕不合格證據，不代表真實瀏覽器已通過。初次實際結果將另記錄，保留失敗而不改動原門檻。
 
 此報告不能代替公司實模／私有 runtime、MLIR 數小時負載、Firefox／WebKit 的 >1 GiB 程序記憶體、固定實體硬體 SLA、OS 斷電或無限期不洩漏。正式網站與固定 Release 仍是已驗收的 preview.18；本輪只有測試與文件，未更新應用程式。
+
+
+## 共用 runner 的原八輪模式
+
+[40664660763](https://github.com/koviankevin/tflite-explorer/actions/runs/40664660763) 已成功；來源 `da70c88a9be134ea035bc728bbc56604420aa5a6`、tree `bf6c80ffcaed98926590625046e014780ed58f66`。原始 [八輪報告](results/soak-shared-eight-cycles-2026-10-28.json)與 [provider／來源相依核對](results/soak-shared-eight-review-2026-10-28.json)通過；24 個模型 Worker、八次完整原模型指紋、權重／custom options、完整模型及子模型重開皆核對。RSS drift 8,658,944 bytes、斜率 1,422,833.37 bytes／輪、取樣峰值 1,010,462,720 bytes，符合原門檻。這確認新增 soak 分支沒有破壞原模式；兩小時 run `40664650666` 仍在執行，不能把八輪成功當成兩小時成功。
