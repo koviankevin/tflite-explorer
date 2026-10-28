@@ -24,7 +24,7 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
         // when the old control was removed and the user has not moved elsewhere.
         if(keyboard&&pending?.then)pending.then(next=>{if(destroyed&&!focused.isConnected&&doc.activeElement===doc.body&&next?.isConnected&&target.contains(next))next.focus({preventScroll:true});}).catch(()=>{});
     };
-    const label=n=>`${n.diagramKind==='pattern'?'展開 pattern':picking&&n.diagramKind==='operator'?'選取 layer':'查看節點'}：${Number.isInteger(n.sourceGraph)?`block/subgraph ${n.sourceGraph} · `:''}${Number.isInteger(n.sourceNode)?`#${n.sourceNode} · `:''}${n.type?.name || n.name || n.identifier} · ${n.identifier}`;
+    const label=n=>`${n.diagramKind==='pattern'?'展開 pattern':picking&&n.diagramKind==='operator'?'選取 layer':'查看節點'}：${Number.isInteger(n.sourceGraph)?`block/subgraph ${n.sourceGraph} · `:''}${Number.isInteger(n.sourceNode)?`#${n.sourceNode} · `:''}${(n.diagramKind==='pattern'?n.name:n.type?.name) || n.name || n.identifier} · ${n.identifier}`;
     const draw=()=>{frame=0;if(destroyed)return;const ratio=Math.min(devicePixelRatio || 1,2),width=target.clientWidth,height=target.clientHeight;
         if(width!==camera.width || height!==camera.height){cancel();camera.pan((width-camera.width)/2,(height-camera.height)/2);camera.width=width;camera.height=height;}
         if(canvas.width!==Math.round(width*ratio) || canvas.height!==Math.round(height*ratio)){canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);}
