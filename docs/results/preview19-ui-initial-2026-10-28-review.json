@@ -1,0 +1,16 @@
+{
+  "authentication": "passed",
+  "runId": 40697650768,
+  "source": "4467b516c3daadd1425d613e84f78604746d5e53",
+  "build": "81bc1725f74c2d5a",
+  "status": "failed",
+  "artifactId": 12821155004,
+  "artifactDigest": "sha256:757fc7b382031db6fb33114a8ca2216e55110086045cb77e1ff0e10dd4dc4d94",
+  "zipBytes": 220443,
+  "rawBytes": 243350,
+  "rawSHA256": "3d755a61ae9e1d3ba4f80e1ae37abcb233cd787d6baa095611638ac02de2f1c7",
+  "checks": 29,
+  "errors": [],
+  "runtime": null,
+  "error": "Error: Runtime DOM timeout: s=>document.querySelector('#edit-runtime-result').dataset.status===s&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/tflite-runtime-flow.mjs:17:120)\n    at async finished (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/tflite-runtime-flow.mjs:22:37)\n    at async tfliteRuntimeFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/tflite-runtime-flow.mjs:31:94)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:102:459"
+}
