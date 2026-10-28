@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {runInNewContext} from 'node:vm';
 import {installBlobControlWorker,installBlobControlPage,blobControlSettings,BLOB_CONTROL_PREFIX_BYTES} from './browser/blob-control-program.mjs';
 import {PHYSICAL_SOURCE_BYTES} from './physical-tflite-fixture.mjs';
+import {memoryBlobParts} from '../src/blob-memory-parts.js';
 
 function virtualFile(){
     const reads=[],constructors=[];
@@ -29,6 +30,13 @@ test('export-sized prefix is copied in 64 KiB pages and preserves the full virtu
 
 test('prefix choice rejects arbitrary sizes before any input read or allocation',()=>{
     for(const prefixBytes of [0,65537,16*1024**2,NaN]){const v=virtualFile();assert.throws(()=>installBlobControlWorker(v,{prefixBytes}),/prefix/);assert.deepEqual(v.reads,[]);assert.deepEqual(v.constructors,[]);}
+});
+
+test('the real export memory-parts helper bounds each large control component while preserving source slices',()=>{
+    const v=virtualFile(),messages=[],scope={...v,postMessage:m=>messages.push(m)};installBlobControlWorker(scope,{prefixBytes:8268412,memoryParts:memoryBlobParts});
+    scope.onmessage({data:{action:'build',file:v.file}});scope.onmessage({data:{action:'readback'}});scope.onmessage({data:{action:'boundary'}});scope.onmessage({data:{action:'share'}});
+    const result=messages.at(-1);assert.equal(result.stage,'shared');assert.equal(result.blob.size,PHYSICAL_SOURCE_BYTES);assert.equal(result.stats.prefixPartCount,127);assert.equal(result.stats.maxPrefixPartBytes,65536);
+    assert.equal(result.stats.readBytes,8268604);assert.ok(v.constructors.slice(0,127).every(p=>p.length===1&&p[0].byteLength<=65536));assert.equal(v.constructors[127].at(-1).size,PHYSICAL_SOURCE_BYTES-8268412);
 });
 
 test('during-download wraps exactly once in the callback continuation after the native link click',async()=>{
@@ -76,7 +84,7 @@ test('real control worker preserves a virtual >1 GiB range and bounds the prefix
     scope.onmessage({data:{action:'build',file:v.file}});scope.onmessage({data:{action:'readback'}});scope.onmessage({data:{action:'boundary'}});scope.onmessage({data:{action:'share'}});
     assert.deepEqual(messages.map(m=>m.stage),['built','readback','boundary','shared']);assert.equal(messages[3].blob.size,PHYSICAL_SOURCE_BYTES);assert.deepEqual(v.reads,[[0,65536],[0,64],[PHYSICAL_SOURCE_BYTES-64,PHYSICAL_SOURCE_BYTES],[65504,65568]]);
     assert.equal(v.constructors[0][0].byteLength,65536);assert.equal(v.constructors[0][1].size,PHYSICAL_SOURCE_BYTES-65536);assert.equal(v.constructors[1][0],messages[3].blob);
-    assert.deepEqual(messages[3].stats,{inputBytes:PHYSICAL_SOURCE_BYTES,blobBytes:PHYSICAL_SOURCE_BYTES,readBytes:65728,maxRead:65536,builds:1,readbacks:1,boundaryReads:1,shares:1});
+    assert.deepEqual(messages[3].stats,{inputBytes:PHYSICAL_SOURCE_BYTES,blobBytes:PHYSICAL_SOURCE_BYTES,readBytes:65728,maxRead:65536,builds:1,readbacks:1,boundaryReads:1,shares:1,prefixPartCount:1,maxPrefixPartBytes:65536});
     assert.equal(messages.slice(0,3).some(m=>Object.hasOwn(m,'blob')),false);
 });
 

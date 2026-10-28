@@ -1,9 +1,9 @@
 // Standalone diagnostic harness, never shipped in the application. Drive each
 // API transition by a visible button; export only scalar status, not file data.
 export const BLOB_CONTROL_PREFIX_BYTES=8268412;
-export function installBlobControlWorker(scope,{prefixBytes=65536}={}){
+export function installBlobControlWorker(scope,{prefixBytes=65536,memoryParts=null}={}){
     if(![65536,8268412].includes(prefixBytes))throw Error('Unknown control prefix size.');
-    let file,blob,candidate;const stats={inputBytes:0,blobBytes:0,readBytes:0,maxRead:0,builds:0,readbacks:0,boundaryReads:0,shares:0};
+    let file,blob,candidate;const stats={inputBytes:0,blobBytes:0,readBytes:0,maxRead:0,builds:0,readbacks:0,boundaryReads:0,shares:0,prefixPartCount:0,maxPrefixPartBytes:0};
     const read=(source,start,end)=>{
         const length=end-start;if(length<0||length>65536||stats.readBytes+length>16*1024**2)throw Error('Bounded control read exceeded.');
         stats.readBytes+=length;stats.maxRead=Math.max(stats.maxRead,length);return new scope.FileReaderSync().readAsArrayBuffer(source.slice(start,end));
@@ -13,7 +13,8 @@ export function installBlobControlWorker(scope,{prefixBytes=65536}={}){
             if(file||blob||!data.file||!Number.isSafeInteger(data.file.size)||data.file.size<=1024**3||typeof data.file.slice!=='function')throw Error('Expected one physical large source.');
             file=data.file;stats.inputBytes=file.size;const prefix=new Uint8Array(prefixBytes);
             for(let offset=0;offset<prefixBytes;offset+=65536)prefix.set(new Uint8Array(read(file,offset,Math.min(prefixBytes,offset+65536))),offset);
-            blob=new scope.Blob([prefix,file.slice(prefixBytes)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
+            const prefixParts=memoryParts?memoryParts(prefix,scope.Blob):[prefix];stats.prefixPartCount=prefixParts.length;stats.maxPrefixPartBytes=Math.max(...prefixParts.map(p=>p.byteLength??p.size));
+            blob=new scope.Blob([...prefixParts,file.slice(prefixBytes)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
         }else if(data.action==='readback'){
             if(!blob||candidate)throw Error('Unexpected readback order.');candidate=new scope.File([blob],'control.tflite');
             read(candidate,0,64);read(candidate,candidate.size-64,candidate.size);stats.readbacks++;scope.postMessage({stage:'readback',stats:{...stats}});
