@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "source": "950d83f59290e3f89685763d63e00bb63fd8b39c",
+  "retainedWebKitSource": "fb55d8f201550237e0997b31add12e3b376e5cc0",
+  "unchangedPaths": [
+    "src",
+    "vendor",
+    "package.json",
+    "package-lock.json",
+    "scripts/build.mjs",
+    "scripts/verify-export.mjs",
+    "docs/export-reports.md"
+  ],
+  "differencesInThosePaths": [],
+  "changedPaths": [
+    "test/browser/mlir-keyboard-flow.mjs"
+  ],
+  "review": "Only Firefox changes native Tab direction per step; Chromium/WebKit retain the previously verified initial-direction and key sequence. Build metadata identities differ and are not used as proof of identical runtime code."
+}

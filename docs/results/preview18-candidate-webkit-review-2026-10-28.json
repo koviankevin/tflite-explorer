@@ -1,0 +1,100 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "engine": "webkit",
+  "runId": 40656481041,
+  "attempt": 1,
+  "source": {
+    "commit": "fb55d8f201550237e0997b31add12e3b376e5cc0",
+    "tree": "ea755921f4ef1fdfc7b62174a8b6c4682880eab6",
+    "committedAt": "2026-10-28T16:23:40+08:00",
+    "dirty": false
+  },
+  "jobId": 122708634276,
+  "artifactId": 12802027349,
+  "providerDigest": "sha256:db00a6a7fe730e937f3ed3be5f52bbd87bcd4027ebe34b4ec403ddd672c2e0f3",
+  "reportSHA256": "40265a56f1aa4c4a26c01128e3db103ecded8905d4fdbb46b54ca039914ca594",
+  "browserVersion": "26.0",
+  "target": "candidate",
+  "build": "c03a8de0c6823abf",
+  "siteId": null,
+  "coreSource": {
+    "commit": "fb55d8f201550237e0997b31add12e3b376e5cc0",
+    "tree": "ea755921f4ef1fdfc7b62174a8b6c4682880eab6",
+    "committedAt": "2026-10-28T16:23:40+08:00",
+    "dirty": false
+  },
+  "staticFiles": 275,
+  "otherWorkerCloseEvents": [
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/src/edit-recovery-worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:41287/tflite-explorer/vendor/netron/worker.js?v=c03a8de0c6823abf",
+      "closed": false
+    }
+  ],
+  "checks": [
+    "public demo: local worker, 32px graph, exact layer lookup and location",
+    "actual file chooser and native pattern import/export preserve the structural query",
+    "TFLite submodel downloads and reopens with exactly one original pattern match",
+    "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+    "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+    "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+    "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+    "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+    "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+    "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+    "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+    "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+    "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once"
+  ],
+  "modelWorkers": 21,
+  "errors": [],
+  "directory": "build/qa/desktop-40656481041-fixed-both/webkit"
+}
