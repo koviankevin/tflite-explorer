@@ -1,0 +1,54 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "runId": 40651280887,
+      "attempt": 1,
+      "source": {
+        "commit": "16573363bf2e4443de62297bfb3fe368e5d8dd45",
+        "tree": "d7b878da1eb4071309cca740c00d24a5628ed51e",
+        "committedAt": "2026-10-28T15:37:20+08:00",
+        "dirty": false
+      },
+      "jobId": 122691685734,
+      "artifactId": 12799269299,
+      "providerDigest": "sha256:b0eb9e94677fb27389304471265fb4829ff64e5fc1f8efc4c08d740d2864d04b",
+      "reportSHA256": "51fed35aab0ebaf724eb2c09d4bb3fb362a6ceafcdba7df82430066cecedca65",
+      "browserVersion": "142.0.1",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location"
+      ],
+      "error": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"filechooser\"\n=========================== logs ===========================\nwaiting for event \"filechooser\"\n============================================================\n    at choose (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:50:72)\n    at /home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:57:11",
+      "errors": [],
+      "directory": "build/qa/desktop-40651280887-native-third/firefox"
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "runId": 40651280887,
+      "attempt": 1,
+      "source": {
+        "commit": "16573363bf2e4443de62297bfb3fe368e5d8dd45",
+        "tree": "d7b878da1eb4071309cca740c00d24a5628ed51e",
+        "committedAt": "2026-10-28T15:37:20+08:00",
+        "dirty": false
+      },
+      "jobId": 122691685575,
+      "artifactId": 12799044667,
+      "providerDigest": "sha256:72f5c9a77dbdc0e362b4dda4f3a74d8deec1469c59bb9ca4968f279e98ee04ca",
+      "reportSHA256": "7547e07dc548a623d38e9058cf121d8de0c1b047dcb6893901cac562f615a5a9",
+      "browserVersion": "26.0",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location"
+      ],
+      "error": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"filechooser\"\n=========================== logs ===========================\nwaiting for event \"filechooser\"\n============================================================\n    at choose (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:50:72)\n    at /home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:57:11",
+      "errors": [],
+      "directory": "build/qa/desktop-40651280887-native-third/webkit"
+    }
+  ]
+}
