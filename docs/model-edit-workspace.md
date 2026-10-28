@@ -1,20 +1,30 @@
 # TFLite 模型編輯工作區
 
-## Preview.15 變更（部署驗收中）
+## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 
-- 已儲存 pattern 增加刪除／復原；刪除不改目前查詢，IndexedDB 交易核對所選版本，舊分頁的儲存不得復活已刪項目；同名衝突的復原保留雙方內容。
+- 已儲存 pattern 增加刪除／復原；刪除不改目前查詢，IndexedDB 交易核對所選版本。Preview.15 的分頁以過期狀態儲存已刪項目時會提示另存新名稱；同名衝突的復原保留雙方內容。
 - 實際模型僅保留頂端「編輯模型」入口；進階 OP 參數位於編輯工作區，依工作區選取的原始 OP 開啟，不沿用探索側欄的舊選取。
 - 模型與匯出結果各開本機模型分頁。背景只保留不可變 File、有限工作階段與編輯命令；切回重新解析、驗證探索工作階段並重建原始編輯範圍／replay history。內部切換不重新計算整個檔案的權重指紋，依同一個 File 物件繫結；外部草稿匯入仍核對完整指紋。
 - 分頁切換保留選取、視角與編輯 Undo／Redo；× 關閉個別模型，「關閉全部」釋放全部來源參照。未匯出草稿的提醒含背景分頁；取消載入恢復原模型。網站關閉後需重新選檔，以已下載的工作階段／編輯草稿接續，並不保存模型本體。
 
 本次 Node 選測與 PR 必要檢查已通過。主分支原生驗收 [40624838165](https://github.com/koviankevin/tflite-explorer/actions/runs/40624838165) 的 [原始報告](results/preview15-main-ui-2026-10-28.json)與 [provider／來源核對](results/preview15-main-ui-review-2026-10-28.json)成功：22 項操作、主 context 27 個模型 Worker 全部關閉；獨立分頁 context 的六個模型 Worker 也全部關閉。切換保留原模型選取、編輯視角、接線、Undo／Redo、子模型獨立查詢；背景草稿關閉提醒及單一啟用 Worker 通過。刪除／復原含跨分頁同名衝突、最後一項刪除後重載與無復活。14 吋驗收使用 1366×640／1280×640，32px 名稱無溢出，編輯區高度 497px、圖區約 257.5px。依使用者要求，本次不跑手機版面；[筆電 pattern 清單畫面](results/preview15-main-laptop-patterns-2026-10-28.png)是此次新截圖。
 
-發布關卡選定 core 40503475445（86 份相依 fingerprint 相同、沿用）、browser 40624831679（實體八輪執行中）、contract 40624834672（76 項通過）、site 40624838165（六種隔離切換與原生操作通過）。正式部署仍待實體關卡與固定來源 prepare；上述成功不代表已發布。
+四項 main 關卡的 [完整來源／provider 核對](results/preview15-gates-review-2026-10-28.json)均通過。Core 40503475445 沿用 86 檔相依 fingerprint；browser [40624831679](https://github.com/koviankevin/tflite-explorer/actions/runs/40624831679) 的 [實體原始報告](results/preview15-main-browser-2026-10-28.json)與 [獨立核對](results/preview15-main-browser-review-2026-10-28.json)通過；contract 40624834672 的 76 項檢查與 site 40624838165 的六種隔離切換亦通過。實體 1.25 GiB／21,005 OP 八輪含兩輪暖機，24 個模型 Worker 終止；暖機後 RSS drift 3,461,120 bytes、斜率 690000.46 bytes／輪、取樣峰值 928,186,368 bytes。完整修改輸出 21,006 OP，每輪 SHA-256 `76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045` 相同；七段共 1,342,177,328 bytes 權重／custom options 一致。
+
+- [正式網站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.15)，build `dbf8955ac378a73a`。固定來源 `b6244017f46ef3dbd346b316e792a15f31609093`、tree `16fde92080149008af3c0a473d4a8ee29f16a6aa`；交付文件後續提交不改寫已發布產物。
+- [準備 40626254233](https://github.com/koviankevin/tflite-explorer/actions/runs/40626254233)與 [獨立審查](results/preview15-prepared-review-2026-10-28.json)通過後，以精確 build／site ID 執行 [發布 40626567627](https://github.com/koviankevin/tflite-explorer/actions/runs/40626567627)。prepare／deploy／verify_live／release 全成功。
+- [正式 HTTP](results/preview15-live-http-2026-10-28.json)驗證全部 1,293 檔 SHA／MIME；site ID `e23b83f454c730b7578a46f6fe6aa36996dbb3e1b47fad6f7766ac6cd5ae4dba`、manifest SHA-256 `73beaf36ff144a47e52803a3a3a45f0d6d74b4f89a96763138b1cc046e5c34f1`、root SHA-256 `418fbfffe1379ef22b42903881f1dc97b1f0c973a6109aa1f64f9dc134c679b4`。保留永久 preview.7 legacy root，另外保留 preview.14／preview.13。
+- [正式原生報告](results/preview15-live-ui-2026-10-28.json)22 項成功，27 個主 context 模型 Worker 及六個模型分頁 context 模型 Worker 全關閉。含原模型／小模型來回切換、原始選取／編輯接線／視角／Undo／Redo 保留、子模型獨立搜尋、背景未匯出草稿提醒、單一啟用 Worker；pattern 刪除／復原、同名衝突副本、最後一項重載無復活亦成功。既有分支／迴圈／custom、草稿 full-file 指紋正反例、TFLite／MLIR 局部匯出重開和 pattern 搜尋通過；實際模型編輯仍僅 TFLite。
+- 本次依使用者要求只驗收筆電（1366×640／1280×640）。32px 編輯工作區 497px、可見圖區約 257.5px，名稱無溢出；[正式 pattern 清單 PNG](results/preview15-live-laptop-patterns-2026-10-28.png) SHA-256 `4be7d1cf3f1e6ac8a180f442b07b55f4af5597ee983c44f8cd9863f565fcd019`。未將歷史手機驗收算入本次結果。
+- [最終獨立交付審查](results/preview15-publication-review-2026-10-28.json)通過：四份實際 Release 下載與原準備包 bytes／SHA 一致；`model-lens-public-0.2.0-preview.15-dbf8955ac378a73a.zip` 為 29,684,708 bytes／267 核心檔案，SHA-256 `1c55c2e03dec2255a951aa5f12c0f1f2782992095d06d904abb5d059788f987e`。Deployment `7376340302`／job `122613002023`／attempt 1 與固定來源、整站及獨立 root 相符。
+
+分頁只在目前網站記憶體內保留；關站前仍須下載探索工作階段／編輯草稿。背景分頁保留原始本機 File 參照，切回需要重新解析；關閉分頁才釋放該參照。上述有限八輪與 Hosted Chromium 驗收不代表公司 runtime／推論、其他引擎、數小時使用或 1 GiB 草稿完整 fingerprint 效能已通過；整體商品等級目標維持進行中。
+
 
 目前實際模型編輯僅支援 TFLite；MLIR 保留探索、搜尋、pattern 編輯及局部匯出。下方 preview.12／preview.13 的 MLIR 實際編輯屬歷史驗收，從 preview.14 起網站不再提供，舊 MLIR 編輯草稿會明確拒絕，不會套用。
 
 
-同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再進入「編輯工作區」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
+同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再按頂端「編輯模型」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
 
 滑鼠拖曳空白處可平移，滾輪以游標位置為中心縮放；Alt＋拖曳或中鍵可從 OP 上平移，保留選取與草稿。點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，型別／shape／量化參考原始 tensor，沒有自動 shape inference。CUSTOM 的 code／options 請從現有 custom OP 複製。
 
@@ -124,7 +134,7 @@
 
 ## 已發布 preview.14
 
-- [正式網站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.14)，build `d182aeed5d8f2901`。實際編輯僅 TFLite；MLIR 保留探索、搜尋、pattern 及局部匯出。上方「編輯模型」與圖上的「編輯工作區」目前都會進入同一工作區，後者是快捷入口。
+- [正式網站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.14)，build `d182aeed5d8f2901`。實際編輯僅 TFLite；MLIR 保留探索、搜尋、pattern 及局部匯出。當時上方「編輯模型」與圖上的「編輯工作區」都會進入同一工作區；preview.15 已整併入口。
 - 固定來源 `5fc7d8e9aaef3e5652fdd3df172ec799ca1aa6f2`、tree `ada971b66cf7b380e2aab73a1927c57d82ceb015`；交付後只有說明文件改動，不改寫已發布產物。
 - [準備 40616526933](https://github.com/koviankevin/tflite-explorer/actions/runs/40616526933)及 [獨立核對](results/preview14-prepared-review-2026-10-28.json)成功後，以精確 build／site ID 執行 [發布 40616867709](https://github.com/koviankevin/tflite-explorer/actions/runs/40616867709)。prepare／deploy／verify_live／release 全部成功。
 - [正式 HTTP 核對](results/preview14-live-http-2026-10-28.json)涵蓋全部 1,286 檔 SHA／MIME。Site ID `345e8ce8088349f36ed2da4fd106081ee132c19831b30b8dcda2360fadfbc10c`、manifest SHA-256 `72255dcd281b51d14629d13d12eec13f002db8c2dc482e36b3817a82edd1d03d`；保留永久 preview.7 legacy root，另保留 preview.13／preview.12。

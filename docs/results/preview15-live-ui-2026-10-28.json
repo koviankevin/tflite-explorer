@@ -1,0 +1,663 @@
+{
+  "format": "model-lens-production-smoke",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-28T03:27:18.112Z",
+  "driverSourceCommit": "b6244017f46ef3dbd346b316e792a15f31609093",
+  "expectedBuild": "dbf8955ac378a73a",
+  "checks": [
+    "version dialog works during delayed graph initialization at the repository subpath",
+    "public demo, 32px graph, exact layer search and location",
+    "native model chooser and native pattern JSON import/export",
+    "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+    "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+    "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+    "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+    "keyboard native pattern import, saved selection, search and exact JSON export",
+    "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+    "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+    "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+    "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+    "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+    "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+    "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+    "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+    "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+    "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+    "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+    "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+    "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers"
+  ],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    },
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+      "closed": true
+    }
+  ],
+  "target": "public-production",
+  "siteRelease": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.15",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "b6244017f46ef3dbd346b316e792a15f31609093",
+      "tree": "16fde92080149008af3c0a473d4a8ee29f16a6aa",
+      "committedAt": "2026-10-28T11:11:27+08:00",
+      "dirty": false
+    },
+    "buildId": "dbf8955ac378a73a"
+  },
+  "siteId": "e23b83f454c730b7578a46f6fe6aa36996dbb3e1b47fad6f7766ac6cd5ae4dba",
+  "coreBasePath": "versions/dbf8955ac378a73a/",
+  "chromium": "141.0.7390.37",
+  "keyboardRequired": true,
+  "keyboardAudit": false,
+  "selectionToolsRequired": true,
+  "keyboard": {
+    "tabPresses": 752,
+    "modelWorkers": 3
+  },
+  "mlirSelection": {
+    "cases": [
+      {
+        "name": "branch-join-custom",
+        "originalLayers": 7,
+        "operators": 7,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 1280,
+            "height": 640,
+            "viewport": 1280,
+            "editor": 311,
+            "inner": 311
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      },
+      {
+        "name": "loop-custom",
+        "originalLayers": 4,
+        "operators": 4,
+        "layouts": [
+          {
+            "width": 1366,
+            "height": 640,
+            "viewport": 1366,
+            "editor": 311,
+            "inner": 311
+          },
+          {
+            "width": 1280,
+            "height": 640,
+            "viewport": 1280,
+            "editor": 311,
+            "inner": 311
+          }
+        ],
+        "negativeMatches": 0,
+        "restoredMatches": 1,
+        "exportedSSA": "passed",
+        "reopenedMatches": 1
+      }
+    ],
+    "modelWorkers": 4,
+    "editorBounds": {
+      "nodes": 256,
+      "edges": 500,
+      "first": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "255",
+        "page": "上一頁下一頁第 1／21 頁 · 245 條連線"
+      },
+      "second": {
+        "rows": 12,
+        "options": 3517,
+        "elements": 4682,
+        "first": "267",
+        "page": "上一頁下一頁第 2／21 頁 · 245 條連線"
+      },
+      "last": {
+        "rows": 6,
+        "options": 1777,
+        "elements": 2864,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 246 條連線"
+      },
+      "removed": {
+        "rows": 5,
+        "options": 1487,
+        "elements": 2561,
+        "first": "495",
+        "page": "上一頁下一頁第 21／21 頁 · 245 條連線"
+      }
+    }
+  },
+  "modelEditing": {
+    "cases": [
+      {
+        "format": "tflite",
+        "added": 1,
+        "removed": 1,
+        "parameter": 3,
+        "weights": "identical",
+        "customOptions": "identical",
+        "invalidRewire": "rejected",
+        "danglingRemoval": "rejected",
+        "cancelledCandidate": "discarded",
+        "newBoundary": [
+          1,
+          2,
+          7,
+          8
+        ]
+      }
+    ],
+    "modelWorkers": 4,
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 283,
+        "right": 1083,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      },
+      {
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "left": 240,
+        "right": 1040,
+        "top": 12,
+        "bottom": 628,
+        "scroll": 798,
+        "client": 798
+      }
+    ],
+    "multiSelection": [],
+    "tfliteParserRequests": [],
+    "receipts": [
+      {
+        "output": "model-edit-1.tflite",
+        "sha256": "8d87438c027745516221fdfddb97a5f884b5a2406025af3215e3ff4d4d31cc29",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-2.tflite",
+        "sha256": "caf3b06970e0f0059c157ba6e672ea96f8a3f85d1fc501f078fa045b023313da",
+        "byteRanges": 4,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      },
+      {
+        "output": "model-edit-3.tflite",
+        "sha256": "8e315ac82b6f8d61bf42e7a3e08f951e7729c2cea36a5f162b996c7828456f8d",
+        "byteRanges": 3,
+        "byteStatus": "passed",
+        "nativeCompiler": "not-run"
+      }
+    ],
+    "workspaceEntry": {
+      "headerOnly": true,
+      "advancedInsideWorkspace": true
+    }
+  },
+  "editWorkspace": {
+    "cases": [
+      {
+        "format": "tflite",
+        "nativeClick": true,
+        "nativeDrag": true,
+        "autoOutput": 10,
+        "undoRedo": true,
+        "draftSurvivesModeSwitch": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "pattern": 1
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 113,
+        "bottom": 610,
+        "headerBottom": 113,
+        "rootHeight": 497,
+        "graphVisibleHeight": 257.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "left": 0,
+        "right": 1280,
+        "top": 113,
+        "bottom": 610,
+        "headerBottom": 113,
+        "rootHeight": 497,
+        "graphVisibleHeight": 257.5,
+        "overflowNames": 0
+      }
+    ],
+    "receipts": [
+      {
+        "output": "workspace-result-1.tflite",
+        "sha256": "b77084f0c33da9f7157cc4c7fbc5b728448c46e826719f84e45c78c1939e9ed7",
+        "byteRanges": 4,
+        "byteStatus": "passed"
+      }
+    ],
+    "modelWorkers": 2
+  },
+  "portableEdit": {
+    "cases": [
+      {
+        "format": "tflite",
+        "scope": 3,
+        "clone": 1,
+        "catalog": "MUL",
+        "randomSeed": 123,
+        "wrongOriginalRejected": true,
+        "redo": true,
+        "view": true,
+        "mousePan": true,
+        "wheelZoom": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 4
+      }
+    ],
+    "modelWorkers": 4
+  },
+  "tfliteEditingOnlyRequired": true,
+  "tfliteControlEdit": {
+    "cases": [
+      {
+        "format": "tflite",
+        "graph": 0,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      },
+      {
+        "format": "tflite",
+        "graph": 4,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      }
+    ],
+    "modelWorkers": 7,
+    "layouts": [
+      {
+        "name": "main-if-while-custom",
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "rootHeight": 497,
+        "visible": 257.5,
+        "overflow": 0
+      },
+      {
+        "name": "while-body-custom",
+        "width": 1280,
+        "height": 640,
+        "documentWidth": 1280,
+        "rootHeight": 497,
+        "visible": 257.5,
+        "overflow": 0
+      }
+    ],
+    "receipts": [
+      {
+        "graph": 0,
+        "outputSHA256": "ad44c4017f0a444952846223f91219720e980f15bbb88bf86347800a07020472",
+        "byteStatus": "passed",
+        "ranges": 7
+      },
+      {
+        "graph": 4,
+        "outputSHA256": "f49c84e0aed572ca994b20045cea97f25ee64361c4ea936cdd9b086fda42bcf0",
+        "byteStatus": "passed",
+        "ranges": 7
+      }
+    ],
+    "mlir": {
+      "editingHidden": true,
+      "legacyDraftRejected": true,
+      "searchPreserved": true
+    }
+  },
+  "consolidatedEditorRequired": true,
+  "patternDelete": {
+    "cases": [
+      {
+        "selectedDelete": true,
+        "queryRetained": true,
+        "peerUpdated": true,
+        "undoConflictCopy": true,
+        "exactRestore": true,
+        "unrelatedPreserved": true
+      },
+      {
+        "lastItemDelete": true,
+        "reloadEmpty": true,
+        "noResurrection": true,
+        "laptopDelete": true,
+        "persistedUnrelated": true
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1280,
+        "documentWidth": 1280,
+        "left": 49.765625,
+        "right": 127.765625,
+        "height": 34
+      }
+    ],
+    "workers": [
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      }
+    ],
+    "errors": [],
+    "contextClosed": true
+  },
+  "modelTabs": {
+    "workers": [
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/vendor/netron/worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      },
+      {
+        "url": "https://koviankevin.github.io/tflite-explorer/versions/dbf8955ac378a73a/src/model-worker.js?v=dbf8955ac378a73a",
+        "closed": true
+      }
+    ],
+    "errors": [],
+    "layouts": [
+      {
+        "width": 1366,
+        "documentWidth": 1366,
+        "left": 18,
+        "right": 1348
+      },
+      {
+        "width": 1280,
+        "documentWidth": 1280,
+        "left": 18,
+        "right": 1262
+      }
+    ],
+    "receipt": {
+      "outputSHA256": "ae4c2e94c67328a1eb2d401abe9764f087d270785f00522327ef1ef7667b7f84",
+      "ranges": 4
+    },
+    "cases": {
+      "separateExportTab": true,
+      "originalSelection": true,
+      "editHistory": true,
+      "viewRestored": true,
+      "childQuery": true,
+      "inactiveDirtyGuard": true,
+      "oneActiveWorker": true,
+      "closeReleases": true,
+      "keyboard": true
+    },
+    "contextClosed": true
+  },
+  "finishedAt": "2026-10-28T03:28:13.165Z"
+}
