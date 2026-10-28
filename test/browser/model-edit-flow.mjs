@@ -17,7 +17,7 @@ const mlMetadata=await readFile(new URL('../../vendor/netron/mlir-metadata.json'
 const tf=bytes=>parseModel((o,n)=>bytes.subarray(o,o+n),bytes.length,tfMetadata);
 const ml=text=>parseMLIR(new TextEncoder().encode(text),{metadata:mlMetadata});
 
-export async function modelEditFlow({page,read,base,directory,check}){
+export async function modelEditFlow({page,read,base,directory,check,allowMlir=true}){
     const report={cases:[],modelWorkers:0,layouts:[],multiSelection:[],tfliteParserRequests:[],receipts:[]};let downloads=0,serial=0,tflitePhase=true,activeSourcePath,lastOutputPath;
     const parserRequest=request=>{if(tflitePhase&&/\/(?:mlir-engine|mlir)\.js(?:\?|$)/.test(request.url()))report.tfliteParserRequests.push(request.url());};page.context().on('request',parserRequest);
     const downloaded=()=>downloads++,intercept=()=>{};page.on('download',downloaded);page.on('filechooser',intercept);
@@ -77,7 +77,7 @@ export async function modelEditFlow({page,read,base,directory,check}){
         let metadataTimer;try{const before=downloads;await page.locator('#export-edited-model').click();await Promise.race([seen,new Promise((_,reject)=>{metadataTimer=setTimeout(()=>reject(Error('Candidate verification metadata request was not observed.')),10000);})]);await page.locator('#close-model-edit').click();release();await until(()=>document.querySelector('#model-edit-dialog').dataset.pendingExports==='0');assert.equal(downloads,before);await ready(4);assert.equal(await read(()=>document.querySelector('#open-export-model').hidden),true);}finally{clearTimeout(metadataTimer);release();await page.context().unroute('**/tflite-metadata.json',holdMetadata);}
         await locate('InternalSplitFoo');await editor();assert.match(await read(()=>document.querySelector('#model-edit-target').textContent),/OP #2 · InternalSplitFoo/);await page.locator('#model-edit-mode').selectOption('remove');await errorExport(/缺少先前/);await page.locator('#model-edit-delete-mode').selectOption('boundary');filename=await exportFile('tflite');index=await tf(new Uint8Array(await readFile(filename)));assert.equal(index.raw.subgraphs[0].operators.length,3);assert.deepEqual([...index.raw.subgraphs[0].inputs],[1,2,7,8]);assert.equal(index.raw.subgraphs[0].tensors[7].quantization.scale[0],.25);await openResult(3);await patternMatches(tfPattern,'Actual-model custom branch',0);await closed(()=>page.locator('#close-model').click());
         report.cases.push({format:'tflite',added:1,removed:1,parameter:3,weights:'identical',customOptions:'identical',invalidRewire:'rejected',danglingRemoval:'rejected',cancelledCandidate:'discarded',newBoundary:[1,2,7,8]});check('actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure');
-        assert.deepEqual(report.tfliteParserRequests,[],'TFLite-only editing must not load the MLIR parser.');tflitePhase=false;
+        assert.deepEqual(report.tfliteParserRequests,[],'TFLite-only editing must not load the MLIR parser.');tflitePhase=false;if(!allowMlir)return report;
 
         for(const [name,text,count,operator] of [['branch',MLIR_CFG_DIAMOND,7,'company.custom_long_name_with_attributes'],['loop',MLIR_CFG_LOOP,4,'company.step']]){
             const input=path.join(directory,`model-edit-${name}.mlir`);await writeFile(input,text,{flag:'wx'});await choose(input);await ready(count);await locate(operator);await editor();await layout();

@@ -1,4 +1,7 @@
-# 獨立模型編輯工作區
+# TFLite 模型編輯工作區
+
+目前實際模型編輯僅支援 TFLite；MLIR 保留探索、搜尋、pattern 編輯及局部匯出。下方 preview.12／preview.13 的 MLIR 實際編輯屬歷史驗收，從 preview.14 起網站不再提供，舊 MLIR 編輯草稿會明確拒絕，不會套用。
+
 
 同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再進入「編輯工作區」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
 
@@ -84,3 +87,9 @@
 - [最終獨立核對](results/preview13-publication-review-2026-10-28.json)成功。四份 Release 資產實際下載，bytes／SHA 均和原準備包一致。ZIP `model-lens-public-0.2.0-preview.13-c659375441a01f98.zip` 為 29,670,840 bytes、264 個核心檔案，SHA-256 `0a9b720b476e70bc3f0a660c3a6d36220e0c29008bd2f1f6e2bc8f041f4ec643`。Deployment `7374318664`／job `122566585918`／attempt 1，正式 root SHA-256 `740f037df930d60eec3d6ee13992251c81fd2d7f390b5700d221ccbd0b6834d1` 與整站身分一致。
 
 驗收涵蓋 Hosted Chromium 與合成模型的有限八輪量測，尚未證明公司 runtime、完整 kernel／量化語意、其他瀏覽器、1 GiB 草稿 fingerprint 的實測效能或數小時使用；商品等級工作清單仍保留這些項目。
+
+## preview.14 候選：僅 TFLite 編輯與控制流程回歸
+
+所有實際模型編輯入口依格式隱藏／停用，Worker 在載入編輯模組、計算完整檔案指紋或修改 session 前拒絕 MLIR 編輯 RPC；舊 MLIR 編輯草稿於匯入時立即拒絕。MLIR 探索、pattern 編輯及局部匯出維持可用。
+
+新增合成 TFLite：主圖含 IF／WHILE、多輸出 custom OP 與匯合，另有 then／else、condition、body 共五個子圖。驗收主圖與迴圈 body 的 32px、原生滾輪／平移後端點命中、拖曳／點選接線、草稿下載→重新選原模型→恢復視角→繼續接線→復原／重做，再匯出完整 TFLite、驗證所有子圖、控制引用、權重／custom options、重新開啟與 pattern 搜尋。custom kernel 實作未提供，結構檢查不代表推論或 runtime 語意已驗證。

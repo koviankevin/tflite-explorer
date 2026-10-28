@@ -31,8 +31,8 @@ window.addEventListener('error',event=>diagnostics.record('global','error',event
 window.addEventListener('unhandledrejection',event=>diagnostics.record('global','error',event.reason));
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
-const modelEditor=modelEditUI({rpc,getSource:()=>file,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
-const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getGraph:()=>currentGraph,getTargets:editTargets,chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
+const modelEditor=modelEditUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
+const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -269,9 +269,10 @@ async function openFile(nextFile) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
-        editWorkspace.enable(true);
-        $('open-edit-workspace').disabled=false;
-        $('open-model-editor').disabled=false;
+        const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
+        for(const id of ['edit-mode','open-edit-workspace','open-model-editor','edit-capture-workspace','edit-capture-model']){$(id).hidden=!editable;$(id).title=editable?'編輯實際 TFLite 模型':'實際模型編輯僅支援 TFLite';}
+        $('open-edit-workspace').disabled=!editable;
+        $('open-model-editor').disabled=!editable;
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
@@ -882,8 +883,8 @@ function refreshPickedNodes() {
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     $('edit-capture').disabled = $('save-capture').disabled;
-    $('edit-capture-model').disabled = !model || exportBusy || !count;
-    $('edit-capture-workspace').disabled = !model || exportBusy || !count;
+    $('edit-capture-model').disabled = model?.sourceFormat!=='tflite' || exportBusy || !count;
+    $('edit-capture-workspace').disabled = model?.sourceFormat!=='tflite' || exportBusy || !count;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
@@ -1076,7 +1077,7 @@ function editTargets(){
 $('edit-advanced').onclick=()=>{const location=editWorkspace.advancedLocation();if(location&&!exportBusy)modelEditor.open([location]).catch(report);};
 $('open-edit-workspace').onclick=$('edit-capture-workspace').onclick=()=>editWorkspace.open();
 $('open-model-editor').onclick=()=>{
-    if(!model||exportBusy){notice('請先開啟模型，並等待匯出完成。');return;}
+    if(model?.sourceFormat!=='tflite'||exportBusy){notice('編輯實際模型僅支援 TFLite；請先開啟 TFLite 模型，並等待匯出完成。');return;}
     if(editWorkspace.hasUnexported){editWorkspace.open();return;}
     const targets=editTargets();
     if(!targets.length){notice('請先點選或框選原始 OP，再按「編輯實際模型」。');return;}

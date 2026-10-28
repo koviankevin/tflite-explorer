@@ -6,6 +6,7 @@ import { operatorKey, operatorIndex } from './pattern-utils.js';
 import {foldPatternSnapshot} from './pattern-fold.js';
 import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
 import {createExportReport} from './export-report.js';
+import {assertModelEditAction} from './model-edit-policy.js';
 let index;
 let overview;
 let results = [];
@@ -29,6 +30,7 @@ const withReport=(result,args)=>{
 };
 self.onmessage = async ({ data: { id, action, args } }) => {
     try {
+        assertModelEditAction(index,action,args);
         if (action === 'open') {
             editIdentity=null;editDraftJob++;
             editWorkspace=null;
