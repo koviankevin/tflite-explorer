@@ -103,3 +103,30 @@ Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 M
 報告記錄選項、頁面操作次序與時間、一次性包裝數，以及 driver 開始／結束等待的時間。這證明控制呼叫次序；不以 Playwright completion promise 的觀察時間冒充引擎內部實際複製區間。尚未改動應用，也未調整既有八輪 RSS 門檻。
 
 20 項相關 Node 檢查通過，新增測試先在舊版以尚未包裝而失敗，再驗證真正的 page／worker callbacks、microtask 次序、只包裝一次、封閉選項、原有讀取預算及自然 timer。真實 Firefox 控制量測仍待 hosted CI；結果不能代替應用八輪驗收。
+
+### Firefox 包裝時機結果：沒有單獨重現高峰
+
+[40723799543](https://github.com/koviankevin/tflite-explorer/actions/runs/40723799543) 完成第三版 Firefox 控制，來源 `724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af`／tree `e71c39f653bf38453e5382443c6f96f12fbaa84d`。頁面已包裝一次後 driver 才開始等待下載完成，兩個 driver 觀察時間相距約 4.36 秒；不將此觀察時間當成原生複製的精確區間。
+
+Object URL 後的 RSS 697,057,280 → 下載完成後 700,764,160 bytes，該相位取樣峰值 703,639,552、整段控制最高 723,763,200 bytes。這個先包裝、後等待完成的簡單控制仍沒有重現原應用的大幅配置。完整 1,349,965,216 bytes 下載 SHA、65,728 bytes 累計／65,536 bytes 最大單次讀取、唯一 Worker close、自然 URL 撤銷及所有 owned PID/start identity 清理通過。保留 [原始 provider ZIP](results/blob-wrap-firefox-2026-10-29.zip) 與 [digest／CRC／來源、次序及量測核對](results/blob-wrap-firefox-review-2026-10-29.json)，沒有修改應用或門檻。
+
+### Preview.21 應用的兩引擎八輪結果
+
+新增手動 runtime／dtype 亂數後的應用另以 [40724931148](https://github.com/koviankevin/tflite-explorer/actions/runs/40724931148) 執行一次完整八輪。來源仍為 `724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af`，與固定正式 preview.21 的 `src`／`vendor`／建置程式及相依套件沒有差異；候選 build `c62686e2d0079cef` 的來源 metadata 不同，沒有為此重新部署。
+
+[獨立核對](results/desktop21-memory-review-2026-10-29.json)重新建置相同 292 檔，逐項比對所有實際 HTTP bytes／SHA、manifest、provider ZIP digest／CRC、來源與原 RSS 政策。失敗與成功報告都獨立重算判定；兩個引擎均完成完整八輪工作與 read／fingerprint audits，每個引擎的 24 個模型與八個指紋 Worker 關閉，全部 owned 程序正常清理，沒有 page error。權重、custom options、完整及局部匯出重開、pattern 正反例均通過。
+
+| 引擎 | 八輪判定 | RSS 峰值 bytes | 相對基準成長 bytes | 暖機後關閉漂移 bytes | 關閉斜率 bytes／輪 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Firefox 142.0.1 | 失敗，只有 `browser-peak-growth` | 4,165,541,888 | 3,344,564,224 | 24,031,232 | 6,210,238.17 |
+| Linux WebKit 26.0 | 本次通過 | 1,439,420,416 | 783,192,064 | 42,979,328 | 10,023,848.23 |
+
+峰值成長上限仍為 805,306,368 bytes；WebKit 本次僅剩約 21 MiB 餘裕，先前其他來源的失敗仍保留，不能說已找到或修正其原因。Firefox 主程序在完整匯出相位的匿名記憶體約 1,848,414,208 bytes，在局部匯出相位的峰值附近約 3,350,495,232 bytes；主要配置位置仍在 parent。這是後續定位依據，不是配置呼叫堆疊或獨立 Worker heap。
+
+保留 [Firefox 原始 ZIP](results/desktop21-memory-firefox-2026-10-29.zip) 與 [WebKit 原始 ZIP](results/desktop21-memory-webkit-2026-10-29.zip)，各含完整原始 JSON／所有取樣。這是目前來源的有限八輪結果；Firefox 記憶體仍待修正，也不代替其他 OS、公司模型、實體硬體或此來源數小時負載。
+
+### 後續控制需涵蓋真實匯出組成
+
+[結構診斷](results/desktop21-export-layout-2026-10-29.json)以目前 parser／draft／exporter 和公開 fixture header 觀察 Blob parts：21,005 個原始 OP 複製新增後，結構 Uint8Array 為 8,268,412 bytes，另有 1.25 GiB 來源切片、三個向原 metadata 回讀的 8 bytes 切片及 padding，共九個 parts。先前控制只有 64 KiB typed prefix 加上一個連續檔案切片。
+
+這個 Node 診斷使用 opaque 虛擬權重，讀取的部分頁面有明確記錄；只用來觀察結構與範圍，沒有配置或核對整份實體權重，也沒有瀏覽器記憶體驗收。後續可分別控制約 8 MiB 的結構區與多個反向檔案切片，避免只憑簡單控制未重現就修改應用。真實八輪的物理資料完整性由上一節的原生下載及完整串流核對證明。

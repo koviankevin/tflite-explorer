@@ -1,0 +1,60 @@
+{
+  "source": {
+    "commit": "724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af",
+    "tree": "e71c39f653bf38453e5382443c6f96f12fbaa84d",
+    "committedAt": "2026-10-29T00:13:07+08:00",
+    "dirty": false
+  },
+  "diagnosticOnly": true,
+  "scope": "Real current parser/draft/export code, virtual opaque weight body, layout only; no physical payload/hash/browser/memory acceptance",
+  "inputHeaderBytes": 7787928,
+  "inputPayloadOffset": 7787936,
+  "logicalSourceBytes": 1349965216,
+  "parsedOperators": 21005,
+  "parserReadBytes": 7919008,
+  "maxReadBytes": 65536,
+  "opaquePageBytes": 131072,
+  "outputBytes": 1350445736,
+  "parts": [
+    {
+      "kind": "Uint8Array",
+      "bytes": 8268412
+    },
+    {
+      "kind": "Uint8Array",
+      "bytes": 4
+    },
+    {
+      "kind": "opaque-source-slice",
+      "bytes": 1342177280,
+      "sourceOffset": 7787936
+    },
+    {
+      "kind": "Uint8Array",
+      "bytes": 0
+    },
+    {
+      "kind": "opaque-source-slice",
+      "bytes": 8,
+      "sourceOffset": 7787788
+    },
+    {
+      "kind": "Uint8Array",
+      "bytes": 8
+    },
+    {
+      "kind": "opaque-source-slice",
+      "bytes": 8,
+      "sourceOffset": 7787844
+    },
+    {
+      "kind": "Uint8Array",
+      "bytes": 8
+    },
+    {
+      "kind": "opaque-source-slice",
+      "bytes": 8,
+      "sourceOffset": 7787900
+    }
+  ]
+}
