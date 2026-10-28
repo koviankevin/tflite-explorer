@@ -1,6 +1,6 @@
 # 實體大模型瀏覽器生命週期驗收
 
-這是獨立、手動啟動的 CI 門檻，與 `performance.yml` 的 Node 核心效能互補。執行 `.github/workflows/browser-lifecycle.yml`，使用隔離的 Ubuntu 24.04 runner、Node 22.23.3、lockfile 的 Playwright 1.56.1 與其 Chromium。尚未通過的執行不得當成發布證據，也尚未強制阻擋其他發布入口。
+這是獨立、手動啟動的 CI 門檻，與 `performance.yml` 的 Node 核心效能互補。執行 `.github/workflows/browser-lifecycle.yml`，使用隔離的 Ubuntu 24.04 runner、Node 22.23.3、lockfile 的 Playwright 1.56.1 與其 Chromium。受控 Pages 發布已要求這項關卡及來源相依 fingerprint；尚未通過的執行不得當成發布證據。新增的 [兩小時負載](lifecycle-soak.md)是額外驗收，不取代這份固定八輪門檻。
 
 ## 固定案例與操作
 

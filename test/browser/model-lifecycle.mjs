@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {execFileSync} from 'node:child_process';
-import {readFile,writeFile,mkdtemp,mkdir,rm,statfs,readdir,stat} from 'node:fs/promises';
+import {readFile,writeFile,rename,mkdtemp,mkdir,rm,statfs,readdir,stat} from 'node:fs/promises';
 import {openSync,readSync,fstatSync,closeSync,createReadStream} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {once} from 'node:events';
@@ -18,23 +18,28 @@ import {installLifecycleAudit,installRecoveryReadAudit} from './lifecycle-audit.
 import {editFileFingerprint} from '../../src/model-edit-session.js';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
+import {LIFECYCLE_SOAK_POLICY,assertSoakExecution,needsSoakCycle,evaluateLifecycleSoak} from './lifecycle-soak-policy.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
 await mkdir(path.dirname(reportPath),{recursive:true});
+const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
 const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[],samples:[],checks:[],limitations:[
-    'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
+    soak?'At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.':'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
     'Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.',
     'Summed /proc RSS includes Chromium descendants and can double-count shared pages; 500ms sampling can miss spikes.',
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
+if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:1,soakPolicy:LIFECYCLE_SOAK_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}}});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
-let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,rootPid,phase='startup',shuttingDown=false;
-const watchdog=setTimeout(async()=>{report.error=`Hard timeout during ${phase}`;await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.error(report.error);process.exit(1);},22*60000);
+let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,rootPid,phase='startup',shuttingDown=false,activeStarted;
+const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
+async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
+const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},(soak?160:22)*60000);
 
 const patterns=[
     reusablePattern('Lifecycle prefix',{nodes:[{alias:'N1',type:'HugeWeightProject'},{alias:'N2',type:'Reshape'},{alias:'N3',type:'Transpose'},{alias:'N4',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'},{from:'N3',to:'N4'}],induced:true}),
@@ -54,7 +59,7 @@ async function processRss(){
 async function sample(){
     const rssBytes=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
     assert.ok(Number.isFinite(mainHeapBytes)&&mainHeapBytes>0,'Main heap unavailable.');
-    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),rssBytes,mainHeapBytes};report.samples.push(sample);return sample;
+    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),rssBytes,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();report.samples.push(sample);return sample;
 }
 async function waitFor(fn,timeout=30000){const until=Date.now()+timeout;while(!await readPage(fn)){if(Date.now()>until)throw Error(`Timed out: ${fn}`);await wait(100);}}
 async function choose(file,button='#open-model'){
@@ -118,6 +123,7 @@ async function editWholeModel(cycle,entry,hashes){
     await waitFor(()=>document.querySelector('#results').dataset.searchQuery==='#0'&&document.querySelector('#results').getAttribute('aria-busy')==='false'&&document.querySelector('#result-count').textContent==='1 筆結果');
     await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
     await page.locator('#edit-mode').click();await waitFor(()=>document.body.classList.contains('editing-model')&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);
+    if(soak){await page.locator('#edit-font').selectOption('32');entry.editFont=Number(await page.locator('#edit-font').inputValue());assert.equal(entry.editFont,32);}
     const scopeOriginals=await readPage(()=>document.querySelectorAll('[data-edit-node]').length);assert.ok(scopeOriginals>=2&&scopeOriginals<=64);assert.match(await page.locator('[data-edit-node="op:0:0"] .edit-node-title').textContent(),/HugeWeightProject/);await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();await page.locator('#edit-add-after').click();await page.locator('#edit-expose').check();
     const started=Date.now();phase=`cycle-${cycle}-full-model-export`;let event=page.waitForEvent('download');await page.locator('#edit-export').click();let download=await event;assert.equal(await download.failure(),null);
     const full=path.join(temporary,`cycle-${cycle}-full.tflite`);await download.saveAs(full);await download.delete();await waitFor(()=>!document.querySelector('#edit-open-result').disabled);
@@ -135,6 +141,7 @@ async function editWholeModel(cycle,entry,hashes){
     return [full,reportFile];
 }
 try{
+    assert.ok(['gate','soak'].includes(mode),'Unknown lifecycle profile.');if(soak)assertSoakExecution(process.env,os.platform());
     assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI.');
     const disk=await statfs(os.tmpdir()),memoryLimit=await optionalRead('/sys/fs/cgroup/memory.max'),memoryCurrent=await optionalRead('/sys/fs/cgroup/memory.current');
     const available=memoryLimit&&memoryLimit!=='max'?Number(memoryLimit)-Number(memoryCurrent):os.freemem();assert.ok(available>=4*1024**3,'Need 4 GiB available RAM.');assert.ok(disk.bavail*disk.bsize>=8*1024**3,'Need 8 GiB free disk.');
@@ -146,7 +153,7 @@ try{
     server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
     browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`]});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
-    context=await browser.newContext({viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
+    context=await browser.newContext({viewport:soak?report.soak.viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
     await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
@@ -158,9 +165,12 @@ try{
     const patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns(patterns));
     // Initial model is opened below; pattern UI is available after selecting its tab.
     const hashes=new Map();
-    for(let cycle=1;cycle<=policy.cycles;cycle++){
+    if(soak){activeStarted=performance.now();report.status='running';await persistReport();}
+    for(let cycle=1;soak?needsSoakCycle(cycle-1,activeElapsed()):cycle<=policy.cycles;cycle++){
         const kind=(cycle-1)%2,name=patterns[kind].name,other=patterns[1-kind].name,entry={cycle,kind:kind===0?'prefix':'branch',workerHeaps:[]};report.cycles.push(entry);
+        if(soak)entry.activeStartMs=activeElapsed();
         phase=`cycle-${cycle}-source`;await choose(report.fixture.file);await ready(21005);
+        if(soak){if(cycle===1){await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');}entry.font=Number(await page.locator('#graph-font-size').inputValue());assert.equal(entry.font,32);}
         await page.locator('[data-kind="patterns"]').click();
         if(cycle===1){
             await page.locator('#open-import').click();await choose(patternFile,'#choose-pattern-file');await page.locator('#confirm-import').click();await waitFor(()=>!document.querySelector('#import-dialog').open);
@@ -179,16 +189,19 @@ try{
         phase=`cycle-${cycle}-release`;await waitFor(()=>globalThis.__lifecycle.urls.every(item=>item.revoked),policy.urlReleaseTimeoutMs);
         const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample());}
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);
-        await rm(child);for(const filename of editedFiles)await rm(filename);console.log(`PASS cycle ${cycle}/${policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
+        await rm(child);for(const filename of editedFiles)await rm(filename);
+        if(soak){entry.activeEndMs=activeElapsed();report.soak.activeDurationMs=entry.activeEndMs;if(cycle%policy.cycles===0)await persistReport();}
+        console.log(`PASS cycle ${cycle}/${soak?'two-hour soak':policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
     }
     report.audit=await readPage(()=>globalThis.__lifecycle);
-    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,24);
-    assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,8);
+    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,report.cycles.length*3);
+    assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,report.cycles.length);
     for(const entry of report.audit.workers){assert.equal(entry.error,undefined);if(/\/model-worker\.js(?:\?|$)/.test(entry.url)){assert.equal(entry.terminated,true);assert.ok(entry.audit?.bytes>0);assert.equal(entry.audit.bytes,entry.stats.bytesRead+(entry.verificationReadBytes||0));}}
-    const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,8);assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check('eight full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers');
+    const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,report.cycles.length);assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check(`${report.cycles.length} full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers`);
     for(const audit of [report.audit.audit,...report.audit.workers.map(w=>w.audit).filter(Boolean)]){assert.deepEqual(audit.violations,[]);assert.ok(audit.maxRead<=policy.maxReadBytes&&audit.bytes<=policy.realmReadBytes);}
-    assert.deepEqual(errors,[]);report.evaluation=evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check('eight physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits');report.status='passed';
-}catch(error){report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
+    if(soak){assert.equal(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),report.environment.sourceCommit);assert.equal(execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),report.environment.sourceTree);assert.equal(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim(),'');report.sourceUnchanged=true;}
+    assert.deepEqual(errors,[]);report.evaluation=soak?evaluateLifecycleSoak(report):evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check(`${report.cycles.length} physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits`);report.status='passed';
+}catch(error){report.status='failed';report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
 finally{
     clearInterval(timer);await pending;shuttingDown=true;
     try{
@@ -200,5 +213,5 @@ finally{
     if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
     // Only this invocation's mkdtemp directory; no model from the user's filesystem.
     if(temporary && path.dirname(temporary)===os.tmpdir() && path.basename(temporary).startsWith('model-lens-lifecycle-'))await rm(temporary,{recursive:true,force:true});
-    report.errors=errors;report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');clearTimeout(watchdog);console.log(`Report ${reportPath}: ${report.status}`);process.exit(report.status==='passed'?0:1);
+    report.errors=errors;report.finishedAt=new Date().toISOString();await persistReport();clearTimeout(watchdog);console.log(`Report ${reportPath}: ${report.status}`);process.exit(report.status==='passed'?0:1);
 }
