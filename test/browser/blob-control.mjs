@@ -1,0 +1,56 @@
+// Physical diagnostic control only. Does not run the app or certify its RSS gate.
+import assert from 'node:assert/strict';
+import {firefox,webkit} from 'playwright';
+import {createServer} from 'node:http';
+import {readFile,writeFile,mkdtemp,rm,statfs} from 'node:fs/promises';
+import {createReadStream} from 'node:fs';
+import {randomBytes,createHash} from 'node:crypto';
+import {once} from 'node:events';
+import path from 'node:path';
+import os from 'node:os';
+import {gitSource} from '../../scripts/lib/release-artifact.mjs';
+import {writePhysicalFixture,PHYSICAL_SOURCE_BYTES,PHYSICAL_SOURCE_SHA256} from '../physical-tflite-fixture.mjs';
+import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot} from './owned-processes.mjs';
+import {createProcessMemoryProbe,summarizeMemoryProfile} from './process-memory-profile.mjs';
+import {blobControlSettings,installBlobControlPage,installBlobControlWorker} from './blob-control-program.mjs';
+
+const {engine}=blobControlSettings(process.env,process.platform),reportPath=path.join(process.env.RUNNER_TEMP,`blob-control-${engine}.json`),wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const report={format:'model-lens-blob-control',version:1,status:'failed',diagnosticOnly:true,memoryAcceptance:'not-evaluated',engine,source:gitSource(),startedAt:new Date().toISOString(),viewport:{width:1280,height:640},samples:[],memoryProfile:{format:'model-lens-proc-memory',version:1,samples:[]},points:[],workers:[],requests:[],errors:[],limitations:[
+    'One staged physical File/Blob control, not the application, model editing, eight-cycle acceptance or a leak-free result.',
+    'Each transition retains aliases deliberately to isolate ownership changes. Native 60-second URL release is unchanged; no forced GC.',
+    'Supplementary per-process categories are later anchored reads, not an instantaneous allocation trace, physical-page deduplication or independent Worker heap.'
+]};
+let directory,server,browser,context,page,tree,timer,clock,phase='startup',sampling=false,pending=Promise.resolve(),closing=false;
+const elapsed=()=>performance.now()-clock,probe=createProcessMemoryProbe({now:elapsed}),persist=()=>writeFile(reportPath,JSON.stringify(report,null,2)+'\n');
+const watchdog=setTimeout(async()=>{report.error='Control hard timeout during '+phase;await persist();process.exit(1);},4*60000);
+async function sample(){const rows=await readProcessTable(),value=tree.sample(rows),row={elapsedMs:elapsed(),phase,...value},slot=report.samples.length;report.samples.push(row);report.memoryProfile.samples[slot]=await probe.capture(tree.remaining(rows),row);return slot;}
+async function state(){return JSON.parse(await page.locator('#state').textContent());}
+async function until(expected,timeout=30000){const end=Date.now()+timeout;for(;;){const s=await state();assert.notEqual(s.stage,'error','Control page/worker failed.');if(expected.includes(s.stage))return s;assert.ok(Date.now()<end,'Control transition timed out: '+expected);await wait(75);}}
+async function point(label){phase=label;const slots=[];for(let i=0;i<3;i++){await wait(500);slots.push(await sample());}const value=await state();report.points.push({label,elapsedMs:elapsed(),samples:slots,state:value});await persist();return value;}
+async function transition(button,expected,label){phase=label;await page.locator('#'+button).click();await until([expected]);return point(label);}
+const html='<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>File / Blob 控制測量</title><style>body{font:20px/1.6 sans-serif;margin:24px}nav{display:flex;gap:8px;flex-wrap:wrap}button{font:inherit}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>File／Blob 控制測量（僅測試）</h1><input id="file" type="file" hidden><nav><button id="choose">選取測試檔</button><button id="build" disabled>建立 Blob</button><button id="readback" disabled>File 讀回</button><button id="share" disabled>Worker 傳回</button><button id="url" disabled>建立 URL</button><button id="download" disabled>原生下載</button><button id="wrap" disabled>File 包裝</button><button id="clear" disabled>清理參照</button></nav><pre id="state"></pre><script type="module" src="/page.js"></script></html>';
+try{
+    assert.equal(report.source.dirty,false);const disk=await statfs(os.tmpdir());assert.ok(disk.bavail*disk.bsize>=8*1024**3&&os.freemem()>=4*1024**3,'Need 8 GiB disk and 4 GiB free RAM.');
+    report.environment={platform:process.platform,node:process.version,runId:process.env.GITHUB_RUN_ID,playwright:JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version,cpu:os.cpus()[0]?.model,totalMemory:os.totalmem(),imageVersion:process.env.ImageVersion};
+    directory=await mkdtemp(path.join(os.tmpdir(),`model-lens-blob-${engine}-`));report.fixture=await writePhysicalFixture(path.join(directory,'physical.tflite'));assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);
+    const assets=new Map([['/',[html,'text/html']],['/page.js',[`(${installBlobControlPage.toString()})();`,'text/javascript']],['/worker.js',[`(${installBlobControlWorker.toString()})(globalThis);`,'text/javascript']],['/favicon.ico',['','image/x-icon']]]);
+    server=createServer((request,response)=>{const asset=assets.get(request.url);response.writeHead(request.method==='GET'&&asset?200:404,{'Content-Type':(asset?.[1]||'text/plain')+'; charset=utf-8','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; worker-src 'self'; object-src 'none'"});response.end(asset?.[0]||'Not found');});server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;report.base=base;
+    const marker=randomBytes(16).toString('hex');browser=await({firefox,webkit}[engine]).launch({headless:true,env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:marker}});report.environment.browser=browser.version();tree=new OwnedProcessTree(await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker));
+    browser.on('disconnected',()=>{if(!closing)report.errors.push('Unexpected browser disconnect.');});context=await browser.newContext({viewport:report.viewport,acceptDownloads:true});
+    await context.route('**/*',async route=>{const q=route.request(),url=new URL(q.url()),local=url.origin===base&&assets.has(url.pathname),allowed=q.method()==='GET'&&(['blob:','data:'].includes(url.protocol)||local);report.requests.push({protocol:url.protocol,path:local?url.pathname:'(non-local)',method:q.method(),allowed});if(allowed)await route.continue();else{report.errors.push('Unexpected control network request.');await route.abort();}});
+    page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',e=>report.errors.push(e.message));page.on('crash',()=>report.errors.push('Control page crashed.'));page.on('websocket',()=>report.errors.push('Unexpected control WebSocket.'));page.on('worker',w=>{const item={url:w.url(),closed:false};report.workers.push(item);w.once('close',()=>{item.closed=true;});});
+    await page.goto(base);await page.locator('#state').filter({hasText:'initial'}).waitFor();clock=performance.now();phase='baseline';await sample();timer=setInterval(()=>{if(sampling)return;sampling=true;pending=sample().catch(e=>report.errors.push('Sampler: '+e.message)).finally(()=>{sampling=false;});},500);await point('baseline');
+    phase='selected';const chosen=page.waitForEvent('filechooser');await page.locator('#choose').click();await(await chosen).setFiles(report.fixture.file);await until(['selected']);assert.equal((await point('selected')).bytes,PHYSICAL_SOURCE_BYTES);
+    await transition('build','built','worker-blob');await transition('readback','readback','worker-file-readback');await transition('share','shared','worker-to-main');await transition('url','url','object-url');
+    phase='native-download';const event=page.waitForEvent('download');await page.locator('#download').click();const download=await event;assert.equal(await download.failure(),null);const output=path.join(directory,'download.tflite');await download.saveAs(output);await download.delete();await until(['downloaded']);await point('native-download');
+    await transition('wrap','wrapped','main-file-wrapper');const worker=page.workers()[0];assert.ok(worker);let timeout;try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Control Worker remained.')),5000);})]);phase='cleared';await page.locator('#clear').click();await ended;}finally{clearTimeout(timeout);}await until(['cleared','revoked']);const cleared=await point('cleared');assert.equal(cleared.bytes,0);assert.equal(await page.locator('#file').inputValue(),'');
+    phase='download-hash';const digest=createHash('sha256');let bytes=0;for await(const chunk of createReadStream(output,{highWaterMark:1024**2})){bytes+=chunk.length;digest.update(chunk);}report.download={bytes,sha256:digest.digest('hex')};assert.equal(bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.download.sha256,PHYSICAL_SOURCE_SHA256);
+    phase='natural-url-release';await until(['revoked'],80000);const released=await point('natural-url-release');assert.equal(released.revoked,true);assert.ok(released.urlRevokedAt-released.urlCreatedAt>=59990);assert.deepEqual(released.stats,{inputBytes:PHYSICAL_SOURCE_BYTES,blobBytes:PHYSICAL_SOURCE_BYTES,readBytes:65664,maxRead:65536,builds:1,readbacks:1,shares:1});
+    clearInterval(timer);await pending;report.measurementEndedMs=elapsed();report.memoryProfile.summary=summarizeMemoryProfile(report.memoryProfile,report.samples);assert.equal(report.workers.length,1);assert.ok(report.workers.every(w=>w.closed));assert.deepEqual(report.errors,[]);assert.deepEqual(gitSource(),report.source);report.sourceUnchanged=true;
+}catch(error){report.error=error.stack||String(error);}
+finally{
+    clearInterval(timer);await pending;closing=true;
+    try{let timeout;try{await Promise.race([(async()=>{await context?.close();await browser?.close();})(),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Control browser close timed out.')),10000);})]);}finally{clearTimeout(timeout);}if(tree){const end=Date.now()+10000;let remaining;do{remaining=tree.remaining(await readProcessTable());if(remaining.length)await wait(100);}while(remaining.length&&Date.now()<end);report.processCleanup={identities:tree.identities,remaining,allReaped:remaining.length===0};assert.equal(remaining.length,0);}report.browserClosed=Boolean(browser);}catch(error){report.errors.push('Cleanup: '+error.message);}
+    if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}if(directory&&path.dirname(directory)===os.tmpdir()&&path.basename(directory).startsWith(`model-lens-blob-${engine}-`))await rm(directory,{recursive:true,force:true});
+    if(!report.error&&report.errors.length===0&&report.sourceUnchanged&&report.browserClosed&&report.processCleanup.allReaped)report.status='completed';report.finishedAt=new Date().toISOString();await persist();clearTimeout(watchdog);console.log(JSON.stringify({engine,status:report.status,error:report.error,errors:report.errors,download:report.download}));process.exit(report.status==='completed'?0:1);
+}
