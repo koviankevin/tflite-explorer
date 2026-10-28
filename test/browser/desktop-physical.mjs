@@ -18,6 +18,7 @@ import {installLifecycleAudit,installRecoveryReadAudit} from './lifecycle-audit.
 import {snapshotLifecycleAudit,installLifecycleDOMProof,registerLifecycleProof,readLifecycleDOMProof} from './lifecycle-dom-proof.mjs';
 import {verifyPhysicalDownload,fingerprintPhysicalSource} from './physical-download.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot} from './owned-processes.mjs';
+import {createProcessMemoryProbe,summarizeMemoryProfile} from './process-memory-profile.mjs';
 import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 import {median} from './lifecycle-policy.mjs';
@@ -27,15 +28,18 @@ const report={format:'model-lens-desktop-physical',version:1,status:'failed',sta
     'Finite eight-cycle synthetic corpus; no company model/custom runtime, numeric equivalence or hours-long result.',
     'Owned-process RSS includes renderer/Worker processes and can double-count shared pages; it is not an independent Worker RSS or isolate heap.',
     '500ms samples can miss short spikes or processes that exit before observation; observed orphans remain tracked by PID and start ticks.',
-    'Pinned test-only File/Blob read guards and whitelisted DOM metadata bridge; no forced GC or shortened Blob URL timer.'
+    'Pinned test-only File/Blob read guards and whitelisted DOM metadata bridge; no forced GC or shortened Blob URL timer.',
+    'Supplementary per-process RssAnon/RssFile/RssShmem are later reads anchored to each original RSS sample; intervals/differences/missing or reused identities remain explicit. They do not identify JS objects, prove physical page sharing or replace the RSS limit.'
 ]};
+report.memoryProfile={format:'model-lens-proc-memory',version:1,samples:[]};
 const reportPath=path.join(process.env.RUNNER_TEMP,`desktop-physical-${engine}.json`),wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const check=text=>{report.checks.push(text);console.log(`PASS ${engine}: ${text}`);};
 let directory,target,browser,context,page,read,tree,timer,clock,phase='startup',sampling=false,pending=Promise.resolve(),shuttingDown=false;
 const elapsed=()=>performance.now()-clock;
+const memoryProbe=createProcessMemoryProbe({now:elapsed});
 async function persist(){await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');}
 const watchdog=setTimeout(async()=>{report.error=`Hard timeout during ${phase}`;report.status='failed';await persist();process.exit(1);},31*60000);
-async function sample(label=phase){const value=tree.sample(await readProcessTable()),row={elapsedMs:elapsed(),phase:label,...value};report.samples.push(row);return row;}
+async function sample(label=phase){const rows=await readProcessTable(),value=tree.sample(rows),row={elapsedMs:elapsed(),phase:label,...value},slot=report.samples.length;report.samples.push(row);report.memoryProfile.samples[slot]=await memoryProbe.capture(tree.remaining(rows),row);return row;}
 async function until(fn,timeout=30000){const end=Date.now()+timeout;while(!await read(fn)){if(Date.now()>end)throw Error('Desktop physical DOM timeout: '+fn);await wait(100);}}
 async function ready(count){await until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');if(count!==undefined)assert.equal(await page.locator('#layer-count').textContent(),count.toLocaleString('en-US'));}
 async function choose(file,button='#open-model'){const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);}
@@ -96,5 +100,6 @@ finally{
     }
     try{await target?.close();}catch(error){report.errors.push('Server cleanup: '+error.message);}
     if(directory&&path.dirname(directory)===os.tmpdir()&&path.basename(directory).startsWith(`model-lens-physical-${engine}-`))await rm(directory,{recursive:true,force:true});
+    try{report.memoryProfile.summary=summarizeMemoryProfile(report.memoryProfile,report.samples);}catch(error){report.errors.push('Memory profile: '+error.message);}
     report.finishedAt=new Date().toISOString();report.evaluation=evaluateDesktopPhysical(report);if(!report.error&&report.evaluation.status==='passed')report.status='passed';else process.exitCode=1;await persist();clearTimeout(watchdog);console.log(JSON.stringify({engine,status:report.status,cycles:report.cycles.length,summary:report.evaluation.summary,error:report.error,issues:report.evaluation.issues}));process.exit(report.status==='passed'?0:1);
 }
