@@ -18,7 +18,7 @@ import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 const {engine,base,expectedBuild,expectedSiteId}=desktopEngineSettings(process.env,process.platform);
 const report={format:'model-lens-desktop-engine',version:1,status:'failed',startedAt:new Date().toISOString(),engine,source:gitSource(),expectedBuild,expectedSiteId,checks:[],errors:[],workers:[],requests:[],browserClosed:false};
 const reportPath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.json`),imagePath=path.join(process.env.RUNNER_TEMP,`desktop-${engine}.png`);
-let browser,context,page;
+let browser,context,page,readDOM;
 const check=name=>{report.checks.push(name);console.log(`PASS ${engine}: ${name}`);};
 try{
     assert.equal(report.source.dirty,false,'Compatibility driver source must be committed.');
@@ -36,17 +36,21 @@ try{
     context=await browser.newContext({viewport:{width:1366,height:640},acceptDownloads:true});
     await context.route('**/*',async route=>{const r=route.request(),u=new URL(r.url());if(['blob:','data:'].includes(u.protocol)){await route.continue();return;}const allowed=r.method()==='GET'&&r.url().startsWith(base);report.requests.push({method:r.method(),url:r.url(),allowed});if(!allowed){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else await route.continue();});
     page=await context.newPage();page.setDefaultTimeout(30000);
+    // Interception is enabled over an asynchronous browser protocol message.
+    // Keep a listener before navigation, so the first real chooser cannot race
+    // the waitForEvent() subscription immediately preceding a fast click.
+    report.chooserEvents=0;page.on('filechooser',()=>{report.chooserEvents++;});
     page.on('pageerror',e=>report.errors.push(e.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
     page.on('worker',worker=>{const item={url:worker.url(),closed:false};report.workers.push(item);worker.on('close',()=>{item.closed=true;});if(/\/model-worker\.js(?:\?|$)/.test(item.url)&&item.url!==new URL(coreBasePath+`src/model-worker.js?v=${expectedBuild}`,base).href)report.errors.push('Worker belongs to another build namespace.');});
     // Each observation is a fixed, source-controlled DOM expression. Never
     // evaluate app APIs, mutate selection or generate a file inside the page.
-    const read=desktopDOMReader(page);
+    const read=readDOM=desktopDOMReader(page);
     const until=async(fn,...args)=>{const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Desktop DOM timeout: '+fn);await new Promise(r=>setTimeout(r,75));}};
     const ready=async count=>{await until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');if(count!==undefined)assert.equal(await page.locator('#layer-count').textContent(),String(count));};
     const choose=async(file,selector='#open-model')=>{const event=page.waitForEvent('filechooser');await page.locator(selector).click();await(await event).setFiles(file);};
     const close=async()=>{const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;try{const closed=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Desktop model worker retained.')),5000);})]);await page.locator('#close-model').click();await closed;}finally{clearTimeout(timer);}assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);};
     const download=async(selector,name)=>{const event=page.waitForEvent('download');await page.locator(selector).click();const d=await event;assert.equal(await d.failure(),null);const file=path.join(directory,name);await d.saveAs(file);await d.delete();return file;};
-    await page.goto(base,{waitUntil:'domcontentloaded'});await until(()=>typeof document.querySelector('#open-model').onclick==='function'&&!document.querySelector('#autosave-enabled').disabled);
+    await page.goto(base,{waitUntil:'domcontentloaded'});await until(()=>!document.querySelector('#autosave-enabled').disabled);
     assert.equal(new URL(await read(()=>document.baseURI)).pathname,new URL(coreBasePath,base).pathname);
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await ready();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await ready();assert.ok(await page.locator('#target .node').count()>0);await close();
     check('public demo: local worker, 32px graph, exact layer lookup and location');
@@ -62,7 +66,7 @@ try{
     const after=await resolveLiveCore({base,expectedBuild,expectedSiteId});assert.equal(after.manifestSHA256,resolved.manifestSHA256);assert.equal(sha256((await readStaticFile(base,'site-manifest.json')).bytes),sha256(raw));
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);
     await copyFile(path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';
-}catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+}catch(error){report.error=error.stack||String(error);process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({engine,status:report.status,checks:report.checks,error:report.error}));

@@ -11,3 +11,5 @@
 實作使用 [Playwright 的固定瀏覽器安裝](https://playwright.dev/docs/browsers)、[file chooser](https://playwright.dev/docs/api/class-filechooser) 與 [download](https://playwright.dev/docs/api/class-download) 介面；Linux WebKit 驗收與實體 Safari 分開記錄。
 
 第一輪 [40649465652](https://github.com/koviankevin/tflite-explorer/actions/runs/40649465652) 的兩個引擎已安裝，逐檔正式站驗證完成，之後在初始 DOM 觀察即遇到 Netron 停用 window.eval。這是觀察器衝突，尚未進入模型操作；[Firefox](results/desktop-firefox-observer-failure-2026-10-28.json)／[WebKit](results/desktop-webkit-observer-failure-2026-10-28.json) 及 [provider digest／CRC／來源核對](results/desktop-observer-failure-review-2026-10-28.json)保留失敗。改用隔離 selector 不改寫正式站，不以此推斷應用功能成功或失敗。
+
+第二輪 [40650250150](https://github.com/koviankevin/tflite-explorer/actions/runs/40650250150) 的 [Firefox](results/desktop-firefox-chooser-failure-2026-10-28.json)已通過 demo／32px／搜尋定位，第一個原生選檔事件逾時；持續訂閱將提前到導覽前。WebKit [原始失敗](results/desktop-webkit-handler-failure-2026-10-28.json)停在 handler 型別等待：隔離環境不保證能查看網站 JavaScript 的 onclick／onchange。啟動等待改為實際的 disabled DOM 狀態，後續仍要完成原生操作，沒有以另一個成功旗標代替流程。[兩個 job 的獨立核對](results/desktop-second-review-2026-10-28.json)保留失敗；仍不宣稱相容性驗收完成。
