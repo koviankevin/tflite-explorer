@@ -101,6 +101,12 @@
 | 關卡 | 選定 run |
 | --- | --- |
 | core | [40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445)，86 個執行相依 fingerprint 不變，沿用成功 main 量測 |
-| browser | [40614829170](https://github.com/koviankevin/tflite-explorer/actions/runs/40614829170)，八輪實體大模型編輯／重開，待完成核對 |
-| contract | [40614834044](https://github.com/koviankevin/tflite-explorer/actions/runs/40614834044)，main 發布合約 |
-| site | [40614838124](https://github.com/koviankevin/tflite-explorer/actions/runs/40614838124)，版本切換與 TFLite 專用原生驗收 |
+| browser | [40614829170](https://github.com/koviankevin/tflite-explorer/actions/runs/40614829170)，八輪實體大模型編輯／重開通過，provider／source fingerprint 已核對 |
+| contract | [40614834044](https://github.com/koviankevin/tflite-explorer/actions/runs/40614834044)，main 發布合約 76 項全通過 |
+| site | [40614838124](https://github.com/koviankevin/tflite-explorer/actions/runs/40614838124)，六種版本切換、19 項原生操作與 27 模型 Worker 終止通過 |
+
+[四項 main 關卡獨立核對](results/preview14-gates-review-2026-10-28.json)成功。實體八輪 [原始報告](results/preview14-main-browser-2026-10-28.json)與 [provider／相依核對](results/preview14-main-browser-review-2026-10-28.json)：1.25 GiB、21,005 OP，編輯範圍 2 原始 OP＋1 複製 OP，完整候選 21,006 OP。24 模型 Worker 終止，原有 60 秒自然 URL 釋放及讀取／記憶體門檻保持；暖機後 RSS drift 10,653,696 bytes、斜率約 0.99 MiB／輪、取樣峰值 932,827,136 bytes。完整輸出每輪 SHA-256 `76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045`，7 段共 1,342,177,328 bytes 權重／custom options 一致。
+
+[Main 原生報告](results/preview14-main-ui-2026-10-28.json)及 [provider／來源核對](results/preview14-main-ui-review-2026-10-28.json)亦通過：19 項操作、27 模型 Worker 全關閉；含主圖／WHILE body 的 32px 變換後精確接線、草稿續改、完整五子圖匯出、重開及唯一 pattern，以及 MLIR 編輯入口／舊草稿拒絕。兩份控制模型每份七段 bytes 比對通過，手機圖區約 371.4px、長名稱無超框。公司 runtime、推論、其他瀏覽器、超長時間操作及 1 GiB 草稿 fingerprint 實測仍不宣稱已驗證；上述實體八輪未執行完整檔案 fingerprint。
+
+目前尚待固定乾淨來源 prepare 及正式部署核對；成功 main 關卡不代表已切換正式網站。
