@@ -8,14 +8,16 @@
 | 真實模型相容性 | 公司環境的 TFLite／MLIR／custom runtime 正負例、支援版本與限制清單 | 合成測試已有；公司實模尚待內網驗收 |
 | 匯出可信度 | 可下載的來源對照、輸出介面、權重與檢查範圍報告；公司 compiler／runtime 驗證接點 | 本機報告、串流 bytes 比對及可指定 native compiler 的 CLI 已實作；公司 compiler／runtime 正負例仍待內網驗收 |
 | 效能標準 | 固定硬體／引擎、不同檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | Node 九筆核心效能 CI 已通過；另加入實體寫滿 1.25 GiB／21,005 OP TFLite 的八輪原生選檔、下載、重開及關閉 CI，含完整權重/custom options、pattern 正反例、整個 Chromium 程序樹 RSS、Worker V8/backing storage、實際 Worker 終止與自然 Blob URL 撤銷；已通過並保存原始報告。數小時長時間負載、其他瀏覽器及固定實體硬體 SLA 仍需補齊；受控發布已強制核對此驗收與來源相依 scope |
-| 保存及復原 | 草稿自動保存、Undo／Redo、跨分頁衝突、崩潰後恢復與格式遷移 | 已加入 IndexedDB 工作草稿、有限歷史、revision 衝突／分叉與 v1／v2 讀取；已驗證重載及兩分頁恢復。Pattern library 已加入交易合併、同名衝突副本與舊 key 保留，實際雙分頁與跨 block 保存／匯出重開通過；硬崩潰／儲存回收與公司環境仍需補齊驗收 |
+| 保存及復原 | 草稿自動保存、Undo／Redo、跨分頁衝突、崩潰後恢復與格式遷移 | 已加入 IndexedDB 工作草稿、有限歷史、revision 衝突／分叉與 v1／v2 讀取；已驗證重載及兩分頁恢復。Pattern library 已加入交易合併、同名衝突副本與舊 key 保留，實際雙分頁與跨 block 保存／匯出重開通過；preview.16 已有 TFLite 編輯本機自動保存、嚴格交易／revision 衝突與副本、專屬瀏覽器程序強制終止後的恢復；OS 斷電／儲存回收與公司環境仍需補齊驗收 |
 | 操作與診斷 | 新使用者完整操作流程、原文定位、鍵盤及焦點驗收、可預覽且不含模型的診斷報告 | 白名單本機診斷預覽／下載、有限操作紀錄及版本缺失已實作；敏感字串排除、Escape 保留跨 block 選取與手機版面已驗收。Preview.9 另完成 TFLite 原生鍵盤開檔／定位、16→32px 焦點、手動 tabs、五種 modal 邊界／關閉後焦點、繼續選取並保存／搜尋／JSON 及子模型下載重開，正式站八項操作均通過。MLIR validation modal、MLIR／Canvas 完整鍵盤流程、完整新手流程與公司環境仍待補；見 [鍵盤驗收](keyboard-acceptance.md) |
-| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 受控 Pages 已強制核對四項 main CI、artifact digest、受測依賴 scope、原始量測與乾淨候選重建；main-only environment／必要 PR 檢查及錯誤整站 ID 拒絕已驗收。前次 preview.8／preview.7 實際回退再恢復、同一 browser context 保存／lazy imports／匯出重開通過，見 [正式切換驗收](production-transition-verification.md)。現行 preview.15 已發布，1,293 檔 SHA／MIME、22 項正式原生操作、七份 TFLite 編輯匯出收據與四份固定 Release 實際 bytes、部署權威及 root 均核對；模型分頁、刪除／復原、獨立圖形編輯與 32px 筆電版面見 [preview.15 驗收](model-edit-workspace.md)。任意資料格式升降級及公司內網實際切換仍需驗收 |
+| 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 受控 Pages 已強制核對四項 main CI、artifact digest、受測依賴 scope、原始量測與乾淨候選重建；main-only environment／必要 PR 檢查及錯誤整站 ID 拒絕已驗收。前次 preview.8／preview.7 實際回退再恢復、同一 browser context 保存／lazy imports／匯出重開通過，見 [正式切換驗收](production-transition-verification.md)。現行 preview.16 已發布，1,302 檔 SHA／MIME、24 項正式原生操作、八份 TFLite 編輯匯出收據與四份固定 Release 實際 bytes、部署權威及 root 均核對；模型分頁、刪除／復原、獨立圖形編輯與 32px 筆電版面見 [preview.16 驗收](edit-recovery.md)。任意資料格式升降級及公司內網實際切換仍需驗收 |
 
-目前 TFLite 編輯草稿可下載 JSON，換電腦重新選取原模型、核對完整檔案指紋後續改；探索用 IndexedDB 草稿／工作階段 JSON 仍不包含模型編輯命令。Preview.15 另以網站內分頁保留原模型和小模型的搜尋、選取、視角及編輯 Undo／Redo，只有當前模型啟用 Worker；關站前仍須下載備份，硬崩潰的自動編輯草稿復原仍未完成。
+目前 TFLite 編輯草稿可下載 JSON，換電腦重新選取原模型、核對完整檔案指紋後續改；探索用 IndexedDB 草稿／工作階段 JSON 仍不包含模型編輯命令。Preview.15 另以網站內分頁保留原模型和小模型的搜尋、選取、視角及編輯 Undo／Redo，只有當前模型啟用 Worker；關站前仍須下載備份，preview.16 的本機編輯自動保存及強制終止測試瀏覽器後的恢復已通過，OS 斷電／儲存回收仍未驗收。
 
 公開開發使用公開／合成樣本。公司模型、私有 dialect 與 compiler 留在內網；內網驗收尚未完成時不得將其標為已支援或將整個商品等級目標標為完成。
 
-版本隔離、可信 site ID、歷史保留／中斷恢復、固定 Release 提升與部署權威核對已在 main。現行固定交付為 preview.15／build `dbf8955ac378a73a`，來源 `b6244017f46ef3dbd346b316e792a15f31609093`。76 項 main 契約、六種隔離切換、22 項正式原生操作與 1.25 GiB／21,005 OP 八輪實際工作區改模、整份輸出及子模型生命週期均通過；四關卡 fingerprint／原始報告在 prepare 重新核對。正式站 1,293 檔、四份 Release 實際下載及最新部署權威核對通過，見 [最新交付與限制](model-edit-workspace.md)。既有失敗、前版發布與回退紀錄保留，不以後續成功改寫。
+版本隔離、可信 site ID、歷史保留／中斷恢復、固定 Release 提升與部署權威核對已在 main。現行固定交付為 preview.16／build `855f8ca810f04f4d`，來源 `fa333255acbdcdfe3c4c6f772672bb31ffc26281`。76 項 main 契約、六種隔離切換、24 項正式原生操作與 1.25 GiB／21,005 OP 八輪實際工作區改模、整份輸出及子模型生命週期均通過；四關卡 fingerprint／原始報告在 prepare 重新核對。正式站 1,302 檔、四份 Release 實際下載及最新部署權威核對通過，見 [最新交付與限制](edit-recovery.md)。既有失敗、前版發布與回退紀錄保留，不以後續成功改寫。
 
-上表公司實模／compiler／runtime、長時間效能、其他引擎、固定實體硬體 SLA、硬崩潰／儲存回收、格式遷移及其餘鍵盤／新手流程仍未完成，整體商品等級目標維持進行中。
+上表公司實模／compiler／runtime、長時間效能、其他引擎、固定實體硬體 SLA、OS 斷電／儲存回收、格式遷移及其餘鍵盤／新手流程仍未完成，整體商品等級目標維持進行中。
+
+Preview.16 的完整大型原模型自動指紋（八輪各最多 1 MiB／次）及瀏覽器程序強制終止後恢復已通過，見 [完整恢復交付](edit-recovery.md)。這不代替公司實模、其他引擎、OS 斷電、數小時負載或大型手動 JSON 恢復延遲的驗收。
