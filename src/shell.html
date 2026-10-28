@@ -2,7 +2,7 @@
   <a class="brand" href="./" aria-label="模鏡首頁"><span class="brand-icon" aria-hidden="true">⌘</span><span><strong style="font-size:20px;letter-spacing:3px">模鏡</strong><small>MODEL LENS · TFLITE EXPLORER</small></span></a>
   <div class="file-summary"><span id="file-name">尚未開啟模型</span><span id="file-stats">從模型結構，找到你要的連接。</span></div>
   <span class="privacy"><i></i>本機處理</span>
-  <nav class="model-modes" aria-label="模型工作區（實際編輯僅支援 TFLite）"><button id="explore-mode" aria-pressed="true">探索模型</button><button id="edit-mode" aria-pressed="false" disabled>編輯模型</button><button id="open-edit-draft">匯入草稿</button></nav><input id="edit-draft-file" type="file" accept=".json,application/json" hidden>
+  <nav class="model-modes" aria-label="模型工作區（實際編輯僅支援 TFLite）"><button id="explore-mode" aria-pressed="true">探索模型</button><button id="edit-mode" aria-pressed="false" disabled>編輯模型</button><button id="open-edit-draft" aria-haspopup="dialog">編輯草稿</button></nav><input id="edit-draft-file" type="file" accept=".json,application/json" hidden>
   <button id="release-info-button" class="quiet" aria-haspopup="dialog">版本</button>
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉全部</button>
@@ -86,7 +86,7 @@
   <p class="edit-wiring-guide">接線：① 點「接出」→ 點「接入」接線。拖曳空白處平移、滾輪縮放；Alt＋拖曳可在 OP 上平移。</p><div id="edit-wire-status" hidden><span id="edit-wire-label"></span><button id="edit-wire-cancel" class="quiet">取消接線</button></div><p id="edit-message" role="status" aria-live="polite">點來源輸出端，再點目標輸入端接線；可拖曳空白處平移。</p>
   <div class="edit-content"><div id="edit-viewport" tabindex="0" aria-label="編輯圖，可拖曳空白處平移"><div id="edit-spacer"><div id="edit-world"><svg id="edit-links" aria-hidden="true"></svg></div></div></div>
     <aside class="edit-inspector" aria-label="選取 OP 與變更預覽"><div id="edit-node-details"></div><div class="edit-operation-actions"><button id="edit-add-before" class="quiet">在前方複製新增</button><button id="edit-add-after" class="quiet">在後方複製新增</button><button id="edit-delete" class="quiet">刪除 OP</button><button id="edit-restore" class="quiet" hidden>恢復 OP</button></div><label id="edit-boundary-field"><input id="edit-boundary" type="checkbox">刪除時，仍使用的輸出改為模型 inputs</label><label id="edit-expose-field" hidden><input id="edit-expose" type="checkbox">將新增輸出加入模型 outputs</label><label id="edit-template-field" hidden>更換新增 OP 範本<select id="edit-template"></select></label><div id="edit-new-ops" hidden></div><button id="edit-advanced" class="text-button" disabled>進階 OP 參數</button><p class="hint">進階 OP 參數可修改原始 OP 的 tensor 接線與參數，適用於尚未變更的草稿；新增 OP 沿用所選 OP 的型別、參數與 custom options。控制流程保持原樣。</p><h3>變更預覽</h3><p id="edit-change-count">0 筆變更</p><ol id="edit-change-list"></ol></aside></div>
-  <footer class="edit-footer"><label id="edit-signatures-field" hidden><input id="edit-signatures" type="checkbox">介面變更時同步更新 signatures</label><span>模型全程在本機處理 · 先驗證，再匯出整份模型</span><button id="save-edit-draft" class="quiet" disabled>儲存編輯草稿</button><button id="edit-export" class="primary" disabled>驗證並匯出模型</button><button id="edit-open-result" class="quiet" disabled>開啟修改結果</button><button id="edit-download-report" class="quiet" disabled>下載修改報告</button></footer>
+  <footer class="edit-footer"><label id="edit-signatures-field" hidden><input id="edit-signatures" type="checkbox">介面變更時同步更新 signatures</label><span>模型全程在本機處理 · 先驗證，再匯出整份模型<output id="edit-recovery-status" class="edit-recovery-status" role="status">開始編輯後，自動保存會先核對完整原模型。</output></span><button id="save-edit-draft" class="quiet" disabled>儲存編輯草稿</button><button id="edit-export" class="primary" disabled>驗證並匯出模型</button><button id="edit-open-result" class="quiet" disabled>開啟修改結果</button><button id="edit-download-report" class="quiet" disabled>下載修改報告</button></footer>
 </section>
 <dialog id="model-edit-dialog" aria-labelledby="model-edit-title">
   <div class="import-heading"><h2 id="model-edit-title">編輯實際 TFLite 模型</h2><button id="close-model-edit" class="icon-button" aria-label="關閉模型編輯">×</button></div>
@@ -115,6 +115,16 @@
   <output id="import-preview" aria-live="polite">尚未選擇檔案。</output>
   <p class="hint">檔案最多 1 MiB、50 組 patterns。只在本機處理，不含模型與權重。</p>
   <div class="import-actions"><button id="cancel-import" class="quiet">取消</button><button id="confirm-import" class="primary" disabled>確認匯入</button></div>
+</dialog>
+<dialog id="edit-recovery-dialog" class="import-dialog" aria-labelledby="edit-recovery-title">
+  <div class="import-heading"><h2 id="edit-recovery-title">編輯草稿</h2><button id="close-edit-recovery" class="icon-button" aria-label="關閉編輯草稿">×</button></div>
+  <label><input id="edit-autosave-enabled" type="checkbox" checked>自動保存本機編輯草稿</label><p id="edit-recovery-dialog-status" role="status"></p>
+  <p class="hint">只保存編輯命令、視角與原模型指紋，不保存模型或權重。首次核對在背景讀取完整原模型；顯示「已保存」後，意外關閉才可從該版本恢復。瀏覽器清除網站資料仍會移除草稿，重要工作請下載 JSON 備份。</p>
+  <button id="choose-edit-draft-file" class="primary">匯入編輯草稿 JSON</button>
+  <label for="edit-recovery-list">此瀏覽器已保存的編輯草稿</label><select id="edit-recovery-list"></select><p id="edit-recovery-description"></p>
+  <div class="import-actions"><button id="download-edit-recovery" class="quiet" disabled>下載所選草稿 JSON</button><button id="restore-edit-recovery" class="primary" disabled>恢復所選草稿</button></div>
+  <div class="import-actions"><button id="retry-edit-recovery" class="quiet" disabled>重試目前草稿保存</button><button id="fork-edit-recovery" class="quiet" disabled>目前編輯另存副本</button></div>
+  <details class="draft-removal"><summary>移除本機編輯草稿</summary><label><input id="remove-edit-recovery-confirm" type="checkbox">我已保留所需備份，確定移除所選草稿及上次成功版本</label><button id="remove-edit-recovery" class="quiet" disabled>移除所選編輯草稿</button></details>
 </dialog>
 <dialog id="draft-dialog" class="import-dialog" aria-labelledby="draft-title">
   <div class="import-heading"><h2 id="draft-title">本機草稿</h2><button id="close-drafts" class="icon-button" aria-label="關閉本機草稿">×</button></div>
