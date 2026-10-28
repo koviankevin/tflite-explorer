@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.14，實際編輯僅支援 TFLite；1,286 檔與 19 項原生操作、固定資產實際下載比對均通過，含可攜編輯草稿、OP 複製／builtin 選單、固定 seed 權重、滑鼠平移與滾輪縮放，見 [最新交付驗收](docs/model-edit-workspace.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
+[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.15，實際編輯僅支援 TFLite；1,293 檔與 22 項原生操作、固定資產實際下載比對均通過，含網站內模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面，見 [最新交付驗收](docs/model-edit-workspace.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
 匯出後可從「最近匯出報告」下載來源 OP、輸入／輸出和原始資料位置對照；以本機 CLI 串流比對實際下載檔的權重／custom options，並可指定公司 MLIR compiler。報告清楚區分結構檢查、bytes 比對和未驗證的 runtime 語意，見 [匯出報告與本機驗證](docs/export-reports.md)。
 
