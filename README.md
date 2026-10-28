@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.15，實際編輯僅支援 TFLite；1,293 檔與 22 項原生操作、固定資產實際下載比對均通過，含網站內模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面，見 [最新交付驗收](docs/model-edit-workspace.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
+[固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。正式站目前為 preview.16，實際編輯僅支援 TFLite；1,302 檔與 24 項原生操作、固定資產實際下載比對均通過，含網站內模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面，見 [最新交付驗收](docs/edit-recovery.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
 匯出後可從「最近匯出報告」下載來源 OP、輸入／輸出和原始資料位置對照；以本機 CLI 串流比對實際下載檔的權重／custom options，並可指定公司 MLIR compiler。報告清楚區分結構檢查、bytes 比對和未驗證的 runtime 語意，見 [匯出報告與本機驗證](docs/export-reports.md)。
 
@@ -16,13 +16,13 @@
 
 選 pattern 時按住 **Alt＋拖曳**可平移模型，滾輪縮放；已有選取會保留。「編輯選取 pattern」把圈選轉成未儲存的 pattern 草稿，可增刪節點與連線；這項操作修改搜尋條件。已儲存的 pattern 可「刪除所選」並復原最近一次刪除，目前搜尋條件保留；若另一分頁已改成不同內容，先重新確認後才能刪除。
 
-「開啟模型」與「開啟匯出結果」各自建立網站內的模型分頁。切回原模型會重新讀取本機 File，恢復搜尋、選取、圖形位置及編輯命令／Undo／Redo；同時只啟用目前模型的 Worker，背景分頁不保留解析索引。每頁的 × 關閉該模型，頂端「關閉全部」釋放所有模型；有未匯出／未下載草稿的變更時會先提醒。分頁是目前網站記憶體內的狀態，關閉網站前仍須下載工作階段或編輯草稿。
+「開啟模型」與「開啟匯出結果」各自建立網站內的模型分頁。切回原模型會重新讀取本機 File，恢復搜尋、選取、圖形位置及編輯命令／Undo／Redo；同時只啟用目前模型的 Worker，背景分頁不保留解析索引。每頁的 × 關閉該模型，頂端「關閉全部」釋放所有模型；有未匯出／未下載草稿的變更時會先提醒。分頁本身是目前網站記憶體內的狀態；本機編輯草稿可重新選原模型恢復，重要工作仍須下載工作階段或編輯草稿備份。
 
 修改實際模型統一從頂端「編輯模型」進入；選原始 OP 後的「進階 OP 參數」也是實際模型編輯，只放在編輯工作區。它適用於尚未修改的原始 OP；新增 OP 的型別、接線和參數使用同一工作區的選單與圖形操作。實際編輯仍僅支援 TFLite。
 
 實際模型編輯**僅支援 TFLite**。開啟 TFLite 後，右上可切換「探索模型／編輯模型」；支援點選／拖曳接線、自動建立 output tensor、OP 複製／builtin 選單、固定 seed 權重、多步變更預覽與復原／重做。拖曳空白處平移，Alt＋拖曳可從 OP 上平移，滾輪以游標為中心縮放。編輯草稿可下載 JSON，重新選原模型並核對完整檔案指紋後恢復接線、歷史及視角。匯出後可直接重開修改結果，詳見 [TFLite 模型編輯工作區](docs/model-edit-workspace.md)。MLIR 保留探索、搜尋、pattern、局部匯出，不提供實際 OP 編輯，也不接受舊 MLIR 模型編輯草稿。
 
-候選 preview.16 另補本機編輯草稿自動保存／異常關閉恢復，實作及待驗收範圍見 [本機編輯恢復](docs/edit-recovery.md)；正式網站仍以已發布版本為準。
+TFLite 編輯預設在背景核對完整原模型並自動保存命令／視角，不保存模型或權重。顯示「已保存」後，可從右上「編輯草稿」選本機記錄、重新選原模型恢復接線及 Undo／Redo；重要工作仍應下載 JSON。已通過瀏覽器強制終止後重啟與 1.25 GiB 八輪量測，見 [本機編輯恢復與限制](docs/edit-recovery.md)。
 
 ## Pattern 條件與工作階段
 
