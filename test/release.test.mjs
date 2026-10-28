@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {buildSite} from '../scripts/build.mjs';
 import {packageRelease} from '../scripts/package-release.mjs';
-import {root,verifyArtifact,buildDestination,buildEvent,safeFile,sha256} from '../scripts/lib/release-artifact.mjs';
+import {root,verifyArtifact,buildDestination,buildEvent,safeFile,sha256,within} from '../scripts/lib/release-artifact.mjs';
 import {readProfile,copyWebTree} from '../scripts/lib/build-profile.mjs';
 import {validateDialectAdapters} from '../src/mlir-dialect-contract.js';
 import {releaseRows} from '../src/release-info.js';
@@ -52,6 +52,12 @@ test('fixed public/internal packages preserve extensions and enforce release int
         const reopened=await parseMLIR(new Uint8Array(await exported.blob.arrayBuffer()),{metadata,dialects:mlirDialects});
         assert.equal(reopened.graphs[0].graph.nodes[1].attributes.find(a=>a.name==='build extension').value,'Internal fixture adapter');
         await assert.rejects(verifyArtifact(internalPath,{publicOnly:true}),/拒絕公開/);
+    });
+    await t.test('a rehashed manifest cannot hide a missing required runtime binary',async()=>{
+        const name='vendor/litert/2.6.0/litert_wasm_compat_internal.wasm',binary=path.join(publicPath,name),manifestPath=path.join(publicPath,'release-manifest.json');assert.ok(within(publicPath,binary));
+        const bytes=await readFile(binary),raw=await readFile(manifestPath),manifest=JSON.parse(raw);assert.equal(bytes.subarray(0,4).toString('hex'),'0061736d');
+        try{await import('node:fs/promises').then(fs=>fs.rm(binary));await writeFile(manifestPath,JSON.stringify({...manifest,files:manifest.files.filter(f=>f.path!==name)}));await assert.rejects(verifyArtifact(publicPath),/缺少 LiteRT WASM/);}
+        finally{await writeFile(binary,bytes);await writeFile(manifestPath,raw);}
     });
     await t.test('standard ZIP reader checks every CRC and manifest entry',async()=>{
         for(const directory of [publicPath,internalPath]) {
