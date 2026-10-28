@@ -20,4 +20,6 @@
 
 上表公司實模／compiler／runtime、長時間效能、其他引擎、固定實體硬體 SLA、OS 斷電／儲存回收、格式遷移及其餘鍵盤／新手流程仍未完成，整體商品等級目標維持進行中。
 
+其他桌面引擎已補上 Hosted Linux Firefox 142.0.1／WebKit 26.0 的正式站唯讀驗收入口與原始結果，見 [桌面相容性診斷](desktop-engines.md)。兩者均驗證實際 TFLite 接線、草稿、IF／WHILE／custom 匯出及 payload；WebKit 另完成十三項含 MLIR Canvas／SSA／pattern 的操作，但仍有 recovery Worker／ResizeObserver 錯誤，Firefox 尚待原生 select 鍵盤流程。最新整輪仍 failed，不能把已完成步驟寫為引擎相容性合格；也未用來代替 1 GiB 或長時間量測。正式站仍為上列 preview.17，未因測試工具變更而重新發布。
+
 Preview.16 的完整大型原模型自動指紋（八輪各最多 1 MiB／次）及瀏覽器程序強制終止後恢復已通過，見 [完整恢復交付](edit-recovery.md)。後續已補上 1.25 GiB 手動 JSON 下載／原生重選恢復、取消、32px 視角及 Redo、實際整份匯出重開與權重／custom options／pattern 驗收，見 [大型手動草稿驗收](large-edit-draft.md)。這不代替公司實模、其他引擎、OS 斷電、固定實體硬體 SLA 或數小時負載。
