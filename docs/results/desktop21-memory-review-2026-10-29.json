@@ -1,0 +1,2315 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af",
+    "tree": "e71c39f653bf38453e5382443c6f96f12fbaa84d",
+    "committedAt": "2026-10-29T00:13:07+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "source": {
+        "commit": "724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af",
+        "tree": "e71c39f653bf38453e5382443c6f96f12fbaa84d",
+        "committedAt": "2026-10-29T00:13:07+08:00",
+        "dirty": false
+      },
+      "runId": 40724931148,
+      "attempt": 1,
+      "jobId": 122945531193,
+      "artifactId": 12832459902,
+      "digest": "sha256:0e4c123d11cfba689a7cd8aed71ddffa9d087814dddc3c939825c784cab40c98",
+      "rawSHA256": "81d67fcaa35fd363e99aebcc510683fe4106ab897d67604ecf437869251a9e16",
+      "rawBytes": 4842389,
+      "build": "c62686e2d0079cef",
+      "coreFiles": 292,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "isolated lifecycle metadata request succeeds before large-model actions",
+        "native pattern JSON chooser, download and exact structure round trip",
+        "eight native full-edit/cut/reopen/close cycles, full weights/options, fingerprints, positive and negative patterns"
+      ],
+      "cycles": 8,
+      "completedCycles": 8,
+      "observedOnly": {
+        "sampledPeakRssBytes": 4165541888,
+        "peakGrowthBytes": 3344564224
+      },
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 6210238.171428571,
+        "rssDriftBytes": 24031232,
+        "sampledPeakRssBytes": 4165541888,
+        "sampledPeakGrowthBytes": 3344564224,
+        "meanSampleMs": 480.2564487577353,
+        "maxSampleGapMs": 563.0572199999588
+      },
+      "evaluation": {
+        "status": "failed",
+        "issues": [
+          "browser-peak-growth"
+        ],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 6210238.171428571,
+          "rssDriftBytes": 24031232,
+          "sampledPeakRssBytes": 4165541888,
+          "sampledPeakGrowthBytes": 3344564224,
+          "meanSampleMs": 480.2564487577353,
+          "maxSampleGapMs": 563.0572199999588
+        }
+      },
+      "completedWorkVerified": true,
+      "allHTTPFilesMatchFreshBuild": true,
+      "memoryProfile": {
+        "observations": 1520,
+        "completeObservations": 1520,
+        "exitedObservations": 0,
+        "reusedPidObservations": 0,
+        "phasePeaks": [
+          {
+            "elapsedMs": 33.856854000001476,
+            "phase": "baseline",
+            "gateRssBytes": 820977664,
+            "observedStartMs": 34.0902070000011,
+            "observedEndMs": 38.12633199999982,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "R",
+                "name": "firefox",
+                "rssBytes": 397295616,
+                "anonymousBytes": 230105088,
+                "fileBytes": 165990400,
+                "sharedBytes": 1200128
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 31813632,
+                "anonymousBytes": 9621504,
+                "fileBytes": 21917696,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 125841408,
+                "anonymousBytes": 38391808,
+                "fileBytes": 86495232,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 30089216,
+                "anonymousBytes": 9641984,
+                "fileBytes": 20172800,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 28737536,
+                "anonymousBytes": 9519104,
+                "fileBytes": 18944000,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 174014464,
+                "anonymousBytes": 63143936,
+                "fileBytes": 109793280,
+                "sharedBytes": 1077248
+              }
+            ],
+            "totals": {
+              "rssBytes": 821506048,
+              "anonymousBytes": 369119232,
+              "fileBytes": 448331776,
+              "sharedBytes": 4055040
+            },
+            "differenceFromGateRSSBytes": 528384,
+            "sourcePhase": "baseline"
+          },
+          {
+            "elapsedMs": 639577.89399,
+            "phase": "source",
+            "gateRssBytes": 1128849408,
+            "observedStartMs": 639577.9253069999,
+            "observedEndMs": 639579.412787,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 502554624,
+                "anonymousBytes": 327061504,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 383803392,
+                "anonymousBytes": 258768896,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 1128849408,
+              "anonymousBytes": 647892992,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "source"
+          },
+          {
+            "elapsedMs": 640196.952525,
+            "phase": "edit",
+            "gateRssBytes": 1137819648,
+            "observedStartMs": 640196.983871,
+            "observedEndMs": 640200.110826,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 507015168,
+                "anonymousBytes": 331522048,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 386428928,
+                "anonymousBytes": 261394432,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 1135935488,
+              "anonymousBytes": 654979072,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": -1884160,
+            "sourcePhase": "cycle-8-edit"
+          },
+          {
+            "elapsedMs": 276903.364187,
+            "phase": "full-export",
+            "gateRssBytes": 2778189824,
+            "observedStartMs": 276903.419639,
+            "observedEndMs": 276905.34136200004,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 2023579648,
+                "anonymousBytes": 1848414208,
+                "fileBytes": 173031424,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 123121664,
+                "anonymousBytes": 34492416,
+                "fileBytes": 87674880,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 505147392,
+                "anonymousBytes": 380461056,
+                "fileBytes": 123494400,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 2780655616,
+              "anonymousBytes": 2301104128,
+              "fileBytes": 474447872,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 2465792,
+            "sourcePhase": "cycle-4-full-export"
+          },
+          {
+            "elapsedMs": 658699.621665,
+            "phase": "fingerprint",
+            "gateRssBytes": 2450866176,
+            "observedStartMs": 658699.65177,
+            "observedEndMs": 658701.0459609999,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 1819369472,
+                "anonymousBytes": 1643876352,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 389128192,
+                "anonymousBytes": 264093696,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 2450989056,
+              "anonymousBytes": 1970032640,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 122880,
+            "sourcePhase": "cycle-8-fingerprint"
+          },
+          {
+            "elapsedMs": 567109.314073,
+            "phase": "edited-model",
+            "gateRssBytes": 2459557888,
+            "observedStartMs": 567109.347343,
+            "observedEndMs": 567110.836666,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 1816571904,
+                "anonymousBytes": 1641078784,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 400519168,
+                "anonymousBytes": 275550208,
+                "fileBytes": 123777024,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 2459582464,
+              "anonymousBytes": 1978691584,
+              "fileBytes": 475787264,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 24576,
+            "sourcePhase": "edited-model"
+          },
+          {
+            "elapsedMs": 570173.725295,
+            "phase": "full-bytes",
+            "gateRssBytes": 2451124224,
+            "observedStartMs": 570173.753877,
+            "observedEndMs": 570180.206442,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 1815646208,
+                "anonymousBytes": 1640153088,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 392986624,
+                "anonymousBytes": 268017664,
+                "fileBytes": 123777024,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 2451124224,
+              "anonymousBytes": 1970233344,
+              "fileBytes": 475787264,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-7-full-bytes"
+          },
+          {
+            "elapsedMs": 390622.77236500004,
+            "phase": "submodel",
+            "gateRssBytes": 4165541888,
+            "observedStartMs": 390622.814257,
+            "observedEndMs": 390624.367114,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 3525660672,
+                "anonymousBytes": 3350495232,
+                "fileBytes": 173031424,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113700864,
+                "anonymousBytes": 24342528,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 397373440,
+                "anonymousBytes": 272404480,
+                "fileBytes": 123777024,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 4165541888,
+              "anonymousBytes": 3684978688,
+              "fileBytes": 475459584,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-5-submodel"
+          },
+          {
+            "elapsedMs": 679625.689472,
+            "phase": "reopen",
+            "gateRssBytes": 3707203584,
+            "observedStartMs": 679625.72167,
+            "observedEndMs": 679627.5116569999,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 3191234560,
+                "anonymousBytes": 3015741440,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 273477632,
+                "anonymousBytes": 148443136,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 3707203584,
+              "anonymousBytes": 3226247168,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "reopen"
+          },
+          {
+            "elapsedMs": 679910.786463,
+            "phase": "verify",
+            "gateRssBytes": 3656638464,
+            "observedStartMs": 679910.8201629999,
+            "observedEndMs": 679931.4393099999,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 3184078848,
+                "anonymousBytes": 3008585728,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 230068224,
+                "anonymousBytes": 105033728,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 3656638464,
+              "anonymousBytes": 3175682048,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-8-verify"
+          },
+          {
+            "elapsedMs": 706920.7438909999,
+            "phase": "release",
+            "gateRssBytes": 3636809728,
+            "observedStartMs": 706920.78415,
+            "observedEndMs": 706922.2083569999,
+            "processes": [
+              {
+                "pid": 3282,
+                "startTicks": "5851",
+                "observation": "present",
+                "parent": 3257,
+                "state": "S",
+                "name": "firefox",
+                "rssBytes": 3180609536,
+                "anonymousBytes": 3005116416,
+                "fileBytes": 173359104,
+                "sharedBytes": 2134016
+              },
+              {
+                "pid": 3338,
+                "startTicks": "5880",
+                "observation": "present",
+                "parent": 3282,
+                "state": "S",
+                "name": "forkserver",
+                "rssBytes": 33714176,
+                "anonymousBytes": 8695808,
+                "fileBytes": 25018368,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 3340,
+                "startTicks": "5882",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Socket Process",
+                "rssBytes": 32878592,
+                "anonymousBytes": 9703424,
+                "fileBytes": 22900736,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3356,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "WebExtensions",
+                "rssBytes": 113684480,
+                "anonymousBytes": 24326144,
+                "fileBytes": 88403968,
+                "sharedBytes": 954368
+              },
+              {
+                "pid": 3365,
+                "startTicks": "5890",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "RDD Process",
+                "rssBytes": 31821824,
+                "anonymousBytes": 9736192,
+                "fileBytes": 21811200,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3436,
+                "startTicks": "5968",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Utility Process",
+                "rssBytes": 30392320,
+                "anonymousBytes": 9601024,
+                "fileBytes": 20516864,
+                "sharedBytes": 274432
+              },
+              {
+                "pid": 3451,
+                "startTicks": "5986",
+                "observation": "present",
+                "parent": 3338,
+                "state": "S",
+                "name": "Web Content",
+                "rssBytes": 213708800,
+                "anonymousBytes": 88674304,
+                "fileBytes": 123842560,
+                "sharedBytes": 1191936
+              }
+            ],
+            "totals": {
+              "rssBytes": 3636809728,
+              "anonymousBytes": 3155853312,
+              "fileBytes": 475852800,
+              "sharedBytes": 5103616
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-8-release"
+          }
+        ]
+      },
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 3282,
+          "startTicks": "5851"
+        },
+        "parentPid": 3257,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 3282,
+            "startTicks": "5851"
+          },
+          {
+            "pid": 3338,
+            "startTicks": "5880"
+          },
+          {
+            "pid": 3340,
+            "startTicks": "5882"
+          },
+          {
+            "pid": 3356,
+            "startTicks": "5890"
+          },
+          {
+            "pid": 3365,
+            "startTicks": "5890"
+          },
+          {
+            "pid": 3436,
+            "startTicks": "5968"
+          },
+          {
+            "pid": 3451,
+            "startTicks": "5986"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/vendor/netron/worker.js?v=c62686e2d0079cef",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:33701/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "passed",
+      "engine": "webkit",
+      "source": {
+        "commit": "724dbe04cff5aeeaf15a34cc8ecf2fd516ae74af",
+        "tree": "e71c39f653bf38453e5382443c6f96f12fbaa84d",
+        "committedAt": "2026-10-29T00:13:07+08:00",
+        "dirty": false
+      },
+      "runId": 40724931148,
+      "attempt": 1,
+      "jobId": 122945532190,
+      "artifactId": 12834080164,
+      "digest": "sha256:295df8c5ebe8481d55eb32b461b6427b35c31cf6a6106ac2e22b0bcd27a65a94",
+      "rawSHA256": "5868f0dc200ae5af47df53b69c687217484b3222ca4b391e952af26d4be7c24f",
+      "rawBytes": 3162647,
+      "build": "c62686e2d0079cef",
+      "coreFiles": 292,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "isolated lifecycle metadata request succeeds before large-model actions",
+        "native pattern JSON chooser, download and exact structure round trip",
+        "eight native full-edit/cut/reopen/close cycles, full weights/options, fingerprints, positive and negative patterns"
+      ],
+      "cycles": 8,
+      "completedCycles": 8,
+      "observedOnly": {
+        "sampledPeakRssBytes": 1439420416,
+        "peakGrowthBytes": 783192064
+      },
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 10023848.228571428,
+        "rssDriftBytes": 42979328,
+        "sampledPeakRssBytes": 1439420416,
+        "sampledPeakGrowthBytes": 783192064,
+        "meanSampleMs": 479.39429380027644,
+        "maxSampleGapMs": 577.3455049999757
+      },
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 10023848.228571428,
+          "rssDriftBytes": 42979328,
+          "sampledPeakRssBytes": 1439420416,
+          "sampledPeakGrowthBytes": 783192064,
+          "meanSampleMs": 479.39429380027644,
+          "maxSampleGapMs": 577.3455049999757
+        }
+      },
+      "completedWorkVerified": true,
+      "allHTTPFilesMatchFreshBuild": true,
+      "memoryProfile": {
+        "observations": 1448,
+        "completeObservations": 1448,
+        "exitedObservations": 0,
+        "reusedPidObservations": 0,
+        "phasePeaks": [
+          {
+            "elapsedMs": 18.989040999997087,
+            "phase": "baseline",
+            "gateRssBytes": 656228352,
+            "observedStartMs": 19.247909999998228,
+            "observedEndMs": 34.871893999999884,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 147161088,
+                "anonymousBytes": 38469632,
+                "fileBytes": 105005056,
+                "sharedBytes": 3686400
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 80977920,
+                "anonymousBytes": 23240704,
+                "fileBytes": 57733120,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 423583744,
+                "anonymousBytes": 208031744,
+                "fileBytes": 211865600,
+                "sharedBytes": 3686400
+              }
+            ],
+            "totals": {
+              "rssBytes": 655486976,
+              "anonymousBytes": 270118912,
+              "fileBytes": 377991168,
+              "sharedBytes": 7376896
+            },
+            "differenceFromGateRSSBytes": -741376,
+            "sourcePhase": "baseline"
+          },
+          {
+            "elapsedMs": 521547.34995299997,
+            "phase": "source",
+            "gateRssBytes": 1224949760,
+            "observedStartMs": 521547.40341299993,
+            "observedEndMs": 521549.26756099996,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145965056,
+                "anonymousBytes": 37421056,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 94310400,
+                "anonymousBytes": 35983360,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 972701696,
+                "anonymousBytes": 737017856,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1216741376,
+              "anonymousBytes": 810799104,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": -8208384,
+            "sourcePhase": "cycle-7-source"
+          },
+          {
+            "elapsedMs": 349148.506161,
+            "phase": "edit",
+            "gateRssBytes": 1153708032,
+            "observedStartMs": 349148.53232999996,
+            "observedEndMs": 349150.940871,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 146280448,
+                "anonymousBytes": 37736448,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 91930624,
+                "anonymousBytes": 33603584,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "R",
+                "name": "WPEWebProcess",
+                "rssBytes": 911740928,
+                "anonymousBytes": 680398848,
+                "fileBytes": 228065280,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1153716224,
+              "anonymousBytes": 752115712,
+              "fileBytes": 395042816,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 8192,
+            "sourcePhase": "cycle-5-edit"
+          },
+          {
+            "elapsedMs": 611572.512386,
+            "phase": "full-export",
+            "gateRssBytes": 1439420416,
+            "observedStartMs": 611572.546797,
+            "observedEndMs": 611576.271004,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145756160,
+                "anonymousBytes": 37212160,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "R",
+                "name": "WPENetworkProce",
+                "rssBytes": 97112064,
+                "anonymousBytes": 38785024,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 1197879296,
+                "anonymousBytes": 962195456,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1444511744,
+              "anonymousBytes": 1038569472,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 5091328,
+            "sourcePhase": "cycle-8-full-export"
+          },
+          {
+            "elapsedMs": 621587.2706909999,
+            "phase": "fingerprint",
+            "gateRssBytes": 1396318208,
+            "observedStartMs": 621587.2977519999,
+            "observedEndMs": 621589.1996909999,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 146681856,
+                "anonymousBytes": 38137856,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 95473664,
+                "anonymousBytes": 37146624,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "R",
+                "name": "WPEWebProcess",
+                "rssBytes": 1151385600,
+                "anonymousBytes": 915701760,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1397305344,
+              "anonymousBytes": 991363072,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 987136,
+            "sourcePhase": "cycle-8-fingerprint"
+          },
+          {
+            "elapsedMs": 623032.956091,
+            "phase": "edited-model",
+            "gateRssBytes": 1232855040,
+            "observedStartMs": 623032.9825309999,
+            "observedEndMs": 623033.868903,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 146034688,
+                "anonymousBytes": 37490688,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 95199232,
+                "anonymousBytes": 36872192,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 987856896,
+                "anonymousBytes": 752173056,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1232855040,
+              "anonymousBytes": 826912768,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "edited-model"
+          },
+          {
+            "elapsedMs": 541058.629051,
+            "phase": "full-bytes",
+            "gateRssBytes": 1169129472,
+            "observedStartMs": 541058.659908,
+            "observedEndMs": 541061.293857,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145842176,
+                "anonymousBytes": 37298176,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 93917184,
+                "anonymousBytes": 35590144,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "R",
+                "name": "WPEWebProcess",
+                "rssBytes": 925761536,
+                "anonymousBytes": 690077696,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1169285120,
+              "anonymousBytes": 763342848,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 155648,
+            "sourcePhase": "cycle-7-full-bytes"
+          },
+          {
+            "elapsedMs": 196034.00569700002,
+            "phase": "submodel",
+            "gateRssBytes": 1302003712,
+            "observedStartMs": 196034.0542,
+            "observedEndMs": 196035.27483,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145842176,
+                "anonymousBytes": 37298176,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "R",
+                "name": "WPENetworkProce",
+                "rssBytes": 116969472,
+                "anonymousBytes": 58642432,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 1035427840,
+                "anonymousBytes": 809672704,
+                "fileBytes": 222478336,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1302003712,
+              "anonymousBytes": 905990144,
+              "fileBytes": 389455872,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-3-submodel"
+          },
+          {
+            "elapsedMs": 639469.22739,
+            "phase": "reopen",
+            "gateRssBytes": 1033498624,
+            "observedStartMs": 639469.266789,
+            "observedEndMs": 639471.329669,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145854464,
+                "anonymousBytes": 37310464,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 98824192,
+                "anonymousBytes": 40497152,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 785055744,
+                "anonymousBytes": 549371904,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 1033498624,
+              "anonymousBytes": 627556352,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "reopen"
+          },
+          {
+            "elapsedMs": 639682.041371,
+            "phase": "verify",
+            "gateRssBytes": 988725248,
+            "observedStartMs": 639682.072327,
+            "observedEndMs": 639713.99173,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145854464,
+                "anonymousBytes": 37310464,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 98709504,
+                "anonymousBytes": 40382464,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 740397056,
+                "anonymousBytes": 504713216,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 988725248,
+              "anonymousBytes": 582782976,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-8-verify"
+          },
+          {
+            "elapsedMs": 654185.831575,
+            "phase": "release",
+            "gateRssBytes": 974135296,
+            "observedStartMs": 654185.858666,
+            "observedEndMs": 654186.7421939999,
+            "processes": [
+              {
+                "pid": 5011,
+                "startTicks": "15587",
+                "observation": "present",
+                "parent": 4988,
+                "state": "S",
+                "name": "bash",
+                "rssBytes": 3764224,
+                "anonymousBytes": 376832,
+                "fileBytes": 3387392,
+                "sharedBytes": 0
+              },
+              {
+                "pid": 5017,
+                "startTicks": "15588",
+                "observation": "present",
+                "parent": 5011,
+                "state": "S",
+                "name": "MiniBrowser",
+                "rssBytes": 145489920,
+                "anonymousBytes": 36945920,
+                "fileBytes": 105267200,
+                "sharedBytes": 3276800
+              },
+              {
+                "pid": 5035,
+                "startTicks": "15648",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPENetworkProce",
+                "rssBytes": 98652160,
+                "anonymousBytes": 40325120,
+                "fileBytes": 58322944,
+                "sharedBytes": 4096
+              },
+              {
+                "pid": 5077,
+                "startTicks": "16147",
+                "observation": "present",
+                "parent": 5017,
+                "state": "S",
+                "name": "WPEWebProcess",
+                "rssBytes": 726228992,
+                "anonymousBytes": 490545152,
+                "fileBytes": 232407040,
+                "sharedBytes": 3276800
+              }
+            ],
+            "totals": {
+              "rssBytes": 974135296,
+              "anonymousBytes": 568193024,
+              "fileBytes": 399384576,
+              "sharedBytes": 6557696
+            },
+            "differenceFromGateRSSBytes": 0,
+            "sourcePhase": "cycle-8-release"
+          }
+        ]
+      },
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 5011,
+          "startTicks": "15587"
+        },
+        "parentPid": 4988,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 5011,
+            "startTicks": "15587"
+          },
+          {
+            "pid": 5017,
+            "startTicks": "15588"
+          },
+          {
+            "pid": 5035,
+            "startTicks": "15648"
+          },
+          {
+            "pid": 5077,
+            "startTicks": "16147"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/vendor/netron/worker.js?v=c62686e2d0079cef",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/edit-recovery-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:38599/tflite-explorer/src/model-worker.js?v=c62686e2d0079cef",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    }
+  ]
+}
