@@ -21,6 +21,7 @@ import {modelTabsFlow} from './model-tabs-flow.mjs';
 import {editRecoveryFlow} from './edit-recovery-flow.mjs';
 import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
 import {tfliteRuntimeFlow} from './tflite-runtime-flow.mjs';
+import {startupNetworkTrace} from './startup-network-trace.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -38,7 +39,7 @@ const editRecoveryRequired=consolidatedEditorRequired&&expected!=='dbf8955ac378a
 const mlirKeyboardRequired=editRecoveryRequired&&expected!=='855f8ca810f04f4d';
 let base='https://koviankevin.github.io/tflite-explorer/';const reportPath=path.join(process.env.RUNNER_TEMP,'production-smoke.json');
 const report={format:'model-lens-production-smoke',version:1,status:'failed',startedAt:new Date().toISOString(),driverSourceCommit:process.env.GITHUB_SHA,expectedBuild:expected,checks:[],errors:[],workers:[]};
-let browser,context,page,readPage,releaseStartup,server;
+let browser,context,page,readPage,releaseStartup,server,startupTrace;
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 async function waitFor(fn){const until=Date.now()+30000;while(!await readPage(fn)){if(Date.now()>until)throw Error(`DOM timeout: ${fn}`);await wait(100);}}
@@ -70,8 +71,9 @@ try{
     let markStartupBlocked,startupReleased=false;
     const startupBlocked=new Promise(resolve=>{markStartupBlocked=resolve;});
     const startupHold=new Promise(resolve=>{releaseStartup=()=>{startupReleased=true;resolve();};});
-    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){markStartupBlocked();await startupHold;}await route.continue();}});
+    await context.route('**/*',async route=>{const r=route.request(),url=new URL(r.url());if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}if(r.method()!=='GET'||!r.url().startsWith(base)){report.errors.push('Unexpected external/non-GET request.');await route.abort();}else {if(url.pathname.endsWith('/vendor/netron/zip.js')&&!startupReleased){startupTrace?.hold(r);markStartupBlocked();await startupHold;}await route.continue();}});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>report.errors.push(error.message));page.on('crash',()=>report.errors.push('Page crash.'));page.on('websocket',()=>report.errors.push('Unexpected WebSocket.'));
+    startupTrace=startupNetworkTrace(base);page.on('request',r=>startupTrace.request(r));page.on('response',r=>startupTrace.response(r));page.on('requestfinished',r=>startupTrace.finished(r));page.on('requestfailed',r=>startupTrace.failed(r));page.on('console',m=>startupTrace.console(m));
     page.on('worker',worker=>{const item={url:worker.url(),closed:false};report.workers.push(item);worker.on('close',()=>{item.closed=true;});if(/\/model-worker\.js(?:\?|$)/.test(item.url)&&item.url!==new URL(coreBasePath+`src/model-worker.js?v=${expected}`,base).href)report.errors.push('Model worker belongs to another core namespace/build.');});
     const cdp=await context.newCDPSession(page);readPage=async (fn,...args)=>{const value=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})(...${JSON.stringify(args)})`,returnByValue:true});if(value.exceptionDetails)throw Error('Read-only DOM observation failed.');return value.result.value;};
     await page.goto(base+'?v='+expected,{waitUntil:'domcontentloaded'});
@@ -81,6 +83,7 @@ try{
     try{await Promise.race([startupBlocked,new Promise((_,reject)=>{startupTimer=setTimeout(()=>reject(Error('Graph initialization request was not observed.')),30000);})]);}finally{clearTimeout(startupTimer);}
     assert.equal(await readPage(()=>typeof document.querySelector('#release-info-button').onclick),'function','Version control must work while graph initialization is pending.');
     if(selectionToolsRequired)assert.equal(await readPage(()=>document.querySelector('#autosave-enabled').disabled),true,'Autosave must not accept changes before the session preferences initialize.');
+    startupTrace.stop();report.startupNetwork=startupTrace.snapshot();
     await page.locator('#release-info-button').click();await page.getByText(expected,{exact:true}).waitFor();await page.locator('#close-release-info').click();releaseStartup();check('version dialog works during delayed graph initialization at the repository subpath');
     await page.locator('#open-demo').click();await ready(26);await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
     await page.locator('#query').fill('#0');await waitFor(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);check('public demo, 32px graph, exact layer search and location');
@@ -100,7 +103,7 @@ try{
     report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}report.editRecoveryRequired=editRecoveryRequired;if(editRecoveryRequired)report.editRecovery=await editRecoveryFlow({page,read:readPage,base,directory:temporary,check});
     report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check});
     const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)),previousWorkers=tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3;assert.equal(modelWorkers.length,previousWorkers+(mlirKeyboardRequired?5:0));assert.ok(modelWorkers.every(w=>w.closed));if(manifest.files.some(f=>f.path==='src/tflite-runtime-worker.js'))report.tfliteRuntime=await tfliteRuntimeFlow({page,read:readPage,base,directory:temporary,check});assert.deepEqual(report.errors,[]);report.status='passed';
-}catch(error){report.error=error.stack||String(error);if(error.tfliteRuntime)report.tfliteRuntime=error.tfliteRuntime;process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
+}catch(error){report.error=error.stack||String(error);if(error.tfliteRuntime)report.tfliteRuntime=error.tfliteRuntime;process.exitCode=1;if(startupTrace&&!report.startupNetwork){startupTrace.stop();report.startupNetwork=startupTrace.snapshot();}if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();
     try{await context?.close();if(browser){let timer;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Browser close timeout.')),10000);})]);}finally{clearTimeout(timer);}}}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
