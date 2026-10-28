@@ -63,8 +63,12 @@
 | 關卡 | 選定證據 |
 | --- | --- |
 | core | [40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445)，86 個執行相依 fingerprint 不變，可沿用既有成功 main 量測 |
-| browser | [40610420461](https://github.com/koviankevin/tflite-explorer/actions/runs/40610420461)，八輪實體大模型編輯／下載／重開／關閉，等待完成後核對 |
-| contract | [40610424400](https://github.com/koviankevin/tflite-explorer/actions/runs/40610424400)，發布合約 main 手動入口 |
-| site | [40610428484](https://github.com/koviankevin/tflite-explorer/actions/runs/40610428484)，隔離版本切換與同份來源原生操作 |
+| browser | [40610420461](https://github.com/koviankevin/tflite-explorer/actions/runs/40610420461)，八輪實體大模型編輯／下載／重開／關閉已通過，provider／來源指紋另行核對 |
+| contract | [40610424400](https://github.com/koviankevin/tflite-explorer/actions/runs/40610424400)，發布合約 main 手動入口 76 項成功，零失敗／略過／取消 |
+| site | [40610428484](https://github.com/koviankevin/tflite-explorer/actions/runs/40610428484)，六種隔離版本切換與 21 項原生操作成功，34 模型 Worker 關閉 |
 
 公司 compiler／runtime、完整 TFLite kernel shape／量化語意、推論結果、其他瀏覽器及數小時操作仍未驗證；商品等級未完成項目不因本次功能而標為完成。
+
+[四項關卡獨立核對](results/preview13-gates-review-2026-10-28.json)通過，所有測試來源相依 fingerprint 與候選一致。八輪實體模型報告見 [完整原始紀錄](results/preview13-main-browser-2026-10-28.json)及 [provider 核對](results/preview13-main-browser-review-2026-10-28.json)：24 模型 Worker 終止，60 秒自然 Blob URL 釋放、每 realm 1 MiB／累計 16 MiB 原有讀取限制不變；原檔 21,005 OP、編輯範圍 2 原始 OP＋1 複製 OP，完整候選 21,006 OP。暖機後 RSS drift 13,639,680 bytes、每輪斜率約 1.96 MiB，取樣峰值 929,910,784 bytes。每輪完整輸出 1,350,445,736 bytes、SHA-256 `76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045`，7 段共 1,342,177,328 bytes 權重／custom options 比對一致。這個八輪量測沒有執行草稿完整檔案 fingerprint；其分段讀取、完整 bytes 覆蓋與取消另有 Node 測試和小型原生草稿驗收，不宣稱已量測 1 GiB 草稿雜湊效能。
+
+[Main 原生驗收](results/preview13-main-ui-2026-10-28.json)及 [provider 核對](results/preview13-main-ui-review-2026-10-28.json)成功。接下來 prepare 與正式發布仍需在固定乾淨來源重新核對完整產物；本段尚不宣稱正式站已切換。

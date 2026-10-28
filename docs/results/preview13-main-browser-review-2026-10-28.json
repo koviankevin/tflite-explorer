@@ -1,0 +1,19 @@
+{
+  "kind": "browser",
+  "id": 40610420461,
+  "status": "passed",
+  "head": "f3374ed2ac9fd1de5ef7cef03c14955592a42229",
+  "artifactId": 12782384102,
+  "artifactDigest": "sha256:f50a74ece7c82fbb62bc38822899dbdca480a326255592d287261282b2bfa229",
+  "reportSHA256": "0cf19813dba77431234379b40a00083f2635b02d34cfdbdd4276069b8895206b",
+  "fingerprint": "9576cfb93c09212280c6b3900e446cb7f804194a3d2b335f24490bbfff42b67c",
+  "files": 275,
+  "summary": {
+    "measuredCycles": 6,
+    "rssSlopeBytesPerCycle": 2059000.6857142858,
+    "rssDriftBytes": 13639680,
+    "mainHeapDriftBytes": 315312,
+    "sampledPeakRssBytes": 929910784,
+    "sampledPeakGrowthBytes": 421351424
+  }
+}
