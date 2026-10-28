@@ -1,0 +1,78 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "203d36af97dd7a4e0e52ba95c8bec540754b03a7",
+    "tree": "ac7be264d285b0399f94a436de546b8f7bc070db",
+    "committedAt": "2026-10-28T19:28:47+08:00",
+    "dirty": false
+  },
+  "testedSource": {
+    "commit": "7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417",
+    "tree": "e69bd29513b9d9371616772f36f16e43ffb1a77a"
+  },
+  "run": {
+    "id": 40679379293,
+    "attempt": 1,
+    "jobId": 122785873586,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40679379293",
+    "startedAt": "2026-10-28T11:22:00Z",
+    "completedAt": "2026-10-28T11:23:59Z"
+  },
+  "artifact": {
+    "id": 12811673202,
+    "digest": "sha256:509595b31c71836b35d10434d5cce36a91cf18db12eb66d1c02a38a5ab10f0b9",
+    "rawSHA256": "8b097ad2fd182a5df1ef6e14f630562d046000d85ca4191eb09015f60f6c8a52",
+    "rawBytes": 34552
+  },
+  "error": "locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#edit-recovery-list option').nth(19)\n\n    at rows (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:87:92)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:107\n    at async until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:84:98)\n    at async Object.ensureSaved (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:77)\n    at async recoveryCapacityPreflight (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery-preflight.mjs:41:13)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:156:75",
+  "errors": [],
+  "measuredCycles": 0,
+  "activeDurationMs": 0,
+  "preflight": {
+    "status": "failed",
+    "cyclesStarted": 21,
+    "completedDraftBackups": 20,
+    "error": "locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#edit-recovery-list option').nth(19)\n\n    at rows (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:87:92)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:107\n    at async until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:84:98)\n    at async Object.ensureSaved (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery.mjs:110:77)\n    at async recoveryCapacityPreflight (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/soak-recovery-preflight.mjs:41:13)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:156:75",
+    "models": {
+      "created": 21,
+      "closed": 21
+    },
+    "identities": {
+      "created": 21,
+      "closed": 21
+    },
+    "browserClosed": true,
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3436,
+          "startTicks": "8708"
+        },
+        {
+          "pid": 3438,
+          "startTicks": "8710"
+        },
+        {
+          "pid": 3439,
+          "startTicks": "8710"
+        },
+        {
+          "pid": 3455,
+          "startTicks": "8712"
+        },
+        {
+          "pid": 3468,
+          "startTicks": "8732"
+        },
+        {
+          "pid": 3480,
+          "startTicks": "8747"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true
+    },
+    "errors": []
+  }
+}

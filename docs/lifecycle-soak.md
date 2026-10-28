@@ -53,4 +53,6 @@
 
 [40679379293](https://github.com/koviankevin/tflite-explorer/actions/runs/40679379293) 在 22 次保存的快速前測中失敗，兩小時測量尚未開始。實際移除第 21 輪的舊稿時，UI 正常將 20 個 option 刷新為 19 個；觀察器分別 await `count`／`nth`／attribute，因而等待已消失的第二十項逾時。錯誤紀錄為 `locator('#edit-recovery-list option').nth(19)`，不是原檔指紋或保存逾時。
 
+原始 [failed 報告](results/soak-capacity-list-failure-2026-10-28.json)及 [provider digest／CRC／來源核對](results/soak-capacity-list-review-2026-10-28.json)已保存：前 20 份最終備份已下載，開始第 21 次；21 個模型及 21 個指紋 Worker 全部 close，owned 程序全數正常結束，沒有 page error。測量區間為零輪／零時間，不能宣稱任何兩小時結果。
+
 從實際 `rows` 抽出的相同逐筆讀取，在會於讀取中移除最後一項的快速 Node 案例先重現失敗；改為一次同步 DOM snapshot，再於 Node 核對 keys／revision，案例通過，下一次 snapshot 能正常觀察到 19 項。只使用既有 Chromium CDP 的唯讀 DOM 觀察，不呼叫應用 API、不更動模型或繞過確認移除。原始失敗仍保留；修正後需取得新的真實前測／兩小時結果，不能因單元案例通過就重標舊 run。
