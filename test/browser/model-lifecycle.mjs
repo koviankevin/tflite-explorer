@@ -19,6 +19,8 @@ import {editFileFingerprint} from '../../src/model-edit-session.js';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
 import {LIFECYCLE_SOAK_POLICY,assertSoakExecution,needsSoakCycle,evaluateLifecycleSoak} from './lifecycle-soak-policy.mjs';
+import {SOAK_RECOVERY_POLICY,createSoakRecovery} from './soak-recovery.mjs';
+import {recoveryCapacityPreflight} from './soak-recovery-preflight.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
@@ -32,11 +34,11 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
-if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:1,soakPolicy:LIFECYCLE_SOAK_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
+if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:2,soakPolicy:LIFECYCLE_SOAK_POLICY,recoveryPolicy:SOAK_RECOVERY_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
-let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,rootPid,phase='startup',shuttingDown=false,activeStarted;
+let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,rootPid,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
 const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},(soak?160:22)*60000);
@@ -129,7 +131,7 @@ async function editWholeModel(cycle,entry,hashes){
     const full=path.join(temporary,`cycle-${cycle}-full.tflite`);await download.saveAs(full);await download.delete();await waitFor(()=>!document.querySelector('#edit-open-result').disabled);
     const exportMs=Date.now()-started;event=page.waitForEvent('download');await page.locator('#edit-download-report').click();download=await event;assert.equal(await download.failure(),null);const reportFile=full+'.report.json';await download.saveAs(reportFile);await download.delete();
     const proof=JSON.parse(await readFile(reportFile,'utf8'));assert.equal(proof.provenance.mode,'model-edit');assert.equal(proof.checks.find(c=>c.id==='serialized-roundtrip').status,'passed');assert.equal(proof.modification.before.layers,21005);assert.equal(proof.modification.after.layers,21006);
-    phase=`cycle-${cycle}-edit-recovery`;await waitFor(()=>document.querySelector('#edit-recovery-status').textContent.startsWith('已保存本機編輯草稿'),90000);
+    phase=`cycle-${cycle}-edit-recovery`;if(soak)await draftRecovery.ensureSaved(entry);else await waitFor(()=>document.querySelector('#edit-recovery-status').textContent.startsWith('已保存本機編輯草稿'),90000);
     const recovery=await readPage(()=>globalThis.__lifecycle.workers.filter(w=>w.recoveryAudit?.complete).at(-1)?.recoveryAudit);assert.equal(recovery.fingerprint,report.fixture.editFingerprint);assert.equal(recovery.bytes,report.fixture.bytes);assert.ok(recovery.maxRead<=1024**2);entry.recovery=recovery;
     const before=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(before);let deadline;
     try{const ended=Promise.race([once(before,'close'),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Original edit Worker did not close.')),5000);})]);await page.locator('#edit-open-result').click();await ended;}finally{clearTimeout(deadline);}
@@ -151,6 +153,7 @@ try{
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
     execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
+    if(soak){phase='draft-capacity-preflight';report.recoveryPreflight={};await recoveryCapacityPreflight({base,directory:temporary,report:report.recoveryPreflight});await persistReport();check('real 22-session draft backup/remove/retry preflight, other nineteen unchanged and owned browser reaped');}
     browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`]});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
     context=await browser.newContext({viewport:soak?report.soak.viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
@@ -158,6 +161,7 @@ try{
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
+    if(soak)draftRecovery=createSoakRecovery({page,directory:temporary,fixture:report.fixture});
     if(soak)page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
     browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
@@ -187,6 +191,7 @@ try{
         await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
         entry.workerHeaps.push({phase:'reopen',...await modelWorkerHeap(browserCDP)});await closeModel();
         phase=`cycle-${cycle}-hash`;Object.assign(entry,await verifyDownload(child,kind));if(hashes.has(kind))assert.equal(entry.sha256,hashes.get(kind),'Repeated exports must be byte-identical.');else hashes.set(kind,entry.sha256);
+        if(soak){phase=`cycle-${cycle}-draft-backup`;await draftRecovery.finishCycle(entry);}
         phase=`cycle-${cycle}-release`;await waitFor(()=>globalThis.__lifecycle.urls.every(item=>item.revoked),policy.urlReleaseTimeoutMs);
         const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample());}
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);

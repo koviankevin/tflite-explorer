@@ -1,4 +1,5 @@
 import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY,median} from './lifecycle-policy.mjs';
+import {evaluateSoakRecovery,validRecoveryPreflight} from './soak-recovery.mjs';
 
 const hour=60*60*1000,MiB=1024**2;
 // This is an additional duration gate. It cannot replace the immutable eight
@@ -22,11 +23,13 @@ function timedSlope(rows){
 export function evaluateLifecycleSoak(report){
     const p=LIFECYCLE_SOAK_POLICY,r=report||{},issues=[],batches=[],cycles=Array.isArray(r.cycles)?r.cycles:[],samples=Array.isArray(r.samples)?r.samples:[];
     const require=(value,name)=>{if(!value)issues.push(name);},same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
-    require(r.format==='model-lens-lifecycle-soak'&&r.version===1,'wrong-soak-format');
+    require(r.format==='model-lens-lifecycle-soak'&&r.version===2,'wrong-soak-format');
     require(same(r.policy,MODEL_EDIT_LIFECYCLE_POLICY)&&same(r.soakPolicy,p),'changed-soak-limits');
     require(r.sourceUnchanged===true&&r.environment?.sourceDirty===false,'missing-clean-unchanged-source');
     require(cycles.length>=p.minCycles&&cycles.length<=p.maxCycles&&cycles.length%p.batchCycles===0,'missing-soak-cycles');
     require(same(r.soak?.viewport,{width:1280,height:640})&&cycles.every(c=>c?.font===32&&c?.editFont===32),'missing-laptop-32px');
+    const recovery=evaluateSoakRecovery(cycles,r.fixture,r.recoveryPolicy);require(recovery.status==='passed','missing-ui-draft-retention');
+    require(validRecoveryPreflight(r.recoveryPreflight),'missing-real-capacity-preflight');
     const native=Array.isArray(r.workerClosures)?r.workerClosures:[],models=native.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w?.url||'')),identities=native.filter(w=>/\/edit-recovery-worker\.js(?:\?|$)/.test(w?.url||''));
     require(models.length===cycles.length*3&&identities.length===cycles.length&&[...models,...identities].every(w=>w.closed===true),'missing-native-worker-closures');
     const elapsed=r.soak?.activeDurationMs;
@@ -51,5 +54,5 @@ export function evaluateLifecycleSoak(report){
         require(summary.maxClosedRssDriftBytes<=MODEL_EDIT_LIFECYCLE_POLICY.closedRssDriftBytes,'soak-closed-rss-drift');
         require(summary.maxClosedMainHeapDriftBytes<=MODEL_EDIT_LIFECYCLE_POLICY.closedMainHeapDriftBytes,'soak-main-heap-drift');
     }
-    return {status:issues.length?'failed':'passed',issues,summary,batches};
+    return {status:issues.length?'failed':'passed',issues,summary,batches,recovery};
 }
