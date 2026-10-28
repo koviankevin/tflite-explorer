@@ -61,6 +61,8 @@
 
 [40680745057](https://github.com/koviankevin/tflite-explorer/actions/runs/40680745057) 於 12:13 UTC 提前失敗，未滿兩小時。GitHub 日誌顯示 22 次快速前測通過，24 輪完整大檔操作完成；第二十五輪保存狀態把稍早的「背景核對原模型 100%」文字，與稍後更新的 error 旗標混在一起。當時 `textContent` 與 `getAttribute` 是分別 await 的兩次觀察，不能作為單一保存狀態。
 
+完整 [原始 provider ZIP](results/soak-status-race-2026-10-28.zip)、[digest／CRC／來源核對](results/soak-status-race-review-2026-10-28.json)及 [完整輪數／保存與清理分析](results/soak-status-race-analysis-2026-10-28.json)已保存。24 輪約 38.6 分鐘，三個完整八輪批次通過原門檻；20 份保留、已核對舊稿下載／移除／retry 的四次實際流程完成。25 次原檔指紋全部完成；原生 73 模型／25 指紋 Worker 全部 close，browserClosed 為 true，errors 為空。最後一個模型的 terminate 呼叫旗標仍保留原 false，不能拿 context cleanup 改寫它。核對收據的 `measuredCycles: 25` 是已開始項目數，補充分析明確區分完成 24 與未完成 25；以上不代表兩小時、最終 sourceUnchanged 或未量到範圍已驗收。
+
 抽出實際相同讀取後，快速測試先重現回傳舊進度文字的失敗；改為一次同步 DOM snapshot 取得文字與旗標，再於 Node 分類。舊進度／非錯誤會繼續等，完整容量錯誤才允許既有備份／移除／retry，其他錯誤仍失敗；缺少旗標或「已保存」同時帶錯誤也直接拒絕。36 項相關 Node 檢查通過，不增加 timeout、不改保存內容或放寬兩小時門檻。修正後仍需新的真實長測，原失敗不改標。
 
 原八輪模式 [40679388661](https://github.com/koviankevin/tflite-explorer/actions/runs/40679388661) 已通過 provider／依賴 scope／原始量測核對；來源 `7ca9d748a931c7c4c8f8d7e6b0b4fd64806b1417`，見 [原始報告](results/retention-shared-eight-cycles-2026-10-28.json)與 [核對收據](results/retention-shared-eight-review-2026-10-28.json)。RSS 漂移 28,155,904 bytes、斜率 1,271,632.46 bytes／輪、峰值成長 479,506,432 bytes；24 模型／八完整指紋 Worker、權重／options 與匯出重開完成。這是該來源八輪成功，不能當作任何未完成的兩小時或後續修改來源的發布憑證。
