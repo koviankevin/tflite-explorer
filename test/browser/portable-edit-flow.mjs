@@ -13,7 +13,7 @@ const tm=JSON.parse(await readFile(new URL('../../vendor/netron/tflite-metadata.
 export async function portableEditFlow({page,read,base,directory,check,allowMlir=true}){
  const report={cases:[],modelWorkers:0};let serial=0;
  async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Portable edit timeout: '+fn);await new Promise(r=>setTimeout(r,75));}}
- async function ready(){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');}
+ async function ready(){await until(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');}
  async function choose(file,button='#open-model'){const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);if(button!=='#open-edit-draft')report.modelWorkers++;await ready();}
  async function download(button,extension){const event=page.waitForEvent('download');await page.locator(button).click();const d=await event;assert.equal(await d.failure(),null);const filename=path.join(directory,`portable-${++serial}.${extension}`);await d.saveAs(filename);await d.delete();return filename;}
  async function open(){await page.locator('#edit-mode').click();await until(()=>document.body.classList.contains('editing-model')&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');}

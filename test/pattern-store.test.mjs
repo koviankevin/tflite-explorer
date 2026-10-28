@@ -71,4 +71,24 @@ test('cross-block pattern ports, control flow and conditions survive collision c
 test('unavailable database is an explicit save failure, not a false success',async()=>{
     const store=patternStore({indexedDB:null,legacyStorage:()=>storage(new Map())});
     await assert.rejects(store.save(p('not saved'),[]),/無法保存/);
+    await assert.rejects(store.remove(p('not saved')),/無法保存/);
+});
+
+test('delete removes only the selected version, remains idempotent and supports an empty persistent record',()=>{
+    const base=[p('delete me'),p('keep','Mul')],before=JSON.stringify(base),result=mutatePatternLibrary(base,{type:'delete',pattern:base[0]});
+    assert.deepEqual(result.patterns,[base[1]]);assert.equal(result.removed,true);assert.equal(JSON.stringify(base),before);
+    const retry=mutatePatternLibrary(result.patterns,{type:'delete',pattern:base[0]});assert.equal(retry.removed,false);assert.deepEqual(retry.patterns,[base[1]]);
+    const last=mutatePatternLibrary(result.patterns,{type:'delete',pattern:base[1]});assert.deepEqual(readPatternRecord({key:'library',schemaVersion:1,revision:3,patterns:last.patterns}).patterns,[]);
+});
+test('a stale delete cannot discard a peer update or unrelated additions',()=>{
+    const old=p('shared'),updated=p('shared','Add'),current=[updated,p('peer','Mul')],before=JSON.stringify(current);
+    assert.throws(()=>mutatePatternLibrary(current,{type:'delete',pattern:old}),/其他分頁更新/);assert.equal(JSON.stringify(current),before);
+    assert.deepEqual(mutatePatternLibrary(current,{type:'delete',pattern:updated}).patterns,[current[1]]);
+});
+test('stale saves cannot resurrect a deleted pattern; undo restores safely alongside a peer replacement',()=>{
+    const original=p('shared'),deleted=mutatePatternLibrary([original],{type:'delete',pattern:original});
+    assert.throws(()=>mutatePatternLibrary(deleted.patterns,{type:'save',base:[original],pattern:p('shared','Mul')}),/其他分頁刪除/);
+    const restored=mutatePatternLibrary(deleted.patterns,{type:'save',base:[],pattern:original});assert.deepEqual(restored.patterns,[original]);
+    const peer=mutatePatternLibrary([],{type:'save',base:[],pattern:p('shared','Add')}),undo=mutatePatternLibrary(peer.patterns,{type:'save',base:[],pattern:original});
+    assert.equal(undo.conflict,true);assert.deepEqual(undo.patterns.map(p=>[p.name,p.nodes[0].type]),[['shared','Add'],['shared（2）','Reshape']]);
 });

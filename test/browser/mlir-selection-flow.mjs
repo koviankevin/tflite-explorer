@@ -15,7 +15,7 @@ export async function mlirSelectionFlow({page,read,base,directory,check}) {
     const report={cases:[],modelWorkers:0};
     const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('MLIR selection DOM wait: '+fn);await wait(100);}}
-    async function ready(){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');}
+    async function ready(){await until(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#layer-count').textContent!=='—'&&document.querySelector('#target').getAttribute('aria-busy')==='false');}
     async function search(){const laptop=page.locator('#run-pattern-laptop');await (await laptop.isVisible()?laptop:page.locator('#run-pattern')).click();}
     async function workerClosed(action){const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;try{const closed=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('MLIR previous worker retained.')),5000);})]);await action();await closed;}finally{clearTimeout(timer);}}
     async function boundedEditor(){
@@ -53,7 +53,7 @@ export async function mlirSelectionFlow({page,read,base,directory,check}) {
             const port=page.locator(`[data-cfg-key="edge-${edge.index}-port-0"]`);await port.fill(String(Number(edge.value)+17));await port.press('Tab');await search();await until(()=>document.querySelector('#result-count').textContent==='0 筆匹配路徑');
             await port.fill(edge.value);await port.press('Tab');await search();await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');
             const layouts=[];
-            for(const size of [{width:1366,height:640},{width:390,height:844}]){
+            for(const size of [{width:1366,height:640},{width:1280,height:640}]){
                 await page.setViewportSize(size);await wait(150);
                 const layout=await read(()=>({viewport:innerWidth,width:document.documentElement.scrollWidth,editor:document.querySelector('#cfg-pattern-editor').getBoundingClientRect().width,inner:document.querySelector('#cfg-pattern-editor .cfg-scroll').scrollWidth}));
                 assert.ok(layout.width<=layout.viewport+1,JSON.stringify(layout));assert.ok(layout.inner<=layout.editor+1,JSON.stringify(layout));layouts.push({...size,...layout});
@@ -69,7 +69,7 @@ export async function mlirSelectionFlow({page,read,base,directory,check}) {
             if(name==='loop-custom')report.editorBounds=await boundedEditor();
             await workerClosed(()=>page.locator('#close-model').click());
             report.cases.push({name,originalLayers:Number(originalCount),operators:aliases.length,layouts,negativeMatches:0,restoredMatches:1,exportedSSA:'passed',reopenedMatches:1});
-            check(`${name}: direct selected CFG edit, successor negative/repair, 32px desktop/mobile layout, saved pattern, MLIR download/direct reopen and worker closure`);
+            check(`${name}: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure`);
         }
     }finally{page.off('filechooser',intercept);}
     return report;

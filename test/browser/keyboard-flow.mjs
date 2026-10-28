@@ -21,7 +21,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     async function choose(filename,selector='#open-model'){
         await tabTo(selector);const event=page.waitForEvent('filechooser',{timeout:5000});await page.keyboard.press('Enter');await(await event).setFiles(filename);
     }
-    async function ready(layers){await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
+    async function ready(layers){await until(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await read(()=>document.querySelector('#layer-count').textContent),String(layers));}
     async function close(){
         const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);await tabTo('#close-model');let timer;
         try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Keyboard model worker did not close.')),5000);})]);await page.keyboard.press('Enter');await ended;}finally{clearTimeout(timer);}
@@ -34,9 +34,9 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     }
     async function selectedTab(kind){assert.equal(await read(()=>document.activeElement?.dataset.kind),kind,'Arrow key must move focus to the new tab.');assert.equal(await read(k=>document.querySelector('[data-kind="'+k+'"]').getAttribute('aria-selected'),kind),'true');}
     async function switchTab(key,kind,activate='Enter'){
-        const previous=await read(()=>document.querySelector('[role="tab"][aria-selected="true"]').dataset.kind);await page.keyboard.press(key);
+        const previous=await read(()=>document.querySelector('#explorer-panel [role="tab"][aria-selected="true"]').dataset.kind);await page.keyboard.press(key);
         assert.equal(await read(()=>document.activeElement?.dataset.kind),kind,'Arrow/Home/End must move tab focus.');
-        assert.equal(await read(()=>document.querySelector('[role="tab"][aria-selected="true"]').dataset.kind),previous,'Moving focus must not start another search.');await page.keyboard.press(activate);await selectedTab(kind);
+        assert.equal(await read(()=>document.querySelector('#explorer-panel [role="tab"][aria-selected="true"]').dataset.kind),previous,'Moving focus must not start another search.');await page.keyboard.press(activate);await selectedTab(kind);
     }
     async function cycleModal(dialog,first,last){
         await tabTo(first);await page.keyboard.press('Shift+Tab');assert.equal(await read(s=>document.activeElement?.matches(s),last),true,'Shift Tab must reach the last visible enabled modal control.');await page.keyboard.press('Tab');assert.equal(await read(s=>document.activeElement?.matches(s),first),true);
@@ -55,7 +55,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
     for(const size of ['16','32']){await option('#graph-font-size',size);await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');assert.equal(await read(()=>document.activeElement.id),'graph-font-size','Graph redraw must retain keyboard control focus.');}
     await tabTo('[data-kind="layers"]');await switchTab('ArrowRight','tensors');await switchTab('ArrowRight','patterns','Space');await switchTab('Home','layers');await switchTab('End','patterns','Space');await switchTab('ArrowLeft','tensors');await switchTab('ArrowRight','patterns');
-    assert.equal(await read(()=>[...document.querySelectorAll('[role="tab"]')].filter(t=>t.tabIndex===0).length),1);
+    assert.equal(await read(()=>[...document.querySelectorAll('#explorer-panel [role="tab"]')].filter(t=>t.tabIndex===0).length),1);
     assert.equal(await read(()=>{const t=document.activeElement,p=document.getElementById(t.getAttribute('aria-controls'));return p?.getAttribute('role')==='tabpanel'&&p.getAttribute('aria-labelledby')===t.id;}),true);
     await until(()=>document.querySelector('#result-count').textContent==='4 筆匹配路徑');
     check('keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results');

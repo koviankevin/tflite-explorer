@@ -30,9 +30,16 @@ export function readPatternRecord(record) {
 export function mutatePatternLibrary(current,operation) {
     current=cleanPatternLibrary(current);
     if(operation.type==='import')return planPatternImport(current,parsePatternFile(operation.text));
+    if(operation.type==='delete'){
+        const expected=reusablePattern(operation.pattern?.name,operation.pattern),existing=current.find(p=>p.name===expected.name);
+        if(!existing)return {patterns:current,removed:false};
+        if(patternSignature(existing)!==patternSignature(expected))throw new Error('這個 pattern 已在其他分頁更新；請重新選取確認內容後再刪除。');
+        return {patterns:current.filter(p=>p.name!==expected.name),pattern:existing,removed:true};
+    }
     if(operation.type!=='save')throw new Error('不支援此 pattern 操作。');
     const pattern=reusablePattern(operation.pattern.name,operation.pattern),base=cleanPatternLibrary(operation.base);
     const existing=current.find(p=>p.name===pattern.name),expected=base.find(p=>p.name===pattern.name);
+    if(!existing&&expected)throw new Error('這個 pattern 已在其他分頁刪除；目前編輯已保留，請改用新名稱另存。');
     const same=(a,b)=>a && b && patternSignature(a)===patternSignature(b);
     if(same(existing,pattern))return {patterns:current,pattern:existing,renamed:0,skipped:1};
     if(existing && !same(existing,expected)) {
@@ -89,6 +96,7 @@ export function patternStore({indexedDB=globalThis.indexedDB,legacyStorage=()=>g
     return {
         async load(){return (await transaction()).record;},
         save(pattern,base){return transaction({type:'save',pattern,base});},
+        remove(pattern){return transaction({type:'delete',pattern});},
         import(text){return transaction({type:'import',text});},
         async close(){if(connection){const db=await connection;db.close();connection=null;}}
     };

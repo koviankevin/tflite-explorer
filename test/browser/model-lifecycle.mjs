@@ -60,7 +60,7 @@ async function choose(file,button='#open-model'){
     const chooser=page.waitForEvent('filechooser');await page.locator(button).click();await (await chooser).setFiles(file);
 }
 async function ready(count){
-    await waitFor(()=>document.querySelector('#loading-card').hidden && document.querySelector('#layer-count').textContent!=='—');
+    await waitFor(()=>document.querySelector('#model-tabs')?.getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden && document.querySelector('#layer-count').textContent!=='—');
     assert.equal(await page.locator('#layer-count').textContent(),count.toLocaleString('en-US'));
     await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');
 }

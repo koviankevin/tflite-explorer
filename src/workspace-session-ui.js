@@ -49,6 +49,7 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush({force:true});});
     window.addEventListener('pagehide',()=>session.flush({force:true}));
     document.addEventListener('keydown',event=>{
+        if(document.getElementById('model-tabs')?.getAttribute('aria-busy')==='true')return;
         if(document.body.classList.contains('editing-model') || document.querySelector('dialog[open]') || event.target.closest?.('input, textarea, select, [contenteditable="true"]') || !(event.ctrlKey || event.metaKey) || event.altKey)return;
         const key=event.key.toLowerCase();if(key==='z' || key==='y'){event.preventDefault();event.stopPropagation();session.travel(key==='y' || event.shiftKey?1:-1).catch(error);}
     });

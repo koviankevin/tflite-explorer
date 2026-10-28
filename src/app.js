@@ -10,6 +10,7 @@ import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
 import {modelEditUI} from './model-edit-ui.js';
 import {modelEditWorkspaceUI} from './model-edit-workspace-ui.js';
+import {modelTabs} from './model-tabs.js';
 import {mlirPatternEditor} from './mlir-pattern-editor.js';
 import {conditionEditor} from './pattern-condition-editor.js';
 import {parseGraphPattern} from './subgraph-pattern.js';
@@ -36,6 +37,7 @@ const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>m
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
+const tabs=modelTabs({capture:captureModelTab,load:loadModelTab,reset,changed:renderModelTabs,error:report,dirty:()=>editWorkspace.hasUnexported,confirmClose:()=>window.confirm('模型分頁有尚未匯出的編輯變更。要放棄並關閉嗎？')});
 const graphFontSizes = ['14', '16', '18', '20', '24', '28', '32'];
 const graphFontKey = 'model-lens.graph-font-size.v1';
 try {
@@ -127,6 +129,7 @@ let graphEdges = [];
 let graphNodeNumber = 5;
 let patternLibrary = [];
 let patternRevision=0,editorLibrary=[],captureLibrary=[],libraryReady,libraryChannel;
+let patternDeleteBusy=false,deletedPattern=null;
 try{libraryChannel=new BroadcastChannel(PATTERN_CHANNEL);}catch{/* Focus refresh also works without BroadcastChannel. */}
 const libraryStore=patternStore({notify:record=>libraryChannel?.postMessage({revision:record.revision})});
 let pickingPattern = false;
@@ -221,8 +224,7 @@ function createWorker() {
 function reset() {
     sessions?.detach();
     editWorkspace.reset();
-    $('open-edit-workspace').disabled=true;$('edit-capture-workspace').disabled=true;
-    detailNode=null;detailLocation=null;modelEditor.clear();$('open-model-editor').disabled=true;
+    detailNode=null;detailLocation=null;modelEditor.clear();
     $('results').setAttribute('aria-busy','false');delete $('results').dataset.searchQuery;
     $('save-workspace').disabled=true;
     sliceExpanded.clear();slicePages.clear();$('slice-connection-controls').hidden=true;
@@ -257,7 +259,10 @@ function reset() {
 }
 async function openFile(nextFile) {
     try { await viewReady; modelFormat(nextFile.name); } catch (error) { diagnostics.record('open','error',error);notice(error.message); return; }
-    if(!discardEditDraft())return false;
+    if(tabs.busy){notice('請等待目前模型載入或切換完成。');return false;}
+    return tabs.open(nextFile);
+}
+async function loadModelTab(nextFile,saved) {
     reset(); file = nextFile;
     const thisFile = file;
     let resumedDraft;
@@ -270,9 +275,7 @@ async function openFile(nextFile) {
         if (file !== thisFile) return;
         model = summary;
         const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
-        for(const id of ['edit-mode','open-edit-workspace','open-model-editor','edit-capture-workspace','edit-capture-model']){$(id).hidden=!editable;$(id).title=editable?'編輯實際 TFLite 模型':'實際模型編輯僅支援 TFLite';}
-        $('open-edit-workspace').disabled=!editable;
-        $('open-model-editor').disabled=!editable;
+        for(const id of ['edit-mode']){$(id).hidden=!editable;$(id).title=editable?'編輯實際 TFLite 模型':'實際模型編輯僅支援 TFLite';}
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
@@ -295,9 +298,10 @@ async function openFile(nextFile) {
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         $('save-workspace').disabled=false;
         renderPattern();
+        if(saved){await restoreWorkspace(saved.workspace);await editWorkspace.restoreTab(saved.edit);return true;}
         if(pendingWorkspace) {
             const workspace=pendingWorkspace,draft=queuedDraft;pendingWorkspace=null;queuedDraft=null;
-            try {await restoreWorkspace(workspace);resumedDraft=draft;return;}
+            try {await restoreWorkspace(workspace);resumedDraft=draft;return true;}
             catch(error){if(file!==thisFile)return;notice(error.message);$('workspace-hint').hidden=true;$('choose-workspace-model').hidden=true;}
         }
         await runSearch();
@@ -312,10 +316,12 @@ async function openFile(nextFile) {
             $('graph-caption').textContent = '索引已就緒 · 選取結果以繪製局部圖';
             status('索引已就緒。請搜尋或選取 layer／tensor，模型圖依需求繪製。');
         }
+        return true;
     } catch (error) {
         if (error.name !== 'AbortError') {
             reset(); notice(`無法開啟模型：${error.message}`); status('載入失敗，請重新選擇檔案。');
         }
+        return false;
     } finally {
         if (file === thisFile) {
             $('loading-card').hidden = true; $('cancel-load').hidden = true;
@@ -797,7 +803,22 @@ async function saveStoredPattern(pattern,base) {
 function updatePatternExport() {
     $('export-pattern').disabled = !patternLibrary.some((pattern) => pattern.name === $('saved-pattern').value);
     $('export-patterns').disabled = !patternLibrary.length;
+    $('delete-pattern').disabled=patternDeleteBusy||$('export-pattern').disabled;
+    $('undo-delete-pattern').hidden=!deletedPattern;$('undo-delete-pattern').disabled=patternDeleteBusy;
 }
+$('delete-pattern').onclick=async()=>{
+    const pattern=patternLibrary.find(p=>p.name===$('saved-pattern').value);if(!pattern||patternDeleteBusy)return;
+    patternDeleteBusy=true;updatePatternExport();
+    try{const result=await diagnostics.track('pattern-delete',()=>libraryStore.remove(pattern));acceptPatternLibrary(result.record);deletedPattern=result.removed?result.pattern:null;refreshPatternLibrary('');$('pattern-library-status').textContent=result.removed?`已刪除「${pattern.name}」；目前查詢保留，可按「復原刪除」。`:'此 pattern 已不在已儲存清單；目前查詢保留。';}
+    catch(error){await refreshStoredPatterns().catch(()=>{});$('pattern-library-status').textContent=error.message;}
+    finally{patternDeleteBusy=false;updatePatternExport();}
+};
+$('undo-delete-pattern').onclick=async()=>{
+    if(!deletedPattern||patternDeleteBusy)return;const pattern=deletedPattern;patternDeleteBusy=true;updatePatternExport();
+    try{const result=await libraryStore.save(pattern,[]);acceptPatternLibrary(result.record);deletedPattern=null;refreshPatternLibrary('');$('pattern-library-status').textContent=result.conflict?`同名項目已更新，已另存復原為「${result.pattern.name}」；目前查詢保留。`:`已復原「${result.pattern.name}」；目前查詢保留。`;}
+    catch(error){$('pattern-library-status').textContent=error.message;}
+    finally{patternDeleteBusy=false;updatePatternExport();}
+};
 async function downloadPatterns(patterns) {
     try { await host.export(patterns.length === 1 ? 'model-lens-pattern.json' : 'model-lens-patterns.json', new Blob([exportPatterns(patterns) + '\n'], { type: 'application/json' })); }
     catch (error) { report(error); }
@@ -883,8 +904,6 @@ function refreshPickedNodes() {
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     $('edit-capture').disabled = $('save-capture').disabled;
-    $('edit-capture-model').disabled = model?.sourceFormat!=='tflite' || exportBusy || !count;
-    $('edit-capture-workspace').disabled = model?.sourceFormat!=='tflite' || exportBusy || !count;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
@@ -1074,16 +1093,7 @@ function editTargets(){
     if(!targets.length&&!pickingPattern){const location=detailLocation||(selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null);if(location)targets=[location];}
     return targets;
 }
-$('edit-advanced').onclick=()=>{const location=editWorkspace.advancedLocation();if(location&&!exportBusy)modelEditor.open([location]).catch(report);};
-$('open-edit-workspace').onclick=$('edit-capture-workspace').onclick=()=>editWorkspace.open();
-$('open-model-editor').onclick=()=>{
-    if(model?.sourceFormat!=='tflite'||exportBusy){notice('編輯實際模型僅支援 TFLite；請先開啟 TFLite 模型，並等待匯出完成。');return;}
-    if(editWorkspace.hasUnexported){editWorkspace.open();return;}
-    const targets=editTargets();
-    if(!targets.length){notice('請先點選或框選原始 OP，再按「編輯實際模型」。');return;}
-    modelEditor.open(targets).catch(report);
-};
-$('edit-capture-model').onclick=()=>$('open-model-editor').click();
+$('edit-advanced').onclick=()=>{const location=editWorkspace.advancedLocation();if(model?.sourceFormat==='tflite'&&location&&!exportBusy)modelEditor.open([location]).catch(report);};
 $('edit-capture').onclick = async () => {
     if ($('target').getAttribute('aria-busy') === 'true') { notice('請等待模型圖繪製完成。'); return; }
     const generation=renderGeneration,sourceFile=file,graph=currentGraph;
@@ -1151,10 +1161,32 @@ $('open-lora-demo').onclick = async () => {
         await openFile(new File([await r.blob()], 'LoRA 結構示範.tflite'));
     } catch (error) { report(error); }
 };
-function discardEditDraft(){return !editWorkspace.hasUnexported||window.confirm('編輯工作區有尚未匯出的變更。要放棄草稿並關閉目前模型嗎？');}
-$('cancel-load').onclick = reset; $('close-model').onclick = ()=>{if(discardEditDraft())reset();};
+async function captureModelTab(){
+    if(!workspaceReady())throw Error('請等待搜尋、繪圖或匯出完成後再切換模型分頁。');
+    const source=file,edit=editWorkspace.captureTab(),identity=await rpc('workspaceIdentity');
+    if(file!==source)throw new DOMException('已取消','AbortError');
+    const workspace=parseWorkspace(exportWorkspace(captureSession(identity)));
+    return {workspace,edit};
+}
+function renderModelTabs(state){
+    $('model-tabs').hidden=!state.tabs.length;
+    $('model-tabs').setAttribute('aria-busy',String(state.busy));
+    if(!state.busy)sessions?.change();
+    for(const selector of ['#explorer-panel','#target','#edit-workspace','.graph-bar','#capture-toolbar','.model-modes','#open-model','#close-model']){const node=document.querySelector(selector);if(node)node.inert=state.busy;}
+    $('model-tab-list').replaceChildren(...state.tabs.map(item=>{
+        const group=document.createElement('div');group.className='model-tab';const tab=document.createElement('button');tab.type='button';tab.id=`model-tab-${item.id}`;tab.dataset.modelTab=String(item.id);tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(item.id===state.current));tab.tabIndex=item.id===state.current?0:-1;tab.textContent=item.name;tab.title=`${item.name}（背景分頁切回時重新讀取本機檔案）`;tab.disabled=state.busy;tab.onclick=async()=>{await tabs.activate(item.id);$(`model-tab-${item.id}`)?.focus();};
+        const close=document.createElement('button');close.type='button';close.className='close-model-tab';close.textContent='×';close.setAttribute('aria-label',`關閉 ${item.name}`);close.disabled=state.busy;close.onclick=()=>tabs.close(item.id).catch(report);group.append(tab,close);return group;
+    }));
+}
+$('model-tab-list').addEventListener('keydown',event=>{
+    if(event.ctrlKey||event.metaKey||event.altKey)return;const items=[...$('model-tab-list').querySelectorAll('[role=tab]')],index=items.indexOf(event.target);if(index<0)return;const next=event.key==='ArrowRight'?(index+1)%items.length:event.key==='ArrowLeft'?(index+items.length-1)%items.length:event.key==='Home'?0:event.key==='End'?items.length-1:-1;if(next<0)return;event.preventDefault();event.stopPropagation();items.forEach((tab,i)=>{tab.tabIndex=i===next?0:-1;});items[next].focus();
+});
+$('model-tab-list').addEventListener('focusout',event=>{if(!$('model-tab-list').contains(event.relatedTarget))for(const tab of $('model-tab-list').querySelectorAll('[role=tab]'))tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;});
+new ResizeObserver(entries=>document.documentElement.style.setProperty('--head',`${Math.ceil(entries[0].borderBoxSize?.[0]?.blockSize||document.querySelector('.app-header').getBoundingClientRect().height)}px`)).observe(document.querySelector('.app-header'));
+window.addEventListener('beforeunload',event=>{if(tabs.hasUnexported){event.preventDefault();event.returnValue='';}});
+$('cancel-load').onclick = ()=>tabs.cancel(); $('close-model').onclick = ()=>tabs.closeAll();
 document.querySelectorAll('[data-kind]').forEach((button) => button.onclick = () => setKind(button.dataset.kind));
-const searchTabs=document.querySelector('[role="tablist"]');
+const searchTabs=document.querySelector('#explorer-panel [role="tablist"]');
 searchTabs.addEventListener('keydown',event=>{
     if(event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
     const tabs=[...searchTabs.querySelectorAll('[role="tab"]')],index=tabs.indexOf(event.target);
@@ -1270,6 +1302,7 @@ document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer?.files[0]) openFile(e.dataTransfer.files[0]); });
 document.addEventListener('keydown', (e) => {
     if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
+    if(tabs.busy)return;
     if(editWorkspace.active){if(editWorkspace.handleKey(e))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
