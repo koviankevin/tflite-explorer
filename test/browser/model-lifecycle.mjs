@@ -3,9 +3,9 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {execFileSync} from 'node:child_process';
-import {readFile,writeFile,rename,mkdtemp,mkdir,rm,statfs,readdir,stat} from 'node:fs/promises';
+import {readFile,writeFile,rename,mkdtemp,mkdir,rm,statfs,stat} from 'node:fs/promises';
 import {openSync,readSync,fstatSync,closeSync,createReadStream} from 'node:fs';
-import {createHash} from 'node:crypto';
+import {createHash,randomBytes} from 'node:crypto';
 import {once} from 'node:events';
 import os from 'node:os';
 import path from 'node:path';
@@ -22,6 +22,7 @@ import {LIFECYCLE_SOAK_POLICY,assertSoakExecution,needsSoakCycle,evaluateLifecyc
 import {SOAK_RECOVERY_POLICY,createSoakRecovery} from './soak-recovery.mjs';
 import {recoveryCapacityPreflight} from './soak-recovery-preflight.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
+import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
@@ -30,15 +31,14 @@ const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
 const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[],samples:[],checks:[],limitations:[
     soak?'At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.':'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
     'Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.',
-    'Summed /proc RSS includes Chromium descendants and can double-count shared pages; 500ms sampling can miss spikes.',
+    'Summed /proc RSS includes observed owned Chromium identities, including reparented descendants, and can double-count shared pages; 500ms sampling can miss spikes or processes never observed.',
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
 if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:2,soakPolicy:LIFECYCLE_SOAK_POLICY,recoveryPolicy:SOAK_RECOVERY_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
-let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,rootPid,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
+let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,processTree,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
 const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},(soak?160:22)*60000);
@@ -48,20 +48,12 @@ const patterns=[
     reusablePattern('Lifecycle branch',{nodes:[{alias:'N1',type:'Mul'},{alias:'N2',type:'Add'},{alias:'N3',type:'CompanySplitLongNameForLargeModel'},{alias:'N4',type:'Add'}],edges:[{from:'N1',to:'N2'},{from:'N1',to:'N3'},{from:'N2',to:'N4'},{from:'N3',to:'N4'}],induced:true})
 ];
 async function processRss(){
-    const ids=(await readdir('/proc')).filter(id=>/^\d+$/.test(id));
-    const rows=(await Promise.all(ids.map(async id=>{
-        const text=await optionalRead(`/proc/${id}/status`);if(!text)return null;
-        if(!rootPid){const command=await optionalRead(`/proc/${id}/cmdline`);if(command?.includes(`--model-lens-lifecycle=${path.basename(temporary)}`)&&/\/(chrome|headless_shell)$/.test(command.split('\0')[0]))rootPid=Number(id);}
-        return {id:Number(id),parent:Number(text.match(/^PPid:\s+(\d+)/m)?.[1]),rss:Number(text.match(/^VmRSS:\s+(\d+)/m)?.[1]||0)*1024};
-    }))).filter(Boolean);
-    assert.ok(rootPid,'Cannot locate owned Chromium process.');const owned=new Set([rootPid]);
-    for(let size=-1;size!==owned.size;){size=owned.size;for(const row of rows)if(owned.has(row.parent))owned.add(row.id);}
-    const rss=rows.filter(r=>owned.has(r.id)).reduce((n,r)=>n+r.rss,0);assert.ok(rss>0,'RSS unavailable.');return rss;
+    assert.ok(processTree,'Cannot locate owned Chromium identities.');return processTree.sample(await readProcessTable());
 }
 async function sample(){
-    const rssBytes=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
+    const memory=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
     assert.ok(Number.isFinite(mainHeapBytes)&&mainHeapBytes>0,'Main heap unavailable.');
-    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),rssBytes,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();report.samples.push(sample);return sample;
+    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),...memory,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();report.samples.push(sample);return sample;
 }
 async function waitFor(fn,timeout=30000){const until=Date.now()+timeout;while(!await readPage(fn)){if(Date.now()>until)throw Error(`Timed out: ${fn}`);await wait(100);}}
 async function choose(file,button='#open-model'){
@@ -154,7 +146,8 @@ try{
     execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
     if(soak){phase='draft-capacity-preflight';report.recoveryPreflight={};await recoveryCapacityPreflight({base,directory:temporary,report:report.recoveryPreflight});await persistReport();check('real 22-session draft backup/remove/retry preflight, other nineteen unchanged and owned browser reaped');}
-    browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`]});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
+    const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
+    const root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,ownershipMarker);processTree=new OwnedProcessTree(root);report.processOwnership={format:'model-lens-owned-processes',version:1,root};
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
     context=await browser.newContext({viewport:soak?report.soak.viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
     await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
@@ -214,9 +207,11 @@ finally{
     try{
         if(context)await context.close();
         if(browser){let timeout;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Browser close/reap timed out.')),10000);})]);}finally{clearTimeout(timeout);}}
-        if(rootPid){await wait(100);assert.equal(await optionalRead(`/proc/${rootPid}/cmdline`),null,'Owned browser process remained after close.');}
+        if(processTree){report.processCleanup=await waitOwnedProcessExit(processTree);assert.equal(report.processCleanup.allReaped,true,'Observed owned browser identities remained after close.');}
         report.browserClosed=true;
-    }catch(error){report.status='failed';errors.push(`Cleanup: ${error.message}`);if(rootPid){const command=await optionalRead(`/proc/${rootPid}/cmdline`);if(command?.includes(`--model-lens-lifecycle=${path.basename(temporary)}`))process.kill(rootPid,'SIGKILL');}}
+    }catch(error){report.status='failed';errors.push(`Cleanup: ${error.message}`);report.forcedCleanup=[];
+        try{if(processTree)for(const candidate of processTree.remaining(await readProcessTable())){const live=processTree.remaining(await readProcessTable()).find(p=>p.pid===candidate.pid&&p.startTicks===candidate.startTicks);if(live&&live.pid>1&&live.pid!==process.pid){try{process.kill(live.pid,'SIGKILL');report.forcedCleanup.push({pid:live.pid,startTicks:live.startTicks});}catch(e){if(e.code!=='ESRCH')errors.push('Owned process termination failed.');}}}}catch{errors.push('Ownership proof unavailable; no unverified PID signalled.');}
+    }
     if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
     // Only this invocation's mkdtemp directory; no model from the user's filesystem.
     if(temporary && path.dirname(temporary)===os.tmpdir() && path.basename(temporary).startsWith('model-lens-lifecycle-'))await rm(temporary,{recursive:true,force:true});

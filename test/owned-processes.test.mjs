@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {parseProcProcess,OwnedProcessTree,findOwnedBrowserRoot} from './browser/owned-processes.mjs';
+import {parseProcProcess,OwnedProcessTree,findOwnedBrowserRoot,waitOwnedProcessExit} from './browser/owned-processes.mjs';
 import {parseProcessMemory,createProcessMemoryProbe,summarizeMemoryProfile} from './browser/process-memory-profile.mjs';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
@@ -30,6 +30,19 @@ test('ownership discovery reads only this Node process children and requires an 
     assert.deepEqual(await findOwnedBrowserRoot(rows,5,marker,read),{pid:10,startTicks:'10'});assert.deepEqual(reads,[10,11]);
     await assert.rejects(findOwnedBrowserRoot(rows,5,marker,async()=>'MODEL_LENS_PHYSICAL_OWNER='+marker+'\0'));
     await assert.rejects(findOwnedBrowserRoot(rows,5,marker,async()=>''));await assert.rejects(findOwnedBrowserRoot(rows,5,'invalid',read));
+});
+
+test('cleanup waits for a previously observed orphan after root exit and excludes its reused foreign PID',async()=>{
+    const owner=new OwnedProcessTree(row(10,1));owner.sample([row(10,1),row(11,10,200)]);let reads=0,time=0;
+    const result=await waitOwnedProcessExit(owner,{readTable:async()=>++reads===1?[row(11,1,200),row(20,1,50000)]:[row(11,1,50000,'999'),row(20,1,50000)],wait:async ms=>{time+=ms;},now:()=>time});
+    assert.equal(result.allReaped,true);assert.equal(result.observations,2);assert.equal(result.identities.length,2);assert.deepEqual(result.remaining,[]);
+});
+
+test('a retained owned identity fails bounded cleanup, and observation errors never become zero memory',async()=>{
+    const owner=new OwnedProcessTree(row(10,1));owner.sample([row(10,1),row(11,10,200)]);let time=0;
+    const result=await waitOwnedProcessExit(owner,{timeoutMs:300,readTable:async()=>[row(11,1,200)],wait:async ms=>{time+=ms;},now:()=>time});assert.equal(result.allReaped,false);assert.equal(result.observations,4);assert.deepEqual(result.remaining,[row(11,1,200)]);
+    await assert.rejects(waitOwnedProcessExit(owner,{readTable:async()=>{throw Error('denied');}}),/denied/);
+    for(const timeoutMs of [-1,10001,NaN])await assert.rejects(waitOwnedProcessExit(owner,{timeoutMs}),/cleanup/);await assert.rejects(waitOwnedProcessExit({},{}),/cleanup/);
 });
 
 const status=(rss=100)=>`Name:\tWeb Content\nVmRSS:\t${rss} kB\nRssAnon:\t80 kB\nRssFile:\t16 kB\nRssShmem:\t4 kB\n`;
