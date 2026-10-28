@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付已更新為 preview.16，含本機編輯草稿自動保存與瀏覽器異常關閉後恢復；最新正式證據見 [本機編輯恢復交付](edit-recovery.md)。下方保留各版本的工作區操作及歷史驗收。
+目前正式交付為 preview.17，新增 MLIR／Canvas 鍵盤流程及可見焦點，見 [正式交付](mlir-keyboard.md)。TFLite 本機編輯草稿自動保存與瀏覽器異常關閉後恢復的歷史證據見 [preview.16 交付](edit-recovery.md)。下方保留各版本的工作區操作及歷史驗收。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 

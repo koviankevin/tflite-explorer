@@ -1,6 +1,6 @@
 # 大型手動編輯草稿驗收
 
-這份獨立 Hosted Linux 驗收已補足 preview.16「超過 1 GiB 原模型，下載 JSON 後重新選檔恢復」的量測。網站程式未變，正式站仍為 preview.16／build `855f8ca810f04f4d`；本次只新增驗收與證據，不重新發布固定產物。
+這份獨立 Hosted Linux 驗收已補足 preview.16「超過 1 GiB 原模型，下載 JSON 後重新選檔恢復」的量測。這份量測的受測版本是 preview.16／build `855f8ca810f04f4d`，當次僅新增驗收與證據，未重新發布。後續正式版 preview.17 見 [鍵盤流程與交付](mlir-keyboard.md)，不把此頁歷史延遲量測當作後續版本重新實測。
 
 執行 `.github/workflows/large-edit-draft.yml`。修改該驗收本身時會在 PR 執行，也保留手動入口。只在本儲存庫的 Hosted Ubuntu 24.04／Chromium 執行，不啟動本機瀏覽器、不測手機、不上傳模型、權重或草稿。以 1366×640 儲存、1280×640 恢復，兩者皆為 32px。
 
