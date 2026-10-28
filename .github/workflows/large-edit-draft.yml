@@ -16,9 +16,6 @@ jobs:
   large-edit-draft:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    env:
-      DRAFT_REPORT: ${{ runner.temp }}/large-edit-draft.json
-      DRAFT_SCREENSHOT: ${{ runner.temp }}/large-edit-draft.png
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -31,14 +28,15 @@ jobs:
       - run: node --test test/manual-draft-audit.test.mjs test/model-edit-session.test.mjs
       - run: node scripts/install-browser.mjs
       - name: Physical 1.25 GiB JSON download, cancel, native restore and export
-        run: node test/browser/large-edit-draft.mjs
+        run: DRAFT_REPORT="$RUNNER_TEMP/large-edit-draft.json" DRAFT_SCREENSHOT="$RUNNER_TEMP/large-edit-draft.png" node test/browser/large-edit-draft.mjs
       - name: Retain bounded evidence and failure screenshot, never model or draft files
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: large-edit-draft-${{ github.sha }}-${{ github.run_attempt }}
           path: |
-            ${{ env.DRAFT_REPORT }}
-            ${{ env.DRAFT_SCREENSHOT }}
+            ${{ runner.temp }}/large-edit-draft.json
+            ${{ runner.temp }}/large-edit-draft.png
           if-no-files-found: error
           retention-days: 30
+
