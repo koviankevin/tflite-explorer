@@ -2,6 +2,7 @@ import {modelEditDraft,editChanges,editIssues,editWireReason,editTemplateReason,
 import {EDIT_DRAFT_LIMIT,parseEditSession,exportEditSession} from './model-edit-session.js';
 import {editNewOpsUI} from './model-edit-new-ops-ui.js';
 import {editRecoveryUI} from './edit-recovery-ui.js';
+import {resizeInFrame} from './resize-in-frame.js';
 import {supportsModelEditing,TFLITE_EDIT_MESSAGE} from './model-edit-policy.js';
 const NS='http://www.w3.org/2000/svg';
 export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
@@ -136,7 +137,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getGrap
     $('edit-open-result').onclick=openResult;$('edit-download-report').onclick=downloadReport;
     $('edit-signatures').onchange=()=>{availability();message('Signature 選項已變更，請重新驗證並匯出。');};
     $('explore-mode').onclick=()=>mode(false);$('edit-mode').onclick=()=>api.open();
-    new ResizeObserver(()=>{const h=document.querySelector('.app-header').offsetHeight;root.style.setProperty('--edit-head',`${h}px`);$('edit-draft-banner').style.top=`${h+8}px`;schedule();}).observe(document.querySelector('.app-header'));
+    resizeInFrame(document.querySelector('.app-header'),()=>{const h=document.querySelector('.app-header').offsetHeight;root.style.setProperty('--edit-head',`${h}px`);$('edit-draft-banner').style.top=`${h+8}px`;schedule();});
     window.addEventListener('beforeunload',e=>{if(api.hasUnexported){e.preventDefault();e.returnValue='';}});
     const api={
         get active(){return active;},get hasUnexported(){return !!draft&&(changes().length>0||draft.canRedo)&&exported!==signature()&&savedDraft!==historySignature();},

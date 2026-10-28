@@ -2,6 +2,7 @@ import {createEditSession,exportEditSession} from './model-edit-session.js';
 import {editRecoveryStore,readEditRecovery,EDIT_RECOVERY_CHANNEL} from './edit-recovery-store.js';
 import {editRecoverySession} from './edit-recovery-session.js';
 import {editRecoveryFingerprint} from './edit-recovery-fingerprint.js';
+import {editRecoveryLifecycle} from './edit-recovery-lifecycle.js';
 
 export function editRecoveryUI({capture,restore,exportFile,chooseImport}){
     const $=id=>document.getElementById(id),dialog=$('edit-recovery-dialog');let channel,records=[],selected=null,listGeneration=0,state;
@@ -38,6 +39,6 @@ export function editRecoveryUI({capture,restore,exportFile,chooseImport}){
     $('remove-edit-recovery').onclick=async()=>{if(!selected||!$('remove-edit-recovery-confirm').checked)return;try{const record=await store.remove({key:selected.key,revision:selected.revision,owner:session.owner});session.external(record,true);await refresh();}catch(error){showError(error);}};
     $('edit-autosave-enabled').onchange=()=>{const on=$('edit-autosave-enabled').checked;session.setEnabled(on);if(!on)fingerprint.cancel();try{localStorage.setItem('model-lens.edit-autosave.v1',on?'on':'off');}catch{/* Preference remains applied in memory. */}};
     $('retry-edit-recovery').onclick=()=>session.retry();$('fork-edit-recovery').onclick=()=>session.fork();
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')session.flush();});window.addEventListener('pagehide',()=>session.flush());
+    editRecoveryLifecycle({session,fingerprint,document,window});
     return {get touched(){return session.touched;},get binding(){return session.binding;},attach:record=>session.attach(record),change:()=>session.change(),detach(){const pending=session.detach();fingerprint.cancel();return pending;},state:()=>({...state})};
 }
