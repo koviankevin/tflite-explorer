@@ -51,3 +51,20 @@
 新增 TFLite OP 的輸入可沿用現有 tensor，或以原始 tensor 的 dtype、shape 與量化參數產生亂數權重。固定 seed、範圍和 xorshift32-v1 演算法隨草稿保存，重開可產生相同 bytes；不隨機修改 stride、padding、axis 等結構參數。支援已知 shape 的數值／boolean dense tensor；不支援動態 shape、sparse、字串／complex／float16。整數／量化範圍使用 raw integer 值；單個 tensor 16 MiB、整次匯出 32 MiB，超出前拒絕配置。
 
 匯出檢查完整索引、producer 順序、介面／signature、subgraph 引用，檢查新 OP 的參數型別／列舉／正值規則、port 數量，以及已實作的二元運算 dtype／broadcast、reshape 元素數。這不是完整 TFLite kernel verifier：卷積／量化運算等其他 shape 與數值規則、版本支援、custom kernel、推論結果仍須以目標 runtime 驗證；網站明示此範圍。未知 runtime 語意不標為已驗證。
+
+## preview.13 發布候選
+
+新增可攜編輯草稿、既有 OP 複製／相容範本切換、TFLite builtin catalog、固定 seed 亂數權重，以及編輯圖拖曳平移／游標中心滾輪縮放。修正既有 2 OP 草稿忽略後來 3 OP 選取、參數欄位尚未掛載便初始化導致節點重疊，以及恢復視角尚未套用便顯示就緒的問題。接線提示保留固定空間，不擠動圖形。
+
+功能 PR #34 的 [原生驗收 40610077786](https://github.com/koviankevin/tflite-explorer/actions/runs/40610077786) 21 項成功、34 個模型 Worker 關閉；[原始報告](results/preview13-pr-ui-2026-10-28.json)、[provider／來源核對](results/preview13-pr-ui-review-2026-10-28.json)及 [32px 手機截圖](results/preview13-pr-mobile-2026-10-28.png)已保存。原生覆蓋新分頁草稿恢復、錯誤完整檔案指紋拒絕、redo／字級／縮放、原始三 OP 同步、MUL options、亂數權重 bytes、原始 weights／custom options，以及 MLIR 迴圈 SSA 匯出重開。1366×640 圖區約 294.5px、390×844 約 371.4px，長名稱無超框。
+
+合併功能來源 `f3374ed2ac9fd1de5ef7cef03c14955592a42229`，tree `22b717361bfa910b6bc9bde0233f75ffa5de0185`，與合格 PR head 的完整 tree 相同。發布選擇如下；選定 run 不代表尚未完成的關卡已通過，prepare 必須重新認證所有 artifact、source fingerprint 及乾淨來源。
+
+| 關卡 | 選定證據 |
+| --- | --- |
+| core | [40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445)，86 個執行相依 fingerprint 不變，可沿用既有成功 main 量測 |
+| browser | [40610420461](https://github.com/koviankevin/tflite-explorer/actions/runs/40610420461)，八輪實體大模型編輯／下載／重開／關閉，等待完成後核對 |
+| contract | [40610424400](https://github.com/koviankevin/tflite-explorer/actions/runs/40610424400)，發布合約 main 手動入口 |
+| site | [40610428484](https://github.com/koviankevin/tflite-explorer/actions/runs/40610428484)，隔離版本切換與同份來源原生操作 |
+
+公司 compiler／runtime、完整 TFLite kernel shape／量化語意、推論結果、其他瀏覽器及數小時操作仍未驗證；商品等級未完成項目不因本次功能而標為完成。
