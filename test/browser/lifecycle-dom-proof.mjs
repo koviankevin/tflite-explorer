@@ -34,3 +34,20 @@ export function installLifecycleDOMProof(snapshot){
         document.documentElement.setAttribute('data-model-lens-lifecycle-proof',text);
     });
 }
+export function createLifecycleProofEngine(){
+    const query=root=>{
+        const doc=root.ownerDocument||root;
+        doc.documentElement.removeAttribute('data-model-lens-lifecycle-proof');
+        doc.dispatchEvent(new Event('model-lens-lifecycle-observe'));
+        const carrier=doc.createElement('output');
+        carrier.textContent=doc.documentElement.getAttribute('data-model-lens-lifecycle-proof');
+        return carrier;
+    };
+    return {query,queryAll:root=>[query(root)]};
+}
+export async function registerLifecycleProof(selectors){await selectors.register('lenslifecycle',createLifecycleProofEngine,{contentScript:true});}
+export async function readLifecycleDOMProof(page){
+    const raw=await page.locator('lenslifecycle=snapshot').textContent();
+    if(!raw||raw.length>1024**2)throw Error('Missing bounded lifecycle proof.');
+    return JSON.parse(raw);
+}

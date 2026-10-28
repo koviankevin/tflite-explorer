@@ -1,0 +1,183 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "13c6526e5d473d86cf160c678bf0c6945b084dbd",
+    "tree": "c73366fe158378480432e8b6102996c88e32beeb",
+    "committedAt": "2026-10-28T18:38:26+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "source": {
+        "commit": "13c6526e5d473d86cf160c678bf0c6945b084dbd",
+        "tree": "c73366fe158378480432e8b6102996c88e32beeb",
+        "committedAt": "2026-10-28T18:38:26+08:00",
+        "dirty": false
+      },
+      "runId": 40673748946,
+      "attempt": 1,
+      "jobId": 122766773766,
+      "artifactId": 12809567081,
+      "digest": "sha256:06ec72159b5c3e5e51b6e6a727458ed2c64e36a0afc7123f06e1f8e7d87f80df",
+      "rawSHA256": "1c959a216af70791263c79f7dde7e9affd25a99367385c243acc75cf7035d2a2",
+      "rawBytes": 86075,
+      "build": "4f430e93781fc171",
+      "coreFiles": 275,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "native pattern JSON chooser, download and exact structure round trip"
+      ],
+      "cycles": 1,
+      "completedCycles": 0,
+      "observedOnly": {
+        "sampledPeakRssBytes": 2826616832,
+        "peakGrowthBytes": 2008670208
+      },
+      "summary": null,
+      "error": "locator.dispatchEvent: window.eval() not supported.\nbrowser.Host</this._window.eval@http://127.0.0.1:42709/tflite-explorer/vendor/netron/browser.js?v=4f430e93781fc171:14:19\neval@debugger eval code:6556:24\nInjectedScript@debugger eval code:6545:36\n@debugger eval code:7901:16\n@debugger eval code:7902:11\n\nCall log:\n  - waiting for locator('html')\n\n    at audit (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:42:51)\n    at editWhole (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:56:173)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:80:27",
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 3442,
+          "startTicks": "7438"
+        },
+        "parentPid": 3419,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 3442,
+            "startTicks": "7438"
+          },
+          {
+            "pid": 3497,
+            "startTicks": "7499"
+          },
+          {
+            "pid": 3499,
+            "startTicks": "7501"
+          },
+          {
+            "pid": 3510,
+            "startTicks": "7513"
+          },
+          {
+            "pid": 3519,
+            "startTicks": "7514"
+          },
+          {
+            "pid": 3591,
+            "startTicks": "7613"
+          },
+          {
+            "pid": 3608,
+            "startTicks": "7635"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:42709/tflite-explorer/vendor/netron/worker.js?v=4f430e93781fc171",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:42709/tflite-explorer/src/model-worker.js?v=4f430e93781fc171",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:42709/tflite-explorer/src/edit-recovery-worker.js?v=4f430e93781fc171",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "source": {
+        "commit": "13c6526e5d473d86cf160c678bf0c6945b084dbd",
+        "tree": "c73366fe158378480432e8b6102996c88e32beeb",
+        "committedAt": "2026-10-28T18:38:26+08:00",
+        "dirty": false
+      },
+      "runId": 40673748946,
+      "attempt": 1,
+      "jobId": 122766774194,
+      "artifactId": 12809283281,
+      "digest": "sha256:6613fb62ad3ea7399b027e1815d428dcba762475a3b7d31630da0e2da5ab4901",
+      "rawSHA256": "83205495a06971bc6a6c6b03a82d0c556a4209be7a096cb22c741d14dbe339f0",
+      "rawBytes": 90800,
+      "build": "4f430e93781fc171",
+      "coreFiles": 275,
+      "checks": [
+        "physical dense 1.25 GiB/21,005 OP fixture and full independent source fingerprint",
+        "native pattern JSON chooser, download and exact structure round trip"
+      ],
+      "cycles": 1,
+      "completedCycles": 0,
+      "observedOnly": {
+        "sampledPeakRssBytes": 1402253312,
+        "peakGrowthBytes": 705003520
+      },
+      "summary": null,
+      "error": "locator.dispatchEvent: Error: window.eval() not supported.\nCall log:\n  - waiting for locator('html')\n\n    at audit (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:42:51)\n    at editWhole (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:56:173)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-physical.mjs:80:27",
+      "errors": [],
+      "ownership": {
+        "root": {
+          "pid": 5378,
+          "startTicks": "7073"
+        },
+        "parentPid": 5355,
+        "method": "direct Node child plus exact per-launch random environment marker"
+      },
+      "processCleanup": {
+        "identities": [
+          {
+            "pid": 5378,
+            "startTicks": "7073"
+          },
+          {
+            "pid": 5384,
+            "startTicks": "7075"
+          },
+          {
+            "pid": 5402,
+            "startTicks": "7133"
+          },
+          {
+            "pid": 5442,
+            "startTicks": "7227"
+          }
+        ],
+        "remaining": [],
+        "allReaped": true
+      },
+      "forcedCleanup": null,
+      "workers": [
+        {
+          "url": "http://127.0.0.1:34141/tflite-explorer/vendor/netron/worker.js?v=4f430e93781fc171",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:34141/tflite-explorer/src/model-worker.js?v=4f430e93781fc171",
+          "closed": false
+        },
+        {
+          "url": "http://127.0.0.1:34141/tflite-explorer/src/edit-recovery-worker.js?v=4f430e93781fc171",
+          "closed": true
+        }
+      ],
+      "browserClosed": true
+    }
+  ]
+}
