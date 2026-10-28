@@ -37,6 +37,8 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
 ]};
 if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:2,soakPolicy:LIFECYCLE_SOAK_POLICY,recoveryPolicy:SOAK_RECOVERY_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+// Resource preflight also uses this helper when cgroup files are unavailable.
+const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,processTree,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;

@@ -203,3 +203,13 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 [原始 ZIP](results/preview22-startup-probe-2026-10-29.zip)與[獨立核對](results/preview22-startup-probe-review-2026-10-29.json)已驗 provider digest／CRC、來源、job／attempt／artifact 時間與啟動記錄範圍。這次開檔按鈕及版本控制在 1,018.213 ms 時已通過延遲圖形初始化前置檢查，84 個同站靜態請求、沒有截斷、沒有 failed requests 或 console errors；主 app.js 回應 HTTP 200／JavaScript MIME 並完成。快照中十個 pending 包含刻意暫停的 zip.js 與九個背景預載，不能將其當成已失敗的資源；它們沒有阻止開檔控制項就緒。
 
 同一輪後續 30 項原生操作通過，包含原生選檔、32px、pattern／TFLite／MLIR 匯出重開、編輯草稿與手動 runtime。這次沒有重現第一次逾時；第一輪缺少請求證據，仍無法確定其確切原因，不宣稱已修正應用啟動。獨立 probe 的成功也不代替原發布工作流程的 verify_live／release 完成，固定 Release 尚未建立，第一次失敗資料仍保留。
+
+### preview.22 正式交付
+
+固定 [preview.22 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.22)／build `04aa44009821ed92` 已完成，核心來源 `e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b`，site ID `5ea831fbefe2cd0cdb168fe03db5f87a54c23272438fe6f6403c6de589cf81ec`。[準備快照審閱](results/preview22-prepared-2026-10-29.json)完整核對兩個 provider ZIP、CRC、安全解壓、網站清單與固定 ZIP。[最終獨立審閱](results/preview22-published-2026-10-29.json)核對正式站全 1,373 檔、root、SHA／MIME、30 項原生操作、七種手動 runtime 情境、36 個模型與四個 runtime Workers 關閉，以及四份 GitHub Release 實際下載 bytes 與原準備產物完全一致。
+
+[40741440704 attempt 2](https://github.com/koviankevin/tflite-explorer/actions/runs/40741440704) 僅經使用者明確授權，刪除已有完整 repo／本機備份的失敗暫存 artifact `12838738699`，再補跑失敗驗證一次；[操作收據](results/preview22-approved-retry-2026-10-29.json)保留。成功的 prepare／deploy 沒有重跑：GitHub 在新 attempt 建立快取 job IDs，但執行時間、steps 與 runner 全等於原紀錄，審閱保留原 job 身分及快取對照。部署權威仍為 `7393412465`、attempt 1／job `123004345975`，沒有建立新部署。第一次啟動逾時的確切原因仍未知，原報告及新增診斷結果照前節保留，不寫成已修正啟動 bug。
+
+原始 provider ZIP：[正式站驗證](results/preview22-live-release-verification-2026-10-29.zip)、[Release 驗證](results/preview22-published-release-verification-2026-10-29.zip)；完整 [site manifest](results/preview22-site-manifest-2026-10-29.json) SHA `e5af018485d9aa150ce8506d07e81e76a9da5204aa954a331a50e6fad09599f8`。固定部署 ZIP SHA `8b3e8773497127fa33c9c0b8af6d4dd6c25bd13c040ee1d059917d68a1bdaeea`，正式 root SHA `585dd7781fe527f65e5792551a1963def4d4035936ac91247eddf53a1dc43cd3`。既有 preview.21／preview.20／legacy preview.7 的不可變版本仍保留。
+
+新應用的獨立 Chromium 長測已完成 80 輪／約 2 小時 12 分，來源與限制見 [長測結果](lifecycle-soak.md#prefix-only-修正的長測結果)。這不代替公司模型、custom kernel、完整 dialect verifier、其他 OS／固定硬體 SLA、其他引擎長時間負載或手動 runtime 數小時驗收，商品等級整體目標仍進行中。

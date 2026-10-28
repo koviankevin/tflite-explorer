@@ -1,0 +1,213 @@
+{
+  "authentication": "passed",
+  "source": {
+    "commit": "4ec5802f6af7aed3086ea516b24868bc43d41df3",
+    "tree": "6f65942e852138e3ec376cb000c6bfeb2647982a",
+    "committedAt": "2026-10-29T02:40:54+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40747440147,
+  "attempt": 1,
+  "jobId": 123024880695,
+  "artifactId": 12850946742,
+  "digest": "sha256:054ddcd5fa9bb1490b8032cb597cce92b19acbf8ab2a981225424b0b66947880",
+  "rawSHA256": "c7941a09c7c09db8580ec2ebb0a9c3155b8aab79e3b2aaa67da8a4e419b84ebb",
+  "rawBytes": 3721247,
+  "build": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.22",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "4ec5802f6af7aed3086ea516b24868bc43d41df3",
+      "tree": "6f65942e852138e3ec376cb000c6bfeb2647982a",
+      "committedAt": "2026-10-29T02:40:54+08:00",
+      "dirty": false
+    },
+    "buildId": "6cc234a24507f0d5"
+  },
+  "acceptance": "passed",
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "activeDurationMs": 7926338.796225,
+      "cycles": 80,
+      "measuredCycles": 78,
+      "batches": 10,
+      "rssSlopeBytesPerHour": 7045185.834808283,
+      "maxClosedRssDriftBytes": 30478336,
+      "maxClosedMainHeapDriftBytes": 1400756,
+      "meanSampleMs": 489.0386720277024,
+      "maxSampleGapMs": 1011.6635300000198
+    },
+    "batches": [
+      {
+        "firstCycle": 1,
+        "lastCycle": 8,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 2040978.2857142857,
+          "rssDriftBytes": 9424896,
+          "mainHeapDriftBytes": 473824,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 9,
+        "lastCycle": 16,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 451730.28571428574,
+          "rssDriftBytes": -4362240,
+          "mainHeapDriftBytes": -134488,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 17,
+        "lastCycle": 24,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 400003.65714285715,
+          "rssDriftBytes": 8519680,
+          "mainHeapDriftBytes": 494936,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 25,
+        "lastCycle": 32,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": -1081109.9428571428,
+          "rssDriftBytes": 14708736,
+          "mainHeapDriftBytes": 286248,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 33,
+        "lastCycle": 40,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 31012.571428571428,
+          "rssDriftBytes": 729088,
+          "mainHeapDriftBytes": 291280,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 41,
+        "lastCycle": 48,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 89994.97142857143,
+          "rssDriftBytes": -667648,
+          "mainHeapDriftBytes": -205648,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 49,
+        "lastCycle": 56,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": -2216170.057142857,
+          "rssDriftBytes": -9236480,
+          "mainHeapDriftBytes": 241904,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 57,
+        "lastCycle": 64,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 2122079.0857142857,
+          "rssDriftBytes": 2392064,
+          "mainHeapDriftBytes": -67928,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 65,
+        "lastCycle": 72,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 1309081.6,
+          "rssDriftBytes": 1880064,
+          "mainHeapDriftBytes": -429908,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      },
+      {
+        "firstCycle": 73,
+        "lastCycle": 80,
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 2763629.714285714,
+          "rssDriftBytes": 10858496,
+          "mainHeapDriftBytes": -107136,
+          "sampledPeakRssBytes": 988303360,
+          "sampledPeakGrowthBytes": 469082112
+        }
+      }
+    ],
+    "recovery": {
+      "status": "passed",
+      "issues": [],
+      "saved": 80,
+      "removed": 60,
+      "retained": 20
+    }
+  },
+  "cycles": 80,
+  "completeContentVerified": true,
+  "models": 240,
+  "identities": 80,
+  "nativeWorkers": 321,
+  "allNativeWorkersClosed": true,
+  "mainRootClosed": true,
+  "preflightOwnedProcessesReaped": true,
+  "payloadHashes": {
+    "full": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+    "prefix": "1c679c150d0a5fef71fcd7c559a6f4f5427dfbd8ad708694d76c880a1f0d6bc4",
+    "branch": "a18d24c795584d83a0733ef52afd8f7ccba6b1593e1c427940adada20ec2c2e8"
+  },
+  "limitations": [
+    "Main long-run RSS records the current Chromium root and descendants; it does not persist start-identity/orphan PID sets. Root closure is verified, not independent all-descendant reaping.",
+    "Worker V8 used/backing values are checkpoints, not a continuous isolate peak.",
+    "No optional manual runtime inference is invoked by this large-file soak."
+  ]
+}

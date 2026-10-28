@@ -17,7 +17,7 @@ gh workflow run verified-pages.yml --ref main -f publish=false
 gh workflow run verified-pages.yml --ref main -f publish=true -f expected_build_id=0123456789abcdef -f expected_site_id=<準備階段的64位site-ID>
 ```
 
-第二個命令必須換成第一次成功準備的實際 build ID 與 64 位 site ID；範例值不能用於正式發布。若期間 main 移動，或保留版本／完整站台與審閱結果不同，就停止，不會悄悄發佈另一版。預設 `publish=false`，只會建置及保存 artifacts，deploy、verify_live、release 都不執行。此整站流程目前在草稿分支，正式站仍使用上次已交付版本；實際完成狀態見 [版本隔離](versioned-site.md)。
+第二個命令必須換成第一次成功準備的實際 build ID 與 64 位 site ID；範例值不能用於正式發布。若期間 main 移動，或保留版本／完整站台與審閱結果不同，就停止，不會悄悄發佈另一版。預設 `publish=false`，只會建置及保存 artifacts，deploy、verify_live、release 都不執行。此整站流程已在 main 受控發布；現行固定版本與完成證據以 [README](../README.md) 為準，版本隔離範圍見 [版本隔離](versioned-site.md)。
 
 本機 `node scripts/publish-github-pages.mjs --site-id <準備階段的64位site-ID>` 先核對 dist 與目前 main、四項驗收及伺服器設定，再 dispatch 同一工作流程；不再建立或推送 gh-pages commit。它回報的是 dispatch，成功上線仍須看 deploy、verify_live 及 release 的實際結果。
 
@@ -39,7 +39,7 @@ Release 證據集合移除每次查核時間及本機快照目錄，保留固定
 
 工作流程的 Pages artifact 保留七天、交付／驗收 artifact 保留三十天；成功的 GitHub Release 下載檔另行保留。過期或未完成的 CI 證據不能用本機 passed JSON 替代。若正式站逐檔核對失敗，Release 不會建立；目前尚無自動回退，應依實際原因修復或使用已驗收版本處理。此入口也不代表瀏覽器資料可反向遷移。
 
-## 提升已發布版本（草稿流程）
+## 提升已發布版本
 
 `promote_version` 留空時建立新 core；指定例如 `0.2.0-preview.7` 時，只取得該已發布版本的完整四份原始資產。控制程式先驗目前四關卡，再驗 bot／tag／來源／digest／ZIP，不接受 draft 或不完整發行，也不使用中斷恢復資料作提升目標。
 
