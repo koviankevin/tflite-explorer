@@ -1,0 +1,6 @@
+LiteRT.js and wasm-utils 2.6.0
+Copyright 2025 Google LLC
+Apache License 2.0; see LICENSE.
+Source: https://github.com/google-ai-edge/LiteRT/tree/main/litert/js
+The core module import was changed to a local relative import.
+NPM package integrity and exact distributed file hashes: provenance.json

@@ -2,6 +2,7 @@
 // Export never trusts client-supplied tensor descriptions or OP templates.
 export const EDIT_LIMITS=Object.freeze({nodes:96,commands:128,originals:64,ports:4096});
 import {builtinInfo,builtinSettings,randomTensorInfo} from './tflite-new-ops.js';
+import {inferTfliteOutputs} from './tflite-shape-inference.js';
 const copy=value=>structuredClone(value);
 export function editPosition(state,node){
     if(!node.fresh)return node.source.node*4+2;
@@ -54,12 +55,13 @@ function mutate(state,command){
     }else if(command.kind==='builtin'){
         if(state.format!=='tflite'||!node.fresh||node.removed)throw Error('請先選取新增的 TFLite OP。');
         if(!Number.isInteger(command.inputCount)||command.inputCount<0||command.inputCount>32||!Array.isArray(command.outputLike)||command.outputLike.length>32||!Number.isInteger(command.version)||command.version<1||command.version>100)throw Error('OP 介面數量或版本無效。');
-        const {info}=builtinSettings(command.code,command.settings),likes=command.outputLike.map(id=>state.values.get(id));
+        const {info}=builtinSettings(command.code,command.settings),likes=command.outputLike.map(id=>state.values.get(id));delete node.inference;
         if(likes.some(v=>!v||v.fresh||v.generated||v.optional||v.graph!==node.source.graph))throw Error('輸出型別需參考同一 subgraph 的原始 tensor。');
         if(command.outputLike.length<node.outputs.length&&node.outputs.slice(command.outputLike.length).some(p=>state.nodes.some(n=>!n.removed&&n.inputs.some(i=>i.value===p.value))))throw Error('縮減的輸出仍被使用，請先重接消費端。');
         node.inputs=Array.from({length:command.inputCount},(_,slot)=>{if(node.inputs[slot])return {...node.inputs[slot],signature:null};const key=`missing:${node.id}:${slot}`;state.values.set(key,{id:key,name:'尚未接線',missing:true,graph:node.source.graph,signature:null,type:'需指定來源'});return {value:key,signature:null,type:'需指定來源'};});
         node.outputs=likes.map((original,i)=>{const key=`${node.id}:out:${i}`,name=`${info.name.toLowerCase()}_${node.serial}_${i}`;state.values.set(key,{...copy(original),id:key,name,producer:node.id,fresh:true,modelOutput:false});return {value:key,type:original.type};});
-        node.name=info.name;node.builtin={code:command.code,version:command.version,settings:copy(command.settings||{}),outputLike:[...command.outputLike]};
+        if(command.inferOutputs!==undefined&&typeof command.inferOutputs!=='boolean')throw Error('輸出推導選項無效。');
+        node.name=info.name;node.builtin={code:command.code,version:command.version,settings:copy(command.settings||{}),outputLike:[...command.outputLike],...(command.inferOutputs!==undefined?{inferOutputs:command.inferOutputs}:{})};
         if(state.values.size>EDIT_LIMITS.ports||state.nodes.filter(n=>n.fresh&&!n.removed).reduce((sum,n)=>sum+n.outputs.length,0)>1024)throw Error('編輯範圍 tensor 或新增輸出超過上限。');
     }else if(command.kind==='random'){
         const like=state.values.get(command.like);if(state.format!=='tflite'||!node.fresh||!node.inputs[command.slot]||!like||like.fresh||like.generated||like.optional||like.graph!==node.source.graph)throw Error('亂數權重需要新增 OP 的輸入端與原始型別範本。');
@@ -68,7 +70,7 @@ function mutate(state,command){
         state.values.set(key,{...copy(like),id:key,name:`random_${state.parameterNext}`,producer:null,order:-1,generated:{...spec,bytes:info.bytes,algorithm:'xorshift32-v1'},kind:'亂數權重',modelOutput:false});node.inputs[command.slot].value=key;
     }else if(command.kind==='template'){
         const reason=editTemplateReason(state,node.id,command.template);if(reason)throw Error(reason);
-        const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;
+        const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;delete node.inference;
         node.inputs=node.inputs.map((p,i)=>({...copy(base.inputs[i]),value:p.value}));
         node.outputs.forEach((port,i)=>{const original=state.values.get(base.outputs[i].value),name=state.format==='mlir'?`${state.prefix}${node.serial}_${original.group}${original.grouped||original.number?`#${original.number}`:''}`:`${original.name||'result'}_edit_${node.serial}_${i}`.slice(0,256);state.values.set(port.value,{...copy(original),id:port.value,name,producer:node.id,fresh:true,modelOutput:false});port.type=original.type;});
     }else if(command.kind==='remove'){
@@ -80,11 +82,21 @@ function mutate(state,command){
         node.exposed=command.enabled===true;
     }else throw Error('不支援此編輯操作。');
 }
+function inferDraft(state){
+    if(state.format!=='tflite')return;
+    for(const node of state.nodes.filter(n=>n.builtin?.inferOutputs&&!n.removed).sort((a,b)=>editPosition(state,a)-editPosition(state,b))){
+        const refs=node.builtin.outputLike.map(id=>state.values.get(id)),outputs=refs.map(v=>JSON.parse(v.signature)),inputs=node.inputs.map(p=>{const v=state.values.get(p.value);return v?.signature&&!v.missing&&!v.optional?JSON.parse(v.signature):null;});
+        const {info,options}=builtinSettings(node.builtin.code,node.builtin.settings),inference=inferTfliteOutputs(info.name,inputs,outputs,options);node.inference=inference;
+        node.outputs.forEach((p,i)=>{const value=state.values.get(p.value),base=refs[i],metadata=outputs[i];value.signature=base.signature;value.type=base.type;p.type=base.type;delete value.inferredShape;
+            if(inference.status==='inferred'){metadata.shape=inference.shapes[i];if(metadata.shape_signature?.length)metadata.shape_signature=[...metadata.shape];value.signature=JSON.stringify(metadata);value.type=`${base.type.split('[')[0]}[${metadata.shape.join(',')}]`;p.type=value.type;value.inferredShape=[...metadata.shape];}
+        });
+    }
+}
 export function replayEditDraft(snapshot,commands=[]){
     if(!snapshot||!['tflite','mlir'].includes(snapshot.format)||!Array.isArray(snapshot.nodes)||snapshot.nodes.length>EDIT_LIMITS.originals||!Array.isArray(snapshot.values)||snapshot.values.length>EDIT_LIMITS.ports)throw Error('編輯範圍無效或超過上限。');
     if(!Array.isArray(commands)||commands.length>EDIT_LIMITS.commands)throw Error('最多累積 128 個編輯操作，請先匯出並重新開啟。');
     const state={format:snapshot.format,prefix:snapshot.prefix,nodes:copy(snapshot.nodes),values:new Map(snapshot.values.map(v=>[v.id,copy(v)])),next:0,parameterNext:0};
-    for(const command of commands)mutate(state,command);
+    for(const command of commands){mutate(state,command);inferDraft(state);}
     return state;
 }
 export function editChanges(snapshot,state){

@@ -21,7 +21,7 @@ export function exportReportUI({exportFile}) {
             if(s.modification?.metadataChanges?.length)rows.push(['Metadata 變更',s.modification.metadataChanges.join(' ')]);
             if(s.modification?.workspaceChanges)rows.push(['工作區變更',`${s.modification.workspaceChanges.length} 筆新增／刪除／改線；完整清單在下載報告內。`]);
             fields.replaceChildren();for(const [label,value] of rows){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;fields.append(dt,dd);}
-            checks.replaceChildren();for(const check of s.checks){const li=document.createElement('li');li.textContent=`${check.status==='passed'?'已完成':'未驗證'} · ${check.detail}`;checks.append(li);}
+            checks.replaceChildren();for(const check of s.checks){const li=document.createElement('li');li.textContent=`${check.status==='passed'?'已完成':check.status==='failed'?'失敗':'未驗證'} · ${check.detail}`;checks.append(li);}
         }
     };
 }

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "hashScope": "Vendored source before release build canonicalization and import query stamping; release-manifest.json records final served hashes.",
+  "packages": [
+    {
+      "name": "@litertjs/core",
+      "version": "2.6.0",
+      "url": "https://registry.npmjs.org/@litertjs/core/-/core-2.6.0.tgz",
+      "integrity": "sha512-TH6/5zLq57YzyZH6q+vO8be1SvTH76uDFe+CiL0wWtRNTUDhc2GAWm2YCohhnyt4fPvefSNztg5PKFZGAYL0cw=="
+    },
+    {
+      "name": "@litertjs/wasm-utils",
+      "version": "2.6.0",
+      "url": "https://registry.npmjs.org/@litertjs/wasm-utils/-/wasm-utils-2.6.0.tgz",
+      "integrity": "sha512-rxARtl8owf+aPV2TsMiAClYDBaEDemML3PjrzBxIpGCvv6POswR7068Kt0sIkrK5XvKkY2Z+JLcm3a9CHmvuUg=="
+    }
+  ],
+  "licenseSource": "https://github.com/google-ai-edge/LiteRT/blob/b53c5cb860ff58cc918e9e7aa73c9b192dc9cb5f/LICENSE",
+  "changes": [
+    "core.js: replace bare wasm-utils import with relative local import.",
+    "Only the single-threaded compatibility CPU WASM build is distributed."
+  ],
+  "files": [
+    {
+      "path": "core.js",
+      "bytes": 100112,
+      "sha256": "b86f45b31390811c48192926c45eb6cd6737a0ffca5f04bc169be628fc6d5622",
+      "upstreamSHA256": "97c795831e67310055fa4c10d3d27e2756cf9b204d1f53852d2a1296b09f0971"
+    },
+    {
+      "path": "wasm-utils.js",
+      "bytes": 1494,
+      "sha256": "e0e20bc28ab001ac732cf40d15b6eebd24fb0deaeb95eeba5100f51eebf015f2",
+      "upstreamSHA256": "e0e20bc28ab001ac732cf40d15b6eebd24fb0deaeb95eeba5100f51eebf015f2"
+    },
+    {
+      "path": "litert_wasm_compat_internal.js",
+      "bytes": 279036,
+      "sha256": "cffb7bebb9411e2160d711ccff00c3921b0031a66a692f58c25ce8204b7ec541",
+      "upstreamSHA256": "cffb7bebb9411e2160d711ccff00c3921b0031a66a692f58c25ce8204b7ec541"
+    },
+    {
+      "path": "litert_wasm_compat_internal.wasm",
+      "bytes": 10948854,
+      "sha256": "4190033238e53ec86b832bad4649851ad111025c226c1688cfae20e1f8fe8926",
+      "upstreamSHA256": "4190033238e53ec86b832bad4649851ad111025c226c1688cfae20e1f8fe8926"
+    }
+  ]
+}

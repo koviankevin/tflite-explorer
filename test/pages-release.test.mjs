@@ -73,6 +73,7 @@ test('browser modules and styles require executable MIME types',()=>{
     assert.doesNotThrow(()=>assertStaticMime('src/app.js','text/javascript; charset=utf-8'));assert.doesNotThrow(()=>assertStaticMime('src/app.css','text/css'));assert.doesNotThrow(()=>assertStaticMime('tools/verify-export.mjs','application/octet-stream'));
     for(const [name,type] of [['src/app.js','application/octet-stream'],['src/app.css','text/plain'],['index.html','application/octet-stream']])assert.throws(()=>assertStaticMime(name,type));
     assert.doesNotThrow(()=>assertStaticMime('versions/'+ 'a'.repeat(16)+'/vendor/netron/flatbuffers.js','application/javascript; charset=utf-8'));assert.doesNotThrow(()=>assertStaticMime('site-manifest.json','application/json'));
+    assert.doesNotThrow(()=>assertStaticMime('vendor/litert/2.6.0/litert_wasm_compat_internal.wasm','application/wasm'));assert.throws(()=>assertStaticMime('vendor/litert/runtime.wasm','application/octet-stream'));
     for(const [name,type] of [['versions/'+'a'.repeat(16)+'/src/model-worker.js','application/octet-stream'],['site-manifest.json','text/plain'],['versions/'+'a'.repeat(16)+'/release.json','text/html']])assert.throws(()=>assertStaticMime(name,type));
 });
 test('delivery consumers verify trusted output hashes, complete ZIP members and source',async()=>{

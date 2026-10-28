@@ -28,7 +28,7 @@
 
 同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再按頂端「編輯模型」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
 
-滑鼠拖曳空白處可平移，滾輪以游標位置為中心縮放；Alt＋拖曳或中鍵可從 OP 上平移，保留選取與草稿。點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，型別／shape／量化參考原始 tensor，沒有自動 shape inference。CUSTOM 的 code／options 請從現有 custom OP 複製。
+滑鼠拖曳空白處可平移，滾輪以游標位置為中心縮放；Alt＋拖曳或中鍵可從 OP 上平移，保留選取與草稿。點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，dtype／量化參考原始 tensor；可選擇依已接入 tensor 自動推導已支援 OP 的輸出 shape，未支援的規則明確沿用參考，不猜測 tensor-valued axis／permutation。CUSTOM 的 code／options 請從現有 custom OP 複製。
 
 右側顯示選取 OP 的 ports、變更預覽與接線問題。支援復原／重做、清除草稿、刪除和恢復 OP；TFLite 可明確將刪除後仍被使用的輸出提升為模型 inputs，或將新增 OP 輸出加入模型 outputs。型別／shape／量化不相容、同 block 後向接線會拒絕；跨 block 的完整 SSA／dominance 於匯出時驗證。MLIR 控制流程以藍色虛線顯示，基礎工作區保留 terminators、successors 與 regions。
 
@@ -36,7 +36,7 @@
 
 工作區只載入最多 64 個原始 OP 的選取與直接相鄰範圍，連同新增 OP 最多 96 個、128 步操作、4,096 個值；ports 分頁顯示。可返回探索選取其他 OP，再回到編輯模式會自動同步新選取，也可按「同步圖上選取」；原有接線與復原／重做歷史保留。模型和權重維持在本機 Worker／原始 File，進出工作區不重新讀取模型或繪製全模型。
 
-「驗證並匯出模型」一次匯出整份修改模型，保留未改動 scopes／subgraphs；重新解析實際候選 bytes，通過 TFLite 結構或 MLIR 型別／SSA／控制流程／dominance 檢查後才開始下載。可直接「開啟修改結果」，或下載含變更預覽、介面及資料範圍的修改報告。尚未執行推論、數值等價或公司 compiler／custom runtime 語意驗證。
+「驗證並匯出模型」一次匯出整份修改模型，保留未改動 scopes／subgraphs；重新解析實際候選 bytes，通過 TFLite 結構或 MLIR 型別／SSA／控制流程／dominance 檢查後才開始下載。可直接「開啟修改結果」，或下載含變更預覽、介面及資料範圍的修改報告。一般匯出不啟動 interpreter。可另按「檢查能否執行（選用）」手動使用本機 LiteRT CPU；參見 [手動執行檢查](tflite-runtime.md)。數值等價或公司 compiler／custom runtime 語意仍需外部驗證。
 
 使用「儲存編輯草稿」下載 JSON；換電腦或瀏覽器後按右上「匯入草稿」，再選取原模型。保存命令、接線、復原／重做、字級與視角；不包含原模型或權重。首次儲存／恢復會以 1 MiB 區塊讀完整原檔，核對版本化 SHA-256 chunk chain（不是標準整檔 SHA-256），可取消。同大小、同名但權重不同的模型也會拒絕；檔名改變但 bytes 相同可恢復。草稿上限 256 KiB、128 步命令。探索工作階段 JSON／自動草稿另行保存，不包含模型編輯命令。
 

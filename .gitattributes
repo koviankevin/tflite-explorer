@@ -1,2 +1,4 @@
 # Keep authenticated report bytes stable when checking out on Windows or Linux.
 /docs/results/*.json text eol=lf
+# Preserve exact bytes authenticated by the upstream npm provenance.
+/vendor/litert/** -text

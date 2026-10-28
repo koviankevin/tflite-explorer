@@ -45,7 +45,7 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
     if(['ADD','MUL','SUB','DIV','MAXIMUM','MINIMUM','POW','SQUARED_DIFFERENCE'].includes(name)){
         if(inputs.length!==2||outputs.length!==1)throw Error(name+' 需要 2 個輸入與 1 個輸出。');
         if(!sameType(inputs[0],inputs[1])||!sameType(inputs[0],outputs[0]))throw Error(name+' 輸入／輸出 dtype 不符。');
-        const a=shapes(inputs[0]),b=shapes(inputs[1]),expected=[];for(let i=0;i<Math.max(a.length,b.length);i++){const x=a.at(-1-i)??1,y=b.at(-1-i)??1;if(x>=0&&y>=0&&x!==y&&x!==1&&y!==1)throw Error(name+' 的 shape 無法 broadcast。');expected.unshift(x<0||y<0?-1:Math.max(x,y));}const out=shapes(outputs[0]);if(out.length!==expected.length||out.some((n,i)=>n>=0&&expected[i]>=0&&n!==expected[i]))throw Error(name+' 的輸出 shape 不符合 broadcast 結果。');
+        const a=shapes(inputs[0]),b=shapes(inputs[1]),expected=[];for(let i=0;i<Math.max(a.length,b.length);i++){const x=a.at(-1-i)??1,y=b.at(-1-i)??1;if(x>=0&&y>=0&&x!==y&&x!==1&&y!==1)throw Error(name+' 的 shape 無法 broadcast。');expected.unshift(x<0||y<0?-1:x===1?y:x);}const out=shapes(outputs[0]);if(out.length!==expected.length||out.some((n,i)=>n>=0&&expected[i]>=0&&n!==expected[i]))throw Error(name+' 的輸出 shape 不符合 broadcast 結果。');
     }
     if(['RESHAPE','SQUEEZE','EXPAND_DIMS'].includes(name)&&inputs[0]&&outputs[0]){const a=shapes(inputs[0]),b=shapes(outputs[0]);if(a.every(n=>n>=0)&&b.every(n=>n>=0)&&a.reduce((n,x)=>n*x,1)!==b.reduce((n,x)=>n*x,1))throw Error(name+' 前後元素數不同。');}
     if(['IF','WHILE'].includes(name)&&!options)throw Error(name+' 需要控制流程 subgraph 設定。');

@@ -20,6 +20,7 @@ import {patternDeleteFlow} from './pattern-delete-flow.mjs';
 import {modelTabsFlow} from './model-tabs-flow.mjs';
 import {editRecoveryFlow} from './edit-recovery-flow.mjs';
 import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
+import {tfliteRuntimeFlow} from './tflite-runtime-flow.mjs';
 assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
 assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
 const expected=process.env.EXPECTED_BUILD;assert.match(expected||'',/^[a-f0-9]{16}$/);
@@ -98,7 +99,7 @@ try{
     report.tfliteEditingOnlyRequired=tfliteEditingOnlyRequired;if(tfliteEditingOnlyRequired)report.tfliteControlEdit=await tfliteControlEditFlow({page,read:readPage,base,directory:temporary,check});
     report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}report.editRecoveryRequired=editRecoveryRequired;if(editRecoveryRequired)report.editRecovery=await editRecoveryFlow({page,read:readPage,base,directory:temporary,check});
     report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check});
-    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)),previousWorkers=tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3;assert.equal(modelWorkers.length,previousWorkers+(mlirKeyboardRequired?5:0));assert.ok(modelWorkers.every(w=>w.closed));assert.deepEqual(report.errors,[]);report.status='passed';
+    const modelWorkers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)),previousWorkers=tfliteEditingOnlyRequired?27:keyboardRequired?(selectionToolsRequired?(editWorkspaceRequired?27+(report.portableEdit?.modelWorkers||0):21):5):3;assert.equal(modelWorkers.length,previousWorkers+(mlirKeyboardRequired?5:0));assert.ok(modelWorkers.every(w=>w.closed));if(manifest.files.some(f=>f.path==='src/tflite-runtime-worker.js'))report.tfliteRuntime=await tfliteRuntimeFlow({page,read:readPage,base,directory:temporary,check});assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.error=error.stack||String(error);process.exitCode=1;if(page)await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')}).catch(()=>{});}
 finally{
     releaseStartup?.();

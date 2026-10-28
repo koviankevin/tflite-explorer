@@ -85,7 +85,7 @@ export async function exportEditWorkspace(index,file,snapshot,commands,{updateSi
         for(const graph of new Set(changes.map(c=>state.nodes.find(n=>n.id===c.node).source.graph))){
             const g=index.raw.subgraphs[graph],scope=state.nodes.filter(n=>n.source.graph===graph),byOriginal=new Map(scope.filter(n=>!n.fresh).map(n=>[n.source.node,n])),newIds=new Map(),tensors=[];
             const clones=active.filter(n=>n.fresh&&n.source.graph===graph).sort((a,b)=>editPosition(state,a)-editPosition(state,b));
-            for(const clone of clones)for(const [slot,port] of clone.outputs.entries()){newIds.set(port.value,g.tensors.length+tensors.length);tensors.push({like:clone.builtin?value(clone.builtin.outputLike[slot]).tensor:g.operators[clone.source.node].outputs[slot],name:value(port.value).name});}
+            for(const clone of clones)for(const [slot,port] of clone.outputs.entries()){newIds.set(port.value,g.tensors.length+tensors.length);const v=value(port.value);tensors.push({like:clone.builtin?value(clone.builtin.outputLike[slot]).tensor:g.operators[clone.source.node].outputs[slot],name:v.name,...(v.inferredShape?{shape:v.inferredShape}:{})});}
             const generated=[...new Set(active.filter(n=>n.source.graph===graph).flatMap(n=>n.inputs.map(p=>p.value)))].map(value).filter(v=>v.generated);
             if(generated.reduce((sum,v)=>sum+randomTensorInfo(g.tensors[v.tensor],v.generated).bytes,0)>32*1024**2)throw Error('單次產生的亂數權重超過 32 MiB，請沿用現有權重或分次編輯。');
             for(const v of generated){newIds.set(v.id,g.tensors.length+tensors.length);tensors.push({like:v.tensor,name:v.name,data:randomTensor(g.tensors[v.tensor],v.generated)});}

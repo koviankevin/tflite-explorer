@@ -7,10 +7,11 @@ const valueId=v=>typeof v==='string'&&/^(?:t:\d+:-?\d+|m:\d+:\d+:\d+|a:\d+:\d+|n
 const keys=(v,list)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).every(k=>list.includes(k));
 function command(v){
     if(!id(v?.node))fail();
-    const fields={wire:['kind','node','slot','value'],clone:['kind','node','side'],template:['kind','node','template'],builtin:['kind','node','code','version','settings','inputCount','outputLike'],random:['kind','node','slot','like','seed','min','max'],remove:['kind','node','boundary'],restore:['kind','node'],expose:['kind','node','enabled']};
+    const fields={wire:['kind','node','slot','value'],clone:['kind','node','side'],template:['kind','node','template'],builtin:['kind','node','code','version','settings','inputCount','outputLike','inferOutputs'],random:['kind','node','slot','like','seed','min','max'],remove:['kind','node','boundary'],restore:['kind','node'],expose:['kind','node','enabled']};
     if(!Object.hasOwn(fields,v.kind)||!keys(v,fields[v.kind]))fail();
     if(v.kind==='wire'&&(!integer(v.slot,1023)||!valueId(v.value))||v.kind==='clone'&&!['before','after'].includes(v.side)||v.kind==='template'&&!id(v.template)||v.kind==='remove'&&typeof v.boundary!=='boolean'||v.kind==='expose'&&typeof v.enabled!=='boolean')fail();
     if(v.kind==='builtin'&&(!integer(v.code,10000)||!integer(v.version,100)||v.version<1||!integer(v.inputCount,32)||!Array.isArray(v.outputLike)||v.outputLike.length>32||v.outputLike.some(x=>!valueId(x))||!v.settings||typeof v.settings!=='object'||Array.isArray(v.settings)||JSON.stringify(v.settings).length>16384))fail();
+    if(v.kind==='builtin'&&v.inferOutputs!==undefined&&typeof v.inferOutputs!=='boolean')fail();
     if(v.kind==='random'&&(!integer(v.slot,31)||!valueId(v.like)||!integer(v.seed,4294967295)||![v.min,v.max].every(Number.isFinite)))fail();
     return {...v};
 }
