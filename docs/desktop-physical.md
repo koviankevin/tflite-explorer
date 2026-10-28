@@ -194,4 +194,12 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 
 [原始報告與截圖 ZIP](results/preview22-startup-failure-2026-10-29.zip)及[獨立 provider／CRC／來源／attempt 核對](results/preview22-startup-failure-review-2026-10-29.json)保留，沒有把失敗刪除或直接重跑到成功。三引擎八輪及隔離網站相同應用曾通過，故先補 CI 啟動資源觀察，區分網路／模組請求未完成、刻意延遲圖形初始化與 DOM 時序，而不提高逾時或變更應用猜測修正。
 
-新的診斷只在選取任何模型前收錄同站 GET document／script／stylesheet／image，最多 128 筆、console errors 最多 32 筆，記錄相對路徑、狀態、content type、完成／失敗時間與刻意暫停的 zip 模組。URL query／credentials／外站網址及 file／data URLs 排除或遮罩；不讀取回應 body 或模型，不記錄認證 header。開檔按鈕已就緒時停止收錄，失敗則保留當下 pending 請求。原 30 秒門檻、原生請求路徑、刻意暫停及全部功能驗證不變。三項 Node 檢查涵蓋請求狀態、上限／同站範圍／開檔後停止，以及文字中的敏感 URL 遮罩；實際公開站重現仍待執行。
+新的診斷只在選取任何模型前收錄同站 GET document／script／stylesheet／image，最多 128 筆、console errors 最多 32 筆，記錄相對路徑、狀態、content type、完成／失敗時間與刻意暫停的 zip 模組。URL query／credentials／外站網址及 file／data URLs 排除或遮罩；不讀取回應 body 或模型，不記錄認證 header。開檔按鈕與延遲圖形檢查已就緒時停止收錄，失敗則保留當下 pending 請求。原 30 秒門檻、原生請求路徑、刻意暫停及全部功能驗證不變。三項 Node 檢查涵蓋請求狀態、上限／同站範圍／開檔後停止，以及文字中的敏感 URL 遮罩。
+
+### 相同公開應用的啟動診斷結果
+
+[40745643509](https://github.com/koviankevin/tflite-explorer/actions/runs/40745643509) 使用診斷 driver 來源 `d6a0d2be828eb2473ce697ff1a635f219835a07a`，實際正式站應用仍為 `e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b`／`04aa44009821ed92`，site ID 也與第一次部署相同。沒有重部署應用、放寬啟動門檻或重跑大型八輪。
+
+[原始 ZIP](results/preview22-startup-probe-2026-10-29.zip)與[獨立核對](results/preview22-startup-probe-review-2026-10-29.json)已驗 provider digest／CRC、來源、job／attempt／artifact 時間與啟動記錄範圍。這次開檔按鈕及版本控制在 1,018.213 ms 時已通過延遲圖形初始化前置檢查，84 個同站靜態請求、沒有截斷、沒有 failed requests 或 console errors；主 app.js 回應 HTTP 200／JavaScript MIME 並完成。快照中十個 pending 包含刻意暫停的 zip.js 與九個背景預載，不能將其當成已失敗的資源；它們沒有阻止開檔控制項就緒。
+
+同一輪後續 30 項原生操作通過，包含原生選檔、32px、pattern／TFLite／MLIR 匯出重開、編輯草稿與手動 runtime。這次沒有重現第一次逾時；第一輪缺少請求證據，仍無法確定其確切原因，不宣稱已修正應用啟動。獨立 probe 的成功也不代替原發布工作流程的 verify_live／release 完成，固定 Release 尚未建立，第一次失敗資料仍保留。
