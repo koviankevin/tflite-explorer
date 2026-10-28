@@ -1,0 +1,143 @@
+{
+  "status": "passed",
+  "runId": 40610428484,
+  "source": "f3374ed2ac9fd1de5ef7cef03c14955592a42229",
+  "artifactId": 12783360813,
+  "digest": "sha256:7997dcc97a5146919cc8fa1188ad498c1468fc888319bf28b7157706753815e2",
+  "reportSHA256": "0f1970b91997047d1a085bc5287f17de4e6be7f336506192ac6e24b35bd5df78",
+  "checks": 21,
+  "workers": 34,
+  "workspace": {
+    "cases": [
+      {
+        "format": "tflite",
+        "nativeClick": true,
+        "nativeDrag": true,
+        "autoOutput": 10,
+        "undoRedo": true,
+        "draftSurvivesModeSwitch": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "pattern": 1
+      },
+      {
+        "format": "mlir",
+        "name": "branch",
+        "blocks": 4,
+        "ssa": "passed",
+        "controlEdges": 4,
+        "pattern": 1
+      },
+      {
+        "format": "mlir",
+        "name": "loop",
+        "blocks": 3,
+        "ssa": "passed",
+        "controlEdges": 3,
+        "pattern": 1
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      },
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      }
+    ],
+    "receipts": [
+      {
+        "output": "workspace-result-1.tflite",
+        "sha256": "b77084f0c33da9f7157cc4c7fbc5b728448c46e826719f84e45c78c1939e9ed7",
+        "byteRanges": 4,
+        "byteStatus": "passed"
+      },
+      {
+        "output": "workspace-result-4.mlir",
+        "sha256": "66aa3621d3d5cef11059c44d0aa8969dd415694cfb63c63cfbee81ae8b8af0bd",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable"
+      },
+      {
+        "output": "workspace-result-7.mlir",
+        "sha256": "cf7cbb0ca198b5c4ab7d90ee798d5ff35517a5c39760ba604f4901992990d9ae",
+        "byteRanges": 0,
+        "byteStatus": "not-applicable"
+      }
+    ],
+    "modelWorkers": 6
+  },
+  "directory": "build/qa/smoke-40610428484-main"
+}
