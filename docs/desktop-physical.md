@@ -168,3 +168,22 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 實際候選保留同步 writer／既有 export API，使用 WeakMap 在同一個 Worker 內記錄 Blob 的結構區長度，不讓快取持有模型。送出 TFLite 子模型、編輯工作區或進階 OP 編輯結果前，僅對超過 64 KiB 的新結構區執行本機 Response 轉換，再與原 Blob 的其餘切片組合；先完成轉換，再驗證候選及回傳下載結果。小型結構與 MLIR 原樣通過，轉換失敗回報原因，不用較高記憶體方式偷偷重試。沒有 fetch、模型上傳、OPFS 或應用持久化暫存，也沒有讀取完整權重。
 
 48 項相關 Node 檢查通過：兩種真實 writer（完整模型／custom 子模型）的結構區準備、所有 output bytes／provenance 保持相同、權重與 custom options 重開、重複準備冪等、缺少 API／轉換失敗／短寫拒絕，以及原有量化、64-bit offsets、草稿、報告與控制子圖。新增測試調整公開 fixture 的 OP 數，確保完整與局部兩種 header 都實際超過 64 KiB，不以小模型誤當大型路徑。接著仍須跑實際八輪與必要發布關卡；正式站尚未改成這個候選。
+
+### preview.22 候選的三引擎八輪與發布關卡
+
+實際應用來源 `22d432f1ed47986bd812d8ec1e8ddea84f48bf20`、tree `099a57ce050b5a7a0d4aa15911b6f61c6105857c`，候選 build `1ca8281cc8277c96`／293 檔。這次是上節修正接入三個實際匯出入口後的完整應用驗證，不再只用 Blob 控制代表應用。
+
+[Firefox／WebKit 八輪 40737474917](https://github.com/koviankevin/tflite-explorer/actions/runs/40737474917)與[獨立核對](results/desktop22-memory-review-2026-10-29.json)通過：重新建置相同來源，逐一比對所有 293 個 HTTP 檔 bytes／SHA 與 manifest；provider ZIP digest／CRC、來源、原 RSS 政策、全部讀取／指紋證據均重新判定。各引擎 24 個模型及八個完整原檔指紋 Worker 關閉，全部 owned 程序正常退出，沒有 page error。公開實體 1.25 GiB、21,005 OP 模型在每輪完成複製改模、整份下載與子模型匯出重開；完整權重、custom options、pattern 正負例及 32px 筆電操作通過。
+
+| 引擎 | RSS 峰值 bytes | 相對基準成長 bytes | 暖機後關閉漂移 bytes | 關閉斜率 bytes／輪 |
+| --- | ---: | ---: | ---: | ---: |
+| firefox | 1,304,584,192 | 479,473,664 | 34,430,976 | 8450750.17 |
+| webkit | 1,440,083,968 | 772,317,184 | 36,462,592 | 10382423.77 |
+
+[Firefox 原始 ZIP](results/desktop22-memory-firefox-2026-10-29.zip)與[WebKit 原始 ZIP](results/desktop22-memory-webkit-2026-10-29.zip)保留全部原始 JSON。原峰值成長上限仍為 805,306,368 bytes；Firefox 從前次 3,344,564,224 bytes 降至 479,473,664。WebKit 本次餘裕約 31 MiB，不能當成所有設備或數小時負載的保證；歷史失敗均保留。Worker 記憶體包含於 owned RSS，未冒稱獨立 Worker isolate heap。
+
+[Chromium 八輪 40737487020](https://github.com/koviankevin/tflite-explorer/actions/runs/40737487020)也通過：RSS 峰值 992,620,544、成長 474,218,496、關閉漂移 23,121,920 bytes，關閉斜率 1,713,532.34 bytes／輪。三引擎的讀取門檻、完整模型／子模型及自然 URL 釋放流程未降低，不使用強制 GC。
+
+[四關卡獨立收據](results/prefix22-release-gates-2026-10-29.json)核對原始 provider artifacts、全新候選重建、原始判定與逐檔 scope。核心九筆沿用 [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)，fingerprint `d25a85aa0caf6999326ea9a4b45298714960c89f9d3146dfe888350f1e4dd01a` 相同；新 Chromium、[77 項發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/40737501030)與[六種網站切換](https://github.com/koviankevin/tflite-explorer/actions/runs/40737514449)均是本次 main 手動成功結果。原始 ZIP：[core](results/prefix22-gate-core-2026-10-29.zip)、[browser](results/prefix22-gate-browser-2026-10-29.zip)、[contract](results/prefix22-gate-contract-2026-10-29.zip)、[site](results/prefix22-gate-site-2026-10-29.zip)。
+
+本節是候選驗收；正式站仍為 preview.21，需再完成準備產物審閱、受控部署與正式站／固定 Release 下載核對。其他 OS、公司模型／compiler／custom kernel、固定實體硬體 SLA 及本來源長時間量測仍待驗證；不把整體商品等級目標標成完成。

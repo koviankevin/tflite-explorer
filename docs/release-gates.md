@@ -9,7 +9,7 @@ node scripts/verify-release-gates.mjs dist build/qa/new-gate-receipt.json
 node scripts/publish-github-pages.mjs --site-id <成功準備並審閱的64位site-ID>
 ```
 
-`release-evidence.json` 只選擇四個 GitHub run ID，不是通過憑證。必須是同一 repository、main、workflow_dispatch、指定工作流程與必要 job 全部成功，且 artifact 未過期、名稱對應本次 attempt、GitHub SHA-256 digest 相符。ZIP 只允許一個有限大小的 JSON，不解壓或執行其中程式。網路、Git 歷史、API 權限或 artifact 缺少時停止，不退回信任本機報告。讀取 GitHub 僅需 repository/Actions read；不額外擴大登入憑證權限。第四項與整站發布目前在草稿分支；正式交付情況另見 [版本隔離](versioned-site.md)。
+`release-evidence.json` 只選擇四個 GitHub run ID，不是通過憑證。必須是同一 repository、main、workflow_dispatch、指定工作流程與必要 job 全部成功，且 artifact 未過期、名稱對應本次 attempt、GitHub SHA-256 digest 相符。ZIP 只允許一個有限大小的 JSON，不解壓或執行其中程式。網路、Git 歷史、API 權限或 artifact 缺少時停止，不退回信任本機報告。讀取 GitHub 僅需 repository/Actions read；不額外擴大登入憑證權限。四項關卡與整站發布均已在 main 的受控流程；驗證過的版本隔離範圍見 [版本隔離](versioned-site.md)，現行正式版本以 [README](../README.md) 為準。
 
 四項必要證據：
 
@@ -34,4 +34,4 @@ node scripts/drill-release-rollback.mjs previous.zip candidate.zip build/qa/new-
 
 ## 伺服器強制邊界與後續
 
-GitHub Pages 已切換為 workflow，github-pages environment 只允許 main；main 的必要檢查限定 GitHub Actions App 並包含管理者。實際負例已確認未受測的 main 推送遭拒、舊 gh-pages 分支更新不再部署、版本不符時 deploy 與 release 不執行。流程見 [受控發布](pages-deployment.md)，實際狀態及尚待完成的正式交付見 [伺服器驗收](pages-deployment-verification.md)。管理者仍可明確修改 repository 規則，不能宣稱完全無法繞過管理權限。正式站回退、資料遷移及升級時舊分頁／CDN 資產隔離仍需另行驗收，商品等級目標尚未完成。
+GitHub Pages 已切換為 workflow，github-pages environment 只允許 main；main 的必要檢查限定 GitHub Actions App 並包含管理者。實際負例已確認未受測的 main 推送遭拒、舊 gh-pages 分支更新不再部署、版本不符時 deploy 與 release 不執行。流程見 [受控發布](pages-deployment.md)，實際狀態及尚待完成的正式交付見 [伺服器驗收](pages-deployment-verification.md)。管理者仍可明確修改 repository 規則，不能宣稱完全無法繞過管理權限。已完成的正式站回退、升級時舊分頁與版本資產隔離範圍見 [正式切換驗收](production-transition-verification.md)；任意使用者資料格式升降級及公司內網實際切換仍需驗收，商品等級目標尚未完成。
