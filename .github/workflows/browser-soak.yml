@@ -1,0 +1,39 @@
+name: Physical model two-hour soak
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: physical-browser-soak-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  soak:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 175
+    env:
+      LIFECYCLE_MODE: soak
+      REPORT_NAME: browser-soak-${{ github.run_id }}-${{ github.run_attempt }}.json
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - name: Check duration, sampling, memory and export failure cases
+        run: node --test test/lifecycle-soak.test.mjs test/browser-lifecycle.test.mjs test/physical-fixture.test.mjs test/custom-export.test.mjs
+      - run: node scripts/install-browser.mjs
+      - name: At least two active hours in one browser, unchanged physical model and memory limits
+        run: LIFECYCLE_REPORT="$RUNNER_TEMP/$REPORT_NAME" node test/browser/model-lifecycle.mjs
+      - name: Retain bounded numeric checkpoints and failures, never model files
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: browser-soak-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ env.REPORT_NAME }}
+          if-no-files-found: error
+          retention-days: 30
