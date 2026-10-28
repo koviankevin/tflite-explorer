@@ -95,3 +95,11 @@ Firefox 峰值附近，名稱為 firefox 的根程序匿名記憶體約 3175.5 M
 原生下載仍為完整 1,349,965,216 bytes，SHA 與固定實體 fixture 相同；累計 Worker 讀取 65,728 bytes、最大單次 65,536 bytes。唯一 Worker 原生 close、60 秒自然 URL 撤銷、乾淨來源及全部已知 owned PID/start identity 清理通過，沒有 page error。完整 [provider ZIP](results/blob-boundary-firefox-2026-10-28.zip) 與 [provider digest／ZIP CRC／來源、相位及完整 bytes 的獨立核對](results/blob-boundary-firefox-review-2026-10-28.json) 保留；原始 `blob-control-firefox.json` 在 ZIP 中，沒有刪減取樣。
 
 這是排除一個簡單重現條件的診斷進展，不是應用八輪 RSS 驗收成功，也沒有因此調整上限或重新部署。下一個單變量是原應用在觸發下載後立即包裝輸出 File，控制案例目前則等原生下載完成才包裝；此差異仍未測，不能先改應用宣稱修正。
+
+### File 包裝時機的控制
+
+第三版報告保留相同實體 fixture、Blob 與讀取範圍，診斷 helper 僅接受封閉的 `after-download`／`during-download` 值。Hosted 入口沿用既有 workflow，此版固定預設執行 `during-download`：在 `link.click()` 後的 fulfilled-promise continuation 建立 File，對應應用 `await host.export()` 不等待原生下載完成就呼叫 `remember()` 的次序。下載完成後包裝的基準 helper 仍有 Node 回歸驗證。driver 讀取包裝計數後才等待 native download completion，兩種次序都有相同的後續取樣、完整 SHA、60 秒自然 URL 撤銷及清理，不增加 workflow 輸入或帳號權限。
+
+報告記錄選項、頁面操作次序與時間、一次性包裝數，以及 driver 開始／結束等待的時間。這證明控制呼叫次序；不以 Playwright completion promise 的觀察時間冒充引擎內部實際複製區間。尚未改動應用，也未調整既有八輪 RSS 門檻。
+
+20 項相關 Node 檢查通過，新增測試先在舊版以尚未包裝而失敗，再驗證真正的 page／worker callbacks、microtask 次序、只包裝一次、封閉選項、原有讀取預算及自然 timer。真實 Firefox 控制量測仍待 hosted CI；結果不能代替應用八輪驗收。
