@@ -40,4 +40,4 @@ SIGKILL 後部分 Worker 未送達 DevTools close 事件，原始事件值保留
 - 依使用者範圍驗收筆電，不跑手機。既有 1366×640／1280×640 的 32px 接線、草稿／匯出重開、pattern、分支／迴圈／custom 回歸通過；編輯區 497px、圖區約 257.5px，名稱無溢出。[正式刪除後拒絕過期重寫的畫面](results/preview16-live-laptop-recovery-2026-10-28.png) SHA-256 `46f0b34fda95e899c430fd41284ea046f498cc5be5241a25e6687abc96876c81`。
 - [最終獨立交付審查](results/preview16-publication-review-2026-10-28.json)成功，四份實際 Release 下載與原準備包 bytes／SHA 一致；`model-lens-public-0.2.0-preview.16-855f8ca810f04f4d.zip` 為 29,713,368 bytes／273 核心檔案，SHA-256 `c7ca481120ed1007ec7fae4f751b818afe5b518a3e0d83de1bb4f28973e3d097`。Deployment `7377462440`／job `122638807672`／attempt 1 與固定來源、整站及獨立 root 相符。
 
-此次大型檔量測覆蓋自動保存的獨立完整指紋 Worker，不等同已量過 1 GiB 手動 JSON 匯入／恢復時的工作區阻塞耗時。OS 斷電、瀏覽器清除／回收網站資料、其他引擎／平台、數小時使用、公司實模／compiler／runtime 仍需另外驗收。上述恢復功能交付不代表整個商品等級目標完成。
+此次大型檔量測覆蓋自動保存的獨立完整指紋 Worker，原始八輪未含大型手動 JSON 匯入／恢復；後續已在相同網站程式上補齊 1.25 GiB 手動恢復的介面延遲、取消、繼續編輯及完整輸出重開，見 [獨立大型草稿驗收](large-edit-draft.md)。OS 斷電、瀏覽器清除／回收網站資料、其他引擎／平台、數小時使用、公司實模／compiler／runtime 仍需另外驗收。上述恢復功能交付不代表整個商品等級目標完成。

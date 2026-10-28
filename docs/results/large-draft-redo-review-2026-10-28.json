@@ -1,0 +1,22 @@
+{
+  "status": "failed",
+  "runId": 40638261043,
+  "head": "bea72b4f0fd2d4ee55d35048e7c95de15d329393",
+  "testedCommit": "df97a56a8ac895834d4fd99acacd6d42b0900bf1",
+  "testedTree": "9893fb1b7ca9f17394d44cfb343874d56d24daee",
+  "runConclusion": "failure",
+  "jobId": 122650172893,
+  "jobConclusion": "failure",
+  "artifactId": 12794183601,
+  "artifactDigest": "sha256:12049057f7ad1200fd9c2aab808321f0e623af3d3da131f9ce4951cc7d2f103c",
+  "reportSHA256": "c2c2220b46ea87e9ac49b5131147380a0b5fffb71fe4bee8abdd6b06533ed2b2",
+  "reportStatus": "failed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied",
+    "fresh native original File restores JSON history, redo and view at 1280×640 / 32px; editing continues",
+    "restored full TFLite reopens at 21,006 OP, all source weight/custom-option ranges match and both original patterns remain unique"
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n5 !== 4\n\n    at file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-edit-draft.mjs:95:205"
+}

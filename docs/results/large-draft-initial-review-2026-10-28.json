@@ -1,0 +1,20 @@
+{
+  "status": "failed",
+  "runId": 40637741724,
+  "head": "a72b58821c72a81d6ccf6ee3f59c610643be995d",
+  "testedCommit": "b898bc29a8d4989716a78c85a575e6307dc47ec3",
+  "testedTree": "28c5111c6361f037f59a4d856cf49740ee8a27fd",
+  "runConclusion": "failure",
+  "jobId": 122648503076,
+  "jobConclusion": "failure",
+  "artifactId": 12793942824,
+  "artifactDigest": "sha256:0087c0c46f2d2e87a8b6ccc8cc95d5e2d699feab88d0553621628ff3ff3d6780",
+  "reportSHA256": "2dd3c4ed8f6c5b85f88ca01c0668bd2de13896d19c52af9dec6632951105ea4c",
+  "reportStatus": "failed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied"
+  ],
+  "error": "Error: Timeout during manual-json-restore: ()=>document.querySelector('#edit-change-count').textContent.startsWith('2 筆')\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-edit-draft.mjs:49:136)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-edit-draft.mjs:90:690"
+}
