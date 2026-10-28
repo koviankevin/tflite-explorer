@@ -27,3 +27,9 @@ LiteRT 來源、精確 npm integrity、原始檔 hashes、Apache-2.0 LICENSE 與
 修正後 Hosted Chromium 的 [30 項原生操作](results/preview19-ui-fixed-2026-10-28.json)、[provider 核對](results/preview19-ui-fixed-2026-10-28-review.json)與 [原始 ZIP](results/preview19-ui-fixed-2026-10-28.zip)保留。新流程確實使用兩份 raw .bin：ADD 輸出 `[4,6]`、MUL 輸出 `[3,8]`，實際下載 ZIP 的 Python CRC、輸入／輸出 bytes、模型 SHA 與修改報告一致；三個 runtime Workers 全部關閉，取消與錯誤案例明確區分失敗／未驗證。一般匯出零 runtime Worker／零 runtime asset 請求；14 吋 1366×640／1280×640、32px 版面通過。完整舊功能與 MLIR SSA／控制流程仍通過，沒有測手機。
 
 首次 [失敗原始報告](results/preview19-ui-initial-2026-10-28.json)、[provider 核對](results/preview19-ui-initial-2026-10-28-review.json)及 [原始 ZIP](results/preview19-ui-initial-2026-10-28.zip)保留，未以後續成功覆寫。上述仍是候選結果；正式部署、正式網址及固定 Release 尚待受控發布確認。兩小時長測獨立執行，不是本次部署前置條件。
+
+## Signature 對應防護（preview.20 候選）
+
+額外實際 CPU 測試確認：LiteRT 的預設 signature 可以指向 subgraph 1；同樣的 dtype／shape 不能證明正在檢查主 subgraph 0。因此僅接受沒有顯式 signatures，或唯一、完整且順序明確對應主 subgraph 0 的 signature；多 signatures、其他目標、部分介面、重排或重複名稱一律在讀取模型 body／啟動 WASM 前標為未能驗證。一般探索、編輯及結構匯出不受影響。後續可另外加入明確的 signature 選擇與 tensor 對應，但本版不猜測。
+
+新回歸在修正前以錯誤的 eligible=true 失敗，修正後拒絕這些歧義且不讀 body；唯一主 signature 的實際 CPU 執行仍通過。preview.19 固定版本不覆寫，修正以 preview.20 另行發布；正式部署證據待補。
