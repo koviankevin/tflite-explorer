@@ -19,3 +19,11 @@ LiteRT 來源、精確 npm integrity、原始檔 hashes、Apache-2.0 LICENSE 與
 本機實際 CPU WASM 已驗證 ADD 的 `[1,2] + [3,4] = [4,6]`、raw 多輸入、ZIP bytes，以及不合法 broadcast／output shape 的失敗。Hosted 原生選檔／下載、14 吋 32px、取消與正式部署證據尚待本次 CI；未完成前不列為已交付。
 
 首次候選 [40697650768](https://github.com/koviankevin/tflite-explorer/actions/runs/40697650768) 的既有 29 項操作通過，但新 runtime 初始化失敗：部署來源格式白名單未複製 `.wasm`，請求取得 404 文字。保留失敗，不以 Node 原始碼成功代替打包後的瀏覽器成功。新增實際打包回歸在修正前以 ENOENT 失敗、修正後通過；產物 verifier 另拒絕刪去 WASM 後重新製作的完整 manifest。版本子路徑下的實際 Worker／官方 loader 也在 Node VM 以打包檔重現失敗，修正後成功執行；瀏覽器重測仍需取得後續證據。
+
+## 候選驗收與發布證據
+
+來源 `2b93eb536d0216e404115abd71a6bd6adac739b2`／tree `5ace35a2f605d91d144fe937691535c50f58a428`，公開候選 build `8b8cf831fe326d69`。本機乾淨來源重新建置得到相同 build，291 個檔案含固定 WASM。四個 main 手動關卡已由 provider／artifact digest／ZIP CRC／原始政策與來源 fingerprint 獨立核對，見 [完整收據](results/preview19-main-gates-2026-10-28.json)：core [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)、實體八輪 [40700040776](https://github.com/koviankevin/tflite-explorer/actions/runs/40700040776)、contract [40700046256](https://github.com/koviankevin/tflite-explorer/actions/runs/40700046256)、site [40700035612](https://github.com/koviankevin/tflite-explorer/actions/runs/40700035612)。
+
+修正後 Hosted Chromium 的 [30 項原生操作](results/preview19-ui-fixed-2026-10-28.json)、[provider 核對](results/preview19-ui-fixed-2026-10-28-review.json)與 [原始 ZIP](results/preview19-ui-fixed-2026-10-28.zip)保留。新流程確實使用兩份 raw .bin：ADD 輸出 `[4,6]`、MUL 輸出 `[3,8]`，實際下載 ZIP 的 Python CRC、輸入／輸出 bytes、模型 SHA 與修改報告一致；三個 runtime Workers 全部關閉，取消與錯誤案例明確區分失敗／未驗證。一般匯出零 runtime Worker／零 runtime asset 請求；14 吋 1366×640／1280×640、32px 版面通過。完整舊功能與 MLIR SSA／控制流程仍通過，沒有測手機。
+
+首次 [失敗原始報告](results/preview19-ui-initial-2026-10-28.json)、[provider 核對](results/preview19-ui-initial-2026-10-28-review.json)及 [原始 ZIP](results/preview19-ui-initial-2026-10-28.zip)保留，未以後續成功覆寫。上述仍是候選結果；正式部署、正式網址及固定 Release 尚待受控發布確認。兩小時長測獨立執行，不是本次部署前置條件。

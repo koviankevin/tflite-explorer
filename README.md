@@ -222,6 +222,9 @@ Custom 切圖另涵蓋 inline／external options 逐 byte 相同、64 KiB 以上
 
 ## 上游來源及授權
 
+選用的本機 CPU 執行檢查使用 Google LiteRT.js／wasm-utils 2.6.0，採 Apache-2.0；固定來源、完整授權、NOTICE 與 npm integrity 保留於 [vendor/litert/2.6.0](vendor/litert/2.6.0/)。輸入主要使用 raw `.bin`；執行後可下載 input／output `.bin` 和 JSON 記錄，詳見 [手動執行檢查](docs/tflite-runtime.md)。開檔、編輯及一般匯出不自動執行 interpreter。
+
+
 本專案採 [MIT 授權](LICENSE)。新增程式碼著作權為 `Copyright (c) 2026 koviankevin`，Netron 的著作權屬 Lutz Roeder；根目錄 LICENSE 同時保留兩者聲明。
 
 Netron: https://github.com/lutzroeder/netron

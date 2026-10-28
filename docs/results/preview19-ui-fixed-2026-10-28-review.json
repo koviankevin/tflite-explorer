@@ -1,0 +1,53 @@
+{
+  "authentication": "passed",
+  "runId": 40700035612,
+  "source": "2b93eb536d0216e404115abd71a6bd6adac739b2",
+  "build": "8b8cf831fe326d69",
+  "status": "passed",
+  "artifactId": 12822060014,
+  "artifactDigest": "sha256:3d037e51735b78c4afff70395748217184b597abd2a5c712ec023a8d86aa1b0b",
+  "zipBytes": 238218,
+  "rawBytes": 246127,
+  "rawSHA256": "b1b399552e954994ddb0e466f1aebc42c9ddc491876ff34a6cf870edf84cfabe",
+  "checks": 30,
+  "errors": [],
+  "runtime": {
+    "cases": [
+      "opening/editing/exporting never starts interpreter or downloads runtime",
+      "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes and exact candidate report",
+      "manual cancellation closes Worker and clears stale input/output after draft changes",
+      "invalid kernel broadcast is reported as failed",
+      "unregistered custom kernel is explicitly unverified without starting WASM"
+    ],
+    "workers": [
+      {
+        "url": "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/src/tflite-runtime-worker.js?v=8b8cf831fe326d69",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/src/tflite-runtime-worker.js?v=8b8cf831fe326d69",
+        "closed": true
+      },
+      {
+        "url": "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/src/tflite-runtime-worker.js?v=8b8cf831fe326d69",
+        "closed": true
+      }
+    ],
+    "downloads": 5,
+    "requests": [
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/core.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/wasm-utils.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/core.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/wasm-utils.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/core.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/wasm-utils.js?v=8b8cf831fe326d69",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+      "http://127.0.0.1:43169/tflite-explorer/versions/8b8cf831fe326d69/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm"
+    ]
+  },
+  "error": null
+}
