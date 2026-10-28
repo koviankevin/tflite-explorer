@@ -1,0 +1,52 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "runId": 40650250150,
+      "attempt": 1,
+      "source": {
+        "commit": "3571b9d417b51f66a2f869d61664afa786d83a51",
+        "tree": "bd3e2b899154a20b7cded14e1d17994148824c28",
+        "committedAt": "2026-10-28T15:27:51+08:00",
+        "dirty": false
+      },
+      "jobId": 122688408171,
+      "artifactId": 12799064165,
+      "providerDigest": "sha256:215b8d590d79e9fb8bfcb140bdeb98b6b7415008e4ca8bcc106d33e510f3ae3b",
+      "reportSHA256": "a2fcebbc26a8836172156c1a881e082aca2cd230ad4be828469015715bbd79c5",
+      "browserVersion": "142.0.1",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location"
+      ],
+      "error": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"filechooser\"\n=========================== logs ===========================\nwaiting for event \"filechooser\"\n============================================================\n    at choose (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:46:72)\n    at /home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:53:11",
+      "errors": [],
+      "directory": "build/qa/desktop-40650250150-second-round/firefox"
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "runId": 40650250150,
+      "attempt": 1,
+      "source": {
+        "commit": "3571b9d417b51f66a2f869d61664afa786d83a51",
+        "tree": "bd3e2b899154a20b7cded14e1d17994148824c28",
+        "committedAt": "2026-10-28T15:27:51+08:00",
+        "dirty": false
+      },
+      "jobId": 122688408545,
+      "artifactId": 12799571735,
+      "providerDigest": "sha256:318ad2ab3e1749752bbcf852f8da3c9d046cd9e4d5385fa0af6026a1fdd972f7",
+      "reportSHA256": "d7b3ee8eca8a2122052fab0d6311e7904ca249aa3b1de9c87131601265fe528c",
+      "browserVersion": "26.0",
+      "checks": [],
+      "error": "Error: Desktop DOM timeout: ()=>typeof document.querySelector('#open-model').onclick==='function'&&!document.querySelector('#autosave-enabled').disabled\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:44:119)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:49:58",
+      "errors": [],
+      "directory": "build/qa/desktop-40650250150-second-round/webkit"
+    }
+  ]
+}

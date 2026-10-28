@@ -1,0 +1,460 @@
+{
+  "format": "model-lens-desktop-engine",
+  "version": 1,
+  "status": "failed",
+  "startedAt": "2026-10-28T07:30:19.286Z",
+  "engine": "webkit",
+  "source": {
+    "commit": "3571b9d417b51f66a2f869d61664afa786d83a51",
+    "tree": "bd3e2b899154a20b7cded14e1d17994148824c28",
+    "committedAt": "2026-10-28T15:27:51+08:00",
+    "dirty": false
+  },
+  "expectedBuild": "b279d3ea3f3d7ec5",
+  "expectedSiteId": "b68ad1da9211af5c8b39309954148f95131be0cea23508f166d028ec829340f1",
+  "checks": [],
+  "errors": [],
+  "workers": [
+    {
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/worker.js?v=b279d3ea3f3d7ec5",
+      "closed": false
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/grapher.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/app.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/app.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-workspace.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/mobile.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-visibility.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/typography.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/overview-canvas.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/explorer-resize.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/laptop.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/release.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-workspace.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-tabs.css?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/browser.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/view.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/hydrate.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/overview-canvas.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-formats.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/explorer-resize.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/release-info.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/dialog-keyboard.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/export-report-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/exported-model-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-workspace-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-tabs.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/mlir-pattern-editor.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-condition-editor.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/subgraph-pattern.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace-session-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace-drafts.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-selection.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/rectangle-selection.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/svg-viewport.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-utils.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-library.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-store.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/diagnostics.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/diagnostics-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/base.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/grapher.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-policy.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/pattern-conditions.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/mlir-pattern-spec.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/mlir-pattern-edit.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace-session.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/workspace-history.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/overview-layout.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-draft.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-session.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/model-edit-new-ops-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-ui.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-store.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-session.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/edit-recovery-fingerprint.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/tflite-new-ops.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/file-fingerprint.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/tflite-schema.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/flatbuffer-writer.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/src/tflite-op-options.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/message.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/onnx.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/pytorch.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/tflite.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/mlnet.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/onnx-proto.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/onnx-schema.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/tflite-schema.js",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/onnx-metadata.json",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/pytorch-metadata.json",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/tflite-metadata.json",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/worker.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/zip.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/protobuf.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/flatbuffers.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/flexbuffers.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/python.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/dagre.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    },
+    {
+      "method": "GET",
+      "url": "https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/text.js?v=b279d3ea3f3d7ec5",
+      "allowed": true
+    }
+  ],
+  "browserClosed": true,
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.17",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "8f374e20ec4acb29d3434eadf81daebf02523e2d",
+      "tree": "b328a1f287869679fd755c30b1065cc624365325",
+      "committedAt": "2026-10-28T14:46:44+08:00",
+      "dirty": false
+    },
+    "buildId": "b279d3ea3f3d7ec5"
+  },
+  "coreBasePath": "versions/b279d3ea3f3d7ec5/",
+  "staticVerification": {
+    "siteId": "b68ad1da9211af5c8b39309954148f95131be0cea23508f166d028ec829340f1",
+    "manifestSHA256": "498973cab32d3d2efb22cdbaa97e4a34f92a860b4507ae674b9f147256b97747",
+    "coreManifestSHA256": "c3964ba80c23b0915c974633f12568a1733588dce67dfbfc1139491c5601ba6c",
+    "rootEntrySHA256": "b273ae773de533d651bc59308395bed365fcff710260ba5b439216b1524ff54d",
+    "files": 1310
+  },
+  "browserVersion": "26.0",
+  "error": "Error: Desktop DOM timeout: ()=>typeof document.querySelector('#open-model').onclick==='function'&&!document.querySelector('#autosave-enabled').disabled\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:44:119)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:49:58",
+  "finishedAt": "2026-10-28T07:31:29.398Z"
+}
