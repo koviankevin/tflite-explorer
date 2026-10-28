@@ -47,4 +47,10 @@
 
 正式長測前先用公開小型 custom fixture、另一個隔離瀏覽器執行 22 次原生選檔、編輯、保存、關閉與備份，實際觸發兩次容量管理，並確認模型／指紋 Worker close 及 owned 程序樹完全結束。這是快速功能 preflight，報告單獨標示，不計入兩小時或 64 輪。隨後的實體大檔長測另開空白 context，從第一輪起持續使用同一個瀏覽器，不在測量中重啟或清空。
 
-31 項相關 Node 檢查已通過，涵蓋原八輪門檻、草稿保存／CAS、容量管理正負例、物理 fixture 及 custom 匯出；這不代表上述真實瀏覽器 preflight 或兩小時負載已通過。應用／Netron 及正式網站仍維持 preview.18。
+32 項相關 Node 檢查已通過，涵蓋原八輪門檻、草稿保存／CAS、容量管理正負例、物理 fixture、custom 匯出及清單刷新競態；這不代表上述真實瀏覽器 preflight 或兩小時負載已通過。應用／Netron 及正式網站仍維持 preview.18。
+
+## v2 首次前測：清單刷新競態
+
+[40679379293](https://github.com/koviankevin/tflite-explorer/actions/runs/40679379293) 在 22 次保存的快速前測中失敗，兩小時測量尚未開始。實際移除第 21 輪的舊稿時，UI 正常將 20 個 option 刷新為 19 個；觀察器分別 await `count`／`nth`／attribute，因而等待已消失的第二十項逾時。錯誤紀錄為 `locator('#edit-recovery-list option').nth(19)`，不是原檔指紋或保存逾時。
+
+從實際 `rows` 抽出的相同逐筆讀取，在會於讀取中移除最後一項的快速 Node 案例先重現失敗；改為一次同步 DOM snapshot，再於 Node 核對 keys／revision，案例通過，下一次 snapshot 能正常觀察到 19 項。只使用既有 Chromium CDP 的唯讀 DOM 觀察，不呼叫應用 API、不更動模型或繞過確認移除。原始失敗仍保留；修正後需取得新的真實前測／兩小時結果，不能因單元案例通過就重標舊 run。
