@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {runInNewContext} from 'node:vm';
-import {installBlobControlWorker,installBlobControlPage,blobControlSettings} from './browser/blob-control-program.mjs';
+import {installBlobControlWorker,installBlobControlPage,blobControlSettings,BLOB_CONTROL_PREFIX_BYTES} from './browser/blob-control-program.mjs';
 import {PHYSICAL_SOURCE_BYTES} from './physical-tflite-fixture.mjs';
 
 function virtualFile(){
@@ -17,6 +17,19 @@ function virtualFile(){
     return {Blob,File,FileReaderSync,file,reads,constructors};
 }
 const env={GITHUB_ACTIONS:'true',GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_WORKFLOW:'Physical File Blob control',GITHUB_REF:'refs/heads/main',GITHUB_EVENT_NAME:'workflow_dispatch',DESKTOP_ENGINE:'firefox'};
+
+test('export-sized prefix is copied in 64 KiB pages and preserves the full virtual source size',()=>{
+    const prefix=8268412,v=virtualFile(),messages=[],scope={...v,postMessage:m=>messages.push(m)};assert.equal(BLOB_CONTROL_PREFIX_BYTES,prefix);installBlobControlWorker(scope,{prefixBytes:prefix});
+    scope.onmessage({data:{action:'build',file:v.file}});assert.equal(messages.at(-1).stage,'built');assert.equal(v.constructors[0][0].byteLength,prefix);assert.equal(v.constructors[0][1].size,PHYSICAL_SOURCE_BYTES-prefix);
+    assert.equal(messages.at(-1).stats.readBytes,prefix);assert.equal(messages.at(-1).stats.maxRead,65536);
+    assert.equal(v.reads.length,Math.ceil(prefix/65536));assert.ok(v.reads.every(([start,end],i)=>start===i*65536&&end===Math.min(prefix,start+65536)));
+    scope.onmessage({data:{action:'readback'}});scope.onmessage({data:{action:'boundary'}});scope.onmessage({data:{action:'share'}});
+    assert.equal(messages.at(-1).stage,'shared');assert.equal(messages.at(-1).blob.size,PHYSICAL_SOURCE_BYTES);assert.deepEqual(v.reads.at(-1),[prefix-32,prefix+32]);assert.equal(messages.at(-1).stats.readBytes,prefix+192);
+});
+
+test('prefix choice rejects arbitrary sizes before any input read or allocation',()=>{
+    for(const prefixBytes of [0,65537,16*1024**2,NaN]){const v=virtualFile();assert.throws(()=>installBlobControlWorker(v,{prefixBytes}),/prefix/);assert.deepEqual(v.reads,[]);assert.deepEqual(v.constructors,[]);}
+});
 
 test('during-download wraps exactly once in the callback continuation after the native link click',async()=>{
     const v=virtualFile(),events=[],elements=new Map(['choose','file','build','readback','boundary','share','url','download','wrap','clear','state'].map(id=>[id,{id,disabled:false,textContent:'',value:'',files:[]}])) ,timers=[];let now=0;

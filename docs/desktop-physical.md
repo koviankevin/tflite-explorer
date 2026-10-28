@@ -130,3 +130,11 @@ Object URL 後的 RSS 697,057,280 → 下載完成後 700,764,160 bytes，該相
 [結構診斷](results/desktop21-export-layout-2026-10-29.json)以目前 parser／draft／exporter 和公開 fixture header 觀察 Blob parts：21,005 個原始 OP 複製新增後，結構 Uint8Array 為 8,268,412 bytes，另有 1.25 GiB 來源切片、三個向原 metadata 回讀的 8 bytes 切片及 padding，共九個 parts。先前控制只有 64 KiB typed prefix 加上一個連續檔案切片。
 
 這個 Node 診斷使用 opaque 虛擬權重，讀取的部分頁面有明確記錄；只用來觀察結構與範圍，沒有配置或核對整份實體權重，也沒有瀏覽器記憶體驗收。後續可分別控制約 8 MiB 的結構區與多個反向檔案切片，避免只憑簡單控制未重現就修改應用。真實八輪的物理資料完整性由上一節的原生下載及完整串流核對證明。
+
+### 結構區大小控制
+
+第四版控制將 typed prefix 長度由 65,536 改為實際匯出診斷量到的 8,268,412 bytes，其餘仍是一個連續來源檔案切片。Prefix 取原檔相同長度的 bytes，因此整份輸出仍必須等於原實體 fixture 的固定 SHA；這只模擬記憶體片段大小，不聲稱 prefix 內容就是編輯後的 header，也還沒有模擬真實的九個 parts。
+
+Worker 按 64 KiB 頁面填入 prefix，最大實際單次讀取仍為 65,536 bytes。為容納這個結構區，控制程式的累計讀取預算由原簡單案例的 1 MiB 改為應用既有的 16 MiB realm 預算，預期實際為 8,268,604 bytes；應用本身的任何讀取／RSS 門檻都沒有改動。控制報告版本為 4，另記錄 `readPolicy`；跨接點讀取跟隨實際 prefix 邊界。舊 64 KiB helper 的讀取範圍仍有回歸檢查，不開放任意大小配置。
+
+22 項相關 Node 檢查通過，新增大 prefix 測試先在舊版以 65,536 而非 8,268,412 bytes 失敗，再檢查分頁讀取、完整虛擬來源大小與非法 prefix 拒絕。包裝時機、原生下載及完整 SHA、500ms 取樣、60 秒自然撤銷與所有權清理保留。真實 Firefox 實測尚待完成，不能以這些 Node 檢查當成記憶體問題修正。
