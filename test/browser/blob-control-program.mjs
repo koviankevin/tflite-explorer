@@ -1,23 +1,26 @@
 // Standalone diagnostic harness, never shipped in the application. Drive each
 // API transition by a visible button; export only scalar status, not file data.
-export function installBlobControlWorker(scope){
+export const BLOB_CONTROL_PREFIX_BYTES=8268412;
+export function installBlobControlWorker(scope,{prefixBytes=65536}={}){
+    if(![65536,8268412].includes(prefixBytes))throw Error('Unknown control prefix size.');
     let file,blob,candidate;const stats={inputBytes:0,blobBytes:0,readBytes:0,maxRead:0,builds:0,readbacks:0,boundaryReads:0,shares:0};
     const read=(source,start,end)=>{
-        const length=end-start;if(length<0||length>1024**2||stats.readBytes+length>1024**2)throw Error('Bounded control read exceeded.');
+        const length=end-start;if(length<0||length>65536||stats.readBytes+length>16*1024**2)throw Error('Bounded control read exceeded.');
         stats.readBytes+=length;stats.maxRead=Math.max(stats.maxRead,length);return new scope.FileReaderSync().readAsArrayBuffer(source.slice(start,end));
     };
     scope.onmessage=({data})=>{try{
         if(data.action==='build'){
             if(file||blob||!data.file||!Number.isSafeInteger(data.file.size)||data.file.size<=1024**3||typeof data.file.slice!=='function')throw Error('Expected one physical large source.');
-            file=data.file;stats.inputBytes=file.size;const prefix=new Uint8Array(read(file,0,65536));
-            blob=new scope.Blob([prefix,file.slice(65536)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
+            file=data.file;stats.inputBytes=file.size;const prefix=new Uint8Array(prefixBytes);
+            for(let offset=0;offset<prefixBytes;offset+=65536)prefix.set(new Uint8Array(read(file,offset,Math.min(prefixBytes,offset+65536))),offset);
+            blob=new scope.Blob([prefix,file.slice(prefixBytes)],{type:'application/octet-stream'});stats.blobBytes=blob.size;stats.builds++;scope.postMessage({stage:'built',stats:{...stats}});
         }else if(data.action==='readback'){
             if(!blob||candidate)throw Error('Unexpected readback order.');candidate=new scope.File([blob],'control.tflite');
             read(candidate,0,64);read(candidate,candidate.size-64,candidate.size);stats.readbacks++;scope.postMessage({stage:'readback',stats:{...stats}});
         }else if(data.action==='boundary'){
             if(!candidate||stats.boundaryReads||stats.shares)throw Error('Unexpected boundary read order.');
-            // Only this new read straddles the 64 KiB typed-prefix/File join.
-            read(candidate,65504,65568);stats.boundaryReads++;scope.postMessage({stage:'boundary',stats:{...stats}});
+            // This read straddles the actual typed-prefix/File join.
+            read(candidate,prefixBytes-32,prefixBytes+32);stats.boundaryReads++;scope.postMessage({stage:'boundary',stats:{...stats}});
         }else if(data.action==='share'){
             if(!candidate||stats.boundaryReads!==1||stats.shares)throw Error('Unexpected share order.');stats.shares++;scope.postMessage({stage:'shared',blob,stats:{...stats}});
         }else throw Error('Unknown control action.');
