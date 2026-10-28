@@ -1,6 +1,6 @@
 # 桌面瀏覽器相容性
 
-既有正式關卡使用 Hosted Linux Chromium。`Desktop engine compatibility` 另以 lockfile 固定的 Playwright Firefox／WebKit，唯讀驗收已發布的完整 site ID 與 build ID。兩個引擎目前仍未通過整輪驗收；後述成功步驟不代替最終失敗結果。這是桌面引擎驗收，不代表 Windows Firefox、macOS Safari、公司實模、超過 1 GiB 或數小時負載已通過。畫面範圍為 14 吋筆電的 1366×640／1280×640，字級包含 32px，不測手機。
+既有正式關卡使用 Hosted Linux Chromium。`Desktop engine compatibility` 另以 lockfile 固定的 Playwright Firefox／WebKit，唯讀驗收已發布的完整 site ID 與 build ID。preview.18 的正式站兩引擎各十三項操作已通過，最新固定交付見 [桌面修正與交付](desktop-fixes.md#正式交付)。下文早期失敗保留當時結果，不代表本版仍失敗。這是桌面引擎驗收，不代表 Windows Firefox、macOS Safari、公司實模、超過 1 GiB 或數小時負載已通過。畫面範圍為 14 吋筆電的 1366×640／1280×640，字級包含 32px，不測手機。
 
 工作流程只有手動入口、`contents: read` 權限，僅允許此 repository 的 main／Hosted Linux runner。先逐檔核對正式站 SHA／MIME 及 root，再啟動獨立瀏覽器；結束時再次核對正式 site／core 身分，並保存 driver Git tree、實際引擎版本、原始操作報告及截圖。模型只有原始公開合成 fixtures，所有非 GET 或站外請求都拒絕。沒有部署、重跑正式發布或操作個人瀏覽器。
 
@@ -24,7 +24,7 @@
 
 WebKit 26.0 [十三項流程完成](results/desktop-webkit-checkout-failure-2026-10-28.json)，包含 undefined SSA 的 modal／零下載、1,608／1,605 OP Canvas 的分支匯合／迴圈跨 block 鍵盤選取、32px、pattern、局部 MLIR SSA／dominance／舊 pattern 各一筆及網站重開；但最終因測試把 worker 紀錄的字串誤當方法而失敗，另有兩筆 edit-recovery-worker access-control 與兩筆 ResizeObserver 通知錯誤。Worker 統計將修正，同時補上錯誤發生階段、stack、request failure 及當時 Worker 狀態，不忽略或改寫這四筆錯誤。[來源／provider／原始報告核對](results/desktop-fourth-review-2026-10-28.json)保留 failed。preview.17 的正式程式與固定 Release 未改動，也未宣稱相容性合格。
 
-## 最新診斷與未完成工作
+## preview.17 歷史診斷與當時未完成工作
 
 第五輪 [40653695286](https://github.com/koviankevin/tflite-explorer/actions/runs/40653695286)受測來源 `e8b0c7675c8844ead34f0dfa11643c1da6bfbbbd`／tree `483ea0adf9ad600b1eb313094b239722e3afb310`，使用 preview.17 正式站的原有 build／site ID，逐檔驗證 1,310 檔。[獨立 provider／CRC／來源核對](results/desktop-fifth-review-2026-10-28.json)完成，兩個 jobs 都維持 failure。
 
@@ -36,3 +36,8 @@ WebKit 26.0 [十三項流程完成](results/desktop-webkit-checkout-failure-2026
 Worker 原始事件保留：兩引擎中 Netron layout worker 的 close 旗標未收到，不能改寫為 true；與明確收到 close 的 model workers 分開記錄。瀏覽器 context／browser close 已完成，但本項未量其他引擎的程序樹記憶體，不由此推論長時間或 1 GiB 不洩漏。
 
 下一步先補可在發布前運行同樣流程的候選產物入口，再以實際錯誤縮小重現：確認頁面離開時 recovery flush 是否在失效 document 建立 Worker，並檢查 capture／header ResizeObserver 的同步樣式更新；Firefox 則對照原生 select 鍵盤語意。必須由候選與正式站實際執行證明修正，不可只靠堆疊推測、忽略錯誤或縮減既有流程。公司模型／compiler、1 GiB 其他引擎、固定硬體及長時間負載仍未驗收，整體商品等級目標維持進行中。
+
+
+## preview.18 正式站結果
+
+[正式站 40660687409](https://github.com/koviankevin/tflite-explorer/actions/runs/40660687409)兩個 jobs 均 success；各十三項、21 個模型 Worker close、errors 空陣列，並以可信 build `88b1b6ae59c5fd17`／完整 site ID 核對 1,318 檔與 root。原始資料、實際版本、32px 筆電畫面、固定包與限制見 [正式交付](desktop-fixes.md#正式交付)。這補齊所列桌面功能流程；其他引擎 1 GiB／程序樹記憶體、macOS Safari／Windows Firefox、公司模型與數小時負載仍未驗收。

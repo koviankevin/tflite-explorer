@@ -1,6 +1,6 @@
 # MLIR／Canvas 鍵盤操作與驗收（preview.17）
 
-preview.17 已正式發布，build `b279d3ea3f3d7ec5`。Canvas 可見鍵盤焦點、跨 block 選取與 MLIR 檢查對話框返回焦點，已通過主分支、完整封裝及正式站對應版本驗收。固定來源及實際下載核對見本頁正式交付紀錄。
+此頁保留 preview.17 的交付證據；現行 preview.18 見 [桌面修正與正式交付](desktop-fixes.md)。preview.17 已正式發布，build `b279d3ea3f3d7ec5`。Canvas 可見鍵盤焦點、跨 block 選取與 MLIR 檢查對話框返回焦點，已通過主分支、完整封裝及正式站對應版本驗收。固定來源及實際下載核對見本頁正式交付紀錄。
 
 Canvas 聚焦時顯示鍵盤提示：方向鍵平移、＋／－縮放、Home 顯示全圖、Tab 到節點，Enter／Space 查看或切換圈選。焦點所在的 OP 有藍色外框，圖面下方顯示目前控制項及 block／OP 編號。長名稱可換行，控制項不超過 100px 高，完整文字保留於可及名稱與 title。節點清單仍最多 100 個；不為 20,000 個 OP 建立完整 DOM。
 

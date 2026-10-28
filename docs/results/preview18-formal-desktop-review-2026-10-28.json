@@ -1,0 +1,226 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "passed",
+      "engine": "firefox",
+      "runId": 40660687409,
+      "attempt": 1,
+      "source": {
+        "commit": "cb0b9c179938d10b827a4bb1e679aae82c5b4754",
+        "tree": "3565d1996e2195ef39c3de70780117c9d036b6d9",
+        "committedAt": "2026-10-28T16:48:06+08:00",
+        "dirty": false
+      },
+      "jobId": 122722679591,
+      "artifactId": 12804375203,
+      "providerDigest": "sha256:2017d984505e8be4764927357ad3a5601d7566b31787d8f9110628c31f9b960f",
+      "reportSHA256": "5b8164defb20b5d7deb98903c9fb754654c8126cbd11bdf4b70038cc1e1799b9",
+      "browserVersion": "142.0.1",
+      "target": "production",
+      "build": "88b1b6ae59c5fd17",
+      "siteId": "34c2acb0e322fe8855c13ca9a5e5973cbe14ef4d2eba7b11b2c705b406518cea",
+      "coreSource": {
+        "commit": "cb0b9c179938d10b827a4bb1e679aae82c5b4754",
+        "tree": "3565d1996e2195ef39c3de70780117c9d036b6d9",
+        "committedAt": "2026-10-28T16:48:06+08:00",
+        "dirty": false
+      },
+      "staticFiles": 1318,
+      "otherWorkerCloseEvents": [
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": false
+        }
+      ],
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once"
+      ],
+      "modelWorkers": 21,
+      "errors": [],
+      "directory": "build/qa/desktop-40660687409-formal/firefox"
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "passed",
+      "engine": "webkit",
+      "runId": 40660687409,
+      "attempt": 1,
+      "source": {
+        "commit": "cb0b9c179938d10b827a4bb1e679aae82c5b4754",
+        "tree": "3565d1996e2195ef39c3de70780117c9d036b6d9",
+        "committedAt": "2026-10-28T16:48:06+08:00",
+        "dirty": false
+      },
+      "jobId": 122722679290,
+      "artifactId": 12804405313,
+      "providerDigest": "sha256:29fb9e2220b487e4d6ada510bd7e810ff772880995767a4b96b41ca3d4729217",
+      "reportSHA256": "7721b86f465aa242ff160ab28d069e5b131af9a92fd7f5a20039148e1a480cd5",
+      "browserVersion": "26.0",
+      "target": "production",
+      "build": "88b1b6ae59c5fd17",
+      "siteId": "34c2acb0e322fe8855c13ca9a5e5973cbe14ef4d2eba7b11b2c705b406518cea",
+      "coreSource": {
+        "commit": "cb0b9c179938d10b827a4bb1e679aae82c5b4754",
+        "tree": "3565d1996e2195ef39c3de70780117c9d036b6d9",
+        "committedAt": "2026-10-28T16:48:06+08:00",
+        "dirty": false
+      },
+      "staticFiles": 1318,
+      "otherWorkerCloseEvents": [
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/src/edit-recovery-worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/88b1b6ae59c5fd17/vendor/netron/worker.js?v=88b1b6ae59c5fd17",
+          "closed": false
+        }
+      ],
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once"
+      ],
+      "modelWorkers": 21,
+      "errors": [],
+      "directory": "build/qa/desktop-40660687409-formal/webkit"
+    }
+  ]
+}

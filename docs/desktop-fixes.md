@@ -1,6 +1,6 @@
-# 桌面引擎修正（preview.18 候選）
+# 桌面引擎修正與正式交付（preview.18）
 
-此頁為尚未發布的候選工作；實際正式站仍依版本對話框與固定 Release。14 吋範圍為 1366×640／1280×640、32px，不測手機，不操作個人瀏覽器。
+preview.18 已正式發布，build `88b1b6ae59c5fd17`；固定來源、實際下載與正式站結果見本頁「正式交付」。14 吋範圍為 1366×640／1280×640、32px，不測手機，不操作個人瀏覽器。
 
 未修正的 [candidate run 40655312920](https://github.com/koviankevin/tflite-explorer/actions/runs/40655312920)來自 `c26aee02cd9e2bb6e6b2a12790fbc8b9e30152ba`，public build `75a25d1e0c7f4095`，核心 273 檔及實際 HTTP root／SHA／MIME 已核對。[Firefox 原始失敗](results/desktop-candidate-original-firefox-2026-10-28.json)重現 native select 等待；[WebKit 原始失敗](results/desktop-candidate-original-webkit-2026-10-28.json)完整執行十三項操作後仍有兩筆 recovery Worker access-control 及兩筆 ResizeObserver 錯誤。[provider digest／CRC／job／來源核對](results/desktop-candidate-original-review-2026-10-28.json)保留 failure，證明可在發布前重現，並非只存在於 CDN。
 
@@ -14,11 +14,11 @@
 
 ## 版面更新
 
-header、capture toolbar 與編輯區 header 的 ResizeObserver 不再於通知回呼內寫入受布局影響的樣式。每個觀察者至多排一個動畫 frame，於 frame 讀取最新尺寸後更新；dispose 會取消未執行 frame，晚到通知不再接觸已釋放檢視。舊同步回呼的兩項回歸測試先失敗，修正後通過。真實 WebKit 是否不再發生 undelivered-notifications，仍須由相同模型流程驗證，不能只靠單元測試宣稱。
+header、capture toolbar 與編輯區 header 的 ResizeObserver 不再於通知回呼內寫入受布局影響的樣式。每個觀察者至多排一個動畫 frame，於 frame 讀取最新尺寸後更新；dispose 會取消未執行 frame，晚到通知不再接觸已釋放檢視。舊同步回呼的兩項回歸測試先失敗，修正後通過。同樣模型流程在候選與正式站 WebKit 均無 undelivered-notifications；原始報告見下文。
 
 Firefox 的原生 select 驗收改用關閉選單狀態的 Home／ArrowDown，由 Gecko 原生事件提交；Chromium／WebKit 保留已驗證的 popup Home／ArrowDown／Enter。這是測試操作差異，沒有改成自製選單、直接設定 select 值或 app API。驗收保留每次 requested／actual value。
 
-本機選測 14 項 recovery／fingerprint／生命週期／frame 案例通過；四項執行限制與 HTTP 身分正負例也通過。候選真實引擎、主分支必要關卡、固定封裝及正式站驗證仍待執行，尚未宣稱部署或商品等級完成。
+本機選測 14 項 recovery／fingerprint／生命週期／frame 案例通過；四項執行限制與 HTTP 身分正負例也通過。後續候選、主分支、固定封裝與正式站證據列於下文；所列驗收通過仍不等於完整商品等級完成。
 
 
 ## 候選與主分支驗收
@@ -31,4 +31,19 @@ Firefox 的原生 select 驗收改用關閉選單狀態的 Home／ArrowDown，�
 
 實體 [八輪 40657311396](https://github.com/koviankevin/tflite-explorer/actions/runs/40657311396) 的 [完整量測](results/preview18-main-browser-2026-10-28.json)與 [額外完整指紋／provider 核對](results/preview18-main-browser-review-2026-10-28.json)通過。原模型 1,349,965,216 bytes／21,005 OP；每次完整編輯輸出 1,350,445,736 bytes／21,006 OP，七段共 1,342,177,328 bytes 權重／custom options 串流比對、八次完整原檔指紋、pattern 正反例及重開均通過。扣除兩輪暖機的六輪，RSS drift 7,118,848 bytes、斜率 1047639.77 bytes／輪、main heap drift 126,892 bytes、取樣峰值 999,694,336 bytes，符合原 policy；24 個模型 Worker 與八個指紋 Worker 全終止，保留自然 60 秒 Blob URL 撤銷、未強制 GC。這是有限的 Chromium／hosted 環境證據，不代表其他引擎 1 GiB、公司模型、OS 斷電、固定硬體 SLA 或數小時不洩漏。
 
-上述為準備發布所需證據；固定包、正式部署、正式站 Firefox／WebKit 仍待核對。公司模型／compiler／runtime 與完整商品等級目標保持未完成。
+上述為發布前證據；後續固定包、正式部署與正式站 Firefox／WebKit 核對如下。公司模型／compiler／runtime 與完整商品等級目標保持未完成。
+
+
+## 正式交付
+
+[正式網站](https://koviankevin.github.io/tflite-explorer/)及 [固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.18)已是 preview.18／build `88b1b6ae59c5fd17`。凍結來源 `cb0b9c179938d10b827a4bb1e679aae82c5b4754`、tree `3565d1996e2195ef39c3de70780117c9d036b6d9`；以下交付文件不改寫固定產物。
+
+- [準備 40659415791](https://github.com/koviankevin/tflite-explorer/actions/runs/40659415791)的 [完整包獨立核對](results/preview18-prepared-review-2026-10-28.json)及 [凍結來源四關卡](results/preview18-frozen-gates-review-2026-10-28.json)通過後，以精確 build／site ID 執行 [正式發布 40660112968](https://github.com/koviankevin/tflite-explorer/actions/runs/40660112968)。prepare／deploy／verify_live／release 全成功，attempt 1。
+- [正式 HTTP 紀錄](results/preview18-live-http-2026-10-28.json)核對 1,318 檔 SHA／MIME，site ID `34c2acb0e322fe8855c13ca9a5e5973cbe14ef4d2eba7b11b2c705b406518cea`、manifest SHA-256 `38817ef2fe18c1e2267325dc8fb0a537ebbd611ae7fe414b558ebec526881495`、root SHA-256 `ff71e1bf2e58500f2fffe8a3499bf8d9e78a7183a163738a51fe4aceb67d6066`；保留 preview.17／preview.16 及 preview.7 legacy root。
+- [正式 Chromium 原生操作](results/preview18-live-ui-2026-10-28.json)29 項通過，包含模型分頁、pattern 刪除／復原、接線、自動 tensor、可攜與自動保存草稿、IF／WHILE／custom OP、MLIR SSA modal、跨 block Canvas 選取／pattern／下載重開。32 個主模型 Worker、模型分頁的六個 Worker、八份 TFLite 編輯匯出收據及兩個 owned process trees 核對通過；SIGKILL 缺失 close 的原 false 和實際 OS 終止證據均保留。
+- [正式桌面引擎 40660687409](https://github.com/koviankevin/tflite-explorer/actions/runs/40660687409)的 Firefox 142.0.1／Linux WebKit 26.0 各通過十三項相同操作及 21 個模型 Worker close，errors 皆空。一般／停用 eval 的 native chooser 對照、下拉選單、SSA modal、1,608／1,605 OP Canvas 分支匯合／迴圈、32px、縮放／平移、pattern JSON、局部 MLIR／TFLite 匯出重開皆通過。原始 [Firefox](results/preview18-formal-firefox-2026-10-28.json)／[WebKit](results/preview18-formal-webkit-2026-10-28.json)及 [provider digest／CRC／job／固定身分核對](results/preview18-formal-desktop-review-2026-10-28.json)保留；正式站 1,318 檔與 root 在操作前核對，結束再驗 site／core 身分。兩個引擎最後 Netron layout Worker 沒收到的 close 仍為 false，不能由此推論其他引擎程序記憶體。
+- 只驗 14 吋範圍的 1366×640／1280×640、16→32px，不測手機。[Chromium 正式畫面](results/preview18-live-canvas-2026-10-28.png)、[Firefox](results/preview18-formal-firefox-2026-10-28.png)與 [WebKit](results/preview18-formal-webkit-2026-10-28.png)已視覺檢查，頁面無水平溢出、焦點控制項在圖面內。Chromium PNG SHA-256 `84f2e03506f3de567f7bbefe83192fe3d9687a8e11c42d4e7cc64f0e7097876f`。
+- [固定 Release 紀錄](results/preview18-fixed-release-2026-10-28.json)及 [最終獨立交付核對](results/preview18-publication-review-2026-10-28.json)確認四份實際下載與原準備包 bytes／SHA 完全相同。`model-lens-public-0.2.0-preview.18-88b1b6ae59c5fd17.zip` 為 29,719,061 bytes、275 核心檔，SHA-256 `485db86efbbb31bf9f0a4b58c8230c64d7100506838d78b3123109c5412af108`。
+- 權威 Deployment `7381067170`／job `122721004355`／run `40660112968` 與來源、完整 site ID、未加 query 的實際 root 一致。未同步 Sites、未使用個人瀏覽器或公司模型。
+
+本輪修正與固定交付完成；其他引擎超過 1 GiB 的程序記憶體與長時間負載、公司實模／dialect／compiler／runtime、固定實體硬體 SLA、OS 斷電／儲存回收、其餘鍵盤／螢幕閱讀器與新手流程仍未完成，整體商品等級目標維持進行中。1.25 GiB 八輪數據為上文 Chromium 量測；preview.16 的大型手動草稿延遲不冒充本版重新實測。
