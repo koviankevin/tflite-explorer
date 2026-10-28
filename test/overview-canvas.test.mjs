@@ -66,6 +66,15 @@ test('Canvas and focused-node keys pan/zoom without changing captured OPs; nativ
     }finally{env.restore();}
 });
 
+test('async capsule expansion returns focus from the graph fallback but never steals a later toolbar focus',async()=>{
+    for(const moved of [false,true]){
+        const env=harness();try{
+            const node={identifier:'capsule',name:'Named pattern',diagramKind:'pattern',x:0,y:0,width:120,height:60,minX:0,minY:0,maxX:120,maxY:60},next=env.doc.createElement('canvas'),toolbar=env.doc.createElement('button');next.isConnected=true;let controller,button;
+            controller=overviewCanvas(env.target,{nodes:[node],edges:[],groups:[],font:32,width:200,height:100},{activate(){controller.dispose();button.isConnected=false;env.target.replaceChildren(next);env.doc.activeElement=moved?toolbar:env.target;return Promise.resolve(next);}});controller.focus(['capsule'],1);env.flush();button=env.target.children[2].children[0];button.isConnected=true;button.focus();env.flush();assert.match(button.textContent,/Named pattern/);button.onclick({detail:0});await Promise.resolve();assert.equal(env.doc.activeElement,moved?toolbar:next);
+        }finally{env.restore();}
+    }
+});
+
 test('Canvas box selection inverse-transforms zoom/pan with a DOM offset, preserves blocks and excludes scaffolding and offscreen OPs',()=>{
     const env=harness();try{
         const node=(identifier,x,y,diagramKind='operator',sourceGraph=1)=>({identifier,name:identifier,type:{name:'company.custom'},sourceGraph,sourceNode:0,diagramKind,x,y,width:120,height:60,minX:x,minY:y,maxX:x+120,maxY:y+60});
