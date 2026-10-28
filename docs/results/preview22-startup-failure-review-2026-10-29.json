@@ -1,0 +1,64 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b",
+    "tree": "532ba368190049617f3fe379a8aae75107792030",
+    "committedAt": "2026-10-29T01:58:57+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40741440704,
+  "attempt": 1,
+  "jobId": 123004682042,
+  "artifactId": 12838738699,
+  "digest": "sha256:4456eeda05942382cd8bf8e18e79972e917f77fd506b7fe6906beb9b3d6af332",
+  "files": [
+    {
+      "name": "pages-live-report.json",
+      "bytes": 361580,
+      "sha256": "2487596dbc4341ec75175b0dd5a6970ea974c5750b8a8e4a653576abc2c8bb51"
+    },
+    {
+      "name": "production-smoke.json",
+      "bytes": 1233,
+      "sha256": "927ad63e7ee6f9520e1f72eeb8fda04d93e3c8b6e9d8eaecbf728280469d5dd6"
+    },
+    {
+      "name": "production-smoke.png",
+      "bytes": 143897,
+      "sha256": "a427a2f063cd62524746ad2695ae412eaab9de6e17a31619f2684df054d15fff"
+    }
+  ],
+  "staticFiles": 1373,
+  "smoke": {
+    "format": "model-lens-production-smoke",
+    "version": 1,
+    "status": "failed",
+    "startedAt": "2026-10-28T18:05:24.725Z",
+    "driverSourceCommit": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b",
+    "expectedBuild": "04aa44009821ed92",
+    "checks": [],
+    "errors": [],
+    "workers": [],
+    "target": "public-production",
+    "siteRelease": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.22",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b",
+        "tree": "532ba368190049617f3fe379a8aae75107792030",
+        "committedAt": "2026-10-29T01:58:57+08:00",
+        "dirty": false
+      },
+      "buildId": "04aa44009821ed92"
+    },
+    "siteId": "5ea831fbefe2cd0cdb168fe03db5f87a54c23272438fe6f6403c6de589cf81ec",
+    "coreBasePath": "versions/04aa44009821ed92/",
+    "chromium": "141.0.7390.37",
+    "error": "Error: DOM timeout: ()=>typeof document.querySelector('#welcome-open').onclick==='function'\n    at waitFor (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:44:110)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:79:5",
+    "finishedAt": "2026-10-28T18:05:55.851Z"
+  }
+}

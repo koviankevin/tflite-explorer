@@ -186,4 +186,12 @@ Worker 建立 Blob、File 讀回、跨接點讀取及傳回 main 後，RSS 檢�
 
 [四關卡獨立收據](results/prefix22-release-gates-2026-10-29.json)核對原始 provider artifacts、全新候選重建、原始判定與逐檔 scope。核心九筆沿用 [40700051621](https://github.com/koviankevin/tflite-explorer/actions/runs/40700051621)，fingerprint `d25a85aa0caf6999326ea9a4b45298714960c89f9d3146dfe888350f1e4dd01a` 相同；新 Chromium、[77 項發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/40737501030)與[六種網站切換](https://github.com/koviankevin/tflite-explorer/actions/runs/40737514449)均是本次 main 手動成功結果。原始 ZIP：[core](results/prefix22-gate-core-2026-10-29.zip)、[browser](results/prefix22-gate-browser-2026-10-29.zip)、[contract](results/prefix22-gate-contract-2026-10-29.zip)、[site](results/prefix22-gate-site-2026-10-29.zip)。
 
-本節是候選驗收；正式站仍為 preview.21，需再完成準備產物審閱、受控部署與正式站／固定 Release 下載核對。其他 OS、公司模型／compiler／custom kernel、固定實體硬體 SLA 及本來源長時間量測仍待驗證；不把整體商品等級目標標成完成。
+本節是候選驗收；當時正式站為 preview.21，需再完成準備產物審閱、受控部署與正式站／固定 Release 下載核對。其他 OS、公司模型／compiler／custom kernel、固定實體硬體 SLA 及本來源長時間量測仍待驗證；不把整體商品等級目標標成完成。
+
+### preview.22 第一次部署的啟動驗證失敗
+
+[40741440704 attempt 1](https://github.com/koviankevin/tflite-explorer/actions/runs/40741440704) 已成功準備並部署來源 `e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b`／build `04aa44009821ed92`，但正式站原生驗證等待 `welcome-open.onclick` 綁定 30 秒逾時，固定 Release 工作被略過。Pages 的 1,373 檔 bytes／SHA／MIME 全數核對成功，瀏覽器報告的 `errors`、`workers`、`checks` 都是空陣列；這不能證明逾時的原因，也不能當成正式交付完成。
+
+[原始報告與截圖 ZIP](results/preview22-startup-failure-2026-10-29.zip)及[獨立 provider／CRC／來源／attempt 核對](results/preview22-startup-failure-review-2026-10-29.json)保留，沒有把失敗刪除或直接重跑到成功。三引擎八輪及隔離網站相同應用曾通過，故先補 CI 啟動資源觀察，區分網路／模組請求未完成、刻意延遲圖形初始化與 DOM 時序，而不提高逾時或變更應用猜測修正。
+
+新的診斷只在選取任何模型前收錄同站 GET document／script／stylesheet／image，最多 128 筆、console errors 最多 32 筆，記錄相對路徑、狀態、content type、完成／失敗時間與刻意暫停的 zip 模組。URL query／credentials／外站網址及 file／data URLs 排除或遮罩；不讀取回應 body 或模型，不記錄認證 header。開檔按鈕已就緒時停止收錄，失敗則保留當下 pending 請求。原 30 秒門檻、原生請求路徑、刻意暫停及全部功能驗證不變。三項 Node 檢查涵蓋請求狀態、上限／同站範圍／開檔後停止，以及文字中的敏感 URL 遮罩；實際公開站重現仍待執行。
