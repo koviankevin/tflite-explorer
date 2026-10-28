@@ -1,0 +1,44 @@
+name: Physical File Blob control
+on:
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: Desktop engine for the isolated physical File/Blob control
+        type: choice
+        options: [all, firefox, webkit]
+        default: all
+permissions:
+  contents: read
+jobs:
+  control:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: ${{ fromJSON(inputs.engine == 'firefox' && '["firefox"]' || inputs.engine == 'webkit' && '["webkit"]' || '["firefox","webkit"]') }}
+    env:
+      DESKTOP_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - name: Reject invalid ownership, unbounded reads and altered control order
+        run: node --test test/blob-control.test.mjs test/owned-processes.test.mjs test/physical-fixture.test.mjs
+      - run: node scripts/install-blob-engine.mjs
+      - name: Isolate Blob construction, Worker transfer, URL and native download
+        run: node test/browser/blob-control.mjs
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blob-control-${{ matrix.engine }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/blob-control-${{ matrix.engine }}.json
+          if-no-files-found: error
+          retention-days: 30
