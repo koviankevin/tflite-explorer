@@ -1,0 +1,253 @@
+{
+  "format": "model-lens-preview21-published-review",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-28T15:58:29.170Z",
+  "source": {
+    "commit": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+    "tree": "99a80eba605032835e65c6574bfe00d9ce79b6aa",
+    "committedAt": "2026-10-28T23:49:16+08:00",
+    "dirty": false
+  },
+  "run": {
+    "id": 40720219760,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40720219760",
+    "attempt": 1,
+    "source": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+    "jobs": [
+      {
+        "id": 122928773518,
+        "name": "prepare",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 122929649829,
+        "name": "Publish site 95987d8eb79014a1ac16ffe6dd3fcd100616a6fed0cdf8406cc07d63d055a77a",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 122929781041,
+        "name": "verify_live",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 122931386311,
+        "name": "release",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 12830093805,
+      "name": "live-release-verification",
+      "jobId": 122929781041,
+      "attempt": 1,
+      "bytes": 267630,
+      "digest": "sha256:e3c93443e30e1c9d3a8e64a397b27bf9a7a46b1b34309e2122fd1f7c9f1beb98",
+      "members": [
+        {
+          "name": "production-smoke.json",
+          "bytes": 39586,
+          "sha256": "71cacefabf6654f149cfcdbbf7a7898322833f8ef623f7b1fa557e828dab4061"
+        },
+        {
+          "name": "pages-live-report.json",
+          "bytes": 361048,
+          "sha256": "4259c97da18a55228d729ddfbe8a9ab96a87e6bec2fbebc7721adff88ef3ef4e"
+        },
+        {
+          "name": "production-smoke.png",
+          "bytes": 194239,
+          "sha256": "2dfa0dda1cef4ca773cb45fd73797204e4693de4444246872c58504cadb95d68"
+        }
+      ]
+    },
+    {
+      "id": 12830771202,
+      "name": "published-release-verification",
+      "jobId": 122931386311,
+      "attempt": 1,
+      "bytes": 763,
+      "digest": "sha256:09d994cc6f0d96d357306c8d16d501a7f7e03faf3d8c7ff183c9818dec27b8d9",
+      "members": [
+        {
+          "name": "pages-release-report.json",
+          "bytes": 1273,
+          "sha256": "d3334874988a0c44101504d1278bebe0c1b94ca86f1720355638f7a6d37a4bc2"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "successful job artifacts authenticated by provider digest, CRC, source and attempt timestamps",
+    "every live file and root matches independently reviewed snapshot",
+    "30 native operations including optional CPU bin IO, 36 model workers and 4 runtime workers closed",
+    "all four actual Release downloads match original prepared bytes",
+    "authoritative Pages deployment and independent root agree with preview.21"
+  ],
+  "fixedRelease": {
+    "url": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.21",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.21",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+        "tree": "99a80eba605032835e65c6574bfe00d9ce79b6aa",
+        "committedAt": "2026-10-28T23:49:16+08:00",
+        "dirty": false
+      },
+      "buildId": "c4346bf8617a020e"
+    },
+    "provenance": {
+      "kind": "github-published-promotion",
+      "releaseId": 426880488,
+      "assetId": 685509979,
+      "tag": "v0.2.0-preview.21",
+      "source": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+      "zipSHA256": "ffb40ca31c0da7be4cdf62b0848f9c36ff7b57ffd68e82c3d8d1a999e9f36ae5",
+      "zipBytes": 41106118,
+      "manifestSHA256": "7d1dc65ca6d06a7d56b4098262f4144d0f24d8fd7cb25a23da0919e847d75f88",
+      "assets": [
+        {
+          "name": "model-lens-public-0.2.0-preview.21-c4346bf8617a020e.zip",
+          "bytes": 41106118,
+          "sha256": "ffb40ca31c0da7be4cdf62b0848f9c36ff7b57ffd68e82c3d8d1a999e9f36ae5"
+        },
+        {
+          "name": "model-lens-public-0.2.0-preview.21-c4346bf8617a020e.zip.sha256",
+          "bytes": 122,
+          "sha256": "5b1a1e37dae486eac26bf60d0d5dad94f71f1c12efcb3e8aea7ff0005a32f1aa"
+        },
+        {
+          "name": "release-gates.json",
+          "bytes": 164685,
+          "sha256": "5a681904cfeac35eb1db14c0c4e9a1699e58a07885d053e95b5f25919b8387e7"
+        },
+        {
+          "name": "release-manifest.json",
+          "bytes": 47325,
+          "sha256": "7d1dc65ca6d06a7d56b4098262f4144d0f24d8fd7cb25a23da0919e847d75f88"
+        }
+      ]
+    },
+    "assets": [
+      {
+        "name": "model-lens-public-0.2.0-preview.21-c4346bf8617a020e.zip",
+        "bytes": 41106118,
+        "sha256": "ffb40ca31c0da7be4cdf62b0848f9c36ff7b57ffd68e82c3d8d1a999e9f36ae5"
+      },
+      {
+        "name": "model-lens-public-0.2.0-preview.21-c4346bf8617a020e.zip.sha256",
+        "bytes": 122,
+        "sha256": "5b1a1e37dae486eac26bf60d0d5dad94f71f1c12efcb3e8aea7ff0005a32f1aa"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 164685,
+        "sha256": "5a681904cfeac35eb1db14c0c4e9a1699e58a07885d053e95b5f25919b8387e7"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 47325,
+        "sha256": "7d1dc65ca6d06a7d56b4098262f4144d0f24d8fd7cb25a23da0919e847d75f88"
+      }
+    ],
+    "coreFiles": 292,
+    "allOriginalPreparedBytesMatch": true
+  },
+  "deployment": {
+    "deploymentId": 7390332851,
+    "controllerSource": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+    "runId": 40720219760,
+    "attempt": 1,
+    "jobId": 122929649829,
+    "siteId": "95987d8eb79014a1ac16ffe6dd3fcd100616a6fed0cdf8406cc07d63d055a77a",
+    "legacy": false
+  },
+  "site": {
+    "siteId": "95987d8eb79014a1ac16ffe6dd3fcd100616a6fed0cdf8406cc07d63d055a77a",
+    "manifestSHA256": "9a43561e0c4967e05ffb7fbab647aeffb30ac302daccd1672baed0c99bb9a0ee",
+    "rootSHA256": "0bfa46cea96879c9d76018a6e88296bbc0e1f2a2062462b533d9b314cd4f9f8d",
+    "current": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.21",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "ed2414a20633765c9bbbdb818c6a14c7a5ca09d0",
+        "tree": "99a80eba605032835e65c6574bfe00d9ce79b6aa",
+        "committedAt": "2026-10-28T23:49:16+08:00",
+        "dirty": false
+      },
+      "buildId": "c4346bf8617a020e"
+    },
+    "legacy": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.7",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+        "committedAt": "2026-10-27T12:03:57+08:00",
+        "dirty": false
+      },
+      "buildId": "163f38ab1dc856e4"
+    },
+    "retainedBuildIds": [
+      "198292d7511b0f2d",
+      "a417b012ff88996d"
+    ],
+    "files": 1371
+  },
+  "live": {
+    "files": 1371,
+    "httpRetries": 0,
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+      "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+      "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+      "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+      "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+      "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+      "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+      "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+      "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+      "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+      "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers",
+      "committed local edit draft survives an owned browser SIGKILL; fresh browser rejects wrong weights and restores original wiring, 32px view and redo",
+      "native shared IndexedDB recovery conflict/fork preserves both edits; verified TFLite export reopens and deleting the saved branch never resurrects it",
+      "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+      "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout"
+    ],
+    "allWorkersClosed": true
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-28T15:58:56.433Z"
+}

@@ -1,6 +1,6 @@
 # 商品等級工作與完成條件
 
-最新固定正式版為 preview.20／build `198292d7511b0f2d`，本機手動 LiteRT／raw .bin／IO 保存及 signature 防護、正式站 30 項原生操作與固定 Release 已通過，見 [正式交付](tflite-runtime.md#preview20-正式交付)。較早來源的 80 輪／兩小時長測另已核對，見 [來源與限制](lifecycle-soak.md)；這不代替新版手動 runtime、公司模型、其他引擎、固定硬體或精度驗收，整體商品等級目標仍未完成。
+最新固定正式版為 preview.21／build `c4346bf8617a020e`，新增權重與手動執行 input 的 dtype 合法亂數及安全預設；正式站 30 項主要操作、七種 runtime 情境、1,371 檔與四份固定下載已通過，見 [型別亂數及正式交付](typed-random.md#preview21-正式交付)。本機手動 LiteRT／raw .bin／IO 保存與 signature 防護仍保留；較早來源的 80 輪／兩小時長測另已核對，見 [來源與限制](lifecycle-soak.md)。這不代替本來源數小時 runtime、公司模型、其他引擎、固定硬體或精度驗收，整體商品等級目標仍未完成。
 
 目標是公開核心可持續升級、公司內網可保留私有擴充，並讓工程師能可靠地日常使用。完成條件不以單一合成模型、一次綠燈或功能數量代替。
 

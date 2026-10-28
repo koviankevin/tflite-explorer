@@ -25,3 +25,11 @@ float16 測試輸入另受瀏覽器 Float16Array 支援及有限範圍 ±65,504 
 [原始候選操作](results/preview21-ui-candidate-2026-10-28.json)、[provider 核對](results/preview21-ui-candidate-2026-10-28-review.json)與 [完整原始 ZIP](results/preview21-ui-candidate-2026-10-28.zip)保留。30 項主要操作及七種 runtime 情境通過，36 個模型與四個 runtime Workers 全部關閉，沒有 page error。新增原生案例從新增 MUL 的表單產生合法權重、拒絕超出 float32 範圍的測試輸入且不啟動 WASM，再以合法資料執行，實際 ADD／MUL 輸出與下載 IO ZIP 的 bytes、CRC 及 seed 一致。14 吋 1366×640／1280×640、32px 流程仍通過，沒有測手機。
 
 這是公開合成案例的候選結果；正式 preview.21 部署仍待受控發布確認，也不代表公司 kernel、準確率、其他引擎的大檔峰值或新版數小時負載已通過。
+
+## Preview.21 正式交付
+
+固定正式來源 `ed2414a20633765c9bbbdb818c6a14c7a5ca09d0`／tree `99a80eba605032835e65c6574bfe00d9ce79b6aa`，build `c4346bf8617a020e`。[準備 40719831256](https://github.com/koviankevin/tflite-explorer/actions/runs/40719831256) 完成後，先 [獨立核對整份 Pages tar／固定 ZIP](results/preview21-prepared-review-2026-10-28.json)，再以精確 build／site ID 執行 [40720219760](https://github.com/koviankevin/tflite-explorer/actions/runs/40720219760)，prepare／deploy／verify_live／release 全成功，attempt 1。
+
+[正式交付獨立核對](results/preview21-publication-review-2026-10-28.json)確認 1,371 個正式站檔案、root／MIME／所有 SHA 與原準備 snapshot 相同；30 項原生操作及七種 runtime 情境通過，36 個模型與四個 runtime Workers 關閉。八份編輯匯出收據與四份 [固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.21) 實際下載 bytes 都符合原準備包；部署權威及獨立 root 也一致。正式 14 吋 1366×640／1280×640、32px 流程通過，沒有測手機。
+
+新增 OP 選取型別參考後，即可在「補上亂數權重／常數」看到合法範圍；手動「檢查能否執行（選用）」中的每個 input 選「亂數」也有相同提示。執行後可下載實際 input／output `.bin` 與 JSON。128 MiB 模型、16 MiB IO、30 秒及 custom kernel 等既有限制保持；不自動執行，也不以有限值保證 OP 語意或模型精度。公司實模、其他引擎的大檔峰值及本來源數小時驗收仍待補齊。
