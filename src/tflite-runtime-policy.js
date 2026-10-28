@@ -9,6 +9,13 @@ export function runtimePlan(model,bytes){
     const skip=reason=>({...result,reason});
     if(!model?.subgraphs?.length||!Number.isSafeInteger(bytes)||bytes<=0)return skip('缺少有效的 TFLite 模型。');
     if(bytes>RUNTIME_LIMITS.modelBytes)return skip('本機執行檢查限 128 MiB；此限制不影響模型讀取、編輯或匯出。請使用公司 native runtime 驗證大型模型。');
+    // LiteRT selects a declared signature, which need not target subgraph 0.
+    // Until a signature selector exists, accept only one complete, ordered
+    // primary interface. Equal shapes/dtypes cannot prove correct tensor binding.
+    const signatures=model.signature_defs||[],primary=model.subgraphs[0];
+    if(signatures.length){const s=signatures[0],ordered=(rows,ids)=>Array.isArray(rows)&&rows.length===ids.length&&rows.every((r,i)=>r.tensor_index===ids[i]&&typeof r.name==='string'&&r.name.length>0)&&new Set(rows.map(r=>r.name)).size===rows.length;
+        if(signatures.length!==1||s.subgraph_index!==0||typeof s.signature_key!=='string'||!s.signature_key||!ordered(s.inputs,primary.inputs)||!ordered(s.outputs,primary.outputs))return skip('signature 無法唯一對應主 subgraph 的完整 input／output 順序；本版未執行，避免檢查到其他函式或誤配 .bin。');
+    }
     let allocation=0;
     for(const g of model.subgraphs){
         for(const op of g.operators){const code=model.operator_codes[op.opcode_index];if(code?.custom_code||code?.builtin_code===32)return skip('模型含 custom OP；此公開 runtime 未註冊對應 kernel，需使用公司 runtime 驗證。');if([118,119].includes(code?.builtin_code))result.controlFlow=true;}
