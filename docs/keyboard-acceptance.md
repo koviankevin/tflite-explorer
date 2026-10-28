@@ -1,6 +1,6 @@
 # 鍵盤操作與焦點驗收
 
-自 `0.2.0-preview.9` 起，搜尋分頁支援鍵盤操作。Tab 進入目前啟用的分頁，左右方向鍵循環移動，Home／End 到第一／最後分頁；Enter 或 Space 才切換並搜尋。移焦點不啟動另一個搜尋，以免大型模型或跨 block pattern 的計算拖慢導覽。搜尋控制區以 tabpanel 與當前分頁互相標示；未啟用的 tabs 不各占一個 Tab 停留點。本頁保留 preview.9 的鍵盤驗收原始證據；最新正式站為 preview.16，見 [目前交付](edit-recovery.md)。MLIR／Canvas 鍵盤流程另見 [preview.17 候選](mlir-keyboard.md)，尚待原生驗收及受控發布。
+自 `0.2.0-preview.9` 起，搜尋分頁支援鍵盤操作。Tab 進入目前啟用的分頁，左右方向鍵循環移動，Home／End 到第一／最後分頁；Enter 或 Space 才切換並搜尋。移焦點不啟動另一個搜尋，以免大型模型或跨 block pattern 的計算拖慢導覽。搜尋控制區以 tabpanel 與當前分頁互相標示；未啟用的 tabs 不各占一個 Tab 停留點。本頁保留 preview.9 的鍵盤驗收原始證據；後續交付見 [編輯恢復](edit-recovery.md)。本版 preview.17 的 MLIR／Canvas 主分支鍵盤流程已通過，見 [原生驗收及範圍](mlir-keyboard.md)；實際部署版本以網站版本對話框／固定 Release 為準。
 
 對話框的 keydown／keyup 停在框內，不再傳給後方圖形的快捷鍵。Tab／Shift Tab 到達最後／第一個可操作控制項時，在框內循環；清單在每次 Tab 當下重新判斷，排除 disabled、inert、隱藏及收合內容，其餘保留原生按鈕、選單和 Escape 行為。原生關閉後回到開啟它的按鈕。Netron 圖形 register 僅在焦點原本屬於圖面或 body 時聚焦圖形；關閉 sidebar 也只在 sidebar／圖形原本持有焦點時返回圖形，避免重畫搶走搜尋欄、字級選單和對話框中的焦點。
 

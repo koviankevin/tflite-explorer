@@ -1,0 +1,14 @@
+{
+  "status": "authenticated-failure",
+  "id": 40641977932,
+  "head": "148ab6235e1523bc8a27bef637718dcc74a36f88",
+  "reason": "inactive tab test navigation",
+  "attempt": 1,
+  "jobId": 122661966053,
+  "artifactId": 12795617659,
+  "artifactDigest": "sha256:627b7caa27841936398704f44b292c7ffd19b21b19b1009a6edfa3b44224d816",
+  "reportSHA256": "b3a1100611742bfdb0c129e3cefbbd52577c7cca16a4fe356be495064e4e1f70",
+  "screenshotSHA256": "53d4b8a07a91f550e1ab5deac89357dbb5be66030dadbae4161a515c042034b7",
+  "completedChecks": 25,
+  "error": "Error: MLIR keyboard cannot reach [data-kind=\"patterns\"]\n    at tabTo (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:17:222)\n    at async enter (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:18:50)\n    at async importPattern (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:27:49)\n    at async mlirKeyboardFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:48:322)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:100:98"
+}

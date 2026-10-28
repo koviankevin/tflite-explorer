@@ -1,0 +1,14 @@
+{
+  "status": "authenticated-failure",
+  "id": 40641603032,
+  "head": "f851298034f4164e35a9e70456e424e4bf444c00",
+  "reason": "validation opener focus",
+  "attempt": 1,
+  "jobId": 122660792281,
+  "artifactId": 12796185524,
+  "artifactDigest": "sha256:cdc796d34daf984da531aac9ee32cc01f80b003e20b363fb0234be3bfc1973dc",
+  "reportSHA256": "ace9d51fbcc5551699ed83421ed69c6491d828778612c1d1fa963c6473def19c",
+  "screenshotSHA256": "e2c3d86395d67970129a9ce9ad9b923984745c5b98f3ba7f3f9932003218b2cd",
+  "completedChecks": 24,
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'close-validation'\n- 'export-submodel'\n\n    at mlirKeyboardFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:42:190)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:100:98"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "authenticated-failure",
+  "id": 40642363870,
+  "head": "384f4b34c9df65e9824407296939a21d22fec55a",
+  "reason": "capsule focus graph fallback",
+  "attempt": 1,
+  "jobId": 122663196692,
+  "artifactId": 12796152697,
+  "artifactDigest": "sha256:676250f3ced7019e25bf9648ca937d631e62fbed1b413582f80d05fe22307f8b",
+  "reportSHA256": "b06f41ade229daa92c7a49e06ff431281dbe6e52b90a4acee219128d7c6bf149",
+  "screenshotSHA256": "817ceb4e413f6200a6bbc63ee566e0d7810f891fce3a3574abeae4ec104d9070",
+  "completedChecks": 25,
+  "error": "Error: MLIR keyboard wait: ()=>document.activeElement?.matches('canvas.overview-canvas')&&document.querySelector('#toggle-overview-match').textContent==='收合此匹配'\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:16:120)\n    at async mlirKeyboardFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:49:135)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:100:98"
+}
