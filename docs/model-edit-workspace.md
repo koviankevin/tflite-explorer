@@ -2,7 +2,7 @@
 
 同一網站右上切換「探索模型／編輯模型」。探索圖上可先選取或框選原始 OP，再進入「編輯工作區」；沒有選取時從目前 block／subgraph 第一個 OP 開始。探索範圍、選取與視角保留，返回後可繼續搜尋。
 
-點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，型別／shape／量化參考原始 tensor，沒有自動 shape inference。CUSTOM 的 code／options 請從現有 custom OP 複製。
+滑鼠拖曳空白處可平移，滾輪以游標位置為中心縮放；Alt＋拖曳或中鍵可從 OP 上平移，保留選取與草稿。點來源「接出」，再點目標「接入」即可接線；接線中顯示來源、相容／不相容提示與取消按鈕；桌面也支援從輸出端拖到輸入端。點 OP 標題選取範本，以「在前方／後方複製新增」產生新的 OP；output tensor／SSA 名稱自動建立，沿用型別、shape、量化、參數與 custom options。可從現有 OP 複製，包括 custom OP。新增的 TFLite OP 可在右側展開「改為其他 TFLite OP」，從內建 catalog 選型別、版本、介面數量與 schema 參數；output tensor 自動建立，型別／shape／量化參考原始 tensor，沒有自動 shape inference。CUSTOM 的 code／options 請從現有 custom OP 複製。
 
 右側顯示選取 OP 的 ports、變更預覽與接線問題。支援復原／重做、清除草稿、刪除和恢復 OP；TFLite 可明確將刪除後仍被使用的輸出提升為模型 inputs，或將新增 OP 輸出加入模型 outputs。型別／shape／量化不相容、同 block 後向接線會拒絕；跨 block 的完整 SSA／dominance 於匯出時驗證。MLIR 控制流程以藍色虛線顯示，基礎工作區保留 terminators、successors 與 regions。
 

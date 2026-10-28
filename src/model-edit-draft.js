@@ -27,7 +27,7 @@ export function editTemplateReason(state,target,template){
     if(!node?.fresh||node.removed||!base||base.fresh||!base.cloneable)return '請選擇新增 OP 與有效的原始範本。';
     if(base.source.graph!==node.source.graph)return '第一版需使用同一個 block／subgraph 的範本。';
     if(base.inputs.length!==node.inputs.length||base.outputs.length!==node.outputs.length)return '輸入／輸出數量不同，請另行新增 OP。';
-    if(base.inputs.some((p,i)=>p.signature!==node.inputs[i].signature)||base.outputs.some((p,i)=>state.values.get(p.value).signature!==state.values.get(node.outputs[i].value).signature))return 'dtype、shape、量化或型別不同，無法保留現有接線。';
+    if(base.inputs.some((p,i)=>p.signature!==state.values.get(node.inputs[i].value)?.signature)||base.outputs.some((p,i)=>state.values.get(p.value).signature!==state.values.get(node.outputs[i].value).signature))return 'dtype、shape、量化或型別不同，無法保留現有接線。';
     return '';
 }
 function mutate(state,command){
@@ -65,7 +65,7 @@ function mutate(state,command){
         const like=state.values.get(command.like);if(state.format!=='tflite'||!node.fresh||!node.inputs[command.slot]||!like||like.fresh||like.generated||like.optional||like.graph!==node.source.graph)throw Error('亂數權重需要新增 OP 的輸入端與原始型別範本。');
         const tensor=JSON.parse(like.signature),spec={seed:command.seed,min:command.min,max:command.max},info=randomTensorInfo(tensor,spec),key=`const:${++state.parameterNext}`;
         if(state.values.size>=EDIT_LIMITS.ports)throw Error('編輯範圍 tensor 過多。');
-        state.values.set(key,{...copy(like),id:key,name:`random_${state.parameterNext}`,producer:null,order:-1,generated:{...spec,bytes:info.bytes,algorithm:'xorshift32-v1'},modelOutput:false});node.inputs[command.slot].value=key;
+        state.values.set(key,{...copy(like),id:key,name:`random_${state.parameterNext}`,producer:null,order:-1,generated:{...spec,bytes:info.bytes,algorithm:'xorshift32-v1'},kind:'亂數權重',modelOutput:false});node.inputs[command.slot].value=key;
     }else if(command.kind==='template'){
         const reason=editTemplateReason(state,node.id,command.template);if(reason)throw Error(reason);
         const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;
