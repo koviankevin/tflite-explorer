@@ -1,0 +1,157 @@
+{
+  "status": "passed",
+  "runId": 40614544211,
+  "source": "7b82875dd3ad6aa9ebcf21b375b47b0a61369be8",
+  "artifactId": 12784926639,
+  "digest": "sha256:b771b04ab4b9f2b8a9b9c00e194ec545e81b27bf9a562c0d9c4fe4cf27cd6a85",
+  "reportSHA256": "70217af1b416ba068ca480cb86bfef3e9668572edb5d7daa19678c27d2638a42",
+  "checks": 19,
+  "workers": 27,
+  "workspace": {
+    "cases": [
+      {
+        "format": "tflite",
+        "nativeClick": true,
+        "nativeDrag": true,
+        "autoOutput": 10,
+        "undoRedo": true,
+        "draftSurvivesModeSwitch": true,
+        "weights": "identical",
+        "customOptions": "identical",
+        "pattern": 1
+      }
+    ],
+    "layouts": [
+      {
+        "width": 1366,
+        "height": 640,
+        "documentWidth": 1366,
+        "left": 0,
+        "right": 1366,
+        "top": 76,
+        "bottom": 610,
+        "headerBottom": 76,
+        "rootHeight": 534,
+        "graphVisibleHeight": 294.5,
+        "overflowNames": 0
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "documentWidth": 390,
+        "left": 0,
+        "right": 390,
+        "top": 93,
+        "bottom": 814,
+        "headerBottom": 93,
+        "rootHeight": 721,
+        "graphVisibleHeight": 371.359375,
+        "overflowNames": 0
+      }
+    ],
+    "receipts": [
+      {
+        "output": "workspace-result-1.tflite",
+        "sha256": "b77084f0c33da9f7157cc4c7fbc5b728448c46e826719f84e45c78c1939e9ed7",
+        "byteRanges": 4,
+        "byteStatus": "passed"
+      }
+    ],
+    "modelWorkers": 2
+  },
+  "control": {
+    "cases": [
+      {
+        "format": "tflite",
+        "graph": 0,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      },
+      {
+        "format": "tflite",
+        "graph": 4,
+        "font": 32,
+        "nativeDrag": true,
+        "nativeClick": true,
+        "wheelZoom": true,
+        "nativePan": true,
+        "preciseHitTargets": true,
+        "restoredView": true,
+        "continuedHistory": true,
+        "undoRedo": true,
+        "subgraphs": 5,
+        "ifTargets": [
+          1,
+          2
+        ],
+        "whileTargets": [
+          3,
+          4
+        ],
+        "weights": "identical",
+        "customOptions": "identical",
+        "reopened": 16,
+        "pattern": 1
+      }
+    ],
+    "modelWorkers": 7,
+    "layouts": [
+      {
+        "name": "main-if-while-custom",
+        "width": 390,
+        "documentWidth": 390,
+        "rootHeight": 721,
+        "visible": 371.359375,
+        "overflow": 0
+      },
+      {
+        "name": "while-body-custom",
+        "width": 390,
+        "documentWidth": 390,
+        "rootHeight": 721,
+        "visible": 371.359375,
+        "overflow": 0
+      }
+    ],
+    "receipts": [
+      {
+        "graph": 0,
+        "outputSHA256": "ad44c4017f0a444952846223f91219720e980f15bbb88bf86347800a07020472",
+        "byteStatus": "passed",
+        "ranges": 7
+      },
+      {
+        "graph": 4,
+        "outputSHA256": "f49c84e0aed572ca994b20045cea97f25ee64361c4ea936cdd9b086fda42bcf0",
+        "byteStatus": "passed",
+        "ranges": 7
+      }
+    ],
+    "mlir": {
+      "editingHidden": true,
+      "legacyDraftRejected": true,
+      "searchPreserved": true
+    }
+  },
+  "directory": "build/qa/smoke-40614544211-qualified"
+}
