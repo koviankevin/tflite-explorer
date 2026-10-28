@@ -1,0 +1,48 @@
+name: Desktop engine compatibility
+on:
+  workflow_dispatch:
+    inputs:
+      expected_build_id:
+        description: Exact build ID already served by public production
+        type: string
+        required: true
+      expected_site_id:
+        description: Exact complete site ID already served by public production
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  desktop:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [firefox, webkit]
+    env:
+      DESKTOP_ENGINE: ${{ matrix.engine }}
+      EXPECTED_BUILD: ${{ inputs.expected_build_id }}
+      EXPECTED_SITE_ID: ${{ inputs.expected_site_id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - run: node scripts/install-desktop-engine.mjs
+      - run: node test/browser/desktop-engines.mjs
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: desktop-${{ matrix.engine }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/desktop-${{ matrix.engine }}.json
+            ${{ runner.temp }}/desktop-${{ matrix.engine }}.png
+          if-no-files-found: error
+          retention-days: 30
