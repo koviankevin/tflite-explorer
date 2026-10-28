@@ -93,3 +93,14 @@
 所有實際模型編輯入口依格式隱藏／停用，Worker 在載入編輯模組、計算完整檔案指紋或修改 session 前拒絕 MLIR 編輯 RPC；舊 MLIR 編輯草稿於匯入時立即拒絕。MLIR 探索、pattern 編輯及局部匯出維持可用。
 
 新增合成 TFLite：主圖含 IF／WHILE、多輸出 custom OP 與匯合，另有 then／else、condition、body 共五個子圖。驗收主圖與迴圈 body 的 32px、原生滾輪／平移後端點命中、拖曳／點選接線、草稿下載→重新選原模型→恢復視角→繼續接線→復原／重做，再匯出完整 TFLite、驗證所有子圖、控制引用、權重／custom options、重新開啟與 pattern 搜尋。custom kernel 實作未提供，結構檢查不代表推論或 runtime 語意已驗證。
+
+功能來源 `938a4a67c9547bbddb2b13e0136bdfd124608eb4`，tree `7df3a6a3010c0e32940841d1e50c9df6de703e0d`，與合格 PR head 完整 tree 相同。[PR 原生驗收 40614544211](https://github.com/koviankevin/tflite-explorer/actions/runs/40614544211) 19 項成功、27 模型 Worker 關閉；見 [原始報告](results/preview14-pr-ui-2026-10-28.json)、[provider／來源核對](results/preview14-pr-ui-review-2026-10-28.json)及已檢視的 [32px 手機長名稱 PNG](results/preview14-pr-mobile-2026-10-28.png)。主圖與 WHILE body 的兩份完整輸出均重開為 16 OP／5 子圖；每份七段權重／custom options 比對成功，舊 MLIR 編輯草稿拒絕，MLIR 探索／搜尋及原有 pattern／局部匯出驗收仍成功。
+
+發布選擇如下，尚在進行的關卡不能視為已通過；prepare 必須重新認證 artifact、來源與相依 fingerprint。
+
+| 關卡 | 選定 run |
+| --- | --- |
+| core | [40503475445](https://github.com/koviankevin/tflite-explorer/actions/runs/40503475445)，86 個執行相依 fingerprint 不變，沿用成功 main 量測 |
+| browser | [40614829170](https://github.com/koviankevin/tflite-explorer/actions/runs/40614829170)，八輪實體大模型編輯／重開，待完成核對 |
+| contract | [40614834044](https://github.com/koviankevin/tflite-explorer/actions/runs/40614834044)，main 發布合約 |
+| site | [40614838124](https://github.com/koviankevin/tflite-explorer/actions/runs/40614838124)，版本切換與 TFLite 專用原生驗收 |
