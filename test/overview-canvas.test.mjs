@@ -45,6 +45,36 @@ test('focusing a viewport button preserves its DOM focus through the redraw unti
     }finally{env.restore();}
 });
 
+test('Canvas keyboard controls remain bounded, identify blocks, and update selection labels without replacing focused controls',()=>{
+    const env=harness();try{
+        const nodes=Array.from({length:2000},(_,i)=>({identifier:String(i),name:`OP ${i}`,type:{name:'company.custom'},diagramKind:'operator',sourceGraph:i%4,sourceNode:i,x:0,y:0,width:120,height:60,minX:0,minY:0,maxX:120,maxY:60})),captures=[];
+        const controller=overviewCanvas(env.target,{nodes,edges:[],groups:[],font:32,width:200,height:100},{activate(){},capture:(hits,options)=>captures.push({ids:hits.map(n=>n.identifier),...options})});controller.focus(['0'],1);env.flush();
+        const controls=env.target.children[2];assert.equal(controls.className,'overview-node-controls');assert.equal(controls.children.length,100);
+        const button=controls.children[0];button.focus();env.flush();assert.match(button.textContent,/block\/subgraph 0/);assert.equal(env.target.children[0].dataset.focusedNode,'0');
+        controller.setPicking(true,['0']);env.flush();assert.equal(env.doc.activeElement,button);assert.match(button.textContent,/選取 layer/);assert.equal(button['aria-pressed'],'true');button.onclick();assert.deepEqual(captures,[{ids:['0'],toggle:true}]);
+        controller.setPicking(false);env.flush();assert.equal(env.doc.activeElement,button);assert.match(button.textContent,/查看節點/);assert.equal(button['aria-pressed'],undefined);controller.dispose();
+    }finally{env.restore();}
+});
+
+test('Canvas and focused-node keys pan/zoom without changing captured OPs; native button activation is not handled twice',()=>{
+    const env=harness();try{
+        const node={identifier:'op',name:'op',diagramKind:'operator',sourceGraph:2,sourceNode:3,x:0,y:0,width:120,height:60,minX:0,minY:0,maxX:120,maxY:60},captures=[];
+        const controller=overviewCanvas(env.target,{nodes:[node],edges:[],groups:[],font:32,width:200,height:100},{activate(){},capture:hits=>captures.push(hits.map(n=>n.identifier))}),canvas=env.target.children[0],controls=env.target.children[2];controller.focus(['op'],1);controller.setPicking(true,['op']);env.flush();
+        const before=controller.snapshot();controls.emit('keydown',{key:'ArrowRight'});controls.emit('keydown',{key:'+'});env.flush();assert.notDeepEqual(controller.snapshot(),before);assert.equal(canvas.dataset.selectionCount,'1');
+        controls.emit('keydown',{key:'Enter'});controls.emit('keydown',{key:' '});assert.deepEqual(captures,[],'native button activation must remain native');canvas.emit('keydown',{key:' '});assert.deepEqual(captures,[['op']]);
+        const current=controller.snapshot();canvas.emit('keydown',{key:'ArrowRight',ctrlKey:true});assert.deepEqual(controller.snapshot(),current);controller.dispose();
+    }finally{env.restore();}
+});
+
+test('async capsule expansion returns focus from the graph fallback but never steals a later toolbar focus',async()=>{
+    for(const moved of [false,true]){
+        const env=harness();try{
+            const node={identifier:'capsule',name:'Named pattern',diagramKind:'pattern',x:0,y:0,width:120,height:60,minX:0,minY:0,maxX:120,maxY:60},next=env.doc.createElement('canvas'),toolbar=env.doc.createElement('button');next.isConnected=true;let controller,button;
+            controller=overviewCanvas(env.target,{nodes:[node],edges:[],groups:[],font:32,width:200,height:100},{activate(){controller.dispose();button.isConnected=false;env.target.replaceChildren(next);env.doc.activeElement=moved?toolbar:env.target;return Promise.resolve(next);}});controller.focus(['capsule'],1);env.flush();button=env.target.children[2].children[0];button.isConnected=true;button.focus();env.flush();assert.match(button.textContent,/Named pattern/);button.onclick({detail:0});await Promise.resolve();assert.equal(env.doc.activeElement,moved?toolbar:next);
+        }finally{env.restore();}
+    }
+});
+
 test('Canvas box selection inverse-transforms zoom/pan with a DOM offset, preserves blocks and excludes scaffolding and offscreen OPs',()=>{
     const env=harness();try{
         const node=(identifier,x,y,diagramKind='operator',sourceGraph=1)=>({identifier,name:identifier,type:{name:'company.custom'},sourceGraph,sourceNode:0,diagramKind,x,y,width:120,height:60,minX:x,minY:y,maxX:x+120,maxY:y+60});

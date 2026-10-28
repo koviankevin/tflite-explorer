@@ -736,7 +736,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
     finally { if (generation === renderGeneration) { $('target').setAttribute('aria-busy', 'false'); refreshPatternFold(); } }
 }
 async function activateOverviewNode(node) {
-    if(node.diagramKind==='pattern'){await activatePatternNode(node);return;}
+    if(node.diagramKind==='pattern'){const source=file,query=queryGeneration;await activatePatternNode(node);if(file===source&&query===queryGeneration&&overviewMode&&virtualOverview)return $('target').querySelector('.overview-canvas');return;}
     if(pickingPattern){if(node.diagramKind==='operator')commitCanvasLayers([node],{toggle:true});else status('這是控制流程／邊界顯示標記，未加入 pattern；請選取原始 OP。');return;}
     if(node.diagramKind!=='operator')return;
     const controller=virtualOverview,generation=renderGeneration;
@@ -893,7 +893,7 @@ function refreshPickedNodes() {
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。鍵盤 Tab 到節點，Enter／Space 切換；方向鍵平移，＋／－縮放。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
     $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;
@@ -940,7 +940,7 @@ $('mlir-export-scope').onchange=refreshPickedNodes;
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes, selections) {
     if (!canExportSubmodel() || exportBusy) return;
-    const sourceFile = file;
+    const sourceFile = file,opener=document.activeElement;
     const mlir = model.capabilities.mlirExport;
     exportBusy = true;
     exportedModels.clear();
@@ -973,12 +973,13 @@ async function downloadSubmodel(graph, nodes, selections) {
         status(`子模型下載已啟動 · ${size(result.blob.size)} · 已保留權重、量化資料與 operator 參數`);
     } catch (error) {
         if(file!==sourceFile) return;
-        if(error.validation) showValidation(error.validation);
+        if(error.validation) showValidation(error.validation,opener);
         else report(error);
     }
     finally { if(file===sourceFile) { exportBusy=false;refreshPickedNodes(); $('export-match').disabled = !canExportSubmodel() || selection?.kind !== 'patterns'; } }
 }
-function showValidation(validation) {
+function showValidation(validation,opener) {
+    const dialog=$('validation-dialog'),source=file;
     $('validation-stage').textContent = `${validation.stage}的檢查未通過，未下載檔案。請依下列位置修正後重新開啟。`;
     $('validation-errors').replaceChildren(...validation.diagnostics.map(item=> {
         const row=element('li');
@@ -988,7 +989,11 @@ function showValidation(validation) {
         if(item.excerpt) row.append(element('pre','',item.excerpt));
         return row;
     }));
-    $('validation-dialog').showModal();
+    // The export control was disabled during async validation, so native dialog
+    // restoration can retain focus on its now-hidden close button. Restore the
+    // original live control after close, without stealing a later user focus.
+    dialog.addEventListener('close',()=>{const active=document.activeElement;if(file===source&&opener?.isConnected&&!opener.disabled&&(active===document.body||dialog.contains(active)||active===opener))opener.focus({preventScroll:true});},{once:true});
+    dialog.showModal();
     status('MLIR 語法／SSA 檢查未通過，已停止匯出。');
 }
 for(const id of ['close-validation','dismiss-validation']) $(id).onclick=()=> $('validation-dialog').close();
