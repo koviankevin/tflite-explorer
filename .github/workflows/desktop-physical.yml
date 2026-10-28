@@ -1,0 +1,44 @@
+name: Desktop physical model lifecycle
+on:
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: Desktop engine for the real 1.25 GiB corpus
+        type: choice
+        options: [all, firefox, webkit]
+        default: all
+permissions:
+  contents: read
+jobs:
+  physical:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: ${{ fromJSON(inputs.engine == 'firefox' && '["firefox"]' || inputs.engine == 'webkit' && '["webkit"]' || '["firefox","webkit"]') }}
+    env:
+      DESKTOP_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+      - run: npm ci --ignore-scripts
+      - name: Reject foreign processes, false memory/worker evidence and corrupt payloads
+        run: node --test test/desktop-physical.test.mjs test/owned-processes.test.mjs test/lifecycle-dom-proof.test.mjs test/physical-fixture.test.mjs test/custom-export.test.mjs
+      - run: node scripts/install-physical-engine.mjs
+      - name: Eight physical model edit, export, reopen and close cycles
+        run: node test/browser/desktop-physical.mjs
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: desktop-physical-${{ matrix.engine }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/desktop-physical-${{ matrix.engine }}.json
+          if-no-files-found: error
+          retention-days: 30

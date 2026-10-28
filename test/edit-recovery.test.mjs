@@ -35,3 +35,14 @@ test('concurrent resume conflicts preserve the peer version and an explicit fork
 test('quota/unavailable failures do not claim protection and pause prevents commits',async()=>{
     const unavailable=editRecoveryStore({indexedDB:null});await assert.rejects(unavailable.list());await assert.rejects(unavailable.save({document:document()}));let state;const session=editRecoverySession({store:{save:async()=>{throw Error('quota');}},owner,delay:60000,capture:document,changed:s=>{state=s;}});session.attach();session.change();await session.flush();assert.equal(state.failed,true);assert.equal(state.saved,false);session.setEnabled(false);await session.retry();assert.equal(state.saved,false);await session.detach();
 });
+
+test('twenty distinct sessions keep the retention guard; archiving one owned record and explicit retry preserves the other nineteen',async()=>{
+    const store=memoryStore();let state;const session=editRecoverySession({store,owner,delay:60000,capture:document,changed:s=>{state=s;}});
+    try{
+        for(let i=0;i<20;i++){session.attach();session.change();await session.flush();assert.equal(state.saved,true);await session.detach();}
+        session.attach();session.change();await session.flush();assert.equal(state.saved,false);assert.equal(state.failed,true);assert.match(state.message,/20 份/);assert.equal(store.records.size,20);
+        const [oldKey,old]=store.records.entries().next().value,backup=exportEditSession(readEditRecovery(old).document),others=[...store.records.keys()].filter(k=>k!==oldKey);assert.deepEqual(parseEditSession(backup),document());
+        store.records.delete(oldKey);session.external({key:oldKey,owner,revision:old.revision+1,deleted:true},true);await session.retry();assert.equal(state.saved,true);assert.equal(state.failed,false);assert.equal(store.records.size,20);assert.equal(store.records.has(oldKey),false);assert.ok(others.every(k=>store.records.has(k)));
+        assert.ok([...store.records.values()].every(r=>exportEditSession(readEditRecovery(r).document)===backup));
+    }finally{session.setEnabled(false);await session.detach();}
+});
