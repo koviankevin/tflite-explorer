@@ -45,3 +45,13 @@ RSS 可能重複計入 shared pages，kernel RSS 計數亦非同步且非精確�
 峰值成長上限仍為 805,306,368 bytes（768 MiB）。Firefox 的最大取樣發生在子模型匯出相位，WebKit 在完整模型匯出相位；這是相位關聯，尚不足以把原因歸給 Blob、引擎內部複製或應用持有參照。關閉漂移／斜率在八輪門檻內，只能描述這次有限區間；仍需進一步定位峰值資源，不調高上限、重設基準或將 summed RSS 換成較小數值取得綠燈。
 
 原始 [Firefox 報告](results/desktop-physical-firefox-cycles-2026-10-28.json)、[WebKit 報告](results/desktop-physical-webkit-cycles-2026-10-28.json)與 [provider digest／CRC／來源核對](results/desktop-physical-complete-review-2026-10-28.json)均保存。完整報告已重新計算原判定並核對來源、job／attempt、固定 fixture、native chooser、核心檔 HTTP 身分與程序清理；authentication passed 與 acceptance failed 分開標示。這次受測應用與正式 preview.18 的程式相同，只有測試工具／證據變動，未再次部署。
+
+## 增加每個程序的記憶體分類
+
+原報告可在 Node 中重播相同判定，確定峰值仍失敗；下一步觀察不調整應用、模型、八輪工作量或任何上限。先區分三個尚未證實的來源：輸出資料配置到記憶體、跨程序共享映射被 RSS 加總、應用參照未釋放。它們分別預測匯出相位的單一程序配置增加、多程序共享／映射欄位一起增加，或關閉後仍隨每輪累積。分類只能縮小範圍，不能直接證明 Blob 的儲存方式或共享到哪些實體頁面。
+
+`process-memory-profile.mjs` 只讀既有 owned tree 已確認的 PID，取得 [Linux status 欄位](https://www.kernel.org/doc/html/latest/filesystems/proc.html)：VmRSS、RssAnon、RssFile、RssShmem，以及經字元白名單限制的程序名稱；不讀 cmdline、environ、模型資料或其他使用者的程序明細。讀 status 前後各核對一次 stat 的 PID／start ticks，PID 重用的數值完全丟棄。程序已退出／欄位缺失保留 exited／reused／null；權限及格式錯誤仍使 sampler 失敗，不能當作零或忽略。
+
+每筆分類都錨定原有 RSS sample 的時間／相位／數值，另記後續讀取的起訖、各程序數值及與原 RSS 的差額。分類取樣不是同一瞬間，kernel RSS 計數亦可能非同步，不能把差額校正成零；分類合計不取代事先固定的 RSS 判定。原本取樣密度及缺口要求仍適用，讀取額外欄位的負擔也留在實測中。缺失欄位使完整分類數下降，不能宣稱已量到；沒有偽造獨立 Worker heap 或使用較小的 PSS 取得綠燈。
+
+Node 正負例檢查單位／真正的零／未知值、只讀已確認 PID、讀取途中 PID 重用、權限失敗、時間／相位／RSS 錨點、合計及差額不可被改寫。完整真實引擎分類尚待執行及 provider 核對；只新增測試工具，正式站不需重新發布。
