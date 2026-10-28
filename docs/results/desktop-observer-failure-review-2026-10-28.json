@@ -1,0 +1,50 @@
+{
+  "authentication": "passed",
+  "acceptance": "failed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "runId": 40649465652,
+      "attempt": 1,
+      "source": {
+        "commit": "970300bc265a62bffa1500920c8261ffdf1eca1c",
+        "tree": "adffa8ba57dc4035992290c9c89342b5f179ebbd",
+        "committedAt": "2026-10-28T15:20:36+08:00",
+        "dirty": false
+      },
+      "jobId": 122685891823,
+      "artifactId": 12798572818,
+      "providerDigest": "sha256:a2050fa412eb60f21cffe8215e53b151f7d83f280d785af2de4a8b176e81da99",
+      "reportSHA256": "3df6a148fc3976b61351fd3ad367899dab4222624d910607c6312e798f25d621",
+      "browserVersion": "142.0.1",
+      "checks": [],
+      "error": "page.evaluate: window.eval() not supported.\nbrowser.Host</this._window.eval@https://koviankevin.github.io/tflite-explorer/versions/b279d3ea3f3d7ec5/vendor/netron/browser.js?v=b279d3ea3f3d7ec5:14:19\nevaluate@debugger eval code:290:30\n@debugger eval code:1:44\n\n    at read (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:41:35)\n    at until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:42:77)\n    at /home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:47:64",
+      "errors": [],
+      "directory": "build/qa/desktop-40649465652-observer-failure/firefox"
+    },
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "webkit",
+      "runId": 40649465652,
+      "attempt": 1,
+      "source": {
+        "commit": "970300bc265a62bffa1500920c8261ffdf1eca1c",
+        "tree": "adffa8ba57dc4035992290c9c89342b5f179ebbd",
+        "committedAt": "2026-10-28T15:20:36+08:00",
+        "dirty": false
+      },
+      "jobId": 122685892293,
+      "artifactId": 12798528136,
+      "providerDigest": "sha256:62ea2a268fba5bbb65713f65f4f932e83e1dd374c4ab44e40d8ecf4ddd2b95f3",
+      "reportSHA256": "02b9b46345b695a5bd8062f330dcc4c8597a0de18a69e52e27e49bc1b3e4b25f",
+      "browserVersion": "26.0",
+      "checks": [],
+      "error": "page.evaluate: Error: window.eval() not supported.\n    at read (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:41:35)\n    at until (/home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:42:77)\n    at /home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:47:64",
+      "errors": [],
+      "directory": "build/qa/desktop-40649465652-observer-failure/webkit"
+    }
+  ]
+}
