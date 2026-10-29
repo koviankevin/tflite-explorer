@@ -16,3 +16,14 @@ preview.28 候選將「加入組合草稿」從全站模式切換移到搜尋結
 [40831753771](https://github.com/koviankevin/tflite-explorer/actions/runs/40831753771)／來源 `75ac025383e44f0afccad6b462ba5c2772180c16` 的 6 個版本切換與 30 項原生操作均通過。原始 [native ZIP](results/contextual-edit-candidate-native-2026-10-29.zip)、[版本 ZIP](results/contextual-edit-candidate-versioning-2026-10-29.zip) 的 provider digest、CRC、來源與時間在 [獨立收據](results/contextual-edit-candidate-review-2026-10-29.json) 核對；[精確功能斷言](results/contextual-edit-candidate-assertions-2026-10-29.json) 再驗 12 次工作區狀態、真正拖曳取消／重複切換、重置取消／確認、兩種桌面尺寸的 32px 不重疊、兩份匯出 byte ranges、四種示範 CPU 情境，以及 48 模型／10 runtime Workers 關閉。
 
 最終測試維護另將示範回歸沿用至後續 preview 版本，並保留編輯區截圖；不改變應用程式執行或匯出。最終 main 發布關卡與正式交付仍待完成。
+
+
+## main 正式發布關卡
+
+來源 `ec855a5662be0bd51a142b6f62d200bc14301720`／tree `6257269568780643f4a9a594d183f0e78b0258ca` 與 PR head `cff40b9ac4c99fff21c1716b45672bfe618b0763` 完整 tree 一致；build `d0c4ec54a1e506c0`。main [站台關卡 40832494591](https://github.com/koviankevin/tflite-explorer/actions/runs/40832494591) 的 6 個版本切換、30 項原生操作及新功能 [精確斷言](results/contextual-main-assertions-2026-10-29.json) 通過，完整 [native ZIP](results/contextual-main-native-2026-10-29.zip)、[版本 ZIP](results/contextual-main-versioning-2026-10-29.zip) 與 [獨立收據](results/contextual-main-native-review-2026-10-29.json) 保留。新版示範原始／編輯後 × 全 0／亂數四種 CPU 案例均通過，48 個模型與 10 個 runtime Workers 關閉。
+
+![main 32px 分支、匯合與獨立草稿工作區](results/contextual-main-editor-2026-10-29.png)
+
+[實體八輪 40832494108](https://github.com/koviankevin/tflite-explorer/actions/runs/40832494108) 的 [獨立收據](results/contextual-main-physical-review-2026-10-29.json)驗證原始 1.25 GiB／21,005 OP、原模型編輯、子模型及組合匯出重開，逐 byte 比對權重與 custom options、pattern 正／負例、草稿與復原／重做，以及程序／Worker 終止與未放寬的記憶體上限。八輪是有限次量測，不宣稱所有長期記憶體問題已排除；本次未跑兩小時或手機驗收。
+
+四關卡的原始 GitHub ZIP、digest／CRC／scope／來源與伺服器狀態由 [獨立四關卡收據](results/contextual-main-gates-review-2026-10-29.json) 核對。核心沿用 40700051621，87 個相依檔與 fingerprint `d25a85aa0caf6999326ea9a4b45298714960c89f9d3146dfe888350f1e4dd01a` 完全相同；其餘本次執行：browser 40832494108、contract 40832491937、site 40832494591。正式準備、發布及固定下載核對尚待完成。
