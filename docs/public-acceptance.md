@@ -17,6 +17,7 @@
 | 編輯草稿與模型分頁 | 正式操作涵蓋 JSON 保存／重選原模型指紋、分頁狀態、衝突／分叉及專屬測試瀏覽器強制終止後恢復；不宣稱 OS 斷電後永不遺失 |
 | 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的 19 種執行／分佈情境：目前分頁已開啟的原模型、編輯／組合／子模型匯出重開、raw .bin、四種亂數、實際 CPU／IO ZIP、錯誤／取消、custom／signature 明確未驗證；編輯與一般匯出不自動推論 |
 | 真實運算中的取消／逾時 | [固定 preview.30 三引擎驗收](runtime-active-compute.md#三引擎實際結果)：實際 WHILE invoke 時 UI 可回應、手動取消、正常 30 秒 watchdog 終止 Worker、無舊 IO，重開正常模型再執行得到 `7`。未以暫停下載或 fake timer 代替；不當成數小時／RSS 證據 |
+| 手動執行與 IO 生命週期 | [Chromium 八輪／24 次 CPU](runtime-io-lifecycle.md#已核對結果)：4 MiB const／input／output、8 份完整 IO bytes、自然 60 秒 URL 釋放與程序／專用 Worker 清理通過；411 次 RSS／main heap 取樣未超過既有門檻。不代替數小時、其他引擎或連續 Worker heap 峰值 |
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |

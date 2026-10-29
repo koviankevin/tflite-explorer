@@ -1,0 +1,20 @@
+{
+  "id": 12900205287,
+  "node_id": "MDg6QXJ0aWZhY3QxMjkwMDIwNTI4Nw==",
+  "name": "production-smoke",
+  "size_in_bytes": 167274,
+  "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12900205287",
+  "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12900205287/zip",
+  "expired": false,
+  "digest": "sha256:b08ea2ff77fbb4b04672239ded890653321925639b5eaf94d13a49838cedd238",
+  "created_at": "2026-10-29T13:09:31Z",
+  "updated_at": "2026-10-29T13:09:31Z",
+  "expires_at": "2026-11-28T13:09:30Z",
+  "workflow_run": {
+    "id": 40878472302,
+    "repository_id": 1428663853,
+    "head_repository_id": 1428663853,
+    "head_branch": "codex/runtime-io-lifecycle-acceptance",
+    "head_sha": "fa9442724ca0f907102ba79a8eb78c3204168a2e"
+  }
+}
