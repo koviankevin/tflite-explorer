@@ -2,11 +2,11 @@
 
 **Model Lens** — 看清結構，找到連接。
 
-公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。第一次使用、公開版驗收與限制見 [公開版指引](docs/public-acceptance.md)；本輪只驗收外網，內網修改由使用者自行處理。後續品質工作另列於 [工作清單](docs/product-readiness.md)。
+公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。第一次使用、公開版驗收與限制見 [公開版指引](docs/public-acceptance.md)及[已知問題](docs/known-issues.md)；本輪只驗收外網，內網修改由使用者自行處理。後續品質工作另列於 [工作清單](docs/product-readiness.md)。
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.22](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.22)／build `04aa44009821ed92`。改善大型 TFLite 匯出時 Firefox 的記憶體配置；三引擎實體 1.25 GiB／21,005 OP 八輪、新應用 80 輪／約 2 小時 12 分長測、正式站 1,373 檔、30 項原生操作、七種 runtime 情境及四份固定下載均已核對。成功部署保持原紀錄，只經授權補跑一次失敗的正式驗證；原失敗與未知原因仍保留，見 [正式交付與範圍](docs/desktop-physical.md#preview22-正式交付)。型別合法亂數、raw `.bin` 及手動 input／output 保存仍保留，見 [手動執行](docs/tflite-runtime.md)及[型別亂數歷史驗收](docs/typed-random.md)。
+目前固定正式版為 [preview.23](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.23)／build `3cc83fdeb25322bb`。修正手動執行的輸入視窗取消後鍵盤焦點遺失；Escape 與取消按鈕在 1280×640／32px 下返回原操作，草稿與圖形視角保留，不自動推論。正式站 1,375 檔、30 項原生操作、八種 runtime 情境及四份固定下載已完成獨立核對，見 [正式交付](docs/runtime-keyboard.md#preview23-正式交付)。本輪 1.25 GiB／21,005 OP 八輪的權重、custom options、pattern 與程序退出通過；既有三引擎及 80 輪歷史量測保留各自來源，見 [大檔驗收範圍](docs/public-acceptance.md)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

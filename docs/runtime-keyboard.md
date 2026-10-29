@@ -26,3 +26,14 @@
 [實體八輪程序核對](results/runtime23-main-owned-review-2026-10-29.json)另驗原固定完整／局部模型 hash、權重／custom options、pattern 正負例、24 個模型與八個完整指紋 Workers。兩輪暖機後 RSS 漂移 6,291,456 bytes、斜率 2926416.457 bytes／輪，觀察到的 6 個 PID／start-ticks 身分正常關閉後全部退出，沒有強制清理。這是有限八輪／取樣證據，不當成新兩小時或其他引擎驗收。
 
 上述是主分支候選及發布前證據，正式 Pages／固定 Release 仍須精確準備與發布後核對；不可先視為已部署。
+
+
+## preview.23 正式交付
+
+固定 [Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.23)／[正式站](https://koviankevin.github.io/tflite-explorer/)為 build `3cc83fdeb25322bb`，來源 `94af79132ee37bc11219ab87b458d5664c434b34`／tree `8cd81df05d574fbefd0dc714a7f8ef166d9638d8`。準備 [40796409594](https://github.com/koviankevin/tflite-explorer/actions/runs/40796409594) 的[原始產物審查](results/preview23-prepared-2026-10-29.json)及[獨立乾淨重建](results/preview23-rebuild-2026-10-29.json)通過，完整核心 manifest 與 293 檔內容一致，再以精確 build／site ID 執行 [40796884645](https://github.com/koviankevin/tflite-explorer/actions/runs/40796884645)。prepare／deploy／verify_live／release 全在 attempt 1 成功，沒有重跑。
+
+[最終獨立核對](results/preview23-published-2026-10-29.json)在凍結來源上下載原始 provider ZIP，重驗 digest／CRC、job／attempt／時段、正式站 1,375 檔 SHA／MIME、root 與權威 deployment。正式站 30 項操作與八種 runtime 情境通過；Escape 及原生鍵盤取消按鈕於 1280×640／32px 皆返回啟用的原按鈕，草稿與視角保持，零新增推論／下載。36 個模型與四個 runtime Workers 全部關閉；原始 raw .bin、CPU ADD／MUL、實際 IO ZIP／bytes 與錯誤／取消／不支援狀態保留。四份實際固定 Release 下載均與原準備 bytes 完全一致。
+
+原始 provider ZIP：[正式站驗證](results/preview23-live-release-verification-2026-10-29.zip)、[Release 驗證](results/preview23-published-release-verification-2026-10-29.zip)。完整 [site manifest](results/preview23-site-manifest-2026-10-29.json) SHA 為 `bf0dbddaf192f3ecc0b12a8d98a32cb0cffb67b1cd3b85b500455c380be7417a`，site ID `c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920`，部署 ZIP SHA `5b2e7ee7370e68449d7350d6500a58ee8a45e26601fbafee8dcceb08b4295b2f`。保留 preview.22／preview.21 namespaces 及 legacy preview.7；既有固定 tag 不覆寫。
+
+本輪只驗外網公開合成資料，未啟動個人瀏覽器、未測手機或公司模型，也不把取消視窗的焦點修正說成所有鍵盤／螢幕閱讀器、所有 OS 或數小時 runtime 驗收完成。
