@@ -23,3 +23,9 @@ test('failed deletion-intent persistence retains the file; mutable report paths 
     const file=await publicControlFile(bytes,{...spec,log});fail=true;await assert.rejects(file.cleanup(),/ledger unavailable/);assert.deepEqual(await readFile(file.path),Buffer.from(bytes));assert.equal(file.record.status,'created');
     fail=false;file.record.path='not-an-owned-path';file.record.directory='not-an-owned-directory';file.record.identity={};await file.cleanup();assert.equal(file.record.directoryRemoved,true);await assert.rejects(readFile(file.path),{code:'ENOENT'});assert.ok(events.filter(e=>e.event==='delete_intent').every(e=>!e.path.includes('not-an-owned')));
 });
+
+test('only the two fixed public fixture names are accepted; a WHILE file is created and removed without execution',async()=>{
+    const {runtimeLoopFixture}=await import('./runtime-loop-fixture.mjs'),f=await runtimeLoopFixture(true),file=await publicControlFile(f.bytes,{expectedBytes:f.bytes.length,expectedSHA256:sha256(f.bytes),name:'warm-cancel.tflite'});
+    assert.ok(file.path.endsWith('warm-cancel.tflite'));assert.ok(file.record.events.every(e=>e.task_id==='runtime-warm-cancel'));assert.deepEqual(await readFile(file.path),Buffer.from(f.bytes));await file.cleanup();assert.equal(file.record.directoryRemoved,true);
+    let events=0;for(const name of ['../outside.tflite','C:/outside.tflite','other.tflite','public-runtime.wasm/child',''])await assert.rejects(publicControlFile(bytes,{...spec,name,log:async()=>events++}));assert.equal(events,0);
+});

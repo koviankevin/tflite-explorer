@@ -1,0 +1,88 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T19:11:39.028051+00:00",
+  "source": {
+    "commit": "774d76e7f1685fbc526e7648e1fdfc0ad40ddf2f",
+    "tree": "14af0a4bfff8c6b5e503bf2fd109dd395d91db07",
+    "committedAt": "2026-10-30T02:42:34+08:00",
+    "dirty": false
+  },
+  "run": 40933429392,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40933429392",
+  "authentication": "passed",
+  "readerActualExit": 0,
+  "readerExitChunk": "3297ba",
+  "producerStatus": "failed",
+  "phase": "model-runtime",
+  "acceptance": "partial-functional-evidence-only; warm import routing gate not observed; RSS/cold not reached",
+  "completedChecks": 14,
+  "demoCPUCases": [
+    {
+      "edited": false,
+      "mode": "zero",
+      "status": "passed"
+    },
+    {
+      "edited": false,
+      "mode": "random",
+      "status": "passed"
+    },
+    {
+      "edited": true,
+      "mode": "zero",
+      "status": "passed"
+    },
+    {
+      "edited": true,
+      "mode": "random",
+      "status": "passed"
+    }
+  ],
+  "runtimeCases": [
+    "opening/editing/exporting never starts interpreter or downloads runtime",
+    "32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download",
+    "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes bound to reopened export; editor report remains structural-only",
+    "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values"
+  ],
+  "nativeRuntimeWorkers": 7,
+  "nativeRuntimeClosed": 7,
+  "archive": {
+    "path": "runtime-module32-first-firefox.zip",
+    "bytes": 209102,
+    "sha256": "785e2bed8815dc900ca0321c0099553361be3ee5040bdee87b3bbdb6d7741f10"
+  },
+  "files": [
+    {
+      "path": "provider-original.zip",
+      "bytes": 200845,
+      "sha256": "6c6a4ee69dde1243fad6c7feb2fc2f2d28b3353d8dcce2793c20ac57f947e10b"
+    },
+    {
+      "path": "run.json",
+      "bytes": 14585,
+      "sha256": "b15cad6827492136c76c123add236f2a857c3ad99a61d7c03e6870d88c3a441c"
+    },
+    {
+      "path": "jobs.json",
+      "bytes": 3970,
+      "sha256": "52ffb7fdbeb6bf59b0ea9febf0f8b2f3835a790a7260cb96ccfecc46ab19e2f8"
+    },
+    {
+      "path": "listing.json",
+      "bytes": 948,
+      "sha256": "a327440da3e4e036a146ccc3e9afac6e90289f3690487994b4bcd244e7bf6515"
+    },
+    {
+      "path": "authentication.json",
+      "bytes": 20944,
+      "sha256": "4d0b2379dbdaea79914435f50bcde7745494ca0b6ebe602ad739d7b60cbc25a0"
+    },
+    {
+      "path": "independent-auth-reader.mjs",
+      "bytes": 5153,
+      "sha256": "d5b7155fe7706d85d9ac36542231bc46b77ef55aed2fdaf7b3500dd852a6bf79"
+    }
+  ],
+  "privacy": "Only public synthetic model names, source metadata and inspected hosted screenshot; no model/BIN payload, user attachment or credentials."
+}
