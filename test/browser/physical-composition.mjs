@@ -1,8 +1,8 @@
 // Runs inside the existing hosted physical-file lifecycle. Native UI mutations,
 // read-only DOM observations, complete Node byte checks, no forced GC.
 import assert from 'node:assert/strict';
-import {open,readFile} from 'node:fs/promises';
-import {createReadStream} from 'node:fs';
+import {readFile} from 'node:fs/promises';
+import {createReadStream,openSync,readSync,fstatSync,closeSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {parseModel} from '../../src/model-engine.js';
@@ -11,12 +11,16 @@ import {parseEditSession} from '../../src/model-edit-session.js';
 import {PHYSICAL_OPTIONS,PHYSICAL_WEIGHT_BYTES,PHYSICAL_WEIGHT_SHA256} from '../physical-tflite-fixture.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
 
-async function verifyComposition(file,source,proof,policy){
-    const fd=await open(file,'r');let bytes=0,maxRead=0,index;
+export async function readCompositionIndex(file,policy){
+    const fd=openSync(file,'r');let bytes=0,maxRead=0,index;
     try{
-        const size=(await fd.stat()).size;assert.ok(size>1024**3);
-        index=await parseModel(async(at,n)=>{bytes+=n;maxRead=Math.max(maxRead,n);assert.ok(n<=policy.maxReadBytes&&bytes<=policy.realmReadBytes);const buffer=new Uint8Array(n);assert.equal((await fd.read(buffer,0,n,at)).bytesRead,n);return buffer;},size,JSON.parse(await readFile('vendor/netron/tflite-metadata.json','utf8')));
-    }finally{await fd.close();}
+        const size=fstatSync(fd).size;
+        index=await parseModel((at,n)=>{bytes+=n;maxRead=Math.max(maxRead,n);assert.ok(n<=policy.maxReadBytes&&bytes<=policy.realmReadBytes);const buffer=new Uint8Array(n);assert.equal(readSync(fd,buffer,0,n,at),n);return buffer;},size,JSON.parse(await readFile('vendor/netron/tflite-metadata.json','utf8')));
+    }finally{closeSync(fd);}
+    return {index,readBytes:bytes,maxRead};
+}
+async function verifyComposition(file,source,proof,policy){
+    const {index,readBytes:bytes,maxRead}=await readCompositionIndex(file,policy);
     const g=index.raw.subgraphs[0];assert.equal(index.raw.subgraphs.length,1);assert.equal(g.operators.length,9);assert.equal(g.tensors.length,21012);assert.equal(index.raw.buffers.length,5);
     assert.deepEqual([...g.inputs],[0]);assert.deepEqual([...g.outputs],[21009,21011]);
     assert.deepEqual([...g.operators[4].inputs],[8,4]);assert.deepEqual([...g.operators[8].inputs],[21010,21010]);assert.deepEqual([...g.operators[8].outputs],[21011]);
@@ -24,7 +28,7 @@ async function verifyComposition(file,source,proof,policy){
     const weight=index.raw.buffers[1],start=Number(weight.offset),end=start+Number(weight.size);assert.equal(Number(weight.size),PHYSICAL_WEIGHT_BYTES);
     const hash=createHash('sha256'),weightHash=createHash('sha256');let offset=0;
     for await(const chunk of createReadStream(file,{highWaterMark:1024**2})){hash.update(chunk);const left=Math.max(0,start-offset),right=Math.min(chunk.length,end-offset);if(right>left)weightHash.update(chunk.subarray(left,right));offset+=chunk.length;}
-    const weightSHA256=weightHash.digest('hex');assert.equal(weightSHA256,PHYSICAL_WEIGHT_SHA256);
+    assert.ok(offset>1024**3);const weightSHA256=weightHash.digest('hex');assert.equal(weightSHA256,PHYSICAL_WEIGHT_SHA256);
     const receipt=await verifyExportFiles({report:proof,source,output:file});assert.equal(receipt.byteComparison.status,'passed');const sha256=hash.digest('hex');assert.equal(receipt.outputSHA256,sha256);
     return {bytes:offset,sha256,weightSHA256,weightVerified:true,optionsVerified:true,sourceOperators:21005,outputOperators:9,readbackOperators:g.operators.length,inputs:[...g.inputs],outputs:[...g.outputs],byteComparison:receipt.byteComparison.status,comparedBytes:receipt.byteComparison.bytes,byteRanges:receipt.byteComparison.ranges.length,readBytes:bytes,maxRead};
 }
