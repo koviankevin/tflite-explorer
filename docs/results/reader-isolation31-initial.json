@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "source": "e273de6568663f63ae3465ef44f003d506445c5c",
+  "archiveSHA256": "9146f786a1ebc8fb655de8b10bf73ed317a808b2e6e9e2910b2252d42f01a2ca",
+  "members": [
+    {
+      "name": "desktop-run.json",
+      "bytes": 14580,
+      "sha256": "6b433ca568df6ec329c830496f267dfa4238c019a79690a76d093101fc28bafd",
+      "normalization": "raw"
+    },
+    {
+      "name": "desktop-jobs.json",
+      "bytes": 7900,
+      "sha256": "a86c0a969db73dc92552eda93bfc59e3eb54ae18aeaeb58c5a1af244242cd31e",
+      "normalization": "raw"
+    },
+    {
+      "name": "desktop-artifacts.json",
+      "bytes": 1851,
+      "sha256": "267a025b2b940c7dc16a6a0d4dd5d2eeab6a8536314c029b999852bc5870ce49",
+      "normalization": "raw"
+    },
+    {
+      "name": "desktop-review.json",
+      "bytes": 11510,
+      "sha256": "17a2959a13ac6f0026f4a0973adaa459fd081b45bf41bae22721e37cd4830bcf",
+      "normalization": "raw"
+    },
+    {
+      "name": "desktop-firefox.zip",
+      "bytes": 186363,
+      "sha256": "57671fe658859e46cdaa39229a83ecebd428c14fc2d034677f992ad558d2bf9b",
+      "normalization": "raw"
+    },
+    {
+      "name": "desktop-webkit.zip",
+      "bytes": 184385,
+      "sha256": "d5325e7ee1b4b03b255e45f304abf59e9eac3e92c0c0e806b6a11d2180ca4a4e",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-run.json",
+      "bytes": 14576,
+      "sha256": "3dd309284142db0852c03f87476fa6b5815ce5d8ff05e9007e8150547b07265e",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-jobs.json",
+      "bytes": 5633,
+      "sha256": "d1f00df981c38e8a7d850c5cb87661c91bbb0ccdb03b97c57375ed2bdb5e876c",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-listing.json",
+      "bytes": 1866,
+      "sha256": "bbedf04b9af2f68a559561608c4ef32d4c0881502e6cee4fa103b32c822f0162",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-review.json",
+      "bytes": 40888,
+      "sha256": "8e81b708fc07fb5fcd79176871f1cda6200cf174c615684471d558edcd7d61cd",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-native.zip",
+      "bytes": 208214,
+      "sha256": "304310349682b1558ff7f4cbda4b67d35c2d13947a56d5e4d280835205c8e413",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-native-artifact.json",
+      "bytes": 832,
+      "sha256": "7e85cc663edc7887f9f10e0d95b2e336c6e2009b95682eb3fe022126dd36807e",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-site.zip",
+      "bytes": 4629,
+      "sha256": "8ec5922bc30b534f07ccfb9008d4b84fda93a372572f7348bb6192d656843640",
+      "normalization": "raw"
+    },
+    {
+      "name": "chromium-site-artifact.json",
+      "bytes": 828,
+      "sha256": "3d3ff5a8c6c5e80f98fc9a628113c8c5a8ae25dc17fbdc01a2ff708f83ce2cc3",
+      "normalization": "raw"
+    },
+    {
+      "name": "review-input-cleanup31-desktop-red.mjs.txt",
+      "bytes": 4721,
+      "sha256": "459ee628a8f4f7469eb91ab93310f63ed3691a7b278a5d7d28f8a3fa491a9c31",
+      "normalization": "canonical-LF"
+    },
+    {
+      "name": "review-input-cleanup31-main.mjs.txt",
+      "bytes": 6827,
+      "sha256": "4f5c20cf38684437d6fe2766f6f13e8ccaa36aec47c57224938309412e237500",
+      "normalization": "canonical-LF"
+    },
+    {
+      "name": "assert-input-cleanup31.mjs.txt",
+      "bytes": 1117,
+      "sha256": "c1e1c37f521067777e88880d3c696fe49eb99d13c6c03700465968102ca2ef27",
+      "normalization": "canonical-LF"
+    },
+    {
+      "name": "assert-active-compute31.mjs.txt",
+      "bytes": 3273,
+      "sha256": "700e2c64c0441042b35da9076a4bdf6cf418ea0ce74d0781fc50f3275cbdf1fd",
+      "normalization": "canonical-LF"
+    },
+    {
+      "name": "assert-runtime-io31.mjs.txt",
+      "bytes": 3069,
+      "sha256": "1987c7a2740fca114f092e4e383812f057e7cf5b94eb5c86a4d1318cd14309f5",
+      "normalization": "canonical-LF"
+    },
+    {
+      "name": "assert-runtime-io-chromium30.mjs.txt",
+      "bytes": 5817,
+      "sha256": "3a572c295d0889060ece9ad10610056d131ad2d06ca0d313645ec4289bba68de",
+      "normalization": "canonical-LF"
+    }
+  ],
+  "desktop": {
+    "run": 40882224160,
+    "authentication": "passed",
+    "acceptance": "failed",
+    "readerActualExit0": true,
+    "chunk": "118b2e",
+    "screenshotsInspected": true
+  },
+  "chromium": {
+    "run": 40882208352,
+    "authentication": "passed",
+    "acceptance": "passed",
+    "readerActualExit0": true,
+    "chunk": "3b8c8a",
+    "cleanupChecks": 14,
+    "lifecycleCleanupChecks": 24
+  },
+  "readerHistory": [
+    {
+      "chunk": "685506",
+      "exit": 1,
+      "reason": "Real unexpected candidate build-ID mismatch; recorded as failure, not waived for acceptance."
+    },
+    {
+      "chunk": "102e7c",
+      "exit": 1,
+      "reason": "Failed report has no producer screenshot SHA. Original PNG remains authenticated by provider ZIP digest/CRC; record missing producer field explicitly."
+    },
+    {
+      "chunk": "1d2b3b",
+      "exit": 1,
+      "reason": "Independent cleanup count initially omitted five existing nested shape/composition/distribution calls; reviewed callers, expanded exact sequence to14, no browser rerun."
+    }
+  ],
+  "scope": "Initial unpublished preview31 source only. Parser root fix changes source scope; these successes do not stand in for new required release gates."
+}

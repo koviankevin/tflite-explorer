@@ -11,3 +11,5 @@ preview.31 候選修正手動執行的輸入視窗。原本成功／取消時雖
 候選保留手動啟動、所有原有資源限制、正常 URL 期限與自然 GC；沒有修改 interpreter kernel 或匯出格式。新版部署、固定 Release、正式原生與八輪量測仍待驗收，不以單元檢查代替正式交付。整體商品等級目標仍在進行。
 
 原始 red／unlink-probe／green 輸出以 ZIP 內同名 `.log` 保留，包含原有空白；[SHA／byte 清單](results/input-cleanup31-unit.json)記錄原始 bytes、exit code 與成功／失敗數，不將格式正規化當成原始紀錄。
+
+首輪 Chromium candidate 已驗到十四組清理及八輪二十四次 CPU；Firefox／WebKit 則另發現[共用 decoder 的 import side effect](model-reader-isolation.md)，已定位並修正，仍須完整核對新來源，不能將早先 Chromium 成功當成修正版的正式交付。
