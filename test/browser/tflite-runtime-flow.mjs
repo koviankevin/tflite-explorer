@@ -9,7 +9,7 @@ import {runtimeFixture} from '../runtime-fixture.mjs';
 import {optionalCustomFixture} from '../optional-custom-fixture.mjs';
 import {Archive} from '../../vendor/netron/zip.js';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false}){
+export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false}){
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
@@ -77,6 +77,22 @@ export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboard
             const file=path.join(directory,'optional-only-custom.tflite');await writeFile(file,await optionalCustomFixture(),{flag:'wx'});const before={workers:report.workers.length,downloads:report.downloads,requests:report.requests.length};await open(file);
             await until(()=>!!document.querySelector('#edit-random-apply'));report.emptyReference=await read(()=>({disabled:document.querySelector('#edit-random-apply').disabled,referenceDisabled:document.querySelector('#edit-random-like').disabled,options:document.querySelector('#edit-random-like').options.length,hint:document.querySelector('#edit-random-range').textContent,added:document.querySelectorAll('.edit-node.added').length}));
             assert.equal(report.emptyReference.disabled,true);assert.equal(report.emptyReference.referenceDisabled,true);assert.equal(report.emptyReference.options,0);assert.equal(report.emptyReference.added,1);assert.ok(report.emptyReference.hint.includes('沒有可用'));assert.equal(report.workers.length,before.workers);assert.equal(report.downloads,before.downloads);assert.equal(report.requests.length,before.requests);await page.locator('#edit-clear').click();await page.locator('#close-model').click();report.cases.push('optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor');
+        }
+        if(precisionInputs){
+            const before={workers:report.workers.length,downloads:report.downloads,requests:report.requests.length};await open(source);
+            await page.setViewportSize({width:1280,height:640});await page.locator('#edit-font').selectOption('32');
+            await page.locator('#edit-new-ops details').first().locator('summary').click();await page.locator('#edit-builtin').selectOption('201');
+            const changes=await read(()=>document.querySelector('#edit-change-list').textContent),title=await page.locator('[data-edit-node="new:1"] .edit-node-title').textContent();
+            await page.locator('[data-builtin-option="offset_dims"]').fill('[9007199254740993]');await page.locator('#edit-builtin-apply').click();
+            await until(()=>document.querySelector('#edit-message').textContent.includes('安全整數'));
+            report.integerPrecision={rejected:await read(()=>document.querySelector('#edit-message').textContent),unchangedChanges:await read(()=>document.querySelector('#edit-change-list').textContent)===changes,unchangedTitle:await page.locator('[data-edit-node="new:1"] .edit-node-title').textContent()===title};
+            assert.equal(report.integerPrecision.unchangedChanges,true);assert.equal(report.integerPrecision.unchangedTitle,true);
+            await page.locator('[data-builtin-option="offset_dims"]').fill('["9007199254740993"]');await page.locator('[data-builtin-option="index_vector_dim"]').fill('9007199254740993');await page.locator('#edit-builtin-apply').click();
+            await until(()=>document.querySelector('[data-edit-node="new:1"] .edit-node-title').textContent==='STABLEHLO_GATHER');
+            report.integerPrecision.accepted=await read(()=>({vector:JSON.parse(document.querySelector('[data-builtin-option="offset_dims"]').value),scalar:document.querySelector('[data-builtin-option="index_vector_dim"]').value,width:innerWidth,scrollWidth:document.documentElement.scrollWidth,font:document.querySelector('#edit-font').value}));
+            assert.deepEqual(report.integerPrecision.accepted.vector,['9007199254740993']);assert.equal(report.integerPrecision.accepted.scalar,'9007199254740993');assert.equal(report.integerPrecision.accepted.font,'32');assert.ok(report.integerPrecision.accepted.scrollWidth<=report.integerPrecision.accepted.width+1);
+            assert.equal(report.workers.length,before.workers);assert.equal(report.downloads,before.downloads);assert.equal(report.requests.length,before.requests);
+            await page.locator('#edit-clear').click();await page.locator('#close-model').click();report.cases.push('32px OP options reject rounded JSON integers without changing the draft and preserve exact quoted int64 values without inference');
         }
         check('optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout');return report;
     }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);}
