@@ -17,7 +17,8 @@ import {createStaticServer} from '../../scripts/serve.mjs';
 import {installLifecycleAudit,installRecoveryReadAudit} from './lifecycle-audit.mjs';
 import {editFileFingerprint} from '../../src/model-edit-session.js';
 import {modelWorkerHeap} from './worker-heap.mjs';
-import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY as policy,median} from './lifecycle-policy.mjs';
+import {evaluateLifecycle,MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY,median} from './lifecycle-policy.mjs';
+import {physicalComposition} from './physical-composition.mjs';
 import {LIFECYCLE_SOAK_POLICY,assertSoakExecution,needsSoakCycle,evaluateLifecycleSoak} from './lifecycle-soak-policy.mjs';
 import {SOAK_RECOVERY_POLICY,createSoakRecovery} from './soak-recovery.mjs';
 import {recoveryCapacityPreflight} from './soak-recovery-preflight.mjs';
@@ -28,6 +29,7 @@ process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
 await mkdir(path.dirname(reportPath),{recursive:true});
 const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
+const policy=soak?MODEL_EDIT_LIFECYCLE_POLICY:MODEL_COMPOSITION_LIFECYCLE_POLICY;
 const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[],samples:[],checks:[],limitations:[
     soak?'At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.':'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
     'Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.',
@@ -35,6 +37,7 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
     'Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.',
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
+report.workerClosures=[];
 if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:2,soakPolicy:LIFECYCLE_SOAK_POLICY,recoveryPolicy:SOAK_RECOVERY_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 // Resource preflight also uses this helper when cgroup files are unavailable.
@@ -49,6 +52,7 @@ const patterns=[
     reusablePattern('Lifecycle prefix',{nodes:[{alias:'N1',type:'HugeWeightProject'},{alias:'N2',type:'Reshape'},{alias:'N3',type:'Transpose'},{alias:'N4',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'},{from:'N3',to:'N4'}],induced:true}),
     reusablePattern('Lifecycle branch',{nodes:[{alias:'N1',type:'Mul'},{alias:'N2',type:'Add'},{alias:'N3',type:'CompanySplitLongNameForLargeModel'},{alias:'N4',type:'Add'}],edges:[{from:'N1',to:'N2'},{from:'N1',to:'N3'},{from:'N2',to:'N4'},{from:'N3',to:'N4'}],induced:true})
 ];
+if(!soak)patterns.push(reusablePattern('Lifecycle branch wrong edge',{...patterns[1],edges:[...patterns[1].edges,{from:'N2',to:'N3'}]}));
 async function processRss(){
     assert.ok(processTree,'Cannot locate owned Chromium identities.');return processTree.sample(await readProcessTable());
 }
@@ -151,12 +155,12 @@ try{
     const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
     const root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,ownershipMarker);processTree=new OwnedProcessTree(root);report.processOwnership={format:'model-lens-owned-processes',version:1,root};
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
-    context=await browser.newContext({viewport:soak?report.soak.viewport:{width:1366,height:768},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
+    context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
     await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
-    if(soak)page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
+    page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
     browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
     if(soak)draftRecovery=createSoakRecovery({page,read:readPage,directory:temporary,fixture:report.fixture});
@@ -170,7 +174,7 @@ try{
         const kind=(cycle-1)%2,name=patterns[kind].name,other=patterns[1-kind].name,entry={cycle,kind:kind===0?'prefix':'branch',workerHeaps:[]};report.cycles.push(entry);
         if(soak)entry.activeStartMs=activeElapsed();
         phase=`cycle-${cycle}-source`;await choose(report.fixture.file);await ready(21005);
-        if(soak){if(cycle===1){await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');}entry.font=Number(await page.locator('#graph-font-size').inputValue());assert.equal(entry.font,32);}
+        if(cycle===1){await page.locator('#graph-font-size').selectOption('32');await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');}entry.font=Number(await page.locator('#graph-font-size').inputValue());assert.equal(entry.font,32);
         await page.locator('[data-kind="patterns"]').click();
         if(cycle===1){
             await page.locator('#open-import').click();await choose(patternFile,'#choose-pattern-file');await page.locator('#confirm-import').click();await waitFor(()=>!document.querySelector('#import-dialog').open);
@@ -186,22 +190,23 @@ try{
         await page.locator('.result-item').first().click();await waitFor(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
         entry.workerHeaps.push({phase:'reopen',...await modelWorkerHeap(browserCDP)});await closeModel();
         phase=`cycle-${cycle}-hash`;Object.assign(entry,await verifyDownload(child,kind));if(hashes.has(kind))assert.equal(entry.sha256,hashes.get(kind),'Repeated exports must be byte-identical.');else hashes.set(kind,entry.sha256);
+        const compositionFiles=soak?[]:await physicalComposition({page,read:readPage,waitFor,choose,ready,match,closeModel,browserCDP,fixture:report.fixture,policy,cycle,entry,directory:temporary,hashes,setPhase:value=>{phase=value;}});
         if(soak){phase=`cycle-${cycle}-draft-backup`;await draftRecovery.finishCycle(entry);}
         phase=`cycle-${cycle}-release`;await waitFor(()=>globalThis.__lifecycle.urls.every(item=>item.revoked),policy.urlReleaseTimeoutMs);
         const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample());}
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);
-        await rm(child);for(const filename of editedFiles)await rm(filename);
+        await rm(child);for(const filename of [...editedFiles,...compositionFiles])await rm(filename);
         if(soak){entry.activeEndMs=activeElapsed();report.soak.activeDurationMs=entry.activeEndMs;if(cycle%policy.cycles===0)await persistReport();}
         console.log(`PASS cycle ${cycle}/${soak?'two-hour soak':policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
     }
     if(soak){clearInterval(timer);await pending;report.soak.activeDurationMs=activeElapsed();}
     report.audit=await readPage(()=>globalThis.__lifecycle);
-    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,report.cycles.length*3);
-    assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,report.cycles.length);
+    assert.equal(report.audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,report.cycles.length*(soak?3:5));
+    assert.equal(report.audit.workers.filter(w=>w.verificationPasses===1).length,report.cycles.length*(soak?1:2));
     for(const entry of report.audit.workers){assert.equal(entry.error,undefined);if(/\/model-worker\.js(?:\?|$)/.test(entry.url)){assert.equal(entry.terminated,true);assert.ok(entry.audit?.bytes>0);assert.equal(entry.audit.bytes,entry.stats.bytesRead+(entry.verificationReadBytes||0));}}
-    const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,report.cycles.length);assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check(`${report.cycles.length} full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers`);
+    const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,report.cycles.length*(soak?1:2));assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check(`${recoveryWorkers.length} full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers`);
     for(const audit of [report.audit.audit,...report.audit.workers.map(w=>w.audit).filter(Boolean)]){assert.deepEqual(audit.violations,[]);assert.ok(audit.maxRead<=policy.maxReadBytes&&audit.bytes<=policy.realmReadBytes);}
-    if(soak){assert.equal(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),report.environment.sourceCommit);assert.equal(execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),report.environment.sourceTree);assert.equal(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim(),'');report.sourceUnchanged=true;}
+    assert.equal(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),report.environment.sourceCommit);assert.equal(execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),report.environment.sourceTree);assert.equal(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim(),'');report.sourceUnchanged=true;
     assert.deepEqual(errors,[]);report.evaluation=soak?evaluateLifecycleSoak(report):evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check(`${report.cycles.length} physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits`);report.status='passed';
 }catch(error){report.status='failed';report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
 finally{
