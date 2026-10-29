@@ -2,6 +2,7 @@ import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {tableFields} from './flatbuffer-writer.js';
 import {TFLITE_OPTIONS,TFLITE_PORTS} from './tflite-op-options.js';
 import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom} from './tensor-random.js';
+import {checkStaticTransform} from './tflite-static-transform.js';
 const normalize=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
 const optionNames=Object.keys(schema).filter(k=>k.endsWith('Options')&&schema[k].decode);
 const types2=new Set([...schema.BuiltinOptions2.decode.toString().matchAll(/tflite\.(\w+)\.decode/g)].map(m=>m[1]));
@@ -40,7 +41,7 @@ export function builtinSettings(code,settings={}){
 }
 export function builtinCatalog(metadata=[]){
     const byName=new Map(metadata.map(m=>[normalize(m.name),m]));
-    return Object.values(schema.BuiltinOperator).filter(Number.isInteger).flatMap(code=>{try{const {info,options}=builtinSettings(code),m=byName.get(normalize(info.name));return [{...info,fields:info.fields.map(f=>({key:f.key,kind:f.kind,value:typeof options[f.key]==='bigint'?String(options[f.key]):options[f.key]})),inputs:m?.inputs?.map(p=>({name:p.name,optional:p.option==='optional',list:p.option==='list',type:p.type}))||null,outputs:m?.outputs?.map(p=>({name:p.name,list:p.option==='list',type:p.type}))||null}];}catch{return [];}});
+    return Object.values(schema.BuiltinOperator).filter(Number.isInteger).flatMap(code=>{try{const {info,options}=builtinSettings(code),m=byName.get(normalize(info.name));return [{...info,fields:info.fields.map(f=>({key:f.key,kind:f.kind,value:typeof options[f.key]==='bigint'?String(options[f.key]):options[f.key]})),inputs:m?.inputs?.map(p=>({name:p.name,optional:p.option==='optional',list:p.list===true||p.option==='list',type:p.type}))||null,outputs:m?.outputs?.map(p=>({name:p.name,list:p.list===true||p.option==='list',type:p.type}))||null}];}catch{return [];}});
 }
 export function checkBuiltinPorts(code,inputs,outputs,options){
     const {name}=builtinInfo(code);
@@ -53,8 +54,9 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
         if(!sameType(inputs[0],inputs[1])||!sameType(inputs[0],outputs[0]))throw Error(name+' 輸入／輸出 dtype 不符。');
         const a=shapes(inputs[0]),b=shapes(inputs[1]),expected=[];for(let i=0;i<Math.max(a.length,b.length);i++){const x=a.at(-1-i)??1,y=b.at(-1-i)??1;if(x>=0&&y>=0&&x!==y&&x!==1&&y!==1)throw Error(name+' 的 shape 無法 broadcast。');expected.unshift(x<0||y<0?-1:x===1?y:x);}const out=shapes(outputs[0]);if(out.length!==expected.length||out.some((n,i)=>n>=0&&expected[i]>=0&&n!==expected[i]))throw Error(name+' 的輸出 shape 不符合 broadcast 結果。');
     }
-    if(['RESHAPE','SQUEEZE','EXPAND_DIMS'].includes(name)&&inputs[0]&&outputs[0]){const a=shapes(inputs[0]),b=shapes(outputs[0]);if(a.every(n=>n>=0)&&b.every(n=>n>=0)&&a.reduce((n,x)=>n*x,1)!==b.reduce((n,x)=>n*x,1))throw Error(name+' 前後元素數不同。');}
+    if(['RESHAPE','EXPAND_DIMS'].includes(name)&&inputs[0]&&outputs[0]){const a=shapes(inputs[0]),b=shapes(outputs[0]);if(a.every(n=>n>=0)&&b.every(n=>n>=0)&&a.reduce((n,x)=>n*x,1)!==b.reduce((n,x)=>n*x,1))throw Error(name+' 前後元素數不同。');}
     if(['IF','WHILE'].includes(name)&&!options)throw Error(name+' 需要控制流程 subgraph 設定。');
+    checkStaticTransform(name,inputs,outputs,options);
     return {scope:'索引／型別／資料長度／已實作的 shape 與參數規則；不代表全部 kernel／runtime 語意已驗證'};
 }
 export const RANDOM_TENSOR_LIMIT=16*1024*1024;
