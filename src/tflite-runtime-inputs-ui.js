@@ -4,7 +4,7 @@ export function runtimeInputsUI(){
     const $=id=>document.getElementById(id),dialog=$('edit-runtime-dialog'),list=$('edit-runtime-inputs');let pending=null;
     const make=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
     const field=(text,control)=>{const label=make('label',text);label.append(control);return label;};
-    function close(value){const resolve=pending;pending=null;$('edit-runtime-run').onclick=null;if(dialog.open)dialog.close();list.replaceChildren();$('edit-runtime-input-error').textContent='';resolve?.(value);}
+    function close(value){const resolve=pending;pending=null;$('edit-runtime-run').onclick=null;if(dialog.open)dialog.close();for(const input of list.querySelectorAll('input[type=file]'))input.value='';list.replaceChildren();$('edit-runtime-input-error').textContent='';resolve?.(value);}
     dialog.addEventListener('keydown',event=>event.stopPropagation());dialog.addEventListener('cancel',event=>{event.preventDefault();close(null);});$('edit-runtime-dialog-close').onclick=()=>close(null);
     return {cancel:()=>close(null),choose(plan){
         close(null);list.replaceChildren();const specs=[];

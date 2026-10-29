@@ -11,7 +11,8 @@ class Element {
     set textContent(value){this._text=value;this.children=[];}
     get textContent(){return this._text+this.children.map(c=>c.textContent).join('');}
     get options(){return this.children.filter(c=>c.tag==='option');}
-    set value(value){this._value=String(value);}
+    set value(value){this._value=String(value);if(this.type==='file'&&value==='')this.files=[];}
+    querySelectorAll(selector){assert.equal(selector,'input[type=file]');const all=e=>[e,...e.children.flatMap(all)];return all(this).filter(e=>e.tag==='input'&&e.type==='file');}
     get value(){return this._value??this.options[0]?.value??'';}
     addEventListener(name,fn){this.listeners[name]=fn;}
     showModal(){if(this.showError)throw this.showError;this.open=true;}
@@ -30,3 +31,6 @@ test('button, Escape and session cancellation release the pending dialog and con
 test('a cancelled dialog confirmation cannot resolve or close a newer input request',()=>fixture(async({ui,$,dialog,confirm})=>{const oldFile=new File([Float32Array.of(1)],'old.bin'),first=ui.choose(plan);chooseBIN($,oldFile);const stale=confirm.onclick;ui.cancel();assert.equal(await first,null);const fresh=ui.choose(plan);stale();assert.equal(dialog.open,true,'stale callback must not close the current dialog');const file=new File([Float32Array.of(9)],'fresh.bin');chooseBIN($,file);confirm.onclick();assert.deepEqual(await fresh,[{mode:'bin',file}]);}));
 test('validation errors keep the current controls active until corrected',()=>fixture(async({ui,$,dialog,error,confirm})=>{const pending=ui.choose(plan);chooseBIN($,new File(['bad'],'bad.bin'));confirm.onclick();assert.equal(dialog.open,true);assert.match(error.textContent,/4 bytes/);assert.equal(typeof confirm.onclick,'function');const file=new File([Float32Array.of(2)],'fixed.bin');chooseBIN($,file);confirm.onclick();assert.deepEqual(await pending,[{mode:'bin',file}]);assert.equal(error.textContent,'');assert.equal(confirm.onclick,null);}));
 test('native showModal failure leaves no pending request, controls or confirmation callback',()=>fixture(async({ui,dialog,list,confirm})=>{dialog.showError=new Error('dialog disconnected');assert.throws(()=>ui.choose(plan),/dialog disconnected/);assert.equal(list.children.length,0);assert.equal(confirm.onclick,null);delete dialog.showError;const pending=ui.choose({inputs:[]});confirm.onclick();assert.deepEqual(await pending,[]);}));
+
+test('confirmed BIN identity survives while retained detached File inputs are explicitly emptied',()=>fixture(async({ui,$,confirm})=>{const file=new File([Float32Array.of(7)],'public-input.bin'),pending=ui.choose(plan);chooseBIN($,file);const retained=$('runtime-input-file-0');assert.equal(retained.files.length,1);confirm.onclick();assert.deepEqual(await pending,[{mode:'bin',file}]);assert.equal(retained.files.length,0,'Detached File input must not keep selected data');}));
+test('cancel and replacement requests empty every retained File input',()=>fixture(async({ui,$,cancel})=>{for(const mode of ['cancel','replacement']){const first=ui.choose(plan);chooseBIN($,new File([Float32Array.of(9)],'public-input.bin'));const retained=$('runtime-input-file-0');if(mode==='cancel')cancel.onclick();else {const next=ui.choose({inputs:[]});ui.cancel();assert.equal(await next,null);}assert.equal(await first,null);assert.equal(retained.files.length,0);}}));

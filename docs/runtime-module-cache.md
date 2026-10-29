@@ -86,3 +86,11 @@ Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model
 另有新的 Node ownership seam 反例：保留指向已移除 File input 的參考時，確認後的元素仍包含選取 File；原有「清空 DOM／確認回呼」斷言無法涵蓋這個狀態。已確認的 BIN 身分仍正確傳回。此測試以 [HTML filename-mode 設定空值會清空 selected files 的規則](https://html.spec.whatwg.org/multipage/input.html#dom-input-value-filename)作為清理契約，尚不是實際瀏覽器或 RSS 所有權證據。
 
 接下來補上移除前明確清空 File input，並將 runtime IO 改為有界 bytes 的 Worker ownership transfer，下載時才建立 Blob；保留直接 Node reference 的既有 Blob 預設、ZIP manifest／CRC／內容、30 秒取消和自然 URL 期限。先取得回歸失敗與真實傳送／CPU 證據，再執行原有三引擎及 RSS 驗收。尚未完成修正，preview.32 維持未發布。
+
+## IO 修正候選（待 Hosted 驗收）
+
+瀏覽器 runtime 的 ZIP 改為單一、最多 17 MiB 的 owned `Uint8Array`，經 `postMessage` transfer list 移交 buffer；不傳送 Blob、共享記憶體或指向 WASM／模型 buffer 的片段。主頁只保存目前 IO bytes，按下載時才建立 ZIP Blob。原有直接 Node `executeRuntime`／`runtimeArchive` 呼叫仍預設 Blob；ZIP 格式、manifest、CRC、BIN 內容、16 MiB tensor IO 預算、30 秒取消及原生 60 秒 URL 期限不變。
+
+輸入確認先保留已驗證的 File 身分，再清空所有 File inputs 的 value 並移除控制項；取消與被新請求取代也使用相同清理。新回歸先在舊來源失敗：要求 transferable archive 卻取得 Blob，以及保留的 detached inputs 仍有 File。修正後 46 項選測通過，含真正 Node Worker 的移交／detachment、8 MiB IO 完整 SHA／獨立 ZIP CRC、實際 CPU `[4,6]`／`[40,60]`、新舊 archive 路徑、亂數／草稿與確認／取消／替換清理。這些是 Node 證據，尚不代表瀏覽器 RSS 已修復。
+
+Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原生 chooser 的元素 handle，直接讀取 detached FileList，要求 disconnected、零 files、空 value；確認仍需完成一次真正 CPU 執行，取消不得再建立 runtime Worker。此證據在原記憶體量測後收集，不修改其 baseline。已完成的獨立診斷不再每次重跑，正式記錄引用其原始 archive；原有實際 runtime RSS 仍完整重新執行。新應用、三引擎、四發布關卡及正式交付仍待完成。
