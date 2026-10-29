@@ -14,7 +14,18 @@
 
 48 項選測通過，包括固定 SHA／MIME／大小／串流失敗、並行只下載／編譯一次、無背景重試、缺少 WASM 的環境仍能匯入、取消／30 秒期限／新舊請求與不同 client 隔離、raw BIN、四種亂數、輸入視窗清理及真實 CPU reference。新 hook 用同一個 compiled module 建立兩組不同 Instance／memory，對實際 BIN 取得 `[4, 6]`、`[40, 60]`。這是 Node 證據，不是瀏覽器或 RSS 通過。
 
-現有 warm 取消案例在新應用改為暫停 Worker 內的 execution-module 動態 import；舊固定版本仍暫停 WASM。兩種情況都要求原生取消、Worker close、無舊 IO 及模型分頁切換；真 WHILE invoke 取消／逾時另照原流程。新應用不必在已 warm 的頁面重抓 WASM，不能沿用「每次執行必有 WASM GET」的假設。仍須補 fresh context 的 cold 準備取消、再次執行、單次公開下載與 native Worker close 證據，且新應用的原 RSS、完整 IO／匯出、三引擎、發布四關卡及正式站核對均尚未完成。
+新應用的 warm 取消改用真正的 WHILE invoke，分別按取消及切換模型分頁，要求五秒內 native close、無舊 IO 並保留原編輯歷史。舊固定版本仍暫停 WASM；原本另有的真 WHILE 30 秒逾時／恢復流程也保留。新應用不必在已 warm 的頁面重抓 WASM，不能沿用「每次執行必有 WASM GET」的假設。仍須補 fresh context 的 cold 準備取消、再次執行、單次公開下載與 native Worker close 證據，且新應用的原 RSS、完整 IO／匯出、三引擎、發布四關卡及正式站核對均尚未完成。
 
 
 候選 native 流程另加入獨立 fresh context（重用已核對的示範檔，不產生新模型或 IO 檔）：先要求開檔／導覽零 WASM GET，再暫停首次公開 WASM 下載，對真正 runtime Worker 僅讀取常數 `1` 確認 context 就緒，原生按取消並觀察 close／輸入清理。放行公開下載後連續手動執行兩次，要求總共一次 WASM GET、三個 runtime 及一個 model native close、沒有舊 IO，最後正常關閉 context。此 helper 放在原記憶體驗收之後，不改其 baseline 或判定；新結果尚待 Hosted 執行，不能以語法或 unit 測試代替。
+
+
+## 第一批 Firefox 原始結果與測試修正
+
+[40933429392](https://github.com/koviankevin/tflite-explorer/actions/runs/40933429392) 來源 `774d76e7f1685fbc526e7648e1fdfc0ad40ddf2f`、tree `14af0a4bfff8c6b5e503bf2fd109dd395d91db07`、build `a71f6dd544f8449f`，在 warm 取消的載入攔截等待失敗。Provider digest／CRC、來源／job／attempt／305 檔及原圖已核對，讀取器 exit 0；[原始資料](results/runtime-module32-first-firefox.zip)和[逐檔雜湊／界線](results/runtime-module32-first-firefox.json)保留。
+
+已完成十四項主要操作，四次實際示範模型 CPU、raw multi-input ADD／MUL 的 ZIP CRC／完整數值、亂數與 dtype 拒絕均通過；七個觀測 runtime Workers 全部 close，沒有 page error。失敗是 `Runtime loading cancellation gate not observed`，尚未到 RSS 或獨立 cold context；不能宣稱新效能通過。
+
+原始路由記錄能看到主 Worker 與 WASM，沒有 Worker 內 transitive JS import 請求；因此新測試把 warm 取消移到實際 true-predicate WHILE，而不修改應用來重抓 WASM。兩次 runtime runs 保持：第一次手動取消，第二次關閉 loop 模型分頁，回到既有結果及原編輯頁，檢查 IO 清除與 Undo。新增 loop 模型及重啟既有結果的兩個 model contexts 明確計數並要求全部 native close，沒有降低 RSS 或 close 要求。
+
+新 loop 檔僅由公開 `runtimeLoopFixture(true)` 序列化產生，不在 Node 執行；使用已驗證 SHA／大小／檔案身分及 flush 意圖的精確清理 helper，只允許原 WASM／新固定 `.tflite` 兩個檔名。只有 native loop model／runtime 消費者已關閉才刪除；失敗而未觀測關閉時保留並寫入報告。12 項 helper／loop 選測及語法檢查通過；其中實際 Node CPU reference 只執行 false predicate。新 native 結果仍待取得，應用程式與原 RSS flow／policy 未變。

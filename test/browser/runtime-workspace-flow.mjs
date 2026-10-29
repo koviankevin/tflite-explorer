@@ -1,3 +1,6 @@
+import {runtimeLoopFixture} from '../runtime-loop-fixture.mjs';
+import {runtimePlan} from '../../src/tflite-runtime-policy.js';
+import {publicControlFile} from './public-control-file.mjs';
 import {runtimeInputCleanupProof} from "./runtime-input-cleanup-proof.mjs";
 // Hosted-only caller supplies the browser. All actions are native gestures,
 // chooser/download events; evaluation reads DOM only. Public synthetic models.
@@ -17,7 +20,8 @@ import {tensorDistributionsFlow} from './tensor-distributions-flow.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 export async function runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false,inputCleanup=false,sharedRuntimeModule=false}){
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs,inputCleanupRequired:inputCleanup,inputCleanup:[],sharedRuntimeModuleRequired:sharedRuntimeModule};
-    const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
+    let warmFile=null,warmOpened=false,warmModelClosed=false;
+    const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false,createdObservedAt:Date.now(),closeObservedAt:null};report.workers.push(row);w.on('close',()=>{row.closed=true;row.closeObservedAt=Date.now();});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
     const downloaded=()=>report.downloads++;
     page.on('worker',workerEvent);page.on('request',requested);page.on('download',downloaded);
@@ -96,17 +100,32 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
         assert.equal(execFileSync('python3',['-I','-c','import sys,zipfile\nwith zipfile.ZipFile(sys.argv[1]) as z: assert z.testzip() is None; print(len(z.namelist()))',randomFile],{encoding:'utf8'}).trim(),'5');
         for(const [name,expected]of [['inputs-0.bin',[.25,.25]],['inputs-1.bin',[2,2]],['outputs-0.bin',[2.25,2.25]],['outputs-1.bin',[.25,.25]]])assert.deepEqual([...new Float32Array(randomZip.entries.get(name).peek().slice().buffer)],expected);
         assert.equal(randomManifest.inputs[0].source,'random');assert.equal(randomManifest.inputs[0].min,.25);assert.equal(randomManifest.inputs[0].seed,1);report.cases.push('dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values');
-        // A warm shared module needs no WASM request. Hold the execution module
-        // import inside each already-started Worker; legacy releases retain
-        // the original WASM gate. In both cases cancellation must really close
-        // the Worker, drop IO and reject late results.
-        let release,held;const hold=new Promise(r=>{release=r;}),gate=new Promise(r=>{held=r;}),pattern=sharedRuntimeModule?'**/tflite-runtime-execute.js*':'**/litert_wasm_compat_internal.wasm';
+
+        if(sharedRuntimeModule){
+            // Worker transitive module requests are not routable in Firefox.
+            // Exercise the actual WHILE kernel, with no network/timer tricks.
+            const loop=await runtimeLoopFixture(true);assert.equal(runtimePlan(loop.model,loop.bytes.length).eligible,true);
+            warmFile=await publicControlFile(loop.bytes,{expectedBytes:loop.bytes.length,expectedSHA256:hash(loop.bytes),name:'warm-cancel.tflite'});
+            report.warmCancellation={networkHeld:false,fakeTimers:false,fixture:warmFile.record,invocations:[],additionalModelWorkers:2,modelWorker:{closed:false,createdObservedAt:null,closeObservedAt:null}};
+            let modelWorker;const observe=w=>{if(/\/model-worker\.js(?:\?|$)/.test(w.url())){modelWorker=w;report.warmCancellation.modelWorker.createdObservedAt=Date.now();w.once('close',()=>{warmModelClosed=true;report.warmCancellation.modelWorker.closed=true;report.warmCancellation.modelWorker.closeObservedAt=Date.now();});}};
+            page.on('worker',observe);try{warmOpened=true;await choose(warmFile.path,'#open-model');await ready();assert.ok(modelWorker);}finally{page.off('worker',observe);}
+            await page.locator('#run-mode').click();await until(()=>!document.querySelector('#run-workspace').hidden);
+            const invoke=async kind=>{await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);for(const mode of await page.locator('#edit-runtime-inputs select[id^=runtime-input-mode-]').all())await mode.selectOption('zero');const before=report.workers.length;await page.locator('#edit-runtime-run').click();await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='true'&&document.querySelector('#run-progress').textContent.includes('使用指定測試輸入執行'));assert.equal(report.workers.length,before+1);assert.equal(report.workers.at(-1).closed,false);report.warmCancellation.invocations.push({kind,workerIndex:before,invokeObservedAt:Date.now()});};
+            await invoke('manual-cancel');report.warmCancellation.cancelClickedAt=Date.now();await page.locator('#edit-runtime-cancel').click();await finished('not-verified');assert.ok(report.workers.at(-1).closeObservedAt-report.warmCancellation.cancelClickedAt>=0&&report.workers.at(-1).closeObservedAt-report.warmCancellation.cancelClickedAt<5000);assert.match(await page.locator('#edit-runtime-result').textContent(),/取消/);assert.equal(await page.locator('#edit-runtime-download').isDisabled(),true);
+            await invoke('model-tab-switch');report.warmCancellation.tabCloseClickedAt=Date.now();await page.locator('.close-model-tab').last().click();await ready();const closedBy=Date.now()+5000;while(!warmModelClosed&&Date.now()<closedBy)await new Promise(r=>setTimeout(r,25));assert.equal(warmModelClosed,true);
+            // Closing C reactivates B; the existing helper then closes B and
+            // returns to A's original editor/history. Those two model contexts
+            // are the only extra model activations; runtime run count stays two.
+            await returnToEdit();const runtimeClosedBy=Date.now()+5000;while(report.workers.some(w=>!w.closed)&&Date.now()<runtimeClosedBy)await new Promise(r=>setTimeout(r,25));assert.equal(await page.locator('#edit-runtime-download').isDisabled(),true);assert.equal(await page.locator('#edit-runtime-result').getAttribute('data-status'),null);assert.ok(report.workers.every(w=>w.closed));assert.ok(report.workers.at(-1).closeObservedAt-report.warmCancellation.tabCloseClickedAt>=0&&report.workers.at(-1).closeObservedAt-report.warmCancellation.tabCloseClickedAt<5000);report.cases.push('changing model tabs cancels an in-flight WASM execution and drops late results and IO');await warmFile.cleanup();
+        }else{
+        let release,held;const hold=new Promise(r=>{release=r;}),gate=new Promise(r=>{held=r;}),pattern='**/litert_wasm_compat_internal.wasm';
         let heldCount=0;const route=async r=>{heldCount++;held();await hold;await r.abort().catch(()=>{});};await page.context().route(pattern,route);
         try{
             await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await Promise.race([gate,new Promise((_,reject)=>setTimeout(()=>reject(Error('Runtime loading cancellation gate not observed')),15000))]);await page.locator('#edit-runtime-cancel').click();await finished('not-verified');assert.ok((await page.locator('#edit-runtime-result').textContent()).includes('取消'));assert.equal(await read(()=>document.querySelector('#edit-runtime-download').disabled),true);
             await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();const end=Date.now()+15000;while(heldCount<2&&Date.now()<end)await new Promise(r=>setTimeout(r,30));assert.equal(heldCount,2);
             await returnToEdit();assert.equal(await page.locator('#edit-runtime-download').isDisabled(),true);assert.equal(await page.locator('#edit-runtime-result').getAttribute('data-status'),null);await until(()=>document.querySelector('#run-workspace').hidden);assert.ok(report.workers.every(w=>w.closed));report.cases.push('changing model tabs cancels an in-flight WASM execution and drops late results and IO');
         }finally{release();await page.context().unroute(pattern,route);}
+        }
         await returnToEdit();await page.locator('#edit-undo').click();assert.equal(await read(()=>document.querySelector('#edit-runtime-download').disabled),true);report.cases.push('manual cancellation closes Worker and clears stale input/output after draft changes');
         await page.locator('#edit-clear').click();await page.locator('#close-model').click();
         const invalid=await runtimeFixture({inputShapes:[[1,2],[1,3]]}),invalidPath=path.join(directory,'runtime-bad-broadcast.tflite');await writeFile(invalidPath,invalid.bytes,{flag:'wx'});await open(invalidPath);await enterRuntime({exported:false});await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await finished('failed');report.cases.push('invalid kernel broadcast is reported as failed');await returnToEdit();await page.locator('#edit-clear').click();await page.locator('#close-model').click();
@@ -142,5 +161,5 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
         await tensorDistributionsFlow({page,read,until,open,choose,ready,download,finished,directory,report,enterRuntime,returnToEdit});
         const mlir=path.join(directory,'runtime-explore-only.mlir');await writeFile(mlir,MLIR_BRANCH,{flag:'wx'});const workerCount=report.workers.length;await choose(mlir,'#open-model');await ready();assert.equal(await page.locator('#run-mode').isHidden(),true);assert.equal(await page.locator('#edit-mode').isHidden(),true);await assertWorkspaceMode(page,'explore');assert.equal(report.workers.length,workerCount);await page.locator('#close-model').click();report.cases.push('MLIR remains exploration-only and never offers a TFLite execution or editing action');
         check('optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout');return report;
-    }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);}
+    }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);if(warmFile&&!warmFile.record.directoryRemoved){if(!warmOpened||warmModelClosed){try{await warmFile.cleanup();}catch(error){warmFile.record.cleanupError=String(error.message);if(!report.error)throw Object.assign(error,{tfliteRuntime:report});}}else warmFile.record.retainedReason='Native consumers were not yet observed closed at flow exit.';}}
 }
