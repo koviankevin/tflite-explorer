@@ -110,7 +110,7 @@ try{
     report.desktopRuntimeRSSRequired=report.activeComputeRequired&&Number(manifest.release.version.match(/^0\.2\.0-preview\.(\d+)$/)?.[1]??31)>=31;
     if(engine==='firefox'&&report.desktopRuntimeRSSRequired){
         const asset=manifest.files.find(f=>f.path==='vendor/litert/2.6.0/litert_wasm_compat_internal.wasm');assert.ok(asset);report.firefoxNetworkControls=[];
-        for(const mode of ['empty','fetch']){phase=`firefox-network-control-${mode}`;report.firefoxNetworkControls.push(await firefoxNetworkMemoryControl({browserType:firefox,base,assetURL:new URL(coreBasePath+asset.path,base).href,expectedBytes:asset.bytes,expectedSHA256:asset.sha256,mode}));}
+        for(const mode of ['empty','fetch','file']){phase=`firefox-network-control-${mode}`;report.firefoxNetworkControls.push(await firefoxNetworkMemoryControl({browserType:firefox,base,assetURL:new URL(coreBasePath+asset.path,base).href,expectedBytes:asset.bytes,expectedSHA256:asset.sha256,mode}));}
     }
     if(report.desktopRuntimeRSSRequired){
         phase='desktop-runtime-rss';report.desktopRuntimeRSS=await desktopRuntimeRSSFlow({browserType:{firefox,webkit}[engine],engine,base});

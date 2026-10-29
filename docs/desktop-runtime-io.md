@@ -60,3 +60,11 @@
 無模型 fetch 已重現父程序的大幅波動，因此「模型推論或 IO ZIP 必然造成那段父程序波動」不成立。原應用父程序在 URL 全釋放後只比 warmup 高 1,986,560 bytes，頁面程序匿名欄位則高 23,379,968 bytes；這些值沒有從原 RSS 扣除。仍未證明每筆記憶體的所有權、工具網路觀察與 Firefox 原生網路配置各占多少，也沒有排除應用頁面的保留。不能只憑 fetch 的不同斜率替原應用驗收轉綠。
 
 下一個可區分的變因是「HTTP 回應」與「Worker 讀取相同資料的配置」：可用同一份公開 WASM 的本機 File，讓 Worker 只讀相同 bytes 而不經 HTTP，再比對原始父程序／頁面欄位。這仍是待執行的因果對照，不是已找到的修正；原失敗、全部門檻、自然 URL 期限和正式 preview.31 保持不變。
+
+## 準備中的本機 File 對照
+
+Firefox 的無模型控制新增第三組 `file`，既有 empty／HTTP fetch 組與後續原應用八輪保持。Node 從同一個已核對 manifest 的公開 WASM 來源取得完整 bytes，檢查 MIME、大小與 SHA，建立獨占暫存檔；真正的 native chooser 選取後，24 個 Worker 各收到 File，只執行 `arrayBuffer()` 並回報長度，不經 HTTP 載入、不編譯 WASM、不讀模型或產生 IO。檔案輸入在量測結束時清空，所有 native Worker 與 owned browser 正常結束後才清理暫存檔。
+
+產檔及刪除意圖透過既有 `buildEvent` flush 保存；只 unlink 同一獨占目錄的 `public-runtime.wasm`，先核對 dev／inode／大小／mtime／SHA，再非遞迴移除空目錄。寫入意圖失敗時不執行刪除；意外改變或無法驗證的檔案會保留並讓控制流程失敗。實驗報告只留 metadata／SHA，不保存該 WASM 或 File payload。
+
+33 項相關 Node 檢查通過，包含真 Blob 的 File-worker 讀取、錯誤／超量規模、native chooser 觀察 adapter、原 RSS／程序分類、刪除意圖失敗時保留，以及真 CPU reference。這不等於 Hosted Firefox File 對照已成功；新實測及原應用 RSS 結果仍待取得。File 組也只作因果診斷，不提供替代 RSS 通過判定，原 16 MiB／輪、自然 IO URL 期限、網路限制與正式版本都沒有變動。
