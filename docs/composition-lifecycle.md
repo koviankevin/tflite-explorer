@@ -1,6 +1,6 @@
 # 大型 TFLite 組合生命週期驗收
 
-本頁記錄新增的驗收範圍；成功的 Hosted 報告尚待取得，不能把本機契約測試當成瀏覽器記憶體通過。正式網站維持 preview.26，這次只改測試及發布證據判定，不重新部署應用。
+修正後的 Hosted Chromium 實體八輪已通過，原始產物及獨立核對見下方。正式網站維持 preview.26，這次只改測試及發布證據判定，不重新部署應用。
 
 ## 工作負載
 
@@ -24,10 +24,23 @@
 
 38 項本機 Node 檢查通過，涵蓋 v1／v2 相容、v3 缺少組合／指紋／原生 close／candidate parse／清理時拒絕，以及原兩小時門檻。另以完整 21,005 OP 拓樸、64-byte 縮小權重核對同一套組合命令、輸入／輸出、custom options 及權重 bytes；它不是 >1 GiB 或瀏覽器記憶體證據。
 
-Hosted 真實八輪的 source、job、provider artifact digest／CRC、原始報告及獨立判定取得後另列。有限八輪不能證明永不洩漏，也不涵蓋大型組合兩小時、Firefox／WebKit、公司模型或 custom kernel 執行。
+Hosted 真實八輪的 source、job、provider artifact digest／CRC、原始報告及獨立判定見下方。有限八輪不能證明永不洩漏，也不涵蓋大型組合兩小時、Firefox／WebKit、公司模型或 custom kernel 執行。
 
 ## 首次實測：Node 核對器 callback 錯誤
 
 [40819329430](https://github.com/koviankevin/tflite-explorer/actions/runs/40819329430) 來源 `f4f8134d3ee9d36fc8acee6d5881844f90e73c2a` 在第一輪失敗；[原始 provider ZIP](results/composition-physical-first-failure-2026-10-29.zip)及[來源／digest／CRC 核對](results/composition-physical-first-review-2026-10-29.json)保留 failed，不能視為八輪成功。瀏覽器已走完組合下載重開與 pattern 斷言，五個 heap 檢查點都有數值；隨後 Node `verifyComposition` 把 async callback 傳給同步 `RangeStream`，讀取結果成為 Promise，因而回報「檔案讀取長度不完整」。不是應用解析器或記憶體門檻失敗。
 
-新增實際檔案核對器回歸，以完整 21,005 OP 拓樸、64-byte 權重匯出九個 OP 後，呼叫與 Hosted 相同的 `readCompositionIndex`。修正前穩定重現相同錯誤；改用有界 `readSync` callback 後三項 fixture 測試通過。保留所有原始讀取、權重與記憶體上限；網站程式、工作流程和正式部署沒有改動。修正後的真實八輪仍待執行。
+新增實際檔案核對器回歸，以完整 21,005 OP 拓樸、64-byte 權重匯出九個 OP 後，呼叫與 Hosted 相同的 `readCompositionIndex`。修正前穩定重現相同錯誤；改用有界 `readSync` callback 後三項 fixture 測試通過。保留所有原始讀取、權重與記憶體上限；網站程式、工作流程和正式部署沒有改動。修正後的真實八輪結果見下節。
+
+
+## 修正後的實體八輪
+
+[40819856581](https://github.com/koviankevin/tflite-explorer/actions/runs/40819856581) 來源 `3bbbf73badde1f2eda46eb7926cf5bab8c23659e`／tree `cca31b67fd8f817db386f1c62411b7a3ce4952e9`／本機獨立重建與 CI build `f9da8008c30d0650`，在 attempt 1 通過。[provider 原始 ZIP](results/composition-physical-2026-10-29.zip)與[獨立核對](results/composition-physical-review-2026-10-29.json)已驗 run／job／來源、digest／CRC、原始量測、舊完整／局部輸出固定 hash 與原檔指紋。首次失敗仍保留，沒有改動原門檻。
+
+八輪全部完成真實 A／B 匹配匯入、Undo／Redo、接線、新增 ADD、明確介面與 v2 自動保存草稿下載；每輪來源 21,005 OP、組合結果九個 OP，完整非零 1.25 GiB 權重、兩份 custom options、所有 byte ranges、重開與 pattern 正負例通過。組合輸出每輪 `1345938408` bytes、SHA `7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086`，八輪 bytes 一致；原生下載耗時 7621～7955ms，這不是所有硬體 SLA。
+
+兩輪暖機後六輪量測 RSS 漂移 10887168 bytes、斜率 1083099.4285714286 bytes／輪，main heap 漂移 220312 bytes；取樣峰值 995848192 bytes、相對 baseline 成長 485543936 bytes。Worker 檢查點 used heap 最高 96281908 bytes、backing storage 最高 15998287 bytes；不是連續 Worker 峰值或獨立 OS RSS。40 個模型及 16 個指紋 Workers 都有原生 close，16 次候選解析；觀察到的 6 個 PID／start-ticks 全部正常退出，無強制清理。每輪所有 URL 自然撤銷、File input 清空，1280×640／32px 圖區與水平寬度檢查通過。
+
+[四關卡相依及 provider 核對](results/composition-physical-gates-review-2026-10-29.json)確認 browser 與 [main contract 40819859749](https://github.com/koviankevin/tflite-explorer/actions/runs/40819859749) 為修正後新結果，[原始契約 ZIP](results/composition-physical-contract-2026-10-29.zip)保留；core 40700051621 與 site 40814696559 的模組 scope fingerprint 完全相同，可沿用。正式站程式、套件及工作流程未變，不重新部署。
+
+此結果只涵蓋所列 Hosted Chromium 的有限八輪。大型 v2 手動匯入恢復、數小時組合、其他引擎、公司模型與 custom kernel 執行仍不在此證據範圍。

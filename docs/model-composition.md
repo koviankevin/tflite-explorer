@@ -55,4 +55,7 @@
 
 原始 ZIP：[正式站驗證](results/preview26-live-release-verification-2026-10-29.zip)、[Release 驗證](results/preview26-published-release-verification-2026-10-29.zip)；完整 [site manifest](results/preview26-site-manifest-2026-10-29.json) SHA `008eecf5763c4082e228a2bfcdc2fd55d71d3642a4b7165f8032da82421dea85`，site ID `288042952e897836c708778956af40702534425867473cff050264d1ef8af467`，固定部署 ZIP SHA `813a364436f24b839f28dc22b9f28925cee6e02b40103b2b02eb55e207f0bb64`。
 
-同版也通過多輸入 CONCATENATION 的 [1,4] 推導／匯出／CPU 與錯誤 SQUEEZE axes 拒絕匯出；先前 int64、空參考表單、取消焦點及原有 TFLite／MLIR 搜尋／pattern／匯出重開保留。未測手機或內網；跨 subgraph／有狀態搬移、完整 kernel 語意、大型組合瀏覽器長測與其他公開品質限制仍列為未完成。
+同版也通過多輸入 CONCATENATION 的 [1,4] 推導／匯出／CPU 與錯誤 SQUEEZE axes 拒絕匯出；先前 int64、空參考表單、取消焦點及原有 TFLite／MLIR 搜尋／pattern／匯出重開保留。未測手機或內網；跨 subgraph／有狀態搬移、完整 kernel 語意、數小時組合與其他引擎驗收及其他公開品質限制仍列為未完成。
+
+
+大型組合另已完成 [實體 Hosted Chromium 八輪](composition-lifecycle.md#修正後的實體八輪)：每輪 21,005 OP 原模型加入兩片段、接線、新增 ADD，下載組合模型與 v2 自動保存備份，核對完整 1.25 GiB 非零權重／options／原始 byte ranges、重開及 pattern 正負例。40 個模型、16 個指紋 Workers 與 owned 程序清理、固定 RSS 門檻通過；有限八輪不代替數小時、其他引擎或大型手動 v2 匯入恢復。正式 preview.26 應用沒有改動或重新部署。

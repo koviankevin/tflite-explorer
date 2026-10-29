@@ -2,7 +2,7 @@
 
 2026-10-29 使用者明確調整本輪範圍：「先保證外網的 OK 就好，內網我會再修改」。本輪以 [公開版使用與驗收清單](public-acceptance.md)為交付範圍；公司模型、dialect、compiler／runtime 與內網部署由使用者自行處理，不再作為外網交付的阻擋條件。本頁保留完整品質規劃及各項證據界線，不將未驗收環境寫成已通過。
 
-最新固定正式版為 preview.26／build `5846ee3c3a5e0a37`。[正式交付](model-composition.md#preview26-正式交付)核對正式站 1,380 檔、30 項原生操作、14 種情境、四份固定下載與權威部署，四工作 attempt 1 成功。新增同一 TFLite／subgraph 的獨立組合草稿、介面、v2 保存與匯出；原有完整編輯及有限八輪通過。大型組合尚只有另列的 Node 切片實驗，未把既定流程八輪當成新組合長測；其他公開品質限制仍保留。
+最新固定正式版為 preview.26／build `5846ee3c3a5e0a37`。[正式交付](model-composition.md#preview26-正式交付)核對正式站 1,380 檔、30 項原生操作、14 種情境、四份固定下載與權威部署，四工作 attempt 1 成功。新增同一 TFLite／subgraph 的獨立組合草稿、介面、v2 保存與匯出；原有完整編輯及有限八輪通過。大型組合已另完成 [實體 Hosted Chromium 八輪](composition-lifecycle.md#修正後的實體八輪)，含組合接線、新增 OP、v2 備份、1.25 GiB 權重／options、重開與 RSS／Worker；不把它當成數小時或其他引擎證據。其他公開品質限制仍保留。
 
 歷史 preview.21 應用程式的 [新版兩引擎八輪](desktop-physical.md#preview21-應用的兩引擎八輪結果)另已核對：當時 Linux WebKit 通過原門檻，Firefox 的 RSS 峰值成長失敗，完整功能／bytes／Worker 與程序清理通過。這些早期結果原樣保留；後續 preview.22 修正與新量測見下段，沒有為了通過調整門檻。
 
