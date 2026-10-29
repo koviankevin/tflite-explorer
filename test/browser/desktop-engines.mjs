@@ -1,5 +1,6 @@
 import {installIdentityWorkerAudit,identityWorkerDiagnostics} from './identity-worker-diagnostics.mjs';
 import {workerStartupControl} from './worker-startup-control.mjs';
+import {desktopRuntimeRSSFlow} from './desktop-runtime-rss-flow.mjs';
 // The browser runs only on the hosted Linux runner. Gestures, chooser and
 // download events use Playwright's browser protocol. Observations read DOM;
 // Firefox diagnosis may query a native Worker context for a data-free constant.
@@ -105,10 +106,16 @@ try{
         assert.ok(report.workerStartupControl.rows.filter(row=>row.timing==='ready').every(row=>row.readyAt!==null));
         assert.equal(report.workerStartupControl.pageClosed,true);
     }
+    report.desktopRuntimeRSSRequired=report.activeComputeRequired&&Number(manifest.release.version.match(/^0\.2\.0-preview\.(\d+)$/)?.[1]??31)>=31;
+    if(report.desktopRuntimeRSSRequired){
+        phase='desktop-runtime-rss';report.desktopRuntimeRSS=await desktopRuntimeRSSFlow({browserType:{firefox,webkit}[engine],engine,base});
+        assert.equal(report.desktopRuntimeRSS.evaluation.status,'passed');
+        await diagnostics?.snapshot('after-desktop-runtime-rss');
+    }
     await target.verifyUnchanged();
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);await diagnostics?.snapshot('before-browser-close',{probe:true});
     await copyFile(report.activeCompute?.screenshot?path.join(directory,'active-cpu-timeout.png'):report.usageGuide?.screenshot?path.join(directory,'usage-guide.png'):path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';phase='complete';
-}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide','activeCompute','workerStartupControl'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide','activeCompute','workerStartupControl','desktopRuntimeRSS'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     try{await target?.close();}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
