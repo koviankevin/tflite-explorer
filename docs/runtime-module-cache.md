@@ -87,10 +87,30 @@ Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model
 
 接下來補上移除前明確清空 File input，並將 runtime IO 改為有界 bytes 的 Worker ownership transfer，下載時才建立 Blob；保留直接 Node reference 的既有 Blob 預設、ZIP manifest／CRC／內容、30 秒取消和自然 URL 期限。先取得回歸失敗與真實傳送／CPU 證據，再執行原有三引擎及 RSS 驗收。尚未完成修正，preview.32 維持未發布。
 
-## IO 修正候選（待 Hosted 驗收）
+## IO bytes／File cleanup 候選
 
 瀏覽器 runtime 的 ZIP 改為單一、最多 17 MiB 的 owned `Uint8Array`，經 `postMessage` transfer list 移交 buffer；不傳送 Blob、共享記憶體或指向 WASM／模型 buffer 的片段。主頁只保存目前 IO bytes，按下載時才建立 ZIP Blob。原有直接 Node `executeRuntime`／`runtimeArchive` 呼叫仍預設 Blob；ZIP 格式、manifest、CRC、BIN 內容、16 MiB tensor IO 預算、30 秒取消及原生 60 秒 URL 期限不變。
 
 輸入確認先保留已驗證的 File 身分，再清空所有 File inputs 的 value 並移除控制項；取消與被新請求取代也使用相同清理。新回歸先在舊來源失敗：要求 transferable archive 卻取得 Blob，以及保留的 detached inputs 仍有 File。修正後 46 項選測通過，含真正 Node Worker 的移交／detachment、8 MiB IO 完整 SHA／獨立 ZIP CRC、實際 CPU `[4,6]`／`[40,60]`、新舊 archive 路徑、亂數／草稿與確認／取消／替換清理。這些是 Node 證據，尚不代表瀏覽器 RSS 已修復。
 
 Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原生 chooser 的元素 handle，直接讀取 detached FileList，要求 disconnected、零 files、空 value；確認仍需完成一次真正 CPU 執行，取消不得再建立 runtime Worker。此證據在原記憶體量測後收集，不修改其 baseline。已完成的獨立診斷不再每次重跑，正式記錄引用其原始 archive；原有實際 runtime RSS 仍完整重新執行。新應用、三引擎、四發布關卡及正式交付仍待完成。
+
+### IO 候選的原始結果
+
+來源 `5746284846937690178f2ed63347a2bffd8c8980`、tree `44c585aa68dd10adf9ea2d8de55eb973c26f8913`、build `dc29d2173f196ffa` 的 [三引擎原始檔與讀取器](results/runtime-io32-originals.zip)、[SHA inventory](results/runtime-io32-originals.json)保留 68 個成員，完整 ZIP SHA 為 `d8dbbe601cb2f7f6d844c20b1e26622f151b88fbbe2fbf48c1390b738e5f0500`。Provider／source／306 core、獨立功能與 RSS、四關卡讀取器皆實際 exit 0；這表示證據可核對，**不表示 Firefox 效能通過**。失敗讀取器最初誤要求 producer 成功路徑才有的 root `sourceUnchanged`；更正為核對真實存在的 nested RSS end-source 觀測、clean source 與 provider 原檔。原失敗 log 也保留，未改寫觀測。
+
+| 引擎 | closed RSS slope（bytes／輪） | final drift（bytes） | 原驗收 |
+| --- | ---: | ---: | --- |
+| Firefox | 37,970,856.23 | 120,406,016 | **失敗：closed-rss-slope** |
+| WebKit | 11,507,185.37 | 47,869,952 | 通過 |
+| Chromium | 8,887,383.77 | 1,536,000 | 通過 |
+
+[Desktop 40956588799](https://github.com/koviankevin/tflite-explorer/actions/runs/40956588799) 的兩引擎均完成 17 功能／19 runtime／5 指南、原生 67 model／20 runtime close。獨立 cold contexts 完成一次 GET／三次 runtime／一次 model close；新增 retained input handle 在確認和取消後都由一個 File 變成零 File，元素 disconnected 且 value 空白。這證實清理契約，不能證實 Firefox RSS 根因。Firefox slope 比先前 27,718,217.14 更高，不能宣稱記憶體改善；八輪 24 CPU／IO、自然 60 秒 URL、原門檻／fixture／baseline 均未改動，owned processes 最後全部退出。
+
+[Chromium 40956969105](https://github.com/koviankevin/tflite-explorer/actions/runs/40956969105) 完成 33 功能、19 runtime、5 指南、86 model／44 runtime close、相同 retained input 與 cold 證據。原 Chromium lifecycle 記錄完整 input／output SHA 與 `bytesVerified`，沒有 Desktop 的 `crcVerified` 欄位；讀取器依實際 schema 驗證，未宣稱不存在的觀測。核心 40885892195 的 87 個 executed scope 檔相同而重用；大型實體模型 40956689353、contract 40956690681、site 40956969105 三個新 main workflow_dispatch 成功，四關卡 provider evidence 已認證。額外 Firefox RSS 仍失敗，因此 **preview.32 未發布，正式站／固定 Release 仍為 preview.31**。
+
+### 下一個 ownership 修正（尚待 Hosted）
+
+第一次明確下載 IO 時只建立一個 Blob，保存在本次 session 的 IO 物件，後續下載重用它；原 transferred bytes 立即以標準 `ArrayBuffer.transfer(0)` 退還 backing storage。若瀏覽器沒有這個 API，則清零 retained view 並丟棄 owned reference，不宣稱強制釋放或獨立 heap 證據。Blob snapshot 必須在退還 bytes 後仍保持完整 ZIP／SHA／CRC。原生 URL 的既有 60 秒期限不變。
+
+開始下一次執行、取消、reset／換模型及 late result 不再只丟棄物件，而明確退還舊 owned bytes；下載 Blob 只清除 session 的引用，已建立 URL 仍按原期限到期。部分 view／shared memory 不可 detach 或清零；不新增 IO 持久快取、runtime 重用、隱私資料儲存、推論觸發或 forced GC。舊程式上先取得真實回歸失敗（未 retire bytes、未 cache Blob、session 未清理），修改後 51 項選測通過，含實際 Worker 的 8 MiB IO、CPU reference、fallback、cancel／restart 的 late-result 隔離。這是資源所有權修正，仍需原 Hosted RSS 驗收，不能先稱 Firefox 問題已解決。

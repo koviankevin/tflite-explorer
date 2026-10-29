@@ -1,0 +1,433 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T21:50:00.864722+00:00",
+  "source": {
+    "commit": "5746284846937690178f2ed63347a2bffd8c8980",
+    "tree": "44c585aa68dd10adf9ea2d8de55eb973c26f8913",
+    "committedAt": "2026-10-30T05:15:52+08:00",
+    "dirty": false
+  },
+  "buildId": "dc29d2173f196ffa",
+  "runs": {
+    "core": 40885892195,
+    "browser": 40956689353,
+    "contract": 40956690681,
+    "site": 40956969105,
+    "native": 40956588799
+  },
+  "authentication": "passed",
+  "acceptance": "Firefox original RSS failed; WebKit and Chromium passed; four gates passed but no publication",
+  "sourceBoundReaders": {
+    "firefox": {
+      "exit": 0,
+      "chunk": "bfa48c",
+      "receipt": "build/qa/runtime-io32-firefox/failed-rss-review.json"
+    },
+    "webkit": {
+      "exit": 0,
+      "chunk": "336f8e",
+      "receipt": "build/qa/runtime-io32-webkit/strict-review-recheck.json"
+    },
+    "chromium": {
+      "exit": 0,
+      "chunk": "d46f1c",
+      "receipt": "build/qa/runtime-io32-chromium-40956969105-final/review.json"
+    },
+    "gates": {
+      "exit": 0,
+      "chunk": "3c5142",
+      "receipt": "build/qa/runtime-io32-gates-authenticated/review.json"
+    }
+  },
+  "results": {
+    "firefox": {
+      "status": "failed",
+      "issues": [
+        "closed-rss-slope"
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 120406016,
+        "closedRssSlopeBytesPerCycle": 37970856.22857143,
+        "sampledPeakRssBytes": 1134596096,
+        "maxSampleGapMs": 545,
+        "sampledPeakGrowthBytes": 360964096
+      }
+    },
+    "webkit": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 47869952,
+        "closedRssSlopeBytesPerCycle": 11507185.371428572,
+        "sampledPeakRssBytes": 951451648,
+        "maxSampleGapMs": 693,
+        "sampledPeakGrowthBytes": 287047680
+      }
+    },
+    "chromium": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 1536000,
+        "mainHeapDriftBytes": 59136,
+        "closedRssSlopeBytesPerCycle": 8887383.771428572,
+        "sampledPeakRssBytes": 721952768,
+        "maxSampleGapMs": 693,
+        "sampledPeakGrowthBytes": 27570176
+      }
+    }
+  },
+  "archive": {
+    "path": "runtime-io32-originals.zip",
+    "bytes": 1558604,
+    "sha256": "d8dbbe601cb2f7f6d844c20b1e26622f151b88fbbe2fbf48c1390b738e5f0500",
+    "members": 68
+  },
+  "members": [
+    {
+      "path": "runtime-io32-firefox/authentication.json",
+      "bytes": 87644,
+      "sha256": "81554c89f6b7c8d95fc0b00e7b041de16fb2eff6e4e721c083d514b7af93b66e"
+    },
+    {
+      "path": "runtime-io32-firefox/desktop-firefox.json",
+      "bytes": 2003923,
+      "sha256": "353446b5234d92816464d6d407ebbad9a3e18ec0fa2f1c8310a34b377138e7b5"
+    },
+    {
+      "path": "runtime-io32-firefox/desktop-firefox.png",
+      "bytes": 156538,
+      "sha256": "fe97d06b5fd5d160b88d793b6bf96946b0d2c39ae7dd188e69ba4199a28a85b3"
+    },
+    {
+      "path": "runtime-io32-firefox/failed-rss-review.json",
+      "bytes": 38433,
+      "sha256": "e1a774b28cba9fea6a459f4afdc86153b946e0cdab10fba29c14b4128fbd3c8e"
+    },
+    {
+      "path": "runtime-io32-firefox/jobs.json",
+      "bytes": 7900,
+      "sha256": "2520527f717624e35159aa237660a98606e7553a2a8d8b394a8ff5c64055b314"
+    },
+    {
+      "path": "runtime-io32-firefox/listing.json",
+      "bytes": 1851,
+      "sha256": "ea30b2e903e164f595f7eac3a69dc96c943ba16b1476e6b3eefe5b3777af7ffb"
+    },
+    {
+      "path": "runtime-io32-firefox/original.zip",
+      "bytes": 235375,
+      "sha256": "18c544e0bbad812f1dc5abc99cb70753797f8adb25fab0e79cfe837e13a785a9"
+    },
+    {
+      "path": "runtime-io32-firefox/run.json",
+      "bytes": 14423,
+      "sha256": "f2021b4c6158d99f83b96d60e9ae68f98bc51ec036061dd4a947a71b5437305a"
+    },
+    {
+      "path": "runtime-io32-webkit/authentication.json",
+      "bytes": 80487,
+      "sha256": "8ac797a18e6b9fde2e4898192dbd18174d2f8d47682de4bb0c041f3466655066"
+    },
+    {
+      "path": "runtime-io32-webkit/desktop-webkit.json",
+      "bytes": 1094506,
+      "sha256": "9229f25b38f33f2cb4404dce2a14aa132361f7eb00632f0ed4a3d8d94635e7b1"
+    },
+    {
+      "path": "runtime-io32-webkit/desktop-webkit.png",
+      "bytes": 164340,
+      "sha256": "d8089b1768afa37a440a403c9da25b740ee65950e6459a14b71162f3f19999a8"
+    },
+    {
+      "path": "runtime-io32-webkit/jobs.json",
+      "bytes": 7900,
+      "sha256": "2520527f717624e35159aa237660a98606e7553a2a8d8b394a8ff5c64055b314"
+    },
+    {
+      "path": "runtime-io32-webkit/listing.json",
+      "bytes": 1851,
+      "sha256": "ea30b2e903e164f595f7eac3a69dc96c943ba16b1476e6b3eefe5b3777af7ffb"
+    },
+    {
+      "path": "runtime-io32-webkit/original.zip",
+      "bytes": 215584,
+      "sha256": "cac16d42e344eb69900416d5a476b4965e5f62dffae097a9cc7c4851fb03846c"
+    },
+    {
+      "path": "runtime-io32-webkit/run.json",
+      "bytes": 14423,
+      "sha256": "f2021b4c6158d99f83b96d60e9ae68f98bc51ec036061dd4a947a71b5437305a"
+    },
+    {
+      "path": "runtime-io32-webkit/strict-review-recheck.json",
+      "bytes": 2920,
+      "sha256": "39c2009646ecef5a008673c09b08cf51d87126eec32512a5c72d1e6826b641e3"
+    },
+    {
+      "path": "runtime-io32-webkit/strict-review.json",
+      "bytes": 2920,
+      "sha256": "39c2009646ecef5a008673c09b08cf51d87126eec32512a5c72d1e6826b641e3"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/jobs.json",
+      "bytes": 5633,
+      "sha256": "995a30ea6abc813708a8c66a2c3491451865cb3f60dcd31ab98d473f47ef36ef"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/listing.json",
+      "bytes": 1866,
+      "sha256": "fd2e7c7a05672500adf4c443e8c1cd251c34570df9f3d6ce1ffa15b4533e29d0"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/native-artifact.json",
+      "bytes": 832,
+      "sha256": "edc9e86b81670552498853a1ad80c00032b2e895ad1c9ab8ed096a8ef7cae1f8"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/native.zip",
+      "bytes": 213056,
+      "sha256": "72311182c300753b251aa36a884a53c1963d514ad034f8dd2a1bdebf313ee03c"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/production-smoke.json",
+      "bytes": 507644,
+      "sha256": "0c76beae1ae533cfda356f632a11454c3d98fde4d2a1eb04b3725331b5469b8b"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/production-smoke.png",
+      "bytes": 149482,
+      "sha256": "02b31b4b63d2cb1adf158a7782d31223ccfb7d638d750149bb1a0f0dcb396b53"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/review.json",
+      "bytes": 2193,
+      "sha256": "0aee889f1a8a5809981f3d17f391b4642025d23f6c8cf2664afa7f45dad4e805"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/run.json",
+      "bytes": 14419,
+      "sha256": "c92ff6be67c9c1791e1e6d2f84dc28ffb99ae8bd55cdc4a61edfb0d54cfcbbbd"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/site-artifact.json",
+      "bytes": 828,
+      "sha256": "8a9ecf6011c32b21b4d90a061c2d6444e3e66e1a634e48f3c3c2d26bc352213e"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/site.zip",
+      "bytes": 4673,
+      "sha256": "7534235c0a11d3dc8682efc6a18366795bda722d0e4992ea15663b97e4689264"
+    },
+    {
+      "path": "runtime-io32-chromium-40956969105-final/versioned-site-browser.json",
+      "bytes": 93962,
+      "sha256": "1b769c977c57463ee0488cfcd6a77d4a8e0243ccc87a6bbfa3aa5ca409e0489b"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-13.zip",
+      "bytes": 740,
+      "sha256": "41c233ca7309e11837ced71a56eee03b7d1bd5150ce5f593ba8ffa3a74b2ff08"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-13.zip.json",
+      "bytes": 1172,
+      "sha256": "4b958246c0905c4e0fc0c732568fe8c862cc2ef4df923efebdfc43fb27775d9d"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-17.zip",
+      "bytes": 4673,
+      "sha256": "7534235c0a11d3dc8682efc6a18366795bda722d0e4992ea15663b97e4689264"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-17.zip.json",
+      "bytes": 93962,
+      "sha256": "1b769c977c57463ee0488cfcd6a77d4a8e0243ccc87a6bbfa3aa5ca409e0489b"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-5.zip.json",
+      "bytes": 59676,
+      "sha256": "ed22fcd9d1f6c7cf44b0af61da50456252b3781426efd3949950129a959566ed"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-9.zip",
+      "bytes": 29946,
+      "sha256": "bc7b56fb06349fc78359a7318e6b755ecab601d740046be843689f625624d740"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/artifact-9.zip.json",
+      "bytes": 369572,
+      "sha256": "3091a7117c47ab48872fd10175f49972c9afba0f611297eca1d0ebe5c8166633"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-1.json",
+      "bytes": 2587,
+      "sha256": "0df1e3229e66a00de9c746018b98ac2afd356b32b3fc846779a842ade0df235b"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-10.json",
+      "bytes": 14411,
+      "sha256": "00207b606f44daab0666c140330ab4ede08db75ec53c34b603ca714f0ab97391"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "8084bd48c6c62b60dceeef38b6e603ed70b0c926fd8840cb9ced0abcaec973d7"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-12.json",
+      "bytes": 946,
+      "sha256": "71174c58a6183cf8acb2a0aac946ae45fea28b23edc63b0f620b8f5acc25dc45"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-14.json",
+      "bytes": 14419,
+      "sha256": "c92ff6be67c9c1791e1e6d2f84dc28ffb99ae8bd55cdc4a61edfb0d54cfcbbbd"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "995a30ea6abc813708a8c66a2c3491451865cb3f60dcd31ab98d473f47ef36ef"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "fd2e7c7a05672500adf4c443e8c1cd251c34570df9f3d6ce1ffa15b4533e29d0"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-6.json",
+      "bytes": 14443,
+      "sha256": "282df03b95c19f1435b3c9f2e6da76c3bd00582c660dcdf94b6392cbdee3ace6"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "de21c45fa907501f5cb35955097154c2eb8089fb23fefe4d52a779606f37a7c6"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/metadata-8.json",
+      "bytes": 949,
+      "sha256": "18699b0272516539f0efe7256b5e143b2df9f8cb3864d47e34a9240279b6536a"
+    },
+    {
+      "path": "runtime-io32-gates-authenticated/review.json",
+      "bytes": 196640,
+      "sha256": "3ecdb231e38342af6063ffc60a15fd4e698f48c833f8849121fe3ec761505cb8"
+    },
+    {
+      "path": "reviewers/auth-runtime-io32-desktop.mjs",
+      "bytes": 5530,
+      "sha256": "0a78bed48c4c73cae7fec84969dfbf007b5154b306e2318ea4b084bf2fbab3f4"
+    },
+    {
+      "path": "reviewers/review-runtime-io32-failure.mjs",
+      "bytes": 6511,
+      "sha256": "67ee2c743202f09c28e34780ccccdaa4e9c186921b706e9429e921df55dd2f92"
+    },
+    {
+      "path": "reviewers/review-runtime-io32-native.mjs",
+      "bytes": 6094,
+      "sha256": "746b044eef37f583c0b3071ff182206f8137f0cb0302c07e5146d604f8366bc2"
+    },
+    {
+      "path": "reviewers/review-runtime-io32-native-recheck.mjs",
+      "bytes": 6102,
+      "sha256": "ff4bd1e88cfa71c381151cdbd56358de9c75797068e70f71c93e4e6b3459158d"
+    },
+    {
+      "path": "reviewers/review-runtime-io32-chromium.mjs",
+      "bytes": 8367,
+      "sha256": "a556c642a7ce1f728405a072ccf485d48a859f48c0ee8b118f6adfbc812f79d9"
+    },
+    {
+      "path": "reviewers/review-runtime-io32-gates.mjs",
+      "bytes": 2141,
+      "sha256": "77e1ef54f810a7f60d5f6bf79ffb77b81ded189be7ed103eb24c050245161743"
+    },
+    {
+      "path": "reviewers/assert-compute-desktop32.mjs",
+      "bytes": 7027,
+      "sha256": "c5338e66940f79109faa34178ce1d2855f43ed83cd59aa353950cacc50e41221"
+    },
+    {
+      "path": "reviewers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "path": "reviewers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "path": "reviewers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "path": "reviewers/runtime-io-transfer-red.log",
+      "bytes": 9995,
+      "sha256": "513d504ccaacfb8b9e4c7dbde2566aed8a7771cb57c47f3c977766174bbe70d9"
+    },
+    {
+      "path": "reviewers/runtime-io-transfer-green-final.log",
+      "bytes": 7546,
+      "sha256": "aa3845dbdd948f44b976d4014aaa6853a1afa1fe3b09f8e6c8f00099ec3db126"
+    },
+    {
+      "path": "reviewers/runtime-io32-firefox-reader.log",
+      "bytes": 496,
+      "sha256": "2f7f53ca09237791238f0c73cb488bacd7784be92607dcec7f236f34b8a80ad4"
+    },
+    {
+      "path": "reviewers/runtime-io32-firefox-reader-fixed.log",
+      "bytes": 22136,
+      "sha256": "cb4be0bcfa13a703447bd70f441cdbb886366040aa317b5b1d6238e7e0a23b24"
+    },
+    {
+      "path": "reviewers/runtime-io32-webkit-reader-recheck.log",
+      "bytes": 2261,
+      "sha256": "ef71f7a7c66e89c732ceb81892518710c3738bf0b3fd3a246a8ec0acd62eea6a"
+    },
+    {
+      "path": "reviewers/runtime-io32-chromium-reader.log",
+      "bytes": 1798,
+      "sha256": "090e55a437f693264029100fd203b0fe7cb1423c5e1ba4575b28551f705609c0"
+    },
+    {
+      "path": "reviewers/runtime-io32-gates-reader.log",
+      "bytes": 708,
+      "sha256": "ab955975937eaaf05da78f119d742ed647497092fb696ca77e2b3105e9343b1e"
+    },
+    {
+      "path": "reviewers/runtime-io32-scope.json",
+      "bytes": 795,
+      "sha256": "e4d0802fc1ca22902a6465405f798bcdc0ff16f1b6506e32311bdb62ced4f328"
+    }
+  ],
+  "readerCorrection": "Failure report has no root sourceUnchanged flag because producer exits before success-only final check. Reader authenticates nested RSS sourceUnchanged=true and actual exact clean gitSource; observations unchanged. Initial reader assertion failure retained."
+}
