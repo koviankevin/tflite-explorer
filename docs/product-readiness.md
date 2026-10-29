@@ -2,6 +2,8 @@
 
 preview.31 的資源清理與 reader 隔離修正已完成[正式交付](preview31.md#發布狀態)：三引擎候選、1.25 GiB／21,005 OP 八輪及手動 CPU／IO 八輪通過，四關卡原始來源／digest／scope 已核對。正式站 1,406 檔、33 項原生操作及四份固定下載吻合原準備包；整體目標保持進行中。
 
+現行應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。下一步以同資料的本機 File 讀取區分網路與配置成本，正式版與原門檻維持。
+
 手動 interpreter 另完成 [Chromium 正式站八輪／24 次 CPU 與 IO 生命週期](runtime-io-lifecycle.md#已核對結果)：4 MiB const、每次 4 MiB input／output、8 份完整 bytes、自然下載 URL 釋放、411 次觀測程序 RSS／main heap 與正常程序退出通過。這是新的有限 CPU／IO 證據，沒有倒算到既有兩小時開檔／編輯負載，也沒有宣稱連續 Worker heap、數小時 interpreter 或其他引擎完成。
 
 現行固定 preview.30 另通過[三引擎真實運算取消／逾時／恢復](runtime-active-compute.md#三引擎實際結果)：不暫停下載、不用 fake timer，實際 WHILE invoke 後觀測 UI 回應、手動取消與網站 30 秒 timer 終止專用 Worker，再開正常模型成功執行。此測試與證據增補沒有修改應用或重新部署，仍不代替數小時 runtime、其他 OS 或 RSS 驗收。
