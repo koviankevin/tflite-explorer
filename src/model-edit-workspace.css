@@ -17,3 +17,5 @@
 .edit-interface-choice{display:flex;align-items:flex-start;gap:.5rem;margin:.5rem 0;overflow-wrap:anywhere;}
 .edit-interface-choice input{flex:0 0 auto;margin-top:.25rem;}
 .edit-interface-choice span{min-width:0;}
+
+.edit-session-label{display:inline-flex;align-items:center;gap:6px;margin-left:12px;font-size:12px}.edit-session-label select{max-width:180px}.result-heading:has(#compose-mode:not([hidden])){flex-wrap:wrap}#compose-mode{font-size:12px}#edit-restart-dialog{max-width:min(560px,calc(100vw - 48px))}

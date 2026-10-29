@@ -1,6 +1,6 @@
 {
   "name": "tflite-pattern-explorer",
-  "version": "0.2.0-preview.27",
+  "version": "0.2.0-preview.28",
   "private": true,
   "license": "MIT",
   "type": "module",

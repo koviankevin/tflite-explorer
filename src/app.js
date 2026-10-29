@@ -276,7 +276,7 @@ async function loadModelTab(nextFile,saved) {
         if (file !== thisFile) return;
         model = summary;
         const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
-        for(const id of ['edit-mode','compose-mode']){$(id).hidden=!editable;$(id).title=editable?(id==='compose-mode'?'將選取或目前匹配加入獨立組合草稿':'編輯實際 TFLite 模型'):'實際模型編輯僅支援 TFLite';}
+        for(const id of ['edit-mode','compose-mode','compose-capture']){$(id).hidden=!editable;$(id).title=editable?(id==='compose-mode'?'將選取或目前匹配加入獨立組合草稿':'編輯實際 TFLite 模型'):'實際模型編輯僅支援 TFLite';}
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
@@ -562,7 +562,7 @@ async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex
 }
 function focusOverviewMatch(item,index) {
     const match=renderedGraph.overviewMatches.find(m=>m.index===index);if(!match)return;
-    activeIndex=index;selection=item;setCurrentGraph(item.graph);
+    activeIndex=index;selection=item;setCurrentGraph(item.graph);editWorkspace.selectionChanged();
     if(![...$('overview-match').options].some(option=>option.value===String(index))) {
         for(const option of [...$('overview-match').options])if(option.dataset.temporary)option.remove();
         const option=overviewOption(match);option.dataset.temporary='true';$('overview-match').add(option);
@@ -613,6 +613,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,
     if(item===selection && blockGraph!==undefined && renderedGraph?.combined && !forceDraw && whole===full){focusMatchBlock(blockGraph);return;}
     const targetGraph=blockGraph ?? (item===selection && item.blocks?.some(b=>b.graph===currentGraph) ? currentGraph : item.graph);
     activeIndex = index; selection = item; full = whole;
+    editWorkspace.selectionChanged();
     $('export-match').hidden = item.kind !== 'patterns' || !canExportSubmodel();
     $('export-match').disabled = exportBusy || !canExportSubmodel();
     document.querySelectorAll('[data-result-index]').forEach((button) => button.classList.toggle('active', Number(button.dataset.resultIndex) === index));
@@ -630,7 +631,7 @@ async function selectResult(index, { whole, forceDraw = false, zoom, blockGraph,
 }
 async function drawGraph(graph, whole = false, zoom,viewport) {
     if (!model) return;
-    setCurrentGraph(graph); full = whole; selection = null;
+    setCurrentGraph(graph); full = whole; selection = null;editWorkspace.selectionChanged();
     overviewMode=false;$('pattern-overview-controls').hidden=true;
     refreshPatternFold();
     $('match-blocks').hidden=true;
@@ -889,12 +890,13 @@ function applyPattern(pattern) {
 }
 function refreshPickedNodes() {
     document.body.classList.toggle('pattern-picking',pickingPattern);
+    editWorkspace.selectionChanged();
     const cfg=model?.graphs[($('capture-cfg').checked?captureSelections()[0]?.graph:undefined) ?? currentGraph]?.cfgExport;
     const across=$('capture-cfg').checked,count=across ? [...cfgSelections.values()].reduce((n,set)=>n+set.size,0) : pickedNodes.size;
     $('capture-cfg').disabled=!!renderedGraph?.combined;
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
-    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選原始 OP，可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。鍵盤 Tab 到節點，Enter／Space 切換；方向鍵平移，＋／－縮放。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選可跨 block 加入 layers；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選加入多個 layers；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選切換原始 OP（已選取消、未選加入），可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。鍵盤 Tab 到節點，Enter／Space 切換；方向鍵平移，＋／－縮放。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選切換 layers（已選取消、未選加入），可跨 block；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選切換 layers（已選取消、未選加入）；點選可加入／取消，Alt＋拖曳平移。';
     $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;
@@ -1056,12 +1058,12 @@ function captureNodeEvent(event) {
 }
 const layerMarquee=rectangleSelection($('target'),{
     enabled:()=>pickingPattern && !virtualOverview && $('target').getAttribute('aria-busy')!=='true',
-    candidates:()=>renderedNodes.map(entry=>({element:entry.element,location:layerLocation(entry,currentGraph)})).filter(c=>c.element && c.location),
+    candidates:()=>renderedNodes.map(entry=>{const location=layerLocation(entry,currentGraph);return {element:entry.element,location,selected:!!location&&!!($('capture-cfg').checked?cfgSelections.get(location.graph):pickedNodes)?.has(location.node)};}).filter(c=>c.element && c.location),
     commit:locations=>{
         const across=$('capture-cfg').checked,selections=across?cfgSelections:new Map([[currentGraph,pickedNodes]]);
-        if(!updateLayerSelection(selections,locations)){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
+        if(!updateLayerSelection(selections,locations,{toggle:true})){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
         if(across)syncCaptureGraph();refreshPickedNodes();
-        status(locations.length?`已加入框選範圍內 ${locations.length} 個 layers；重複的 layers 不會重複加入。`:'框選範圍內沒有可選取的 layers。');
+        status(locations.length?`已切換框選範圍內 ${locations.length} 個 layers；已選的取消，未選的加入。`:'框選範圍內沒有可選取的 layers。');
     }
 });
 $('target').addEventListener('click', captureNodeEvent, true);

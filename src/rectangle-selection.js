@@ -8,7 +8,7 @@ export function rectangleSelection(target,{enabled,candidates,commit}) {
     const cancel=()=>{
         if(!drag)return false;
         const previous=drag;drag=null;
-        previous.box?.remove();previous.candidates.forEach(c=>c.element.classList.remove('marquee-hit'));
+        previous.box?.remove();previous.candidates.forEach(c=>c.element.classList.remove('marquee-hit','marquee-remove'));
         doc.removeEventListener('pointermove',move,true);doc.removeEventListener('pointerup',up,true);doc.removeEventListener('pointercancel',cancelPointer,true);
         if(target.hasPointerCapture(previous.id))target.releasePointerCapture(previous.id);
         return true;
@@ -17,9 +17,9 @@ export function rectangleSelection(target,{enabled,candidates,commit}) {
         const rect=selectionRectangle(drag.start,{x:event.clientX,y:event.clientY},drag.bounds);
         drag.rect=rect;drag.hits=layersInRectangle(drag.candidates,rect);
         const hits=new Set(drag.hits);
-        drag.candidates.forEach(c=>c.element.classList.toggle('marquee-hit',hits.has(c)));
+        drag.candidates.forEach(c=>{c.element.classList.toggle('marquee-hit',hits.has(c)&&!c.selected);c.element.classList.toggle('marquee-remove',hits.has(c)&&!!c.selected);});
         Object.assign(drag.box.style,{left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.right-rect.left}px`,height:`${rect.bottom-rect.top}px`});
-        drag.box.firstChild.textContent=`框選 ${drag.hits.length} 個 layers`;
+        drag.box.firstChild.textContent=`加入 ${drag.hits.filter(c=>!c.selected).length}／取消 ${drag.hits.filter(c=>c.selected).length} 個 layers`;
     };
     const move=event=>{
         if(!drag || event.pointerId!==drag.id)return;

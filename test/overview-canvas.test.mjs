@@ -88,8 +88,9 @@ test('Canvas box selection inverse-transforms zoom/pan with a DOM offset, preser
         canvas.emit('pointerdown',{clientX:900,clientY:600,altKey:true});canvas.emit('pointermove',{clientX:820,clientY:650});canvas.emit('pointerup',{clientX:820,clientY:650});assert.equal(commits.length,0);
         canvas.emit('wheel',{clientX:670,clientY:450,deltaY:100});env.flush();assert.ok(Number(canvas.dataset.zoom)<1);
         const box=(start,end)=>{canvas.emit('pointerdown',{clientX:start[0],clientY:start[1]});canvas.emit('pointermove',{clientX:end[0],clientY:end[1]});env.flush();assert.equal(canvas.dataset.marqueeCount,'2');canvas.emit('pointerup',{clientX:end[0],clientY:end[1]});env.flush();};
-        box([730,450],[520,395]);assert.deepEqual(commits.at(-1),{ids:['a','b'],toggle:false});assert.deepEqual([...selected.keys()].sort(),[1,2]);assert.equal(canvas.dataset.selectionCount,'2');
-        box([520,395],[730,450]);assert.equal(canvas.dataset.selectionCount,'2','repeat boxes add each original OP once');
+        box([730,450],[520,395]);assert.deepEqual(commits.at(-1),{ids:['a','b'],toggle:true});assert.deepEqual([...selected.keys()].sort(),[1,2]);assert.equal(canvas.dataset.selectionCount,'2');
+        box([520,395],[730,450]);assert.equal(canvas.dataset.selectionCount,'0','a repeated rectangle removes selected OPs exactly once');
+        box([730,450],[520,395]);assert.equal(canvas.dataset.selectionCount,'2');
         canvas.emit('pointerdown',{clientX:566,clientY:532});canvas.emit('pointerup',{clientX:566,clientY:532});env.flush();assert.deepEqual(commits.at(-1),{ids:['c'],toggle:true});assert.equal(canvas.dataset.selectionCount,'3');
         canvas.emit('pointerdown',{clientX:566,clientY:532});canvas.emit('pointerup',{clientX:566,clientY:532});env.flush();assert.equal(canvas.dataset.selectionCount,'2');
         canvas.emit('pointerdown',{clientX:-10000,clientY:-10000});canvas.emit('pointermove',{clientX:20000,clientY:20000});canvas.emit('pointerup',{clientX:20000,clientY:20000});assert.deepEqual(commits.at(-1).ids,['a','b','c'],'the selection is clipped to the actual viewport, not its preload margin or the whole model');
