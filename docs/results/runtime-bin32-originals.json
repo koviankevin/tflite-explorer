@@ -1,0 +1,188 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T22:29:13.645284+00:00",
+  "source": {
+    "commit": "71ea9855333b3ee880012a9b737eee166d643e9b",
+    "tree": "9a4c0361a77aaf206ee29ef4ec8434572518c2e7",
+    "committedAt": "2026-10-30T06:17:55+08:00",
+    "dirty": false
+  },
+  "buildId": "2ae5400d34745e36",
+  "run": 40964827311,
+  "authentication": "passed",
+  "acceptance": "Original FirefoxRSS failed at18,495,546.51 bytes/cycle. RawBINcopyremoval didnotresolve slope; no release. Functional/cold/retained/IO passed.",
+  "sourceBoundReaders": [
+    {
+      "kind": "provider/CRC/source/306core",
+      "exit": 0,
+      "chunk": "d99cfe"
+    },
+    {
+      "kind": "independent functional/cold/retained/originalRSS",
+      "exit": 0,
+      "chunk": "6fc182"
+    },
+    {
+      "kind": "executedSourceScope4",
+      "exit": 0,
+      "chunk": "a5d1fb"
+    }
+  ],
+  "watch": {
+    "exit": 1,
+    "chunk": "18e7e5"
+  },
+  "rss": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-slope"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 121647104,
+      "closedRssSlopeBytesPerCycle": 18495546.514285713,
+      "sampledPeakRssBytes": 1044389888,
+      "maxSampleGapMs": 590,
+      "sampledPeakGrowthBytes": 260694016
+    }
+  },
+  "archive": {
+    "path": "runtime-bin32-originals.zip",
+    "bytes": 500799,
+    "sha256": "515ad55172ecd20456f689976e424c4e36710e02fcb62dfd668ec0a404d9faf3",
+    "members": 26
+  },
+  "members": [
+    {
+      "path": "firefox/authentication.json",
+      "bytes": 87646,
+      "sha256": "9f9edce01cbb87cc8c86bd414d06bee42de0dbfe4765b4aee19463eb3f7fe5bc"
+    },
+    {
+      "path": "firefox/desktop-firefox.json",
+      "bytes": 2000350,
+      "sha256": "84487a32f003b27f5099f6c0b3270e5797f1243de601793a4be25faf6260f8d3"
+    },
+    {
+      "path": "firefox/desktop-firefox.png",
+      "bytes": 156538,
+      "sha256": "fe97d06b5fd5d160b88d793b6bf96946b0d2c39ae7dd188e69ba4199a28a85b3"
+    },
+    {
+      "path": "firefox/failed-rss-review.json",
+      "bytes": 35470,
+      "sha256": "b5434f1d898483b124b5edd7d0e77f8a7e08299112a3746fab72f5c52dc95f40"
+    },
+    {
+      "path": "firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "47638e3ac275666fec4003553e2af4b2bb948ae65a113c1ab8ac0855ff7af45c"
+    },
+    {
+      "path": "firefox/listing.json",
+      "bytes": 948,
+      "sha256": "eb851ef05c59e51d2e5c5d8f711473f8cebb0a45d00c0d8bd77c12842bccc1ec"
+    },
+    {
+      "path": "firefox/original.zip",
+      "bytes": 235626,
+      "sha256": "e31d507e167e455b468a3791bae296798ecbf827809e34e55385d3534bbe7249"
+    },
+    {
+      "path": "firefox/run.json",
+      "bytes": 14423,
+      "sha256": "70dc9afe469218e6ba6d4e797c98346ca2ba75b54eafc6cef93faf0c45fd11c8"
+    },
+    {
+      "path": "reviewers/auth-runtime-bin32-firefox.mjs",
+      "bytes": 5533,
+      "sha256": "d191bb58d4309d0139a7cbf7d8ff0aad02179977f40bdcb68acd6c33a8d4259d"
+    },
+    {
+      "path": "reviewers/review-runtime-bin32-failure.mjs",
+      "bytes": 6511,
+      "sha256": "cb689e670a76803248c47d77aa0abeb9d65848974094a109d49b93504100a8c1"
+    },
+    {
+      "path": "reviewers/assert-compute-desktop32.mjs",
+      "bytes": 7027,
+      "sha256": "c5338e66940f79109faa34178ce1d2855f43ed83cd59aa353950cacc50e41221"
+    },
+    {
+      "path": "reviewers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "path": "reviewers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "path": "reviewers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "path": "reviewers/runtime-bin-copy-red.mjs",
+      "bytes": 756,
+      "sha256": "956b7454953325d1b1efe9b240244123c89b151b590c79fe327ba2ce74dd6142"
+    },
+    {
+      "path": "reviewers/runtime-bin-copy-red.log",
+      "bytes": 509,
+      "sha256": "eadee486e69479637aefc6eeb3dd596e163002394de08d1dcc584283bae8cac7"
+    },
+    {
+      "path": "reviewers/runtime-bin-buffer-red.log",
+      "bytes": 3160,
+      "sha256": "92f8aa9c01fc3b26b06653cc74256f6076b5e9d158da1aebb9886761e1100d08"
+    },
+    {
+      "path": "reviewers/runtime-bin-buffer-green.log",
+      "bytes": 9490,
+      "sha256": "2883c3a3f1da1f28169b004d80553b8bdb1a910c241029ea5d0a90eb68784bff"
+    },
+    {
+      "path": "reviewers/runtime-bin-buffer-final.log",
+      "bytes": 542,
+      "sha256": "0daf18d177e9b9142e63f676fcc39a906a2a4c485cd133c41f380eeca9e104d7"
+    },
+    {
+      "path": "reviewers/runtime-bin32-build.log",
+      "bytes": 443,
+      "sha256": "8a1a76283e94e494d1ca231b593babe9167f7f90f8ebf78afd377ffc16fe2339"
+    },
+    {
+      "path": "reviewers/runtime-bin32-watch.log",
+      "bytes": 8509,
+      "sha256": "5b5093f9b6992c1300867a879adc0d90e71025d26c6360204b38adabe1292289"
+    },
+    {
+      "path": "reviewers/runtime-bin32-auth.log",
+      "bytes": 1595,
+      "sha256": "88a98e907379ecdfc501f3ae35b66c8292d758d2a584e80c1e9d07c5c301c083"
+    },
+    {
+      "path": "reviewers/runtime-bin32-review.log",
+      "bytes": 20477,
+      "sha256": "b0ccf1e732b59dd86ca3053d8601efc0d65dec9223d47839349b62008ad0e4b0"
+    },
+    {
+      "path": "reviewers/check-runtime-bin32-scopes.mjs",
+      "bytes": 1041,
+      "sha256": "ef80f70d4448ddea8011d6ccf4f2823e2289b08268908ad1d8c08e652815ce3c"
+    },
+    {
+      "path": "reviewers/runtime-bin32-scope.json",
+      "bytes": 1504,
+      "sha256": "abc0ffbbdfa6460da48d629c6c253dc8539e05a4495e8740538ebcdae7fc5b9b"
+    },
+    {
+      "path": "reviewers/runtime-bin32-scope.log",
+      "bytes": 900,
+      "sha256": "f223f942b52b913d211963ddc04f7af6fc61c2e8b841b652468f6435d6ea5bdb"
+    }
+  ]
+}

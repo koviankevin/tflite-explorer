@@ -139,3 +139,17 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 已用實際 `runtimeInput` 重現另一份 4 MiB 配置：公開 File 的 `arrayBuffer()` 只讀一次、回傳內容及 hash 正確，但原程式又配置同大小 typed tensor。新路徑在 native little-endian 環境直接建立 private buffer 的 typed view；big-endian 路徑保留逐值轉換，零值／亂數邏輯不變。不加入 input／模型快取、不修改 buffer 或延長 Worker 生命週期。
 
 仍檢查 File 宣告長度與實際回傳 buffer 長度、dtype／shape 預算、boolean 只能為 0／1，拒絕 shared buffer 及缺少 TypedArray constructor。新增四項回歸涵蓋 4 MiB 實際 async raw path／零額外 tensor backing storage、各整數／浮點／64-bit 與手動 endian-conversion 路徑、零長度、無效資料及原 bytes 不被修改。舊路徑的實際 identity 斷言先失敗；修改後 58 項選測通過，包含既有 4 MiB const 真正 CPU／8 MiB IO 及獨立 ZIP CRC、shared module 的 fresh Instance、session 及 const 分佈。只證實配置及正確性，尚不能宣稱 Firefox RSS 達標；仍須原 Hosted 八輪。
+
+### raw BIN 候選原始結果
+
+[Firefox 40964827311](https://github.com/koviankevin/tflite-explorer/actions/runs/40964827311) 的來源為 `71ea9855333b3ee880012a9b737eee166d643e9b`、tree `9a4c0361a77aaf206ee29ef4ec8434572518c2e7`、build `2ae5400d34745e36`。原流程仍以 **closed RSS slope 18,495,546.51 bytes／輪失敗**，最終 drift 121,647,104、sampled peak growth 260,694,016、最大取樣缺口 590 ms。相較上一批 18,457,629.26，沒有證據顯示 raw BIN copy 移除改善剩餘 slope；因此不重跑同一版、不放寬門檻、不發布。
+
+17 功能／19 runtime／5 指南、實際 CPU／8 份 IO、native Worker／程序退出、cold context 及 retained File input 清理均通過。306 core、provider digest／CRC／source 與獨立失敗讀取器實際 exit 0，原 workflow watch exit 1 保留；[26 檔原始證據](results/runtime-bin32-originals.zip)及[SHA inventory](results/runtime-bin32-originals.json)已核對（ZIP SHA `515ad55172ecd20456f689976e424c4e36710e02fcb62dfd668ec0a404d9faf3`）。四個 executed dependency scopes 比對完成；core 的 87 檔不變，其他三關因 runtime／測試來源改變而需要新證據，但尚未在 Firefox 失敗時重跑整批。
+
+### 同一模型的有界 ZIP buffer 重用候選
+
+每次明確開始新執行，消耗本次 session 的舊 IO bytes，先清零，再移交一個最多 17 MiB 的 owned ArrayBuffer 給新的 runtime Worker。相同 ZIP 長度直接寫入這個 buffer；長度改變時使用標準 transfer resize，沒有該 API 則清理舊 buffer 並配置有界新 buffer。Worker 及 WASM Instance／memory 仍每次重新建立；不加入跨模型、持久、全域或含前次資料的快取。舊 IO 物件與 views 不再可讀，已轉成下載 Blob 的結果沿原期限到期，不進入重用路徑。
+
+輸入選擇期間的 buffer 由特定 request 持有；取消、reset、換模型、metadata／同步 client 錯誤均清理該 request。client 接手後，在準備失敗、取消、clone／Worker 建構失敗或 ineligible plan 清理未送出的 buffer；成功則以真正 postMessage transfer list 移交，callback 不把私有資料留在公開 Module promise。每次 executeRuntime 仍驗證模型及輸入、產生新 manifest 與完整 ZIP。
+
+舊 archive API 忽略 ioBuffer 而重新配置 ZIP 的實際 identity 斷言先失敗。修改後 **66 項 Node 選測通過**：same-size backing identity、resize／無 transfer fallback、部分／shared／超限拒絕、零化及 detachment、取消／錯誤／換模型、三個 fresh 真實 Workers 的完整 8 MiB IO 與獨立 CRC，以及真正 CPU 跨 fresh Instance／memory 重用 IO 後的 `[4,6]`／`[40,60]`。這些只證明有界分配與內容正確性，仍待原 Hosted Firefox RSS；不宣稱此候選已達標或已發布。

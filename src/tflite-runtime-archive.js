@@ -1,13 +1,14 @@
 import {littleEndianBytes,inputSize} from './tflite-runtime-inputs.js';
 import {RUNTIME_LIMITS} from './tflite-runtime-policy.js';
 import {randomOptions,randomAlgorithm} from './tensor-random.js';
-import {RUNTIME_IO_ARCHIVE_BYTES} from './runtime-io.js';
+import {RUNTIME_IO_ARCHIVE_BYTES,runtimeIOBufferTransfers,reuseRuntimeIOBuffer} from './runtime-io.js';
 const crcTable=Uint32Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
 const crc=bytes=>{let n=0xffffffff;for(const b of bytes)n=crcTable[(n^b)&255]^(n>>>8);return(n^0xffffffff)>>>0;};
 // ZIP store only; controlled flat filenames, <=257 entries, <=17 MiB. No ZIP64,
 // compression Worker, object URLs or external library lifetime to retain.
-export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDetails,specs,modelSHA256,transferable=false}){
+export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDetails,specs,modelSHA256,transferable=false,ioBuffer=null}){
     if(typeof transferable!=='boolean')throw Error('IO archive 傳送模式無效。');
+    if(ioBuffer!==null){if(!transferable)throw Error('只有 transferable IO 可重用暫存 buffer。');runtimeIOBufferTransfers(ioBuffer);}
     const files=[],rows={inputs:[],outputs:[]};let bytes=0;
     for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{const detail=details[i];bytes+=inputSize({dtype:detail.dtype,shape:Array.from(tensor.shape)});if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');const data=littleEndianBytes(tensor.toTypedArray(),detail.dtype),name=`${side}-${i}.bin`;files.push({name,data});const s=specs[i];rows[side].push({file:name,name:String(detail.name||'').slice(0,256),shape:Array.from(tensor.shape),dtype:detail.dtype,bytes:data.length,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})});});
     const manifest={format:'model-lens-runtime-io',version:1,createdAt:new Date().toISOString(),byteOrder:'little-endian',modelSHA256,...rows,validation:{...validation}};
@@ -19,5 +20,5 @@ export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDet
     const end=new Uint8Array(22),e=new DataView(end.buffer);e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,central.reduce((n,a)=>n+a.length,0),true);e.setUint32(16,offset,true);
     const all=[...parts,...central,end],total=all.reduce((n,p)=>n+p.byteLength,0);if(total>RUNTIME_IO_ARCHIVE_BYTES)throw Error('IO archive 超過 17 MiB。');
     if(!transferable)return {archive:new Blob(all,{type:'application/zip'}),manifest};
-    const archive=new Uint8Array(total);let at=0;for(const part of all){archive.set(part,at);at+=part.byteLength;}return {archive,manifest};
+    const archive=reuseRuntimeIOBuffer(ioBuffer,total);let at=0;for(const part of all){archive.set(part,at);at+=part.byteLength;}return {archive,manifest};
 }
