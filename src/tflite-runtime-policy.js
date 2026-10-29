@@ -17,7 +17,12 @@ export function runtimePlan(model,bytes){
         if(signatures.length!==1||s.subgraph_index!==0||typeof s.signature_key!=='string'||!s.signature_key||!ordered(s.inputs,primary.inputs)||!ordered(s.outputs,primary.outputs))return skip('signature 無法唯一對應主 subgraph 的完整 input／output 順序；本版未執行，避免檢查到其他函式或誤配 .bin。');
     }
     let allocation=0;
-    for(const g of model.subgraphs){
+    for(const [graphIndex,g]of model.subgraphs.entries()){
+        for(const [opIndex,op]of g.operators.entries()){
+            const code=model.operator_codes[op.opcode_index]?.builtin_code,prefix=`subgraph ${graphIndex} · OP #${opIndex}`;
+            if(code===22&&op.inputs.length<2&&op.builtin_options?.new_shape===undefined)return skip(`${prefix} RESHAPE 缺少 shape tensor 或 new_shape；無法配置 tensors。若為舊示範檔，請重新開啟新版示範模型。`);
+            if(code===39&&op.inputs.length!==2)return skip(`${prefix} TRANSPOSE 需要資料與 permutation 兩個 inputs；目前缺少必要參數，無法配置 tensors。`);
+        }
         for(const op of g.operators){const code=model.operator_codes[op.opcode_index];if(code?.custom_code||code?.builtin_code===32)return skip('模型含 custom OP；此公開 runtime 未註冊對應 kernel，需使用公司 runtime 驗證。');if([118,119].includes(code?.builtin_code))result.controlFlow=true;}
         for(const t of g.tensors){const type=types[t.type],shape=dims(t);if(!type)return skip('模型包含此執行檢查尚未支援的 tensor dtype。');if(shape.length>128||t.shape_signature?.some(n=>n<0)||shape.some(n=>!Number.isSafeInteger(n)||n<0))return skip('含動態、未知或過高 rank 的 shape；未執行。');const size=shape.reduce((n,d)=>n*d,1)*type[1];if(!Number.isSafeInteger(size)||size>RUNTIME_LIMITS.estimatedBytes)return skip('tensor 配置估算超過本機執行預算。');allocation+=size;if(!Number.isSafeInteger(allocation)||allocation>RUNTIME_LIMITS.estimatedBytes)return skip('tensor 配置估算超過本機執行預算。');}
     }
