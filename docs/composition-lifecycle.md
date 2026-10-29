@@ -25,3 +25,9 @@
 38 項本機 Node 檢查通過，涵蓋 v1／v2 相容、v3 缺少組合／指紋／原生 close／candidate parse／清理時拒絕，以及原兩小時門檻。另以完整 21,005 OP 拓樸、64-byte 縮小權重核對同一套組合命令、輸入／輸出、custom options 及權重 bytes；它不是 >1 GiB 或瀏覽器記憶體證據。
 
 Hosted 真實八輪的 source、job、provider artifact digest／CRC、原始報告及獨立判定取得後另列。有限八輪不能證明永不洩漏，也不涵蓋大型組合兩小時、Firefox／WebKit、公司模型或 custom kernel 執行。
+
+## 首次實測：Node 核對器 callback 錯誤
+
+[40819329430](https://github.com/koviankevin/tflite-explorer/actions/runs/40819329430) 來源 `f4f8134d3ee9d36fc8acee6d5881844f90e73c2a` 在第一輪失敗；[原始 provider ZIP](results/composition-physical-first-failure-2026-10-29.zip)及[來源／digest／CRC 核對](results/composition-physical-first-review-2026-10-29.json)保留 failed，不能視為八輪成功。瀏覽器已走完組合下載重開與 pattern 斷言，五個 heap 檢查點都有數值；隨後 Node `verifyComposition` 把 async callback 傳給同步 `RangeStream`，讀取結果成為 Promise，因而回報「檔案讀取長度不完整」。不是應用解析器或記憶體門檻失敗。
+
+新增實際檔案核對器回歸，以完整 21,005 OP 拓樸、64-byte 權重匯出九個 OP 後，呼叫與 Hosted 相同的 `readCompositionIndex`。修正前穩定重現相同錯誤；改用有界 `readSync` callback 後三項 fixture 測試通過。保留所有原始讀取、權重與記憶體上限；網站程式、工作流程和正式部署沒有改動。修正後的真實八輪仍待執行。

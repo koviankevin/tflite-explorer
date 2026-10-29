@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,rm} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {physicalFixtureHeader,writePhysicalFixture,PHYSICAL_OPTIONS} from './physical-tflite-fixture.mjs';
@@ -8,6 +8,8 @@ import {parseModel} from '../src/model-engine.js';
 import {exportTflite} from '../src/tflite-export.js';
 import {editWorkspaceSnapshot,exportEditWorkspace} from '../src/model-edit-workspace.js';
 import {modelEditDraft} from '../src/model-edit-draft.js';
+import {readCompositionIndex} from './browser/physical-composition.mjs';
+import {LIFECYCLE_POLICY} from './browser/lifecycle-policy.mjs';
 const metadata=JSON.parse(await readFile(new URL('../vendor/netron/tflite-metadata.json',import.meta.url)));
 const parse=bytes=>parseModel((offset,length)=>bytes.subarray(offset,offset+length),bytes.length,metadata);
 test('physical corpus has the fixed full scale before allocating weight storage',async()=>{
@@ -35,4 +37,5 @@ test('21,005-OP composition contract joins distant fragments with the expected n
     const result=await exportEditWorkspace(index,file,snapshot,draft.commands),out=await parse(new Uint8Array(await result.blob.arrayBuffer())),g=out.raw.subgraphs[0];
     assert.equal(draft.commands.length,7);assert.equal(g.operators.length,9);assert.equal(g.tensors.length,21012);assert.deepEqual([...g.inputs],[0]);assert.deepEqual([...g.outputs],[21009,21011]);assert.deepEqual([...g.operators[4].inputs],[8,4]);assert.deepEqual([...g.operators[8].inputs],[21010,21010]);for(const code of [0,5])assert.deepEqual(g.operators.find(op=>op.opcode_index===code).custom_options,PHYSICAL_OPTIONS);
     const weight=out.raw.buffers[1];assert.equal(Number(weight.size),64);assert.deepEqual(new Uint8Array(await result.blob.slice(Number(weight.offset),Number(weight.offset+weight.size)).arrayBuffer()),Uint8Array.from({length:64},(_,i)=>i));
+    const dir=await mkdtemp(path.join(os.tmpdir(),'composition-verifier-unit-'));try{const output=path.join(dir,'output.tflite');await writeFile(output,new Uint8Array(await result.blob.arrayBuffer()));const checked=await readCompositionIndex(output,LIFECYCLE_POLICY);assert.equal(checked.index.raw.subgraphs[0].operators.length,9);assert.ok(checked.readBytes>0&&checked.maxRead<=LIFECYCLE_POLICY.maxReadBytes);}finally{await rm(dir,{recursive:true,force:true});}
 });

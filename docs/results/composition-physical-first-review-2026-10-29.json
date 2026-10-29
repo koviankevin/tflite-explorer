@@ -1,0 +1,89 @@
+{
+  "format": "model-lens-composition-physical-review",
+  "version": 1,
+  "authentication": "passed",
+  "acceptance": "failed",
+  "source": {
+    "commit": "f4f8134d3ee9d36fc8acee6d5881844f90e73c2a",
+    "tree": "0c24d5a41fa837e587c3b7e837edc53651bc6c6b",
+    "committedAt": "2026-10-29T12:43:16+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40819329430,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40819329430",
+  "attempt": 1,
+  "jobId": 123267836488,
+  "artifactId": 12873134182,
+  "digest": "sha256:05b24eb6f6e53d61ae151356db23d2ceeef16d4ee02380f5e5b93ce717df2c2f",
+  "rawSHA256": "292c9b9ef5c12e1f5765edacf9144c1f527e6d965c256df5e87df68f812eaeef",
+  "rawBytes": 28039,
+  "build": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.26",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "f4f8134d3ee9d36fc8acee6d5881844f90e73c2a",
+      "tree": "0c24d5a41fa837e587c3b7e837edc53651bc6c6b",
+      "committedAt": "2026-10-29T12:43:16+08:00",
+      "dirty": false
+    },
+    "buildId": "20a40d3320daf017"
+  },
+  "evaluation": {
+    "status": "failed",
+    "issues": [
+      "missing-cycles",
+      "cycle-1-incomplete",
+      "cycle-1-composition-incomplete",
+      "cycle-1-composition-source-identity"
+    ],
+    "summary": null
+  },
+  "error": "Error: 檔案讀取長度不完整。\n    at getPage (file:///home/runner/work/tflite-explorer/tflite-explorer/src/range-stream.js:29:50)\n    at RangeStream.peek (file:///home/runner/work/tflite-explorer/tflite-explorer/src/range-stream.js:39:45)\n    at new flatbuffers.StreamReader (file:///home/runner/work/tflite-explorer/tflite-explorer/vendor/netron/flatbuffers.js:342:37)\n    at flatbuffers.BinaryReader.open (file:///home/runner/work/tflite-explorer/tflite-explorer/vendor/netron/flatbuffers.js:12:17)\n    at parseModel (file:///home/runner/work/tflite-explorer/tflite-explorer/src/model-engine.js:30:33)\n    at verifyComposition (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/physical-composition.mjs:18:21)\n    at async physicalComposition (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/physical-composition.mjs:58:65)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/model-lifecycle.mjs:193:40",
+  "errors": [],
+  "cycles": 1,
+  "composition": [
+    null
+  ],
+  "ownership": null,
+  "cleanup": {
+    "identities": [
+      {
+        "pid": 3303,
+        "startTicks": "8221"
+      },
+      {
+        "pid": 3305,
+        "startTicks": "8222"
+      },
+      {
+        "pid": 3306,
+        "startTicks": "8222"
+      },
+      {
+        "pid": 3321,
+        "startTicks": "8224"
+      },
+      {
+        "pid": 3335,
+        "startTicks": "8236"
+      },
+      {
+        "pid": 3349,
+        "startTicks": "8244"
+      }
+    ],
+    "remaining": [],
+    "allReaped": true,
+    "observations": 1
+  },
+  "limitations": [
+    "Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.",
+    "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+    "Summed /proc RSS includes observed owned Chromium identities, including reparented descendants, and can double-count shared pages; 500ms sampling can miss spikes or processes never observed.",
+    "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+    "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer."
+  ]
+}
