@@ -3,6 +3,7 @@
   <div class="file-summary"><span id="file-name">尚未開啟模型</span><span id="file-stats">從模型結構，找到你要的連接。</span></div>
   <span class="privacy"><i></i>本機處理</span>
   <nav class="model-modes" aria-label="模型工作區（實際編輯僅支援 TFLite）"><button id="explore-mode" aria-pressed="true">探索模型</button><button id="edit-mode" aria-pressed="false" disabled>編輯模型</button><button id="run-mode" aria-pressed="false" disabled>執行模型</button><button id="open-edit-draft" aria-haspopup="dialog">編輯草稿</button></nav><input id="edit-draft-file" type="file" accept=".json,application/json" hidden>
+  <button id="usage-guide-button" class="quiet" aria-haspopup="dialog" aria-keyshortcuts="F1" title="操作指南（F1）">說明</button>
   <button id="release-info-button" class="quiet" aria-haspopup="dialog">版本</button>
   <button id="cancel-load" class="quiet" hidden>取消載入</button>
   <button id="close-model" class="quiet" hidden>關閉全部</button>
@@ -170,8 +171,10 @@
 </dialog>
 <main id="empty-state" class="empty-state">
   <div class="welcome-grid" aria-hidden="true"><span>RESHAPE</span><i>↓</i><span class="accent">TRANSPOSE</span><i>↓</i><span>RESHAPE</span><b class="grid-label">CONNECTED BY TENSORS</b></div>
-  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR，<br>搜尋資料流、圈選及尋找 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite／.mlir 檔案 <span>↗</span></button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><button id="open-mlir-demo" class="text-button">試用 MLIR 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建索引；MLIR 的大型 dense／resource 權重分段讀取。</small></div>
+  <div class="welcome-copy"><span class="eyebrow">從一個模型開始</span><h1>看清結構。<br>找到連接。</h1><p>讀取 TFLite 或文字 MLIR，<br>搜尋資料流、圈選及尋找 operator 模式。</p><button id="welcome-open" class="primary">選擇 .tflite／.mlir 檔案 <span>↗</span></button><button id="welcome-guide" class="text-button" aria-haspopup="dialog">第一次使用？查看操作指南 →</button><button id="open-demo" class="text-button">試用示範模型 →</button><button id="open-lora-demo" class="text-button">試用 LoRA 分支示範 →</button><button id="open-mlir-demo" class="text-button">試用 MLIR 分支示範 →</button><small>也可以將檔案拖放至此處。<br>大型模型先建索引；MLIR 的大型 dense／resource 權重分段讀取。</small></div>
 </main>
 <div id="loading-card" class="loading-card" hidden><span class="loader"></span><strong id="loading-stage">讀取模型結構</strong><p>模型保留在本機，權重資料按需讀取。</p></div>
 <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="notice-action" class="quiet" hidden>取消繪圖</button><button id="dismiss-notice" aria-label="關閉訊息">×</button></div>
 <footer class="status-bar"><span id="status" role="status">準備就緒</span><span id="metrics">LOCAL FILE · NO UPLOAD</span></footer>
+
+<dialog id="usage-guide" aria-labelledby="usage-guide-title"><header><h2 id="usage-guide-title">模鏡操作指南</h2><button id="close-usage-guide" class="quiet">關閉說明</button></header><p class="guide-intro">模型留在本機。選擇主題查看步驟，也可直接前往對應操作。</p><div id="guide-topics" role="tablist" aria-label="操作指南主題"></div><div id="guide-content" role="tabpanel" tabindex="0"></div><p id="guide-status" role="status" aria-live="polite"></p><footer>F1 開啟說明 · Esc 關閉並返回原位置 · 方向鍵移動主題，Enter／Space 開啟</footer></dialog>
