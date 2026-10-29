@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)，新增情境式片段加入、重複框選取消、重置確認及分層分支排版，保留普通／組合草稿、接線與匯出重開；見 [正式交付](contextual-model-editing.md#preview28-正式交付)。新版示範也已通過原模型／編輯後的全 0／亂數 CPU 檢查，舊下載檔需重新開啟新版。
+目前正式交付為 [preview.29](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)：編輯匯出只做結構與資料驗證，執行移到獨立工作區；const 提供 Uniform／Normal／Truncated Normal／Bernoulli 與合理預設，保留草稿、接線及匯出重開，見 [正式交付](model-runtime-workspace.md#preview29-正式交付)。新分佈草稿使用 v3；舊 v1／v2 Uniform 仍保持原 bytes。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 

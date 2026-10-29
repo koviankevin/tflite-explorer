@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)／build `b1a823b72e94f81b`。加入片段改為匹配／圈選操作，支援拖曳切換選取、確認後重置目前草稿與依連線分層的編輯圖；修正示範檔缺少 shape／permutation 導致 interpreter 配置失敗。正式站 1,389 檔、30 項操作、14 種既有情境、四種示範 CPU 與四份固定下載已核對；見 [正式交付](docs/contextual-model-editing.md#preview28-正式交付)。
+目前固定正式版為 [preview.29](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)／build `ad6db9bb06620139`。探索、編輯與執行分開；編輯匯出只做結構及資料驗證，局部模型先匯出並開啟再執行。測試輸入與 const 共用四種分佈、合理預設與進階參數，v3 草稿保存規則與 seed。正式站 1,393 檔、30 項操作、19 種執行情境及四份固定下載已核對；見 [正式交付](docs/model-runtime-workspace.md#preview29-正式交付)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

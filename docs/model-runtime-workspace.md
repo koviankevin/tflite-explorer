@@ -1,6 +1,6 @@
 # 探索、編輯與執行工作區
 
-這是 preview.29 開發中的操作契約，尚未代表正式站已更新。正式發布與驗收證據會另外記錄。
+本頁為 preview.29 操作契約；main 與正式站、固定 Release 的驗收證據列於下方。
 
 探索負責搜尋、pattern 與切圖；編輯負責草稿、接線及結構／資料完整性驗證；「執行模型」只使用目前網站內模型分頁已開啟的不可變 TFLite 檔。執行區不接收編輯命令，也不建立草稿候選。
 
@@ -36,3 +36,14 @@
 [1.25 GiB／21,005 OP 八輪 40847076914](https://github.com/koviankevin/tflite-explorer/actions/runs/40847076914)的 [原始 ZIP](results/runtime29-main-physical-2026-10-29.zip)及[獨立核對](results/runtime29-main-physical-review-2026-10-29.json)通過原有門檻：兩輪暖機後 RSS 漂移 9,973,760 bytes，斜率約 770,282 bytes／輪，main heap 漂移 234,964 bytes，取樣峰值 1,004,158,976 bytes；40 個模型／16 個指紋 Workers 關閉，6 個觀察到的 PID／start-ticks 身分正常退出，無強制清理。權重、opaque custom options、固定 SHA、pattern 正負例及匯出重開保持正確。有限八輪不代表所有模型或長期記憶體狀況均已驗證；本次未跑兩小時或手機。
 
 [四關卡獨立收據](results/runtime29-main-gates-review-2026-10-29.json)驗 provider digest／CRC、run／來源、原始數值與依賴 scope；本次 main core 40847067607、browser 40847076914、contract 40847087035、site 40847098088 均成功。全部嚴格讀取器實際 exit 0 後才寫入此批證據；正式準備、發布與固定下載驗證尚待完成。歷史 writer [產製程式](results/runtime29-writer-oracle-producer-2026-10-29.mjs.txt)、[continuation](results/runtime29-writer-oracle-resume-2026-10-29.mjs.txt)、[計畫](results/runtime29-writer-oracle-plan-2026-10-29.json)、[append-only 事件](results/runtime29-writer-oracle-events-2026-10-29.jsonl)與[來源說明](results/runtime29-writer-producer-provenance-2026-10-29.json)保留，未將超過 1 GiB 模型加入 repository。
+
+
+## preview.29 正式交付
+
+[正式站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)為 build `ad6db9bb06620139`，來源 `42e0771e49891becfd68ace7cea2d444ca989c51`／tree `8ec1ce2325fa5f6197061dd008155cb4a2ed5da8`。準備 [40850402435](https://github.com/koviankevin/tflite-explorer/actions/runs/40850402435) 的[原始產物審閱](results/preview29-prepared-2026-10-29.json)與[乾淨重建](results/preview29-rebuild-2026-10-29.json)通過，再以精確 build／site ID 執行 [40851247777](https://github.com/koviankevin/tflite-explorer/actions/runs/40851247777)；prepare／deploy／verify_live／release 在 attempt 1 全部成功。
+
+[最終獨立核對](results/preview29-published-2026-10-29.json)驗 provider ZIP digest／CRC／來源／時段、全站 1,393 檔 SHA／MIME、root、部署權威與四份實際下載，均符合原準備包。正式站 30 項原生操作、19 種執行／分佈情境、68 個模型與 14 個 runtime Workers 關閉通過；探索／編輯／執行互斥，切圖、編輯及組合均先匯出並開啟後才執行，實際 IO 對應匯出 SHA。四種分佈共用預設、const 與 input bytes／CPU 結果、v3 草稿匯入／Redo／再次匯出相同 bytes、舊 Uniform、32px／兩種筆電尺寸、取消／分頁與 custom／signature 排除均通過。
+
+完整 [site manifest](results/preview29-site-manifest-2026-10-29.json) SHA `9d68aae294f60de418632f83e8125cfbfdff06736c1d4f979872f2fd6e4e9463`；site ID `3894b07f1b022eeb867cc782431b0457dfed2ec5509f88d4c7ef20629726adfc`；固定 ZIP SHA `2f85702bd817676dc4c46851dd833a53bb59dda9a008d9b4193f31dde5f19392`。保留 [正式站原始 ZIP](results/preview29-live-release-verification-2026-10-29.zip)與 [Release 原始 ZIP](results/preview29-published-release-verification-2026-10-29.zip)。既有 writer 與 Node 失敗證據沒有改寫。
+
+一般匯出不會自動跑 interpreter。有限八輪／合成 CPU 情境不證明任意模型、訓練精度、全部控制路徑或所有長期記憶體狀況；公開界線仍列在[已知問題](known-issues.md)，公司模型與 kernels 由使用者於內網處理，整體商品等級目標保持未完成。
