@@ -1,0 +1,357 @@
+{
+  "authentication": "passed",
+  "reusedRun": 40700051621,
+  "testedCommit": "2b93eb536d0216e404115abd71a6bd6adac739b2",
+  "candidateCommit": "ec855a5662be0bd51a142b6f62d200bc14301720",
+  "fingerprint": "d25a85aa0caf6999326ea9a4b45298714960c89f9d3146dfe888350f1e4dd01a",
+  "files": [
+    {
+      "path": ".github/workflows/performance.yml",
+      "gitBlob": "975cd60b6bb8190b9ffcc30c33bad380f9e1ed88"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "e1ead4b49468f01917619e407698e88cf75425dccb057fd86a8da8317975924c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fe2f524d8d06afd95537ca80104c04e9ff6ca22093df1defd804e9651115b8af"
+    },
+    {
+      "path": "scripts/accept-performance.mjs",
+      "gitBlob": "86fba6cc27cb80dd0eacfeb944165c0eb7f0948e"
+    },
+    {
+      "path": "scripts/large-mlir-resources.mjs",
+      "gitBlob": "b2f9d9c57602d20198f38c1e8ba001e0d1446ca6"
+    },
+    {
+      "path": "scripts/lib/performance-policy.mjs",
+      "gitBlob": "a591af35e8a67acadc5eec8eaf943a9e0a77127b"
+    },
+    {
+      "path": "scripts/measure-performance.mjs",
+      "gitBlob": "9cbc719c5be70413b066ead4733927e9924e1e23"
+    },
+    {
+      "path": "src/mlir-combined-graph.js",
+      "gitBlob": "d7f24cb87a6300ce9fa8653b4c1118c5e5c12d01"
+    },
+    {
+      "path": "src/mlir-connection-index.js",
+      "gitBlob": "4e2e8e004e695ba03e99141fbeb7c59263792f15"
+    },
+    {
+      "path": "src/mlir-connection-view.js",
+      "gitBlob": "97c9765c20462e62d43345caff9aabffe34af720"
+    },
+    {
+      "path": "src/mlir-dialects.js",
+      "gitBlob": "b2db13d01bc25ab699155656a3a7181a65c66b7d"
+    },
+    {
+      "path": "src/mlir-engine.js",
+      "gitBlob": "c9c79f5df9bb28251885da57bf9002a3272d6ce8"
+    },
+    {
+      "path": "src/mlir-export-provenance.js",
+      "gitBlob": "dcb2ce5cdd6c2232731fc5ddd5c90b5f9e37543e"
+    },
+    {
+      "path": "src/mlir-export.js",
+      "gitBlob": "a4342f414323cefbe2105f819fc519977773aedc"
+    },
+    {
+      "path": "src/mlir-file.js",
+      "gitBlob": "cec48572ccb93552bf86c1c42d4c66fa6ab9259e"
+    },
+    {
+      "path": "src/mlir-ir.js",
+      "gitBlob": "f50be08e9282577ad054e535808f24dc1efbe0f8"
+    },
+    {
+      "path": "src/mlir-pattern-projection.js",
+      "gitBlob": "feeba58711115a3da5d846af74c42d7b5d3ea635"
+    },
+    {
+      "path": "src/mlir-pattern-spec.js",
+      "gitBlob": "97b808518b0d9248bff1240d8cbb8c27d938dc1b"
+    },
+    {
+      "path": "src/mlir-pattern.js",
+      "gitBlob": "81ed47e5d24004002ce5d2bbd5cbfbcd86acabc8"
+    },
+    {
+      "path": "src/mlir-slice-graph.js",
+      "gitBlob": "9d7f5a9933556a3041787aee5c18f9ccf1edb678"
+    },
+    {
+      "path": "src/mlir-slice.js",
+      "gitBlob": "2a3f0d3fdd87167fd643cb5dc95d94ccc41d14f8"
+    },
+    {
+      "path": "src/mlir-types.js",
+      "gitBlob": "67cd259e1485510032da7555027419f032dce35b"
+    },
+    {
+      "path": "src/mlir-validate.js",
+      "gitBlob": "72d8b674a74d22a8da03bf220d410caa848fea2d"
+    },
+    {
+      "path": "src/model-engine.js",
+      "gitBlob": "13f9e3c0e8b8ff526b04ec2fa6e37cbad8d623ea"
+    },
+    {
+      "path": "src/overview-layout.js",
+      "gitBlob": "f1edd5b3e6914469f16d7dda903ca2fe9be32c5a"
+    },
+    {
+      "path": "src/pattern-conditions.js",
+      "gitBlob": "50880976e1a0d394e3c9eb529e7d98fa7185a6f4"
+    },
+    {
+      "path": "src/pattern-overview.js",
+      "gitBlob": "5de99f245ac8e7350e4fdc3a69f659c37f416c19"
+    },
+    {
+      "path": "src/pattern-utils.js",
+      "gitBlob": "7964874c737bc9d2e5638d43a1d1d9ab628c1303"
+    },
+    {
+      "path": "src/range-stream.js",
+      "gitBlob": "951af0f0dc91fdc4be2d4e6e5943112f90ba7bf0"
+    },
+    {
+      "path": "src/subgraph-pattern.js",
+      "gitBlob": "4e5eb399a22da15f5533d0e6fd7e381da8500fae"
+    },
+    {
+      "path": "test/fixture.mjs",
+      "gitBlob": "f2b62ba3f4dfe9c420d7ad009f61cbaef66063b6"
+    },
+    {
+      "path": "test/performance-fixtures.mjs",
+      "gitBlob": "94741439143842549f2dd80b901ff261edceb8a0"
+    },
+    {
+      "path": "test/performance-policy.json",
+      "gitBlob": "e809e8571dbc88d396d1e2e6966dc9d5668bfdf4"
+    },
+    {
+      "path": "vendor/litert/2.6.0/provenance.json",
+      "gitBlob": "56a5641c311a742726861b6ac5364670df6b6a42"
+    },
+    {
+      "path": "vendor/netron/acuity-metadata.json",
+      "gitBlob": "fb138f1e4505542f51eaf993bdc6a1665789bb77"
+    },
+    {
+      "path": "vendor/netron/armnn-metadata.json",
+      "gitBlob": "1538afa5c3e3934d9a32af58d76076447946cb17"
+    },
+    {
+      "path": "vendor/netron/base.js",
+      "gitBlob": "63191c9a4710e169dd9d905bd72866f14af954f7"
+    },
+    {
+      "path": "vendor/netron/bigdl-metadata.json",
+      "gitBlob": "d42b79c7e68b2c69adb9fa41ab79a944f2ca9ccc"
+    },
+    {
+      "path": "vendor/netron/caffe-metadata.json",
+      "gitBlob": "3d7c1927eec68dffde58d2302b94d599e1734365"
+    },
+    {
+      "path": "vendor/netron/caffe2-metadata.json",
+      "gitBlob": "47b29c825f338176bef2a7822e1805a582e6b028"
+    },
+    {
+      "path": "vendor/netron/circle-metadata.json",
+      "gitBlob": "76e82c6ba1d9c381bb8137ac4e1cfac2a50321f0"
+    },
+    {
+      "path": "vendor/netron/cntk-metadata.json",
+      "gitBlob": "dbb77ab5ebd0659256398c80a3b8447047ce5bb7"
+    },
+    {
+      "path": "vendor/netron/coreml-metadata.json",
+      "gitBlob": "1a5ff686f034b38b34af06265a3bc24c99a90e5a"
+    },
+    {
+      "path": "vendor/netron/darknet-metadata.json",
+      "gitBlob": "c5b171bfaa0d0a22575c66aa3c620b0d52c99263"
+    },
+    {
+      "path": "vendor/netron/dl4j-metadata.json",
+      "gitBlob": "4965893a0dfc4ef82a0e085e4f75fe054c83315e"
+    },
+    {
+      "path": "vendor/netron/dlc-metadata.json",
+      "gitBlob": "9cb6471dcd4406f50fdd441120950156182a8292"
+    },
+    {
+      "path": "vendor/netron/dnn-metadata.json",
+      "gitBlob": "2e0f4b2a434f049bd3b8f376d72e0109e9e397c6"
+    },
+    {
+      "path": "vendor/netron/espdl-metadata.json",
+      "gitBlob": "01ad405719c20224407885f17afb91e1d5a8cd30"
+    },
+    {
+      "path": "vendor/netron/espresso-metadata.json",
+      "gitBlob": "f4c718388a64dacae74f2093e1b93a84e9f93c62"
+    },
+    {
+      "path": "vendor/netron/flatbuffers.js",
+      "gitBlob": "dabdb7804b227771c4e2f6639f57a4b20ceaf46e"
+    },
+    {
+      "path": "vendor/netron/flexbuffers.js",
+      "gitBlob": "fdbee2659412e26e8cdabfc9d970ae4fd99a2481"
+    },
+    {
+      "path": "vendor/netron/flux-metadata.json",
+      "gitBlob": "32960f8ced39dd5eade0f15d41e275b2dc8d4c70"
+    },
+    {
+      "path": "vendor/netron/gguf-metadata.json",
+      "gitBlob": "52fdd4a18c0c86fd90b41826f0a3339e4a8debb2"
+    },
+    {
+      "path": "vendor/netron/hailo-metadata.json",
+      "gitBlob": "05752d7b481c077e625a61cd72e16cdd7fa1c2f7"
+    },
+    {
+      "path": "vendor/netron/kann-metadata.json",
+      "gitBlob": "ba202ab0f23450c014d076e7ef75ecc0f578e173"
+    },
+    {
+      "path": "vendor/netron/keras-metadata.json",
+      "gitBlob": "c771639dc33c4dc4ccfb097739a6f8d1f73bf5b2"
+    },
+    {
+      "path": "vendor/netron/lasagne-metadata.json",
+      "gitBlob": "b3f40a4cea66496b685ed7de3cad1a89e48bbc2e"
+    },
+    {
+      "path": "vendor/netron/megengine-metadata.json",
+      "gitBlob": "3fb7dae1504eb717648d0f7714fa6cc2feda17fe"
+    },
+    {
+      "path": "vendor/netron/mindir-metadata.json",
+      "gitBlob": "a8f4b2c60a29d281ccd84790b56b94710ca01d12"
+    },
+    {
+      "path": "vendor/netron/mlir-metadata.json",
+      "gitBlob": "29f52f62fe19ccbc2889f9b178e5e6c41b459ea3"
+    },
+    {
+      "path": "vendor/netron/mlir.js",
+      "gitBlob": "6cb85248df090b0f94f46c1da8893e3cdc3ea3a5"
+    },
+    {
+      "path": "vendor/netron/mlnet-metadata.json",
+      "gitBlob": "005c177d076fa4513f2c09675f0348c22d25f3b2"
+    },
+    {
+      "path": "vendor/netron/mnn-metadata.json",
+      "gitBlob": "39c3f44f4b23132b020877e0f510119b99b623aa"
+    },
+    {
+      "path": "vendor/netron/mslite-metadata.json",
+      "gitBlob": "38bb81b60bc44ebc2e15db3cb355ef47d5645fdd"
+    },
+    {
+      "path": "vendor/netron/mxnet-metadata.json",
+      "gitBlob": "8d271c9e75635a13606e6a8f7535005559d87059"
+    },
+    {
+      "path": "vendor/netron/ncnn-metadata.json",
+      "gitBlob": "30621c3db3609a89f40474222e7fb259189b0272"
+    },
+    {
+      "path": "vendor/netron/nnabla-metadata.json",
+      "gitBlob": "7a2ff8f5bf6716919431597737e511e5ebe808e3"
+    },
+    {
+      "path": "vendor/netron/om-metadata.json",
+      "gitBlob": "e458ec146beac052a25e50ef8e0c6179cf8bfdf6"
+    },
+    {
+      "path": "vendor/netron/onednn-metadata.json",
+      "gitBlob": "f204b0b0c6d9e5db1703df9212c6bdcfe8281dc9"
+    },
+    {
+      "path": "vendor/netron/onnx-metadata.json",
+      "gitBlob": "6748d98e5f47445aa7b982a773b1d5692a478e40"
+    },
+    {
+      "path": "vendor/netron/openvino-metadata.json",
+      "gitBlob": "cdddbe28eb3b861b6c138f630d3e7d2bb601743f"
+    },
+    {
+      "path": "vendor/netron/paddle-metadata.json",
+      "gitBlob": "65b297fdd0f565a060fc5a54dc077dd51f486f27"
+    },
+    {
+      "path": "vendor/netron/pytorch-metadata.json",
+      "gitBlob": "034cbbdabc1c2aff3952b04da47ca7e55c872c73"
+    },
+    {
+      "path": "vendor/netron/qnn-metadata.json",
+      "gitBlob": "25f1145f5f89f3f9e6567da6ab3e154f9ead5f53"
+    },
+    {
+      "path": "vendor/netron/rknn-metadata.json",
+      "gitBlob": "d1c47976df3707993fab081e452b61684f87a8cb"
+    },
+    {
+      "path": "vendor/netron/sklearn-metadata.json",
+      "gitBlob": "4166b19ecd7e24aa64d6f602663630dd039228cd"
+    },
+    {
+      "path": "vendor/netron/tengine-metadata.json",
+      "gitBlob": "67af19558ace31c36224905a5c4152fc4757d0bb"
+    },
+    {
+      "path": "vendor/netron/text.js",
+      "gitBlob": "27a06da76b7c1efb908a0c78cb701c8521a14cb5"
+    },
+    {
+      "path": "vendor/netron/tf-metadata.json",
+      "gitBlob": "320cebfd2b1e2f56e423fc23ab409231b4cccbf3"
+    },
+    {
+      "path": "vendor/netron/tflite-metadata.json",
+      "gitBlob": "aff7136e01a576a2e8bdb5384908bdd7c3251d32"
+    },
+    {
+      "path": "vendor/netron/tflite-schema.js",
+      "gitBlob": "f9a681d111663b20f7c3f75f0877579e56b7f030"
+    },
+    {
+      "path": "vendor/netron/tflite.js",
+      "gitBlob": "ecca54baed6a6ba912ea377ac0c8d553a68fa4dd"
+    },
+    {
+      "path": "vendor/netron/tnn-metadata.json",
+      "gitBlob": "80c5c3757601de306dac4c1cdc5c04502b328e5f"
+    },
+    {
+      "path": "vendor/netron/torch-metadata.json",
+      "gitBlob": "3a67732b613a854eacea4ce43dae13cf8a2e6312"
+    },
+    {
+      "path": "vendor/netron/tosa-metadata.json",
+      "gitBlob": "77d208cab0bdba9225f11d75cdc04cab4ddda2de"
+    },
+    {
+      "path": "vendor/netron/uff-metadata.json",
+      "gitBlob": "ad9f28a035eb7966bb66b301b4d051e258a1d901"
+    },
+    {
+      "path": "vendor/netron/zip.js",
+      "gitBlob": "1e5370a7782296d4961d082468ad6fa89980d072"
+    }
+  ]
+}

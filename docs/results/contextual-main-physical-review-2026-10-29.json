@@ -1,0 +1,549 @@
+{
+  "format": "model-lens-composition-physical-review",
+  "version": 1,
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "ec855a5662be0bd51a142b6f62d200bc14301720",
+    "tree": "6257269568780643f4a9a594d183f0e78b0258ca",
+    "committedAt": "2026-10-29T14:58:32+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40832494108,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40832494108",
+  "attempt": 1,
+  "jobId": 123309676586,
+  "artifactId": 12880167036,
+  "digest": "sha256:f89b3160842d6ebee36ea93e1756c0a9840a297b9af8fa1fa96143e6c36a2d1e",
+  "rawSHA256": "4991fd6b168faf268f376859f52f7b4e3735048a2256c317133b6d55d84de952",
+  "rawBytes": 402846,
+  "build": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.28",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "ec855a5662be0bd51a142b6f62d200bc14301720",
+      "tree": "6257269568780643f4a9a594d183f0e78b0258ca",
+      "committedAt": "2026-10-29T14:58:32+08:00",
+      "dirty": false
+    },
+    "buildId": "d0c4ec54a1e506c0"
+  },
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 958112.9142857143,
+      "rssDriftBytes": 10084352,
+      "mainHeapDriftBytes": 44544,
+      "sampledPeakRssBytes": 1005756416,
+      "sampledPeakGrowthBytes": 494800896
+    }
+  },
+  "errors": [],
+  "cycles": 8,
+  "composition": [
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 17248.100000000006
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 15344
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 16994.29999999999
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 14651
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 17397.20000000001
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 14972
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 10524.099999999977
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 13631
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 16742.399999999907
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 14674
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 11360.599999999977
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 13142
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 12276.79999999993
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 13152
+    },
+    {
+      "bytes": 1345938408,
+      "sha256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+      "weightVerified": true,
+      "optionsVerified": true,
+      "sourceOperators": 21005,
+      "outputOperators": 9,
+      "readbackOperators": 9,
+      "inputs": [
+        0
+      ],
+      "outputs": [
+        21009,
+        21011
+      ],
+      "byteComparison": "passed",
+      "comparedBytes": 1342177320,
+      "byteRanges": 6,
+      "readBytes": 3892200,
+      "maxRead": 65536,
+      "workspaceNative": true,
+      "imports": [
+        4,
+        4
+      ],
+      "sourceNodes": 8,
+      "cloneNodes": 1,
+      "undoRedo": true,
+      "roundTrip": true,
+      "prefixMatches": 1,
+      "branchMatches": 1,
+      "negativePatternMatches": 0,
+      "reshapeMatches": 1,
+      "draft": {
+        "version": 2,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "nodes": 8
+      },
+      "recovery": {
+        "bytes": 1349965216,
+        "calls": 1288,
+        "maxRead": 1048576,
+        "violations": [],
+        "complete": true,
+        "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "elapsedMs": 16100.599999999977
+      },
+      "layout": {
+        "font": 32,
+        "width": 1280,
+        "scrollWidth": 1280,
+        "graphHeight": 244.5
+      },
+      "exportMs": 14686
+    }
+  ],
+  "ownership": {
+    "observedOwnedIdentities": 6,
+    "allObservedOwnedReaped": true,
+    "forcedCleanup": false,
+    "root": {
+      "pid": 3104,
+      "startTicks": "8377"
+    },
+    "cleanupObservations": 1,
+    "modelWorkers": 40,
+    "identityWorkers": 16,
+    "measurement": "observed PID/start-tick identities including reparented descendants; shared pages may be double-counted and unobserved short-lived processes are not claimed"
+  },
+  "cleanup": {
+    "identities": [
+      {
+        "pid": 3104,
+        "startTicks": "8377"
+      },
+      {
+        "pid": 3106,
+        "startTicks": "8378"
+      },
+      {
+        "pid": 3107,
+        "startTicks": "8379"
+      },
+      {
+        "pid": 3123,
+        "startTicks": "8380"
+      },
+      {
+        "pid": 3136,
+        "startTicks": "8389"
+      },
+      {
+        "pid": 3147,
+        "startTicks": "8396"
+      }
+    ],
+    "remaining": [],
+    "allReaped": true,
+    "observations": 1
+  },
+  "limitations": [
+    "Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.",
+    "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+    "Summed /proc RSS includes observed owned Chromium identities, including reparented descendants, and can double-count shared pages; 500ms sampling can miss spikes or processes never observed.",
+    "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+    "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer."
+  ]
+}
