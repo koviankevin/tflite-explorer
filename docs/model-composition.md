@@ -59,3 +59,6 @@
 
 
 大型組合另已完成 [實體 Hosted Chromium 八輪](composition-lifecycle.md#修正後的實體八輪)：每輪 21,005 OP 原模型加入兩片段、接線、新增 ADD，下載組合模型與 v2 自動保存備份，核對完整 1.25 GiB 非零權重／options／原始 byte ranges、重開及 pattern 正負例。40 個模型、16 個指紋 Workers 與 owned 程序清理、固定 RSS 門檻通過；有限八輪不代替數小時、其他引擎或大型手動 v2 匯入恢復。正式 preview.26 應用沒有改動或重新部署。
+
+
+大型 v2 JSON 手動下載、取消、重新選原模型還原及 byte-identical 重匯出已另通過 [專項驗收](large-composition-draft.md#已核對的結果)，包含 32px 視角／Redo、權重／options 及原 pattern 正負例。

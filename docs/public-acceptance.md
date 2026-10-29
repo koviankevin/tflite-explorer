@@ -17,7 +17,7 @@
 | 編輯草稿與模型分頁 | 正式操作涵蓋 JSON 保存／重選原模型指紋、分頁狀態、衝突／分叉及專屬測試瀏覽器強制終止後恢復；不宣稱 OS 斷電後永不遺失 |
 | 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的 14 種參數／runtime／組合情境：原模型／候選、raw .bin、型別亂數、實際 IO ZIP、錯誤／取消、custom／signature 明確未驗證；開檔／一般匯出不自動推論 |
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
-| 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；不代替數小時組合、其他引擎或大型手動 v2 匯入恢復 |
+| 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
 | 固定部署及下載 | [最終獨立核對](results/preview26-published-2026-10-29.json)：全站 1,380 檔／SHA／MIME、root、部署身分及四份實際 Release 下載均與準備快照一致；四個工作在 attempt 1 成功 |
 
