@@ -1,0 +1,26 @@
+{
+  "authentication": "passed",
+  "source": {
+    "commit": "f9984335b7196eb066cbe85f44673de0dcd3b42f",
+    "tree": "101d8828ad52f91183515248e7dada85fbd96663",
+    "committedAt": "2026-10-29T09:36:22+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "build": "d0676e3b7609c608",
+  "coreManifestSHA256": "71376731430b0d3f8724e248f5ce2842ac7011826420d1d975760c430978fade",
+  "coreFiles": 293,
+  "site": {
+    "siteId": "0ed4da304bce56d8dbbb4f8ce9ae18bc86284fe14fcfee4c8e79fa66af194c9f",
+    "manifestSHA256": "b385747a74dc13e46b6722ff1439ef4fa8544f177e23ee093df9f7d68dab7695",
+    "current": "d0676e3b7609c608",
+    "legacy": "163f38ab1dc856e4",
+    "retainedBuildIds": [
+      "3cc83fdeb25322bb",
+      "04aa44009821ed92"
+    ],
+    "files": 1376
+  },
+  "preparation": 40801429782,
+  "scope": "Independently rebuilt clean local source matches the exact provider-prepared core manifest; prepared original ZIP/tar already fully verified"
+}

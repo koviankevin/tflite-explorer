@@ -1,0 +1,24 @@
+{
+  "source": {
+    "commit": "f9984335b7196eb066cbe85f44673de0dcd3b42f",
+    "tree": "101d8828ad52f91183515248e7dada85fbd96663",
+    "committedAt": "2026-10-29T09:36:22+08:00",
+    "dirty": false
+  },
+  "sourceUnchangedAtAudit": true,
+  "preparation": 40801429782,
+  "classification": "Local read-only artifact transfer exceeded its original 120-second deadline; no application or CI test failure",
+  "firstReview": "failed/incomplete",
+  "receivedBytes": 7798784,
+  "partialSHA256": "a546f1a77a1863033ddbf50ff1a0738978de2df4c71621185c7a26f098022b38",
+  "partialMatchesAuthenticatedArchivePrefix": true,
+  "expectedBytes": 28996258,
+  "providerDigest": "sha256:334fb3e4f29315b90cb011de0ac1d1a3e953016a0739e6f713ba48b26f52941b",
+  "oldNetworkDeadlineMs": 120000,
+  "retryNetworkDeadlineMs": 600000,
+  "retryReview": "passed",
+  "originalFailurePreserved": true,
+  "workflowRerun": false,
+  "acceptanceChecksChanged": false,
+  "scope": "Only the administrative local transfer deadline differs; all original source/size/digest/CRC/tar/asset checks retained"
+}
