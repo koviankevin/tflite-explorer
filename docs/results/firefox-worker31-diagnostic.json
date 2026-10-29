@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "85a68980378a77e3aed9b928f74c72a1dd23ce730472361842e1c990dbc30f81",
+  "members": [
+    {
+      "name": "original.zip",
+      "bytes": 198793,
+      "sha256": "9ddaf71f8e09bb85e947880a6a25fce9bbdbeac65097cf8b9994ad3a9063b547"
+    },
+    {
+      "name": "run.json",
+      "bytes": 14426,
+      "sha256": "af545b0ae27d79e18d5ef30c46b9bd81fd7f377c00751b0042d293f56c1ce6c6"
+    },
+    {
+      "name": "jobs.json",
+      "bytes": 3970,
+      "sha256": "72f94d51ee05a9c26de6708a255f220f7d5fbec537f2d48d1f58503e651d88dc"
+    },
+    {
+      "name": "artifacts.json",
+      "bytes": 948,
+      "sha256": "de9e1c6e33b2cc929fcca87d374665a31803e600e0f37880939bb095c2a48e1c"
+    },
+    {
+      "name": "review.json",
+      "bytes": 134128,
+      "sha256": "b78e08e096bd3fc4671a899d9ed39f2e760a3c39ffade604775b541ef719238d"
+    }
+  ],
+  "run": 40893435879,
+  "source": "7e094d26ebbe627f61e70840ba9bdb26bff0ee94",
+  "authentication": "passed",
+  "acceptance": "unverified",
+  "independentReaderExit": 0,
+  "independentReaderChunk": "57e900",
+  "findings": {
+    "constructors": 27,
+    "nativeTerminateReturned": 27,
+    "missingIdentityCloseEvents": 15,
+    "missingIdentityTerminationMilliseconds": [
+      0,
+      1
+    ],
+    "missingIdentityReplied": 0,
+    "dataFreeContextProbes": {
+      "timeout": 4,
+      "returned": 0,
+      "rejected": 0
+    }
+  },
+  "limits": "Timing observer may perturb native scheduling. Native terminate return and context probe timeout are not proof of closure or a leak."
+}
