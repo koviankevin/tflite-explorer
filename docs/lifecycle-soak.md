@@ -12,7 +12,7 @@
 
 後續 CI producer 改用與桌面八輪共用的 `OwnedProcessTree`：以每次 launch 的隨機環境標記辨識本測試 Node 直接啟動的根程序，只讀這些直接子程序的環境；以 PID＋start ticks 保留已觀察的 descendants，重新掛接後仍計入 RSS，PID 重用不會採用成原程序。正常關閉後至多等待十秒並保留全部已觀察 identities／remaining；有殘留或讀取不明就失敗，不以根 PID 已消失代表全部清理成功。失敗清理也逐一重新核對 identity，不能對其他程序送出 signal。未在取樣間觀察到的短命程序與共享頁重算限制仍存在。
 
-31 項相關 Node 檢查通過，新增測試包括根程序消失後仍存活的 orphan、同 PID 被外部程序重用、固定時間內未釋放、觀察權限錯誤及不合法的等待預算；原長度、64 輪／八輪分批、讀取／RSS／Worker／Blob URL 門檻完全保留。只有測試量測與清理證據改變，應用與工作流程未變；新的實體八輪驗證尚待完成，不把新增 producer 的能力倒算到舊報告。
+31 項相關 Node 檢查通過，新增測試包括根程序消失後仍存活的 orphan、同 PID 被外部程序重用、固定時間內未釋放、觀察權限錯誤及不合法的等待預算；原長度、64 輪／八輪分批、讀取／RSS／Worker／Blob URL 門檻完全保留。只有測試量測與清理證據改變，應用與工作流程未變；修正後的實體八輪已完成，結果見下方「逐程序識別八輪結果」；不把新增 producer 的能力倒算到舊報告。
 
 另以既有 provider ZIP digest／原始 JSON SHA／CRC 校準獨立核對器，重算歷史 80 輪，並確認晚期輸出 hash、Worker 終止、完整原檔指紋、讀取上限或有效時長被竄改時都拒絕，見 [離線校準紀錄](results/soak-review-calibration-2026-10-29.json)。這是核對工具的正負例校準，沒有重新執行瀏覽器，也不是 `4ec5802` 的最終成功證據。
 
@@ -104,4 +104,13 @@
 
 [40750776324](https://github.com/koviankevin/tflite-explorer/actions/runs/40750776324)，來源 `8d71184bc5211c4735912c4f9db9c40c52e9c02b`，在 resource preflight 因 `optionalRead is not defined` 失敗，零輪、零個記憶體樣本；[原始 ZIP](results/lifecycle-identity-preflight-failure-2026-10-29.zip)與[認證紀錄](results/lifecycle-identity-preflight-failure-review-2026-10-29.json)保留。這是量測程式重構時漏留資源預檢共用 helper，沒有啟動模型／瀏覽器負載，不能寫成應用記憶體失敗或成功。
 
-已恢復原 helper。以原始 preflight source 在無瀏覽器的合成資源環境重播，先重現相同 ReferenceError，修正後五項檢查通過：cgroup 限量、缺少 cgroup／max 回退、RAM 不足及磁碟不足。原門檻與 read behavior 不變；新的程序識別實體八輪仍待驗證。正式網站與 Release 的 source 固定在 `e654829`，不受此 CI-only 修正影響。
+已恢復原 helper。以原始 preflight source 在無瀏覽器的合成資源環境重播，先重現相同 ReferenceError，修正後五項檢查通過：cgroup 限量、缺少 cgroup／max 回退、RAM 不足及磁碟不足。原門檻與 read behavior 不變；修正後的程序識別實體八輪結果見下節。正式網站與 Release 的 source 固定在 `e654829`，不受此 CI-only 修正影響。
+
+
+### 逐程序識別八輪結果
+
+[40790518295](https://github.com/koviankevin/tflite-explorer/actions/runs/40790518295)，來源 `304348fd7965bccb2fb455d2daff44995a5477d5`／build `73f24f9ba7ff17fd`，完成八輪實體 1.25 GiB／21,005 OP 的原生選檔、完整修改／局部匯出、下載重開、原模型指紋、權重／custom options 與 pattern 正負例。[原始 ZIP](results/lifecycle-owned-eight-2026-10-29.zip)與[獨立核對](results/lifecycle-owned-eight-2026-10-29-review.json)通過；原政策未更動。
+
+兩輪暖機後 RSS 漂移 6,004,736 bytes，斜率 1275728.457 bytes／輪，取樣峰值 1,004,761,088 bytes。共觀察 6 個 PID／start-ticks 身分，正常關閉後全部退出，沒有強制清理；24 個模型及八個完整原檔指紋 Workers 均按原要求終止。
+
+此量測含已觀察而後重新掛父程序的身分；500ms 取樣可能漏掉短命程序／尖峰，RSS 可能重複計入共用頁面。Worker 仍是 V8 檢查點，沒有獨立 OS RSS／連續峰值。八輪結果不替代兩小時結果，也不證明無限期沒有洩漏。前述零輪 preflight 失敗照原樣保留，沒有重跑成功部署。

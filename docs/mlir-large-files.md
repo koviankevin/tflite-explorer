@@ -14,6 +14,14 @@
 
 本機檢查涵蓋結構語法、SSA、已註冊的分支傳值與 dominance。大型 payload 檢查 UTF-8、引號／括號閉合及 hex 字元／偶數長度；不逐值解析數值 literal、不檢查權重元素數量，也不取代 LLVM／公司 dialect verifier。下載狀態會明示「大型權重保留原文，未逐值驗證」。檔案診斷在略去 payload 後會映回原始行列；匯出候選文字使用自己的位置。
 
+## 現行來源的 Hosted Node 大檔驗收（2026-10-29）
+
+[40791134897](https://github.com/koviankevin/tflite-explorer/actions/runs/40791134897) 的實際來源為 `304348fd7965bccb2fb455d2daff44995a5477d5`，與固定 preview.22 公開應用程式相同，測試／交付文件不同。[原始 provider ZIP](results/large-mlir-current-2026-10-29.zip)及[獨立核對](results/large-mlir-current-2026-10-29-review.json)已核對 provider digest、ZIP CRC、來源、兩個實際子程序與全部原始報告。
+
+實體來源 2,684,355,495 bytes，匯出 2,684,362,324 bytes；完整權重 hash 與既有固定 fixture 一致，SSA／dominance 通過，五個選取 OP 的跨 block pattern 在原檔及重開後各一筆。Pattern 檔另外保留五個 block、四個 argument 的控制結構，不是重複匹配。Node v24.22.1 開檔約 8.95 秒、驗證程序約 27.53 秒，子程序最大 RSS 286.3 MiB；compact structure 為 983 bytes。
+
+這次是 Node 實體合成檔，沒有瀏覽器／Worker 記憶體、原生 compiler 或公司 dialect 驗收。2026-10-25 的瀏覽器與 Node 歷史紀錄保留如下，不能當成本次新跑的瀏覽器結果。
+
 ## 驗證紀錄（2026-10-25）
 
 實體檔 `weights-2560MiB.mlir` 為 **2,684,355,495 bytes**，含 2.5 GiB hex literal，表示 1.25 GiB 的 i8 權重、10 OP／6 blocks，以及 custom op、分支、匯合與迴圈。逐塊實際寫入、fsync，沒有 sparse padding。來源 SHA-256：`91f73e977e3d7787657a11cfa9b8369da58249faed0b63ebbd5187105402d3b4`。
