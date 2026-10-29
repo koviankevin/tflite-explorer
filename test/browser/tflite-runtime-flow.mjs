@@ -12,8 +12,8 @@ import {Archive} from '../../vendor/netron/zip.js';
 import {tfliteShapeFlow} from './tflite-shape-flow.mjs';
 import {modelCompositionFlow} from './model-composition-flow.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false,inputCleanup=false}){
-    if(await page.locator('#run-mode').count())return runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs,referenceInputs,precisionInputs,shapeInputs,compositionInputs,inputCleanup});
+export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false,inputCleanup=false,sharedRuntimeModule=false}){
+    if(await page.locator('#run-mode').count())return runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs,referenceInputs,precisionInputs,shapeInputs,compositionInputs,inputCleanup,sharedRuntimeModule});
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};

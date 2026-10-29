@@ -28,14 +28,14 @@ test('runtime rejects ambiguous or non-primary signatures before any model-body 
     for(const signatures of [[{...signature,subgraph_index:1}],[signature,{...signature,signature_key:'other'}],[{...signature,inputs:signature.inputs.toReversed()}],[{...signature,outputs:[]}],[{...signature,inputs:[signature.inputs[0],signature.inputs[0]]}]]){const m={...f.model,signature_defs:signatures},plan=runtimePlan(m,f.blob.size);assert.equal(plan.eligible,false);assert.match(plan.reason,/signature/i);const r=await executeRuntime({blob:{size:f.blob.size,arrayBuffer(){throw Error('must not read');}},plan,rt:null});assert.equal(r.status,'not-verified');}
 });
 test('client owns and releases Workers on success, cancellation, supersession and errors',async()=>{
-    const workers=[],client=runtimeClient({createWorker:()=>{const w={terminated:0,terminate(){this.terminated++;},postMessage(){}};workers.push(w);return w;}}),plan={eligible:true};
-    let promise=client.check({},plan);workers[0].onmessage({data:{result:{status:'passed'}}});assert.equal((await promise).status,'passed');assert.equal(workers[0].terminated,1);
+    const workers=[],client=runtimeClient({prepareModule:async()=>new WebAssembly.Module(Uint8Array.of(0,97,115,109,1,0,0,0)),createWorker:()=>{const w={terminated:0,terminate(){this.terminated++;},postMessage(){}};workers.push(w);return w;}}),plan={eligible:true};
+    let promise=client.check({},plan);await Promise.resolve();workers[0].onmessage({data:{result:{status:'passed'}}});assert.equal((await promise).status,'passed');assert.equal(workers[0].terminated,1);
     promise=client.check({},plan);client.cancel();assert.equal((await promise).cancelled,true);assert.equal(workers[1].terminated,1);
     promise=client.check({},plan);const replacement=client.check({},plan);assert.equal((await promise).cancelled,true);workers.at(-1).onerror({preventDefault(){}});assert.equal((await replacement).status,'not-verified');assert.ok(workers.every(w=>w.terminated===1));
 });
 test('a nonresponsive runtime is terminated at the documented deadline and never passes',async t=>{
     t.mock.timers.enable({apis:['setTimeout']});let terminated=0;
-    try{const client=runtimeClient({createWorker:()=>({postMessage(){},terminate(){terminated++;}})}),task=client.check({}, {eligible:true});t.mock.timers.tick(RUNTIME_LIMITS.timeoutMs+1);const result=await task;assert.equal(result.status,'not-verified');assert.match(result.reason,/30 秒/);assert.equal(terminated,1);client.cancel();assert.equal(terminated,1);}
+    try{const client=runtimeClient({prepareModule:async()=>new WebAssembly.Module(Uint8Array.of(0,97,115,109,1,0,0,0)),createWorker:()=>({postMessage(){},terminate(){terminated++;}})}),task=client.check({}, {eligible:true});t.mock.timers.tick(RUNTIME_LIMITS.timeoutMs+1);const result=await task;assert.equal(result.status,'not-verified');assert.match(result.reason,/30 秒/);assert.equal(terminated,1);client.cancel();assert.equal(terminated,1);}
     finally{t.mock.timers.reset();}
 });
 test('runtime report keeps numerical equivalence unverified and reflects actual stages',async()=>{
