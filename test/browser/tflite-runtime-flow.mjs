@@ -8,8 +8,8 @@ import path from 'node:path';
 import {runtimeFixture} from '../runtime-fixture.mjs';
 import {Archive} from '../../vendor/netron/zip.js';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function tfliteRuntimeFlow({page,read,base,directory,check}){
-    const report={cases:[],workers:[],downloads:0,requests:[]};
+export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true}){
+    const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
     const downloaded=()=>report.downloads++;
@@ -20,11 +20,27 @@ export async function tfliteRuntimeFlow({page,read,base,directory,check}){
     async function open(file){await choose(file,'#open-model');await ready();await page.locator('#edit-mode').click();await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();await page.locator('#edit-add-after').click();await until(()=>document.querySelectorAll('.edit-node.added').length===1);}
     async function download(button,name){const event=page.waitForEvent('download');await page.locator(button).click();const d=await event;assert.equal(await d.failure(),null);const file=path.join(directory,name);await d.saveAs(file);await d.delete();return file;}
     async function finished(status){await until(()=>!!document.querySelector('#edit-runtime-result').dataset.status&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');const state=await read(()=>({status:document.querySelector('#edit-runtime-result').dataset.status,detail:document.querySelector('#edit-runtime-result').textContent}));assert.equal(state.status,status,JSON.stringify(state));const end=Date.now()+5000;while(report.workers.some(w=>!w.closed)&&Date.now()<end)await new Promise(r=>setTimeout(r,25));assert.ok(report.workers.every(w=>w.closed));}
+    async function tabTo(selector){for(let i=0;i<180;i++){if(await read(s=>document.activeElement?.matches(s),selector))return;await page.keyboard.press('Tab');}throw Error('Runtime keyboard cannot reach '+selector);}
+    async function keyboardDismissal(){
+        await page.setViewportSize({width:1280,height:640});await page.locator('#edit-font').selectOption('32');
+        const before={workers:report.workers.length,requests:report.requests.length,downloads:report.downloads,changes:await read(()=>document.querySelector('#edit-change-list').textContent)};
+        const camera=await read(()=>({left:document.querySelector('#edit-viewport').scrollLeft,top:document.querySelector('#edit-viewport').scrollTop,font:document.querySelector('#edit-font').value}));report.keyboardDismissals=[];
+        for(const action of ['escape','cancel-button']){
+            await tabTo('#edit-runtime-check');await page.keyboard.press('Enter');await until(()=>document.querySelector('#edit-runtime-dialog').open);
+            if(action==='cancel-button'){await tabTo('#edit-runtime-dialog-close');await page.keyboard.press('Enter');}else await page.keyboard.press('Escape');
+            await until(()=>!document.querySelector('#edit-runtime-dialog').open&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');
+            const state=await read(()=>({focusedId:document.activeElement?.id||null,focusedTag:document.activeElement?.tagName,checkEnabled:!document.querySelector('#edit-runtime-check').disabled,changes:document.querySelector('#edit-change-list').textContent,camera:{left:document.querySelector('#edit-viewport').scrollLeft,top:document.querySelector('#edit-viewport').scrollTop,font:document.querySelector('#edit-font').value}}));report.keyboardDismissals.push({action,...state});
+            assert.equal(state.checkEnabled,true);assert.equal(state.changes,before.changes);assert.deepEqual(state.camera,camera);assert.equal(report.workers.length,before.workers);assert.equal(report.requests.length,before.requests);assert.equal(report.downloads,before.downloads);
+            assert.equal(state.focusedId,'edit-runtime-check','Cancelling test inputs must return keyboard focus to the enabled manual check action.');
+        }
+        report.cases.push('32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download');
+    }
     try{
         await page.goto(base,{waitUntil:'domcontentloaded'});await until(()=>!document.querySelector('#autosave-enabled').disabled);
         const f=await runtimeFixture(),source=path.join(directory,'runtime-source.tflite');await writeFile(source,f.bytes,{flag:'wx'});await open(source);
         await page.locator('#edit-new-ops details').first().locator('summary').click();await until(()=>!!document.querySelector('#edit-builtin'));await page.locator('#edit-builtin').selectOption('18');await page.locator('#edit-builtin-apply').click();await until(()=>document.querySelector('[data-edit-node="new:1"] .edit-node-title').textContent==='MUL');await page.locator('#edit-expose').check();
         const before=await download('#edit-export','runtime-before.tflite');await until(()=>!document.querySelector('#edit-open-result').disabled);const untested=JSON.parse(await readFile(await download('#edit-download-report','runtime-before.report.json'),'utf8'));assert.equal(untested.checks.find(c=>c.id==='runtime-load').status,'not-run');assert.equal(report.workers.length,0);assert.equal(report.requests.length,0);report.cases.push('opening/editing/exporting never starts interpreter or downloads runtime');
+        if(keyboardInputs)await keyboardDismissal();
         const a=path.join(directory,'runtime-a.bin'),b=path.join(directory,'runtime-b.bin'),bad=path.join(directory,'runtime-invalid.bin');await writeFile(a,Buffer.from(Float32Array.of(1,2).buffer),{flag:'wx'});await writeFile(b,Buffer.from(Float32Array.of(3,4).buffer),{flag:'wx'});await writeFile(bad,Buffer.of(1,2,3),{flag:'wx'});
         await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);assert.equal(await read(()=>document.querySelectorAll('#edit-runtime-inputs fieldset').length),2);
         for(const i of [0,1])await page.locator(`#runtime-input-mode-${i}`).selectOption('bin');await choose(bad,'#runtime-input-file-0');await choose(b,'#runtime-input-file-1');await page.locator('#edit-runtime-run').click();await until(()=>document.querySelector('#edit-runtime-input-error').textContent.includes('8 bytes'));assert.equal(report.workers.length,0);await choose(a,'#runtime-input-file-0');

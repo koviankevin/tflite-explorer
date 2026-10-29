@@ -143,17 +143,21 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getGrap
     }
     const outputName=()=>owner.name.replace(/(?:-edited)?\.[^.]+$/,'')+'-edited.tflite';
     $('edit-runtime-check').onclick=async()=>{
-        if(busy||!draft)return;const ticket=generation,stamp=signature();
+        if(busy||!draft)return;const ticket=generation,stamp=signature();let inputsDismissed=false;
         setBusy(true);message('為手動執行檢查建立候選模型…');
         try{const candidate=await prepareCandidate(outputName());if(!live(ticket))return;
-            const specs=candidate.runtimePlan?.eligible?await runtimeInputs.choose(candidate.runtimePlan):[];if(!live(ticket)||specs===null)return;
+            const specs=candidate.runtimePlan?.eligible?await runtimeInputs.choose(candidate.runtimePlan):[];if(!live(ticket))return;if(specs===null){inputsDismissed=true;return;}
             $('edit-runtime-cancel').hidden=false;
             let result;try{result=await runtime.check(candidate.blob,candidate.runtimePlan,message,specs);}finally{$('edit-runtime-cancel').hidden=true;}
             if(!live(ticket))return;
             const {io,...validation}=result;checked={owner,token:snapshot.token,stamp,validation,io,candidate:candidate.runtimePlan?.eligible&&!validation.cancelled?candidate:null};
             $('edit-runtime-result').textContent=[runtimeSummary(validation),validation.ioError||'',...(validation.diagnostics||[])].filter(Boolean).join('\n');$('edit-runtime-result').dataset.status=validation.status;
             message(runtimeSummary(validation)+' 草稿已保留，尚未下載模型。');
-        }catch(error){if(live(ticket))message(error.message);}finally{if(live(ticket))setBusy(false);}
+        }catch(error){if(live(ticket))message(error.message);}
+        finally{if(live(ticket)){
+            // Native dialog restoration runs while its opener is still disabled.
+            setBusy(false);if(inputsDismissed)$('edit-runtime-check').focus({preventScroll:true});
+        }}
     };
     $('edit-export').onclick=async()=>{
         if(busy||!draft||!changes().length)return;const ticket=generation,sourceFile=owner,stamp=signature(),name=outputName();
