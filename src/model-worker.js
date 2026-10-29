@@ -77,9 +77,9 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             if(index!==sourceIndex||file!==sourceFile||job!==editDraftJob||editWorkspace!==session)throw Error('模型或工作區已切換，未套用草稿。');
             if(action==='editDraftSave'){const document=await createEditSession(file,session.snapshot,args,fingerprint);if(job!==editDraftJob||file!==sourceFile)throw Error('已取消草稿儲存。');send(id,document);}
             else {const restored=await restoreEditSession(index,file,document,fingerprint);if(job!==editDraftJob||file!==sourceFile||editWorkspace!==session)throw Error('模型已切換，未套用草稿。');editWorkspace={index,file,snapshot:restored.snapshot,token:++editWorkspaceSerial};send(id,{snapshot:{...restored.snapshot,token:editWorkspace.token},saved:restored.saved});}
-        } else if(action==='editRuntimeOriginal'){
-            if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file||!index.raw)throw Error('TFLite 編輯工作區已過期。');
-            const {runtimePlan}=await import('./tflite-runtime-policy.js');send(id,{blob:file,runtimePlan:runtimePlan(index.raw,file.size),roundTrip:true});
+        } else if(action==='modelRuntimeInfo'){
+            if(!index?.raw||index.mlir||!file)throw Error('執行模式僅支援目前分頁已開啟的 TFLite。');
+            const {runtimePlan}=await import('./tflite-runtime-policy.js');send(id,runtimePlan(index.raw,file.size));
         } else if(action==='editWorkspaceExport'){
             if(!editWorkspace||args.token!==editWorkspace.token||editWorkspace.index!==index||editWorkspace.file!==file)throw Error('編輯工作區已過期，請重新開啟。');
             if(editInProgress)throw Error('上一筆模型修改仍在驗證。');if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
@@ -92,7 +92,6 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const c of result.changes)validateTfliteModelGraph(candidate.raw,c.graph);}
                 if(index!==sourceIndex||file!==sourceFile||editWorkspace!==session){send(id,{cancelled:true});return;}
                 const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
-                if(candidate.raw){const {runtimePlan}=await import('./tflite-runtime-policy.js');verified.runtimePlan=runtimePlan(candidate.raw,result.blob.size);}
                 const {replayEditDraft}=await import('./model-edit-draft.js'),state=replayEditDraft(session.snapshot,args.commands),targets=[...new Map(result.workspaceChanges.map(c=>{const n=state.nodes.find(n=>n.id===c.node);return [`${n.source.graph}:${n.source.node}`,n.source];})).values()];
                 try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,{...targets[0],mode:'workspace',workspaceTargets:targets},{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}catch(reason){verified.reportError=reason.message;}
                 send(id,verified);

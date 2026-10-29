@@ -1,0 +1,21 @@
+{
+  "format": "model-lens-options-red",
+  "source": {
+    "commit": "68bea6eb200ed48262d6d6ca150743438b24fe33",
+    "tree": "47ed44695ac5d857ed5b8f6ba21b00c9cb108ccf",
+    "committedAt": "2026-10-29T15:41:58+08:00",
+    "dirty": false
+  },
+  "command": [
+    "node",
+    "--test",
+    "test/builtin-options-diagnostics.test.mjs"
+  ],
+  "node": "v24.22.1",
+  "exitCode": 1,
+  "testSHA256": "2ff97a9b7c75054573837b56cfcbfced4c4d433e3b588ee857522695d1cecd00",
+  "writerSHA256": "b1bea3e1d1cb28a793ecdb2a490c4c53ec9ce24646b3ea579dcffc8a7faf3ef3",
+  "applicationSourceUnchangedFrom": "7c27d7e1e0fe610823194acf73fa759ebf087445",
+  "stdout": "Failed to create default WebGPU device: TypeError: Cannot read properties of undefined (reading 'requestAdapter')\n    at createDefaultWebGpuDevice (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/vendor/litert/2.6.0/core.js:221:39)\n    at _Environment.create (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/vendor/litert/2.6.0/core.js:200:30)\n    at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/vendor/litert/2.6.0/core.js:2808:25\n    at async TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/builtin-options-diagnostics.test.mjs:19:61)\n    at async Test.run (node:internal/test_runner/test:1409:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n✖ a valid ADD submodel executes without acquiring custom options diagnostics on round trip (167.8957ms)\nℹ tests 1\nℹ suites 0\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 357.4255\n\n✖ failing tests:\n\ntest at test\\builtin-options-diagnostics.test.mjs:14:1\n✖ a valid ADD submodel executes without acquiring custom options diagnostics on round trip (167.8957ms)\n  AssertionError [ERR_ASSERTION]: cutting a valid builtin OP must not add a custom-options error\n  + actual - expected\n  \n  + [\n  +   'ERROR: Found builtin operator ADD with custom options.'\n  + ]\n  - []\n  \n      at TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/builtin-options-diagnostics.test.mjs:26:16)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [ 'ERROR: Found builtin operator ADD with custom options.' ],\n    expected: [],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+  "stderr": ""
+}

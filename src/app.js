@@ -11,6 +11,7 @@ import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
 import {modelEditUI} from './model-edit-ui.js';
 import {modelEditWorkspaceUI} from './model-edit-workspace-ui.js';
+import {modelRuntimeWorkspaceUI} from './model-runtime-workspace-ui.js';
 import {modelTabs} from './model-tabs.js';
 import {mlirPatternEditor} from './mlir-pattern-editor.js';
 import {conditionEditor} from './pattern-condition-editor.js';
@@ -34,7 +35,9 @@ window.addEventListener('unhandledrejection',event=>diagnostics.record('global',
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
 const modelEditor=modelEditUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
-const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,getCompositionTargets:compositionTargets,getCompositionLabel:()=>kind==='patterns'?$('saved-pattern').value||$('condition-pattern-name').value:'',chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
+let runWorkspace;
+const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,getCompositionTargets:compositionTargets,getCompositionLabel:()=>kind==='patterns'?$('saved-pattern').value||$('condition-pattern-name').value:'',chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),onMode:()=>runWorkspace?.leave(),isRunning:()=>!!runWorkspace?.active});
+runWorkspace=modelRuntimeWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,leaveEditor:()=>editWorkspace.explore(),saveFile:(name,blob)=>host.export(name,blob)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -224,6 +227,7 @@ function createWorker() {
 }
 function reset() {
     sessions?.detach();
+    runWorkspace.reset();
     editWorkspace.reset();
     detailNode=null;detailLocation=null;modelEditor.clear();
     $('results').setAttribute('aria-busy','false');delete $('results').dataset.searchQuery;
@@ -234,6 +238,7 @@ function reset() {
     exportBusy = false; $('validation-dialog').close();exportReports.clear();exportedModels.clear();
     ++queryGeneration; ++renderGeneration;
     stopWorker(); model = null; file = null; $('model-file').value=''; selection = null; activeIndex = -1; patternCollapsed=false; $('toggle-pattern-fold').hidden=true;
+    editWorkspace.enable(false);runWorkspace.enable(false);
     overviewMode=false;patternSearchReady=false;overviewExpanded.clear();$('fold-all-patterns').hidden=true;$('pattern-overview-controls').hidden=true;
     pickedNodes=new Set();pickedGraph=0;cfgSelections.clear(); $('capture-cfg').checked=false; $('capture-cfg-option').hidden=true; $('match-blocks').hidden=true; renderedNodes = []; renderedGraph = null; setPickingPattern(false);
     full = false; fullConfirmed = false; currentGraph = 0;
@@ -276,6 +281,7 @@ async function loadModelTab(nextFile,saved) {
         if (file !== thisFile) return;
         model = summary;
         const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
+        runWorkspace.enable(editable);
         for(const id of ['edit-mode','compose-mode','compose-capture']){$(id).hidden=!editable;$(id).title=editable?(id==='compose-mode'?'將選取或目前匹配加入獨立組合草稿':'編輯實際 TFLite 模型'):'實際模型編輯僅支援 TFLite';}
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
@@ -299,7 +305,7 @@ async function loadModelTab(nextFile,saved) {
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         $('save-workspace').disabled=false;
         renderPattern();
-        if(saved){await restoreWorkspace(saved.workspace);await editWorkspace.restoreTab(saved.edit);return true;}
+        if(saved){await restoreWorkspace(saved.workspace);await editWorkspace.restoreTab(saved.edit);if(saved.running)runWorkspace.open();return true;}
         if(pendingWorkspace) {
             const workspace=pendingWorkspace,draft=queuedDraft;pendingWorkspace=null;queuedDraft=null;
             try {await restoreWorkspace(workspace);resumedDraft=draft;return true;}
@@ -1178,13 +1184,13 @@ async function captureModelTab(){
     const source=file,edit=editWorkspace.captureTab(),identity=await rpc('workspaceIdentity');
     if(file!==source)throw new DOMException('已取消','AbortError');
     const workspace=parseWorkspace(exportWorkspace(captureSession(identity)));
-    return {workspace,edit};
+    return {workspace,edit,running:runWorkspace.active};
 }
 function renderModelTabs(state){
     $('model-tabs').hidden=!state.tabs.length;
     $('model-tabs').setAttribute('aria-busy',String(state.busy));
     if(!state.busy)sessions?.change();
-    for(const selector of ['#explorer-panel','#target','#edit-workspace','.graph-bar','#capture-toolbar','.model-modes','#open-model','#close-model']){const node=document.querySelector(selector);if(node)node.inert=state.busy;}
+    for(const selector of ['#explorer-panel','#target','#edit-workspace','#run-workspace','.graph-bar','#capture-toolbar','.model-modes','#open-model','#close-model']){const node=document.querySelector(selector);if(node)node.inert=state.busy;}
     $('model-tab-list').replaceChildren(...state.tabs.map(item=>{
         const group=document.createElement('div');group.className='model-tab';const tab=document.createElement('button');tab.type='button';tab.id=`model-tab-${item.id}`;tab.dataset.modelTab=String(item.id);tab.setAttribute('role','tab');tab.setAttribute('aria-selected',String(item.id===state.current));tab.tabIndex=item.id===state.current?0:-1;tab.textContent=item.name;tab.title=`${item.name}（背景分頁切回時重新讀取本機檔案）`;tab.disabled=state.busy;tab.onclick=async()=>{await tabs.activate(item.id);$(`model-tab-${item.id}`)?.focus();};
         const close=document.createElement('button');close.type='button';close.className='close-model-tab';close.textContent='×';close.setAttribute('aria-label',`關閉 ${item.name}`);close.disabled=state.busy;close.onclick=()=>tabs.close(item.id).catch(report);group.append(tab,close);return group;
@@ -1315,6 +1321,7 @@ document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfe
 document.addEventListener('keydown', (e) => {
     if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
     if(tabs.busy)return;
+    if(runWorkspace.active){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if(editWorkspace.active){if(editWorkspace.handleKey(e))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }

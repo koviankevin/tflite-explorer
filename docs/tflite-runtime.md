@@ -2,7 +2,7 @@
 
 目前固定公開版為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)／build `b1a823b72e94f81b`。新版示範原模型／編輯後 × 全 0／亂數四種 CPU 情境通過，並保留 14 種既有情境與實際 raw BIN／IO ZIP；一般讀取、編輯、匯出仍不自動推論。舊示範下載檔不會自動補參數，需重新開啟新版示範，見 [根因](demo-runtime.md)與[正式交付](contextual-model-editing.md#preview28-正式交付)。
 
-開檔、編輯、一般匯出不會載入 interpreter，也不會自動跑推論。編輯工作區另提供「檢查能否執行（選用）」：沒有變更時檢查目前原模型，有變更時先建立並重新解析候選模型。按鈕準備完成後才列出 model inputs，再按「以這組輸入執行一次」啟動本機 LiteRT.js 2.6.0 CPU WASM。
+開檔、編輯、一般匯出不會載入 interpreter，也不會自動跑推論。preview.28 的手動檢查位於編輯工作區，會使用原模型或草稿候選。開發中的 preview.29 將它拆成獨立「執行模型」工作區，只跑目前分頁已開啟的 TFLite；編輯／組合與局部模型必須先匯出並開啟，見[工作區契約](model-runtime-workspace.md)。兩版均由使用者指定 model inputs，再按「以這組輸入執行一次」啟動本機 LiteRT.js 2.6.0 CPU WASM。
 
 每個 input 分別選零值、帶 seed／範圍的亂數或 raw `.bin`。面板顯示名稱、shape、dtype、所需 bytes；多輸入需逐項對應。raw 資料採 little-endian，byte 數須完全一致，沒有自動 dtype 轉換。boolean 限 0／1；量化資料使用原始整數值。零值指儲存值 0，不推測各 channel 的數學零點。索引、mask、token IDs 等有語意限制的輸入需由使用者提供有效資料，亂數不保證合法。
 

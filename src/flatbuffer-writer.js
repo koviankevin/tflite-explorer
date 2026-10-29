@@ -54,9 +54,18 @@ export class FlatbufferWriter {
         this.write(vt, 4 + slots * 2, 'setUint16'); this.write(vt + 2, 8 + slots * 8, 'setUint16'); this.write(pos, pos - vt, 'setInt32');
         const at = (slot) => pos + 8 + (slot - 4) / 2 * 8;
         const present = (slot) => this.write(vt + slot, at(slot) - pos, 'setUint16');
+        const code = name === 'Operator' ? this.operatorCodes?.[value.opcode_index] : null;
+        // The decoder materializes an absent vector as Uint8Array(0). Writing
+        // that vector back makes LiteRT diagnose builtin OPs as carrying custom
+        // options. Only omit a truly empty builtin field; custom OPs, nonempty
+        // bytes and external payloads retain their original representation.
+        const omitEmptyCustomOptions = code && (Number.isInteger(code.builtin_code) || Number.isInteger(code.deprecated_builtin_code)) &&
+            !code.custom_code && code.builtin_code !== 32 && code.deprecated_builtin_code !== 32 &&
+            !value.large_custom_options_size && !value.externalRanges?.some(range => range.size && range.offsetKey === 'large_custom_options_offset');
         for (const field of fields) {
             const item = value[field.key];
             if (item === null || item === undefined) continue;
+            if (omitEmptyCustomOptions && field.key === 'custom_options' && item.length === 0) continue;
             const { kind, slot, args } = field;
             if (scalar[kind]) { present(slot); this.write(at(slot), item, scalar[kind][0]); }
             else if (kind === 'union') {
@@ -89,6 +98,7 @@ export class FlatbufferWriter {
     }
     finish(model, file) { return this.finishArtifact(model, file).blob; }
     finishArtifact(model, file) {
+        this.operatorCodes = model.operator_codes;
         const root = this.table(model, 'Model'); this.write(0, root); this.bytes.set([84, 70, 76, 51], 4);
         let offset = this.length;
         const parts = [];

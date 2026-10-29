@@ -1,7 +1,7 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {tableFields} from './flatbuffer-writer.js';
 import {TFLITE_OPTIONS,TFLITE_PORTS} from './tflite-op-options.js';
-import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom} from './tensor-random.js';
+import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom,randomOptions} from './tensor-random.js';
 import {checkStaticTransform} from './tflite-static-transform.js';
 const normalize=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
 const optionNames=Object.keys(schema).filter(k=>k.endsWith('Options')&&schema[k].decode);
@@ -61,18 +61,19 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
 }
 export const RANDOM_TENSOR_LIMIT=16*1024*1024;
 const numeric={0:['Float32Array',4],2:['Int32Array',4],3:['Uint8Array',1],4:['BigInt64Array',8],6:['Uint8Array',1],7:['Int16Array',2],9:['Int8Array',1],10:['Float64Array',8],12:['BigUint64Array',8],15:['Uint32Array',4],16:['Uint16Array',2]};
-export function randomTensorInfo(tensor,{seed,min=-.05,max=.05}){
+export function randomTensorInfo(tensor,spec){
+    const options=randomOptions((spec.distribution??'uniform')==='uniform'?{min:-.05,max:.05,...spec}:spec);
     const kind=numeric[tensor?.type],dims=Array.from(tensor?.shape||[]);if(!kind||tensor.sparsity||tensor.shape_signature?.some(n=>n<0)||dims.some(n=>!Number.isSafeInteger(n)||n<0))throw Error('亂數需要已知 shape 的數值／boolean dense tensor；不支援動態維度或 sparse。');
     const count=dims.reduce((n,x)=>n*x,1);if(!Number.isSafeInteger(count)||count*kind[1]>RANDOM_TENSOR_LIMIT)throw Error('單個亂數 tensor 超過 16 MiB，請縮小 shape 或沿用現有權重。');
-    validateRandomRange(TFLITE_RANDOM_DTYPES[tensor.type],{seed,min,max});
+    validateRandomRange(TFLITE_RANDOM_DTYPES[tensor.type],options);
     const q=tensor.quantization;if(q){if(q.scale?.some(x=>!Number.isFinite(x)||x<=0)||q.scale?.length>1&&q.scale.length!==dims[q.quantized_dimension]||q.zero_point?.length&&q.zero_point.length!==q.scale?.length)throw Error('量化 scale、zero point 或 channel 維度不合法。');}
     const ranges={2:[-2147483648,2147483647],3:[0,255],6:[0,1],7:[-32768,32767],9:[-128,127],12:[0,Number.MAX_SAFE_INTEGER],15:[0,4294967295],16:[0,65535],4:[Number.MIN_SAFE_INTEGER,Number.MAX_SAFE_INTEGER]};
-    const r=ranges[tensor.type];if(r&&(min<r[0]||max>r[1]||!Number.isInteger(min)||!Number.isInteger(max)))throw Error('整數／量化 tensor 的亂數範圍需為 dtype 可表示的整數。');
+    const r=ranges[tensor.type];
     if(q?.zero_point?.some(x=>!r||BigInt(x)<BigInt(r[0])||BigInt(x)>BigInt(r[1])))throw Error('量化 zero point 超出 dtype 範圍。');
-    return {count,kind,range:r,bytes:count*kind[1],seed,min,max};
+    return {count,kind,range:r,bytes:count*kind[1],...options};
 }
 export function randomTensor(tensor,spec){
-    const {count,kind,seed,min,max}=randomTensorInfo(tensor,spec),bytes=new Uint8Array(count*kind[1]),view=new DataView(bytes.buffer),next=seededRandom(TFLITE_RANDOM_DTYPES[tensor.type],{seed,min,max});
+    const info=randomTensorInfo(tensor,spec),{count,kind}=info,bytes=new Uint8Array(count*kind[1]),view=new DataView(bytes.buffer),next=seededRandom(TFLITE_RANDOM_DTYPES[tensor.type],info);
     const setters={0:'setFloat32',2:'setInt32',3:'setUint8',4:'setBigInt64',6:'setUint8',7:'setInt16',9:'setInt8',10:'setFloat64',12:'setBigUint64',15:'setUint32',16:'setUint16'};
     for(let i=0;i<count;i++){const v=next();view[setters[tensor.type]](i*kind[1],kind[0].includes('Big')?BigInt(v):v,true);}
     return bytes;
