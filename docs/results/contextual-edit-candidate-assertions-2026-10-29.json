@@ -1,0 +1,9 @@
+{
+  "checks": 30,
+  "demoCPU": 4,
+  "modelWorkers": 48,
+  "runtimeWorkers": 10,
+  "contextualSelection": true,
+  "restart": true,
+  "layouts": 2
+}

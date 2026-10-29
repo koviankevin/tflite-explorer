@@ -9,3 +9,10 @@ preview.28 候選將「加入組合草稿」從全站模式切換移到搜尋結
 編輯圖依 tensor 定義／使用關係分層排列，分支同層並排、匯合接續；節點間距依實際卡片高度計算。這只調整圖形，不變更模型 OP 順序、接線或匯出語意。暫時不合法的循環草稿也會保留可點選的卡片，由既有驗證顯示原因。
 
 本機相關 39 項 Node 測試通過；完整 PR 必要檢查、Hosted 原生滑鼠／32px／重置／接線／草稿與匯出驗收、正式部署仍待取得。沒有本機瀏覽器或手機驗收。Interpreter 使用者回報的錯誤另待完整訊息才能診斷，不列為本次已修復。
+
+
+## 候選原生驗證
+
+[40831753771](https://github.com/koviankevin/tflite-explorer/actions/runs/40831753771)／來源 `75ac025383e44f0afccad6b462ba5c2772180c16` 的 6 個版本切換與 30 項原生操作均通過。原始 [native ZIP](results/contextual-edit-candidate-native-2026-10-29.zip)、[版本 ZIP](results/contextual-edit-candidate-versioning-2026-10-29.zip) 的 provider digest、CRC、來源與時間在 [獨立收據](results/contextual-edit-candidate-review-2026-10-29.json) 核對；[精確功能斷言](results/contextual-edit-candidate-assertions-2026-10-29.json) 再驗 12 次工作區狀態、真正拖曳取消／重複切換、重置取消／確認、兩種桌面尺寸的 32px 不重疊、兩份匯出 byte ranges、四種示範 CPU 情境，以及 48 模型／10 runtime Workers 關閉。
+
+最終測試維護另將示範回歸沿用至後續 preview 版本，並保留編輯區截圖；不改變應用程式執行或匯出。最終 main 發布關卡與正式交付仍待完成。
