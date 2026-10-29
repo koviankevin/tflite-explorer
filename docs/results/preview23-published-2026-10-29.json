@@ -1,0 +1,282 @@
+{
+  "format": "model-lens-preview23-published-review",
+  "version": 1,
+  "status": "passed",
+  "startedAt": "2026-10-29T00:58:53.653Z",
+  "source": {
+    "commit": "94af79132ee37bc11219ab87b458d5664c434b34",
+    "tree": "8cd81df05d574fbefd0dc714a7f8ef166d9638d8",
+    "committedAt": "2026-10-29T08:48:02+08:00",
+    "dirty": false
+  },
+  "run": {
+    "id": 40796884645,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40796884645",
+    "attempt": 1,
+    "source": "94af79132ee37bc11219ab87b458d5664c434b34",
+    "jobs": [
+      {
+        "id": 123195398644,
+        "name": "prepare",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 123195623982,
+        "name": "Publish site c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 123195700643,
+        "name": "verify_live",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 123196602379,
+        "name": "release",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 12864311988,
+      "name": "live-release-verification",
+      "jobId": 123195700643,
+      "attempt": 1,
+      "bytes": 270618,
+      "digest": "sha256:2a4f15cd7c6a9a62bd4bf22480d59b8a0e827eb5aef8e23826ee034bb473ec65",
+      "members": [
+        {
+          "name": "production-smoke.json",
+          "bytes": 68944,
+          "sha256": "2f73b7b91c79e07cea76f937ad406fb5ea2219a4fffca5b08aa892d215ed45db"
+        },
+        {
+          "name": "pages-live-report.json",
+          "bytes": 362112,
+          "sha256": "091c58043011aae2c020843faafc5ff536817577b82e087ba55f39f88cd0edcb"
+        },
+        {
+          "name": "production-smoke.png",
+          "bytes": 194307,
+          "sha256": "0eb3250a72db38746e75d17791c1d849afb5274a82a15b3b8c5a98702f29fb04"
+        }
+      ]
+    },
+    {
+      "id": 12864925193,
+      "name": "published-release-verification",
+      "jobId": 123196602379,
+      "attempt": 1,
+      "bytes": 765,
+      "digest": "sha256:9971b2c5e9688091a23af11e0bec38f3c3510004d2216fa900c3e61efac55f67",
+      "members": [
+        {
+          "name": "pages-release-report.json",
+          "bytes": 1273,
+          "sha256": "27d7d06831089140c1508fc34aef7be537cc93f27d061aae306177485cd9e9ee"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "successful job artifacts authenticated by provider digest, CRC, source and attempt timestamps",
+    "every live file and root matches independently reviewed snapshot",
+    "30 native operations including optional CPU bin IO, 36 model workers and 4 runtime workers closed",
+    "all four actual Release downloads match original prepared bytes",
+    "authoritative Pages deployment and independent root agree with preview.23"
+  ],
+  "runtimeKeyboard": {
+    "cases": 8,
+    "dismissals": [
+      {
+        "action": "escape",
+        "focusedId": "edit-runtime-check",
+        "focusedTag": "BUTTON",
+        "checkEnabled": true,
+        "changes": "新增 · MUL輸入：a、b；自動輸出：mul_1_0；加入模型 outputs",
+        "camera": {
+          "left": 0,
+          "top": 0,
+          "font": "32"
+        }
+      },
+      {
+        "action": "cancel-button",
+        "focusedId": "edit-runtime-check",
+        "focusedTag": "BUTTON",
+        "checkEnabled": true,
+        "changes": "新增 · MUL輸入：a、b；自動輸出：mul_1_0；加入模型 outputs",
+        "camera": {
+          "left": 0,
+          "top": 0,
+          "font": "32"
+        }
+      }
+    ]
+  },
+  "fixedRelease": {
+    "url": "https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.23",
+    "release": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.23",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "94af79132ee37bc11219ab87b458d5664c434b34",
+        "tree": "8cd81df05d574fbefd0dc714a7f8ef166d9638d8",
+        "committedAt": "2026-10-29T08:48:02+08:00",
+        "dirty": false
+      },
+      "buildId": "3cc83fdeb25322bb"
+    },
+    "provenance": {
+      "kind": "github-published-promotion",
+      "releaseId": 427349785,
+      "assetId": 686888034,
+      "tag": "v0.2.0-preview.23",
+      "source": "94af79132ee37bc11219ab87b458d5664c434b34",
+      "zipSHA256": "5b2e7ee7370e68449d7350d6500a58ee8a45e26601fbafee8dcceb08b4295b2f",
+      "zipBytes": 41108675,
+      "manifestSHA256": "2dd45bc0c7899f0f8fdf5da0e52cca9f91060f420d9d8e00562b03f164d161e6",
+      "assets": [
+        {
+          "name": "model-lens-public-0.2.0-preview.23-3cc83fdeb25322bb.zip",
+          "bytes": 41108675,
+          "sha256": "5b2e7ee7370e68449d7350d6500a58ee8a45e26601fbafee8dcceb08b4295b2f"
+        },
+        {
+          "name": "model-lens-public-0.2.0-preview.23-3cc83fdeb25322bb.zip.sha256",
+          "bytes": 122,
+          "sha256": "9a0c6a26c0e6ff101e21b655527a73377272d121a3674080945458e5bc1d304c"
+        },
+        {
+          "name": "release-gates.json",
+          "bytes": 165648,
+          "sha256": "4b459df4370ab2f6091600f5ee32cf8edd06efee70a623d480b7f0a81c4b720b"
+        },
+        {
+          "name": "release-manifest.json",
+          "bytes": 47484,
+          "sha256": "2dd45bc0c7899f0f8fdf5da0e52cca9f91060f420d9d8e00562b03f164d161e6"
+        }
+      ]
+    },
+    "assets": [
+      {
+        "name": "model-lens-public-0.2.0-preview.23-3cc83fdeb25322bb.zip",
+        "bytes": 41108675,
+        "sha256": "5b2e7ee7370e68449d7350d6500a58ee8a45e26601fbafee8dcceb08b4295b2f"
+      },
+      {
+        "name": "model-lens-public-0.2.0-preview.23-3cc83fdeb25322bb.zip.sha256",
+        "bytes": 122,
+        "sha256": "9a0c6a26c0e6ff101e21b655527a73377272d121a3674080945458e5bc1d304c"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 165648,
+        "sha256": "4b459df4370ab2f6091600f5ee32cf8edd06efee70a623d480b7f0a81c4b720b"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 47484,
+        "sha256": "2dd45bc0c7899f0f8fdf5da0e52cca9f91060f420d9d8e00562b03f164d161e6"
+      }
+    ],
+    "coreFiles": 293,
+    "allOriginalPreparedBytesMatch": true
+  },
+  "deployment": {
+    "deploymentId": 7401117862,
+    "controllerSource": "94af79132ee37bc11219ab87b458d5664c434b34",
+    "runId": 40796884645,
+    "attempt": 1,
+    "jobId": 123195623982,
+    "siteId": "c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920",
+    "legacy": false
+  },
+  "site": {
+    "siteId": "c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920",
+    "manifestSHA256": "bf0dbddaf192f3ecc0b12a8d98a32cb0cffb67b1cd3b85b500455c380be7417a",
+    "rootSHA256": "4966d022ba76fee9337e45d0b906bdfb116f2f4601a1e13aed7f791a92a46a13",
+    "current": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.23",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "94af79132ee37bc11219ab87b458d5664c434b34",
+        "tree": "8cd81df05d574fbefd0dc714a7f8ef166d9638d8",
+        "committedAt": "2026-10-29T08:48:02+08:00",
+        "dirty": false
+      },
+      "buildId": "3cc83fdeb25322bb"
+    },
+    "legacy": {
+      "schemaVersion": 1,
+      "version": "0.2.0-preview.7",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "tree": "cdbc32d48769232a5721abb34db8d192e401f8d9",
+        "committedAt": "2026-10-27T12:03:57+08:00",
+        "dirty": false
+      },
+      "buildId": "163f38ab1dc856e4"
+    },
+    "retainedBuildIds": [
+      "04aa44009821ed92",
+      "c4346bf8617a020e"
+    ],
+    "files": 1375
+  },
+  "live": {
+    "files": 1375,
+    "httpRetries": 0,
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+      "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+      "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+      "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+      "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+      "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+      "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+      "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+      "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+      "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+      "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers",
+      "committed local edit draft survives an owned browser SIGKILL; fresh browser rejects wrong weights and restores original wiring, 32px view and redo",
+      "native shared IndexedDB recovery conflict/fork preserves both edits; verified TFLite export reopens and deleting the saved branch never resurrects it",
+      "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+      "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout"
+    ],
+    "allWorkersClosed": true
+  },
+  "sourceUnchanged": true,
+  "finishedAt": "2026-10-29T00:59:21.567Z"
+}

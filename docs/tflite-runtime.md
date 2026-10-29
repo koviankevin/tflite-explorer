@@ -1,6 +1,6 @@
 # TFLite 手動執行檢查
 
-目前固定公開版為 [preview.22](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.22)／build `04aa44009821ed92`。手動 raw .bin、型別亂數、input／output ZIP、原模型及修改模型、錯誤／取消與不支援情境已隨正式站 30 項操作核對；見 [最新正式交付](desktop-physical.md#preview22-正式交付)。文末保留各版候選與失敗的歷史紀錄，當時「待發布」不代表目前仍未交付。
+目前固定公開版為 [preview.23](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.23)／build `3cc83fdeb25322bb`。手動 raw .bin、型別亂數、input／output ZIP、原模型及修改模型、錯誤／取消與不支援情境已隨正式站 30 項操作核對；新增 32px 原生鍵盤取消返回焦點，見 [最新正式交付](runtime-keyboard.md#preview23-正式交付)。文末保留各版候選與失敗的歷史紀錄，當時「待發布」不代表目前仍未交付。
 
 開檔、編輯、一般匯出不會載入 interpreter，也不會自動跑推論。編輯工作區另提供「檢查能否執行（選用）」：沒有變更時檢查目前原模型，有變更時先建立並重新解析候選模型。按鈕準備完成後才列出 model inputs，再按「以這組輸入執行一次」啟動本機 LiteRT.js 2.6.0 CPU WASM。
 
