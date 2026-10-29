@@ -2,6 +2,7 @@ import {modelRuntimeSession} from './model-runtime-session.js';
 import {runtimeClient} from './tflite-runtime-client.js';
 import {runtimeInputsUI} from './tflite-runtime-inputs-ui.js';
 import {runtimeSummary} from './tflite-runtime-policy.js';
+import {runtimeIOBlob} from './runtime-io.js';
 
 export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,saveFile}){
     const $=id=>document.getElementById(id),root=$('run-workspace');let active=false;
@@ -34,6 +35,6 @@ export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,sav
     $('run-mode').onclick=()=>api.open();
     $('edit-runtime-check').onclick=async()=>{await session.run();if(active&&!session.state.busy)$('edit-runtime-check').focus({preventScroll:true});};
     $('edit-runtime-cancel').onclick=()=>session.cancel();
-    $('edit-runtime-download').onclick=()=>{const io=session.state.io;if(io?.archive&&!session.state.busy)return saveFile(getSource().name.replace(/\.[^.]+$/,'')+'-runtime-io.zip',io.archive);};
+    $('edit-runtime-download').onclick=()=>{const io=session.state.io;if(io?.archive&&!session.state.busy)return saveFile(getSource().name.replace(/\.[^.]+$/,'')+'-runtime-io.zip',runtimeIOBlob(io));};
     return api;
 }
