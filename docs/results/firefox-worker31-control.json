@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "15fe896cc05eb075baaa74862b591b57a2cde30346980805afa7114baacb11cf",
+  "members": [
+    {
+      "name": "original.zip",
+      "bytes": 200916,
+      "sha256": "58d281f670be55951c4fa6c6f2c24061bf6c16d6dfc862e10e7da650a2cf2b6b"
+    },
+    {
+      "name": "run.json",
+      "bytes": 14426,
+      "sha256": "72652f34f43acb15d697e1a0b0fe3a2726e8da6d1db11ed761c24c830393777b"
+    },
+    {
+      "name": "jobs.json",
+      "bytes": 3970,
+      "sha256": "bb5392809012cbc9db8eda54a33cb967e5a30900bacdc3095134c0a0edbfb48b"
+    },
+    {
+      "name": "artifacts.json",
+      "bytes": 948,
+      "sha256": "38ec587035d2f362a743e2cac57e4c022f2da232b9185c895de50fcd484183dc"
+    },
+    {
+      "name": "review.json",
+      "bytes": 135049,
+      "sha256": "997d2a472c81fbd848ec5f50a6ab3d01feb46afcb207bc217254689e732286b9"
+    },
+    {
+      "name": "unit-red.log",
+      "bytes": 3854,
+      "sha256": "a77e3e2fb3dbd34b8911b53b64b05990602df7ace291d3566cbc757fe78fa94a"
+    },
+    {
+      "name": "unit-green.log",
+      "bytes": 2572,
+      "sha256": "f6cc8207e9b361767c2cff06510ce2f7a9ba72bf3299f70dffdeb89f25d4064c"
+    }
+  ],
+  "run": 40897677111,
+  "source": {
+    "commit": "5a4845057cc7511215956f4a93c2ffc31a4812e0",
+    "tree": "d4ba41a8812bf5eabd93398de65f7256f2cf9fbb",
+    "committedAt": "2026-10-29T23:02:59+08:00",
+    "dirty": false
+  },
+  "authentication": "passed",
+  "acceptance": "unverified",
+  "reader": {
+    "exit": 0,
+    "chunk": "903316"
+  },
+  "controlGroups": [
+    {
+      "kind": "classic",
+      "timing": "immediate",
+      "rows": 8,
+      "nativeCreated": 8,
+      "nativeClosed": 8,
+      "unobservedClose": 0,
+      "missingCreation": 0
+    },
+    {
+      "kind": "classic",
+      "timing": "ready",
+      "rows": 8,
+      "nativeCreated": 8,
+      "nativeClosed": 8,
+      "unobservedClose": 0,
+      "missingCreation": 0
+    },
+    {
+      "kind": "module",
+      "timing": "immediate",
+      "rows": 8,
+      "nativeCreated": 8,
+      "nativeClosed": 8,
+      "unobservedClose": 0,
+      "missingCreation": 0
+    },
+    {
+      "kind": "module",
+      "timing": "ready",
+      "rows": 8,
+      "nativeCreated": 8,
+      "nativeClosed": 8,
+      "unobservedClose": 0,
+      "missingCreation": 0
+    }
+  ],
+  "identityConstructors": 27,
+  "nativeTerminationReturns": 27,
+  "unobservedIdentityClose": 15,
+  "unitBefore": {
+    "pass": 3,
+    "fail": 3,
+    "exit": 1,
+    "chunk": "924714"
+  },
+  "unitAfter": {
+    "pass": 21,
+    "fail": 0,
+    "exit": 0,
+    "chunk": "91fbaa"
+  },
+  "limits": "Blob controls all32closed; imported app identity Workers still have15 unobservedclose. General immediate-cancel hypothesis is not established. New scheduling/callback cleanup requires hosted validation."
+}
