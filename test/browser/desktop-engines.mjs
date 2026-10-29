@@ -17,6 +17,7 @@ import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
 import {demoRuntimeFlow} from './demo-runtime-flow.mjs';
 import {tfliteRuntimeFlow} from './tflite-runtime-flow.mjs';
 import {usageGuideFlow} from './usage-guide-flow.mjs';
+import {activeComputeFlow} from './active-compute-flow.mjs';
 import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 
@@ -89,12 +90,14 @@ try{
         phase='model-runtime';const afterDemo=modelWorkers().length;report.tfliteRuntime=await tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs:true,referenceInputs:true,precisionInputs:true,shapeInputs:true,compositionInputs:true});assert.equal(report.tfliteRuntime.cases.length,19);assert.equal(modelWorkers().length-afterDemo,33);
     }
     if(report.usageGuideRequired){phase='usage-guide';report.usageGuide=await usageGuideFlow({page,read,directory,check});assert.equal(report.usageGuide.cases.length,5);}
+    report.activeComputeRequired=report.runtimeWorkspaceRequired&&report.usageGuideRequired;
+    if(report.activeComputeRequired){phase='active-compute';report.activeCompute=await activeComputeFlow({page,read,directory,check});}
     const workers=modelWorkers(),runtimes=report.workers.filter(w=>/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url));report.modelWorkers=workers.length;report.runtimeWorkers=runtimes.length;
-    assert.equal(workers.length,report.baseModelWorkers+(report.runtimeWorkspaceRequired?36:0)+(report.usageGuideRequired?3:0));assert.equal(runtimes.length,(report.runtimeWorkspaceRequired?14:0)+(report.usageGuideRequired?2:0));assert.ok([...workers,...runtimes].every(w=>w.closed));assert.deepEqual(report.errors,[]);
+    assert.equal(workers.length,report.baseModelWorkers+(report.runtimeWorkspaceRequired?36:0)+(report.usageGuideRequired?3:0)+(report.activeComputeRequired?3:0));assert.equal(runtimes.length,(report.runtimeWorkspaceRequired?14:0)+(report.usageGuideRequired?2:0)+(report.activeComputeRequired?4:0));assert.ok([...workers,...runtimes].every(w=>w.closed));assert.deepEqual(report.errors,[]);
     await target.verifyUnchanged();
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);
-    await copyFile(report.usageGuide?.screenshot?path.join(directory,'usage-guide.png'):path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';phase='complete';
-}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+    await copyFile(report.activeCompute?.screenshot?path.join(directory,'active-cpu-timeout.png'):report.usageGuide?.screenshot?path.join(directory,'usage-guide.png'):path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';phase='complete';
+}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide','activeCompute'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     try{await target?.close();}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
