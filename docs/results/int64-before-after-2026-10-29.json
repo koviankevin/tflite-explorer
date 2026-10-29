@@ -1,0 +1,8 @@
+{
+  "beforeSource": "ea3fce88df43e9b4fe5979838b411f8855eb5787",
+  "requested": "9007199254740993",
+  "before": "9007199254740992",
+  "afterUnsafeNumber": "rejected",
+  "afterDecimalString": "9007199254740993",
+  "scope": "Actual pristine and modified builtinSettings; serialization has separate Node coverage; not browser or deployment acceptance"
+}
