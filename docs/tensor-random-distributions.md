@@ -26,3 +26,5 @@ Normal 的平均值與標準差定義採 [NIST 的常態分佈定義](https://cs
 
 
 本版 const 浮點產生支援 float32／float64；整數及 boolean 使用 Uniform／Bernoulli，64-bit 整數以 JavaScript 可精確表示的範圍為限。Runtime float16 的資料建立另取決於瀏覽器是否提供 Float16Array；未支援會明確拒絕，不默默換 dtype。
+
+目前固定 preview.30 的 [Chromium／Firefox／WebKit 核對](runtime-active-compute.md#三引擎實際結果)也保留上述 const／input 四種分佈、預設值、v3 草稿還原與相同 bytes 重匯出斷言；新增加的運算取消／逾時驗收沒有更改這些功能。
