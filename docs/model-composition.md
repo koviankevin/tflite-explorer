@@ -1,6 +1,6 @@
 # 從原始圖組合 TFLite 模型
 
-候選與 main 的 Hosted 原生驗收已通過；正式站目前仍為 preview.25，受控發布與發布後核對尚待完成。
+本功能已在 [preview.26](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.26) 正式發布，build `5846ee3c3a5e0a37`；網站及固定下載已獨立核對，見下方正式交付。
 
 ## 操作
 
@@ -27,7 +27,7 @@
 - 控制流程／子圖呼叫、有狀態 OP、variable／resource／variant／外部檔案 tensors 不搬移；拒絕時保留原草稿。
 - 支援圖結構組合與插入新 OP；不執行 compiler kernel fusion，也不自動判定兩個 tensor 的數值用途是否適合相接。
 
-本機回歸已驗匯入累積／重疊／Undo／Redo、拓樸排序／循環拒絕、獨立匯出／無關資料移除、custom options／權重／原編號、明確介面、v2 保存與指紋還原，以及獨立原始資料對照。Hosted 原生測試也已通過 A／B pattern、32px／14 吋版面、分頁、raw BIN CPU 與匯出重開，詳見下方原始證據；正式部署尚待完成。
+本機回歸已驗匯入累積／重疊／Undo／Redo、拓樸排序／循環拒絕、獨立匯出／無關資料移除、custom options／權重／原編號、明確介面、v2 保存與指紋還原，以及獨立原始資料對照。Hosted 原生測試也已通過 A／B pattern、32px／14 吋版面、分頁、raw BIN CPU 與匯出重開，詳見下方原始證據與正式交付。
 
 ## 候選與主分支驗收
 
@@ -46,3 +46,13 @@
 另有 [本機 Node 報告](results/composition-local-blob-report-2026-10-29.json)及[固定來源實驗腳本](results/composition-local-blob-harness-2026-10-29.txt)：以共享零值頁建立實際 1,349,965,216-byte File／21,005 OP，取八個 OP，匯出並完整串流比對 1.25 GiB 權重、重新解析與 options 通過。來源每次解析讀取最多 65,536 bytes；有 131,072 bytes 的正常權重區預讀，未整檔讀入。Node 峰值 RSS 447,229,952 bytes、建構約 195 ms；不當成瀏覽器／實體磁碟／有意義權重或 kernel 的驗收。
 
 [第一版 probe 失敗](results/composition-local-blob-probe-failure-2026-10-29.json)保留：測試誤要求解析器完全不讀權重區；改為準確提供零值視窗並記錄預讀量，保留原 16 MiB 單次讀取上限，沒有修改應用或 CI 門檻。
+
+## preview.26 正式交付
+
+[正式站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.26)為 build `5846ee3c3a5e0a37`，來源 `f4230c9f18926cf3ceb0a70faab88451c1fdc5f5`／tree `1178c64b373652679ed44c6cdd146d96de2256f4`。準備 [40816382766](https://github.com/koviankevin/tflite-explorer/actions/runs/40816382766) 的[完整產物審閱](results/preview26-prepared-2026-10-29.json)及[獨立乾淨重建](results/preview26-rebuild-2026-10-29.json)通過，再以精確 build／site ID 執行 [40816757520](https://github.com/koviankevin/tflite-explorer/actions/runs/40816757520)；prepare／deploy／verify_live／release 在 attempt 1 成功。
+
+[最終獨立核對](results/preview26-published-2026-10-29.json)驗 provider ZIP digest／CRC、job／來源／時段、正式站 1,380 檔 SHA／MIME／root／權威 deployment，以及四份固定 Release 實際下載與原準備包一致。30 項原生操作、14 種參數／runtime／組合情境通過，47 個模型與六個 runtime Workers 關閉。實際 A／B 匹配匯入、重疊去重、兩份編輯歷史、介面、v2 JSON、CPU `[14,28]`／IO ZIP、權重 options 對照、來源／結果分頁及舊 pattern 搜尋均通過。
+
+原始 ZIP：[正式站驗證](results/preview26-live-release-verification-2026-10-29.zip)、[Release 驗證](results/preview26-published-release-verification-2026-10-29.zip)；完整 [site manifest](results/preview26-site-manifest-2026-10-29.json) SHA `008eecf5763c4082e228a2bfcdc2fd55d71d3642a4b7165f8032da82421dea85`，site ID `288042952e897836c708778956af40702534425867473cff050264d1ef8af467`，固定部署 ZIP SHA `813a364436f24b839f28dc22b9f28925cee6e02b40103b2b02eb55e207f0bb64`。
+
+同版也通過多輸入 CONCATENATION 的 [1,4] 推導／匯出／CPU 與錯誤 SQUEEZE axes 拒絕匯出；先前 int64、空參考表單、取消焦點及原有 TFLite／MLIR 搜尋／pattern／匯出重開保留。未測手機或內網；跨 subgraph／有狀態搬移、完整 kernel 語意、大型組合瀏覽器長測與其他公開品質限制仍列為未完成。

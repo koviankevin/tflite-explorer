@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 preview.25／build `95784ae94cb97575`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
+目前固定版本為 preview.26／build `5846ee3c3a5e0a37`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -10,7 +10,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 功能限制
 
-Preview.25 新發現合法多輸入 `CONCATENATION` 被固定 port 數拒絕，以及非單位維度的 `SQUEEZE` axes 仍可匯出；[本機修正與回歸](op-shape-validation.md)以及 Hosted 候選／main 原生操作已通過，正式部署尚待完成。
+組合模型目前限同一 TFLite／subgraph，暫不搬移控制流程或有狀態 OP；大型組合的瀏覽器長測尚未完成，見 [功能與驗收範圍](model-composition.md)。
 
 - **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。量化規則與任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
 - **手動 interpreter 的規模與支援範圍**：CPU WASM 限 128 MiB 模型、16 MiB IO、30 秒執行，另有 512 MiB 提前配置估算；此估算不含所有 kernel scratch。公開 runtime 不含任意 custom kernels，動態／未知 shape、部分 dtype 及不明確的 signature 對應會列為未能驗證。大型模型仍可探索、編輯與匯出。見 [完整限制](tflite-runtime.md)。
@@ -28,3 +28,5 @@ Preview.25 新發現合法多輸入 `CONCATENATION` 被固定 port 數拒絕，�
 新增 OP 沒有可用 tensor 參考時進階表單被例外取代，已在 preview.24 修正；現在保留表單、停用無法產生的亂數並提供原因。合法型別亂數及原有操作仍通過，見 [正式交付](random-reference-guard.md#preview24-正式交付)。
 
 新增 OP 的 64-bit 整數精度問題已在 preview.25 修正並完成正式驗收；大整數請以十進位字串輸入，JSON 陣列元素需加雙引號，見 [正式交付](op-integer-precision.md#preview25-正式交付)。
+
+合法多輸入 CONCATENATION 的固定 port 誤判、SQUEEZE 非單位 axes 仍可匯出，已在 preview.26 修正並完成正式站／CPU 正負例驗收，見 [正式交付](model-composition.md#preview26-正式交付)。

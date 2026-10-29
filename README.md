@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.25](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.25)／build `95784ae94cb97575`。修正新增 OP 的 64-bit 參數接受已捨入數字的問題；不安全 Number 會顯示原因，大整數可改用十進位字串。正式站 1,376 檔、30 項原生操作、十種參數／runtime 情境與四份固定下載已獨立核對，見 [正式交付](docs/op-integer-precision.md#preview25-正式交付)。1.25 GiB／21,005 OP 八輪的權重、custom options、pattern 與程序退出通過；歷史各引擎及長測保持各自來源。
+目前固定正式版為 [preview.26](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.26)／build `5846ee3c3a5e0a37`。新增同一 TFLite／subgraph 的片段組合草稿：分次加入 pattern A／B、重疊去重、獨立接線歷史、明確輸入／輸出、v2 保存與獨立模型匯出。32px／14 吋、真實 CPU／IO ZIP、custom options／權重與重開通過；一般匯出不自動執行 interpreter。正式站 1,380 檔、30 項原生操作、14 種參數／runtime／組合情境及四份固定下載已核對，見 [正式交付](docs/model-composition.md#preview26-正式交付)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
