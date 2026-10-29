@@ -21,3 +21,5 @@
 原始 Firefox 截圖中 header 與 Run 已對齊至 128；前一個 1366 寬的瞬間值則為 header 115／Run 128。現有 `resizeInFrame` 明確在 ResizeObserver 後的 animation frame 更新 CSS，因此測試修正為有上限地等待實際幾何位置一致，再保留原本不重疊、無水平溢出及內容高度的斷言，另記錄 initial／settled rectangles。不加固定睡眠、不改應用、不放寬版面門檻；後續只補跑 Firefox，WebKit 原成功結果保留並依相同應用／fixture 與僅觀察等待的差異核對沿用。
 
 獨立讀取器最初沿用 Chromium 的「所有 Worker close」斷言時，也記錄到 WebKit 的最後一個頁面級 Netron layout Worker 沒有 close 通知；前十二個 layout Workers 都已通知關閉，browser close 已完成。跨引擎結果明確區分這個未觀測的最後頁面事件與必須全部通知關閉的六十個模型／十六個 runtime Workers；未知或更多未關閉 Worker 仍拒絕。這不是所有程序／RSS 的驗收，不將未觀測事件當成已證實關閉。原始 provider ZIP／SHA／CRC 與這項讀取器失敗會保留。
+
+Firefox 補跑 `40867450185` 已通過十九種 runtime 情境，initial／settled rectangles 也確認 1366 與 1280 都在排版完成後對齊；最後指南的忙碌測試則因「abort WASM 請求一定使執行失敗」的假設而失敗。原始網路紀錄確有 abort，但本次執行仍回報成功；session 每次開始會清掉舊 validation，不能將它解讀為舊結果殘留，也沒有足夠 trace 指定是哪一種快取／fallback 路徑。測試改成先暫停真實 WASM 請求，確認導覽停用，再放行並要求 CPU 成功、指南仍開啟且導覽恢復；原本的忙碌防護與草稿保留斷言仍在。這是跨引擎測試完成條件的修正，不修改應用，原失敗保留；後續仍只補跑 Firefox。
