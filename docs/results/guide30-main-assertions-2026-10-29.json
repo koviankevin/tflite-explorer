@@ -1,0 +1,13 @@
+{
+  "guideCases": 5,
+  "checks": 31,
+  "demoCPU": 4,
+  "modelWorkers": 71,
+  "runtimeWorkers": 16,
+  "runtimeCases": 19,
+  "randomDistributions": 4,
+  "portableDistributionDraftVersion": 3,
+  "contextualSelection": true,
+  "restart": true,
+  "layouts": 2
+}

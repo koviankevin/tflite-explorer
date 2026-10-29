@@ -1,0 +1,73 @@
+param([switch]$ResumePreflight)
+$ErrorActionPreference='Stop'
+$taskRoot=(Resolve-Path -LiteralPath '.').Path
+$taskScope=[IO.Path]::GetFullPath((Join-Path $taskRoot 'build/qa/options29-oracle-temporary'))
+if(-not $taskScope.StartsWith($taskRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Temporary scope escaped workspace'}
+$taskAudit=Join-Path $taskRoot 'build/qa/options29-oracle-cleanup-20261029'
+if((Test-Path -LiteralPath $taskAudit) -and -not $ResumePreflight){throw 'Existing cleanup audit: reconcile before continuing'}
+[IO.Directory]::CreateDirectory($taskAudit)|Out-Null
+$taskEncoding=[Text.UTF8Encoding]::new($false)
+function Write-Durable([string]$taskPath,[string]$taskText,[bool]$taskAppend=$false){
+    $taskMode=if($taskAppend){[IO.FileMode]::Append}else{[IO.FileMode]::CreateNew}
+    $taskStream=[IO.FileStream]::new($taskPath,$taskMode,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+    try{$taskBytes=$taskEncoding.GetBytes($taskText);$taskStream.Write($taskBytes);$taskStream.Flush($true)}finally{$taskStream.Dispose()}
+}
+function Event([string]$taskName,$taskData){Write-Durable (Join-Path $taskAudit 'events.jsonl') ((@{event=$taskName;timestamp=[DateTime]::UtcNow.ToString('o');data=$taskData}|ConvertTo-Json -Depth 12 -Compress)+"`n") $true}
+function Check-Path([string]$taskPath){
+    $taskFull=[IO.Path]::GetFullPath($taskPath)
+    if(-not $taskFull.StartsWith($taskRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Path escaped workspace'}
+    $taskInfo=Get-Item -LiteralPath $taskFull
+    if($null -ne $taskInfo.ResolveLinkTarget($true) -or $taskInfo.LinkType){throw 'Path is a link'}
+    if($taskInfo.Attributes -band [IO.FileAttributes]::ReparsePoint){
+        $taskTagLines=@(fsutil reparsepoint query $taskFull);$taskTagLine=$taskTagLines[0]
+        if($LASTEXITCODE -ne 0 -or $taskTagLine -notmatch '0x([0-9a-fA-F]+)'){throw 'Reparse tag unreadable'}
+        $taskTag=[Convert]::ToUInt64($Matches[1],16)
+        if(($taskTag -band [uint64]536870912) -ne 0 -or ($taskTag -band [uint64]4294905855) -ne [uint64]2415919130){throw 'Non-cloud reparse point excluded'}
+    }
+    return $taskInfo
+}
+$taskEntries=@(
+ @{name='physical-source.tflite';bytes=1349965216;sha256='7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586'},
+ @{name='full-edited-source.tflite';bytes=1350445736;sha256='76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045'},
+ @{name='reference-writer.mjs';bytes=8151;sha256='b4b7b176de198e3ff145a15055c1f5fdccdfb69fdb503ffc1ead8b146d1278f0'}
+)
+$taskRetained=@('docs/results/runtime29-physical-writer-oracle.json','docs/results/runtime29-writer-oracle-producer-2026-10-29.mjs.txt','docs/results/runtime29-writer-oracle-resume-2026-10-29.mjs.txt','docs/results/runtime29-writer-oracle-plan-2026-10-29.json','docs/results/runtime29-writer-oracle-events-2026-10-29.jsonl')
+foreach($taskName in $taskRetained){if(-not(Test-Path -LiteralPath (Join-Path $taskRoot $taskName) -PathType Leaf)){throw "Missing retained source/audit $taskName"}}
+$taskOracle=Get-Content -LiteralPath (Join-Path $taskRoot $taskRetained[0]) -Raw|ConvertFrom-Json
+if($taskOracle.status -ne 'passed' -or -not $taskOracle.sourceUnchanged){throw 'Oracle was not successful'}
+if($ResumePreflight){
+    $taskPrior=Get-Content -LiteralPath (Join-Path $taskAudit 'plan.json') -Raw|ConvertFrom-Json
+    if($taskPrior.root -ne $taskRoot -or $taskPrior.scope -ne $taskScope -or $taskPrior.entries.Count -ne 3){throw 'Prior plan differs'}
+    foreach($taskEntry in $taskEntries){$taskOld=@($taskPrior.entries|Where-Object name -eq $taskEntry.name);if($taskOld.Count -ne 1 -or $taskOld[0].bytes -ne $taskEntry.bytes -or $taskOld[0].sha256 -ne $taskEntry.sha256){throw 'Prior candidate differs'}}
+    if(Test-Path -LiteralPath (Join-Path $taskAudit 'events.jsonl')){foreach($taskLine in Get-Content -LiteralPath (Join-Path $taskAudit 'events.jsonl')){if(($taskLine|ConvertFrom-Json).event -in @('delete_intent','deleted')){throw 'Prior deletion requires per-item reconciliation'}}}
+    Event 'preflight_resumed' @{previous='Stopped before any hash or delete intent; native fsutil pipeline was truncated by Select-Object -First 1';fix='Capture complete bounded native output before selecting tag line';deleteCount=0}
+}else{
+    Write-Durable (Join-Path $taskAudit 'plan.json') ((@{task='Cleanup exact registered options29 synthetic intermediates';createdAt=[DateTime]::UtcNow.ToString('o');root=$taskRoot;scope=$taskScope;classification='Verified generated intermediate, not a duplicate or user model';producer='Original plan/events and retained pinned producers';retained=$taskRetained;entries=$taskEntries;eligibility='Original Node producers/readers actually exited; oracle and preview29 publication successful; no remaining consumers depend on temporary payload files';recovery='Read append-only intents/results and actual path before resuming; never rerun blindly';deleteMode='Exact files only, no recursive removal, keep directory and evidence'}|ConvertTo-Json -Depth 10)+"`n")
+}
+foreach($taskPart in @('build','build/qa','build/qa/options29-oracle-temporary')){$null=Check-Path (Join-Path $taskRoot $taskPart)}
+if(@(Get-Process node -ErrorAction SilentlyContinue).Count -ne 0){throw 'Local Node reader/producer may still be active'}
+$taskVerified=@()
+foreach($taskEntry in $taskEntries){
+    $taskPath=Join-Path $taskScope $taskEntry.name;$taskInfo=Check-Path $taskPath
+    if($taskInfo.PSIsContainer -or $taskInfo.Length -ne $taskEntry.bytes){throw 'Changed candidate identity/size'}
+    $taskTicks=$taskInfo.LastWriteTimeUtc.Ticks
+    $taskStream=[IO.FileStream]::new($taskPath,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::None,1048576,[IO.FileOptions]::SequentialScan)
+    try{$taskSHA=[Security.Cryptography.SHA256]::Create();try{$taskHash=[Convert]::ToHexString($taskSHA.ComputeHash($taskStream)).ToLowerInvariant()}finally{$taskSHA.Dispose()}}finally{$taskStream.Dispose()}
+    $taskCurrent=Check-Path $taskPath
+    if($taskHash -ne $taskEntry.sha256 -or $taskCurrent.Length -ne $taskEntry.bytes -or $taskCurrent.LastWriteTimeUtc.Ticks -ne $taskTicks){throw 'Hash or current metadata changed'}
+    $taskRow=@{path=$taskPath;bytes=$taskEntry.bytes;sha256=$taskHash;mtimeTicks=$taskTicks;exclusiveRead='passed';linkCheck='No redirect; OneDrive non-name-surrogate cloud tag only'};$taskVerified+=$taskRow;Event 'verified' $taskRow
+}
+if(@(Get-Process node -ErrorAction SilentlyContinue).Count -ne 0){throw 'Local Node reader/producer started'}
+$taskDeleted=@()
+foreach($taskRow in $taskVerified){
+    $taskInfo=Check-Path $taskRow.path
+    if($taskInfo.Length -ne $taskRow.bytes -or $taskInfo.LastWriteTimeUtc.Ticks -ne $taskRow.mtimeTicks){throw 'Candidate changed before deletion'}
+    Event 'delete_intent' $taskRow
+    Remove-Item -LiteralPath $taskRow.path
+    if(Test-Path -LiteralPath $taskRow.path){throw 'Exact deletion did not complete'}
+    Event 'deleted' $taskRow;$taskDeleted+=$taskRow
+}
+foreach($taskName in $taskRetained){if(-not(Test-Path -LiteralPath (Join-Path $taskRoot $taskName) -PathType Leaf)){throw 'Retained source/audit missing after cleanup'}}
+$taskResult=@{status='passed';deletedCount=$taskDeleted.Count;logicalBytes=($taskDeleted|Measure-Object bytes -Sum).Sum;deleted=$taskDeleted;retained=$taskRetained;directoryRemoved=$false;scope=$taskScope;note='Logical file lengths, not measured physical disk space freed. No recursive deletion or user models.'}
+Write-Durable (Join-Path $taskAudit 'report.json') (($taskResult|ConvertTo-Json -Depth 10)+"`n")
+$taskResult|ConvertTo-Json -Depth 4 -Compress

@@ -1,0 +1,1029 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "eee03f5069c4faf3f00e84850b5408de736dacff",
+    "tree": "f50da3bd550f6a5e58df8723212d82cdce482b80",
+    "committedAt": "2026-10-29T18:37:08+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40858995013,
+  "attempt": 1,
+  "jobId": 123397109929,
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.30",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "eee03f5069c4faf3f00e84850b5408de736dacff",
+      "tree": "f50da3bd550f6a5e58df8723212d82cdce482b80",
+      "committedAt": "2026-10-29T18:37:08+08:00",
+      "dirty": false
+    },
+    "buildId": "d529808a68054b02"
+  },
+  "site": {
+    "artifact": {
+      "id": 12889909778,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg4OTkwOTc3OA==",
+      "name": "versioned-site-browser-eee03f5069c4faf3f00e84850b5408de736dacff-1",
+      "size_in_bytes": 4631,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12889909778",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12889909778/zip",
+      "expired": false,
+      "digest": "sha256:37f7c39abce5e81a4812d14cc52920937e9f4cb22519e787ea508330f2bd6346",
+      "created_at": "2026-10-29T10:40:03Z",
+      "updated_at": "2026-10-29T10:40:03Z",
+      "expires_at": "2026-11-28T10:40:02Z",
+      "workflow_run": {
+        "id": 40858995013,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "codex/in-app-usage-guide",
+        "head_sha": "eee03f5069c4faf3f00e84850b5408de736dacff"
+      }
+    },
+    "members": [
+      {
+        "name": "versioned-site-browser.json",
+        "bytes": 93620,
+        "sha256": "bfe6b8b720782ea36088bce0aba8b1c0644a7320a6a91bde586babca8f69017c"
+      }
+    ],
+    "checks": [
+      "original legacy tab, native TFLite and persisted pattern before switching",
+      "legacy and namespaced old tabs lazily load custom MLIR after upgrade with their original version",
+      "new root selects the candidate namespace and sees the original IndexedDB pattern",
+      "already-open candidate lazily loads TFLite after rollback and retains its version and saved pattern",
+      "32px pattern search, native submodel download/reopen and original pattern export after rollback",
+      "fresh root after rollback opens the old version with its original persisted pattern"
+    ],
+    "status": "passed"
+  },
+  "native": {
+    "artifact": {
+      "id": 12891170844,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg5MTE3MDg0NA==",
+      "name": "versioned-delivery-smoke-eee03f5069c4faf3f00e84850b5408de736dacff-1",
+      "size_in_bytes": 229892,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12891170844",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12891170844/zip",
+      "expired": false,
+      "digest": "sha256:38ad2276aabbba52f591a94f27eed013075afce7b8fbd58ea0c48cdc9262ccca",
+      "created_at": "2026-10-29T10:40:02Z",
+      "updated_at": "2026-10-29T10:40:02Z",
+      "expires_at": "2026-11-28T10:40:01Z",
+      "workflow_run": {
+        "id": 40858995013,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "codex/in-app-usage-guide",
+        "head_sha": "eee03f5069c4faf3f00e84850b5408de736dacff"
+      }
+    },
+    "members": [
+      {
+        "name": "production-smoke.json",
+        "bytes": 317600,
+        "sha256": "9bc393fb8d94dcff2ddccc44334e2714a4bb411ad2836e98ff9759cbf1aa1aba"
+      },
+      {
+        "name": "production-smoke.png",
+        "bytes": 179157,
+        "sha256": "0d42f0c6554b1c5aa037ea5bfcb257928921a7211af1a98f3f25c15c6e1be9dc"
+      }
+    ],
+    "status": "passed",
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+      "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+      "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+      "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+      "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+      "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+      "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+      "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+      "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+      "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+      "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers",
+      "committed local edit draft survives an owned browser SIGKILL; fresh browser rejects wrong weights and restores original wiring, 32px view and redo",
+      "native shared IndexedDB recovery conflict/fork preserves both edits; verified TFLite export reopens and deleting the saved branch never resurrects it",
+      "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+      "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout",
+      "in-app guide, F1/manual tabs/focus, preserved editing state, safe model navigation, explicit inference and laptop layout"
+    ],
+    "modelWorkers": 71,
+    "runtimeWorkers": 16,
+    "runtime": {
+      "cases": [
+        "opening/editing/exporting never starts interpreter or downloads runtime",
+        "32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download",
+        "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes bound to reopened export; editor report remains structural-only",
+        "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values",
+        "changing model tabs cancels an in-flight WASM execution and drops late results and IO",
+        "manual cancellation closes Worker and clears stale input/output after draft changes",
+        "invalid kernel broadcast is reported as failed",
+        "unregistered custom kernel is explicitly unverified without starting WASM",
+        "a signature targeting a different subgraph cannot be reported as a primary-model pass",
+        "native layer selection exports a TFLite slice, opens a new model tab, runs exact slice bytes and clears IO on close",
+        "optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor",
+        "32px OP options reject rounded JSON integers without changing the draft and preserve exact quoted int64 values without inference",
+        "32px non-unit SQUEEZE axes block export with a reason, preserving the draft without inference or download",
+        "32px variadic CONCATENATION infers and exports [1,4], actual raw BIN CPU/IO ZIP values agree, and native reopen/search locates the new OP",
+        "composition pattern A/B, independent histories, explicit interface, v2 draft, manual CPU and verified export/reopen",
+        "custom composition preserves opaque options and original IDs/weights; unregistered kernel remains unverified without WASM",
+        "shared beginner presets and all four random distributions preserve exact typed const/input bytes and actual CPU outputs",
+        "v3 random-rule draft restores distribution/seed, 32px view and redo, then exports identical TFLite bytes and reopens",
+        "MLIR remains exploration-only and never offers a TFLite execution or editing action"
+      ],
+      "workers": [
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/tflite-runtime-worker.js?v=d529808a68054b02",
+          "closed": true
+        }
+      ],
+      "downloads": 23,
+      "requests": [
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/core.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/wasm-utils.js?v=d529808a68054b02",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm"
+      ],
+      "keyboardInputsRequired": true,
+      "runLayouts": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "run": {
+            "x": 0,
+            "y": 124,
+            "width": 1366,
+            "height": 486,
+            "top": 124,
+            "right": 1366,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1366,
+            "height": 113,
+            "top": 0,
+            "right": 1366,
+            "bottom": 113,
+            "left": 0
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "run": {
+            "x": 0,
+            "y": 124,
+            "width": 1280,
+            "height": 486,
+            "top": 124,
+            "right": 1280,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 124,
+            "top": 0,
+            "right": 1280,
+            "bottom": 124,
+            "left": 0
+          }
+        }
+      ],
+      "keyboardDismissals": [
+        {
+          "action": "escape",
+          "focusedId": "edit-runtime-check",
+          "focusedTag": "BUTTON",
+          "checkEnabled": true,
+          "changes": "",
+          "camera": {
+            "left": 0,
+            "top": 0,
+            "font": "32"
+          }
+        },
+        {
+          "action": "cancel-button",
+          "focusedId": "edit-runtime-check",
+          "focusedTag": "BUTTON",
+          "checkEnabled": true,
+          "changes": "",
+          "camera": {
+            "left": 0,
+            "top": 0,
+            "font": "32"
+          }
+        }
+      ],
+      "emptyReference": {
+        "disabled": true,
+        "referenceDisabled": true,
+        "options": 0,
+        "hint": "此 subgraph 沒有可用的 tensor 型別與 shape 參考，無法產生亂數。請先接入有效 tensor。",
+        "added": 1
+      },
+      "integerPrecision": {
+        "rejected": "offset_dims 必須為安全整數；較大的 64-bit 值請使用十進位整數文字（陣列元素也需加雙引號）。",
+        "unchangedChanges": true,
+        "unchangedTitle": true,
+        "accepted": {
+          "vector": [
+            "9007199254740993"
+          ],
+          "scalar": "9007199254740993",
+          "width": 1280,
+          "scrollWidth": 1280,
+          "font": "32"
+        }
+      },
+      "shapeValidation": {
+        "rejected": "SQUEEZE squeeze_dims 只能指定範圍內、大小為 1 的維度。",
+        "invalidExportPreservesDraft": true,
+        "exported": {
+          "shape": [
+            1,
+            4
+          ],
+          "inputs": [
+            0,
+            1
+          ],
+          "axis": 1,
+          "sha256": "bd18d387cedfc096f01af2e3bc7abfacb8932696e161f27f6ad924ee3d2650d9"
+        },
+        "cpuOutputs": [
+          [
+            4,
+            6
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "layout": {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "font": "32"
+        },
+        "reopenedAndLocated": true
+      },
+      "composition": {
+        "cases": [
+          "native A/B pattern imports deduplicate the shared OP, import Undo/Redo and separate model/composition histories preserve wiring and view",
+          "portable composition draft v2, explicit interface, verified weight report, manual CPU [14,28], equal re-export and source/result tabs with old pattern search"
+        ],
+        "workers": [
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:35377/tflite-explorer/versions/d529808a68054b02/src/model-worker.js?v=d529808a68054b02",
+            "closed": true
+          }
+        ],
+        "layouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "graphHeight": 244.5,
+            "font": "32",
+            "cards": 4,
+            "noOverlap": true
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "graphHeight": 233.5,
+            "font": "32",
+            "cards": 4,
+            "noOverlap": true
+          }
+        ],
+        "receipts": [
+          {
+            "schemaVersion": 1,
+            "format": "model-lens-export-verification",
+            "verifiedAt": "2026-10-29T10:39:35.109Z",
+            "outputSHA256": "5978316437f5c7b216ae4b587e702a7b43486044dc7c1887d38697d28b538598",
+            "source": {
+              "name": "composition-original.tflite",
+              "bytes": 2348
+            },
+            "output": {
+              "name": "composition-result.tflite",
+              "bytes": 2408
+            },
+            "byteComparison": {
+              "status": "passed",
+              "ranges": [
+                {
+                  "sourceOffset": 2276,
+                  "outputOffset": 2400,
+                  "bytes": 8,
+                  "kind": "buffer",
+                  "reference": "buffer:1",
+                  "sha256": "986c627ee6ef1bcc3d746256a7045624ceeb44c4ed557ca055b2d43933de3489"
+                }
+              ],
+              "bytes": 8
+            },
+            "nativeCompiler": {
+              "status": "not-run"
+            },
+            "runtimeEquivalence": {
+              "status": "not-run"
+            },
+            "limitations": [
+              "僅比對報告列出的原始 byte ranges，完整來源檔未計算 SHA-256；報告本身未簽章。",
+              "下載後的完整輸出 SHA-256 供後續檔案核對；未宣稱來源身分或 OP 語意等價。",
+              "瀏覽器內的結構檢查記錄未在此工具重跑；native compiler 驗證僅在明確指定時執行。"
+            ]
+          },
+          {
+            "schemaVersion": 1,
+            "format": "model-lens-export-verification",
+            "verifiedAt": "2026-10-29T10:39:40.392Z",
+            "outputSHA256": "6e40255c58ba5640765c14c4938d8f8311b3890abd0b4c53db636e709b1b91c3",
+            "source": {
+              "name": "composition-custom.tflite",
+              "bytes": 2356
+            },
+            "output": {
+              "name": "composition-custom-result.tflite",
+              "bytes": 2148
+            },
+            "byteComparison": {
+              "status": "passed",
+              "ranges": [
+                {
+                  "sourceOffset": 1688,
+                  "outputOffset": 1744,
+                  "bytes": 7,
+                  "kind": "custom-options-inline",
+                  "reference": "graph:0:operator:1",
+                  "sha256": "704f6d4334ef12a233ef65ec637056da3e9548bd99c5b1c2fffb0befbf69e7f0"
+                },
+                {
+                  "sourceOffset": 2284,
+                  "outputOffset": 2128,
+                  "bytes": 8,
+                  "kind": "buffer",
+                  "reference": "buffer:1",
+                  "sha256": "986c627ee6ef1bcc3d746256a7045624ceeb44c4ed557ca055b2d43933de3489"
+                },
+                {
+                  "sourceOffset": 2340,
+                  "outputOffset": 2144,
+                  "bytes": 4,
+                  "kind": "buffer",
+                  "reference": "buffer:2",
+                  "sha256": "63d987d1c6d69751c17297f410f5b3547a65d096a8993b35bcb4f9cad054f176"
+                }
+              ],
+              "bytes": 19
+            },
+            "nativeCompiler": {
+              "status": "not-run"
+            },
+            "runtimeEquivalence": {
+              "status": "not-run"
+            },
+            "limitations": [
+              "僅比對報告列出的原始 byte ranges，完整來源檔未計算 SHA-256；報告本身未簽章。",
+              "下載後的完整輸出 SHA-256 供後續檔案核對；未宣稱來源身分或 OP 語意等價。",
+              "瀏覽器內的結構檢查記錄未在此工具重跑；native compiler 驗證僅在明確指定時執行。"
+            ]
+          }
+        ],
+        "modeStates": [
+          {
+            "mode": "composition",
+            "pressed": [
+              "false",
+              "true",
+              "false"
+            ],
+            "editorHidden": false
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "edit",
+            "pressed": [
+              "false",
+              "true",
+              "false"
+            ],
+            "editorHidden": false
+          },
+          {
+            "mode": "composition",
+            "pressed": [
+              "false",
+              "true",
+              "false"
+            ],
+            "editorHidden": false
+          },
+          {
+            "mode": "composition",
+            "pressed": [
+              "false",
+              "true",
+              "false"
+            ],
+            "editorHidden": false
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "composition",
+            "pressed": [
+              "false",
+              "true",
+              "false"
+            ],
+            "editorHidden": false
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          },
+          {
+            "mode": "explore",
+            "pressed": [
+              "true",
+              "false",
+              "false"
+            ],
+            "editorHidden": true
+          }
+        ],
+        "reset": {
+          "cancelPreserves": true,
+          "scopeCleared": true,
+          "returnsToExplore": true
+        },
+        "editorScreenshot": true,
+        "cpu": [
+          14,
+          28
+        ],
+        "rectangle": {
+          "font": 32,
+          "repeatToggle": true,
+          "moveDoesNotFlip": true,
+          "reversal": true,
+          "cancelPreserves": true,
+          "contextualAction": true
+        },
+        "custom": {
+          "options": true,
+          "ids": true,
+          "weights": true,
+          "unregisteredKernel": "not-verified"
+        },
+        "modelWorkers": 10
+      },
+      "distributions": {
+        "defaults": {
+          "weight": {
+            "distribution": "truncated-normal",
+            "mean": 0,
+            "std": 0.05,
+            "min": -0.1,
+            "max": 0.1,
+            "probability": 0,
+            "advanced": false
+          }
+        },
+        "executions": [
+          {
+            "first": "normal",
+            "inputs": [
+              {
+                "distribution": "normal",
+                "algorithm": "xorshift32-box-muller-v1",
+                "seed": 1,
+                "mean": 0,
+                "std": 1
+              },
+              {
+                "distribution": "bernoulli",
+                "algorithm": "xorshift32-bernoulli-v1",
+                "seed": 1,
+                "probability": 0.5
+              }
+            ],
+            "modelSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+            "cpuValues": true
+          },
+          {
+            "first": "truncated-normal",
+            "inputs": [
+              {
+                "distribution": "truncated-normal",
+                "algorithm": "xorshift32-truncated-normal-v1",
+                "seed": 1,
+                "mean": 0,
+                "std": 1,
+                "min": -2,
+                "max": 2
+              },
+              {
+                "distribution": "uniform",
+                "algorithm": "xorshift32-v1",
+                "seed": 1,
+                "min": 0,
+                "max": 1
+              }
+            ],
+            "modelSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+            "cpuValues": true
+          }
+        ],
+        "draft": {
+          "version": 3,
+          "redo": 1,
+          "distributions": [
+            "normal",
+            "bernoulli",
+            "truncated-normal"
+          ]
+        },
+        "constSHA256": "10b2ef9b9868397d33ded9193b63cf8425ecdb5ccc97d95c99af9739e327e419",
+        "outputSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+        "restoredEqualBytes": true
+      }
+    },
+    "demo": {
+      "cases": [
+        {
+          "edited": false,
+          "mode": "zero",
+          "status": "passed"
+        },
+        {
+          "edited": false,
+          "mode": "random",
+          "status": "passed"
+        },
+        {
+          "edited": true,
+          "mode": "zero",
+          "status": "passed"
+        },
+        {
+          "edited": true,
+          "mode": "random",
+          "status": "passed"
+        }
+      ],
+      "modelWorkers": 3,
+      "runtimeWorkers": [
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        }
+      ]
+    },
+    "guide": {
+      "cases": [
+        "F1 and header help use manual topic tabs, Escape restores focus, and no-model actions explain requirements without opening workers",
+        "guide preserves selected pattern and editor commands/32px/zoom; both 14-inch logical desktop sizes keep the dialog and controls visible",
+        "guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes",
+        "a running interpreter disables guide navigation; completion refreshes eligibility in the open guide and existing draft survives",
+        "guide uses a real local MLIR chooser, blocks TFLite-only actions and opens an explicit demo in another tab without replacing the original"
+      ],
+      "layouts": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "height": 640,
+          "dialog": {
+            "x": 223,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1143,
+            "bottom": 608,
+            "left": 223
+          },
+          "content": {
+            "x": 250,
+            "y": 196.578125,
+            "width": 866,
+            "height": 344.625,
+            "top": 196.578125,
+            "right": 1116,
+            "bottom": 541.203125,
+            "left": 250
+          },
+          "close": {
+            "x": 1038,
+            "y": 55,
+            "width": 78,
+            "height": 38.390625,
+            "top": 55,
+            "right": 1116,
+            "bottom": 93.390625,
+            "left": 1038
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "height": 640,
+          "dialog": {
+            "x": 180,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1100,
+            "bottom": 608,
+            "left": 180
+          },
+          "content": {
+            "x": 207,
+            "y": 196.578125,
+            "width": 866,
+            "height": 344.625,
+            "top": 196.578125,
+            "right": 1073,
+            "bottom": 541.203125,
+            "left": 207
+          },
+          "close": {
+            "x": 995,
+            "y": 55,
+            "width": 78,
+            "height": 38.390625,
+            "top": 55,
+            "right": 1073,
+            "bottom": 93.390625,
+            "left": 995
+          }
+        }
+      ],
+      "modelWorkers": [
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        }
+      ],
+      "runtimeWorkers": [
+        {
+          "closed": true
+        },
+        {
+          "closed": true
+        }
+      ],
+      "navigation": [
+        {
+          "topic": "edit",
+          "before": {
+            "active": "usage-guide-button",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "pattern",
+          "before": {
+            "active": "pick-pattern",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "edit",
+          "before": {
+            "active": "pick-pattern",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "current",
+          "before": {
+            "active": "edit-zoom-in",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-edit",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "current",
+          "before": {
+            "active": "edit-zoom-in",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-edit",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "save",
+          "before": {
+            "active": "edit-zoom-in",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-edit",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "run",
+          "before": {
+            "active": "edit-zoom-in",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-edit",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "edit",
+          "before": {
+            "active": "",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-run",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "current",
+          "before": {
+            "active": "",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "edit",
+          "before": {
+            "active": "usage-guide-button",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "run",
+          "before": {
+            "active": "usage-guide-button",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        },
+        {
+          "topic": "explore",
+          "before": {
+            "active": "usage-guide-button",
+            "guide": false
+          },
+          "after": {
+            "active": "guide-tab-explore",
+            "modal": "usage-guide",
+            "guide": true
+          }
+        }
+      ],
+      "screenshot": true
+    }
+  },
+  "scope": "Hosted Chromium public synthetic candidate; original/edit/composition/slice reopen then run exact opened bytes, native input choosers/downloads, cancellation and 1280/1366 desktop; not production acceptance"
+}

@@ -1,0 +1,41 @@
+{
+  "logicalBytes": 2700419103.0,
+  "deletedCount": 3,
+  "status": "passed",
+  "deleted": [
+    {
+      "bytes": 1349965216,
+      "exclusiveRead": "passed",
+      "linkCheck": "No redirect; OneDrive non-name-surrogate cloud tag only",
+      "path": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary\\physical-source.tflite",
+      "mtimeTicks": 639288577071008914,
+      "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586"
+    },
+    {
+      "bytes": 1350445736,
+      "exclusiveRead": "passed",
+      "linkCheck": "No redirect; OneDrive non-name-surrogate cloud tag only",
+      "path": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary\\full-edited-source.tflite",
+      "mtimeTicks": 639288580602256820,
+      "sha256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045"
+    },
+    {
+      "bytes": 8151,
+      "exclusiveRead": "passed",
+      "linkCheck": "No redirect; OneDrive non-name-surrogate cloud tag only",
+      "path": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary\\reference-writer.mjs",
+      "mtimeTicks": 639288577135534702,
+      "sha256": "b4b7b176de198e3ff145a15055c1f5fdccdfb69fdb503ffc1ead8b146d1278f0"
+    }
+  ],
+  "directoryRemoved": false,
+  "scope": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary",
+  "note": "Logical file lengths, not measured physical disk space freed. No recursive deletion or user models.",
+  "retained": [
+    "docs/results/runtime29-physical-writer-oracle.json",
+    "docs/results/runtime29-writer-oracle-producer-2026-10-29.mjs.txt",
+    "docs/results/runtime29-writer-oracle-resume-2026-10-29.mjs.txt",
+    "docs/results/runtime29-writer-oracle-plan-2026-10-29.json",
+    "docs/results/runtime29-writer-oracle-events-2026-10-29.jsonl"
+  ]
+}
