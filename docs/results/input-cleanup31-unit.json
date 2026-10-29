@@ -1,0 +1,31 @@
+{
+  "format": "input-cleanup-unit-evidence",
+  "normalization": "none; original stdout/stderr bytes retained inside ZIP",
+  "archiveSHA256": "a3e1694f8f13c46090db91d0203b677d0de0ac215b8618c4e53ec762577e2db7",
+  "members": [
+    {
+      "name": "red.log",
+      "bytes": 5345,
+      "sha256": "b5b3d1bec8aa9688e8b23e5a7e09247541f5de1ceac4f307bb4a7d4f6ae7fd74",
+      "exitCode": 1,
+      "passed": 0,
+      "failed": 5
+    },
+    {
+      "name": "unlink-probe.log",
+      "bytes": 2738,
+      "sha256": "dbc7b1945b13b9fb1c929d92ef28c785213ed6b7207fd76353ca9e32bd0cf814",
+      "exitCode": 1,
+      "passed": 3,
+      "failed": 2
+    },
+    {
+      "name": "green.log",
+      "bytes": 3251,
+      "sha256": "3792d2b858335c458d0fdedd606b5c8d4171072dd7a70e3beec7ff6a56a6b8d9",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0
+    }
+  ]
+}
