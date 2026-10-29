@@ -1,0 +1,218 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "b22ffdccfce8c991b15709419a5b8bac8c5b3ec3",
+    "tree": "b2d54b7feef4f0097d9e325567f1fc92463d4806",
+    "committedAt": "2026-10-29T09:19:18+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40799735463,
+  "attempt": 1,
+  "jobId": 123204696700,
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.24",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "b22ffdccfce8c991b15709419a5b8bac8c5b3ec3",
+      "tree": "b2d54b7feef4f0097d9e325567f1fc92463d4806",
+      "committedAt": "2026-10-29T09:19:18+08:00",
+      "dirty": false
+    },
+    "buildId": "7cdef2178e357298"
+  },
+  "site": {
+    "artifact": {
+      "id": 12865746074,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg2NTc0NjA3NA==",
+      "name": "versioned-site-browser-b22ffdccfce8c991b15709419a5b8bac8c5b3ec3-1",
+      "size_in_bytes": 4533,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12865746074",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12865746074/zip",
+      "expired": false,
+      "digest": "sha256:1477fe10491ee3c63b85f42880485e6aa0a4165e10ae41fc5171a9081469cb9b",
+      "created_at": "2026-10-29T01:22:13Z",
+      "updated_at": "2026-10-29T01:22:13Z",
+      "expires_at": "2026-11-28T01:22:12Z",
+      "workflow_run": {
+        "id": 40799735463,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "main",
+        "head_sha": "b22ffdccfce8c991b15709419a5b8bac8c5b3ec3"
+      }
+    },
+    "members": [
+      {
+        "name": "versioned-site-browser.json",
+        "bytes": 92026,
+        "sha256": "b13248e2a202e23de31116a83c4eb36c99e59ab74ec56f6cd7f0582f86a49bf3"
+      }
+    ],
+    "checks": [
+      "original legacy tab, native TFLite and persisted pattern before switching",
+      "legacy and namespaced old tabs lazily load custom MLIR after upgrade with their original version",
+      "new root selects the candidate namespace and sees the original IndexedDB pattern",
+      "already-open candidate lazily loads TFLite after rollback and retains its version and saved pattern",
+      "32px pattern search, native submodel download/reopen and original pattern export after rollback",
+      "fresh root after rollback opens the old version with its original persisted pattern"
+    ],
+    "status": "passed"
+  },
+  "native": {
+    "artifact": {
+      "id": 12865288442,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg2NTI4ODQ0Mg==",
+      "name": "versioned-delivery-smoke-b22ffdccfce8c991b15709419a5b8bac8c5b3ec3-1",
+      "size_in_bytes": 241058,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12865288442",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12865288442/zip",
+      "expired": false,
+      "digest": "sha256:15c88e31b0821a7e39f6be1941f88fc249518cca4510efc80f8d7faf117ad6f2",
+      "created_at": "2026-10-29T01:22:11Z",
+      "updated_at": "2026-10-29T01:22:11Z",
+      "expires_at": "2026-11-28T01:22:10Z",
+      "workflow_run": {
+        "id": 40799735463,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "main",
+        "head_sha": "b22ffdccfce8c991b15709419a5b8bac8c5b3ec3"
+      }
+    },
+    "members": [
+      {
+        "name": "production-smoke.json",
+        "bytes": 279326,
+        "sha256": "a2722b84a8dd1e4c163339c22a205984058797c7ec41b603e09d0a98976f2654"
+      },
+      {
+        "name": "production-smoke.png",
+        "bytes": 194180,
+        "sha256": "210382302625fce4c7b418b463d5170ea9cf13ef56d83be2b29da2b17523e7d6"
+      }
+    ],
+    "status": "passed",
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+      "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+      "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+      "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+      "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+      "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+      "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+      "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+      "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+      "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+      "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers",
+      "committed local edit draft survives an owned browser SIGKILL; fresh browser rejects wrong weights and restores original wiring, 32px view and redo",
+      "native shared IndexedDB recovery conflict/fork preserves both edits; verified TFLite export reopens and deleting the saved branch never resurrects it",
+      "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+      "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout"
+    ],
+    "errors": [],
+    "runtime": {
+      "cases": [
+        "opening/editing/exporting never starts interpreter or downloads runtime",
+        "32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download",
+        "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes and exact candidate report",
+        "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values",
+        "manual cancellation closes Worker and clears stale input/output after draft changes",
+        "invalid kernel broadcast is reported as failed",
+        "unregistered custom kernel is explicitly unverified without starting WASM",
+        "a signature targeting a different subgraph cannot be reported as a primary-model pass",
+        "optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor"
+      ],
+      "workers": [
+        {
+          "url": "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/src/tflite-runtime-worker.js?v=7cdef2178e357298",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/src/tflite-runtime-worker.js?v=7cdef2178e357298",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/src/tflite-runtime-worker.js?v=7cdef2178e357298",
+          "closed": true
+        },
+        {
+          "url": "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/src/tflite-runtime-worker.js?v=7cdef2178e357298",
+          "closed": true
+        }
+      ],
+      "downloads": 6,
+      "requests": [
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/core.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/wasm-utils.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/core.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/wasm-utils.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/core.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/wasm-utils.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/core.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/wasm-utils.js?v=7cdef2178e357298",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.js",
+        "http://127.0.0.1:46203/tflite-explorer/versions/7cdef2178e357298/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm"
+      ],
+      "keyboardInputsRequired": true,
+      "keyboardDismissals": [
+        {
+          "action": "escape",
+          "focusedId": "edit-runtime-check",
+          "focusedTag": "BUTTON",
+          "checkEnabled": true,
+          "changes": "新增 · MUL輸入：a、b；自動輸出：mul_1_0；加入模型 outputs",
+          "camera": {
+            "left": 0,
+            "top": 0,
+            "font": "32"
+          }
+        },
+        {
+          "action": "cancel-button",
+          "focusedId": "edit-runtime-check",
+          "focusedTag": "BUTTON",
+          "checkEnabled": true,
+          "changes": "新增 · MUL輸入：a、b；自動輸出：mul_1_0；加入模型 outputs",
+          "camera": {
+            "left": 0,
+            "top": 0,
+            "font": "32"
+          }
+        }
+      ],
+      "emptyReference": {
+        "disabled": true,
+        "referenceDisabled": true,
+        "options": 0,
+        "hint": "此 subgraph 沒有可用的 tensor 型別與 shape 參考，無法產生亂數。請先接入有效 tensor。",
+        "added": 1
+      }
+    }
+  },
+  "scope": "Hosted Chromium public synthetic candidate; native keyboard, actual CPU/raw BIN/ZIP cases; not production deployment acceptance"
+}
