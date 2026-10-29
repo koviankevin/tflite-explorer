@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "0f6c79cc66b5bdc0a43ca323028b5a5b3edffdf9",
+    "tree": "6d07acb8a01ce66344d271e2aafca30d1e464ff1",
+    "committedAt": "2026-10-29T21:11:05+08:00",
+    "dirty": false
+  },
+  "testedSource": {
+    "commit": "fa9442724ca0f907102ba79a8eb78c3204168a2e",
+    "tree": "6d07acb8a01ce66344d271e2aafca30d1e464ff1",
+    "committedAt": "2026-10-29T21:02:23+08:00",
+    "dirty": false
+  },
+  "fullTestTreeEqualsMain": true,
+  "appBuildWorkflowUnchanged": true,
+  "strictReader": {
+    "actualExit0": true,
+    "chunk": "d86fe4"
+  },
+  "requiredChecks": {
+    "node": 40878465984,
+    "contract": 40878465999
+  },
+  "run": 40878472302,
+  "build": "f3ff13b75b83ee57",
+  "siteId": "ff1f2e3d7bafb505f8f0bf1037977746625f4c1e4c98e84779bbd301df76d956",
+  "files": [
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/run.json",
+      "output": "docs/results/runtime-io30-run.json",
+      "bytes": 15136,
+      "sha256": "4966fecdd1b715e7ac12a909d5fa7d999e1e80483a69503b63ef712b3bca09c9",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/jobs.json",
+      "output": "docs/results/runtime-io30-jobs.json",
+      "bytes": 5129,
+      "sha256": "09f5ab71a523badca534819a45e08daacf3157309dfd03940b5ce9066e9c0ab2",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/artifact.json",
+      "output": "docs/results/runtime-io30-artifact.json",
+      "bytes": 814,
+      "sha256": "9c5be6dcbb736319c6573289dbfd4d06872e518be9b494c27b8f10c025634d39",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/review.json",
+      "output": "docs/results/runtime-io30-review.json",
+      "bytes": 4470,
+      "sha256": "82a973df12c89cbf41c062e5bb0a52e2dd39537704cde8ea28bc9175901da781",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/native.zip",
+      "output": "docs/results/runtime-io30-native.zip",
+      "bytes": 167274,
+      "sha256": "b08ea2ff77fbb4b04672239ded890653321925639b5eaf94d13a49838cedd238",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/runtime-io30-chromium-40878472302-final/production-smoke.png",
+      "output": "docs/results/runtime-io30-production-smoke.png",
+      "bytes": 149490,
+      "sha256": "b30490fbe8e4074696158a1075f34d66d45a3c71bbc9cd0b7a7dd5ce5df715df",
+      "normalization": "raw"
+    },
+    {
+      "input": "build/qa/assert-runtime-io30.mjs",
+      "output": "docs/results/runtime-io30-assert-runtime-io30.mjs.txt",
+      "bytes": 3095,
+      "sha256": "9d69e188cdb8758babe0cbb6c48366628b2df0e873de6d6bddf038324b172f70",
+      "normalization": "canonical-LF"
+    },
+    {
+      "input": "build/qa/assert-runtime-io-chromium30.mjs",
+      "output": "docs/results/runtime-io30-assert-runtime-io-chromium30.mjs.txt",
+      "bytes": 5817,
+      "sha256": "3a572c295d0889060ece9ad10610056d131ad2d06ca0d313645ec4289bba68de",
+      "normalization": "canonical-LF"
+    },
+    {
+      "input": "build/qa/review-runtime-io30.mjs",
+      "output": "docs/results/runtime-io30-review-runtime-io30.mjs.txt",
+      "bytes": 4992,
+      "sha256": "e4caaea9f1bbe100dd4b7d6e43ca18945f35a3cf3c744d4ef11f14819046e8c6",
+      "normalization": "canonical-LF"
+    },
+    {
+      "input": "build/qa/assert-active-compute30.mjs",
+      "output": "docs/results/runtime-io30-assert-active-compute30.mjs.txt",
+      "bytes": 3319,
+      "sha256": "38b3a4d2a209ae9f6e8add9a7aee128b0a2f48ad905e15452ccb4160ed00ff10",
+      "normalization": "canonical-LF"
+    }
+  ],
+  "lifecycle": {
+    "cycles": 8,
+    "warmups": 2,
+    "manualCPU": 24,
+    "fullIOByteComparisons": 8,
+    "modelBytes": 4195488,
+    "modelSHA256": "26d19cdb359ccea2b405369cecfd5ad56486d4925c982f93646075d489a76daf",
+    "inputBytes": 4194304,
+    "outputBytes": 4194304,
+    "elapsedMs": 180590,
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -7225344,
+      "mainHeapDriftBytes": -338260,
+      "closedRssSlopeBytesPerCycle": 12608892.342857143,
+      "sampledPeakRssBytes": 769863680,
+      "maxSampleGapMs": 643,
+      "sampledPeakGrowthBytes": 140251136
+    },
+    "samples": 411,
+    "modelWorkersClosed": 8,
+    "runtimeWorkersClosed": 24,
+    "nativeURLLifetimeMs": [
+      60000,
+      60000,
+      60000,
+      60001,
+      60000,
+      60001,
+      60001,
+      60001
+    ],
+    "observedProcessIdentities": 6,
+    "allObservedReaped": true,
+    "forcedGC": false,
+    "shortenedURLTimer": false,
+    "scope": "Hosted Linux Chromium finite sample. Summed owned process RSS may double-count shared pages; main V8 heap is not continuous runtime Worker/WASM memory."
+  },
+  "scope": "Hosted Chromium read-only fixed production, finite manual runtime and IO lifecycle, observed owned PID RSS/mainheap and naturalURL release; not all-model/OS/hours-long/continuous Worker heap certification."
+}

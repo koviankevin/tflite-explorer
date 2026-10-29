@@ -23,6 +23,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 另補齊[三引擎真實 CPU 運算中的取消與 30 秒逾時](runtime-active-compute.md#三引擎實際結果)，含 UI 回應、Worker close 及恢復執行；Chromium 32 項、Firefox／WebKit 各 17 項功能通過。這組有限合成迴圈不涵蓋所有模型、背景節流、數小時 runtime 或 RSS；跨引擎 layout Worker 最後 close 與 Firefox module request 的觀察界線保持明列。
 
+[手動 CPU／IO 八輪](runtime-io-lifecycle.md#已核對結果)另已通過 Chromium 程序 RSS／main heap 與自然 URL 期限驗收，新增 24 次執行、8 份完整 IO bytes及程序清理；有限範圍內未觀測持續累積。數小時 interpreter、其他引擎／OS 與連續 Worker heap 峰值仍未驗收。
+
 已核對的瀏覽器／程序量測主要來自 Hosted Linux。其他 OS／固定實體硬體 SLA、其他引擎與手動 interpreter 數小時負載、Worker 連續 heap 峰值、OS 斷電／儲存回收、任意資料格式升降級及完整螢幕閱讀器／新使用者流程仍未驗收。既有八輪／兩小時結果保持各自來源與量測範圍，見 [品質工作清單](product-readiness.md)。
 
 ## 本輪已修復

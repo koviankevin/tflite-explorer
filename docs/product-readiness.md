@@ -1,5 +1,7 @@
 # 商品等級工作與完成條件
 
+手動 interpreter 另完成 [Chromium 正式站八輪／24 次 CPU 與 IO 生命週期](runtime-io-lifecycle.md#已核對結果)：4 MiB const、每次 4 MiB input／output、8 份完整 bytes、自然下載 URL 釋放、411 次觀測程序 RSS／main heap 與正常程序退出通過。這是新的有限 CPU／IO 證據，沒有倒算到既有兩小時開檔／編輯負載，也沒有宣稱連續 Worker heap、數小時 interpreter 或其他引擎完成。
+
 現行固定 preview.30 另通過[三引擎真實運算取消／逾時／恢復](runtime-active-compute.md#三引擎實際結果)：不暫停下載、不用 fake timer，實際 WHILE invoke 後觀測 UI 回應、手動取消與網站 30 秒 timer 終止專用 Worker，再開正常模型成功執行。此測試與證據增補沒有修改應用或重新部署，仍不代替數小時 runtime、其他 OS 或 RSS 驗收。
 
 2026-10-29 使用者明確調整本輪範圍：「先保證外網的 OK 就好，內網我會再修改」。本輪以 [公開版使用與驗收清單](public-acceptance.md)為交付範圍；公司模型、dialect、compiler／runtime 與內網部署由使用者自行處理，不再作為外網交付的阻擋條件。本頁保留完整品質規劃及各項證據界線，不將未驗收環境寫成已通過。
