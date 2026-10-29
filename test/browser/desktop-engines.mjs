@@ -14,6 +14,9 @@ import {editWorkspaceFlow} from './edit-workspace-flow.mjs';
 import {portableEditFlow} from './portable-edit-flow.mjs';
 import {tfliteControlEditFlow} from './tflite-control-edit-flow.mjs';
 import {mlirKeyboardFlow} from './mlir-keyboard-flow.mjs';
+import {demoRuntimeFlow} from './demo-runtime-flow.mjs';
+import {tfliteRuntimeFlow} from './tflite-runtime-flow.mjs';
+import {usageGuideFlow} from './usage-guide-flow.mjs';
 import {registerDOMReader,desktopDOMReader} from './desktop-dom-reader.mjs';
 import {installDesktopChooserReader} from './desktop-chooser-reader.mjs';
 
@@ -74,14 +77,26 @@ try{
     phase='portable-edit';report.portableEdit=await portableEditFlow({page,read,base,directory,check,allowMlir:false});
     phase='control-edit';report.controlEdit=await tfliteControlEditFlow({page,read,base,directory,check});
     phase='mlir-keyboard';report.mlirKeyboard=await mlirKeyboardFlow({page,read,base,directory,check});
-    const workers=report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url));report.modelWorkers=workers.length;
-    assert.equal(workers.length,3+report.editWorkspace.modelWorkers+report.portableEdit.modelWorkers+report.controlEdit.modelWorkers+report.mlirKeyboard.modelWorkers);assert.ok(workers.every(w=>w.closed));assert.deepEqual(report.errors,[]);
+    const modelWorkers=()=>report.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)),baseWorkers=modelWorkers();report.baseModelWorkers=baseWorkers.length;
+    assert.equal(baseWorkers.length,3+report.editWorkspace.modelWorkers+report.portableEdit.modelWorkers+report.controlEdit.modelWorkers+report.mlirKeyboard.modelWorkers);assert.ok(baseWorkers.every(w=>w.closed));
+    // Older immutable releases retain their original compatibility coverage.
+    // Current standalone Run builds must exercise the same real CPU, IO and
+    // native file/draft workflows as Chromium, without editing the application.
+    report.runtimeWorkspaceRequired=manifest.files.some(f=>f.path==='src/model-runtime-workspace-ui.js');
+    report.usageGuideRequired=manifest.files.some(f=>f.path==='src/usage-guide-ui.js');
+    if(report.runtimeWorkspaceRequired){
+        phase='published-demo-runtime';const before=modelWorkers().length;report.demoRuntime=await demoRuntimeFlow({page,read,directory});assert.equal(modelWorkers().length-before,3);check('exact published demo original and reopened edit run with zero/random inputs on the selected engine');
+        phase='model-runtime';const afterDemo=modelWorkers().length;report.tfliteRuntime=await tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs:true,referenceInputs:true,precisionInputs:true,shapeInputs:true,compositionInputs:true});assert.equal(report.tfliteRuntime.cases.length,19);assert.equal(modelWorkers().length-afterDemo,33);
+    }
+    if(report.usageGuideRequired){phase='usage-guide';report.usageGuide=await usageGuideFlow({page,read,directory,check});assert.equal(report.usageGuide.cases.length,5);}
+    const workers=modelWorkers(),runtimes=report.workers.filter(w=>/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url));report.modelWorkers=workers.length;report.runtimeWorkers=runtimes.length;
+    assert.equal(workers.length,report.baseModelWorkers+(report.runtimeWorkspaceRequired?36:0)+(report.usageGuideRequired?3:0));assert.equal(runtimes.length,(report.runtimeWorkspaceRequired?14:0)+(report.usageGuideRequired?2:0));assert.ok([...workers,...runtimes].every(w=>w.closed));assert.deepEqual(report.errors,[]);
     await target.verifyUnchanged();
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);
-    await copyFile(path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';
-}catch(error){report.error=error.stack||String(error);if(error.mlirKeyboard)report.mlirKeyboard=error.mlirKeyboard;process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+    await copyFile(report.usageGuide?.screenshot?path.join(directory,'usage-guide.png'):path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';phase='complete';
+}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     try{await target?.close();}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
-    report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({engine,status:report.status,checks:report.checks,error:report.error}));
+    report.phase=phase;report.finishedAt=new Date().toISOString();await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({engine,status:report.status,checks:report.checks,error:report.error}));
 }
