@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "015b3c6444b7bb4da5e76504f6d0fe4c0173a2f6f2ede954e910dcc2932f74d7",
+  "members": [
+    {
+      "name": "audit-run.json",
+      "bytes": 14425,
+      "sha256": "8589c5eec2aa8f926fd8e0b29ab8279c4c4e74e52042e5fb38356a16e4062dbe"
+    },
+    {
+      "name": "audit-jobs.json",
+      "bytes": 7900,
+      "sha256": "e2a817408147181d4f4e00a350302340cf06f5682d38b85a5d65b1136837ef3a"
+    },
+    {
+      "name": "audit-artifacts.json",
+      "bytes": 1851,
+      "sha256": "3dd934b7b20f198d0af9e3bbc3d9901618623b69ef08cff50e838974e80989af"
+    },
+    {
+      "name": "audit-review.json",
+      "bytes": 15093,
+      "sha256": "5a94ed57e2f91fb1d15955fd41ed23daff48dbcb8a77505915f2cca30f90df3d"
+    },
+    {
+      "name": "audit-firefox.zip",
+      "bytes": 192179,
+      "sha256": "ee6a0521f809a980da66708757f13a6f16553635dbeb26a642997ab2cff85d59"
+    },
+    {
+      "name": "audit-webkit.zip",
+      "bytes": 196481,
+      "sha256": "19ba20f127cad709f6225fdff05aa21c8bff34442a38c09a641ec5a88219c55c"
+    },
+    {
+      "name": "webkit-full-review.json",
+      "bytes": 52389,
+      "sha256": "f47df18ac62806b39d0166e5cd05d4c5b88a0d597c236383f72723f9521f9493"
+    },
+    {
+      "name": "webkit-job-review.json",
+      "bytes": 46068,
+      "sha256": "e0861f9510db37465eff363ee2c7cd19e6a2cbbf7c334056322e7b3e4900cf00"
+    }
+  ],
+  "source": {
+    "commit": "3f26db6283ea13edc943ca93fa2947c9e8719dc0",
+    "tree": "73dcd40c497a9146d8591147a195bd9c6a2baf1b",
+    "committedAt": "2026-10-29T21:51:08+08:00",
+    "dirty": false
+  },
+  "run": 40885964513,
+  "firefox": {
+    "authentication": "passed",
+    "resourceAcceptance": "unverified",
+    "strictReader": {
+      "exit": 1,
+      "chunk": "9bd434"
+    },
+    "auditReader": {
+      "actualExit0": true,
+      "chunk": "722a39"
+    },
+    "unobservedIdentityIndex": 95
+  },
+  "webkit": {
+    "authentication": "passed",
+    "acceptance": "passed-for-webkit-only",
+    "actualExit0": true,
+    "chunk": "5c9c49",
+    "originalProviderBytesReused": true
+  },
+  "scope": "Original source proof only. Does not waive the missing Firefox identity close event or assert all processes/RSS."
+}

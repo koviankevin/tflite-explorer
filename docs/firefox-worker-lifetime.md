@@ -1,0 +1,17 @@
+# Firefox 指紋 Worker 關閉狀態診斷
+
+preview.31 來源 `3f26db6283ea13edc943ca93fa2947c9e8719dc0` 的四個 main 關卡與 Chromium 原生／八輪 IO 已獨立核對；正式站仍為 preview.30，尚未準備或發布新版。桌面工作流程 `40885964513` 兩個 jobs 都回報成功，但獨立資源核對在 Firefox 發現 27 個 edit-recovery Workers 中只有 26 個 close 事件，第 95 筆觀察缺少 close。63 model／20 runtime Workers 與十四組輸入清理皆通過。這是尚待釐清的資源證據，不能直接稱為洩漏或框架問題，也不能把 job 綠燈當成完整資源驗收。
+
+同一工作流程的 WebKit 有四個指紋 Worker，四個 close 都已觀察；其十七項功能、完整 candidate manifest、原生 CPU／IO、十四組清理與既有資源界線已完成獨立核對。沿用 WebKit，不重跑成功引擎。兩引擎最後頁面 Netron layout Worker 的 close 未觀察，仍維持既有的明確界線；不擴大該例外來容納 Firefox 指紋 Worker。
+
+診斷依序區分三個可反駁的情況：
+
+1. Native context 已消失，但 close 通知未傳到觀察端：預期每個 constructor 都有原生 terminate 回傳，且頁面仍開啟時，舊 Worker context 的唯讀存活探測會拒絕。
+2. 網站沒有對某個 Worker 呼叫 terminate：預期 constructor 記錄沒有對應的 terminate，且 native Worker list／context 仍存在。
+3. 呼叫 terminate 後 native context 仍可執行：預期 terminate 已回傳，但原生 context 仍能回傳常數；仍需進一步釐清 engine／生命週期，不能當成已釋放。
+
+僅在 Hosted Firefox candidate 加入測試端觀察。建構與 terminate 仍交給原生實作；記錄時間、次數、script/build、是否收到指紋回覆，絕不保存 File／Blob、message payload 或指紋值。額外 message/error 觀察 listener 在原生 terminate 前移除。按既有流程階段記錄 page.workers 與 DOM 上的數字紀錄；對至少五秒仍未收到 close 的指紋 Worker，最多四次、每次 1.5 秒上限地要求 native context 回傳常數 `1`。不讀模型、不呼叫 app API、不終止或關閉 Worker 來製造成功，也不把探測拒絕／timeout 改寫為 close 事件。
+
+這是診斷：包裝與觀察可能擾動排程。所有原有功能、model／runtime close 與已知 layout 界線維持；新資料用於判斷下一步，尚不是 Firefox 資源驗收通過的聲明。五項相關 Node 檢查已驗證原生參數／回傳、觀察 listener 解除、payload 排除、唯讀 native probe 與不偽造 closed 狀態。應用 src／vendor／建置／workflow 未修改；四個發布關卡是否可沿用仍按真正 dependency fingerprint 核對，contract 因涵蓋測試源碼須重新取得 main 證據。
+
+[原始 provider ZIP 與獨立收據](results/firefox-worker31-original.zip)及[來源／SHA／讀取器狀態清單](results/firefox-worker31-original.json)保留，原 Firefox strict reader 失敗與後續 authentication-only 稽核分開記錄。
