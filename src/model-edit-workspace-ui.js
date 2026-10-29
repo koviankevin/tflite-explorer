@@ -4,17 +4,14 @@ import {editNewOpsUI} from './model-edit-new-ops-ui.js';
 import {editRecoveryUI} from './edit-recovery-ui.js';
 import {resizeInFrame} from './resize-in-frame.js';
 import {supportsModelEditing,TFLITE_EDIT_MESSAGE} from './model-edit-policy.js';
-import {runtimeClient} from './tflite-runtime-client.js';
-import {runtimeSkipped,runtimeSummary} from './tflite-runtime-policy.js';
+import {runtimeSkipped} from './tflite-runtime-policy.js';
 import {attachRuntimeReport} from './tflite-runtime-report.js';
-import {runtimeInputsUI} from './tflite-runtime-inputs-ui.js';
 import {modelEditLayout} from './model-edit-layout.js';
 import {compositionInterface} from './model-composition-draft.js';
 const NS='http://www.w3.org/2000/svg';
-export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getCompositionTargets=getTargets,getCompositionLabel=()=>'',getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
+export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getCompositionTargets=getTargets,getCompositionLabel=()=>'',getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport,onMode=()=>{},isRunning=()=>false}){
     const $=id=>document.getElementById(id),root=$('edit-workspace'),viewport=$('edit-viewport'),world=$('edit-world'),svg=$('edit-links');
     let owner=null,snapshot=null,draft=null,active=false,busy=false,generation=0,selected=null,armed=null,zoom=1,exported='',exportedToken=null,pages=new Map(),frame=0,gesture=null,exploreScroll=null;
-    const runtime=runtimeClient(),runtimeInputs=runtimeInputsUI();let checked=null;
     const signature=()=>JSON.stringify({commands:draft?.commands,updateSignatures:$('edit-signatures').checked});
     let pendingDraft=null,pendingRecoveryRecord=null,savedDraft='',draftTask=false;
     let parked={};
@@ -30,11 +27,13 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     const live=ticket=>ticket===generation&&owner===getSource();
     const changes=()=>draft?editChanges(snapshot,draft.state):[];
     const modeButtons=()=>{
-        $('explore-mode').setAttribute('aria-pressed',String(!active));
+        $('explore-mode').setAttribute('aria-pressed',String(!active&&!isRunning()));
         $('edit-mode').setAttribute('aria-pressed',String(active));
+        $('run-mode').setAttribute('aria-pressed',String(isRunning()));
         $('edit-session').value=snapshot?.composition?'composition':'edit';
     };
     const mode=value=>{
+        onMode();
         if(value===active){modeButtons();return;}
         if(value){const t=$('target'),p=document.scrollingElement;exploreScroll={left:t.scrollLeft,top:t.scrollTop,x:p.scrollLeft,y:p.scrollTop};}
         active=value;root.hidden=!value;document.body.classList.toggle('editing-model',value);
@@ -44,6 +43,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     };
     function availability(){
         const composing=!!snapshot?.composition,editable=getFormat()==='tflite';$('edit-mode').disabled=busy||!editable;
+        $('run-mode').disabled=busy||!editable;
         for(const id of ['compose-mode','compose-capture']){$(id).hidden=!editable;$(id).disabled=busy||!editable||!getCompositionTargets().length;}
         $('compose-mode').hidden=!editable||root.ownerDocument.body.classList.contains('pattern-picking');
         $('edit-session').disabled=busy||!draft;$('edit-session').querySelector('[value=composition]').disabled=!composing&&!parked.composition;
@@ -60,10 +60,8 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         $('edit-open-result').disabled=busy||!exported||exported!==signature()||!isCurrentResult(exportedToken);
         $('edit-download-report').disabled=$('edit-open-result').disabled;
         $('edit-signatures-field').hidden=composing||!snapshot?.hasSignatures;
-        $('edit-runtime-check').disabled=busy||!valid||!!draft&&editIssues(draft.state).length>0;
-        if(composing&&draft){const iface=compositionInterface(draft.state);if(iface.missing.length||!iface.outputs.length)$('edit-export').disabled=$('edit-runtime-check').disabled=true;}
+        if(composing&&draft){const iface=compositionInterface(draft.state);if(iface.missing.length||!iface.outputs.length)$('edit-export').disabled=true;}
         for(const input of root.querySelectorAll('[data-composition-side]'))input.disabled=busy;
-        $('edit-runtime-download').disabled=busy||!checked?.io?.archive||!checkedCurrent();
         root.setAttribute('aria-busy',String(busy));
         $('choose-edit-draft-model').hidden=draftTask||!pendingDraft;$('save-edit-draft').disabled=busy||!valid;$('open-edit-draft').disabled=busy;$('edit-template').disabled=busy;
     }
@@ -110,7 +108,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         if(!iface.outputs.length)section.append(make('p','請至少選擇一個模型輸出。','edit-problem'));
     }
     function render(){
-        if(!draft)return;if(checked&&!checkedCurrent()){checked=null;$('edit-runtime-result').textContent='草稿已變更，尚未檢查';delete $('edit-runtime-result').dataset.status;}world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(e=>e.remove());
+        if(!draft)return;world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(e=>e.remove());
         const state=draft.state;
         for(const node of state.nodes)world.append(card(node));
         const producers=new Set(state.nodes.filter(n=>!n.removed||n.boundary).map(n=>n.id)),used=new Set(state.nodes.filter(n=>!n.removed).flatMap(n=>n.inputs.map(p=>p.value)));
@@ -166,45 +164,23 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         if(busy||!draft)return;const ticket=generation,stamp=historySignature(),history=draft.history,view={selected:selected??null,zoom,font:Number($('edit-font').value),left:viewport.scrollLeft,top:viewport.scrollTop};draftTask=true;setBusy(true);banner('正在本機核對完整原模型；大型檔案可能需要時間，可取消。');
         try{const document=await rpc('editDraftSave',{token:snapshot.token,history,view,options:{updateSignatures:$('edit-signatures').checked}});if(!live(ticket))return;await saveFile(owner.name.replace(/\.[^.]+$/,'')+'-edit-draft.json',new Blob([exportEditSession(document)],{type:'application/json'}));if(!live(ticket))return;savedDraft=stamp;message('編輯草稿已開始下載；換電腦後匯入此 JSON，再選原模型即可繼續。');$('edit-draft-banner').hidden=true;}catch(e){if(live(ticket))banner(e.message);}finally{if(live(ticket)){draftTask=false;setBusy(false);}}
     };
-    const checkedCurrent=()=>checked&&checked.owner===owner&&checked.token===snapshot?.token&&checked.stamp===signature();
     async function prepareCandidate(name){
-        if(checkedCurrent()&&checked.candidate)return checked.candidate;
         if(snapshot.composition&&!changes().length)throw Error('組合草稿尚未加入任何 OP。');
-        if(!changes().length)return rpc('editRuntimeOriginal',{token:snapshot.token});
         const result=await rpc('editWorkspaceExport',{token:snapshot.token,commands:draft.commands,updateSignatures:$('edit-signatures').checked,outputName:name});
         if(!result.roundTrip)throw Error('候選尚未重新解析。');return result;
     }
     const outputName=()=>owner.name.replace(/(?:-edited|-composed)?\.[^.]+$/,'')+(snapshot.composition?'-composed.tflite':'-edited.tflite');
-    $('edit-runtime-check').onclick=async()=>{
-        if(busy||!draft)return;const ticket=generation,stamp=signature();let inputsDismissed=false;
-        setBusy(true);message('為手動執行檢查建立候選模型…');
-        try{const candidate=await prepareCandidate(outputName());if(!live(ticket))return;
-            const specs=candidate.runtimePlan?.eligible?await runtimeInputs.choose(candidate.runtimePlan):[];if(!live(ticket))return;if(specs===null){inputsDismissed=true;return;}
-            $('edit-runtime-cancel').hidden=false;
-            let result;try{result=await runtime.check(candidate.blob,candidate.runtimePlan,message,specs);}finally{$('edit-runtime-cancel').hidden=true;}
-            if(!live(ticket))return;
-            const {io,...validation}=result;checked={owner,token:snapshot.token,stamp,validation,io,candidate:candidate.runtimePlan?.eligible&&!validation.cancelled?candidate:null};
-            $('edit-runtime-result').textContent=[runtimeSummary(validation),validation.ioError||'',...(validation.diagnostics||[])].filter(Boolean).join('\n');$('edit-runtime-result').dataset.status=validation.status;
-            message(runtimeSummary(validation)+' 草稿已保留，尚未下載模型。');
-        }catch(error){if(live(ticket))message(error.message);}
-        finally{if(live(ticket)){
-            // Native dialog restoration runs while its opener is still disabled.
-            setBusy(false);if(inputsDismissed)$('edit-runtime-check').focus({preventScroll:true});
-        }}
-    };
     $('edit-export').onclick=async()=>{
         if(busy||!draft||!changes().length)return;const ticket=generation,sourceFile=owner,stamp=signature(),name=outputName();
         setBusy(true);message('在本機建立整份候選、重新解析並驗證接線／控制流程…');
         try{const result=await prepareCandidate(name);if(!live(ticket))return;
-            const validation=checkedCurrent()&&checked.candidate===result?checked.validation:runtimeSkipped('尚未對此匯出執行手動 LiteRT 檢查。');
-            result.report=await attachRuntimeReport(result.report,validation);const token=await onExport(result,name,sourceFile);if(!live(ticket))return;exportedToken=token;exported=stamp;message('修改模型已開始下載；可開啟修改結果繼續編輯。結構驗證通過。'+runtimeSummary(validation));
+            const validation=runtimeSkipped('編輯匯出僅做結構與資料完整性驗證；請開啟匯出結果，再到「執行模型」手動執行。');
+            result.report=await attachRuntimeReport(result.report,validation);const token=await onExport(result,name,sourceFile);if(!live(ticket))return;exportedToken=token;exported=stamp;message('結構與資料完整性驗證通過，修改模型已開始下載。請開啟修改結果，再到「執行模型」手動執行；本次匯出未跑 interpreter。');
         }catch(error){if(live(ticket))message([error.message,...(error.validation?.diagnostics||[]).slice(0,8).map(d=>`${d.code}: ${d.message}`)].join('\n'));}
         finally{if(live(ticket))setBusy(false);}
     };
     $('edit-open-result').onclick=openResult;$('edit-download-report').onclick=downloadReport;
-    $('edit-runtime-cancel').onclick=()=>runtime.cancel();
-    $('edit-runtime-download').onclick=()=>{if(!busy&&checkedCurrent()&&checked.io?.archive)return saveFile(owner.name.replace(/\.[^.]+$/,'')+'-runtime-io.zip',checked.io.archive);};
-    $('edit-signatures').onchange=()=>{checked=null;$('edit-runtime-result').textContent='選項已變更，尚未檢查';availability();message('Signature 選項已變更，請重新驗證並匯出。');};
+    $('edit-signatures').onchange=()=>{availability();message('Signature 選項已變更，請重新驗證並匯出。');};
     async function switchEditor(composition){
         if(busy)return false;const stash={...parked};
         if(owner===getSource()&&draft){const saved=api.captureTab();delete saved.sessions;saved.dirty=currentDirty();stash[snapshot.composition?'composition':'edit']=saved;setBusy(true);try{await recovery.park();}finally{setBusy(false);}}
@@ -222,6 +198,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     resizeInFrame(document.querySelector('.app-header'),()=>{const h=document.querySelector('.app-header').offsetHeight;root.style.setProperty('--edit-head',`${h}px`);$('edit-draft-banner').style.top=`${h+8}px`;schedule();});
     window.addEventListener('beforeunload',e=>{if(api.hasUnexported){e.preventDefault();e.returnValue='';}});
     const api={
+        explore(){mode(false);},
         get active(){return active;},get hasUnexported(){return currentDirty()||Object.values(parked).some(s=>s?.dirty);},
         captureTab(){
             if(busy)throw Error('請等待編輯、匯出或草稿核對完成後再切換分頁。');
@@ -244,7 +221,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         handleKey(e){if(e.defaultPrevented||e.isComposing||e.altKey)return false;const input=e.target.closest?.('input,textarea,select,[contenteditable="true"]');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!input){e.preventDefault();e.stopPropagation();travel(e.shiftKey);return true;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='f'){e.preventDefault();e.stopPropagation();$('edit-find').focus();return true;}if(e.key==='Escape'&&armed){e.preventDefault();source(armed);return true;}return false;},
         selectionChanged(){availability();},
         enable(value){$('edit-mode').disabled=!value;for(const id of ['compose-mode','compose-capture'])$(id).disabled=!value||!getCompositionTargets().length;},
-        reset(){runtime.cancel();runtimeInputs.cancel();checked=null;$('edit-runtime-cancel').hidden=true;$('edit-runtime-download').disabled=true;$('edit-runtime-result').textContent='尚未執行';recovery.detach();generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;parked={};selected=null;armed=null;exported='';exportedToken=null;savedDraft='';draftTask=false;newOps.reset();$('edit-signatures').checked=false;pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;onBusy(false);$('edit-mode').disabled=true;availability();},
+        reset(){recovery.detach();generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;parked={};selected=null;armed=null;exported='';exportedToken=null;savedDraft='';draftTask=false;newOps.reset();$('edit-signatures').checked=false;pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;onBusy(false);$('edit-mode').disabled=true;availability();},
         async open(){
             if(!supportsModelEditing(getFormat())){message(TFLITE_EDIT_MESSAGE);return;}
             if((snapshot?.composition||!snapshot&&parked.edit)&&!await switchEditor(false))return;

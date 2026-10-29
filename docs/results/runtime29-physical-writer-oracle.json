@@ -1,0 +1,252 @@
+{
+  "format": "model-lens-builtin-options-physical-oracle",
+  "status": "passed",
+  "source": {
+    "commit": "37963102ddd4ff52daee77791dd3fb87c8fc2b7f",
+    "tree": "033449ca73a9141e41760b6c7e01d804e5bb476c",
+    "committedAt": "2026-10-29T15:57:22+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "node": "v24.22.1",
+  "sourceFile": {
+    "path": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary\\physical-source.tflite",
+    "bytes": 1349965216,
+    "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+    "verification": "existing fsync/full-readback event plus unchanged full-file hash revalidated on resume"
+  },
+  "reference": {
+    "commit": "68bea6eb200ed48262d6d6ca150743438b24fe33",
+    "writerSHA256": "c4dc38ee6aa4730ab87668f4cee4f520a3ba1af01ea0ef54c9a00e7a2f57588f",
+    "importRelocationOnly": true
+  },
+  "resumedAfter": "Prefix baseline source mismatch, preserved in original invocation; native fixture source lineage corrected without changing expected hashes",
+  "rows": [
+    {
+      "kind": "full",
+      "legacySHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+      "currentSHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+      "referenceNormalizedSHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+      "legacyBytes": 1350445736,
+      "currentBytes": 1350445736,
+      "omittedFields": [],
+      "payloadsUnchanged": true,
+      "sourceRanges": [
+        {
+          "sourceOffset": 3530592,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "graph:0:operator:0"
+        },
+        {
+          "sourceOffset": 3530592,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "graph:0:operator:1"
+        },
+        {
+          "sourceOffset": 7787212,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "graph:0:operator:21004"
+        },
+        {
+          "sourceOffset": 7787936,
+          "bytes": 1342177280,
+          "kind": "buffer",
+          "reference": "buffer:1"
+        },
+        {
+          "sourceOffset": 7787788,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:2"
+        },
+        {
+          "sourceOffset": 7787844,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:3"
+        },
+        {
+          "sourceOffset": 7787900,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:4"
+        }
+      ],
+      "rss": 417681408
+    },
+    {
+      "kind": "prefix",
+      "sourceKind": "full-edited",
+      "legacySHA256": "1c679c150d0a5fef71fcd7c559a6f4f5427dfbd8ad708694d76c880a1f0d6bc4",
+      "currentSHA256": "433f3f623df078b99cc0e80f92204f5dd2b4f5fab44066755b6c74b9a506e4b6",
+      "referenceNormalizedSHA256": "433f3f623df078b99cc0e80f92204f5dd2b4f5fab44066755b6c74b9a506e4b6",
+      "legacyBytes": 1345937480,
+      "currentBytes": 1345937480,
+      "omittedFields": [
+        {
+          "graph": 0,
+          "node": 1,
+          "builtin": 22
+        },
+        {
+          "graph": 0,
+          "node": 2,
+          "builtin": 39
+        },
+        {
+          "graph": 0,
+          "node": 3,
+          "builtin": 22
+        }
+      ],
+      "payloadsUnchanged": true,
+      "sourceRanges": [
+        {
+          "sourceOffset": 3842904,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "operator:0"
+        },
+        {
+          "sourceOffset": 8268416,
+          "bytes": 1342177280,
+          "kind": "buffer",
+          "reference": "buffer:1"
+        },
+        {
+          "sourceOffset": 1350445696,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:2"
+        },
+        {
+          "sourceOffset": 1350445712,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:3"
+        },
+        {
+          "sourceOffset": 1350445728,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:4"
+        }
+      ],
+      "rss": 523415552
+    },
+    {
+      "kind": "branch",
+      "sourceKind": "full-edited",
+      "legacySHA256": "a18d24c795584d83a0733ef52afd8f7ccba6b1593e1c427940adada20ec2c2e8",
+      "currentSHA256": "daaa025921ba77036d694dd827b5176c8d6c6e169ecd77a1357bf9da68c8c8e9",
+      "referenceNormalizedSHA256": "daaa025921ba77036d694dd827b5176c8d6c6e169ecd77a1357bf9da68c8c8e9",
+      "legacyBytes": 1345937528,
+      "currentBytes": 1345937496,
+      "omittedFields": [
+        {
+          "graph": 0,
+          "node": 0,
+          "builtin": 18
+        },
+        {
+          "graph": 0,
+          "node": 1,
+          "builtin": 0
+        },
+        {
+          "graph": 0,
+          "node": 3,
+          "builtin": 0
+        }
+      ],
+      "payloadsUnchanged": true,
+      "sourceRanges": [
+        {
+          "sourceOffset": 8267716,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "operator:21004"
+        },
+        {
+          "sourceOffset": 8268416,
+          "bytes": 1342177280,
+          "kind": "buffer",
+          "reference": "buffer:1"
+        },
+        {
+          "sourceOffset": 1350445696,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:2"
+        },
+        {
+          "sourceOffset": 1350445712,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:3"
+        },
+        {
+          "sourceOffset": 1350445728,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:4"
+        }
+      ],
+      "rss": 545357824
+    },
+    {
+      "kind": "composition",
+      "sourceKind": "original",
+      "legacySHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "currentSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "referenceNormalizedSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "legacyBytes": 1345938408,
+      "currentBytes": 1345938408,
+      "omittedFields": [],
+      "payloadsUnchanged": true,
+      "sourceRanges": [
+        {
+          "sourceOffset": 3530592,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "graph:0:operator:0"
+        },
+        {
+          "sourceOffset": 7787212,
+          "bytes": 8,
+          "kind": "custom-options-inline",
+          "reference": "graph:0:operator:6"
+        },
+        {
+          "sourceOffset": 7787936,
+          "bytes": 1342177280,
+          "kind": "buffer",
+          "reference": "buffer:1"
+        },
+        {
+          "sourceOffset": 7787788,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:2"
+        },
+        {
+          "sourceOffset": 7787844,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:3"
+        },
+        {
+          "sourceOffset": 7787900,
+          "bytes": 8,
+          "kind": "buffer",
+          "reference": "buffer:4"
+        }
+      ],
+      "rss": 539226112
+    }
+  ]
+}
