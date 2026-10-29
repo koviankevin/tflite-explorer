@@ -4,7 +4,7 @@ export function runtimeInputsUI(){
     const $=id=>document.getElementById(id),dialog=$('edit-runtime-dialog'),list=$('edit-runtime-inputs');let pending=null;
     const make=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
     const field=(text,control)=>{const label=make('label',text);label.append(control);return label;};
-    function close(value){if(!pending)return;const resolve=pending;pending=null;dialog.close();list.replaceChildren();$('edit-runtime-input-error').textContent='';resolve(value);}
+    function close(value){const resolve=pending;pending=null;$('edit-runtime-run').onclick=null;if(dialog.open)dialog.close();list.replaceChildren();$('edit-runtime-input-error').textContent='';resolve?.(value);}
     dialog.addEventListener('keydown',event=>event.stopPropagation());dialog.addEventListener('cancel',event=>{event.preventDefault();close(null);});$('edit-runtime-dialog-close').onclick=()=>close(null);
     return {cancel:()=>close(null),choose(plan){
         close(null);list.replaceChildren();const specs=[];
@@ -17,7 +17,8 @@ export function runtimeInputsUI(){
             specs.push(()=>({mode:mode.value,...(mode.value==='bin'?{file:file.files[0]}:mode.value==='random'?rules.spec(): {})}));list.append(row);
         }
         if(!plan.inputs.length)list.append(make('p','此模型沒有外部 inputs，將直接執行一次。'));
-        $('edit-runtime-run').onclick=()=>{try{const values=specs.map(s=>s());validateRuntimeInputs(plan.inputs,values);close(values);}catch(error){$('edit-runtime-input-error').textContent=error.message;}};
-        dialog.showModal();return new Promise(resolve=>{pending=resolve;});
+        const result=new Promise(resolve=>{pending=resolve;}),ticket=pending;
+        $('edit-runtime-run').onclick=()=>{if(pending!==ticket)return;try{const values=specs.map(s=>s());validateRuntimeInputs(plan.inputs,values);close(values);}catch(error){$('edit-runtime-input-error').textContent=error.message;}};
+        try{dialog.showModal();}catch(error){close(null);throw error;}return result;
     }};
 }

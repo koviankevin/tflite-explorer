@@ -1,3 +1,4 @@
+import {runtimeInputCleanupProof} from "./runtime-input-cleanup-proof.mjs";
 // Hosted-only caller supplies the browser. All actions are native gestures,
 // chooser/download events; evaluation reads DOM only. Public synthetic models.
 import assert from 'node:assert/strict';
@@ -14,8 +15,8 @@ import {assertWorkspaceMode} from './workspace-mode-proof.mjs';
 import {MLIR_BRANCH} from '../mlir-fixture.mjs';
 import {tensorDistributionsFlow} from './tensor-distributions-flow.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false}){
-    const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
+export async function runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false,inputCleanup=false}){
+    const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs,inputCleanupRequired:inputCleanup,inputCleanup:[]};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
     const downloaded=()=>report.downloads++;
@@ -25,7 +26,7 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
     async function choose(file,button){const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);}
     async function open(file){await choose(file,'#open-model');await ready();await page.locator('#edit-mode').click();await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();await page.locator('#edit-add-after').click();await until(()=>document.querySelectorAll('.edit-node.added').length===1);}
     async function download(button,name){const event=page.waitForEvent('download');await page.locator(button).click();const d=await event;assert.equal(await d.failure(),null);const file=path.join(directory,name);await d.saveAs(file);await d.delete();return file;}
-    async function finished(status){await until(()=>!!document.querySelector('#edit-runtime-result').dataset.status&&document.querySelector('#run-workspace').getAttribute('aria-busy')==='false');const state=await read(()=>({status:document.querySelector('#edit-runtime-result').dataset.status,detail:document.querySelector('#edit-runtime-result').textContent}));assert.equal(state.status,status,JSON.stringify(state));const end=Date.now()+5000;while(report.workers.some(w=>!w.closed)&&Date.now()<end)await new Promise(r=>setTimeout(r,25));assert.ok(report.workers.every(w=>w.closed));}
+    async function finished(status){await until(()=>!!document.querySelector('#edit-runtime-result').dataset.status&&document.querySelector('#run-workspace').getAttribute('aria-busy')==='false');const state=await read(()=>({status:document.querySelector('#edit-runtime-result').dataset.status,detail:document.querySelector('#edit-runtime-result').textContent}));assert.equal(state.status,status,JSON.stringify(state));const end=Date.now()+5000;while(report.workers.some(w=>!w.closed)&&Date.now()<end)await new Promise(r=>setTimeout(r,25));assert.ok(report.workers.every(w=>w.closed));if(inputCleanup)report.inputCleanup.push(await runtimeInputCleanupProof(read,"finished-"+status));}
     let runtimeResultTab=false;
     async function enterRuntime({exported=true}={}){
         runtimeResultTab=exported;
@@ -47,7 +48,7 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
             await tabTo('#edit-runtime-check');await page.keyboard.press('Enter');await until(()=>document.querySelector('#edit-runtime-dialog').open);
             if(action==='cancel-button'){await tabTo('#edit-runtime-dialog-close');await page.keyboard.press('Enter');}else await page.keyboard.press('Escape');
             await until(()=>!document.querySelector('#edit-runtime-dialog').open&&document.querySelector('#run-workspace').getAttribute('aria-busy')==='false');
-            const state=await read(()=>({focusedId:document.activeElement?.id||null,focusedTag:document.activeElement?.tagName,checkEnabled:!document.querySelector('#edit-runtime-check').disabled,changes:document.querySelector('#edit-change-list').textContent,camera:{left:document.querySelector('#edit-viewport').scrollLeft,top:document.querySelector('#edit-viewport').scrollTop,font:document.querySelector('#edit-font').value}}));report.keyboardDismissals.push({action,...state});
+            const state=await read(()=>({focusedId:document.activeElement?.id||null,focusedTag:document.activeElement?.tagName,checkEnabled:!document.querySelector('#edit-runtime-check').disabled,changes:document.querySelector('#edit-change-list').textContent,camera:{left:document.querySelector('#edit-viewport').scrollLeft,top:document.querySelector('#edit-viewport').scrollTop,font:document.querySelector('#edit-font').value}}));report.keyboardDismissals.push({action,...state});if(inputCleanup)report.inputCleanup.push(await runtimeInputCleanupProof(read,action));
             assert.equal(state.checkEnabled,true);assert.equal(state.changes,before.changes);assert.deepEqual(state.camera,camera);assert.equal(report.workers.length,before.workers);assert.equal(report.requests.length,before.requests);assert.equal(report.downloads,before.downloads);
             assert.equal(state.focusedId,'edit-runtime-check','Cancelling test inputs must return keyboard focus to the enabled manual check action.');
         }

@@ -1,0 +1,113 @@
+✖ confirm returns the selected BIN, then detaches the dialog controls and confirmation callback (4.8233ms)
+✖ button, Escape and session cancellation release the pending dialog and confirmation callback (0.6354ms)
+✖ a cancelled dialog confirmation cannot resolve or close a newer input request (0.7061ms)
+✖ validation errors keep the current controls active until corrected (1.6046ms)
+✖ native showModal failure leaves no pending request, controls or confirmation callback (0.8113ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 162.3557
+
+✖ failing tests:
+
+test at test\tflite-runtime-inputs-ui.test.mjs:28:1
+✖ confirm returns the selected BIN, then detaches the dialog controls and confirmation callback (4.8233ms)
+  AssertionError [ERR_ASSERTION]: closed dialog must not own the old specs / File controls
+  + actual - expected
+  
+  + [Function (anonymous)]
+  - null
+  
+      at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:28:433
+      at async fixture (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:24:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\tflite-runtime-inputs-ui.test.mjs:29:1
+✖ button, Escape and session cancellation release the pending dialog and confirmation callback (0.6354ms)
+  AssertionError [ERR_ASSERTION]: button
+  + actual - expected
+  
+  + [Function (anonymous)]
+  - null
+  
+      at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:29:537
+      at async fixture (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:24:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\tflite-runtime-inputs-ui.test.mjs:30:1
+✖ a cancelled dialog confirmation cannot resolve or close a newer input request (0.7061ms)
+  AssertionError [ERR_ASSERTION]: stale callback must not close the current dialog
+  
+  false !== true
+  
+      at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:30:341
+      at async fixture (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:24:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\tflite-runtime-inputs-ui.test.mjs:31:1
+✖ validation errors keep the current controls active until corrected (1.6046ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + [Function (anonymous)]
+  - null
+  
+      at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:31:518
+      at async fixture (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:24:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\tflite-runtime-inputs-ui.test.mjs:32:1
+✖ native showModal failure leaves no pending request, controls or confirmation callback (0.8113ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:32:254
+      at fixture (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:24:15)
+      at TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/tflite-runtime-inputs-ui.test.mjs:32:98)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
