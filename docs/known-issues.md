@@ -1,10 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 preview.26／build `5846ee3c3a5e0a37`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
-
-## 待修：工作區切換按鈕選取標示
-
-從組合編輯返回探索、關閉再開啟模型後，探索與「加入組合草稿」可能同時顯示選取狀態；[真實大檔還原截圖](results/large-composition-draft-reopen-2026-10-29.png)已確認。`model-edit-workspace-ui.js` 的 `mode(false)` 更新探索與編輯兩個按鈕，組合按鈕在另一個 availability 路徑更新，仍待補齊並做原生回歸。此輪[大型 v2 還原及匯出](large-composition-draft.md#已核對的結果)資料檢查通過，按鈕標示缺陷另列待修。
+目前固定版本為 preview.27／build `7d7884ad7a1d1ce2`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -34,3 +30,5 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 新增 OP 的 64-bit 整數精度問題已在 preview.25 修正並完成正式驗收；大整數請以十進位字串輸入，JSON 陣列元素需加雙引號，見 [正式交付](op-integer-precision.md#preview25-正式交付)。
 
 合法多輸入 CONCATENATION 的固定 port 誤判、SQUEEZE 非單位 axes 仍可匯出，已在 preview.26 修正並完成正式站／CPU 正負例驗收，見 [正式交付](model-composition.md#preview26-正式交付)。
+
+返回探索、模型分頁及草稿還原後工作區按鈕選取殘留，已在 preview.27 修正並完成正式站十二次互斥導覽驗收；原 red、修正版與正式證據分開保留，見 [正式交付](workspace-mode-state.md#preview27-正式交付)。
