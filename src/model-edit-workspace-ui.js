@@ -8,6 +8,7 @@ import {runtimeSkipped} from './tflite-runtime-policy.js';
 import {attachRuntimeReport} from './tflite-runtime-report.js';
 import {modelEditLayout} from './model-edit-layout.js';
 import {compositionInterface} from './model-composition-draft.js';
+import {randomDescription} from './tensor-random.js';
 const NS='http://www.w3.org/2000/svg';
 export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getCompositionTargets=getTargets,getCompositionLabel=()=>'',getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport,onMode=()=>{},isRunning=()=>false}){
     const $=id=>document.getElementById(id),root=$('edit-workspace'),viewport=$('edit-viewport'),world=$('edit-world'),svg=$('edit-links');
@@ -93,7 +94,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         newOps.render();
         renderCompositionInterface();
         const list=$('edit-change-list');list.replaceChildren();const diff=changes();$('edit-change-count').textContent=`${diff.length} 筆變更 · 尚未套用到原模型`;
-        for(const c of diff){const row=make('li');row.append(make('strong',`${c.kind==='add'?'新增':c.kind==='remove'?'刪除':'改線'} · ${c.name}`));row.append(make('p',c.kind==='wire'?`輸入 ${c.slot+1}：${c.before} → ${c.after}`:c.kind==='add'?`輸入：${c.inputs.join('、')}；自動輸出：${c.outputs.join('、')}${c.exposed?'；加入模型 outputs':''}`:c.boundary?'仍被使用的輸出保留成模型 inputs':'仍被使用的輸出需重新接線'));for(const p of c.parameters||[])row.append(make('p',`亂數輸入 ${p.slot+1}：seed ${p.seed}，範圍 ${p.min}～${p.max}，${p.bytes} bytes`));list.append(row);}
+        for(const c of diff){const row=make('li');row.append(make('strong',`${c.kind==='add'?'新增':c.kind==='remove'?'刪除':'改線'} · ${c.name}`));row.append(make('p',c.kind==='wire'?`輸入 ${c.slot+1}：${c.before} → ${c.after}`:c.kind==='add'?`輸入：${c.inputs.join('、')}；自動輸出：${c.outputs.join('、')}${c.exposed?'；加入模型 outputs':''}`:c.boundary?'仍被使用的輸出保留成模型 inputs':'仍被使用的輸出需重新接線'));for(const p of c.parameters||[])row.append(make('p',`亂數輸入 ${p.slot+1}：${randomDescription(p)} seed ${p.seed}，${p.bytes} bytes`));list.append(row);}
         for(const issue of draft?editIssues(draft.state).slice(0,8):[])list.append(make('li',`${issue.node} 輸入 ${issue.slot+1}：${issue.message}`,'edit-problem'));
         availability();
     }

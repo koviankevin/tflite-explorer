@@ -1,12 +1,13 @@
 import {littleEndianBytes,inputSize} from './tflite-runtime-inputs.js';
 import {RUNTIME_LIMITS} from './tflite-runtime-policy.js';
+import {randomOptions,randomAlgorithm} from './tensor-random.js';
 const crcTable=Uint32Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
 const crc=bytes=>{let n=0xffffffff;for(const b of bytes)n=crcTable[(n^b)&255]^(n>>>8);return(n^0xffffffff)>>>0;};
 // ZIP store only; controlled flat filenames, <=257 entries, <=17 MiB. No ZIP64,
 // compression Worker, object URLs or external library lifetime to retain.
 export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDetails,specs,modelSHA256}){
     const files=[],rows={inputs:[],outputs:[]};let bytes=0;
-    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{const detail=details[i];bytes+=inputSize({dtype:detail.dtype,shape:Array.from(tensor.shape)});if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');const data=littleEndianBytes(tensor.toTypedArray(),detail.dtype),name=`${side}-${i}.bin`;files.push({name,data});const s=specs[i];rows[side].push({file:name,name:String(detail.name||'').slice(0,256),shape:Array.from(tensor.shape),dtype:detail.dtype,bytes:data.length,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{seed:s.seed,min:s.min,max:s.max,algorithm:'xorshift32-v1'}:{})}:{})});});
+    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{const detail=details[i];bytes+=inputSize({dtype:detail.dtype,shape:Array.from(tensor.shape)});if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');const data=littleEndianBytes(tensor.toTypedArray(),detail.dtype),name=`${side}-${i}.bin`;files.push({name,data});const s=specs[i];rows[side].push({file:name,name:String(detail.name||'').slice(0,256),shape:Array.from(tensor.shape),dtype:detail.dtype,bytes:data.length,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})});});
     const manifest={format:'model-lens-runtime-io',version:1,createdAt:new Date().toISOString(),byteOrder:'little-endian',modelSHA256,...rows,validation:{...validation}};
     files.push({name:'manifest.json',data:new TextEncoder().encode(JSON.stringify(manifest,null,2)+'\n')});
     const parts=[],central=[];let offset=0;

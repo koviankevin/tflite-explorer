@@ -8,6 +8,8 @@
 
 執行區顯示目前檔名及可支援的 input／output 規格。手動選擇各個 input 的 raw `.bin`、全 0 或依 dtype 的亂數，再執行一次。載入執行區只讀取已解析的介面，不載入 WASM 或讀取完整權重。模型、BIN 與 IO 都留在本機。
 
+亂數輸入與編輯 const 共用 [資料規則與合理預設](tensor-random-distributions.md)，包含 Uniform、Normal、Truncated Normal、Bernoulli 與可展開的進階參數。
+
 輸入大小／型別檢查、30 秒取消／逾時、CPU WASM 與 [執行資源上限](tflite-runtime.md)沿用現有策略。custom kernels、動態型別及資源超限仍明確標示未能驗證，不當成通過。執行成功不證明精度、所有控制路徑或與原模型等價。
 
 編輯匯出報告只記錄結構及資料完整性，runtime 項目維持未執行。執行結果與實際 inputs／outputs 另存 IO ZIP，manifest 的模型 SHA-256 對應目前開啟的檔案。兩份報告分開，避免把原模型的成功套到後續草稿。

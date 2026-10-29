@@ -20,7 +20,7 @@ export async function demoRuntimeFlow({page,read,directory}){
             if(standalone)await page.locator('#run-mode').click();
             for(const mode of ['zero','random']){
                 await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);
-                for(const input of await page.locator('#edit-runtime-inputs select').all())await input.selectOption(mode);
+                for(const input of await page.locator('#edit-runtime-inputs select[id^=runtime-input-mode-]').all())await input.selectOption(mode);
                 await page.locator('#edit-runtime-run').click();await until(()=>!!document.querySelector('#edit-runtime-result').dataset.status&&(document.querySelector('#run-workspace')||document.querySelector('#edit-workspace')).getAttribute('aria-busy')==='false');
                 const result=await read(()=>({status:document.querySelector('#edit-runtime-result').dataset.status,detail:document.querySelector('#edit-runtime-result').textContent}));
                 assert.equal(result.status,'passed',`published demo ${edited?'edited':'original'} / ${mode}: ${JSON.stringify(result)}`);if(standalone)assert.doesNotMatch(result.detail,/Found builtin operator .* with custom options/);report.cases.push({edited,mode,status:result.status});

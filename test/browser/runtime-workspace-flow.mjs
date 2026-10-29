@@ -12,6 +12,7 @@ import {tfliteShapeFlow} from './tflite-shape-flow.mjs';
 import {modelCompositionFlow} from './model-composition-flow.mjs';
 import {assertWorkspaceMode} from './workspace-mode-proof.mjs';
 import {MLIR_BRANCH} from '../mlir-fixture.mjs';
+import {tensorDistributionsFlow} from './tensor-distributions-flow.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 export async function runtimeWorkspaceFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false}){
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
@@ -72,12 +73,13 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
         await page.locator('#edit-font').selectOption('32');for(const viewport of [{width:1366,height:640},{width:1280,height:640}]){await page.setViewportSize(viewport);await page.locator('#edit-fit').click();const layout=await read(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,graph:document.querySelector('#edit-viewport').getBoundingClientRect().height}));assert.ok(layout.scroll<=layout.width+1&&layout.graph>=200,JSON.stringify(layout));}await page.setViewportSize({width:1366,height:640});
         // Generate a typed constant for the new OP through its real inspector,
         // then exercise typed random inputs and inspect the actual CPU/ZIP bytes.
-        await page.locator('#edit-new-ops details').nth(1).locator('summary').click();await page.locator('#edit-random-slot').selectOption('1');await page.locator('#edit-random-like').selectOption('t:0:0');
+        await page.locator('#edit-new-ops details').nth(1).locator('summary').first().click();await page.locator('#edit-random-slot').selectOption('1');await page.locator('#edit-random-like').selectOption('t:0:0');
         assert.ok((await page.locator('#edit-random-range').textContent()).includes('float32'));assert.equal(await page.locator('#edit-random-min').getAttribute('step'),'any');
+        await page.locator('#edit-random-distribution').selectOption('uniform');await page.locator('details:has(> label > #edit-random-seed) > summary').click();
         await page.locator('#edit-random-min').fill('1');await page.locator('#edit-random-max').fill('1');await page.locator('#edit-random-apply').click();await until(()=>document.querySelector('#edit-change-list').textContent.includes('亂數輸入 2'));
         await download('#edit-export','runtime-random-weights.tflite');await enterRuntime();
         await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);
-        for(const i of [0,1]){await page.locator(`#runtime-input-mode-${i}`).selectOption('random');assert.ok((await page.locator(`#runtime-input-range-${i}`).textContent()).includes('有限值'));assert.equal(await page.locator(`#runtime-input-seed-${i}`).getAttribute('step'),'1');}
+        for(const i of [0,1]){await page.locator(`#runtime-input-mode-${i}`).selectOption('random');await page.locator(`#runtime-input-distribution-${i}`).selectOption('uniform');await page.locator('#edit-runtime-inputs fieldset').nth(i).locator('details > summary').click();assert.ok((await page.locator(`#runtime-input-range-${i}`).textContent()).includes('有限值'));assert.equal(await page.locator(`#runtime-input-seed-${i}`).getAttribute('step'),'1');}
         await page.locator('#runtime-input-min-0').fill('3.5e38');await page.locator('#runtime-input-max-0').fill('3.5e38');const randomCount=report.workers.length;await page.locator('#edit-runtime-run').click();await until(()=>document.querySelector('#edit-runtime-input-error').textContent.includes('float32'));assert.equal(report.workers.length,randomCount);
         for(const [i,value]of [[0,'.25'],[1,'2']]){await page.locator(`#runtime-input-min-${i}`).fill(value);await page.locator(`#runtime-input-max-${i}`).fill(value);}await page.locator('#edit-runtime-run').click();await finished('passed');
         const randomFile=await download('#edit-runtime-download','runtime-typed-io.zip'),randomZip=Archive.open(new Uint8Array(await readFile(randomFile)),'zip'),randomManifest=JSON.parse(new TextDecoder().decode(randomZip.entries.get('manifest.json').peek()));
@@ -124,6 +126,7 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
         }
         if(shapeInputs)await tfliteShapeFlow({page,read,until,open,choose,ready,download,finished,source,directory,report,enterRuntime,returnToEdit});
         if(compositionInputs)await modelCompositionFlow({page,read,until,choose,ready,download,finished,directory,report,enterRuntime,returnToEdit});
+        await tensorDistributionsFlow({page,read,until,open,choose,ready,download,finished,directory,report,enterRuntime,returnToEdit});
         const mlir=path.join(directory,'runtime-explore-only.mlir');await writeFile(mlir,MLIR_BRANCH,{flag:'wx'});const workerCount=report.workers.length;await choose(mlir,'#open-model');await ready();assert.equal(await page.locator('#run-mode').isHidden(),true);assert.equal(await page.locator('#edit-mode').isHidden(),true);await assertWorkspaceMode(page,'explore');assert.equal(report.workers.length,workerCount);await page.locator('#close-model').click();report.cases.push('MLIR remains exploration-only and never offers a TFLite execution or editing action');
         check('optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout');return report;
     }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);}

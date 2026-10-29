@@ -1,7 +1,8 @@
 // Optional inspector controls; the Worker reconstructs all tensors from trusted metadata.
-import {TFLITE_RANDOM_DTYPES,randomRange} from './tensor-random.js';
+import {TFLITE_RANDOM_DTYPES} from './tensor-random.js';
+import {tensorRandomUI} from './tensor-random-ui.js';
 export function editNewOpsUI({$,make,rpc,state,selected,apply,message,isBusy}){
-    const root=$('edit-new-ops');let catalog=null,loading=null,shown=null;
+    const root=$('edit-new-ops');let catalog=null,loading=null,shown=null,currentRules=null;
     const node=()=>state()?.nodes.find(n=>n.id===selected());
     const prototypes=()=>[...state().values.values()].filter(v=>!v.fresh&&!v.generated&&!v.missing&&!v.optional&&v.graph===node().source.graph);
     const select=(id,rows)=>{const e=make('select');e.id=id;for(const [value,text]of rows)e.append(new Option(text,value));return e;};
@@ -23,21 +24,25 @@ export function editNewOpsUI({$,make,rpc,state,selected,apply,message,isBusy}){
     function render(){
         const n=node(),show=!!n?.fresh&&!n.removed&&state().format==='tflite';root.hidden=!show;if(!show){shown=null;return;}
         if(!catalog){root.textContent='載入本機 OP 定義…';if(!loading)loading=rpc('editBuiltinCatalog').then(c=>{catalog=c;shown=null;render();}).catch(e=>{root.textContent=e.message;}).finally(()=>{loading=null;});return;}
-        const stamp=JSON.stringify([n.id,n.builtin,n.inference,n.inputs.map(p=>p.value)]);if(stamp===shown)return;shown=stamp;root.replaceChildren();
+        const stamp=JSON.stringify([n.id,n.builtin,n.inference,n.inputs.map(p=>p.value)]);if(stamp===shown)return;
+        const same=shown&&JSON.parse(shown)[0]===n.id,expanded=same?[...root.querySelectorAll('details')].map(d=>d.open):[],previous=same&&currentRules&&$('edit-random-slot')?{slot:$('edit-random-slot').value,like:$('edit-random-like').value,spec:currentRules.spec()}:null;
+        shown=stamp;currentRules=null;root.replaceChildren();
         const details=make('details');details.append(make('summary','改為其他 TFLite OP'));
         const kinds=select('edit-builtin',catalog.map(c=>[String(c.code),c.name]));kinds.value=String(n.builtin?.code??catalog.find(c=>c.name===n.name)?.code??catalog[0].code);details.append(field('內建 OP（CUSTOM 請複製原始 OP）',kinds));const body=make('div');body.id='edit-builtin-config';details.append(body);
         const change=make('button','套用 OP 型別與參數','quiet');change.type='button';change.id='edit-builtin-apply';change.onclick=()=>{if(isBusy())return;try{const settings={};for(const e of body.querySelectorAll('[data-builtin-option]')){const k=e.dataset.optionKind,t=e.value;settings[e.dataset.builtinOption]=k==='bool_'?e.checked:['array','int64s_','bools_'].includes(k)?JSON.parse(t):['int64_','uint64_','string_'].includes(k)?t==='null'?null:t:JSON.parse(t);}const count=Number($('edit-builtin-outputs').value);if(!Number.isInteger(count)||count<0||count>32)throw Error('輸出數量需介於 0～32。');apply({kind:'builtin',node:n.id,code:Number(kinds.value),version:Number($('edit-builtin-version').value),inputCount:Number($('edit-builtin-inputs').value),outputLike:Array.from({length:count},(_,i)=>$(`edit-output-like-${i}`).value),inferOutputs:$('edit-infer-outputs').checked,settings});}catch(e){message(e.message);}};details.append(change);root.append(details);kinds.onchange=config;config();
         if(n.inputs.length){const random=make('details');random.append(make('summary','補上亂數權重／常數'));
-            const slot=select('edit-random-slot',n.inputs.map((_,i)=>[String(i),`輸入 ${i+1}`])),like=select('edit-random-like',prototypes().map(v=>[v.id,`${v.name} · ${v.type}`]));random.append(field('要補齊的輸入',slot),field('權重型別與 shape 參考',like),field('seed',number('edit-random-seed',1,0,4294967295)),field('最小值',number('edit-random-min',-.05,-1e6,1e6)),field('最大值',number('edit-random-max',.05,-1e6,1e6)));
-            root.append(random);const hint=make('p','','hint');hint.id='edit-random-range';
-            const button=make('button','產生並接入此輸入','quiet');button.id='edit-random-apply';button.type='button';button.onclick=()=>{if(!isBusy())apply({kind:'random',node:n.id,slot:Number(slot.value),like:like.value,seed:Number($('edit-random-seed').value),min:Number($('edit-random-min').value),max:Number($('edit-random-max').value)});};random.append(hint,button,make('p','只產生權重資料；不隨機更改 stride、padding、axis。單個 tensor 上限 16 MiB，整次匯出上限 32 MiB。量化範圍使用原始整數值。','hint'));
+            const slot=select('edit-random-slot',n.inputs.map((_,i)=>[String(i),`輸入 ${i+1}`])),like=select('edit-random-like',prototypes().map(v=>[v.id,`${v.name} · ${v.type}`])),rules=tensorRandomUI({id:key=>`edit-random-${key}`,role:'weight'});
+            currentRules=rules;if(previous){if([...slot.options].some(o=>o.value===previous.slot))slot.value=previous.slot;if([...like.options].some(o=>o.value===previous.like))like.value=previous.like;}
+            random.append(field('要補齊的輸入',slot),field('權重型別與 shape 參考',like),rules.root);root.append(random);
+            const button=make('button','產生並接入此輸入','quiet');button.id='edit-random-apply';button.type='button';button.onclick=()=>{if(!isBusy())apply({kind:'random',node:n.id,slot:Number(slot.value),like:like.value,...rules.spec()});};random.append(button,make('p','只產生權重資料；不隨機更改 stride、padding、axis。單個 tensor 上限 16 MiB，整次匯出上限 32 MiB。','hint'));
             const defaults=()=>{try{
                 const reference=state().values.get(like.value);if(!reference)throw Error('此 subgraph 沒有可用的 tensor 型別與 shape 參考，無法產生亂數。請先接入有效 tensor。');
                 let type;try{type=JSON.parse(reference.signature);}catch{throw Error('參考 tensor 的型別資料無效，請重新選擇。');}
-                const range=randomRange(TFLITE_RANDOM_DTYPES[type?.type]);for(const key of ['min','max']){const input=$(`edit-random-${key}`);input.min=String(range.min);input.max=String(range.max);input.step=range.step;input.value=String(key==='min'?range.defaultMin:range.defaultMax);}hint.textContent=range.description+(type.quantization?.scale?.length?' 量化 tensor 使用原始整數值，不自動換算 scale／zero point。':'');button.disabled=false;
-            }catch(error){hint.textContent=error.message;button.disabled=true;}};like.disabled=like.options.length===0;like.onchange=defaults;defaults();
+                rules.setType(TFLITE_RANDOM_DTYPES[type?.type],!!type.quantization?.scale?.length);rules.disable(false);button.disabled=false;
+            }catch(error){rules.explain(error.message);rules.disable(true);button.disabled=true;}};like.disabled=like.options.length===0;like.onchange=defaults;defaults();if(previous&&!button.disabled&&like.value===previous.like)rules.restore(previous.spec);
         }
-        root.append(make('p','匯出前檢查接線、資料長度、索引及已支援的型別／shape 規則。下方可選擇 LiteRT 本機檢查；custom runtime 需由你的工具驗證。','hint'));
+        root.append(make('p','匯出前檢查接線、資料長度、索引及已支援的型別／shape 規則。需要試跑請先匯出並開啟，再到「執行模型」；custom runtime 需由你的工具驗證。','hint'));
+        [...root.querySelectorAll('details')].forEach((d,i)=>{if(expanded[i]!==undefined)d.open=expanded[i];});
     }
-    return {render,reset(){catalog=null;shown=null;}};
+    return {render,reset(){catalog=null;shown=null;currentRules=null;root.replaceChildren();root.hidden=true;}};
 }

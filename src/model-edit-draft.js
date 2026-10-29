@@ -2,6 +2,7 @@
 // Export never trusts client-supplied tensor descriptions or OP templates.
 export const EDIT_LIMITS=Object.freeze({nodes:96,commands:128,originals:64,ports:4096});
 import {builtinInfo,builtinSettings,randomTensorInfo} from './tflite-new-ops.js';
+import {randomOptions,randomAlgorithm} from './tensor-random.js';
 import {inferTfliteOutputs} from './tflite-shape-inference.js';
 import {compositionCommand,compositionOrder,compositionWireReason} from './model-composition-draft.js';
 const copy=value=>structuredClone(value);
@@ -69,9 +70,9 @@ function mutate(state,command){
         if(state.values.size>EDIT_LIMITS.ports||state.nodes.filter(n=>n.fresh&&!n.removed).reduce((sum,n)=>sum+n.outputs.length,0)>1024)throw Error('編輯範圍 tensor 或新增輸出超過上限。');
     }else if(command.kind==='random'){
         const like=state.values.get(command.like);if(state.format!=='tflite'||!node.fresh||!node.inputs[command.slot]||!like||like.fresh||like.generated||like.optional||like.graph!==node.source.graph)throw Error('亂數權重需要新增 OP 的輸入端與原始型別範本。');
-        const tensor=JSON.parse(like.signature),spec={seed:command.seed,min:command.min,max:command.max},info=randomTensorInfo(tensor,spec),key=`const:${++state.parameterNext}`;
+        const tensor=JSON.parse(like.signature),spec=randomOptions(command),info=randomTensorInfo(tensor,spec),key=`const:${++state.parameterNext}`;
         if(state.values.size>=EDIT_LIMITS.ports)throw Error('編輯範圍 tensor 過多。');
-        state.values.set(key,{...copy(like),id:key,name:`random_${state.parameterNext}`,producer:null,order:-1,generated:{...spec,bytes:info.bytes,algorithm:'xorshift32-v1'},kind:'亂數權重',modelOutput:false});node.inputs[command.slot].value=key;
+        state.values.set(key,{...copy(like),id:key,name:`random_${state.parameterNext}`,producer:null,order:-1,generated:{...spec,bytes:info.bytes,algorithm:randomAlgorithm(spec)},kind:'亂數權重',modelOutput:false});node.inputs[command.slot].value=key;
     }else if(command.kind==='template'){
         const reason=editTemplateReason(state,node.id,command.template);if(reason)throw Error(reason);
         const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;delete node.inference;
