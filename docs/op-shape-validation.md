@@ -12,7 +12,7 @@ Preview.25 的 `CONCATENATION` catalog／port 表將 Netron metadata 的 `list: 
 
 本機十九項相關測試通過，含三個原失敗、正負 axes／dtype／rank／空維度／溢位、動態與 scalar 保守處理、Undo／Redo 後真正匯出重開、既有草稿／亂數與 64-bit 參數。Hosted 候選與 main 原生案例已通過：1280×640／32px 的錯誤 SQUEEZE 拒絕匯出且保留草稿；雙輸入 CONCATENATION 匯出 `[1,4]`，由使用者手動執行 raw BIN 後核對 CPU／IO ZIP 的 `[1,2,3,4]`，再實際選檔重開並搜尋定位。
 
-目前正式站仍是 preview.25，尚未部署這些修改；一般開檔、編輯及匯出不自動啟動 interpreter。
+這些修改已隨 preview.26 完成正式部署；一般開檔、編輯及匯出不自動啟動 interpreter。
 
 
-相關 shape 正負例已納入 [組合功能的候選與主分支驗收](model-composition.md#候選與主分支驗收)，包含實際 CPU 與 IO ZIP；目前正式站仍為 preview.25，尚待共同發布。
+相關 shape 正負例已納入 [組合功能的候選與主分支驗收](model-composition.md#候選與主分支驗收)，包含實際 CPU 與 IO ZIP；已隨 [preview.26 正式交付](model-composition.md#preview26-正式交付)完成共同發布。

@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 preview.18，補上 recovery／版面生命週期修正與 Firefox／WebKit 正式站驗收，見 [正式交付](desktop-fixes.md)。MLIR／Canvas 鍵盤流程及可見焦點的歷史證據見 [preview.17](mlir-keyboard.md)。TFLite 本機編輯草稿自動保存與瀏覽器異常關閉後恢復的歷史證據見 [preview.16 交付](edit-recovery.md)。下方保留各版本的工作區操作及歷史驗收。
+目前正式交付為 [preview.26](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.26)，新增 [獨立片段組合工作區](model-composition.md)。普通編輯及組合各自保留接線、Undo／Redo 與視角；[正式交付](model-composition.md#preview26-正式交付)已核對 32px、草稿及模型匯出重開。下方保留 preview.18 以前的歷史範圍與證據。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 

@@ -2,23 +2,24 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [preview.25](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.25)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `95784ae94cb97575`，來源 `3427c4a02911edac35fe48ebf3d94fd628223e9d`。網站更新不會自動更新公司內網站台。
+固定版本為 [preview.26](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.26)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `5846ee3c3a5e0a37`，來源 `f4230c9f18926cf3ceb0a70faab88451c1fdc5f5`。網站更新不會自動更新公司內網站台。
 
 ## 已核對的公開流程
 
 | 使用需求 | 證據與範圍 |
 | --- | --- |
-| 本機開檔、搜尋及定位 | [正式交付](op-integer-precision.md#preview25-正式交付)的 30 項原生操作包含實際選檔、名稱／類型搜尋、選取與定位；模型不經遠端解析服務 |
+| 本機開檔、搜尋及定位 | [正式交付](model-composition.md#preview26-正式交付)的 30 項原生操作包含實際選檔、名稱／類型搜尋、選取與定位；模型不經遠端解析服務 |
 | Pattern 圈選、修改、保存與檔案移轉 | 同一份正式操作報告驗證圈選保留、JSON 原生下載／匯入、刪除／復原及跨分頁衝突；跨 block pattern 以結構匹配，不依 block／SSA 名稱 |
 | 分支、匯合、迴圈與 custom op | 正式操作涵蓋 TFLite IF／WHILE／custom，以及 MLIR diamond／loop；匯出重開後原 pattern 各一筆，連線負例拒絕 |
 | MLIR 局部匯出 | [SSA／Canvas 驗收](mlir-keyboard.md)及正式操作涵蓋必要邊界、控制流程、精簡圖與重開；自動補出的介面不當成原 pattern OP |
 | TFLite 實際模型編輯 | 正式操作涵蓋圖上接線、tensor 自動建立、OP 複製／builtin catalog、參數、型別亂數、Undo／Redo、完整修改與子模型下載重開 |
+| 片段組合模型 | [組合模型](model-composition.md#preview26-正式交付)驗證 A／B 匹配分次加入、重疊去重、新 OP 接線、獨立普通／組合歷史、輸入／輸出選擇、v2 草稿、CPU `[14,28]`、custom options／權重／編號及匯出重開；目前限同一 TFLite／subgraph |
 | 編輯草稿與模型分頁 | 正式操作涵蓋 JSON 保存／重選原模型指紋、分頁狀態、衝突／分叉及專屬測試瀏覽器強制終止後恢復；不宣稱 OS 斷電後永不遺失 |
-| 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的十種參數／runtime 情境：原模型／候選、raw .bin、型別亂數、實際 IO ZIP、錯誤／取消、custom／signature 明確未驗證；開檔／一般匯出不自動推論 |
+| 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的 14 種參數／runtime／組合情境：原模型／候選、raw .bin、型別亂數、實際 IO ZIP、錯誤／取消、custom／signature 明確未驗證；開檔／一般匯出不自動推論 |
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
-| 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.25 Chromium 八輪](op-integer-precision.md#候選與主分支驗收)及既有獨立 Chromium 80 輪／約 2 小時 12 分；各結果來源另列，完整權重、custom options、pattern 正負例與 Worker 終止按原門檻核對，不當成全部新版／引擎長測 |
+| 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。新的大型組合只有另列的 Node 共享零頁 Blob／切片實驗，未宣稱大型組合瀏覽器長測 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
-| 固定部署及下載 | [最終獨立核對](results/preview25-published-2026-10-29.json)：全站 1,376 檔／SHA／MIME、root、部署身分及四份實際 Release 下載均與準備快照一致；四個工作在 attempt 1 成功 |
+| 固定部署及下載 | [最終獨立核對](results/preview26-published-2026-10-29.json)：全站 1,380 檔／SHA／MIME、root、部署身分及四份實際 Release 下載均與準備快照一致；四個工作在 attempt 1 成功 |
 
 ## 第一次使用
 
