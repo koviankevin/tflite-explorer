@@ -2,6 +2,8 @@
 
 preview.31 的資源清理與 reader 隔離修正已完成[正式交付](preview31.md#發布狀態)：三引擎候選、1.25 GiB／21,005 OP 八輪及手動 CPU／IO 八輪通過，四關卡原始來源／digest／scope 已核對。正式站 1,406 檔、33 項原生操作及四份固定下載吻合原準備包；整體目標保持進行中。
 
+最新 [IO ownership 修正與原始驗證](runtime-module-cache.md#ownership-修正後仍未達標)已將 owned bytes retirement、首次下載 Blob 快取及 session 清理加入候選；51 項 Node 選測、實際 8 MiB Worker／ZIP、CPU、確認／取消及 cold context 通過。來源 d0f3ff9 的 Firefox 原八輪 RSS slope 為 **18,457,629.26 bytes／輪，仍高於原 16 MiB**；原始失敗、component observations 與 provider 認證均保留，未發布 preview.32。下一步是可重現的暫存配置修正，不以認證成功、較低單次數值或重跑取代原驗收。較早診斷歷史如下。
+
 現行應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 
 手動 interpreter 另完成 [Chromium 正式站八輪／24 次 CPU 與 IO 生命週期](runtime-io-lifecycle.md#已核對結果)：4 MiB const、每次 4 MiB input／output、8 份完整 bytes、自然下載 URL 釋放、411 次觀測程序 RSS／main heap 與正常程序退出通過。這是新的有限 CPU／IO 證據，沒有倒算到既有兩小時開檔／編輯負載，也沒有宣稱連續 Worker heap、數小時 interpreter 或其他引擎完成。
