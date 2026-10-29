@@ -1,6 +1,6 @@
 # 亂數資料規則與預設
 
-開發中的 preview.29 在「執行模型」的測試輸入與「編輯模型 → 補上亂數權重／常數」共用一套規則。選擇用途後可以直接產生，seed 與數值參數收在「進階參數」，不需要先理解統計名詞。
+preview.29 在「執行模型」的測試輸入與「編輯模型 → 補上亂數權重／常數」共用一套規則。選擇用途後可以直接產生，seed 與數值參數收在「進階參數」，不需要先理解統計名詞。
 
 | 用途／dtype | 預設 | 說明 |
 | --- | --- | --- |
@@ -22,4 +22,7 @@ Normal 的平均值與標準差定義採 [NIST 的常態分佈定義](https://cs
 
 測試 IO ZIP 記錄分佈、seed、參數及演算法名稱，並保存實際生成的 BIN。相同實作與數值環境可重現；不同引擎的浮點數學函式末位可能不同，嚴格逐 bytes 重播請使用已保存的 BIN／匯出模型。
 
-驗收涵蓋固定 seed 統計平均／變異、截斷後的條件變異與遠端窄區間、Bernoulli 比例、dtype／溢位拒絕、const 與測試輸入逐 bytes 相同、版本 1／2 相容、版本 3 草稿／Redo／本機復原，以及 Hosted 瀏覽器的實際 CPU／IO 與匯出重開。main 的 Hosted 原生、CPU／IO、草稿與八輪大檔驗收已通過，見[完整證據](model-runtime-workspace.md#main-與-hosted-驗收)；正式部署與固定下載仍待完成。
+驗收涵蓋固定 seed 統計平均／變異、截斷後的條件變異與遠端窄區間、Bernoulli 比例、dtype／溢位拒絕、const 與測試輸入逐 bytes 相同、版本 1／2 相容、版本 3 草稿／Redo／本機復原，以及 Hosted 瀏覽器的實際 CPU／IO 與匯出重開。main 的 Hosted 原生、CPU／IO、草稿與八輪大檔驗收已通過，見[完整證據](model-runtime-workspace.md#main-與-hosted-驗收)；[正式站及固定下載已核對](model-runtime-workspace.md#preview29-正式交付)。
+
+
+本版 const 浮點產生支援 float32／float64；整數及 boolean 使用 Uniform／Bernoulli，64-bit 整數以 JavaScript 可精確表示的範圍為限。Runtime float16 的資料建立另取決於瀏覽器是否提供 Float16Array；未支援會明確拒絕，不默默換 dtype。

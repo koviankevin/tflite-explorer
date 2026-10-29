@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `b1a823b72e94f81b`，來源 `27df8bf5a86c20c04e33aff60c03b03d1001062c`。外網更新不會自動更新公司內網站台。
+固定版本為 [preview.29](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `ad6db9bb06620139`，來源 `42e0771e49891becfd68ace7cea2d444ca989c51`。外網更新不會自動更新公司內網站台。
 
 ## 已核對的公開流程
 
@@ -19,7 +19,7 @@
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
-| 固定部署及下載 | [最終獨立核對](results/preview28-published-2026-10-29.json)：1,389 檔 SHA／MIME、root、權威部署及四份實際固定下載吻合；30 項原生操作、14 種既有情境、四種示範 CPU、12 次互斥工作區狀態通過，四工作 attempt 1 成功 |
+| 固定部署及下載 | [最終獨立核對](results/preview29-published-2026-10-29.json)：1,393 檔 SHA／MIME、root、權威部署與四份固定下載一致；30 項原生操作、19 種執行／分佈情境、v3 草稿及 68 model／14 runtime Workers 關閉，四工作 attempt 1 成功 |
 
 ## 第一次使用
 

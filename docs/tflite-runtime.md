@@ -1,8 +1,8 @@
 # TFLite 手動執行檢查
 
-目前固定公開版為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)／build `b1a823b72e94f81b`。新版示範原模型／編輯後 × 全 0／亂數四種 CPU 情境通過，並保留 14 種既有情境與實際 raw BIN／IO ZIP；一般讀取、編輯、匯出仍不自動推論。舊示範下載檔不會自動補參數，需重新開啟新版示範，見 [根因](demo-runtime.md)與[正式交付](contextual-model-editing.md#preview28-正式交付)。
+目前固定公開版為 [preview.29](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)／build `ad6db9bb06620139`。獨立「執行模型」只使用目前分頁已開啟的 TFLite，編輯與一般匯出不自動跑 interpreter；測試輸入和編輯 const 共用四種亂數規則與合理預設。正式站 raw BIN、實際 CPU／IO、取消、19 種情境及固定下載已核對，見 [正式交付](model-runtime-workspace.md#preview29-正式交付)。
 
-開檔、編輯、一般匯出不會載入 interpreter，也不會自動跑推論。preview.28 的手動檢查位於編輯工作區，會使用原模型或草稿候選。開發中的 preview.29 將它拆成獨立「執行模型」工作區，只跑目前分頁已開啟的 TFLite；編輯／組合與局部模型必須先匯出並開啟，見[工作區契約](model-runtime-workspace.md)。兩版均由使用者指定 model inputs，再按「以這組輸入執行一次」啟動本機 LiteRT.js 2.6.0 CPU WASM。
+開檔、編輯、一般匯出不會載入 interpreter，也不會自動推論。開啟「執行模型」只讀取介面，設定各個 input 後，再按「以這組輸入執行一次」才啟動 LiteRT.js 2.6.0 CPU WASM。編輯／組合結果或局部模型需先匯出 TFLite 並開啟到新模型分頁；執行區不接收草稿，見[工作區流程](model-runtime-workspace.md)與[資料規則](tensor-random-distributions.md)。
 
 每個 input 分別選零值、帶 seed／範圍的亂數或 raw `.bin`。面板顯示名稱、shape、dtype、所需 bytes；多輸入需逐項對應。raw 資料採 little-endian，byte 數須完全一致，沒有自動 dtype 轉換。boolean 限 0／1；量化資料使用原始整數值。零值指儲存值 0，不推測各 channel 的數學零點。索引、mask、token IDs 等有語意限制的輸入需由使用者提供有效資料，亂數不保證合法。
 
@@ -10,15 +10,15 @@
 
 結果分為通過、失敗、未能驗證。載入／編譯與執行分別記錄；有些 kernel 在第一次執行才配置／prepare，不能把成功載入當成成功執行。缺少 custom kernel、動態／未知 shape、不支援 dtype、資源超額、初始化失敗、取消或逾時不算通過。檢查涵蓋主 subgraph 與一組輸入，不宣稱所有 signatures、分支、迴圈路徑、精度或與原模型等價；失敗也須結合 runtime／輸入語意判讀。
 
-「下載測試 input／output」保存 ZIP：`inputs-N.bin`、實際存在的 `outputs-N.bin`、`manifest.json`，含 dtype／shape、little-endian、資料來源／seed、執行狀態與候選模型標準 SHA-256（無 WebCrypto 時明確為 null）。執行失敗但已有 inputs 時可以保存部分記錄，沒有 outputs 會保持空清單。ZIP 不含模型或權重；每次只保留最近一次，改草稿、換 signature 選項或關閉模型後釋放。下載須由使用者按鈕操作。
+「下載測試 input／output」保存 ZIP：`inputs-N.bin`、實際存在的 `outputs-N.bin` 與 `manifest.json`，含 dtype／shape、little-endian、資料來源、分佈／seed／適用參數／演算法、執行狀態與目前已開啟模型的 SHA-256（無 WebCrypto 時明確為 null）。失敗但已有 inputs 時可保存部分記錄，沒有 outputs 保持空清單。ZIP 不含模型或權重。新一次執行、換模型分頁或關閉會清除 IO；同一模型完成後切回編輯可保留 IO，進行中的執行則取消。下載由使用者按鈕操作。
 
-同一份未變更的已檢查候選可直接匯出，報告包含該次實際狀態；一般匯出未跑 runtime 時保留未驗證，不把舊草稿的成功套用到新草稿。Runtime 失敗不禁止結構匯出，方便帶到公司 runtime 處理，報告仍保留失敗。
+編輯匯出報告僅記錄結構及資料完整性，runtime 保持未執行；執行區的結果另存在 IO ZIP，不把原模型的成功套到草稿。執行失敗不修改原檔或草稿。需驗證編輯結果時，先匯出並開啟，再使用獨立執行區或公司 runtime。
 
 輸出 shape 推導目前涵蓋部分逐元素 unary、ADD／MUL／SUB／DIV 等 broadcast、SQUEEZE、單輸入且 options 固定的 RESHAPE。dtype／量化仍由參考 tensor 明確指定；未知、動態、per-axis 量化維度衝突或未實作的 OP 保留參考並顯示原因。舊 v1 編輯草稿未帶 `inferOutputs` 時維持原行為。
 
 LiteRT 來源、精確 npm integrity、原始檔 hashes、Apache-2.0 LICENSE 與 NOTICE 保留於 `vendor/litert/2.6.0/`。公開 runtime 不包含公司的 custom kernels。此功能與公司 runtime 相容性、任意 builtin 組合皆可執行及整體商品等級完成是不同的驗收範圍。
 
-本機實際 CPU WASM 已驗證 ADD 的 `[1,2] + [3,4] = [4,6]`、raw 多輸入、ZIP bytes，以及不合法 broadcast／output shape 的失敗。Hosted 原生選檔／下載、14 吋 32px、取消與正式部署證據尚待本次 CI；未完成前不列為已交付。
+本機實際 CPU WASM 與 Hosted 原生已驗證 raw 多輸入、實際 ADD／MUL／CONCATENATION 輸出、分佈 const／inputs、ZIP bytes、錯誤 broadcast／output shape、custom／signature 排除、取消與分頁釋放。正式站 19 種情境、1280×640／1366×640、32px 編輯視角及匯出重開見 [正式交付](model-runtime-workspace.md#preview29-正式交付)；不代表任意模型、所有路徑或數值精度均通過。
 
 首次候選 [40697650768](https://github.com/koviankevin/tflite-explorer/actions/runs/40697650768) 的既有 29 項操作通過，但新 runtime 初始化失敗：部署來源格式白名單未複製 `.wasm`，請求取得 404 文字。保留失敗，不以 Node 原始碼成功代替打包後的瀏覽器成功。新增實際打包回歸在修正前以 ENOENT 失敗、修正後通過；產物 verifier 另拒絕刪去 WASM 後重新製作的完整 manifest。版本子路徑下的實際 Worker／官方 loader 也在 Node VM 以打包檔重現失敗，修正後成功執行；瀏覽器重測仍需取得後續證據。
 
