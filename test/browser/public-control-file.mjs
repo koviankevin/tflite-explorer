@@ -8,12 +8,12 @@ import {buildEvent,sha256} from '../../scripts/lib/release-artifact.mjs';
 // Only a verified public diagnostic asset, never a user-selected model. Closure
 // paths/identity remain authoritative even if a caller modifies report metadata.
 export async function publicControlFile(bytes,{expectedBytes,expectedSHA256,name='public-runtime.wasm',log=buildEvent,parent=os.tmpdir()}={}){
-    assert.ok(['public-runtime.wasm','warm-cancel.tflite'].includes(name),'Only fixed public diagnostic asset names are allowed.');
+    assert.ok(['public-runtime.wasm','warm-cancel.tflite','guide-busy.tflite'].includes(name),'Only fixed public diagnostic asset names are allowed.');
     assert.ok(bytes instanceof Uint8Array&&bytes.byteLength>0&&bytes.byteLength<=16*1024**2);
     assert.equal(bytes.byteLength,expectedBytes);assert.match(expectedSHA256,/^[a-f0-9]{64}$/);assert.equal(sha256(bytes),expectedSHA256);
     const id='network-file-'+randomBytes(8).toString('hex'),prefix=path.join(path.resolve(parent),'model-lens-network-file-');
     const record={id,directory:null,path:null,bytes:expectedBytes,sha256:expectedSHA256,status:'planned',directoryRemoved:false,identity:null,events:[]};
-    const event=async(kind,target,extra={})=>{const value={schema_version:1,task_id:name==='public-runtime.wasm'?'firefox-network-control':'runtime-warm-cancel',operation_id:id+'-'+target+'-'+kind,artifact_id:id+'-'+target,event:kind,path:target==='directory'?directory??prefix+'<unique>':file,kind:'temporary',purpose:'Verified public diagnostic fixture; never a user-selected model',producer:'test/browser/public-control-file.mjs',inputs:{bytes:expectedBytes,sha256:expectedSHA256},cleanup_condition:'Native consumers finished; unchanged exact file identity and SHA, then empty-directory removal only',retain_until:'bounded diagnostic cleanup',...extra};await log(value);record.events.push({...value,timestamp:new Date().toISOString()});};
+    const event=async(kind,target,extra={})=>{const value={schema_version:1,task_id:name==='public-runtime.wasm'?'firefox-network-control':name==='guide-busy.tflite'?'usage-guide-busy':'runtime-warm-cancel',operation_id:id+'-'+target+'-'+kind,artifact_id:id+'-'+target,event:kind,path:target==='directory'?directory??prefix+'<unique>':file,kind:'temporary',purpose:'Verified public diagnostic fixture; never a user-selected model',producer:'test/browser/public-control-file.mjs',inputs:{bytes:expectedBytes,sha256:expectedSHA256},cleanup_condition:'Native consumers finished; unchanged exact file identity and SHA, then empty-directory removal only',retain_until:'bounded diagnostic cleanup',...extra};await log(value);record.events.push({...value,timestamp:new Date().toISOString()});};
     let directory,file,identity,fileRemoved=false,directoryRemoved=false;
     try{
         await event('create_intent','directory');directory=path.resolve(await mkdtemp(prefix));record.directory=directory;await event('created','directory');

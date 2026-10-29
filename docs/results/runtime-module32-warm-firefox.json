@@ -1,0 +1,78 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T19:34:48.858961+00:00",
+  "source": {
+    "commit": "2932697bd99771f42663364433836ea4adc8b912",
+    "tree": "9c3da411cfc5009d290f4b25cbf3c72c329b352f",
+    "committedAt": "2026-10-30T03:23:26+08:00",
+    "dirty": false
+  },
+  "run": 40939718626,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40939718626",
+  "authentication": "passed",
+  "readerActualExit": 0,
+  "readerExitChunk": "4ee670",
+  "producerStatus": "failed",
+  "phase": "usage-guide",
+  "acceptance": "partial-functional-evidence-only; guide repeated-WASM hold not observed; RSS/cold not reached",
+  "completedChecks": 15,
+  "runtimeCases": [
+    "opening/editing/exporting never starts interpreter or downloads runtime",
+    "32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download",
+    "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes bound to reopened export; editor report remains structural-only",
+    "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values",
+    "changing model tabs cancels an in-flight WASM execution and drops late results and IO",
+    "manual cancellation closes Worker and clears stale input/output after draft changes",
+    "invalid kernel broadcast is reported as failed",
+    "unregistered custom kernel is explicitly unverified without starting WASM",
+    "a signature targeting a different subgraph cannot be reported as a primary-model pass",
+    "native layer selection exports a TFLite slice, opens a new model tab, runs exact slice bytes and clears IO on close",
+    "optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor",
+    "32px OP options reject rounded JSON integers without changing the draft and preserve exact quoted int64 values without inference",
+    "32px non-unit SQUEEZE axes block export with a reason, preserving the draft without inference or download",
+    "32px variadic CONCATENATION infers and exports [1,4], actual raw BIN CPU/IO ZIP values agree, and native reopen/search locates the new OP",
+    "composition pattern A/B, independent histories, explicit interface, v2 draft, manual CPU and verified export/reopen",
+    "custom composition preserves opaque options and original IDs/weights; unregistered kernel remains unverified without WASM",
+    "shared beginner presets and all four random distributions preserve exact typed const/input bytes and actual CPU outputs",
+    "v3 random-rule draft restores distribution/seed, 32px view and redo, then exports identical TFLite bytes and reopens",
+    "MLIR remains exploration-only and never offers a TFLite execution or editing action"
+  ],
+  "archive": {
+    "path": "runtime-module32-warm-firefox.zip",
+    "bytes": 386200,
+    "sha256": "c8e7e3e5f5e4c491be62c4c704609c1a69ad242723d1da476c02673804cf1f00"
+  },
+  "files": [
+    {
+      "path": "provider-original.zip",
+      "bytes": 204320,
+      "sha256": "648d585c39624fc334f5febf46d21dbefb5c1c698132d5ac6f2aa4484728b3b6"
+    },
+    {
+      "path": "run.json",
+      "bytes": 14429,
+      "sha256": "9209120495291f7a8d11aa2ac54999c9ed5ebf28eb8f44834eda56c73640aef5"
+    },
+    {
+      "path": "jobs.json",
+      "bytes": 3970,
+      "sha256": "1066037717aa0bcb8a9809b3e99a0f04c404801cd6b8f9881e6909e218fcbf71"
+    },
+    {
+      "path": "listing.json",
+      "bytes": 948,
+      "sha256": "689225cd09592add04a0b9222655e2e5696a8c23c423808918d4bafa839abfc2"
+    },
+    {
+      "path": "authentication.json",
+      "bytes": 60023,
+      "sha256": "ece331fba3cf2e5b68a7e483daa442203289dd4fe0adae31b28ec5c5c4b55587"
+    },
+    {
+      "path": "desktop-firefox.png",
+      "bytes": 181833,
+      "sha256": "7578f582f420c2875759e3dd4478d5f1c32a6a36aa9b20c6956671bcd6ec81e7"
+    }
+  ]
+}

@@ -29,3 +29,11 @@
 原始路由記錄能看到主 Worker 與 WASM，沒有 Worker 內 transitive JS import 請求；因此新測試把 warm 取消移到實際 true-predicate WHILE，而不修改應用來重抓 WASM。兩次 runtime runs 保持：第一次手動取消，第二次關閉 loop 模型分頁，回到既有結果及原編輯頁，檢查 IO 清除與 Undo。新增 loop 模型及重啟既有結果的兩個 model contexts 明確計數並要求全部 native close，沒有降低 RSS 或 close 要求。
 
 新 loop 檔僅由公開 `runtimeLoopFixture(true)` 序列化產生，不在 Node 執行；使用已驗證 SHA／大小／檔案身分及 flush 意圖的精確清理 helper，只允許原 WASM／新固定 `.tflite` 兩個檔名。只有 native loop model／runtime 消費者已關閉才刪除；失敗而未觀測關閉時保留並寫入報告。12 項 helper／loop 選測及語法檢查通過；其中實際 Node CPU reference 只執行 false predicate。新 native 結果仍待取得，應用程式與原 RSS flow／policy 未變。
+
+## 第二批 Firefox：執行與分佈通過，指南的 warm 假設待修
+
+[40939718626](https://github.com/koviankevin/tflite-explorer/actions/runs/40939718626) 來源 `2932697bd99771f42663364433836ea4adc8b912`、tree `9c3da411cfc5009d290f4b25cbf3c72c329b352f`、build `8b2dcead11a3faa7` 已完成十九種 runtime 情境：實際 WHILE 手動取消與關閉分頁、raw BIN／CPU／ZIP、四種 const／input 分佈、v3 草稿／Redo／同 bytes 匯出、custom 與 signature 拒絕均通過，沒有 page error。這包含使用者要求的 const 同步功能，但仍只是候選的部分證據；正式 const 功能已在 preview.31 交付。
+
+流程接著在指南等待第二次 WASM GET 失敗：`Guide busy runtime was not observed`。同一頁已共用 compiled module，不應要求每次重新下載。Provider、CRC、來源與全部 305 core 檔已核對，reader exit 0；[原始 ZIP／截圖](results/runtime-module32-warm-firefox.zip)與[逐檔 SHA／失敗界線](results/runtime-module32-warm-firefox.json)保留，沒有到達 RSS 或 cold context，不能宣告效能修復。
+
+指南的新 warm 測試改用真正的 true-predicate WHILE，在實際 invoke 後開啟 F1，要求導覽停用、保持對話框開啟直到原有 30 秒期限終止 Worker，再要求導覽即時恢復、沒有 IO。前一步仍完整保留有限示範模型的成功 CPU／IO 斷言；deadline 與 memory 門檻不變。關閉 loop 分頁回原模型，核對既有編輯歷史未變。這新增兩個明確計數且必須 native close 的 model contexts，runtime 仍兩次；舊固定版本保留原 WASM hold 成功完成測試。公開暫存 helper 額外只允許固定 `guide-busy.tflite`，先記錄意圖、核對完整 SHA／檔案身分，在消費者關閉後精確刪檔與空目錄，否則保留原因。
