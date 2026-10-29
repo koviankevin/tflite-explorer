@@ -1,6 +1,6 @@
 # 共用公開 runtime module（候選，尚未部署）
 
-目前正式站仍為 preview.31。此分支準備 preview.32；新應用尚未取得 Hosted 瀏覽器／RSS 驗收，不能宣告 Firefox 問題已修復。
+目前正式站仍為 preview.31。此分支準備 preview.32；Hosted Chromium／WebKit 功能與原有記憶體驗收通過，Firefox 功能通過但原 RSS slope 仍失敗。候選尚未發布，不能宣告 Firefox 問題已修復。
 
 [原始 File／HTTP 對照](desktop-runtime-io.md#本機-file-對照的實際結果)顯示：空 Worker 與同 bytes 的本機 File 走勢接近，HTTP fetch 則重現較大父程序波動。原應用 RSS slope 仍失敗；此修正針對反覆載入相同公開 WASM 的成本，不將診斷值扣除或放寬門檻。
 
@@ -37,3 +37,23 @@
 流程接著在指南等待第二次 WASM GET 失敗：`Guide busy runtime was not observed`。同一頁已共用 compiled module，不應要求每次重新下載。Provider、CRC、來源與全部 305 core 檔已核對，reader exit 0；[原始 ZIP／截圖](results/runtime-module32-warm-firefox.zip)與[逐檔 SHA／失敗界線](results/runtime-module32-warm-firefox.json)保留，沒有到達 RSS 或 cold context，不能宣告效能修復。
 
 指南的新 warm 測試改用真正的 true-predicate WHILE，在實際 invoke 後開啟 F1，要求導覽停用、保持對話框開啟直到原有 30 秒期限終止 Worker，再要求導覽即時恢復、沒有 IO。前一步仍完整保留有限示範模型的成功 CPU／IO 斷言；deadline 與 memory 門檻不變。關閉 loop 分頁回原模型，核對既有編輯歷史未變。這新增兩個明確計數且必須 native close 的 model contexts，runtime 仍兩次；舊固定版本保留原 WASM hold 成功完成測試。公開暫存 helper 額外只允許固定 `guide-busy.tflite`，先記錄意圖、核對完整 SHA／檔案身分，在消費者關閉後精確刪檔與空目錄，否則保留原因。
+
+## 第三批候選：功能與 const 正常，Firefox RSS 未修復
+
+同一來源 `19728b95ec8a6c27a754c122384a47cd38f78474`、tree `5dc30653c9fe30fd120df63477ac8e2df26ef155`、build `e10444709f7d5d9d` 已取得下列獨立核對。Provider digest／ZIP CRC、來源、全部 305 core 檔與原圖均檢查；[原始資料與讀取器](results/runtime-module32-native-originals.zip)及[逐檔 SHA／實際退出紀錄](results/runtime-module32-native-originals.json)永久保留，沒有改寫失敗。
+
+| Hosted 引擎 | 功能與原生關閉 | 原有八輪記憶體結果 |
+| --- | --- | --- |
+| [Chromium](https://github.com/koviankevin/tflite-explorer/actions/runs/40941944370) | 33 項、19 runtime／分佈、5 指南；86 model／44 runtime close | 通過；RSS slope 7,593,984 bytes／輪，final drift 11,767,808 bytes，main heap drift −284,896 bytes |
+| [WebKit](https://github.com/koviankevin/tflite-explorer/actions/runs/40942282717) | 17 項、19 runtime／分佈、5 指南；67 model／20 runtime close | 通過；RSS slope 15,196,277.03 bytes／輪，final drift 48,992,256 bytes |
+| [Firefox](https://github.com/koviankevin/tflite-explorer/actions/runs/40941850313) | 17 項、19 runtime／分佈、5 指南；67 model／20 runtime close | **失敗**；RSS slope 27,376,493.71 bytes／輪，高於原 16 MiB 上限；final drift 119,689,216 bytes，peak growth 353,263,616 bytes |
+
+每個引擎仍驗證實際 CPU、raw BIN、四種 const／input 分佈、v3 草稿、Redo、逐 bytes 相同的 TFLite 重匯出與重新開啟。新 warm WHILE 的手動取消、分頁關閉及指南的實際 30 秒期限均通過，公開 loop 暫存的八個意圖／完成事件及原生關閉後刪除也已核對。Chromium／WebKit 的獨立 cold context 完成取消、兩次後續 CPU、一次 WASM GET、三個 runtime／一個 model close 和三次輸入清理；Firefox 在原 RSS 失敗後沒有到此步，不能沿用別的引擎宣稱通過。
+
+Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model／24 個 runtime 全 close、24 次輸入清理、八份完整 IO 數值與 CRC、自然 URL 期限及七個 owned processes 退出均核對。409 個匿名／file／shared 分類樣本全部可讀。依原六輪窗口另計的父程序與 Web Content 匿名斜率約為 12,605,615.54 與 14,362,097.37 bytes／輪；這些是稍後採樣的診斷欄位，沒有從實際 RSS 扣除。單次公開下載不是剩餘問題已解決的證據，也不足以判定物件洩漏或配置所有權。
+
+接下來先區分每次輸入 File／輸出 Blob 傳送、compiled module clone／Instance、runtime native allocations 的成本。以公開、無公司資料的限量對照分開驗證；不強制 GC、不修改原 RSS flow／policy／baseline、不假造 close，也不重跑成功部署。候選維持未發布。
+
+[1.25 GiB／21,005 OP 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/40941943495)、[main 發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/40941944769)及上述版本切換關卡均成功；核心範圍與可信 main run `40885892195` 的 87 檔 fingerprint 完全相同而沿用。四關卡的 provider／CRC／來源範圍認證 exit 0。它們不取代額外 Firefox RSS 的失敗，也不代表 preview.32 已正式交付。
+
+獨立讀取器的兩項格式修正亦保留：WebKit reader 起初錯用早於 desktop RSS 檔案加入的正式版基準，改為與 app 修正前 `940a9e5` 的四個完全相同 protocol／policy／fixture 檔比較；Chromium reader 起初誤要求 Desktop 專有的 `crcVerified` 欄位，原 Chromium schema 記錄的是完整 input／output SHA 和 `bytesVerified`。僅修讀取器並重核原檔，沒有重跑成功流程、改寫觀測或宣稱未記錄的 Chromium IO CRC。最終 WebKit、Chromium 與 Firefox 失敗診斷讀取器皆 exit 0。
