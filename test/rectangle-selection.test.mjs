@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {rectangleSelection} from '../src/rectangle-selection.js';
+import {updateLayerSelection} from '../src/pattern-selection.js';
 
 function fixture() {
     const doc=new EventTarget(),children=[],commits=[];let reads=0;
@@ -43,4 +44,15 @@ test('Alt-drag, touch and scrollbar gestures remain available to the existing gr
         const f=fixture();assert.equal(f.fire(f.target,'pointerdown',options).defaultPrevented,false);
         f.fire(f.doc,'pointermove',{clientX:250,clientY:250});f.fire(f.doc,'pointerup');assert.equal(f.children.length,0);assert.deepEqual(f.commits,[]);
     }
+});
+
+test('a rectangle toggles once at release; repeated moves, reversals and cancellation never flip the live selection',()=>{
+    const f=fixture(),selection=new Map([[2,new Set([0,9])]]);
+    const apply=()=>updateLayerSelection(selection,f.commits.at(-1),{toggle:true});
+    f.start();for(let i=0;i<15;i++)f.fire(f.doc,'pointermove',{clientX:260,clientY:260});
+    assert.deepEqual([...selection.get(2)],[0,9]);assert.equal(f.commits.length,0);
+    f.fire(f.doc,'pointermove',{clientX:125,clientY:125});f.fire(f.doc,'pointermove',{clientX:250,clientY:250});
+    f.fire(f.doc,'pointerup',{clientX:250,clientY:250});apply();assert.deepEqual([...selection.get(2)],[9]);
+    f.start();f.fire(f.doc,'pointerup',{clientX:250,clientY:250});apply();assert.deepEqual([...selection.get(2)],[9,0]);
+    f.start();f.controller.cancel();assert.equal(f.commits.length,2);assert.deepEqual([...selection.get(2)],[9,0]);
 });

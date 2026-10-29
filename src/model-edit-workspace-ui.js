@@ -8,6 +8,7 @@ import {runtimeClient} from './tflite-runtime-client.js';
 import {runtimeSkipped,runtimeSummary} from './tflite-runtime-policy.js';
 import {attachRuntimeReport} from './tflite-runtime-report.js';
 import {runtimeInputsUI} from './tflite-runtime-inputs-ui.js';
+import {modelEditLayout} from './model-edit-layout.js';
 import {compositionInterface} from './model-composition-draft.js';
 const NS='http://www.w3.org/2000/svg';
 export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getCompositionTargets=getTargets,getCompositionLabel=()=>'',getGraph,chooseModel,saveFile,onBusy,onExport,isCurrentResult,openResult,downloadReport}){
@@ -30,8 +31,8 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     const changes=()=>draft?editChanges(snapshot,draft.state):[];
     const modeButtons=()=>{
         $('explore-mode').setAttribute('aria-pressed',String(!active));
-        $('edit-mode').setAttribute('aria-pressed',String(active&&!snapshot?.composition));
-        $('compose-mode').setAttribute('aria-pressed',String(active&&!!snapshot?.composition));
+        $('edit-mode').setAttribute('aria-pressed',String(active));
+        $('edit-session').value=snapshot?.composition?'composition':'edit';
     };
     const mode=value=>{
         if(value===active){modeButtons();return;}
@@ -39,14 +40,18 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         active=value;root.hidden=!value;document.body.classList.toggle('editing-model',value);
         modeButtons();
         if(!value&&exploreScroll)requestAnimationFrame(()=>{$('target').scrollTo({left:exploreScroll.left,top:exploreScroll.top,behavior:'instant'});document.scrollingElement.scrollTo({left:exploreScroll.x,top:exploreScroll.y,behavior:'instant'});});
-        if(value){availability();schedule();}
+        if(value){if(!pendingDraft&&!draftTask)$('edit-draft-banner').hidden=true;availability();schedule();}
     };
     function availability(){
-        const composing=!!snapshot?.composition;$('edit-mode').disabled=busy||getFormat()!=='tflite';$('compose-mode').disabled=busy||getFormat()!=='tflite';modeButtons();
-        $('edit-workspace-title').textContent=composing?'組合模型草稿':'編輯實際模型';$('edit-export-description').textContent=composing?'本機處理 · 匯出所選片段組成的獨立模型':'模型全程在本機處理 · 先驗證，再匯出整份模型';$('edit-export').textContent=composing?'驗證並匯出組合模型':'驗證並匯出模型';$('edit-add-selection').textContent=composing?'加入圖上選取':'同步圖上選取';
+        const composing=!!snapshot?.composition,editable=getFormat()==='tflite';$('edit-mode').disabled=busy||!editable;
+        for(const id of ['compose-mode','compose-capture']){$(id).hidden=!editable;$(id).disabled=busy||!editable||!getCompositionTargets().length;}
+        $('compose-mode').hidden=!editable||root.ownerDocument.body.classList.contains('pattern-picking');
+        $('edit-session').disabled=busy||!draft;$('edit-session').querySelector('[value=composition]').disabled=!composing&&!parked.composition;
+        $('edit-restart').disabled=busy||!draft;modeButtons();
+        $('edit-workspace-title').textContent=composing?'組合模型草稿':'編輯實際模型';$('edit-export-description').textContent=composing?'本機處理 · 匯出所選片段組成的獨立模型':'模型全程在本機處理 · 先驗證，再匯出整份模型';$('edit-export').textContent=composing?'驗證並匯出組合模型':'驗證並匯出模型';$('edit-add-selection').textContent='加入探索圖已選 OP';
         const valid=!!draft,dirty=changes().length>0;
         for(const id of ['edit-add-before','edit-add-after','edit-delete','edit-restore','edit-clear','edit-add-selection','edit-undo','edit-redo','edit-export'])$(id).disabled=busy||!valid;
-        $('edit-undo').disabled=busy||!draft?.canUndo;$('edit-redo').disabled=busy||!draft?.canRedo;$('edit-clear').disabled=busy||!dirty;
+        $('edit-undo').disabled=busy||!draft?.canUndo;$('edit-redo').disabled=busy||!draft?.canRedo;$('edit-clear').disabled=busy||!draft?.canUndo&&!draft?.canRedo;
         const node=draft?.state.nodes.find(n=>n.id===selected);
         $('edit-add-before').disabled=$('edit-add-after').disabled=busy||!node?.cloneable||!!node?.removed;
         $('edit-delete').disabled=busy||!node?.removable||!!node?.removed;$('edit-restore').hidden=!node?.removed;
@@ -115,12 +120,14 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     }
     function schedule(){if(frame)return;frame=requestAnimationFrame(()=>{frame=0;if(!active||!draft)return;layout();});}
     function layout(){
-        const state=draft.state,font=Number($('edit-font').value),width=Math.round(310*Math.sqrt(font/14)),groups=[...new Set(state.nodes.map(n=>n.source.graph))].sort((a,b)=>a-b),cards=new Map([...world.querySelectorAll('[data-edit-node]')].map(e=>[e.dataset.editNode,e]));
-        let boundaryY=50;for(const e of world.querySelectorAll('.edit-boundary')){e.style.width=`${width}px`;e.style.left='24px';e.style.top=`${boundaryY}px`;boundaryY+=e.offsetHeight+24;}
-        let height=Math.max(boundaryY,400);world.querySelectorAll('.edit-block-label').forEach(e=>e.remove());
-        for(const [column,graph] of groups.entries()){let y=54;const x=width+120+column*(width+120),label=make('div',`block/subgraph ${graph}`,'edit-block-label');label.dataset.editBlock=String(graph);label.style.left=`${x}px`;label.style.top='12px';world.append(label);
-            for(const node of state.nodes.filter(n=>n.source.graph===graph).sort((a,b)=>editPosition(state,a)-editPosition(state,b))){const e=cards.get(node.id);e.style.width=`${width}px`;e.style.left=`${x}px`;e.style.top=`${y}px`;y+=e.offsetHeight+56;}height=Math.max(height,y+40);}
-        const worldWidth=(groups.length+1)*(width+120)+80;world.style.width=`${worldWidth}px`;world.style.height=`${height}px`;svg.setAttribute('width',String(worldWidth));svg.setAttribute('height',String(height));svg.setAttribute('viewBox',`0 0 ${worldWidth} ${height}`);scale();draw();
+        const state=draft.state,font=Number($('edit-font').value),width=Math.round(310*Math.sqrt(font/14)),cards=new Map([...world.querySelectorAll('[data-edit-node]')].map(e=>[e.dataset.editNode,e]));
+        for(const e of cards.values())e.style.width=`${width}px`;
+        let boundaryY=54;for(const e of world.querySelectorAll('.edit-boundary')){e.style.width=`${width}px`;e.style.left='24px';e.style.top=`${boundaryY}px`;boundaryY+=e.offsetHeight+32;}
+        const plan=modelEditLayout([...state.nodes].sort((a,b)=>editPosition(state,a)-editPosition(state,b)),state.values,new Map([...cards].map(([id,e])=>[id,e.offsetHeight])),{width,left:width+164});
+        world.querySelectorAll('.edit-block-label').forEach(e=>e.remove());
+        for(const block of plan.blocks){const label=make('div',`block/subgraph ${block.graph}`,'edit-block-label');label.dataset.editBlock=String(block.graph);label.style.left=`${block.x}px`;label.style.top=`${block.y}px`;world.append(label);}
+        for(const [id,p]of plan.positions){const e=cards.get(id);e.style.left=`${p.x}px`;e.style.top=`${p.y}px`;}
+        const worldWidth=plan.width,height=Math.max(plan.height,boundaryY+40);world.style.width=`${worldWidth}px`;world.style.height=`${height}px`;svg.setAttribute('width',String(worldWidth));svg.setAttribute('height',String(height));svg.setAttribute('viewBox',`0 0 ${worldWidth} ${height}`);scale();draw();
     }
     function scale(){world.style.transform=`scale(${zoom})`;$('edit-spacer').style.width=`${world.offsetWidth*zoom}px`;$('edit-spacer').style.height=`${world.offsetHeight*zoom}px`;$('edit-zoom-value').textContent=`${Math.round(zoom*100)}%`;}
     function zoomAt(next,x=viewport.clientWidth/2,y=viewport.clientHeight/2){
@@ -144,7 +151,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     $('edit-delete').onclick=()=>apply({kind:'remove',node:selected,boundary:$('edit-boundary').checked});$('edit-restore').onclick=()=>apply({kind:'restore',node:selected});
     $('edit-expose').onchange=()=>apply({kind:'expose',node:selected,enabled:$('edit-expose').checked});$('edit-boundary').onchange=()=>{const n=draft?.state.nodes.find(n=>n.id===selected);if(n?.removed)apply({kind:'remove',node:selected,boundary:$('edit-boundary').checked});};
     const travel=redo=>{if(!busy&&draft){draft[redo?'redo':'undo']();armed=null;if(!draft.state.nodes.some(n=>n.id===selected))selected=draft.state.nodes[0]?.id||null;render();}};
-    $('edit-undo').onclick=()=>travel(false);$('edit-redo').onclick=()=>travel(true);$('edit-clear').onclick=()=>{if(!busy&&draft){draft.clear();armed=null;selected=draft.state.nodes[0]?.id||null;render();message('草稿已清除，原模型保持不變。');}};
+    $('edit-undo').onclick=()=>travel(false);$('edit-redo').onclick=()=>travel(true);$('edit-clear').onclick=()=>{if(!busy&&draft){draft.clear();armed=null;selected=draft.state.nodes[0]?.id||null;render();message('已撤銷所有變更；原始編輯範圍保留。要清空範圍，請用「重新開始草稿」。');}};
     $('edit-zoom-in').onclick=()=>{zoomAt(zoom*1.25);};$('edit-zoom-out').onclick=()=>{zoomAt(zoom/1.25);};$('edit-fit').onclick=()=>{zoom=Math.max(.15,Math.min(1,viewport.clientWidth/world.offsetWidth,viewport.clientHeight/world.offsetHeight));scale();viewport.scrollTo(0,0);};
     $('edit-font').onchange=()=>{root.style.setProperty('--edit-font',`${$('edit-font').value}px`);schedule();};
     $('edit-find').oninput=()=>{const q=$('edit-find').value.toLowerCase();for(const e of world.querySelectorAll('[data-edit-node]'))e.classList.toggle('find-hit',!!q&&e.textContent.toLowerCase().includes(q));};
@@ -204,7 +211,14 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         const previous=stash[composition?'composition':'edit'];delete stash[composition?'composition':'edit'];api.reset();parked=stash;
         if(previous)await api.restoreTab({...previous,sessions:stash});return true;
     }
-    $('explore-mode').onclick=()=>mode(false);$('edit-mode').onclick=()=>api.open().catch(e=>message(e.message));$('compose-mode').onclick=()=>api.composeSelection().catch(e=>banner(e.message));
+    $('explore-mode').onclick=()=>mode(false);
+    $('edit-mode').onclick=()=>{if(snapshot?.composition&&owner===getSource())mode(true);else api.open().catch(e=>message(e.message));};
+    for(const id of ['compose-mode','compose-capture'])$(id).onclick=()=>api.composeSelection().catch(e=>banner(e.message));
+    $('edit-session').onchange=async()=>{try{if($('edit-session').value==='edit')await api.open();else if(await switchEditor(true))mode(true);}catch(e){message(e.message);}finally{availability();}};
+    const restartDialog=$('edit-restart-dialog');
+    $('edit-restart').onclick=()=>{if(busy||!draft)return;$('edit-restart-description').textContent=`${snapshot.composition?'片段組合':'原模型編輯'} · ${draft.state.nodes.length} 個 OP · ${draft.history.commands.length} 筆命令／${draft.history.redo.length} 筆重做。`;restartDialog.showModal();};
+    $('edit-restart-cancel').onclick=()=>restartDialog.close();restartDialog.addEventListener('keydown',e=>e.stopPropagation());
+    $('edit-restart-confirm').onclick=async()=>{if(busy||!draft)return;const stash={...parked};setBusy(true);try{await recovery.park();restartDialog.close();api.reset();parked=stash;availability();banner('目前草稿已重置。請在探索圖重新選取 OP，再編輯或加入組合草稿；已保存的備份可從「編輯草稿」找回。');}catch(e){message(e.message);setBusy(false);}};
     resizeInFrame(document.querySelector('.app-header'),()=>{const h=document.querySelector('.app-header').offsetHeight;root.style.setProperty('--edit-head',`${h}px`);$('edit-draft-banner').style.top=`${h+8}px`;schedule();});
     window.addEventListener('beforeunload',e=>{if(api.hasUnexported){e.preventDefault();e.returnValue='';}});
     const api={
@@ -228,11 +242,12 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         },
         advancedLocation(){const n=draft?.state.nodes.find(n=>n.id===selected);return n&&!n.fresh&&!n.removed&&!changes().length?n.source:null;},
         handleKey(e){if(e.defaultPrevented||e.isComposing||e.altKey)return false;const input=e.target.closest?.('input,textarea,select,[contenteditable="true"]');if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!input){e.preventDefault();e.stopPropagation();travel(e.shiftKey);return true;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='f'){e.preventDefault();e.stopPropagation();$('edit-find').focus();return true;}if(e.key==='Escape'&&armed){e.preventDefault();source(armed);return true;}return false;},
-        enable(value){$('edit-mode').disabled=!value;$('compose-mode').disabled=!value;},
-        reset(){runtime.cancel();runtimeInputs.cancel();checked=null;$('edit-runtime-cancel').hidden=true;$('edit-runtime-download').disabled=true;$('edit-runtime-result').textContent='尚未執行';recovery.detach();generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;parked={};selected=null;armed=null;exported='';exportedToken=null;savedDraft='';draftTask=false;newOps.reset();$('edit-signatures').checked=false;pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;onBusy(false);$('edit-mode').disabled=true;},
+        selectionChanged(){availability();},
+        enable(value){$('edit-mode').disabled=!value;for(const id of ['compose-mode','compose-capture'])$(id).disabled=!value||!getCompositionTargets().length;},
+        reset(){runtime.cancel();runtimeInputs.cancel();checked=null;$('edit-runtime-cancel').hidden=true;$('edit-runtime-download').disabled=true;$('edit-runtime-result').textContent='尚未執行';recovery.detach();generation++;endGesture();if(frame){cancelAnimationFrame(frame);frame=0;}mode(false);owner=null;snapshot=null;draft=null;parked={};selected=null;armed=null;exported='';exportedToken=null;savedDraft='';draftTask=false;newOps.reset();$('edit-signatures').checked=false;pages.clear();world.querySelectorAll('.edit-node,.edit-boundary,.edit-block-label').forEach(n=>n.remove());svg.replaceChildren();$('edit-node-details').replaceChildren();$('edit-change-list').replaceChildren();busy=false;onBusy(false);$('edit-mode').disabled=true;availability();},
         async open(){
             if(!supportsModelEditing(getFormat())){message(TFLITE_EDIT_MESSAGE);return;}
-            if(snapshot?.composition&&!await switchEditor(false))return;
+            if((snapshot?.composition||!snapshot&&parked.edit)&&!await switchEditor(false))return;
             if(!getSource())return;if(owner===getSource()&&draft){mode(true);const missing=getTargets().filter(t=>!snapshot.nodes.some(n=>n.source.graph===t.graph&&n.source.node===t.node));if(missing.length)await extend(missing);return;}
             owner=getSource();const ticket=++generation;mode(true);root.scrollTo(0,0);setBusy(true);message('載入編輯範圍（模型與權重保留本機）…');
             try{const next=await rpc('editWorkspaceOpen',{targets:getTargets(),graph:getGraph()});if(!live(ticket))return;snapshot=next;draft=modelEditDraft(next);recovery.attach();selected=next.selected[0];pages.clear();zoom=1;exported='';$('edit-font').value=$('graph-font-size').value;root.style.setProperty('--edit-font',`${$('edit-font').value}px`);render();message('點來源輸出端，再點目標輸入端接線。藍色虛線是保留的控制流程；新增輸出自動建立。');requestAnimationFrame(()=>$('edit-fit').click());}
@@ -242,7 +257,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
             if(busy||!getSource()||!supportsModelEditing(getFormat()))return;
             const targets=getCompositionTargets();
             if(!targets.length&&!snapshot?.composition&&!parked.composition){banner('請先在原始圖圈選 OP，或點選一筆 pattern 匹配結果，再加入組合草稿。');return;}
-            if(snapshot&&!snapshot.composition&&!await switchEditor(true))return;
+            if((snapshot&&!snapshot.composition||!snapshot&&parked.composition)&&!await switchEditor(true))return;
             if(snapshot?.composition){mode(true);if(targets.length)await extend(targets,getCompositionLabel());return;}
             if(!targets.length)return;owner=getSource();const ticket=++generation;mode(true);setBusy(true);
             try{const next=await rpc('editWorkspaceOpen',{targets,composition:true});if(!live(ticket))return;const nextDraft=modelEditDraft(next,[importCommand(targets,getCompositionLabel())]);snapshot=next;draft=nextDraft;selected=draft.state.nodes[0]?.id||null;armed=null;pages.clear();zoom=1;recovery.attach();$('edit-font').value=$('graph-font-size').value;root.style.setProperty('--edit-font',`${$('edit-font').value}px`);render();message('片段已加入獨立組合草稿。可返回探索加入下一個片段，再新增 OP 接線；原模型保留。');requestAnimationFrame(()=>$('edit-fit').click());}

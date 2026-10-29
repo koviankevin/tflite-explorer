@@ -2,6 +2,7 @@ import {mkdir,readFile,writeFile,cp,mkdtemp,rename,lstat} from 'node:fs/promises
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {fixture} from '../test/fixture.mjs';
+import {executableDemoFixture} from '../test/executable-demo-fixture.mjs';
 import {MLIR_BRANCH} from '../test/mlir-fixture.mjs';
 import {root,gitSource,webSources,canonical,sha256,filesIn,writeManifest,verifyArtifact,buildDestination,buildEvent} from './lib/release-artifact.mjs';
 import {readProfile,installProfile,copyWebTree} from './lib/build-profile.mjs';
@@ -37,7 +38,7 @@ export async function buildSite({output='dist',profile:profilePath}={}) {
         for(const [en,zh] of translations)view=view.replaceAll(`'${en}'`,`'${zh}'`);
         await writeFile(dest('vendor/netron/view.js'),view);
         for(const [name,options] of [['demo.tflite',{graphCount:2,repeats:4}],['lora-demo.tflite',{graphCount:1,variant:'lora'}]]) {
-            const demo=fixture(options),buffer=new Uint8Array(demo.totalBytes);buffer.set(demo.data);await writeFile(dest(name),buffer);
+            const demo=name==='demo.tflite'?await executableDemoFixture():fixture(options),buffer=new Uint8Array(demo.totalBytes);buffer.set(demo.data);await writeFile(dest(name),buffer);
         }
         await writeFile(dest('demo.mlir'),MLIR_BRANCH+'\n');
         await cp(source('vendor/netron/LICENSE'),dest('LICENSE-Netron.txt'));

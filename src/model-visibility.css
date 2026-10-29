@@ -82,3 +82,5 @@
 #target .graph-node.marquee-hit > .node-border { stroke: #18745d !important; stroke-width: 4px !important; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
 #target .graph-node.marquee-hit .node-item-type path { fill: #c8f0dc !important; }
 #target .graph-node.marquee-hit .node-item-type text { fill: #103d30 !important; }
+
+#target .graph-node.marquee-remove > .node-border{stroke:#b74735!important;stroke-width:4px!important;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
