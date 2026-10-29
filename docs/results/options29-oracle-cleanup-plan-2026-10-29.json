@@ -1,0 +1,35 @@
+{
+  "deleteMode": "Exact files only, no recursive removal, keep directory and evidence",
+  "createdAt": "2026-10-29T10:51:02.6733725Z",
+  "eligibility": "Original Node producers/readers actually exited; oracle and preview29 publication successful; no remaining consumers depend on temporary payload files",
+  "classification": "Verified generated intermediate, not a duplicate or user model",
+  "producer": "Original plan/events and retained pinned producers",
+  "entries": [
+    {
+      "bytes": 1349965216,
+      "name": "physical-source.tflite",
+      "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586"
+    },
+    {
+      "bytes": 1350445736,
+      "name": "full-edited-source.tflite",
+      "sha256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045"
+    },
+    {
+      "bytes": 8151,
+      "name": "reference-writer.mjs",
+      "sha256": "b4b7b176de198e3ff145a15055c1f5fdccdfb69fdb503ffc1ead8b146d1278f0"
+    }
+  ],
+  "task": "Cleanup exact registered options29 synthetic intermediates",
+  "recovery": "Read append-only intents/results and actual path before resuming; never rerun blindly",
+  "root": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer",
+  "retained": [
+    "docs/results/runtime29-physical-writer-oracle.json",
+    "docs/results/runtime29-writer-oracle-producer-2026-10-29.mjs.txt",
+    "docs/results/runtime29-writer-oracle-resume-2026-10-29.mjs.txt",
+    "docs/results/runtime29-writer-oracle-plan-2026-10-29.json",
+    "docs/results/runtime29-writer-oracle-events-2026-10-29.jsonl"
+  ],
+  "scope": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary"
+}

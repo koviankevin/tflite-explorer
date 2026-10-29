@@ -1,0 +1,1863 @@
+{
+  "authentication": "passed",
+  "failures": [
+    {
+      "run": {
+        "id": 40856894302,
+        "name": "Public site browser smoke",
+        "node_id": "WFR_kwLOVSeuLc8AAAAJg0K7Xg",
+        "head_branch": "codex/in-app-usage-guide",
+        "head_sha": "f944e372e3b3542d5afebd23fa91c44cd5653f5e",
+        "path": ".github/workflows/production-smoke.yml",
+        "display_title": "Public site browser smoke",
+        "run_number": 93,
+        "event": "workflow_dispatch",
+        "status": "completed",
+        "conclusion": "failure",
+        "workflow_id": 397790592,
+        "check_suite_id": 110746522609,
+        "check_suite_node_id": "CS_kwDOVSeuLc8AAAAZyQHT8Q",
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302",
+        "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40856894302",
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls/120",
+            "id": 5066246348,
+            "number": 120,
+            "head": {
+              "ref": "codex/in-app-usage-guide",
+              "sha": "f944e372e3b3542d5afebd23fa91c44cd5653f5e",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            },
+            "base": {
+              "ref": "main",
+              "sha": "2f69d7b05c75614a8bdd704e0d87afa6144274ab",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            }
+          }
+        ],
+        "created_at": "2026-10-29T10:21:19Z",
+        "updated_at": "2026-10-29T10:24:32Z",
+        "actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [],
+        "run_started_at": "2026-10-29T10:21:19Z",
+        "triggering_actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302/jobs",
+        "logs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302/logs",
+        "check_suite_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-suites/110746522609",
+        "artifacts_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302/artifacts",
+        "cancel_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302/cancel",
+        "rerun_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/workflows/397790592",
+        "head_commit": {
+          "id": "f944e372e3b3542d5afebd23fa91c44cd5653f5e",
+          "tree_id": "a0a1b22b4145ea2165a916e122222dbeeff709aa",
+          "message": "Add an in-app guide for model workflows",
+          "timestamp": "2026-10-29T10:20:38Z",
+          "author": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          },
+          "committer": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          }
+        },
+        "repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        },
+        "head_repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        }
+      },
+      "jobs": {
+        "total_count": 2,
+        "jobs": [
+          {
+            "id": 123390005444,
+            "run_id": 40856894302,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcup4QxA",
+            "head_sha": "f944e372e3b3542d5afebd23fa91c44cd5653f5e",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123390005444",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40856894302/job/123390005444",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-29T10:21:20Z",
+            "started_at": "2026-10-29T10:21:22Z",
+            "completed_at": "2026-10-29T10:24:32Z",
+            "name": "site-upgrade",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-29T10:21:23Z",
+                "completed_at": "2026-10-29T10:21:23Z"
+              },
+              {
+                "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-29T10:21:24Z",
+                "completed_at": "2026-10-29T10:21:26Z"
+              },
+              {
+                "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-29T10:21:26Z",
+                "completed_at": "2026-10-29T10:21:31Z"
+              },
+              {
+                "name": "Run npm ci --ignore-scripts",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-29T10:21:31Z",
+                "completed_at": "2026-10-29T10:21:32Z"
+              },
+              {
+                "name": "Run node scripts/install-browser.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-29T10:21:32Z",
+                "completed_at": "2026-10-29T10:21:51Z"
+              },
+              {
+                "name": "Run node test/browser/versioned-site.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-29T10:21:51Z",
+                "completed_at": "2026-10-29T10:22:05Z"
+              },
+              {
+                "name": "Run node test/browser/production-smoke.mjs",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 7,
+                "started_at": "2026-10-29T10:22:05Z",
+                "completed_at": "2026-10-29T10:24:28Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-10-29T10:24:28Z",
+                "completed_at": "2026-10-29T10:24:29Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-10-29T10:24:29Z",
+                "completed_at": "2026-10-29T10:24:30Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 17,
+                "started_at": "2026-10-29T10:24:30Z",
+                "completed_at": "2026-10-29T10:24:30Z"
+              },
+              {
+                "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 18,
+                "started_at": "2026-10-29T10:24:30Z",
+                "completed_at": "2026-10-29T10:24:30Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 19,
+                "started_at": "2026-10-29T10:24:30Z",
+                "completed_at": "2026-10-29T10:24:30Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123390005444",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": 1000003469,
+            "runner_name": "GitHub Actions 1000003469",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 123390007338,
+            "run_id": 40856894302,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40856894302",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcup4YKg",
+            "head_sha": "f944e372e3b3542d5afebd23fa91c44cd5653f5e",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123390007338",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40856894302/job/123390007338",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-10-29T10:21:21Z",
+            "started_at": "2026-10-29T10:21:21Z",
+            "completed_at": "2026-10-29T10:21:20Z",
+            "name": "public-smoke",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123390007338",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      },
+      "artifact": {
+        "id": 12890026798,
+        "node_id": "MDg6QXJ0aWZhY3QxMjg5MDAyNjc5OA==",
+        "name": "versioned-delivery-smoke-f944e372e3b3542d5afebd23fa91c44cd5653f5e-1",
+        "size_in_bytes": 179439,
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12890026798",
+        "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12890026798/zip",
+        "expired": false,
+        "digest": "sha256:f452881efaaf6d670de14fea336d5437cade15f6db21590c32dad7fdf96f4704",
+        "created_at": "2026-10-29T10:24:29Z",
+        "updated_at": "2026-10-29T10:24:29Z",
+        "expires_at": "2026-11-28T10:24:28Z",
+        "workflow_run": {
+          "id": 40856894302,
+          "repository_id": 1428663853,
+          "head_repository_id": 1428663853,
+          "head_branch": "codex/in-app-usage-guide",
+          "head_sha": "f944e372e3b3542d5afebd23fa91c44cd5653f5e"
+        }
+      },
+      "originalBytes": 179439,
+      "sha256": "f452881efaaf6d670de14fea336d5437cade15f6db21590c32dad7fdf96f4704",
+      "error": "Error: Guide DOM timeout: ()=>document.querySelector('#usage-guide').open\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:12:119)\n    at async guide (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:14:64)\n    at async usageGuideFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:40:44)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:108:1091",
+      "guide": {
+        "cases": [
+          "F1 and header help use manual topic tabs, Escape restores focus, and no-model actions explain requirements without opening workers",
+          "guide preserves selected pattern and editor commands/32px/zoom; both 14-inch logical desktop sizes keep the dialog and controls visible",
+          "guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes",
+          "a running interpreter disables guide navigation; completion refreshes eligibility in the open guide and existing draft survives"
+        ],
+        "layouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "height": 640,
+            "dialog": {
+              "x": 223,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1143,
+              "bottom": 608,
+              "left": 223
+            },
+            "content": {
+              "x": 250,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1116,
+              "bottom": 541.203125,
+              "left": 250
+            },
+            "close": {
+              "x": 1038,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1116,
+              "bottom": 93.390625,
+              "left": 1038
+            }
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "height": 640,
+            "dialog": {
+              "x": 180,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1100,
+              "bottom": 608,
+              "left": 180
+            },
+            "content": {
+              "x": 207,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1073,
+              "bottom": 541.203125,
+              "left": 207
+            },
+            "close": {
+              "x": 995,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1073,
+              "bottom": 93.390625,
+              "left": 995
+            }
+          }
+        ],
+        "modelWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "runtimeWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "screenshot": true
+      }
+    },
+    {
+      "run": {
+        "id": 40857648968,
+        "name": "Public site browser smoke",
+        "node_id": "WFR_kwLOVSeuLc8AAAAJg04_SA",
+        "head_branch": "codex/in-app-usage-guide",
+        "head_sha": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba",
+        "path": ".github/workflows/production-smoke.yml",
+        "display_title": "Public site browser smoke",
+        "run_number": 94,
+        "event": "workflow_dispatch",
+        "status": "completed",
+        "conclusion": "failure",
+        "workflow_id": 397790592,
+        "check_suite_id": 110748572844,
+        "check_suite_node_id": "CS_kwDOVSeuLc8AAAAZySEcrA",
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968",
+        "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40857648968",
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls/120",
+            "id": 5066246348,
+            "number": 120,
+            "head": {
+              "ref": "codex/in-app-usage-guide",
+              "sha": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            },
+            "base": {
+              "ref": "main",
+              "sha": "2f69d7b05c75614a8bdd704e0d87afa6144274ab",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            }
+          }
+        ],
+        "created_at": "2026-10-29T10:26:58Z",
+        "updated_at": "2026-10-29T10:30:12Z",
+        "actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [],
+        "run_started_at": "2026-10-29T10:26:58Z",
+        "triggering_actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968/jobs",
+        "logs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968/logs",
+        "check_suite_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-suites/110748572844",
+        "artifacts_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968/artifacts",
+        "cancel_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968/cancel",
+        "rerun_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/workflows/397790592",
+        "head_commit": {
+          "id": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba",
+          "tree_id": "ed0fdc0b3561eaf12c88fa34d946d6af587a1249",
+          "message": "Observe guide modal transitions and await native dismissal",
+          "timestamp": "2026-10-29T10:26:43Z",
+          "author": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          },
+          "committer": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          }
+        },
+        "repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        },
+        "head_repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        }
+      },
+      "jobs": {
+        "total_count": 2,
+        "jobs": [
+          {
+            "id": 123392550397,
+            "run_id": 40857648968,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcusTl_Q",
+            "head_sha": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123392550397",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40857648968/job/123392550397",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-29T10:27:00Z",
+            "started_at": "2026-10-29T10:27:02Z",
+            "completed_at": "2026-10-29T10:30:12Z",
+            "name": "site-upgrade",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-29T10:27:02Z",
+                "completed_at": "2026-10-29T10:27:03Z"
+              },
+              {
+                "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-29T10:27:03Z",
+                "completed_at": "2026-10-29T10:27:06Z"
+              },
+              {
+                "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-29T10:27:06Z",
+                "completed_at": "2026-10-29T10:27:11Z"
+              },
+              {
+                "name": "Run npm ci --ignore-scripts",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-29T10:27:11Z",
+                "completed_at": "2026-10-29T10:27:12Z"
+              },
+              {
+                "name": "Run node scripts/install-browser.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-29T10:27:12Z",
+                "completed_at": "2026-10-29T10:27:30Z"
+              },
+              {
+                "name": "Run node test/browser/versioned-site.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-29T10:27:30Z",
+                "completed_at": "2026-10-29T10:27:45Z"
+              },
+              {
+                "name": "Run node test/browser/production-smoke.mjs",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 7,
+                "started_at": "2026-10-29T10:27:45Z",
+                "completed_at": "2026-10-29T10:30:07Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-10-29T10:30:07Z",
+                "completed_at": "2026-10-29T10:30:08Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-10-29T10:30:08Z",
+                "completed_at": "2026-10-29T10:30:09Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 17,
+                "started_at": "2026-10-29T10:30:09Z",
+                "completed_at": "2026-10-29T10:30:09Z"
+              },
+              {
+                "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 18,
+                "started_at": "2026-10-29T10:30:09Z",
+                "completed_at": "2026-10-29T10:30:10Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 19,
+                "started_at": "2026-10-29T10:30:10Z",
+                "completed_at": "2026-10-29T10:30:10Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123392550397",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": 1000003473,
+            "runner_name": "GitHub Actions 1000003473",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 123392552353,
+            "run_id": 40857648968,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40857648968",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcusTtoQ",
+            "head_sha": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123392552353",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40857648968/job/123392552353",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-10-29T10:27:00Z",
+            "started_at": "2026-10-29T10:27:00Z",
+            "completed_at": "2026-10-29T10:26:59Z",
+            "name": "public-smoke",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123392552353",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      },
+      "artifact": {
+        "id": 12889423505,
+        "node_id": "MDg6QXJ0aWZhY3QxMjg4OTQyMzUwNQ==",
+        "name": "versioned-delivery-smoke-444d291e679d9d57fbe3e00c8b7498467fa4f2ba-1",
+        "size_in_bytes": 179381,
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12889423505",
+        "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12889423505/zip",
+        "expired": false,
+        "digest": "sha256:e85798bcaa0d1c7c2058fb6cff4f184d239453717612e298123b9e4fae0caebe",
+        "created_at": "2026-10-29T10:30:08Z",
+        "updated_at": "2026-10-29T10:30:08Z",
+        "expires_at": "2026-11-28T10:30:07Z",
+        "workflow_run": {
+          "id": 40857648968,
+          "repository_id": 1428663853,
+          "head_repository_id": 1428663853,
+          "head_branch": "codex/in-app-usage-guide",
+          "head_sha": "444d291e679d9d57fbe3e00c8b7498467fa4f2ba"
+        }
+      },
+      "originalBytes": 179381,
+      "sha256": "e85798bcaa0d1c7c2058fb6cff4f184d239453717612e298123b9e4fae0caebe",
+      "error": "Error: Guide DOM timeout: ()=>document.querySelector('#usage-guide').open\n    at until (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:12:119)\n    at async guide (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:14:476)\n    at async usageGuideFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:40:44)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:108:1091",
+      "guide": {
+        "cases": [
+          "F1 and header help use manual topic tabs, Escape restores focus, and no-model actions explain requirements without opening workers",
+          "guide preserves selected pattern and editor commands/32px/zoom; both 14-inch logical desktop sizes keep the dialog and controls visible",
+          "guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes",
+          "a running interpreter disables guide navigation; completion refreshes eligibility in the open guide and existing draft survives"
+        ],
+        "layouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "height": 640,
+            "dialog": {
+              "x": 223,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1143,
+              "bottom": 608,
+              "left": 223
+            },
+            "content": {
+              "x": 250,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1116,
+              "bottom": 541.203125,
+              "left": 250
+            },
+            "close": {
+              "x": 1038,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1116,
+              "bottom": 93.390625,
+              "left": 1038
+            }
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "height": 640,
+            "dialog": {
+              "x": 180,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1100,
+              "bottom": 608,
+              "left": 180
+            },
+            "content": {
+              "x": 207,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1073,
+              "bottom": 541.203125,
+              "left": 207
+            },
+            "close": {
+              "x": 995,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1073,
+              "bottom": 93.390625,
+              "left": 995
+            }
+          }
+        ],
+        "modelWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "runtimeWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "navigation": [
+          {
+            "topic": "edit",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "pattern",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "save",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "run",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-run",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "run",
+            "before": {
+              "active": "guide-tab-edit",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "guide": false
+            }
+          }
+        ],
+        "screenshot": true
+      }
+    },
+    {
+      "run": {
+        "id": 40858401237,
+        "name": "Public site browser smoke",
+        "node_id": "WFR_kwLOVSeuLc8AAAAJg1m51Q",
+        "head_branch": "codex/in-app-usage-guide",
+        "head_sha": "1edca7de112805778c894d2862a6a9c7ab8dc165",
+        "path": ".github/workflows/production-smoke.yml",
+        "display_title": "Public site browser smoke",
+        "run_number": 95,
+        "event": "workflow_dispatch",
+        "status": "completed",
+        "conclusion": "failure",
+        "workflow_id": 397790592,
+        "check_suite_id": 110750678664,
+        "check_suite_node_id": "CS_kwDOVSeuLc8AAAAZyUE-iA",
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237",
+        "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40858401237",
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls/120",
+            "id": 5066246348,
+            "number": 120,
+            "head": {
+              "ref": "codex/in-app-usage-guide",
+              "sha": "1edca7de112805778c894d2862a6a9c7ab8dc165",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            },
+            "base": {
+              "ref": "main",
+              "sha": "2f69d7b05c75614a8bdd704e0d87afa6144274ab",
+              "repo": {
+                "id": 1428663853,
+                "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+                "name": "tflite-explorer"
+              }
+            }
+          }
+        ],
+        "created_at": "2026-10-29T10:32:46Z",
+        "updated_at": "2026-10-29T10:35:39Z",
+        "actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [],
+        "run_started_at": "2026-10-29T10:32:46Z",
+        "triggering_actor": {
+          "login": "koviankevin",
+          "id": 337180773,
+          "node_id": "U_kgDOFBj4ZQ",
+          "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/koviankevin",
+          "html_url": "https://github.com/koviankevin",
+          "followers_url": "https://api.github.com/users/koviankevin/followers",
+          "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+          "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+          "repos_url": "https://api.github.com/users/koviankevin/repos",
+          "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237/jobs",
+        "logs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237/logs",
+        "check_suite_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-suites/110750678664",
+        "artifacts_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237/artifacts",
+        "cancel_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237/cancel",
+        "rerun_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/workflows/397790592",
+        "head_commit": {
+          "id": "1edca7de112805778c894d2862a6a9c7ab8dc165",
+          "tree_id": "1d7a3dfb78566144cea8d70454fa35583a220213",
+          "message": "Restore guide focus after a native file chooser",
+          "timestamp": "2026-10-29T10:32:20Z",
+          "author": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          },
+          "committer": {
+            "name": "GH Studio",
+            "email": "sites@users.noreply.openai.com"
+          }
+        },
+        "repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        },
+        "head_repository": {
+          "id": 1428663853,
+          "node_id": "R_kgDOVSeuLQ",
+          "name": "tflite-explorer",
+          "full_name": "koviankevin/tflite-explorer",
+          "private": false,
+          "owner": {
+            "login": "koviankevin",
+            "id": 337180773,
+            "node_id": "U_kgDOFBj4ZQ",
+            "avatar_url": "https://avatars.githubusercontent.com/u/337180773?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/koviankevin",
+            "html_url": "https://github.com/koviankevin",
+            "followers_url": "https://api.github.com/users/koviankevin/followers",
+            "following_url": "https://api.github.com/users/koviankevin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/koviankevin/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/koviankevin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/koviankevin/subscriptions",
+            "organizations_url": "https://api.github.com/users/koviankevin/orgs",
+            "repos_url": "https://api.github.com/users/koviankevin/repos",
+            "events_url": "https://api.github.com/users/koviankevin/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/koviankevin/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/koviankevin/tflite-explorer",
+          "description": "模鏡 Model Lens｜在瀏覽器本機搜尋 TFLite 結構、tensor 與 operator 連接模式",
+          "fork": false,
+          "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
+          "forks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/forks",
+          "keys_url": "https://api.github.com/repos/koviankevin/tflite-explorer/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/koviankevin/tflite-explorer/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/koviankevin/tflite-explorer/teams",
+          "hooks_url": "https://api.github.com/repos/koviankevin/tflite-explorer/hooks",
+          "issue_events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/koviankevin/tflite-explorer/events",
+          "assignees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/koviankevin/tflite-explorer/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/tags",
+          "blobs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/koviankevin/tflite-explorer/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/koviankevin/tflite-explorer/languages",
+          "stargazers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/stargazers",
+          "contributors_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contributors",
+          "subscribers_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscribers",
+          "subscription_url": "https://api.github.com/repos/koviankevin/tflite-explorer/subscription",
+          "commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/koviankevin/tflite-explorer/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/koviankevin/tflite-explorer/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/koviankevin/tflite-explorer/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/koviankevin/tflite-explorer/merges",
+          "archive_url": "https://api.github.com/repos/koviankevin/tflite-explorer/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/koviankevin/tflite-explorer/downloads",
+          "issues_url": "https://api.github.com/repos/koviankevin/tflite-explorer/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/koviankevin/tflite-explorer/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/koviankevin/tflite-explorer/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/koviankevin/tflite-explorer/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/koviankevin/tflite-explorer/labels{/name}",
+          "releases_url": "https://api.github.com/repos/koviankevin/tflite-explorer/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/koviankevin/tflite-explorer/deployments"
+        }
+      },
+      "jobs": {
+        "total_count": 2,
+        "jobs": [
+          {
+            "id": 123395127657,
+            "run_id": 40858401237,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcuuw5aQ",
+            "head_sha": "1edca7de112805778c894d2862a6a9c7ab8dc165",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123395127657",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40858401237/job/123395127657",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-29T10:32:47Z",
+            "started_at": "2026-10-29T10:32:48Z",
+            "completed_at": "2026-10-29T10:35:39Z",
+            "name": "site-upgrade",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-29T10:32:49Z",
+                "completed_at": "2026-10-29T10:32:50Z"
+              },
+              {
+                "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-29T10:32:50Z",
+                "completed_at": "2026-10-29T10:32:53Z"
+              },
+              {
+                "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-29T10:32:53Z",
+                "completed_at": "2026-10-29T10:32:58Z"
+              },
+              {
+                "name": "Run npm ci --ignore-scripts",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-29T10:32:58Z",
+                "completed_at": "2026-10-29T10:32:59Z"
+              },
+              {
+                "name": "Run node scripts/install-browser.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-29T10:32:59Z",
+                "completed_at": "2026-10-29T10:33:18Z"
+              },
+              {
+                "name": "Run node test/browser/versioned-site.mjs",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-29T10:33:18Z",
+                "completed_at": "2026-10-29T10:33:32Z"
+              },
+              {
+                "name": "Run node test/browser/production-smoke.mjs",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 7,
+                "started_at": "2026-10-29T10:33:32Z",
+                "completed_at": "2026-10-29T10:35:34Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-10-29T10:35:34Z",
+                "completed_at": "2026-10-29T10:35:35Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 9,
+                "started_at": "2026-10-29T10:35:35Z",
+                "completed_at": "2026-10-29T10:35:36Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 17,
+                "started_at": "2026-10-29T10:35:36Z",
+                "completed_at": "2026-10-29T10:35:36Z"
+              },
+              {
+                "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 18,
+                "started_at": "2026-10-29T10:35:36Z",
+                "completed_at": "2026-10-29T10:35:37Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 19,
+                "started_at": "2026-10-29T10:35:37Z",
+                "completed_at": "2026-10-29T10:35:37Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123395127657",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": 1000003477,
+            "runner_name": "GitHub Actions 1000003477",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 123395131197,
+            "run_id": 40858401237,
+            "workflow_name": "Public site browser smoke",
+            "head_branch": "codex/in-app-usage-guide",
+            "run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/runs/40858401237",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOVSeuLc8AAAAcuuxHPQ",
+            "head_sha": "1edca7de112805778c894d2862a6a9c7ab8dc165",
+            "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/jobs/123395131197",
+            "html_url": "https://github.com/koviankevin/tflite-explorer/actions/runs/40858401237/job/123395131197",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-10-29T10:32:47Z",
+            "started_at": "2026-10-29T10:32:47Z",
+            "completed_at": "2026-10-29T10:32:47Z",
+            "name": "public-smoke",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/koviankevin/tflite-explorer/check-runs/123395131197",
+            "labels": [
+              "ubuntu-24.04"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      },
+      "artifact": {
+        "id": 12890496751,
+        "node_id": "MDg6QXJ0aWZhY3QxMjg5MDQ5Njc1MQ==",
+        "name": "versioned-delivery-smoke-1edca7de112805778c894d2862a6a9c7ab8dc165-1",
+        "size_in_bytes": 179591,
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12890496751",
+        "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12890496751/zip",
+        "expired": false,
+        "digest": "sha256:c744ef3036790db36211ef95d781c16603c5cbf2ddc38ce7a4513c5671561389",
+        "created_at": "2026-10-29T10:35:35Z",
+        "updated_at": "2026-10-29T10:35:35Z",
+        "expires_at": "2026-11-28T10:35:35Z",
+        "workflow_run": {
+          "id": 40858401237,
+          "repository_id": 1428663853,
+          "head_repository_id": 1428663853,
+          "head_branch": "codex/in-app-usage-guide",
+          "head_sha": "1edca7de112805778c894d2862a6a9c7ab8dc165"
+        }
+      },
+      "originalBytes": 179591,
+      "sha256": "c744ef3036790db36211ef95d781c16603c5cbf2ddc38ce7a4513c5671561389",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 2\n\n    at usageGuideFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:41:74)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:108:1091",
+      "guide": {
+        "cases": [
+          "F1 and header help use manual topic tabs, Escape restores focus, and no-model actions explain requirements without opening workers",
+          "guide preserves selected pattern and editor commands/32px/zoom; both 14-inch logical desktop sizes keep the dialog and controls visible",
+          "guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes",
+          "a running interpreter disables guide navigation; completion refreshes eligibility in the open guide and existing draft survives"
+        ],
+        "layouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "height": 640,
+            "dialog": {
+              "x": 223,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1143,
+              "bottom": 608,
+              "left": 223
+            },
+            "content": {
+              "x": 250,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1116,
+              "bottom": 541.203125,
+              "left": 250
+            },
+            "close": {
+              "x": 1038,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1116,
+              "bottom": 93.390625,
+              "left": 1038
+            }
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "height": 640,
+            "dialog": {
+              "x": 180,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1100,
+              "bottom": 608,
+              "left": 180
+            },
+            "content": {
+              "x": 207,
+              "y": 196.578125,
+              "width": 866,
+              "height": 344.625,
+              "top": 196.578125,
+              "right": 1073,
+              "bottom": 541.203125,
+              "left": 207
+            },
+            "close": {
+              "x": 995,
+              "y": 55,
+              "width": 78,
+              "height": 38.390625,
+              "top": 55,
+              "right": 1073,
+              "bottom": 93.390625,
+              "left": 995
+            }
+          }
+        ],
+        "modelWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "runtimeWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "navigation": [
+          {
+            "topic": "edit",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "pattern",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "save",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "run",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-run",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "run",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "explore",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          }
+        ],
+        "screenshot": true
+      }
+    }
+  ],
+  "scope": "Original failed candidate artifacts rechecked against provider metadata, SHA256 and ZIP CRC; failures are not converted to passes."
+}
