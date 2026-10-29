@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "dd882315cee069484af80d64bed5f33829a0a40e",
+    "tree": "549a3624bfa2b58e2d91ad1b78b64e0463a7b8cc",
+    "committedAt": "2026-10-29T20:35:01+08:00",
+    "dirty": false
+  },
+  "strictReaders": [
+    {
+      "kind": "chromium",
+      "actualExit0": true,
+      "chunk": "a70fe3"
+    },
+    {
+      "kind": "desktop",
+      "actualExit0": true,
+      "chunk": "0f12a5"
+    },
+    {
+      "kind": "combined",
+      "actualExit0": true,
+      "chunk": "773240"
+    }
+  ],
+  "combinedReaderSchemaFailure": {
+    "chunk": "3c5c9f",
+    "exit": 1,
+    "reason": "Chromium report uses driverSourceCommit/siteRelease; corrected reader to use the existing engine schema, not the desktop schema. No browser rerun or assertion threshold change."
+  },
+  "files": [
+    {
+      "input": "build/qa/active-compute30-combined/review.json",
+      "output": "docs/results/active-compute30-combined-review.json",
+      "sha256": "9eadd25b8b344d49acff3fac6d418102edb67e117ab163c7dff00d107b3adcb1",
+      "bytes": 8242
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/review.json",
+      "output": "docs/results/active-compute30-chromium-review.json",
+      "sha256": "04a679049ad0aa3a5837389ae874d38ee5a515c03a583fc67a356e4459adec82",
+      "bytes": 3295
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/review.json",
+      "output": "docs/results/active-compute30-desktop-review.json",
+      "sha256": "499e7a16b8dfa46222eb206594e58b37ab9742089f30306a21324a9e762c06da",
+      "bytes": 105459
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/native.zip",
+      "output": "docs/results/active-compute30-chromium-original.zip",
+      "sha256": "f244c0144f827b9aa1e109ec9a3424cbc4a2288c5a256f3a4ad2468a89cdd0dc",
+      "bytes": 159751
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/production-smoke.png",
+      "output": "docs/results/active-compute30-chromium-timeout.png",
+      "sha256": "7d352cb38878ecd53839ecd061add3f226870fb9788f2a6c5a5a6a479f52171f",
+      "bytes": 149503
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/firefox.zip",
+      "output": "docs/results/active-compute30-firefox-original.zip",
+      "sha256": "d71d9fb0c847959a2b2b383c4a28fcbd8e4353d9757e039817abfcec5d4fb3b9",
+      "bytes": 176649
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/firefox/desktop-firefox.png",
+      "output": "docs/results/active-compute30-firefox-timeout.png",
+      "sha256": "a360c580e527bd38f52e03f934f1bca914747350206cd989622c14c54811bf7b",
+      "bytes": 172716
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/webkit.zip",
+      "output": "docs/results/active-compute30-webkit-original.zip",
+      "sha256": "d0a0482016cfcf6178ece1f5d00bf9e13e9c7c2bae931ee3a0df98bc536fa649",
+      "bytes": 182698
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/webkit/desktop-webkit.png",
+      "output": "docs/results/active-compute30-webkit-timeout.png",
+      "sha256": "24e8b0a57e096c00b62de8b5bd3321ce5ca67f87e08e8274d85f65e0e55ca1d0",
+      "bytes": 164146
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/run.json",
+      "output": "docs/results/active-compute30-chromium-run.json",
+      "sha256": "6c2a8e2948745a43df08ade2fc2c5d78d9376def3b376bdb51d537cd1fa8885f",
+      "bytes": 15134
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/jobs.json",
+      "output": "docs/results/active-compute30-chromium-jobs.json",
+      "sha256": "72bcac4179e0f5553af335ca9b7abe9b4f82538a64d55e4584f145a122c1f0e0",
+      "bytes": 5127
+    },
+    {
+      "input": "build/qa/active-compute30-chromium-40873286083-final/artifact.json",
+      "output": "docs/results/active-compute30-chromium-artifact.json",
+      "sha256": "5820fddd277992c71fdd79d89f3905de5c2230512d234601afdfdb18cfbc56a2",
+      "bytes": 813
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/run.json",
+      "output": "docs/results/active-compute30-desktop-run.json",
+      "sha256": "39629493348b34d000129bc349ebac0035c62bdcf92f342e103f57a6df6c9af2",
+      "bytes": 14423
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/jobs.json",
+      "output": "docs/results/active-compute30-desktop-jobs.json",
+      "sha256": "4e7f6339089dac9a1738f1ba45911254a49c9609e0372608c3e5452ae0048d8c",
+      "bytes": 7900
+    },
+    {
+      "input": "build/qa/desktop-40874474215-final/artifacts.json",
+      "output": "docs/results/active-compute30-desktop-artifacts.json",
+      "sha256": "90b8310d6a1a0e6f9991425030cffa1ecc9ad5bcf3d0ce2ffad48e5e730c71dc",
+      "bytes": 1851
+    },
+    {
+      "input": "build/qa/assert-active-compute30.mjs",
+      "output": "docs/results/active-compute30-assert-active-compute30.mjs.txt",
+      "sha256": "38b3a4d2a209ae9f6e8add9a7aee128b0a2f48ad905e15452ccb4160ed00ff10",
+      "bytes": 3319
+    },
+    {
+      "input": "build/qa/assert-compute-chromium30.mjs",
+      "output": "docs/results/active-compute30-assert-compute-chromium30.mjs.txt",
+      "sha256": "63c912385372d144000d9d9febe03b92a51801337d3838877c3d3669ccac577f",
+      "bytes": 5815
+    },
+    {
+      "input": "build/qa/assert-compute-desktop30.mjs",
+      "output": "docs/results/active-compute30-assert-compute-desktop30.mjs.txt",
+      "sha256": "e4ee58cfa707cd6094933558fc2f8b40539bb2279b1dd86f7a7a17b023b21c09",
+      "bytes": 6809
+    },
+    {
+      "input": "build/qa/review-active-compute30-chromium.mjs",
+      "output": "docs/results/active-compute30-review-active-compute30-chromium.mjs.txt",
+      "sha256": "1e72064725ce1529341531cd56bc415e66fb6789038945ab884c4aed5243aa16",
+      "bytes": 4783
+    },
+    {
+      "input": "build/qa/review-active-compute30-desktop.mjs",
+      "output": "docs/results/active-compute30-review-active-compute30-desktop.mjs.txt",
+      "sha256": "bacf2756e3452bad3951d4128bdd569a5a5a257ac860aec3c7bf255b96ecc16e",
+      "bytes": 10505
+    },
+    {
+      "input": "build/qa/combine-active-compute30.mjs",
+      "output": "docs/results/active-compute30-combine-active-compute30.mjs.txt",
+      "sha256": "47ab0057c7367c599caaed7baed1089cc721587507eb10d152dbbcde17e2cb3b",
+      "bytes": 6121
+    }
+  ],
+  "scope": "Hosted Linux finite functional tests. Real invoke observed with no network hold/fake timer; 30s client watchdog, UI responsiveness, native Worker close and recovery. Does not prove arbitrary models/custom kernels/other OS/hours-long/RSS. Firefox/WebKit final page-layout shutdown close remains unobserved; Firefox JS module network events remain unobserved."
+}

@@ -1,0 +1,45 @@
+{
+  "total_count": 2,
+  "artifacts": [
+    {
+      "id": 12896974041,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg5Njk3NDA0MQ==",
+      "name": "desktop-webkit-dd882315cee069484af80d64bed5f33829a0a40e-1",
+      "size_in_bytes": 182698,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12896974041",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12896974041/zip",
+      "expired": false,
+      "digest": "sha256:d0a0482016cfcf6178ece1f5d00bf9e13e9c7c2bae931ee3a0df98bc536fa649",
+      "created_at": "2026-10-29T12:38:20Z",
+      "updated_at": "2026-10-29T12:38:20Z",
+      "expires_at": "2026-11-28T12:38:20Z",
+      "workflow_run": {
+        "id": 40874474215,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "main",
+        "head_sha": "dd882315cee069484af80d64bed5f33829a0a40e"
+      }
+    },
+    {
+      "id": 12896729092,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg5NjcyOTA5Mg==",
+      "name": "desktop-firefox-dd882315cee069484af80d64bed5f33829a0a40e-1",
+      "size_in_bytes": 176649,
+      "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12896729092",
+      "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12896729092/zip",
+      "expired": false,
+      "digest": "sha256:d71d9fb0c847959a2b2b383c4a28fcbd8e4353d9757e039817abfcec5d4fb3b9",
+      "created_at": "2026-10-29T12:38:23Z",
+      "updated_at": "2026-10-29T12:38:23Z",
+      "expires_at": "2026-11-28T12:38:22Z",
+      "workflow_run": {
+        "id": 40874474215,
+        "repository_id": 1428663853,
+        "head_repository_id": 1428663853,
+        "head_branch": "main",
+        "head_sha": "dd882315cee069484af80d64bed5f33829a0a40e"
+      }
+    }
+  ]
+}

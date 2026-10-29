@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {gitSource,sha256} from '../../scripts/lib/release-artifact.mjs';
+import {assertActiveCompute30} from './assert-active-compute30.mjs';
+import {assertComputeChromium30} from './assert-compute-chromium30.mjs';
+import {assertComputeDesktop30} from './assert-compute-desktop30.mjs';
+const source=gitSource(),main='dd882315cee069484af80d64bed5f33829a0a40e',branch='b406b6bfc5330d7e5153a2d96b3f01a09de556a9';
+assert.equal(source.commit,main);assert.equal(source.dirty,false);
+const json=async p=>JSON.parse(await readFile(p,'utf8')),git=args=>execFileSync('git',args,{encoding:'utf8',windowsHide:true}).trim();
+assert.equal(git(['rev-parse',branch+'^{tree}']),source.tree);
+const prepared=await json('build/qa/prepared-40862411404-runtime30/report.json');assert.equal(prepared.status,'passed');assert.equal(prepared.sourceUnchanged,true);
+for(const driver of [main,branch])git(['diff','--exit-code',prepared.release.source.commit,driver,'--','src','scripts','vendor','package.json','package-lock.json','.github/workflows']);
+const chrome='build/qa/active-compute30-chromium-40873286083-final',desktop='build/qa/desktop-40874474215-final',desktopReview=await json(desktop+'/review.json');
+assert.equal(desktopReview.authentication,'passed');assert.equal(desktopReview.acceptance,'passed');assert.equal(desktopReview.sourceUnchanged,true);assert.deepEqual(desktopReview.source,source);
+const engines=[];
+for(const engine of ['chromium','firefox','webkit']){
+ const isChrome=engine==='chromium',base=isChrome?chrome:desktop+'/'+engine,review=await json(base+'/review.json'),reportFile=base+'/'+(isChrome?'production-smoke':'desktop-'+engine)+'.json',raw=await readFile(reportFile),r=JSON.parse(raw),zip=isChrome?chrome+'/native.zip':desktop+'/'+engine+'.zip',bytes=await readFile(zip);
+ assert.equal(review.authentication,'passed');assert.equal(review.acceptance,'passed');assert.equal(review.reportSHA256??review.members.find(m=>m.name==='production-smoke.json').sha256,sha256(raw));
+ const digest=isChrome?review.artifact.digest:review.providerDigest;assert.equal('sha256:'+sha256(bytes),digest);
+ const run=await json((isChrome?chrome:desktop)+'/run.json');assert.equal(run.status,'completed');assert.equal(run.conclusion,'success');assert.equal(run.run_attempt,1);assert.equal(run.head_sha,isChrome?branch:main);assert.equal(run.head_branch,isChrome?'codex/active-cpu-watchdog-acceptance':'main');assert.equal(run.path,'.github/workflows/'+(isChrome?'production-smoke.yml':'desktop-engines.yml'));
+ if(isChrome){assert.equal(r.driverSourceCommit,branch);assert.equal(review.source.commit,branch);assert.equal(review.source.tree,source.tree);assert.equal(review.source.dirty,false);assert.equal(review.sourceUnchanged,true);assert.equal(r.target,'public-production');assert.deepEqual(r.siteRelease,prepared.release);assert.equal(r.siteId,prepared.site.siteId);assert.equal(review.site.files,1400);}else{assert.deepEqual(r.source,source);assert.equal(r.sourceUnchanged,true);assert.equal(r.browserClosed,true);assert.equal(r.target,'production');assert.deepEqual(r.release,prepared.release);assert.equal(r.expectedSiteId,prepared.site.siteId);assert.equal(r.staticVerification.files,1400);}
+ assert.equal(r.status,'passed');assert.deepEqual(r.errors,[]);assert.equal(r.expectedBuild,prepared.release.buildId);
+ const imageFile=base+'/'+(isChrome?'production-smoke':'desktop-'+engine)+'.png',screenshot=await readFile(imageFile);assert.equal(sha256(screenshot),isChrome?review.members.find(m=>m.name==='production-smoke.png').sha256:r.screenshotSHA256);
+ execFileSync(process.env.PYTHON_BIN,['-I','-c',"import sys,zipfile,hashlib\nz=zipfile.ZipFile(sys.argv[1]); stem=sys.argv[2]; assert len(z.infolist())==2; assert set(z.namelist())=={stem+'.json',stem+'.png'}; assert z.testzip() is None; assert z.read(stem+'.json')==open(sys.argv[3],'rb').read(); assert z.read(stem+'.png')==open(sys.argv[4],'rb').read()",zip,isChrome?'production-smoke':'desktop-'+engine,reportFile,imageFile],{windowsHide:true});
+ const active=await assertActiveCompute30(r),core=(isChrome?assertComputeChromium30:assertComputeDesktop30)(r,{release:prepared.release,runtimePrefix:'https://koviankevin.github.io/tflite-explorer/versions/'+prepared.release.buildId+'/vendor/litert/2.6.0/'});
+ engines.push({engine,runId:run.id,attempt:1,source:isChrome?review.source:r.source,jobId:review.jobId,artifactId:isChrome?review.artifact.id:review.artifactId,providerDigest:digest,reportSHA256:sha256(raw),screenshotSHA256:sha256(screenshot),core,active,zip,reportFile,imageFile});
+}
+const programs=['assert-active-compute30.mjs','assert-compute-chromium30.mjs','assert-compute-desktop30.mjs','review-active-compute30-chromium.mjs','review-active-compute30-desktop.mjs','combine-active-compute30.mjs'],programHashes={};
+for(const p of programs)programHashes[p]=sha256(Buffer.from((await readFile('build/qa/'+p,'utf8')).replaceAll('\r\n','\n')));
+assert.deepEqual(gitSource(),source);const directory='build/qa/active-compute30-combined';await mkdir(directory);
+const report={authentication:'passed',acceptance:'passed',source,sourceUnchanged:true,release:prepared.release,site:prepared.site,engines,programSHA256CanonicalLF:programHashes,reuse:{chromiumBranchFullTreeEqualsMain:true,appBuildDependenciesWorkflowsUnchanged:true,successfulRunsAndDeploymentNotRepeated:true},scope:'Hosted Linux finite functional tests. Real invoke observed with no network hold/fake timer; 30s client watchdog, UI responsiveness, native Worker close and recovery. Does not prove arbitrary models/custom kernels/other OS/hours-long/RSS. Firefox/WebKit final page-layout shutdown close remains unobserved; Firefox JS module network events remain unobserved.'};
+await writeFile(directory+'/review.json',JSON.stringify(report,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({directory,authentication:report.authentication,acceptance:report.acceptance,engines:engines.map(e=>({engine:e.engine,run:e.runId,active:e.active}))}));
