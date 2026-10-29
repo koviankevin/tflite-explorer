@@ -1,0 +1,8 @@
+{
+  "applicationChanged": false,
+  "error": "File format is not tflite.Model (Parser must not read the large lazy weight).",
+  "classification": "local probe assertion incorrectly forbade any bounded parser prefetch into zero weights",
+  "source": "facc77600f529f5df3a0ba000f97ccf1a20df4ed",
+  "followup": "Keep the existing 16 MiB per-read cap; supply accurate zero-weight windows and record the actual bounded bytes.",
+  "status": "failed"
+}

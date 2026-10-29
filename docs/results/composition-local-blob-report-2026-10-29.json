@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "source": {
+    "commit": "facc77600f529f5df3a0ba000f97ccf1a20df4ed",
+    "tree": "dda35bd2ec121083a7bef8bcddb29e609130456f",
+    "committedAt": "2026-10-29T11:53:28+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "fixture": {
+    "kind": "real in-memory Blob/File with shared zero pages; not a physical disk or browser measurement",
+    "bytes": 1349965216,
+    "operators": 21005,
+    "weightBytes": 1342177280,
+    "weightSHA256": "b857ea49e0b2bcc4eb7a44e44b1d24a62cbd386a3c20c5ffe0c4e9772022d082"
+  },
+  "snapshot": {
+    "operators": 8,
+    "bytes": 9400
+  },
+  "output": {
+    "bytes": 1345938024,
+    "operators": 8,
+    "weightBytesCompared": 1342177280,
+    "preservedIds": true
+  },
+  "parser": {
+    "calls": 121,
+    "maxRead": 65536,
+    "weightReadBytes": 131072
+  },
+  "fileSliceCalls": 4,
+  "exportMs": 194.89130000000023,
+  "totalMs": 10553.432200000001,
+  "node": "v24.22.1",
+  "rss": 395743232,
+  "peakRssBytes": 447229952,
+  "scope": "Local Node only; zero-filled shared-page corpus, no whole File read, full 1.25 GiB output weight stream hash and actual TFLite reparse; not browser memory/physical corpus or kernel validity"
+}

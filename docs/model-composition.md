@@ -1,6 +1,6 @@
 # 從原始圖組合 TFLite 模型
 
-此功能正在開發，正式站仍為 preview.25；下列操作待 Hosted 原生驗收及受控發布完成。
+候選與 main 的 Hosted 原生驗收已通過；正式站目前仍為 preview.25，受控發布與發布後核對尚待完成。
 
 ## 操作
 
@@ -27,4 +27,22 @@
 - 控制流程／子圖呼叫、有狀態 OP、variable／resource／variant／外部檔案 tensors 不搬移；拒絕時保留原草稿。
 - 支援圖結構組合與插入新 OP；不執行 compiler kernel fusion，也不自動判定兩個 tensor 的數值用途是否適合相接。
 
-本機回歸已驗匯入累積／重疊／Undo／Redo、拓樸排序／循環拒絕、獨立匯出／無關資料移除、custom options／權重／原編號、明確介面、v2 保存與指紋還原，以及獨立原始資料對照。Hosted 原生測試將實際操作 A／B pattern、32px／14 吋版面、分頁、raw BIN CPU 與匯出重開；尚未宣稱部署完成。
+本機回歸已驗匯入累積／重疊／Undo／Redo、拓樸排序／循環拒絕、獨立匯出／無關資料移除、custom options／權重／原編號、明確介面、v2 保存與指紋還原，以及獨立原始資料對照。Hosted 原生測試也已通過 A／B pattern、32px／14 吋版面、分頁、raw BIN CPU 與匯出重開，詳見下方原始證據；正式部署尚待完成。
+
+## 候選與主分支驗收
+
+候選 [40814231314](https://github.com/koviankevin/tflite-explorer/actions/runs/40814231314)，來源 `9628c78b7bab6d5300985bbea755fe5b65cb3eb3`／tree `dda35bd2ec121083a7bef8bcddb29e609130456f`／build `89679378430f9ba2`，其[獨立核對](results/composition-candidate-review-2026-10-29.json)、[切換 ZIP](results/composition-candidate-site-2026-10-29.zip)及[原生 ZIP](results/composition-candidate-native-2026-10-29.zip)已驗 provider digest／CRC／乾淨來源重建。
+
+主分支來源 `facc77600f529f5df3a0ba000f97ccf1a20df4ed` 與候選完整 tree 一致，build `a9b0e94f885da192`。[site 40814696559](https://github.com/koviankevin/tflite-explorer/actions/runs/40814696559) 的[獨立核對](results/composition-main-review-2026-10-29.json)、[原始切換](results/composition-main-site-2026-10-29.zip)與[原始操作](results/composition-main-native-2026-10-29.zip)通過六種切換、30 項原生操作、14 種參數／runtime／組合情境；47 個模型與六個 runtime Workers 關閉，沒有 page errors。
+
+實際從兩個 A／B pattern 匹配加入，重疊 merge OP 共用；Undo／Redo 匯入及普通／組合兩份接線歷史保留。1366×640／1280×640 的 32px 圖區分別 257.5／246.5px，無水平溢出。v2 JSON 由原生下載／選檔恢復，重匯出 bytes 相同；獨立 CLI 核對權重／options ranges。使用者明確手動執行 raw BIN 後，真實 CPU／IO ZIP 輸出 `[14,28]`；custom 組合保留編號／options／權重，無 kernel 時未啟動 WASM，列為未能驗證。原模型／結果分頁與沿用舊 pattern 搜尋通過。
+
+[四個 main 關卡](results/composition-main-gates-review-2026-10-29.json)驗 source、scope fingerprint、原始報告與產物 digest：core 沿用未變的 40700051621，browser 40814691282、contract 40814694039、site 40814696559 為新 main 成功 run。
+
+[主分支實體八輪](results/composition-main-owned-review-2026-10-29.json)使用原 1.25 GiB／21,005 OP 的完整編輯及局部匯出流程，固定完整／局部 hash、權重、custom options、pattern 正負例、24 個模型及八個指紋 Workers 均通過。兩輪暖機後 RSS 漂移 9756672 bytes、斜率 328967.314 bytes／輪；觀察到的 6 個 PID／start-ticks 全部正常退出，無強制清理。這是既定流程的有限八輪，不等同於大型組合模式的反覆匯出或新兩小時量測。
+
+## 本機大型 Blob 切片實驗
+
+另有 [本機 Node 報告](results/composition-local-blob-report-2026-10-29.json)及[固定來源實驗腳本](results/composition-local-blob-harness-2026-10-29.txt)：以共享零值頁建立實際 1,349,965,216-byte File／21,005 OP，取八個 OP，匯出並完整串流比對 1.25 GiB 權重、重新解析與 options 通過。來源每次解析讀取最多 65,536 bytes；有 131,072 bytes 的正常權重區預讀，未整檔讀入。Node 峰值 RSS 447,229,952 bytes、建構約 195 ms；不當成瀏覽器／實體磁碟／有意義權重或 kernel 的驗收。
+
+[第一版 probe 失敗](results/composition-local-blob-probe-failure-2026-10-29.json)保留：測試誤要求解析器完全不讀權重區；改為準確提供零值視窗並記錄預讀量，保留原 16 MiB 單次讀取上限，沒有修改應用或 CI 門檻。
