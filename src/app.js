@@ -34,7 +34,7 @@ window.addEventListener('unhandledrejection',event=>diagnostics.record('global',
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
 const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFile=>openFile(nextFile),error:reason=>report(reason)});
 const modelEditor=modelEditUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
-const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
+const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,getCompositionTargets:compositionTargets,getCompositionLabel:()=>kind==='patterns'?$('saved-pattern').value||$('condition-pattern-name').value:'',chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download()});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -276,7 +276,7 @@ async function loadModelTab(nextFile,saved) {
         if (file !== thisFile) return;
         model = summary;
         const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
-        for(const id of ['edit-mode']){$(id).hidden=!editable;$(id).title=editable?'編輯實際 TFLite 模型':'實際模型編輯僅支援 TFLite';}
+        for(const id of ['edit-mode','compose-mode']){$(id).hidden=!editable;$(id).title=editable?(id==='compose-mode'?'將選取或目前匹配加入獨立組合草稿':'編輯實際 TFLite 模型'):'實際模型編輯僅支援 TFLite';}
         if(model.sourceFormat!=='mlir' && cfgPattern && kind==='patterns')setKind('layers',false);
         if(kind==='patterns')try{reusablePattern('開模搜尋',currentPattern());}catch{setKind('layers',false);notice('未完成的 pattern 草稿已保留；先以 Layers 開啟模型，修正規則後再搜尋。');}
         $('capture-cfg-option').hidden=model.sourceFormat!=='mlir';
@@ -1094,6 +1094,10 @@ function addVisibleLayers(graph) {
     syncCaptureGraph();refreshPickedNodes();
 }
 $('add-visible-layers').onclick=()=>addVisibleLayers();
+function compositionTargets(){
+    if(!pickingPattern&&selection?.kind==='patterns'&&Array.isArray(selection.path))return [...new Set(selection.path)].map(node=>({graph:selection.graph,node}));
+    return editTargets();
+}
 function editTargets(){
     let targets=pickingPattern?($('capture-cfg').checked?captureSelections().flatMap(s=>s.nodes.map(node=>({graph:s.graph,node}))):[...pickedNodes].map(node=>({graph:pickedGraph,node}))):[];
     if(!targets.length&&!pickingPattern){const location=detailLocation||(selection?.kind==='layers'?{graph:selection.graph,node:selection.index}:null);if(location)targets=[location];}

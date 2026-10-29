@@ -3,8 +3,10 @@
 export const EDIT_LIMITS=Object.freeze({nodes:96,commands:128,originals:64,ports:4096});
 import {builtinInfo,builtinSettings,randomTensorInfo} from './tflite-new-ops.js';
 import {inferTfliteOutputs} from './tflite-shape-inference.js';
+import {compositionCommand,compositionOrder,compositionWireReason} from './model-composition-draft.js';
 const copy=value=>structuredClone(value);
 export function editPosition(state,node){
+    if(state.composition)return state.nodes.indexOf(node)*4+2;
     if(!node.fresh)return node.source.node*4+2;
     const peers=state.nodes.filter(n=>n.fresh&&!n.removed&&n.anchor.graph===node.anchor.graph&&n.anchor.node===node.anchor.node&&n.anchor.side===node.anchor.side),i=peers.indexOf(node);
     return node.anchor.node*4+(node.anchor.side==='after'?2:0)+2*(i+1)/(peers.length+1);
@@ -14,10 +16,11 @@ export function editWireReason(state,target,slot,valueId){
     if(!node||node.removed||!Number.isInteger(slot)||slot<0||!old||!value)return '找不到輸入端或來源輸出端。';
     if(value.missing)return '此輸入尚未接線，請接入來源或產生權重 tensor。';
     const producer=state.nodes.find(n=>n.id===value.producer);
-    if(producer?.removed&&!(state.format==='tflite'&&producer.boundary&&!producer.fresh))return '來源 OP 已刪除，請改選有效來源。';
+    if(producer?.removed&&!state.composition&&!(state.format==='tflite'&&producer.boundary&&!producer.fresh))return '來源 OP 已刪除，請改選有效來源。';
     if(value.optional&&!old.optional)return '這個輸入端不能留空。';
     if(old.signature!==null&&value.signature!==old.signature)return 'dtype、shape、量化或型別不同，不能直接接線。';
     if(state.format==='tflite'&&value.graph!==node.source.graph)return 'TFLite 只能在同一個 subgraph 內接線。';
+    if(state.composition){const reason=compositionWireReason(state,node.id,valueId);if(reason)return reason;}
     if(state.format==='mlir'&&!node.visibleRegions.includes(value.region))return '此 SSA 值不在目標 OP 可見的 region／function。';
     const order=producer?editPosition(state,producer):value.order;
     if(node.ordered&&value.graph===node.source.graph&&Number.isFinite(order)&&order>=editPosition(state,node))return '來源必須先於目標 OP 產生，不能建立同一 block 內的回圈。';
@@ -33,6 +36,7 @@ export function editTemplateReason(state,target,template){
 }
 function mutate(state,command){
     if(!command||typeof command!=='object')throw Error('編輯草稿格式無效。');
+    if(compositionCommand(state,command))return;
     const node=state.nodes.find(n=>n.id===command.node);
     if(!node)throw Error('找不到要修改的 OP。');
     if(command.kind==='wire'){
@@ -83,6 +87,7 @@ function mutate(state,command){
     }else throw Error('不支援此編輯操作。');
 }
 function inferDraft(state){
+    if(state.composition)state.nodes=[...compositionOrder(state),...state.nodes.filter(n=>n.removed)];
     if(state.format!=='tflite')return;
     for(const node of state.nodes.filter(n=>n.builtin?.inferOutputs&&!n.removed).sort((a,b)=>editPosition(state,a)-editPosition(state,b))){
         const refs=node.builtin.outputLike.map(id=>state.values.get(id)),outputs=refs.map(v=>JSON.parse(v.signature)),inputs=node.inputs.map(p=>{const v=state.values.get(p.value);return v?.signature&&!v.missing&&!v.optional?JSON.parse(v.signature):null;});
@@ -93,15 +98,17 @@ function inferDraft(state){
     }
 }
 export function replayEditDraft(snapshot,commands=[]){
+    if(snapshot?.composition&&snapshot.format!=='tflite')throw Error('組合草稿僅支援 TFLite。');
     if(!snapshot||!['tflite','mlir'].includes(snapshot.format)||!Array.isArray(snapshot.nodes)||snapshot.nodes.length>EDIT_LIMITS.originals||!Array.isArray(snapshot.values)||snapshot.values.length>EDIT_LIMITS.ports)throw Error('編輯範圍無效或超過上限。');
     if(!Array.isArray(commands)||commands.length>EDIT_LIMITS.commands)throw Error('最多累積 128 個編輯操作，請先匯出並重新開啟。');
-    const state={format:snapshot.format,prefix:snapshot.prefix,nodes:copy(snapshot.nodes),values:new Map(snapshot.values.map(v=>[v.id,copy(v)])),next:0,parameterNext:0};
+    const state={format:snapshot.format,prefix:snapshot.prefix,nodes:snapshot.composition?[]:copy(snapshot.nodes),values:new Map(snapshot.values.map(v=>[v.id,copy(v)])),next:0,parameterNext:0,...(snapshot.composition?{composition:true,templates:copy(snapshot.nodes),groups:[],interface:{inputs:new Map(),outputs:new Map()}}:{})};
     for(const command of commands){mutate(state,command);inferDraft(state);}
     return state;
 }
 export function editChanges(snapshot,state){
     const originals=new Map(snapshot.nodes.map(n=>[n.id,n])),changes=[];
     for(const node of state.nodes){
+        if(state.composition&&!node.fresh&&!node.removed){changes.push({kind:'add',node:node.id,name:node.name,inputs:node.inputs.map(p=>state.values.get(p.value)?.name||''),outputs:node.outputs.map(p=>state.values.get(p.value)?.name||''),imported:true});}
         if(node.fresh){if(!node.removed)changes.push({kind:'add',node:node.id,name:node.name,inputs:node.inputs.map(p=>state.values.get(p.value).name),outputs:node.outputs.map(p=>state.values.get(p.value).name),parameters:node.inputs.flatMap((p,slot)=>{const v=state.values.get(p.value);return v.generated?[{slot,name:v.name,...v.generated}]:[];}),exposed:node.exposed});continue;}
         const old=originals.get(node.id);
         if(node.removed){changes.push({kind:'remove',node:node.id,name:node.name,boundary:node.boundary});continue;}

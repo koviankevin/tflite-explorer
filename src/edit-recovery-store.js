@@ -9,7 +9,8 @@ const key=value=>typeof value==='string'&&/^[a-f0-9]{32}$/.test(value);
 export function readEditRecovery(record){
     if(record?.schemaVersion!==1||!key(record.key)||!key(record.owner)||!Number.isSafeInteger(record.revision)||record.revision<1||!Number.isSafeInteger(record.updatedAt)||record.updatedAt<0||typeof record.text!=='string'||record.text.length>EDIT_DRAFT_LIMIT)throw invalid();
     let header;try{header=JSON.parse(record.text);}catch{/* A torn/corrupt supported head may use its committed previous version. */}
-    if(header?.format&&(header.format!=='model-lens-edit-draft'||header.version!==1))throw invalid();
+    if(header?.format&&(header.format!=='model-lens-edit-draft'||![1,2].includes(header.version)))throw invalid();
+    if(header?.version===2&&(header.scope?.composition!==true||header.source?.format!=='tflite'))throw invalid();
     const decode=text=>{const document=parseEditSession(text);if(document.source.format!=='tflite'||editRecoveryModelKey(document.source)!==record.modelKey)throw invalid();return document;};
     try{return {...record,document:decode(record.text),recoveredPrevious:false};}
     catch(reason){if(typeof record.previous!=='string')throw reason;return {...record,document:decode(record.previous),recoveredPrevious:true};}

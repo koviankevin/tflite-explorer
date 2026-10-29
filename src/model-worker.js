@@ -63,7 +63,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const session=editWorkspace,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js'),{modelEditDraft}=await import('./model-edit-draft.js');
             if(editWorkspace!==session)throw Error('工作區已切換，請重試。');
             if(!Array.isArray(args.targets)||args.targets.length>32||JSON.stringify(args.commands).length>1024*1024)throw Error('加入範圍或草稿過大。');
-            const targets=[...new Map([...session.snapshot.nodes.map(n=>n.source),...args.targets].map(t=>[`${t.graph}:${t.node}`,t])).values()],snapshot=editWorkspaceSnapshot(index,{targets});
+            const targets=[...new Map([...session.snapshot.nodes.map(n=>n.source),...args.targets].map(t=>[`${t.graph}:${t.node}`,t])).values()],snapshot=editWorkspaceSnapshot(index,{targets,composition:!!session.snapshot.composition});
             modelEditDraft(snapshot,args.commands,args.redo||[]);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
         } else if(action==='editDraftCancel'){
             editDraftJob++;send(id,{cancelled:true});
