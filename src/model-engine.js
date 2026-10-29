@@ -8,9 +8,10 @@ export { operatorKey } from './pattern-utils.js';
 const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter((value) => value && typeof value === 'object' && value.identifier !== undefined) : [];
 export const CUSTOM_OPTIONS_PREVIEW_LIMIT = 64 * 1024;
 
-// Preserve the original Netron parser, but represent inline weights using the
-// external-buffer range path it already supports. No weight payload is copied.
-schema.Buffer.decode = (reader, position) => {
+// Keep the generated schema unchanged for builders and other readers. Only
+// this model reader represents inline weights using Netron's external-buffer
+// range path; importing the parser must not change subsequent model bytes.
+const decodeBuffer = (reader, position) => {
     const buffer = new schema.Buffer();
     buffer.data = new Uint8Array(0);
     buffer.offset = reader.uint64_(position, 6, 0n);
@@ -72,7 +73,7 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
                     try { value = type.decode(r, p, tag); }
                     finally { r.array = originalArray; }
                     Object.assign(value, { customOptionsInline: inline, customOptionsRange: optionsRange, customOptionsDeferred: deferred });
-                } else value = type.decode(r, p, tag);
+                } else value = type === schema.Buffer ? decodeBuffer(r, p) : type.decode(r, p, tag);
                 if (method === 'union' && tag && !value) exportUnsupportedReason = '模型包含未知 operator／量化 options；暫不能安全匯出子模型。';
                 if (value) checkTable(p, method === 'union' ? value.constructor : type);
                 return value;

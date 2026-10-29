@@ -1,0 +1,33 @@
+{
+  "normalization": "none; originalbytes in ZIP",
+  "archiveSHA256": "afa5b45a6fd3835e83d0874c23feb762e97424e1a549a7b3550df13d4d30e20d",
+  "members": [
+    {
+      "name": "import-order-red.log",
+      "bytes": 1164,
+      "sha256": "cbeb669c766d5a7f0d2bf47797eab86d4330416ff84fd1c0cadc20352465e66c"
+    },
+    {
+      "name": "regression-red.log",
+      "bytes": 5101,
+      "sha256": "d4c4900e7298f8f5c9260532f69e974009c8ff15f9900a83bc8b69867e56a6a2"
+    },
+    {
+      "name": "regression-green.log",
+      "bytes": 2828,
+      "sha256": "6082212cda11036bf6c7d3a362766fc5a2c3dc1ff532d463ca819d1044c46271"
+    }
+  ],
+  "regressionRed": {
+    "exit": 1,
+    "tests": 1,
+    "fail": 1,
+    "chunk": "f801b8"
+  },
+  "green": {
+    "exit": 0,
+    "tests": 18,
+    "fail": 0,
+    "chunk": "9f8704"
+  }
+}
