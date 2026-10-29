@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "builtin-empty-custom-options29",
+  "createdAt": "2026-10-29T08:01:38.971Z",
+  "source": {
+    "commit": "37963102ddd4ff52daee77791dd3fb87c8fc2b7f",
+    "tree": "033449ca73a9141e41760b6c7e01d804e5bb476c",
+    "committedAt": "2026-10-29T15:57:22+08:00",
+    "dirty": false
+  },
+  "goal": "Fix builtin empty custom-options diagnostics without changing any tensor, weight, real options or connection",
+  "scope": "Only this invocation synthetic file and reference-writer module",
+  "temporary": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary",
+  "audit": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-audit",
+  "file": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\options29-oracle-temporary\\physical-source.tflite",
+  "parameters": {
+    "operators": 21005,
+    "weightBytes": 1342177280
+  },
+  "steps": [
+    "record intent",
+    "write/fsync/readback pinned nonzero physical source",
+    "compare historical serializer to pinned old hashes",
+    "compare normalized reference to actual new writer",
+    "retain receipts; clean exact synthetic files when no readers remain"
+  ],
+  "recovery": "Do not rerun blindly after existing plan; inspect events and actual file/hash first"
+}

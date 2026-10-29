@@ -22,4 +22,4 @@ Normal 的平均值與標準差定義採 [NIST 的常態分佈定義](https://cs
 
 測試 IO ZIP 記錄分佈、seed、參數及演算法名稱，並保存實際生成的 BIN。相同實作與數值環境可重現；不同引擎的浮點數學函式末位可能不同，嚴格逐 bytes 重播請使用已保存的 BIN／匯出模型。
 
-驗收涵蓋固定 seed 統計平均／變異、截斷後的條件變異與遠端窄區間、Bernoulli 比例、dtype／溢位拒絕、const 與測試輸入逐 bytes 相同、版本 1／2 相容、版本 3 草稿／Redo／本機復原，以及 Hosted 瀏覽器的實際 CPU／IO 與匯出重開。正式部署與 Hosted 結果尚待本版驗收完成後記錄。
+驗收涵蓋固定 seed 統計平均／變異、截斷後的條件變異與遠端窄區間、Bernoulli 比例、dtype／溢位拒絕、const 與測試輸入逐 bytes 相同、版本 1／2 相容、版本 3 草稿／Redo／本機復原，以及 Hosted 瀏覽器的實際 CPU／IO 與匯出重開。main 的 Hosted 原生、CPU／IO、草稿與八輪大檔驗收已通過，見[完整證據](model-runtime-workspace.md#main-與-hosted-驗收)；正式部署與固定下載仍待完成。

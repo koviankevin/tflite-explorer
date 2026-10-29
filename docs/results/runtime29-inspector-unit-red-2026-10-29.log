@@ -1,0 +1,51 @@
+✖ random inspector handles a cloned optional-input custom op without reference tensors (19.4987ms)
+✖ invalid or unsupported reference metadata disables generation without tearing down the inspector (10.6823ms)
+✖ valid float32 reference still creates the same deterministic random command (1.2188ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 200.1634
+
+✖ failing tests:
+
+test at test\model-edit-new-ops-ui.test.mjs:32:1
+✖ random inspector handles a cloned optional-input custom op without reference tensors (19.4987ms)
+  AssertionError [ERR_ASSERTION]: inspector must remain mounted, not become a raw exception
+      at TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/model-edit-new-ops-ui.test.mjs:35:72)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\model-edit-new-ops-ui.test.mjs:37:1
+✖ invalid or unsupported reference metadata disables generation without tearing down the inspector (10.6823ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok($('edit-random-apply'))
+  
+      at TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/model-edit-new-ops-ui.test.mjs:38:125)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\model-edit-new-ops-ui.test.mjs:40:1
+✖ valid float32 reference still creates the same deterministic random command (1.2188ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'disabled')
+      at TestContext.<anonymous> (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/model-edit-new-ops-ui.test.mjs:41:110)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

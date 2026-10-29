@@ -1,0 +1,12 @@
+{
+  "checks": 30,
+  "demoCPU": 4,
+  "modelWorkers": 68,
+  "runtimeWorkers": 14,
+  "runtimeCases": 19,
+  "randomDistributions": 4,
+  "portableDistributionDraftVersion": 3,
+  "contextualSelection": true,
+  "restart": true,
+  "layouts": 2
+}
