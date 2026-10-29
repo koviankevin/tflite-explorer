@@ -133,3 +133,9 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 不為了碰到綠燈重跑同一程式。下一步逐一驗證大型暫存分配：同一模型連續手動執行能否用已清零、限量且真正移交所有權的 session buffer，避免每次重建完整 ZIP；raw BIN 的 private arrayBuffer 是否能在 little-endian 環境直接建立 typed view，避免額外 copy。兩者都須先有真實 red、bytes／型別／cancel／late-result 正負例，再以原 RSS 流程驗收。若仍不足才補新的無 WASM ownership 對照，不從對照值扣除驗收 RSS。
 
 只有主發布四關卡的 core executed scope 相同可沿用；瀏覽器、contract、site fingerprints 已因兩個 runtime 模組及測試改變。由於首要 Firefox RSS 尚未通過，沒有再觸發整批發布驗證；preview.32 繼續未發布，正式 preview.31 的 const 分佈功能不受影響。
+
+### raw BIN 配置候選（待 Hosted）
+
+已用實際 `runtimeInput` 重現另一份 4 MiB 配置：公開 File 的 `arrayBuffer()` 只讀一次、回傳內容及 hash 正確，但原程式又配置同大小 typed tensor。新路徑在 native little-endian 環境直接建立 private buffer 的 typed view；big-endian 路徑保留逐值轉換，零值／亂數邏輯不變。不加入 input／模型快取、不修改 buffer 或延長 Worker 生命週期。
+
+仍檢查 File 宣告長度與實際回傳 buffer 長度、dtype／shape 預算、boolean 只能為 0／1，拒絕 shared buffer 及缺少 TypedArray constructor。新增四項回歸涵蓋 4 MiB 實際 async raw path／零額外 tensor backing storage、各整數／浮點／64-bit 與手動 endian-conversion 路徑、零長度、無效資料及原 bytes 不被修改。舊路徑的實際 identity 斷言先失敗；修改後 58 項選測通過，包含既有 4 MiB const 真正 CPU／8 MiB IO 及獨立 ZIP CRC、shared module 的 fresh Instance、session 及 const 分佈。只證實配置及正確性，尚不能宣稱 Firefox RSS 達標；仍須原 Hosted 八輪。
