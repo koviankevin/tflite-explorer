@@ -12,4 +12,12 @@
 
 保留原本十三項探索、pattern、TFLite 接線／權重／custom options／草稿，以及 MLIR SSA／跨 block Canvas／匯出重開的斷言。新流程預期每個引擎合計十六項原生檢查、六十個模型與十六個 runtime Workers 關閉；這些數字是驗收要求，尚不是執行結果。舊固定版沒有獨立 Run／指南模組時保留其原有範圍；preview.30 的獨立核對會要求兩個新範圍確實執行，不能以略過代替通過。
 
-目前只完成七項 Hosted 執行界線、chooser／DOM 觀察與 HTTP 身分政策的 Node 檢查。兩引擎實際結果、原始 provider ZIP／SHA／CRC、受測來源、靜態檔清單、Worker 關閉與截圖仍待 CI 完成後核對。不把此短流程當成其他 OS、固定硬體 SLA、數小時 interpreter、完整螢幕閱讀器或公司 kernels 驗收。
+前置七項 Hosted 執行界線、chooser／DOM 觀察與 HTTP 身分政策的 Node 檢查已通過。第一輪 WebKit 成功與 Firefox 失敗的 provider ZIP／SHA／CRC、受測來源、固定正式站身分及截圖已核對，詳見下節；Firefox 補跑與最終歸檔仍待完成。不把此短流程當成其他 OS、固定硬體 SLA、數小時 interpreter、完整螢幕閱讀器或公司 kernels 驗收。
+
+## 第一輪原生結果與觀察邊界
+
+首次 main 工作流程 `40865708321` 的 WebKit 26.0 job 完成十六項檢查、四次正式示範 CPU、十九種執行情境與五組指南；六十個模型及十六個 runtime Workers 都有原生 close 事件。Firefox 142.0.1 通過原有十三項與正式示範 CPU，但在立即調整至 1280×640 後取樣到 header bottom 128／Run top 115，因此整個 matrix 保持失敗；不能把 WebKit 成功寫成整組成功。
+
+原始 Firefox 截圖中 header 與 Run 已對齊至 128；前一個 1366 寬的瞬間值則為 header 115／Run 128。現有 `resizeInFrame` 明確在 ResizeObserver 後的 animation frame 更新 CSS，因此測試修正為有上限地等待實際幾何位置一致，再保留原本不重疊、無水平溢出及內容高度的斷言，另記錄 initial／settled rectangles。不加固定睡眠、不改應用、不放寬版面門檻；後續只補跑 Firefox，WebKit 原成功結果保留並依相同應用／fixture 與僅觀察等待的差異核對沿用。
+
+獨立讀取器最初沿用 Chromium 的「所有 Worker close」斷言時，也記錄到 WebKit 的最後一個頁面級 Netron layout Worker 沒有 close 通知；前十二個 layout Workers 都已通知關閉，browser close 已完成。跨引擎結果明確區分這個未觀測的最後頁面事件與必須全部通知關閉的六十個模型／十六個 runtime Workers；未知或更多未關閉 Worker 仍拒絕。這不是所有程序／RSS 的驗收，不將未觀測事件當成已證實關閉。原始 provider ZIP／SHA／CRC 與這項讀取器失敗會保留。

@@ -59,7 +59,16 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo
         await page.locator('#edit-new-ops details').first().locator('summary').click();await until(()=>!!document.querySelector('#edit-builtin'));await page.locator('#edit-builtin').selectOption('18');await page.locator('#edit-builtin-apply').click();await until(()=>document.querySelector('[data-edit-node="new:1"] .edit-node-title').textContent==='MUL');await page.locator('#edit-expose').check();
         const before=await download('#edit-export','runtime-before.tflite');await until(()=>!document.querySelector('#edit-open-result').disabled);const untested=JSON.parse(await readFile(await download('#edit-download-report','runtime-before.report.json'),'utf8'));assert.equal(untested.checks.find(c=>c.id==='runtime-load').status,'not-run');assert.equal(report.workers.length,0);assert.equal(report.requests.length,0);report.cases.push('opening/editing/exporting never starts interpreter or downloads runtime');
         await page.locator('#edit-font').selectOption('32');await enterRuntime();
-        report.runLayouts=[];for(const viewport of [{width:1366,height:640},{width:1280,height:640}]){await page.setViewportSize(viewport);const layout=await read(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,run:document.querySelector('#run-workspace').getBoundingClientRect().toJSON(),header:document.querySelector('.app-header').getBoundingClientRect().toJSON()}));assert.ok(layout.scrollWidth<=layout.width+1&&layout.run.top>=layout.header.bottom-1&&layout.run.height>=300,JSON.stringify(layout));report.runLayouts.push(layout);}
+        report.runLayouts=[];report.runLayoutTransitions=[];
+        const layoutSnapshot=()=>read(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,run:document.querySelector('#run-workspace').getBoundingClientRect().toJSON(),header:document.querySelector('.app-header').getBoundingClientRect().toJSON()}));
+        for(const viewport of [{width:1366,height:640},{width:1280,height:640}]){
+            await page.setViewportSize(viewport);const initial=await layoutSnapshot();
+            // ResizeObserver deliberately defers header writes to the next
+            // animation frame. Observe actual aligned geometry before taking
+            // the acceptance snapshot; a persistent overlap still times out.
+            await until(width=>innerWidth===width&&Math.abs(document.querySelector('#run-workspace').getBoundingClientRect().top-Math.ceil(document.querySelector('.app-header').getBoundingClientRect().bottom))<=1,viewport.width);
+            const layout=await layoutSnapshot();assert.ok(layout.scrollWidth<=layout.width+1&&layout.run.top>=layout.header.bottom-1&&layout.run.height>=300,JSON.stringify(layout));report.runLayouts.push(layout);report.runLayoutTransitions.push({width:viewport.width,initial,settled:layout});
+        }
         if(keyboardInputs)await keyboardDismissal();
         const a=path.join(directory,'runtime-a.bin'),b=path.join(directory,'runtime-b.bin'),bad=path.join(directory,'runtime-invalid.bin');await writeFile(a,Buffer.from(Float32Array.of(1,2).buffer),{flag:'wx'});await writeFile(b,Buffer.from(Float32Array.of(3,4).buffer),{flag:'wx'});await writeFile(bad,Buffer.of(1,2,3),{flag:'wx'});
         await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);assert.equal(await read(()=>document.querySelectorAll('#edit-runtime-inputs fieldset').length),2);
