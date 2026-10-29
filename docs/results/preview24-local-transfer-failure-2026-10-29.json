@@ -1,0 +1,103 @@
+{
+  "format": "model-lens-prepared-snapshot-review",
+  "version": 1,
+  "status": "failed",
+  "startedAt": "2026-10-29T01:38:12.625Z",
+  "source": {
+    "commit": "f9984335b7196eb066cbe85f44673de0dcd3b42f",
+    "tree": "101d8828ad52f91183515248e7dada85fbd96663",
+    "committedAt": "2026-10-29T09:36:22+08:00",
+    "dirty": false
+  },
+  "runId": 40801429782,
+  "artifacts": [],
+  "prepared": {
+    "prepared": true,
+    "promotion": false,
+    "controllerSource": "f9984335b7196eb066cbe85f44673de0dcd3b42f",
+    "coreSource": "f9984335b7196eb066cbe85f44673de0dcd3b42f",
+    "checkedAt": "2026-10-29T01:36:52.320Z",
+    "buildId": "d0676e3b7609c608",
+    "siteId": "0ed4da304bce56d8dbbb4f8ce9ae18bc86284fe14fcfee4c8e79fa66af194c9f",
+    "siteManifestSHA256": "b385747a74dc13e46b6722ff1439ef4fa8544f177e23ee093df9f7d68dab7695",
+    "previousSiteId": "c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920",
+    "previousDeployment": {
+      "deploymentId": 7401117862,
+      "controllerSource": "94af79132ee37bc11219ab87b458d5664c434b34",
+      "runId": 40796884645,
+      "attempt": 1,
+      "jobId": 123195623982,
+      "siteId": "c128cb85bc1b80b9fd3ebcbf508734a52537f89f0af58e55bd40c0fabc18e920",
+      "legacy": false
+    },
+    "history": [
+      {
+        "build": "d0676e3b7609c608",
+        "kind": "verified-candidate"
+      },
+      {
+        "build": "163f38ab1dc856e4",
+        "kind": "github-release",
+        "releaseId": 425024166,
+        "assetId": 680389934,
+        "tag": "v0.2.0-preview.7",
+        "source": "a0c0f702e310b53fc6baa3a05a57dbb5ca79b887",
+        "zipSHA256": "4a7db3bcf310d7253c1d103cf86292323c32441b7471e84c035917a66b0702f7",
+        "zipBytes": 29454029,
+        "manifestSHA256": "856da197840ba33d498317d07e22b223c20bac0d84984b226a82cece189b4a54"
+      },
+      {
+        "build": "3cc83fdeb25322bb",
+        "kind": "github-release",
+        "releaseId": 427349785,
+        "assetId": 686888034,
+        "tag": "v0.2.0-preview.23",
+        "source": "94af79132ee37bc11219ab87b458d5664c434b34",
+        "zipSHA256": "5b2e7ee7370e68449d7350d6500a58ee8a45e26601fbafee8dcceb08b4295b2f",
+        "zipBytes": 41108675,
+        "manifestSHA256": "2dd45bc0c7899f0f8fdf5da0e52cca9f91060f420d9d8e00562b03f164d161e6"
+      },
+      {
+        "build": "04aa44009821ed92",
+        "kind": "github-release",
+        "releaseId": 427306983,
+        "assetId": 686708945,
+        "tag": "v0.2.0-preview.22",
+        "source": "e654829c9c51a0f163ec3e986ce3e8b8bc8cbe3b",
+        "zipSHA256": "8b3e8773497127fa33c9c0b8af6d4dd6c25bd13c040ee1d059917d68a1bdaeea",
+        "zipBytes": 41108431,
+        "manifestSHA256": "28be9ba58f742a5767feda5de229cf0c318f63a7d703526a2555dc7ffd415ecb"
+      }
+    ],
+    "gates": [
+      {
+        "kind": "core",
+        "runId": 40700051621,
+        "reused": true
+      },
+      {
+        "kind": "browser",
+        "runId": 40799729271,
+        "reused": true
+      },
+      {
+        "kind": "contract",
+        "runId": 40799732347,
+        "reused": true
+      },
+      {
+        "kind": "site",
+        "runId": 40799735463,
+        "reused": true
+      }
+    ],
+    "zipSHA256": "e78342b686841d77acef831199b40867974db4d0f46db1b27583c04b2c89c6a6"
+  },
+  "error": "Error: Artifact download failed: null\n    at ChildProcess.<anonymous> (<local-workspace>/build/qa/review-prepared-site.mjs:25:320)\n    at ChildProcess.wrapper (node:events:639:12)\n    at ChildProcess.emit (node:events:514:28)\n    at maybeClose (node:internal/child_process:1172:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:335:5)",
+  "finishedAt": "2026-10-29T01:40:17.141Z",
+  "localRecordRedaction": {
+    "localWorkspacePathRemoved": true,
+    "originalRawRetainedLocally": true,
+    "originalRawSHA256": "44c76c5a89d2fd8f12cd5cebc004e094458fd8c88f30f110cc230203193ca6d0"
+  }
+}

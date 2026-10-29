@@ -6,7 +6,7 @@
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.23](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.23)／build `3cc83fdeb25322bb`。修正手動執行的輸入視窗取消後鍵盤焦點遺失；Escape 與取消按鈕在 1280×640／32px 下返回原操作，草稿與圖形視角保留，不自動推論。正式站 1,375 檔、30 項原生操作、八種 runtime 情境及四份固定下載已完成獨立核對，見 [正式交付](docs/runtime-keyboard.md#preview23-正式交付)。本輪 1.25 GiB／21,005 OP 八輪的權重、custom options、pattern 與程序退出通過；既有三引擎及 80 輪歷史量測保留各自來源，見 [大檔驗收範圍](docs/public-acceptance.md)。
+目前固定正式版為 [preview.24](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.24)／build `d0676e3b7609c608`。修正新增 OP 沒有可用 tensor 參考時進階表單被例外取代的問題；現在保留表單、顯示原因並停用無法產生的亂數。正式站 1,376 檔、30 項原生操作、九種 runtime 情境與四份固定下載已獨立核對，見 [正式交付](docs/random-reference-guard.md#preview24-正式交付)。本輪 1.25 GiB／21,005 OP 八輪的權重、custom options、pattern 與程序退出通過；既有各引擎及長測結果保留各自來源。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
