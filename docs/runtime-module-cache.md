@@ -114,3 +114,22 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 第一次明確下載 IO 時只建立一個 Blob，保存在本次 session 的 IO 物件，後續下載重用它；原 transferred bytes 立即以標準 `ArrayBuffer.transfer(0)` 退還 backing storage。若瀏覽器沒有這個 API，則清零 retained view 並丟棄 owned reference，不宣稱強制釋放或獨立 heap 證據。Blob snapshot 必須在退還 bytes 後仍保持完整 ZIP／SHA／CRC。原生 URL 的既有 60 秒期限不變。
 
 開始下一次執行、取消、reset／換模型及 late result 不再只丟棄物件，而明確退還舊 owned bytes；下載 Blob 只清除 session 的引用，已建立 URL 仍按原期限到期。部分 view／shared memory 不可 detach 或清零；不新增 IO 持久快取、runtime 重用、隱私資料儲存、推論觸發或 forced GC。舊程式上先取得真實回歸失敗（未 retire bytes、未 cache Blob、session 未清理），修改後 51 項選測通過，含實際 Worker 的 8 MiB IO、CPU reference、fallback、cancel／restart 的 late-result 隔離。這是資源所有權修正，仍需原 Hosted RSS 驗收，不能先稱 Firefox 問題已解決。
+
+### Ownership 修正後仍未達標
+
+[Firefox 40961709357](https://github.com/koviankevin/tflite-explorer/actions/runs/40961709357) 使用來源 `d0f3ff92389a087a0f78842d953009b1bbce4477`、tree `d5d3b49813bb1189ac691de8f08b6b7e8579375c`、build `ceb24629a446ce6c`，沒有重跑成功部署。PR150 的必要 Node／建置與 contract 通過，合併完整 tree 與受測 head 相同；本機 51 項選測及最後 20 項 ownership／session 檢查 exit 0。新增 Blob 快取、owned bytes retirement、零化 fallback 及 late result 隔離確實完成，但本次 job 仍是 **failure**。
+
+306 core 檔、provider digest／CRC／source、17 功能／19 runtime／5 指南、67 model／20 runtime close、實際八輪 24 CPU／8 份完整 IO 均通過；獨立 cold 的一次 GET／三個 runtime／一個 model close，以及 retained native File input 的確認／取消也通過。Provider 與獨立失敗讀取器分別實際 exit 0，沒有拿認證成功取代原 RSS 判定。原始 [24 檔證據 ZIP](results/runtime-io-ownership32-originals.zip)及 [SHA inventory／退出紀錄](results/runtime-io-ownership32-originals.json)保留；ZIP SHA `bae8380f06e0567c43df92411f6f12ea0ebf99989d12d9a0c855bde912a82deb`。
+
+| 原門檻指標 | d0f3ff9 本次觀測 | 判定 |
+| --- | ---: | --- |
+| 測量六輪 closed RSS slope | **18,457,629.26 bytes／輪** | **超過 16,777,216，失敗** |
+| 最終 URL 自然釋放後 drift | 122,642,432 bytes | 低於 134,217,728 |
+| sampled peak growth | 266,063,872 bytes | 低於原上限 |
+| 最大取樣缺口 | 563 ms | 通過 |
+
+上一批不同應用的 slope 是 37,970,856.23，這次較低；兩者都是單次有界八輪觀測，不是根因歸屬或所有負載的效能保證。原 60 秒 URL、baseline／fixture／門檻與 30 秒 runtime deadline 不變，不做 forced GC 或 RSS 扣除。所有觀測 PID／start-ticks 退出。頁面匿名記憶體在第 3～8 輪 settled medians 為 170.07、178.82、189.36、184.39、189.67、198.03 MiB；父程序為 178.18、188.94、201.17、214.04、226.96、240.10 MiB。這是觀測欄位，不能直接認定哪些物件洩漏。
+
+不為了碰到綠燈重跑同一程式。下一步逐一驗證大型暫存分配：同一模型連續手動執行能否用已清零、限量且真正移交所有權的 session buffer，避免每次重建完整 ZIP；raw BIN 的 private arrayBuffer 是否能在 little-endian 環境直接建立 typed view，避免額外 copy。兩者都須先有真實 red、bytes／型別／cancel／late-result 正負例，再以原 RSS 流程驗收。若仍不足才補新的無 WASM ownership 對照，不從對照值扣除驗收 RSS。
+
+只有主發布四關卡的 core executed scope 相同可沿用；瀏覽器、contract、site fingerprints 已因兩個 runtime 模組及測試改變。由於首要 Firefox RSS 尚未通過，沒有再觸發整批發布驗證；preview.32 繼續未發布，正式 preview.31 的 const 分佈功能不受影響。
