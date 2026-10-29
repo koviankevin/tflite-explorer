@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {EventEmitter} from 'node:events';
-import {evaluateLifecycle,LIFECYCLE_POLICY as policy,MODEL_EDIT_LIFECYCLE_POLICY,median,slope} from './browser/lifecycle-policy.mjs';
+import {evaluateLifecycle,LIFECYCLE_POLICY as policy,MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY,median,slope} from './browser/lifecycle-policy.mjs';
 import {modelWorkerHeap} from './browser/worker-heap.mjs';
 
 const good=()=>({cycles:Array.from({length:8},(_,i)=>({cycle:i+1,weightVerified:true,optionsVerified:true,patternSourceMatches:1,patternReopenMatches:1,negativePatternMatches:0,fileInputEmpty:true,liveModelWorkers:0,activeBlobUrls:0,closedRssBytes:300*1024**2,closedMainHeapBytes:10*1024**2,workerHeaps:[{usedSize:1,backingStorageSize:0},{usedSize:2,backingStorageSize:3}]})),samples:[{rssBytes:300*1024**2},{rssBytes:700*1024**2}]});
@@ -34,6 +34,17 @@ class FakeCDP extends EventEmitter {
     calls=[];result={usedSize:12,totalSize:40,backingStorageSize:8};
     async send(method,args){this.calls.push({method,args});if(method==='Target.getTargets')return {targetInfos:[{type:'worker',url:'http://localhost/src/model-worker.js?v=123',targetId:'worker-1'}]};if(method==='Target.attachToTarget')return {sessionId:'session-1'};if(method==='Target.sendMessageToTarget' && this.result!==null)queueMicrotask(()=>this.emit('Target.receivedMessageFromTarget',{sessionId:'session-1',message:JSON.stringify({id:1,result:this.result})}));return {};}
 }
+
+test('v3 lifecycle requires native composition, retained weights/options, stable outputs and laptop view in every cycle',()=>{
+    const report=goodEdit();report.policy=MODEL_COMPOSITION_LIFECYCLE_POLICY;report.fixture.editFingerprint='f'.repeat(64);report.fixture.bytes=1349965216;
+    for(const c of report.cycles){c.workerHeaps.push({usedSize:3,backingStorageSize:4},{usedSize:3,backingStorageSize:4});c.composition={workspaceNative:true,imports:[4,4],sourceNodes:8,cloneNodes:1,undoRedo:true,sourceOperators:21005,outputOperators:9,readbackOperators:9,bytes:1345938024,weightVerified:true,optionsVerified:true,weightSHA256:report.fixture.weightSHA256,roundTrip:true,prefixMatches:1,branchMatches:1,reshapeMatches:1,byteComparison:'passed',comparedBytes:1342177280,byteRanges:8,sha256:'c'.repeat(64),exportMs:1000,inputs:[0],outputs:[21009,21011],draft:{version:2,nodes:8,fingerprint:report.fixture.editFingerprint},layout:{font:32,width:1280,scrollWidth:1280,graphHeight:246}};}
+    for(const c of report.cycles)Object.assign(c.composition,{negativePatternMatches:0,recovery:{complete:true,bytes:report.fixture.bytes,fingerprint:report.fixture.editFingerprint,maxRead:1024**2,violations:[]}});
+    assert.equal(evaluateLifecycle(report).status,'passed');assert.deepEqual({...MODEL_COMPOSITION_LIFECYCLE_POLICY,version:1},policy);
+    const changes=[r=>delete r.cycles[3].composition,r=>r.cycles[3].modelEdit.weightVerified=false,r=>r.cycles[3].workerHeaps.pop(),r=>r.cycles[3].composition.layout.graphHeight=199,r=>r.cycles[3].composition.layout.scrollWidth=1281,r=>r.cycles[3].composition.draft.fingerprint='x',r=>r.cycles[3].composition.draft.version=1];
+    for(const [key,value] of Object.entries({workspaceNative:false,imports:[4],sourceNodes:7,cloneNodes:0,undoRedo:false,sourceOperators:21004,outputOperators:8,readbackOperators:8,bytes:1024**3,weightVerified:false,optionsVerified:false,weightSHA256:'z'.repeat(64),roundTrip:false,prefixMatches:2,branchMatches:0,reshapeMatches:7000,byteComparison:'not-run',comparedBytes:1024,byteRanges:0,sha256:'d'.repeat(64),exportMs:0,inputs:[0,21005],outputs:[21010]}))changes.push(r=>{r.cycles[3].composition[key]=value;});
+    changes.push(r=>r.cycles[3].composition.negativePatternMatches=1,r=>r.cycles[3].composition.recovery.complete=false,r=>r.cycles[3].composition.recovery.violations.push('read'));
+    for(const mutate of changes){const copy=structuredClone(report);mutate(copy);assert.equal(evaluateLifecycle(copy).status,'failed');}
+});
 test('Worker CDP reads actual isolate metrics and always detaches observer',async()=>{
     const cdp=new FakeCDP();assert.equal((await modelWorkerHeap(cdp)).backingStorageSize,8);assert.equal(cdp.listenerCount('Target.receivedMessageFromTarget'),0);assert.equal(cdp.calls.at(-1).method,'Target.detachFromTarget');
     for(const result of [null,{usedSize:12}]){const bad=new FakeCDP();bad.result=result;await assert.rejects(modelWorkerHeap(bad,{timeoutMs:10}),/timed out|unavailable/);assert.equal(bad.listenerCount('Target.receivedMessageFromTarget'),0);assert.equal(bad.calls.at(-1).method,'Target.detachFromTarget');}
