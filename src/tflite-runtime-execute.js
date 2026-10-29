@@ -2,12 +2,12 @@ import {RUNTIME_ENGINE,RUNTIME_LIMITS,runtimeSkipped} from './tflite-runtime-pol
 import {runtimeInput,validateRuntimeInputs} from './tflite-runtime-inputs.js';
 import {runtimeArchive} from './tflite-runtime-archive.js';
 const scope='主 subgraph 的載入／CPU 配置及一組指定輸入；不代表數值精度、等價性、全部 signatures 或分支覆蓋。';
-export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>({mode:'zero'})),progress=()=>{},diagnostics=()=>[],transferableIO=false}){
+export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>({mode:'zero'})),progress=()=>{},diagnostics=()=>[],transferableIO=false,ioBuffer=null}){
     if(!plan?.eligible||blob.size!==plan.modelBytes||blob.size>RUNTIME_LIMITS.modelBytes)return runtimeSkipped(plan?.reason||'模型與執行檢查資料不符。');
     let stage='inputs',model=null,environment=null,ins=[],outs=[],compiled=false,invoked=false,modelSHA256=null,inputDetails=[],outputDetails=[];
     const started=performance.now();
     const record=(status,reason)=>({schemaVersion:1,engine:RUNTIME_ENGINE,status,stage,reason,compiled,invoked,modelSHA256,elapsedMs:Math.round(performance.now()-started),scope,diagnostics:diagnostics().slice(-12).map(s=>String(s).slice(0,512))});
-    const capture=(status,reason)=>{const result=record(status,reason);if(ins.length||invoked)try{result.io=runtimeArchive({validation:result,inputs:ins,outputs:outs,inputDetails,outputDetails:outs.map((t,i)=>({name:outputDetails[i]?.name,dtype:t.dtype})),specs,modelSHA256,transferable:transferableIO});}catch(error){result.ioError=`執行記錄未能保存：${String(error.message).slice(0,512)}`;}return result;};
+    const capture=(status,reason)=>{const result=record(status,reason);if(ins.length||invoked)try{result.io=runtimeArchive({validation:result,inputs:ins,outputs:outs,inputDetails,outputDetails:outs.map((t,i)=>({name:outputDetails[i]?.name,dtype:t.dtype})),specs,modelSHA256,transferable:transferableIO,ioBuffer});}catch(error){result.ioError=`執行記錄未能保存：${String(error.message).slice(0,512)}`;}return result;};
     try{
         validateRuntimeInputs(plan.inputs,specs);
         stage='compile';progress('LiteRT：載入模型及配置 CPU tensors…');

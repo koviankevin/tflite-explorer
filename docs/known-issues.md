@@ -21,6 +21,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
+raw BIN copy 移除後的[新一批原始結果](runtime-module-cache.md#raw-bin-候選原始結果)仍是 18,495,546.51 bytes／輪，沒有改善剩餘 Firefox RSS slope。所有功能／內容與 native 清理仍通過；接著驗證同一模型的零化 ZIP buffer 重用，候選尚未發布。較早 d0f3ff9 結果保留如下。
+
 最新 IO ownership 候選已核對：[d0f3ff9 的 Firefox 八輪](runtime-module-cache.md#ownership-修正後仍未達標)在完整功能／IO／Worker／程序清理通過後，closed RSS slope 為 **18,457,629.26 bytes／輪，仍超過原 16 MiB 門檻**；比先前 37,970,856.23 低，仍不能宣稱問題已修復。原始失敗及讀取器已保存。沒有重跑碰綠燈、調整門檻或發布 preview.32；接著逐一驗證暫存分配。下段較早各批結果保持其來源與界線。
 
 preview.31 相同應用另完成 [WebKit 手動 CPU／IO 八輪 RSS](desktop-runtime-io.md#首次原始結果)，24 次 CPU／八份完整 IO、URL／Worker／程序清理通過。Firefox 同次量測則在 closed-RSS slope 超過原 16 MiB／輪，原始失敗保留；最終 URL 釋放後 drift 未超限，不足以證明洩漏或排除問題。後續程序分類與無模型對照也保留原始判定，沒有修改正式應用、重跑成功部署或放寬門檻。

@@ -1,13 +1,14 @@
 import {RUNTIME_LIMITS,runtimeSkipped} from './tflite-runtime-policy.js';
 import {prepareRuntimeModule} from './runtime-module.js';
+import {runtimeIOBufferTransfers,releaseRuntimeIOBuffer} from './runtime-io.js';
 function prepared(slot,module){
     if(slot.finished)return;
-    try{slot.worker.postMessage({...slot.payload,runtimeModule:module});slot.payload=null;}
+    try{slot.worker.postMessage({...slot.payload,runtimeModule:module},runtimeIOBufferTransfers(slot.payload.ioBuffer));slot.payload=null;}
     catch(error){slot.finish(runtimeSkipped(`此瀏覽器無法傳送本機 runtime：${String(error.message).slice(0,512)}`));}
 }
 function preparationFailed(slot,error){if(!slot.finished)slot.finish(runtimeSkipped(`無法準備公開 runtime：${String(error?.message||error).slice(0,512)}`));}
 function finish(slot,release,result){
-    if(slot.finished)return;slot.finished=true;clearTimeout(slot.timer);slot.payload=slot.progress=null;
+    if(slot.finished)return;slot.finished=true;clearTimeout(slot.timer);releaseRuntimeIOBuffer(slot.payload?.ioBuffer);slot.payload=slot.progress=null;
     if(slot.worker){slot.worker.onmessage=slot.worker.onerror=slot.worker.onmessageerror=null;slot.worker.terminate();slot.worker=null;}
     const resolve=slot.resolve;slot.resolve=null;release(slot);resolve(result);
 }
@@ -30,9 +31,9 @@ export function runtimeClient({createWorker=()=>new Worker(new URL('./tflite-run
     let current=null;
     const release=slot=>{if(current===slot)current=null;};
     const cancel=()=>current?.finish({...runtimeSkipped('已取消本機執行檢查；尚未驗證的結果不算通過。'),cancelled:true});
-    return {cancel,check(blob,plan,progress=()=>{},specs=plan?.inputs?.map(()=>({mode:'zero'}))){
-        cancel();if(!plan?.eligible)return Promise.resolve(runtimeSkipped(plan?.reason||'缺少執行檢查 metadata。'));
-        current={worker:null,timer:null,finished:false,payload:{blob,plan,specs},progress,finish:null,resolve:null};
+    return {cancel,check(blob,plan,progress=()=>{},specs=plan?.inputs?.map(()=>({mode:'zero'})),ioBuffer=null){
+        cancel();if(!plan?.eligible){releaseRuntimeIOBuffer(ioBuffer);return Promise.resolve(runtimeSkipped(plan?.reason||'缺少執行檢查 metadata。'));}
+        current={worker:null,timer:null,finished:false,payload:{blob,plan,specs,ioBuffer},progress,finish:null,resolve:null};
         return start(current,createWorker,prepareModule,release);
     }};
 }
