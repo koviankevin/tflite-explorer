@@ -42,4 +42,4 @@ Firefox／WebKit 較早加入 [實體 1.25 GiB 八輪程序 RSS 驗收](desktop-
 
 大型 v2 組合草稿的 [手動儲存、取消及重新選原模型還原](large-composition-draft.md#已核對的結果)已補驗，包含 32px 視角、Redo、完整權重／options、相同 bytes 重匯出及原生程序清理；當時截圖發現的工作區按鈕選取殘留已在 [preview.27](workspace-mode-state.md#preview27-正式交付)修復，後續 preview.30 的工作區互斥驗收也通過。
 
-現行 preview.30 的 Firefox／WebKit 獨立執行、分佈／const／草稿及五主題指南另有[跨引擎驗收計畫](desktop-runtime.md)。測試 driver 擴充不改應用或重新部署；實際 CI 結果待核對，不把較早十三項結果延伸成新功能也已通過。
+現行 preview.30 的 Firefox 142.0.1／WebKit 26.0 已完成[跨引擎獨立核對](desktop-runtime.md#最終核對結果)：各十六項原生操作、四次正式示範 CPU、十九種執行／分佈情境、五組指南及六十模型／十六 runtime Workers 關閉。兩次 Firefox 測試觀察問題與原失敗保留，WebKit 成功按相同應用及僅測試等待／完成策略的差異沿用；未修改應用或重新部署。頁面 layout Worker 最後 close 與 Firefox JS module request 的觀察界線另明列，不延伸為所有程序／RSS、數小時或完整螢幕閱讀器已驗收。

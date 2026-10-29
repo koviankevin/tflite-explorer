@@ -19,6 +19,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
+現行 preview.30 已核對 [Firefox 142.0.1／WebKit 26.0 的十六項功能](desktop-runtime.md#最終核對結果)，包含獨立執行、分佈／const／草稿與指南；這是 Hosted Linux 的短流程，不改變下列長期、其他 OS 與完整無障礙驗收缺口。
+
 已核對的瀏覽器／程序量測主要來自 Hosted Linux。其他 OS／固定實體硬體 SLA、其他引擎與手動 interpreter 數小時負載、Worker 連續 heap 峰值、OS 斷電／儲存回收、任意資料格式升降級及完整螢幕閱讀器／新使用者流程仍未驗收。既有八輪／兩小時結果保持各自來源與量測範圍，見 [品質工作清單](product-readiness.md)。
 
 ## 本輪已修復

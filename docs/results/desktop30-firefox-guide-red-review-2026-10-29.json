@@ -1,0 +1,1203 @@
+{
+  "source": {
+    "commit": "d868f40055357ec0c91d7b02050f45ffcce85900",
+    "tree": "ce3baaffcb33e0ca58f40566e7dded675fcf9d76",
+    "committedAt": "2026-10-29T19:42:19+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "engines": [
+    "firefox"
+  ],
+  "authentication": "passed",
+  "acceptance": "failed",
+  "reviews": [
+    {
+      "authentication": "passed",
+      "acceptance": "failed",
+      "engine": "firefox",
+      "runId": 40867450185,
+      "attempt": 1,
+      "source": {
+        "commit": "d868f40055357ec0c91d7b02050f45ffcce85900",
+        "tree": "ce3baaffcb33e0ca58f40566e7dded675fcf9d76",
+        "committedAt": "2026-10-29T19:42:19+08:00",
+        "dirty": false
+      },
+      "jobId": 123425697708,
+      "artifactId": 12895070198,
+      "providerDigest": "sha256:6fd04acc1e9d44f5aec2a2b6f2c339613deb212a26aa4253cfc874a85914f580",
+      "reportSHA256": "4b62c8cbcd4556299f2b9051385c1d0714c1aa0cc6fd3a24508851c281b730fc",
+      "browserVersion": "142.0.1",
+      "target": "production",
+      "build": "f3ff13b75b83ee57",
+      "siteId": "ff1f2e3d7bafb505f8f0bf1037977746625f4c1e4c98e84779bbd301df76d956",
+      "coreSource": {
+        "commit": "0ee55ba2803038b22b0c11dfc38b6f890aedca5c",
+        "tree": "d70b6d131004f872b4fec3ae3667433e04f47199",
+        "committedAt": "2026-10-29T19:03:11+08:00",
+        "dirty": false
+      },
+      "staticFiles": 1400,
+      "otherWorkerCloseEvents": [
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/netron/worker.js?v=f3ff13b75b83ee57",
+          "closed": false
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/edit-recovery-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        },
+        {
+          "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+          "closed": true
+        }
+      ],
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "exact published demo original and reopened edit run with zero/random inputs on the selected engine",
+        "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout"
+      ],
+      "runtimeProof": null,
+      "scope": "Native functional compatibility; model/runtime Workers require explicit close events. Final page layout Worker close may be unobserved after browser close; no all-process/RSS claim.",
+      "runtime": {
+        "cases": [
+          "opening/editing/exporting never starts interpreter or downloads runtime",
+          "32px keyboard Escape and cancel-button return focus, preserve camera/draft and never start runtime or download",
+          "raw multi-input byte validation, actual CPU ADD/MUL outputs, ZIP CRC/bytes bound to reopened export; editor report remains structural-only",
+          "dtype-safe generated weights and random inputs reject float32 overflow before execution and preserve actual CPU/ZIP values",
+          "changing model tabs cancels an in-flight WASM execution and drops late results and IO",
+          "manual cancellation closes Worker and clears stale input/output after draft changes",
+          "invalid kernel broadcast is reported as failed",
+          "unregistered custom kernel is explicitly unverified without starting WASM",
+          "a signature targeting a different subgraph cannot be reported as a primary-model pass",
+          "native layer selection exports a TFLite slice, opens a new model tab, runs exact slice bytes and clears IO on close",
+          "optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor",
+          "32px OP options reject rounded JSON integers without changing the draft and preserve exact quoted int64 values without inference",
+          "32px non-unit SQUEEZE axes block export with a reason, preserving the draft without inference or download",
+          "32px variadic CONCATENATION infers and exports [1,4], actual raw BIN CPU/IO ZIP values agree, and native reopen/search locates the new OP",
+          "composition pattern A/B, independent histories, explicit interface, v2 draft, manual CPU and verified export/reopen",
+          "custom composition preserves opaque options and original IDs/weights; unregistered kernel remains unverified without WASM",
+          "shared beginner presets and all four random distributions preserve exact typed const/input bytes and actual CPU outputs",
+          "v3 random-rule draft restores distribution/seed, 32px view and redo, then exports identical TFLite bytes and reopens",
+          "MLIR remains exploration-only and never offers a TFLite execution or editing action"
+        ],
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/tflite-runtime-worker.js?v=f3ff13b75b83ee57",
+            "closed": true
+          }
+        ],
+        "downloads": 23,
+        "requests": [
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+          "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm"
+        ],
+        "keyboardInputsRequired": true,
+        "runLayouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "run": {
+              "x": 0,
+              "y": 115,
+              "width": 1366,
+              "height": 495,
+              "top": 115,
+              "right": 1366,
+              "bottom": 610,
+              "left": 0
+            },
+            "header": {
+              "x": 0,
+              "y": 0,
+              "width": 1366,
+              "height": 115,
+              "top": 0,
+              "right": 1366,
+              "bottom": 115,
+              "left": 0
+            }
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "run": {
+              "x": 0,
+              "y": 128,
+              "width": 1280,
+              "height": 482,
+              "top": 128,
+              "right": 1280,
+              "bottom": 610,
+              "left": 0
+            },
+            "header": {
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 128,
+              "top": 0,
+              "right": 1280,
+              "bottom": 128,
+              "left": 0
+            }
+          }
+        ],
+        "runLayoutTransitions": [
+          {
+            "width": 1366,
+            "initial": {
+              "width": 1366,
+              "scrollWidth": 1366,
+              "run": {
+                "x": 0,
+                "y": 128,
+                "width": 1366,
+                "height": 482,
+                "top": 128,
+                "right": 1366,
+                "bottom": 610,
+                "left": 0
+              },
+              "header": {
+                "x": 0,
+                "y": 0,
+                "width": 1366,
+                "height": 115,
+                "top": 0,
+                "right": 1366,
+                "bottom": 115,
+                "left": 0
+              }
+            },
+            "settled": {
+              "width": 1366,
+              "scrollWidth": 1366,
+              "run": {
+                "x": 0,
+                "y": 115,
+                "width": 1366,
+                "height": 495,
+                "top": 115,
+                "right": 1366,
+                "bottom": 610,
+                "left": 0
+              },
+              "header": {
+                "x": 0,
+                "y": 0,
+                "width": 1366,
+                "height": 115,
+                "top": 0,
+                "right": 1366,
+                "bottom": 115,
+                "left": 0
+              }
+            }
+          },
+          {
+            "width": 1280,
+            "initial": {
+              "width": 1280,
+              "scrollWidth": 1280,
+              "run": {
+                "x": 0,
+                "y": 115,
+                "width": 1280,
+                "height": 495,
+                "top": 115,
+                "right": 1280,
+                "bottom": 610,
+                "left": 0
+              },
+              "header": {
+                "x": 0,
+                "y": 0,
+                "width": 1280,
+                "height": 128,
+                "top": 0,
+                "right": 1280,
+                "bottom": 128,
+                "left": 0
+              }
+            },
+            "settled": {
+              "width": 1280,
+              "scrollWidth": 1280,
+              "run": {
+                "x": 0,
+                "y": 128,
+                "width": 1280,
+                "height": 482,
+                "top": 128,
+                "right": 1280,
+                "bottom": 610,
+                "left": 0
+              },
+              "header": {
+                "x": 0,
+                "y": 0,
+                "width": 1280,
+                "height": 128,
+                "top": 0,
+                "right": 1280,
+                "bottom": 128,
+                "left": 0
+              }
+            }
+          }
+        ],
+        "keyboardDismissals": [
+          {
+            "action": "escape",
+            "focusedId": "edit-runtime-check",
+            "focusedTag": "BUTTON",
+            "checkEnabled": true,
+            "changes": "",
+            "camera": {
+              "left": 0,
+              "top": 0,
+              "font": "32"
+            }
+          },
+          {
+            "action": "cancel-button",
+            "focusedId": "edit-runtime-check",
+            "focusedTag": "BUTTON",
+            "checkEnabled": true,
+            "changes": "",
+            "camera": {
+              "left": 0,
+              "top": 0,
+              "font": "32"
+            }
+          }
+        ],
+        "emptyReference": {
+          "disabled": true,
+          "referenceDisabled": true,
+          "options": 0,
+          "hint": "此 subgraph 沒有可用的 tensor 型別與 shape 參考，無法產生亂數。請先接入有效 tensor。",
+          "added": 1
+        },
+        "integerPrecision": {
+          "rejected": "offset_dims 必須為安全整數；較大的 64-bit 值請使用十進位整數文字（陣列元素也需加雙引號）。",
+          "unchangedChanges": true,
+          "unchangedTitle": true,
+          "accepted": {
+            "vector": [
+              "9007199254740993"
+            ],
+            "scalar": "9007199254740993",
+            "width": 1280,
+            "scrollWidth": 1280,
+            "font": "32"
+          }
+        },
+        "shapeValidation": {
+          "rejected": "SQUEEZE squeeze_dims 只能指定範圍內、大小為 1 的維度。",
+          "invalidExportPreservesDraft": true,
+          "exported": {
+            "shape": [
+              1,
+              4
+            ],
+            "inputs": [
+              0,
+              1
+            ],
+            "axis": 1,
+            "sha256": "bd18d387cedfc096f01af2e3bc7abfacb8932696e161f27f6ad924ee3d2650d9"
+          },
+          "cpuOutputs": [
+            [
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "layout": {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "font": "32"
+          },
+          "reopenedAndLocated": true
+        },
+        "composition": {
+          "cases": [
+            "native A/B pattern imports deduplicate the shared OP, import Undo/Redo and separate model/composition histories preserve wiring and view",
+            "portable composition draft v2, explicit interface, verified weight report, manual CPU [14,28], equal re-export and source/result tabs with old pattern search"
+          ],
+          "workers": [
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            },
+            {
+              "url": "https://koviankevin.github.io/tflite-explorer/versions/f3ff13b75b83ee57/src/model-worker.js?v=f3ff13b75b83ee57",
+              "closed": true
+            }
+          ],
+          "layouts": [
+            {
+              "width": 1366,
+              "scrollWidth": 1366,
+              "graphHeight": 242.5,
+              "font": "32",
+              "cards": 4,
+              "noOverlap": true
+            },
+            {
+              "width": 1280,
+              "scrollWidth": 1280,
+              "graphHeight": 229.5,
+              "font": "32",
+              "cards": 4,
+              "noOverlap": true
+            }
+          ],
+          "receipts": [
+            {
+              "schemaVersion": 1,
+              "format": "model-lens-export-verification",
+              "verifiedAt": "2026-10-29T11:44:30.833Z",
+              "outputSHA256": "5978316437f5c7b216ae4b587e702a7b43486044dc7c1887d38697d28b538598",
+              "source": {
+                "name": "composition-original.tflite",
+                "bytes": 2348
+              },
+              "output": {
+                "name": "composition-result.tflite",
+                "bytes": 2408
+              },
+              "byteComparison": {
+                "status": "passed",
+                "ranges": [
+                  {
+                    "sourceOffset": 2276,
+                    "outputOffset": 2400,
+                    "bytes": 8,
+                    "kind": "buffer",
+                    "reference": "buffer:1",
+                    "sha256": "986c627ee6ef1bcc3d746256a7045624ceeb44c4ed557ca055b2d43933de3489"
+                  }
+                ],
+                "bytes": 8
+              },
+              "nativeCompiler": {
+                "status": "not-run"
+              },
+              "runtimeEquivalence": {
+                "status": "not-run"
+              },
+              "limitations": [
+                "僅比對報告列出的原始 byte ranges，完整來源檔未計算 SHA-256；報告本身未簽章。",
+                "下載後的完整輸出 SHA-256 供後續檔案核對；未宣稱來源身分或 OP 語意等價。",
+                "瀏覽器內的結構檢查記錄未在此工具重跑；native compiler 驗證僅在明確指定時執行。"
+              ]
+            },
+            {
+              "schemaVersion": 1,
+              "format": "model-lens-export-verification",
+              "verifiedAt": "2026-10-29T11:44:37.485Z",
+              "outputSHA256": "6e40255c58ba5640765c14c4938d8f8311b3890abd0b4c53db636e709b1b91c3",
+              "source": {
+                "name": "composition-custom.tflite",
+                "bytes": 2356
+              },
+              "output": {
+                "name": "composition-custom-result.tflite",
+                "bytes": 2148
+              },
+              "byteComparison": {
+                "status": "passed",
+                "ranges": [
+                  {
+                    "sourceOffset": 1688,
+                    "outputOffset": 1744,
+                    "bytes": 7,
+                    "kind": "custom-options-inline",
+                    "reference": "graph:0:operator:1",
+                    "sha256": "704f6d4334ef12a233ef65ec637056da3e9548bd99c5b1c2fffb0befbf69e7f0"
+                  },
+                  {
+                    "sourceOffset": 2284,
+                    "outputOffset": 2128,
+                    "bytes": 8,
+                    "kind": "buffer",
+                    "reference": "buffer:1",
+                    "sha256": "986c627ee6ef1bcc3d746256a7045624ceeb44c4ed557ca055b2d43933de3489"
+                  },
+                  {
+                    "sourceOffset": 2340,
+                    "outputOffset": 2144,
+                    "bytes": 4,
+                    "kind": "buffer",
+                    "reference": "buffer:2",
+                    "sha256": "63d987d1c6d69751c17297f410f5b3547a65d096a8993b35bcb4f9cad054f176"
+                  }
+                ],
+                "bytes": 19
+              },
+              "nativeCompiler": {
+                "status": "not-run"
+              },
+              "runtimeEquivalence": {
+                "status": "not-run"
+              },
+              "limitations": [
+                "僅比對報告列出的原始 byte ranges，完整來源檔未計算 SHA-256；報告本身未簽章。",
+                "下載後的完整輸出 SHA-256 供後續檔案核對；未宣稱來源身分或 OP 語意等價。",
+                "瀏覽器內的結構檢查記錄未在此工具重跑；native compiler 驗證僅在明確指定時執行。"
+              ]
+            }
+          ],
+          "modeStates": [
+            {
+              "mode": "composition",
+              "pressed": [
+                "false",
+                "true",
+                "false"
+              ],
+              "editorHidden": false
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "edit",
+              "pressed": [
+                "false",
+                "true",
+                "false"
+              ],
+              "editorHidden": false
+            },
+            {
+              "mode": "composition",
+              "pressed": [
+                "false",
+                "true",
+                "false"
+              ],
+              "editorHidden": false
+            },
+            {
+              "mode": "composition",
+              "pressed": [
+                "false",
+                "true",
+                "false"
+              ],
+              "editorHidden": false
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "composition",
+              "pressed": [
+                "false",
+                "true",
+                "false"
+              ],
+              "editorHidden": false
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            },
+            {
+              "mode": "explore",
+              "pressed": [
+                "true",
+                "false",
+                "false"
+              ],
+              "editorHidden": true
+            }
+          ],
+          "reset": {
+            "cancelPreserves": true,
+            "scopeCleared": true,
+            "returnsToExplore": true
+          },
+          "editorScreenshot": true,
+          "cpu": [
+            14,
+            28
+          ],
+          "rectangle": {
+            "font": 32,
+            "repeatToggle": true,
+            "moveDoesNotFlip": true,
+            "reversal": true,
+            "cancelPreserves": true,
+            "contextualAction": true
+          },
+          "custom": {
+            "options": true,
+            "ids": true,
+            "weights": true,
+            "unregisteredKernel": "not-verified"
+          },
+          "modelWorkers": 10
+        },
+        "distributions": {
+          "defaults": {
+            "weight": {
+              "distribution": "truncated-normal",
+              "mean": 0,
+              "std": 0.05,
+              "min": -0.1,
+              "max": 0.1,
+              "probability": 0,
+              "advanced": false
+            }
+          },
+          "executions": [
+            {
+              "first": "normal",
+              "inputs": [
+                {
+                  "distribution": "normal",
+                  "algorithm": "xorshift32-box-muller-v1",
+                  "seed": 1,
+                  "mean": 0,
+                  "std": 1
+                },
+                {
+                  "distribution": "bernoulli",
+                  "algorithm": "xorshift32-bernoulli-v1",
+                  "seed": 1,
+                  "probability": 0.5
+                }
+              ],
+              "modelSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+              "cpuValues": true
+            },
+            {
+              "first": "truncated-normal",
+              "inputs": [
+                {
+                  "distribution": "truncated-normal",
+                  "algorithm": "xorshift32-truncated-normal-v1",
+                  "seed": 1,
+                  "mean": 0,
+                  "std": 1,
+                  "min": -2,
+                  "max": 2
+                },
+                {
+                  "distribution": "uniform",
+                  "algorithm": "xorshift32-v1",
+                  "seed": 1,
+                  "min": 0,
+                  "max": 1
+                }
+              ],
+              "modelSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+              "cpuValues": true
+            }
+          ],
+          "draft": {
+            "version": 3,
+            "redo": 1,
+            "distributions": [
+              "normal",
+              "bernoulli",
+              "truncated-normal"
+            ]
+          },
+          "constSHA256": "10b2ef9b9868397d33ded9193b63cf8425ecdb5ccc97d95c99af9739e327e419",
+          "outputSHA256": "f2f57e11f559991ea15841b7f55ca16b981ce4fd98579695bb328a1cbfd5beef",
+          "restoredEqualBytes": true
+        }
+      },
+      "guide": {
+        "cases": [
+          "F1 and header help use manual topic tabs, Escape restores focus, and no-model actions explain requirements without opening workers",
+          "guide preserves selected pattern and editor commands/32px/zoom; both 14-inch logical desktop sizes keep the dialog and controls visible",
+          "guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes"
+        ],
+        "layouts": [
+          {
+            "width": 1366,
+            "scrollWidth": 1366,
+            "height": 640,
+            "dialog": {
+              "x": 223,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1143,
+              "bottom": 608,
+              "left": 223
+            },
+            "content": {
+              "x": 250,
+              "y": 196.60000610351562,
+              "width": 866,
+              "height": 344.5999755859375,
+              "top": 196.60000610351562,
+              "right": 1116,
+              "bottom": 541.1999816894531,
+              "left": 250
+            },
+            "close": {
+              "x": 1038,
+              "y": 55,
+              "width": 78,
+              "height": 38.399993896484375,
+              "top": 55,
+              "right": 1116,
+              "bottom": 93.39999389648438,
+              "left": 1038
+            }
+          },
+          {
+            "width": 1280,
+            "scrollWidth": 1280,
+            "height": 640,
+            "dialog": {
+              "x": 180,
+              "y": 32,
+              "width": 920,
+              "height": 576,
+              "top": 32,
+              "right": 1100,
+              "bottom": 608,
+              "left": 180
+            },
+            "content": {
+              "x": 207,
+              "y": 196.60000610351562,
+              "width": 866,
+              "height": 344.5999755859375,
+              "top": 196.60000610351562,
+              "right": 1073,
+              "bottom": 541.1999816894531,
+              "left": 207
+            },
+            "close": {
+              "x": 995,
+              "y": 55,
+              "width": 78,
+              "height": 38.399993896484375,
+              "top": 55,
+              "right": 1073,
+              "bottom": 93.39999389648438,
+              "left": 995
+            }
+          }
+        ],
+        "modelWorkers": [
+          {
+            "closed": false
+          }
+        ],
+        "runtimeWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ],
+        "navigation": [
+          {
+            "topic": "edit",
+            "before": {
+              "active": "usage-guide-button",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "pattern",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "pick-pattern",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-explore",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "current",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "save",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "run",
+            "before": {
+              "active": "edit-zoom-in",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-edit",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          },
+          {
+            "topic": "edit",
+            "before": {
+              "active": "",
+              "guide": false
+            },
+            "after": {
+              "active": "guide-tab-run",
+              "modal": "usage-guide",
+              "guide": true
+            }
+          }
+        ],
+        "screenshot": true
+      },
+      "demo": {
+        "cases": [
+          {
+            "edited": false,
+            "mode": "zero",
+            "status": "passed"
+          },
+          {
+            "edited": false,
+            "mode": "random",
+            "status": "passed"
+          },
+          {
+            "edited": true,
+            "mode": "zero",
+            "status": "passed"
+          },
+          {
+            "edited": true,
+            "mode": "random",
+            "status": "passed"
+          }
+        ],
+        "modelWorkers": 3,
+        "runtimeWorkers": [
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          },
+          {
+            "closed": true
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at usageGuideFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:36:718)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:91:73",
+      "errors": [],
+      "directory": "build/qa/desktop-40867450185-firefox-guide-red/firefox"
+    }
+  ]
+}
