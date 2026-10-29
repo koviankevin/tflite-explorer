@@ -6,9 +6,10 @@ import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {runtimeFixture} from '../runtime-fixture.mjs';
+import {optionalCustomFixture} from '../optional-custom-fixture.mjs';
 import {Archive} from '../../vendor/netron/zip.js';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true}){
+export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false}){
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
@@ -72,6 +73,11 @@ export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboard
         const invalid=await runtimeFixture({inputShapes:[[1,2],[1,3]]}),invalidPath=path.join(directory,'runtime-bad-broadcast.tflite');await writeFile(invalidPath,invalid.bytes,{flag:'wx'});await open(invalidPath);await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await finished('failed');report.cases.push('invalid kernel broadcast is reported as failed');await page.locator('#edit-clear').click();await page.locator('#close-model').click();
         const custom=await runtimeFixture({custom:true}),customPath=path.join(directory,'runtime-custom.tflite');await writeFile(customPath,custom.bytes,{flag:'wx'});await open(customPath);const count=report.workers.length;await page.locator('#edit-runtime-check').click();await finished('not-verified');assert.ok((await page.locator('#edit-runtime-result').textContent()).includes('custom'));assert.equal(report.workers.length,count);report.cases.push('unregistered custom kernel is explicitly unverified without starting WASM');await page.locator('#edit-clear').click();await page.locator('#close-model').click();
         const signed=await runtimeFixture({signatureTarget:1}),signedPath=path.join(directory,'runtime-secondary-signature.tflite');await writeFile(signedPath,signed.bytes,{flag:'wx'});await open(signedPath);const signedCount=report.workers.length;await page.locator('#edit-runtime-check').click();await finished('not-verified');assert.ok((await page.locator('#edit-runtime-result').textContent()).includes('signature'));assert.equal(report.workers.length,signedCount);report.cases.push('a signature targeting a different subgraph cannot be reported as a primary-model pass');await page.locator('#edit-clear').click();await page.locator('#close-model').click();
+        if(referenceInputs){
+            const file=path.join(directory,'optional-only-custom.tflite');await writeFile(file,await optionalCustomFixture(),{flag:'wx'});const before={workers:report.workers.length,downloads:report.downloads,requests:report.requests.length};await open(file);
+            await until(()=>!!document.querySelector('#edit-random-apply'));report.emptyReference=await read(()=>({disabled:document.querySelector('#edit-random-apply').disabled,referenceDisabled:document.querySelector('#edit-random-like').disabled,options:document.querySelector('#edit-random-like').options.length,hint:document.querySelector('#edit-random-range').textContent,added:document.querySelectorAll('.edit-node.added').length}));
+            assert.equal(report.emptyReference.disabled,true);assert.equal(report.emptyReference.referenceDisabled,true);assert.equal(report.emptyReference.options,0);assert.equal(report.emptyReference.added,1);assert.ok(report.emptyReference.hint.includes('沒有可用'));assert.equal(report.workers.length,before.workers);assert.equal(report.downloads,before.downloads);assert.equal(report.requests.length,before.requests);await page.locator('#edit-clear').click();await page.locator('#close-model').click();report.cases.push('optional-only custom clone keeps inspector mounted and explains disabled random generation without a reference tensor');
+        }
         check('optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout');return report;
     }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);}
 }
