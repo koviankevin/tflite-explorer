@@ -1,5 +1,7 @@
 # 惰性權重 decoder 的 reader 隔離
 
+本頁記錄的修正已在 [preview.31 正式交付](preview31.md#發布狀態)核對；原始失敗、診斷與當時的待驗證狀態保留於下文，不改寫歷史。
+
 preview.31 初次 Firefox／WebKit candidate 都在示範檔實際 CPU 開始前失敗：`Tensor 15 is invalidly specified in schema`。兩引擎各十三項探索／編輯／MLIR 流程已通過，但示範 CPU 為失敗，尚未走到輸入清理檢查。原始 ZIP／provider digest／CRC／來源與畫面保留，沒有將它改寫為成功。
 
 同一來源 `e273de6568663f63ae3465ef44f003d506445c5c` 的一般建置為 build `cce9e9e1a2f35306`，桌面流程先匯入解析器再建置則為 `3cf6f539a384da32`。兩者 demo 分別為 12,624／12,616 bytes，SHA 為 `b417c9581c3c18d16f41cb9ebccf5d64ac461eeda333a620882fd191c65eb83d`／`f5ffe821c52198e421eb732e2238ad12fabab2628775327c441c07c61cceaa92`。獨立讀取器首先因 build ID 不同而拒絕；後續失敗稽核明列此差異，未取消成功驗收對建置身分的一致要求。

@@ -1,5 +1,7 @@
 # Firefox 指紋 Worker 關閉狀態診斷
 
+本頁記錄的修正已在 [preview.31 正式交付](preview31.md#發布狀態)核對；原始失敗、診斷與當時的待驗證狀態保留於下文，不改寫歷史。
+
 preview.31 來源 `3f26db6283ea13edc943ca93fa2947c9e8719dc0` 的四個 main 關卡與 Chromium 原生／八輪 IO 已獨立核對；正式站仍為 preview.30，尚未準備或發布新版。桌面工作流程 `40885964513` 兩個 jobs 都回報成功，但獨立資源核對在 Firefox 發現 27 個 edit-recovery Workers 中只有 26 個 close 事件，第 95 筆觀察缺少 close。63 model／20 runtime Workers 與十四組輸入清理皆通過。這是尚待釐清的資源證據，不能直接稱為洩漏或框架問題，也不能把 job 綠燈當成完整資源驗收。
 
 同一工作流程的 WebKit 有四個指紋 Worker，四個 close 都已觀察；其十七項功能、完整 candidate manifest、原生 CPU／IO、十四組清理與既有資源界線已完成獨立核對。沿用 WebKit，不重跑成功引擎。兩引擎最後頁面 Netron layout Worker 的 close 未觀察，仍維持既有的明確界線；不擴大該例外來容納 Firefox 指紋 Worker。

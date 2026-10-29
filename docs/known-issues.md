@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 preview.30／build `f3ff13b75b83ee57`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [preview.31](preview31.md#發布狀態)／build `3061076374227547`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -10,7 +10,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 功能限制
 
-**輸入視窗的回呼清理（preview.31 候選）**：preview.30 關閉手動輸入視窗後，執行按鈕仍保留上一組控制項／File 的回呼。候選已加入解除回呼、請求身分隔離與開窗失敗清理；相關 24 項測試成功，正式部署及 native 量測尚待完成，見[診斷與原始失敗](runtime-input-cleanup.md)。有限 RSS 通過不等於物件保留已完全排除。
+**輸入視窗與草稿 Worker 清理已在 preview.31 交付**：解除確認回呼、請求身分隔離及開窗失敗清理；同一輪取消不再建立指紋 Worker，終止前清除回呼。正式站 14 次一般與 24 次 IO 生命週期輸入清理、候選 Firefox 指紋 Worker 四次 native close 均核對，見[正式交付](preview31.md#發布狀態)及[原始診斷](runtime-input-cleanup.md)。這些具體缺口已修正；有限量測不等於所有物件、所有負載永不保留。
 
 組合模型目前限同一 TFLite／subgraph，暫不搬移控制流程或有狀態 OP；大型組合已通過 [Hosted Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)；數小時組合與其他引擎尚待驗收，見 [功能與驗收範圍](model-composition.md)。
 
@@ -21,7 +21,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-現行 preview.30 已核對 [Firefox 142.0.1／WebKit 26.0 的十六項功能](desktop-runtime.md#最終核對結果)，包含獨立執行、分佈／const／草稿與指南；這是 Hosted Linux 的短流程，不改變下列長期、其他 OS 與完整無障礙驗收缺口。
+歷史 preview.30 已核對 [Firefox 142.0.1／WebKit 26.0 的十六項功能](desktop-runtime.md#最終核對結果)，包含獨立執行、分佈／const／草稿與指南；這是 Hosted Linux 的短流程，不改變下列長期、其他 OS 與完整無障礙驗收缺口。
 
 另補齊[三引擎真實 CPU 運算中的取消與 30 秒逾時](runtime-active-compute.md#三引擎實際結果)，含 UI 回應、Worker close 及恢復執行；Chromium 32 項、Firefox／WebKit 各 17 項功能通過。這組有限合成迴圈不涵蓋所有模型、背景節流、數小時 runtime 或 RSS；跨引擎 layout Worker 最後 close 與 Firefox module request 的觀察界線保持明列。
 
