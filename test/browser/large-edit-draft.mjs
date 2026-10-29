@@ -20,6 +20,7 @@ import {installManualDraftReadAudit,installManualDraftPageAudit} from './manual-
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {chooseEditDraft} from './edit-draft-chooser.mjs';
 import {largeCompositionDraft} from './large-composition-draft.mjs';
+import {assertWorkspaceMode} from './workspace-mode-proof.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
@@ -55,7 +56,7 @@ async function ready(count){await until(()=>document.querySelector('#model-tabs'
 async function editReady(){await until(()=>document.body.classList.contains('editing-model')&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);}
 async function closeModel(){const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timeout;
     try{const ended=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Model Worker did not close')),5000);})]);await page.locator('#close-model').click();await ended;}finally{clearTimeout(timeout);}
-    await until(()=>document.querySelector('#model-file').files.length===0&&document.querySelector('#close-model').hidden);assert.equal(page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length,0);
+    await until(()=>document.querySelector('#model-file').files.length===0&&document.querySelector('#close-model').hidden);assert.equal(page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length,0);await assertWorkspaceMode(page,'explore');
 }
 async function download(button,filename){const event=page.waitForEvent('download');await page.locator(button).click();const d=await event;assert.equal(await d.failure(),null);const target=path.join(temporary,filename);await d.saveAs(target);await d.delete();return target;}
 async function begin(name){phase=name;await read(name=>{const p={name,startedAt:performance.now(),ticks:0,maxGapMs:0,longTasks:0,maxLongTaskMs:0};globalThis.__manualDraft.phases.push(p);globalThis.__manualDraft.phase=p;},name);}
