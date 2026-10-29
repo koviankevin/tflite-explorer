@@ -10,10 +10,19 @@ const normalized=(value,budget={count:0,depth:0})=>{if(++budget.count>65536||bud
 const tfSignature=t=>{if([t.shape,t.shape_signature].some(v=>v?.length>128)||['min','max','scale','zero_point'].some(k=>t.quantization?.[k]?.length>16384))throw Error('Tensor 型別／量化 metadata 過大，請使用進階表單。');const s=JSON.stringify(normalized(Object.fromEntries(['type','shape','shape_signature','quantization','sparsity'].map(k=>[k,t[k]]))));if(s.length>128*1024)throw Error('Tensor metadata 過大，請縮小編輯範圍。');return s;};
 
 // Select a bounded edit scope once. Payloads/IR text never enter this snapshot.
-export function editWorkspaceSnapshot(index,{targets,graph=0,includeNeighbours=true}={}){
+export function editWorkspaceSnapshot(index,{targets,graph=0,includeNeighbours=true,composition=false}={}){
+    if(typeof composition!=='boolean')throw Error('組合草稿模式無效。');
     const format=index.mlir?'mlir':'tflite',all=index.graphs;
     if(!targets?.length)targets=all[graph]?.graph.nodes.length?[{graph,node:0}]:[];
     if(!Array.isArray(targets)||!targets.length||targets.length>EDIT_LIMITS.originals)throw Error('編輯範圍最多容納 64 個原始 OP。');
+    if(composition){
+        if(format!=='tflite'||new Set(targets.map(t=>t.graph)).size!==1)throw Error('組合草稿需選擇同一個 TFLite subgraph 的 OP。');
+        includeNeighbours=false;
+        for(const t of targets){const op=index.raw.subgraphs[t.graph]?.operators[t.node],code=op&&index.raw.operator_codes[op.opcode_index],name=code&&schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code)];
+            if(!op||!name||/(?:VAR_HANDLE|VARIABLE|HASHTABLE|RANDOM|CALL_ONCE|ASSIGN)/.test(name)||op.mutating_variable_inputs?.some(Boolean)||[op.builtin_options,op.builtin_options_2].some(o=>o&&Object.keys(o).some(k=>/subgraph/.test(k))))throw Error('組合第一版不搬移控制流程／子圖呼叫或有狀態 OP；原草稿保留。');
+            if([...op.inputs,...op.outputs].some(id=>id>=0&&index.raw.subgraphs[t.graph].tensors[id]?.is_variable))throw Error('組合第一版不搬移 variable tensors。');
+        }
+    }
     const selected=new Map();
     for(const target of targets){if(!Number.isInteger(target?.graph)||!Number.isInteger(target.node)||target.graph<0||target.node<0||!all[target.graph]?.graph.nodes[target.node])throw Error('找不到要編輯的原始 OP。');selected.set(opId(target.graph,target.node),{graph:target.graph,node:target.node});}
     const originals=[...selected.values()],nodes=[],values=new Map(),controls=[];let transferBytes=4096;
@@ -70,7 +79,7 @@ export function editWorkspaceSnapshot(index,{targets,graph=0,includeNeighbours=t
         }
     }
     if(values.size>EDIT_LIMITS.ports||nodes.some(n=>n.inputs.length+n.outputs.length>1024))throw Error('選取範圍的介面過大，請縮小範圍或使用進階 OP 表單。');
-    const snapshot={format,prefix,nodes,values:[...values.values()],controls,selected:originals.map(l=>opId(l.graph,l.node)),total:all.reduce((n,g)=>n+g.graph.nodes.length,0),hasSignatures:!!index.raw?.signature_defs.length};
+    const snapshot={format,prefix,nodes,values:[...values.values()],controls,selected:originals.map(l=>opId(l.graph,l.node)),total:all.reduce((n,g)=>n+g.graph.nodes.length,0),hasSignatures:!!index.raw?.signature_defs.length,...(composition?{composition:true}:{})};
     if(JSON.stringify(snapshot).length>4*1024**2)throw Error('編輯範圍 metadata 超過 4 MiB，請縮小選取範圍。');return snapshot;
 }
 
@@ -79,26 +88,9 @@ export async function exportEditWorkspace(index,file,snapshot,commands,{updateSi
     if(!changes.length)throw Error('草稿沒有變更。');if(issues.length)throw Error(issues.slice(0,8).map(i=>`${i.node} input ${i.slot}: ${i.message}`).join('\n'));
     const active=state.nodes.filter(n=>!n.removed),value=id=>{const v=state.values.get(id);if(!v)throw Error('找不到接線來源。');return v;};
     if(!index.mlir){
-        const {editTfliteModel}=await import('./tflite-model-edit.js'),plans=[];
-        const generatedValues=[...new Set(active.flatMap(n=>n.inputs.map(p=>p.value)))].map(value).filter(v=>v.generated);
-        if(generatedValues.reduce((sum,v)=>sum+randomTensorInfo(index.raw.subgraphs[v.graph].tensors[v.tensor],v.generated).bytes,0)>32*1024**2)throw Error('整次匯出的亂數權重超過 32 MiB。');
-        for(const graph of new Set(changes.map(c=>state.nodes.find(n=>n.id===c.node).source.graph))){
-            const g=index.raw.subgraphs[graph],scope=state.nodes.filter(n=>n.source.graph===graph),byOriginal=new Map(scope.filter(n=>!n.fresh).map(n=>[n.source.node,n])),newIds=new Map(),tensors=[];
-            const clones=active.filter(n=>n.fresh&&n.source.graph===graph).sort((a,b)=>editPosition(state,a)-editPosition(state,b));
-            for(const clone of clones)for(const [slot,port] of clone.outputs.entries()){newIds.set(port.value,g.tensors.length+tensors.length);const v=value(port.value);tensors.push({like:clone.builtin?value(clone.builtin.outputLike[slot]).tensor:g.operators[clone.source.node].outputs[slot],name:v.name,...(v.inferredShape?{shape:v.inferredShape}:{})});}
-            const generated=[...new Set(active.filter(n=>n.source.graph===graph).flatMap(n=>n.inputs.map(p=>p.value)))].map(value).filter(v=>v.generated);
-            if(generated.reduce((sum,v)=>sum+randomTensorInfo(g.tensors[v.tensor],v.generated).bytes,0)>32*1024**2)throw Error('單次產生的亂數權重超過 32 MiB，請沿用現有權重或分次編輯。');
-            for(const v of generated){newIds.set(v.id,g.tensors.length+tensors.length);tensors.push({like:v.tensor,name:v.name,data:randomTensor(g.tensors[v.tensor],v.generated)});}
-            const tensor=id=>{const v=value(id);if(v.graph!==graph)throw Error('不能跨 TFLite subgraph 接線。');return v.fresh||v.generated?newIds.get(id):v.tensor;};
-            const entries=[];for(let node=0;node<g.operators.length;node++){
-                const append=side=>{for(const clone of clones.filter(c=>c.anchor.node===node&&c.anchor.side===side))entries.push({template:clone.source.node,inputs:clone.inputs.map(p=>tensor(p.value)),outputs:clone.outputs.map(p=>tensor(p.value)),...(clone.builtin?{builtin:clone.builtin}:{})});};
-                append('before');const current=byOriginal.get(node);if(!current?.removed)entries.push(current?{template:node,inputs:current.inputs.map(p=>tensor(p.value))}:{template:node});append('after');
-            }
-            const boundary=scope.filter(n=>n.removed&&n.boundary&&!n.fresh).flatMap(n=>n.outputs.map(p=>tensor(p.value))).filter(id=>g.outputs.includes(id)||entries.some(e=>(e.inputs||g.operators[e.template].inputs).includes(id)));
-            const exposed=clones.filter(n=>n.exposed).flatMap(n=>n.outputs.map(p=>tensor(p.value)));
-            plans.push({graph,operators:entries,tensors,inputs:[...new Set([...g.inputs,...boundary])],outputs:[...new Set([...g.outputs,...exposed])],updateSignatures:updateSignatures===true});
-        }
-        const result=editTfliteModel(index,file,plans);return {...result,workspaceChanges:changes,workspaceScope:snapshot.selected};
+        if(snapshot.composition){const {exportComposition}=await import('./tflite-composition-export.js');return exportComposition(index,file,state,changes);}
+        const {editTfliteModel}=await import('./tflite-model-edit.js'),{tfliteWorkspacePlans}=await import('./tflite-workspace-plan.js');
+        const result=editTfliteModel(index,file,tfliteWorkspacePlans(index,state,changes,{updateSignatures}));return {...result,workspaceChanges:changes,workspaceScope:snapshot.selected};
     }
     const {editMLIRModel}=await import('./mlir-model-edit.js'),edits=[];
     for(const node of state.nodes){

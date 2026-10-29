@@ -9,8 +9,9 @@ import {runtimeFixture} from '../runtime-fixture.mjs';
 import {optionalCustomFixture} from '../optional-custom-fixture.mjs';
 import {Archive} from '../../vendor/netron/zip.js';
 import {tfliteShapeFlow} from './tflite-shape-flow.mjs';
+import {modelCompositionFlow} from './model-composition-flow.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false}){
+export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs=true,referenceInputs=false,precisionInputs=false,shapeInputs=false,compositionInputs=false}){
     const report={cases:[],workers:[],downloads:0,requests:[],keyboardInputsRequired:keyboardInputs};
     const workerEvent=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())){const row={url:w.url(),closed:false};report.workers.push(row);w.on('close',()=>{row.closed=true;});}};
     const requested=r=>{if(/\/vendor\/litert\//.test(r.url()))report.requests.push(r.url());};
@@ -96,6 +97,7 @@ export async function tfliteRuntimeFlow({page,read,base,directory,check,keyboard
             await page.locator('#edit-clear').click();await page.locator('#close-model').click();report.cases.push('32px OP options reject rounded JSON integers without changing the draft and preserve exact quoted int64 values without inference');
         }
         if(shapeInputs)await tfliteShapeFlow({page,read,until,open,choose,ready,download,finished,source,directory,report});
+        if(compositionInputs)await modelCompositionFlow({page,read,until,choose,ready,download,finished,directory,report});
         check('optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout');return report;
     }catch(error){report.error=error.stack||String(error);error.tfliteRuntime=report;throw error;}finally{page.off('worker',workerEvent);page.off('request',requested);page.off('download',downloaded);}
 }

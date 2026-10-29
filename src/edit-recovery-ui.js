@@ -26,7 +26,7 @@ export function editRecoveryUI({capture,restore,exportFile,chooseImport}){
     };
     async function refresh(){
         const generation=++listGeneration,previous=$('edit-recovery-list').value;const found=await store.list();if(generation!==listGeneration||!dialog.open)return;
-        records=found;$('edit-recovery-list').replaceChildren(...records.map(record=>{let name;try{name=readEditRecovery(record).document.source.name;}catch{name='無法解析的編輯草稿';}return new Option(`${name} · ${new Date(record.updatedAt||0).toLocaleString()} · v${record.revision}`,record.key);}));
+        records=found;$('edit-recovery-list').replaceChildren(...records.map(record=>{let name;try{const doc=readEditRecovery(record).document;name=(doc.scope.composition?'組合 · ':'編輯 · ')+doc.source.name;}catch{name='無法解析的編輯草稿';}return new Option(`${name} · ${new Date(record.updatedAt||0).toLocaleString()} · v${record.revision}`,record.key);}));
         if(records.some(r=>r.key===previous))$('edit-recovery-list').value=previous;selection();
     }
     $('open-edit-draft').onclick=()=>{dialog.showModal();$('edit-recovery-description').textContent='讀取本機編輯草稿…';refresh().catch(showError);};
@@ -40,5 +40,5 @@ export function editRecoveryUI({capture,restore,exportFile,chooseImport}){
     $('edit-autosave-enabled').onchange=()=>{const on=$('edit-autosave-enabled').checked;session.setEnabled(on);if(!on)fingerprint.cancel();try{localStorage.setItem('model-lens.edit-autosave.v1',on?'on':'off');}catch{/* Preference remains applied in memory. */}};
     $('retry-edit-recovery').onclick=()=>session.retry();$('fork-edit-recovery').onclick=()=>session.fork();
     editRecoveryLifecycle({session,fingerprint,document,window});
-    return {get touched(){return session.touched;},get binding(){return session.binding;},attach:record=>session.attach(record),change:()=>session.change(),detach(){const pending=session.detach();fingerprint.cancel();return pending;},state:()=>({...state})};
+    return {get touched(){return session.touched;},get binding(){return session.binding;},attach:record=>session.attach(record),change:()=>session.change(),async park(){await session.detach();fingerprint.cancel();},detach(){const pending=session.detach();fingerprint.cancel();return pending;},state:()=>({...state})};
 }
