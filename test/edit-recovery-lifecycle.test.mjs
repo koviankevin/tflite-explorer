@@ -19,9 +19,13 @@ test('leaving an inactive document starts no new fingerprint Worker; restoring t
     f.active=true;f.win.dispatchEvent(new Event('pageshow'));await f.session.flush();assert.equal(f.created,1);assert.equal(f.writes.length,1);assert.deepEqual(f.writes[0].document,draft());
 });
 test('leaving cancels an in-flight fingerprint without claiming saved; a cached-page restore retries successfully',async t=>{
-    const f=fixture(t);f.autoReply=false;f.session.change();const pending=f.session.flush();assert.equal(f.created,1);
+    const f=fixture(t);f.autoReply=false;f.session.change();const pending=f.session.flush();await Promise.resolve();assert.equal(f.created,1);
     f.active=false;f.win.dispatchEvent(new Event('pagehide'));assert.equal(f.workers[0].terminated,true);await pending;assert.equal(f.writes.length,0);
     f.active=true;f.autoReply=true;f.win.dispatchEvent(new Event('pageshow'));await f.session.flush();assert.equal(f.created,2);assert.equal(f.writes.length,1);assert.ok(f.workers.every(w=>w.terminated));
+});
+test('pagehide before queued fingerprint startup settles the save without starting work in the inactive document',async t=>{
+    const f=fixture(t);f.session.change();const pending=f.session.flush();f.active=false;f.win.dispatchEvent(new Event('pagehide'));await pending;assert.equal(f.created,0);assert.equal(f.writes.length,0);
+    f.active=true;f.win.dispatchEvent(new Event('pageshow'));await f.session.flush();assert.equal(f.created,1);assert.equal(f.writes.length,1);
 });
 test('a background but still active page continues saving; hiding after pagehide cannot restart fingerprint work',async t=>{
     const f=fixture(t);f.session.change();f.doc.visibilityState='hidden';f.doc.dispatchEvent(new Event('visibilitychange'));await f.session.flush();assert.equal(f.writes.length,1);
