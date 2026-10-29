@@ -28,3 +28,5 @@ Normal 的平均值與標準差定義採 [NIST 的常態分佈定義](https://cs
 本版 const 浮點產生支援 float32／float64；整數及 boolean 使用 Uniform／Bernoulli，64-bit 整數以 JavaScript 可精確表示的範圍為限。Runtime float16 的資料建立另取決於瀏覽器是否提供 Float16Array；未支援會明確拒絕，不默默換 dtype。
 
 目前固定 preview.30 的 [Chromium／Firefox／WebKit 核對](runtime-active-compute.md#三引擎實際結果)也保留上述 const／input 四種分佈、預設值、v3 草稿還原與相同 bytes 重匯出斷言；新增加的運算取消／逾時驗收沒有更改這些功能。
+
+2026-10-30 已重新核對正式站仍為 preview.31／build `3061076374227547`，共用亂數規則、表單與編輯 OP inspector 三個實際檔案的完整 SHA 均與正式 manifest 一致；紀錄隨[候選驗收原始資料](results/runtime-module32-native-originals.zip)保存。const 操作位置是「編輯模型 → 新增／複製的 OP → 補上亂數權重／常數」。同一套四種分佈、dtype 拒絕、草稿／Redo／同 bytes 匯出重開也在[最新三引擎功能驗收](runtime-module-cache.md#第三批候選功能與-const-正常firefox-rss-未修復)通過；其中 Firefox 額外 RSS 失敗仍獨立列為未解，沒有把功能成功當作效能合格。

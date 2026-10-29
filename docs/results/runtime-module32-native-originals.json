@@ -1,0 +1,306 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T19:59:23.677124+00:00",
+  "source": {
+    "commit": "19728b95ec8a6c27a754c122384a47cd38f78474",
+    "tree": "5dc30653c9fe30fd120df63477ac8e2df26ef155",
+    "committedAt": "2026-10-30T03:37:36+08:00",
+    "dirty": false
+  },
+  "candidateBuild": "e10444709f7d5d9d",
+  "published": false,
+  "formalVersion": "0.2.0-preview.31",
+  "formalBuild": "3061076374227547",
+  "scope": "All19 const/input/distribution/draft/CPU cases pass on three engines; Firefox original RSS slope still fails; Firefox independent cold not reached. No published32 or repaired-memory claim.",
+  "readers": {
+    "zip": "docs/results/runtime-module32-native-originals.zip",
+    "inventory": "docs/results/runtime-module32-native-originals.json",
+    "purpose": "Immutable exact provider originals plus independent native/lifecycle/failedRSS receipts and reviewer source; public synthetic only, screenshots inspected",
+    "retention": "permanent audit, do not overwrite",
+    "allLocalSourceBoundReadersFinished": true,
+    "fourGateReader": {
+      "exit": 0,
+      "chunk": "b27f44"
+    },
+    "webkitStrictReader": {
+      "exit": 0,
+      "chunk": "21c064"
+    },
+    "firefoxDiagnosticReader": {
+      "exit": 0,
+      "chunk": "1a4e96"
+    },
+    "chromiumCachedReader": {
+      "exit": 0,
+      "chunk": "35aaeb"
+    }
+  },
+  "archive": {
+    "path": "runtime-module32-native-originals.zip",
+    "bytes": 878561,
+    "sha256": "43646bcb68a265708c261df6104d803a59c43218777c5e49c9d74e5964de651a"
+  },
+  "files": [
+    {
+      "path": "firefox/run.json",
+      "bytes": 14430,
+      "sha256": "24d17b0e18b1b751bfd415862daf32a872e3bef0cf8cddb33ae8532fc78959fc"
+    },
+    {
+      "path": "firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "223c6c712e5e5f9161ed8b2999e1852eda9bdfbf0defe92dd28072402630ef01"
+    },
+    {
+      "path": "firefox/listing.json",
+      "bytes": 948,
+      "sha256": "c4fc9c96ceef781dd18e0e88c23a8c8dc4e678b07eac7c39aeaadb8879288ef8"
+    },
+    {
+      "path": "firefox/original.zip",
+      "bytes": 273788,
+      "sha256": "d8b4bfd1e695db6c460effa50c64fa33d0a1b0e271ae43b2978e4f76193f77b3"
+    },
+    {
+      "path": "firefox/authentication.json",
+      "bytes": 64504,
+      "sha256": "804eede92353278d1628da1c97e0b14edf478a972bf0a721cd394b327998be08"
+    },
+    {
+      "path": "firefox/diagnostic-review.json",
+      "bytes": 223328,
+      "sha256": "0c9c7d2c74053dd78442afd6d4d1f7d4539eb9ab654ab8a5b3265de97c9ed1e2"
+    },
+    {
+      "path": "webkit/run.json",
+      "bytes": 14430,
+      "sha256": "706423704db4f3860b9c18d32e0c2082730f4e8a03c24b4bf78d139943201893"
+    },
+    {
+      "path": "webkit/jobs.json",
+      "bytes": 3969,
+      "sha256": "9d702c0f840b2194c5ae02467646f7d5e089950ba10d7e0a2045e96b2fef7a59"
+    },
+    {
+      "path": "webkit/listing.json",
+      "bytes": 947,
+      "sha256": "683bfbb290d53cec6bdbdb09c6ba6eaf2ce588d81b0e03902b333d21afe42682"
+    },
+    {
+      "path": "webkit/original.zip",
+      "bytes": 213692,
+      "sha256": "a0327ad580ee07f241542c44ef3b24b2c8b85901a4cb926bc4ea8ab91b505e2e"
+    },
+    {
+      "path": "webkit/authentication.json",
+      "bytes": 80007,
+      "sha256": "48256f16435a4cb963543d4aca0a8d8f86919719ad2ff7630d129a15a6ad43b0"
+    },
+    {
+      "path": "webkit/strict-review.json",
+      "bytes": 2768,
+      "sha256": "fee0de47b9d4064bdb6f55c2147bb1609bda8e5ce51e0ace66cfb3b7b8f3d723"
+    },
+    {
+      "path": "chromium/run.json",
+      "bytes": 14426,
+      "sha256": "849259cc292a204a63e12f63b4178fe077464a8b770f174ac9fc5ca2ce102c2f"
+    },
+    {
+      "path": "chromium/jobs.json",
+      "bytes": 5633,
+      "sha256": "c693a572b84a9daee4730f1f7fbde86d0bac58e2a22e062f72dccbb5c91f8622"
+    },
+    {
+      "path": "chromium/listing.json",
+      "bytes": 1866,
+      "sha256": "eea3bf5772d5fab0ac3bfa2b82f4f3efb8ce3364613bf079716bf987e9827d28"
+    },
+    {
+      "path": "chromium/site.zip",
+      "bytes": 4659,
+      "sha256": "b88d5c903841cf6a5afecc9a4556f46faf7a772c26cc8c41fd33af64abebbbff"
+    },
+    {
+      "path": "chromium/site-artifact.json",
+      "bytes": 828,
+      "sha256": "7abba0e38e3a074af51e066c3077b1688cb0909197f2da244614cfe9d64a5d3b"
+    },
+    {
+      "path": "chromium/native.zip",
+      "bytes": 211906,
+      "sha256": "c513511e0a77dd1cf86c0da1b7d4874f7b99f047f7ab74378438ddb1cac5bb3f"
+    },
+    {
+      "path": "chromium/native-artifact.json",
+      "bytes": 832,
+      "sha256": "33dcf2235cc2c7bca38814fa28f5f60c7b76098b7324cbc71ab0324189eb8038"
+    },
+    {
+      "path": "chromium/review.json",
+      "bytes": 2248,
+      "sha256": "15afd0cd28d5ba168786f6bd36194db45cbba30ad2bcf8653db2e004952831cb"
+    },
+    {
+      "path": "gates/artifact-13.zip",
+      "bytes": 738,
+      "sha256": "01a5da95fdcb73975a0296ba59361a4dbfe7557a9e27db9d107aa5a9499606aa"
+    },
+    {
+      "path": "gates/artifact-17.zip",
+      "bytes": 4659,
+      "sha256": "b88d5c903841cf6a5afecc9a4556f46faf7a772c26cc8c41fd33af64abebbbff"
+    },
+    {
+      "path": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "path": "gates/artifact-9.zip",
+      "bytes": 32053,
+      "sha256": "f525a6a7774e7f852dc50ebefbb5b84b1d4d50b337b59f92e3d80653a96fd58f"
+    },
+    {
+      "path": "gates/metadata-1.json",
+      "bytes": 2601,
+      "sha256": "f1c60e032bda5d20629c4458b7770510802df3838d6eb1a575820499eff418d3"
+    },
+    {
+      "path": "gates/metadata-10.json",
+      "bytes": 14418,
+      "sha256": "ba996d4dc44736c60df6008ca9375f42c733d32062f3059df03a635a419019d7"
+    },
+    {
+      "path": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "5461d4f247ebc1ed7e1b764b6ca53db07c9a39ad79b60eb00eab81298b6f4e54"
+    },
+    {
+      "path": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "769ea03046b16c84f0e4127dbf619b54fffc57f8957dc9fba471b7ce790a07c2"
+    },
+    {
+      "path": "gates/metadata-14.json",
+      "bytes": 14426,
+      "sha256": "849259cc292a204a63e12f63b4178fe077464a8b770f174ac9fc5ca2ce102c2f"
+    },
+    {
+      "path": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "c693a572b84a9daee4730f1f7fbde86d0bac58e2a22e062f72dccbb5c91f8622"
+    },
+    {
+      "path": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "eea3bf5772d5fab0ac3bfa2b82f4f3efb8ce3364613bf079716bf987e9827d28"
+    },
+    {
+      "path": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "path": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "path": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "path": "gates/metadata-6.json",
+      "bytes": 14450,
+      "sha256": "17eeadf02cdab0e524757ee3bc81a58ce41bfe654ee55f1e32ca60997aedb721"
+    },
+    {
+      "path": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "949d5b99048109c116cfc586dad21ab454309813715c914e83915b644912f3f3"
+    },
+    {
+      "path": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "b631fa4a235b57f405bf4d23a7f65af63e62e28841849a811ee0a4eb4f23d9c9"
+    },
+    {
+      "path": "gates/review.json",
+      "bytes": 195000,
+      "sha256": "89a42717ee6eef1257d3f573ce42eb891890167e24c9be14498dcfa18a8fc8e4"
+    },
+    {
+      "path": "reviewers/auth-runtime-module32-guide.mjs",
+      "bytes": 5240,
+      "sha256": "e4a13d77616835910280968cd71587b75b8b087b63b6095347b2851cd1dcabc3"
+    },
+    {
+      "path": "reviewers/auth-runtime-module32-guide-webkit.mjs",
+      "bytes": 5232,
+      "sha256": "7ad82b6aa1c200355b361df02adeb39de683eadcfd93b4d98c387c39e567ad4b"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-native.mjs",
+      "bytes": 11320,
+      "sha256": "6698aa2f55ff936c8ee47226c62ea437f6460987306b89341a640b6d607fe6f4"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-firefox-diagnostic.mjs",
+      "bytes": 12531,
+      "sha256": "707f6e049ea66a7bb23f09d288395b7b90b3e01278e1f77c83cffef16570d39b"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-guide-chromium.mjs",
+      "bytes": 7672,
+      "sha256": "fad7dd15901e17b74f215dcc6a6eb80a32270be436da85b7285edf06cacc4906"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-guide-chromium-cached.mjs",
+      "bytes": 8421,
+      "sha256": "2eefcce2043d8b54da035efa1af7a59d9fabb25d49d05c9c90c49af077a4db6c"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-guide-gates.mjs",
+      "bytes": 2161,
+      "sha256": "1c591d13e1aa13f272ed84d2dc9131c5f8cd22b99f794a39779c1c44722a27f4"
+    },
+    {
+      "path": "reviewers/assert-compute-desktop32.mjs",
+      "bytes": 7027,
+      "sha256": "c5338e66940f79109faa34178ce1d2855f43ed83cd59aa353950cacc50e41221"
+    },
+    {
+      "path": "reviewers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "path": "reviewers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "path": "reviewers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "path": "reviewers/runtime-module32-remaining-hypotheses.json",
+      "bytes": 2372,
+      "sha256": "9a00a31927ffd5a26d4d8614b3a38ad2935a105b2387a215b29229f48b7fdd0d"
+    },
+    {
+      "path": "reviewers/runtime-module32-guide-scope.json",
+      "bytes": 795,
+      "sha256": "b263f423f29b7ea0617d344700e000b54c6289368f7d9f551ce0b1a2e1788a2c"
+    },
+    {
+      "path": "reviewers/const-presets31-live-recheck.json",
+      "bytes": 628,
+      "sha256": "ab718138e780ac15dc4b0f7f52e5cf4207a762ed718ec525f1e15930e10ad82d"
+    }
+  ]
+}
