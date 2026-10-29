@@ -1,0 +1,166 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T17:51:11.829507+00:00",
+  "source": {
+    "commit": "940a9e55de7b10b8d72353abc57f4d40959182e4",
+    "tree": "fb7a084a3ac397efb2302d4ca09a5281b698d0f7",
+    "committedAt": "2026-10-30T01:39:03+08:00",
+    "dirty": false
+  },
+  "run": 40923416310,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40923416310",
+  "artifact": 12920002429,
+  "providerDigest": "sha256:6d4288398a1ffb16fbe6759763faeb929222f1d19e648ed61a6e6295453b30c5",
+  "authentication": "passed",
+  "acceptance": "Original application failed closed-rss-slope; no-model controls valid diagnostic protocols only.",
+  "readerActualExit": 0,
+  "readerExitChunk": "244ad9",
+  "applicationRSS": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-slope"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 61718528,
+      "closedRssSlopeBytesPerCycle": 24459088.457142856,
+      "sampledPeakRssBytes": 1138855936,
+      "maxSampleGapMs": 581,
+      "sampledPeakGrowthBytes": 376594432
+    }
+  },
+  "controls": [
+    {
+      "mode": "empty",
+      "profile": {
+        "observations": 132,
+        "complete": 132,
+        "exited": 0,
+        "reused": 0
+      },
+      "parentAnonymousMedians": [
+        175407104,
+        161681408,
+        153100288,
+        152666112,
+        151011328,
+        153686016,
+        155537408,
+        155676672
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "closedRssSlopeBytesPerCycle": 1702765.7142857143,
+        "rssDriftBytes": -851968,
+        "sampledPeakRssBytes": 716816384,
+        "scope": "Diagnostic-only, no model/runtime/IO and no RSS acceptance pass/fail. Tiny Worker-script URLs revoked after native termination; production IO timers untouched."
+      },
+      "fileInputEmpty": null,
+      "nativeWorkersClosed": 24,
+      "allObservedProcessesReaped": true
+    },
+    {
+      "mode": "fetch",
+      "profile": {
+        "observations": 136,
+        "complete": 136,
+        "exited": 0,
+        "reused": 0
+      },
+      "parentAnonymousMedians": [
+        264536064,
+        161378304,
+        225808384,
+        254050304,
+        204660736,
+        317403136,
+        215203840,
+        326406144
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "closedRssSlopeBytesPerCycle": 15766674.285714285,
+        "rssDriftBytes": 159580160,
+        "sampledPeakRssBytes": 947060736,
+        "scope": "Diagnostic-only, no model/runtime/IO and no RSS acceptance pass/fail. Tiny Worker-script URLs revoked after native termination; production IO timers untouched."
+      },
+      "fileInputEmpty": null,
+      "nativeWorkersClosed": 24,
+      "allObservedProcessesReaped": true
+    },
+    {
+      "mode": "file",
+      "profile": {
+        "observations": 133,
+        "complete": 133,
+        "exited": 0,
+        "reused": 0
+      },
+      "parentAnonymousMedians": [
+        174780416,
+        161841152,
+        153337856,
+        152911872,
+        151089152,
+        153202688,
+        153833472,
+        153886720
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "closedRssSlopeBytesPerCycle": 1714000.4571428571,
+        "rssDriftBytes": -1290240,
+        "sampledPeakRssBytes": 728576000,
+        "scope": "Diagnostic-only, no model/runtime/IO and no RSS acceptance pass/fail. Tiny Worker-script URLs revoked after native termination; production IO timers untouched."
+      },
+      "fileInputEmpty": true,
+      "nativeWorkersClosed": 24,
+      "allObservedProcessesReaped": true
+    }
+  ],
+  "archive": {
+    "path": "firefox-runtime31-file.zip",
+    "bytes": 285758,
+    "sha256": "b073b4b7184d0ad71d331a77720387ee458aa8c0f468476e32e4c18737112860"
+  },
+  "files": [
+    {
+      "path": "provider-original.zip",
+      "bytes": 276209,
+      "sha256": "6d4288398a1ffb16fbe6759763faeb929222f1d19e648ed61a6e6295453b30c5"
+    },
+    {
+      "path": "run.json",
+      "bytes": 14426,
+      "sha256": "3cdb0c164d3e25083f99ed8c41290f8b51b4dd795399d37fafb45b3c8da5af30"
+    },
+    {
+      "path": "jobs.json",
+      "bytes": 3970,
+      "sha256": "a64c72b77bb4372dabbab55aa11148934e700f799a868f58f54165fbffb91306"
+    },
+    {
+      "path": "listing.json",
+      "bytes": 948,
+      "sha256": "fb94000409ac642740e65432554000224412735de5c514b4692312ba482578d4"
+    },
+    {
+      "path": "independent-review.json",
+      "bytes": 257555,
+      "sha256": "79bcc7de7507b0a585851fdadf1a2829e93f905fddfb02f881d20fb9efeed719"
+    },
+    {
+      "path": "independent-reader.mjs",
+      "bytes": 15079,
+      "sha256": "b6660b904792b6891fe9505399d2e52705ad325e11dc401802723da34bb66b28"
+    },
+    {
+      "path": "unit-original.log",
+      "bytes": 4501,
+      "sha256": "fe2534f4a94cd55edd10ff07a339658f5f5e521fed3138a2b3d883c1ae12f0d3"
+    }
+  ],
+  "privacy": "Public synthetic data; no model/BIN payload, user attachment, auth header or credential. Native PNG inspected: public welcome at1280x640 and32px.",
+  "interpretation": "File and empty curves are similar; repeated HTTP produces much larger parent-anonymous swings without model/compilation/IO. This separates the HTTP path from equally-sized Worker reads, but does not attribute ownership between Firefox native network and observer or prove the app slope repaired."
+}

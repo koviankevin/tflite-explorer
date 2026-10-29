@@ -68,3 +68,19 @@ Firefox 的無模型控制新增第三組 `file`，既有 empty／HTTP fetch 組
 產檔及刪除意圖透過既有 `buildEvent` flush 保存；只 unlink 同一獨占目錄的 `public-runtime.wasm`，先核對 dev／inode／大小／mtime／SHA，再非遞迴移除空目錄。寫入意圖失敗時不執行刪除；意外改變或無法驗證的檔案會保留並讓控制流程失敗。實驗報告只留 metadata／SHA，不保存該 WASM 或 File payload。
 
 33 項相關 Node 檢查通過，包含真 Blob 的 File-worker 讀取、錯誤／超量規模、native chooser 觀察 adapter、原 RSS／程序分類、刪除意圖失敗時保留，以及真 CPU reference。這不等於 Hosted Firefox File 對照已成功；新實測及原應用 RSS 結果仍待取得。File 組也只作因果診斷，不提供替代 RSS 通過判定，原 16 MiB／輪、自然 IO URL 期限、網路限制與正式版本都沒有變動。
+
+## 本機 File 對照的實際結果
+
+[40923416310](https://github.com/koviankevin/tflite-explorer/actions/runs/40923416310) 已以 failure 結束，來源 `940a9e55de7b10b8d72353abc57f4d40959182e4`／tree `fb7a084a3ac397efb2302d4ca09a5281b698d0f7`／build `f685158a3a924125`。PR #142 的必要 Node／contract 均成功，合併 tree 相同；應用、相依、workflow 與原 RSS flow／policy 仍未改動。原 provider digest／CRC、來源／job／attempt／時間、304 檔、全部 IO 及程序分類錨點重算通過，獨立讀取器實際 exit 0。原始 JSON 3,487,167 bytes，在原 4 MiB 讀取上限內。[原始資料與讀取器](results/firefox-runtime31-file.zip)及[逐檔 SHA、退出與比較](results/firefox-runtime31-file.json)保留。
+
+| 無模型對照 | 結果與界線 |
+| --- | --- |
+| empty | 132 筆完整觀測；cycle 2→8 RSS 差 −851,968 bytes，後六輪 slope 1,702,765.71 bytes／輪。父程序匿名欄位先由約 175 MB 下降至 151 MB，末輪約 156 MB。 |
+| HTTP fetch | 136 筆完整觀測；cycle 2→8 RSS 差 159,580,160 bytes，後六輪 slope 15,766,674.29 bytes／輪。父程序匿名欄位在約 161～326 MB 間波動。 |
+| native File | 133 筆完整觀測；cycle 2→8 RSS 差 −1,290,240 bytes，後六輪 slope 1,714,000.46 bytes／輪。父程序匿名欄位走勢與 empty 接近，先由約 175 MB 下降至 151 MB，末輪約 154 MB。24 次完整讀到相同 10,948,854 bytes；輸入清空，公開檔案完整 SHA／身分與八項 create／delete 事件核對，檔案及空目錄移除。 |
+
+三組各 24 個 native Worker close、七個觀測程序正常退出，沒有 missing／reused 分類。三組都沒有模型、WASM 編譯、推論或 IO ZIP。只讀同樣大的本機 File 沒有重現 HTTP 組的大幅波動，因此在此協定下，Worker 資料配置本身不足以解釋那段父程序變化；HTTP 路徑仍包含 Firefox 原生網路及工具觀察成本，不能進一步憑此歸因單一所有者，亦不將各獨立 browser 的數值相減。
+
+原應用仍只因 **closed-rss-slope 24,459,088.46 bytes／輪**失敗；429 筆完整觀測，URL 全自然釋放後 drift 61,718,528 bytes、peak growth 376,594,432 bytes，最大樣本缺口 581ms。八輪／24 次 CPU／八份 IO SHA／CRC、8 model／24 runtime close、24 次輸入清理及 33 個生成檔清理均完成，七個觀測程序正常退出。沒有將對照完成宣稱為原應用通過。
+
+接著針對重複 HTTP 載入準備[共用公開 runtime module 候選修正](runtime-module-cache.md)，每次模型執行仍使用新的 Instance／memory／Worker。新應用的瀏覽器與原門檻驗收尚待取得，正式站仍為 preview.31。
