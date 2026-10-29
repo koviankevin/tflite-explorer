@@ -40,7 +40,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         active=value;root.hidden=!value;document.body.classList.toggle('editing-model',value);
         modeButtons();
         if(!value&&exploreScroll)requestAnimationFrame(()=>{$('target').scrollTo({left:exploreScroll.left,top:exploreScroll.top,behavior:'instant'});document.scrollingElement.scrollTo({left:exploreScroll.x,top:exploreScroll.y,behavior:'instant'});});
-        if(value){availability();schedule();}
+        if(value){if(!pendingDraft&&!draftTask)$('edit-draft-banner').hidden=true;availability();schedule();}
     };
     function availability(){
         const composing=!!snapshot?.composition,editable=getFormat()==='tflite';$('edit-mode').disabled=busy||!editable;

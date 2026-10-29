@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 // Observes the actual navigation and editor after a native action; no UI state
-// is assigned by the test. All three buttons must agree with the shown panel.
+// is assigned by the test. Navigation and local draft kind agree with the panel;
+// older immutable builds keep their previous three-button navigation contract.
 export async function assertWorkspaceMode(page,mode){
     assert.ok(['explore','edit','composition'].includes(mode));
     const contextual=await page.locator('#edit-session').count()>0;

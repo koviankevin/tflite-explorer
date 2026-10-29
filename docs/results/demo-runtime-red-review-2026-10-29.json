@@ -24,7 +24,7 @@
         "number": 114,
         "head": {
           "ref": "codex/contextual-model-editing",
-          "sha": "14f3dc9da0aa60a62ac000fc34268f7851e9a7f5",
+          "sha": "901abf66868a9deeae01ecf66ffcb7e5f7dc05a4",
           "repo": {
             "id": 1428663853,
             "url": "https://api.github.com/repos/koviankevin/tflite-explorer",
@@ -426,6 +426,12 @@
           "head_sha": "14f3dc9da0aa60a62ac000fc34268f7851e9a7f5"
         }
       },
+      "source": {
+        "commit": "14f3dc9da0aa60a62ac000fc34268f7851e9a7f5",
+        "tree": "bdfc9333fcf202f70e0fd31dc29400e7e49108f2",
+        "committedAt": "2026-10-29T14:40:00+08:00",
+        "dirty": false
+      },
       "status": "failed",
       "checks": [
         "version dialog works during delayed graph initialization at the repository subpath",
@@ -433,7 +439,7 @@
         "native model chooser and native pattern JSON import/export",
         "actual TFLite submodel download, native reopen, original pattern and worker cleanup"
       ],
-      "error": "AssertionError [ERR_ASSERTION]: published demo original / zero: {\"status\":\"failed\",\"detail\":\"LiteRT �����ˬd�G���ѡC���w��J���楢�ѡGERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:2226]\\n�| ERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:2190]\\n�| ERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:578]\\n�| Failed to allocate tensors�C�ݨ̦� runtime����J���E�_�T�{��]�C\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd56d0, name=CpuAccelerator\\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\\nINFO: [environment.cc:36] Creating LiteRT environment with options\\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd7000, name=GPU WebGPU\\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd72e0, name=CpuAccelerator\\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\\nERROR: XNNPack delegate failed to reshape runtime\\nERROR: Node number 13 (TfLiteXNNPackDelegate) failed to prepare.\"}\n\n'failed' !== 'passed'\n\n    at demoRuntimeFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/demo-runtime-flow.mjs:20:24)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:98:73",
+      "error": "AssertionError [ERR_ASSERTION]: published demo original / zero: {\"status\":\"failed\",\"detail\":\"LiteRT 本機檢查：失敗。指定輸入執行失敗：ERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:2226]\\n└ ERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:2190]\\n└ ERROR: [./third_party/odml/litert/litert/cc/litert_compiled_model.h:578]\\n└ Failed to allocate tensors。需依此 runtime／輸入的診斷確認原因。\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd56d0, name=CpuAccelerator\\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\\nINFO: [environment.cc:36] Creating LiteRT environment with options\\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd7000, name=GPU WebGPU\\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd72e0, name=CpuAccelerator\\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\\nERROR: XNNPack delegate failed to reshape runtime\\nERROR: Node number 13 (TfLiteXNNPackDelegate) failed to prepare.\"}\n\n'failed' !== 'passed'\n\n    at demoRuntimeFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/demo-runtime-flow.mjs:20:24)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:98:73",
       "bytes": 267403
     },
     {
