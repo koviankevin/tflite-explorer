@@ -1,11 +1,11 @@
 import {randomDefaults,randomRange,randomOptions,randomDescription} from './tensor-random.js';
 
 // Both generated constants and runtime inputs use the same controls and spec.
-export function tensorRandomUI({id,role='input',dtype='float32',quantized=false}){
-    const make=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;},root=make('div'),select=make('select'),hint=make('p'),advanced=make('details'),controls={},fields={};
+export function tensorRandomUI({id,role='input',dtype='float32',quantized=false,make=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;}}){
+    const root=make('div'),select=make('select'),hint=make('p'),advanced=make('details'),controls={},fields={};
     select.id=id('distribution');hint.id=id('range');hint.className='hint';
     const names=[['uniform','範圍內平均取樣（Uniform）'],['normal',role==='weight'?'一般小幅浮點權重（Normal）':'標準化浮點資料（Normal）'],['truncated-normal',role==='weight'?'小幅浮點權重（Truncated Normal）':'有上下界的浮點資料（Truncated Normal）'],['bernoulli','二元 mask／開關（Bernoulli）']];
-    for(const [value,label]of names)select.append(new Option(label,value));
+    for(const [value,label]of names){const option=make('option',label);option.value=value;select.append(option);}
     const label=make('label','資料規則');label.append(select);advanced.append(make('summary','進階參數（可沿用預設）'));root.append(label,hint,advanced);
     for(const [key,title]of [['seed','seed（相同設定可重現）'],['min','最小值'],['max','最大值'],['mean','平均值（中心）'],['std','標準差（數值分散程度）'],['probability','產生 1 的機率（0～1）']]){
         const input=make('input'),field=make('label',title);input.id=id(key);input.type='number';input.step=key==='seed'?'1':'any';controls[key]=input;fields[key]=field;field.append(input);advanced.append(field);input.oninput=()=>describe();
