@@ -1,0 +1,193 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T20:49:04.700516+00:00",
+  "source": {
+    "commit": "878b48d9b27b9832c8b04e69cd422fec76d0bbbd",
+    "tree": "fae2abf98311ea0e840a166fff4b6185b9453061",
+    "committedAt": "2026-10-30T04:23:34+08:00",
+    "dirty": false
+  },
+  "run": 40948691875,
+  "authentication": "passed",
+  "producerStatus": "failed",
+  "acceptance": "failed-original-rss-with-valid-diagnostics",
+  "sourceBoundReaders": [
+    {
+      "kind": "provider/CRC/source/305core",
+      "exit": 0,
+      "chunk": "4313ce"
+    },
+    {
+      "kind": "independentcontrols+originalRSS+cold",
+      "exit": 0,
+      "chunk": "c41841"
+    }
+  ],
+  "observations": {
+    "rss": {
+      "status": "failed",
+      "issues": [
+        "closed-rss-slope"
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 120291328,
+        "closedRssSlopeBytesPerCycle": 27718217.14285714,
+        "sampledPeakRssBytes": 1110204416,
+        "maxSampleGapMs": 556,
+        "sampledPeakGrowthBytes": 335659008
+      }
+    },
+    "controls": [
+      {
+        "mode": "file-read",
+        "summary": {
+          "measuredCycles": 6,
+          "closedRssSlopeBytesPerCycle": 3180836.5714285714,
+          "rssDriftBytes": 15216640,
+          "sampledPeakRssBytes": 728330240,
+          "scope": "Diagnostic protocol only; no application model/runtime/Instance or RSS acceptance pass. Continuous owned-process RSS; anonymous/file/shared only at settled observations. No forcedGC or shortened URL timers."
+        },
+        "completeSettledProfiles": 51
+      },
+      {
+        "mode": "file-io",
+        "summary": {
+          "measuredCycles": 6,
+          "closedRssSlopeBytesPerCycle": 27688725.942857143,
+          "rssDriftBytes": -1818624,
+          "sampledPeakRssBytes": 871870464,
+          "scope": "Diagnostic protocol only; no application model/runtime/Instance or RSS acceptance pass. Continuous owned-process RSS; anonymous/file/shared only at settled observations. No forcedGC or shortened URL timers."
+        },
+        "completeSettledProfiles": 51
+      },
+      {
+        "mode": "module-clone",
+        "summary": {
+          "measuredCycles": 6,
+          "closedRssSlopeBytesPerCycle": 1210777.6,
+          "rssDriftBytes": 6823936,
+          "sampledPeakRssBytes": 891994112,
+          "scope": "Diagnostic protocol only; no application model/runtime/Instance or RSS acceptance pass. Continuous owned-process RSS; anonymous/file/shared only at settled observations. No forcedGC or shortened URL timers."
+        },
+        "completeSettledProfiles": 51
+      }
+    ],
+    "cold": {
+      "warmRealInvokes": 2,
+      "warmGuideDeadline": true,
+      "publicFixturesRemoved": 2,
+      "coldAssetGETs": 1,
+      "coldRuntimeCloses": 3,
+      "coldModelCloses": 1,
+      "coldInputCleanups": 3
+    }
+  },
+  "retainedFileInputProbe": {
+    "nodeExit": 1,
+    "wrapperExit": 0,
+    "chunk": "37bfdf",
+    "source": "reviewers/original-inputs-ui.js",
+    "scope": "Node ownership-seam only; retained input still has1File. Not native FileList or RSS root-cause proof.",
+    "reference": "https://html.spec.whatwg.org/multipage/input.html#dom-input-value-filename"
+  },
+  "publication": false,
+  "archive": {
+    "path": "firefox-payload32-originals.zip",
+    "bytes": 311997,
+    "sha256": "b0fc371b45b4b3b31ac0d85745d96aeb4213487fd643653370ca50a8e78a487a"
+  },
+  "files": [
+    {
+      "path": "run.json",
+      "bytes": 14425,
+      "sha256": "041040fa11b5b9e307a93c4806032d0345f893a8b812bda332cfd168f83fb72f"
+    },
+    {
+      "path": "jobs.json",
+      "bytes": 3970,
+      "sha256": "47c193fac4c6203ba915500cb2519542f3b6d9bf3fb0bcc2f50eee166c345a51"
+    },
+    {
+      "path": "listing.json",
+      "bytes": 948,
+      "sha256": "ca6118b1a9aed69e1c7e414a261ca955a6993db68169ff0525ecb3183bad7d4f"
+    },
+    {
+      "path": "original.zip",
+      "bytes": 284185,
+      "sha256": "0fc87a856280f2926601b22c501186ec85ae5f028d27e8ea36c55e7391009565"
+    },
+    {
+      "path": "authentication.json",
+      "bytes": 87484,
+      "sha256": "815f69b482c6efcf0f3c97e4c7ea2003e3c40e46c049450852e6c0beabb67c68"
+    },
+    {
+      "path": "diagnostic-review.json",
+      "bytes": 8785,
+      "sha256": "f1c1ec1acb1b7124526d8d146a46408c92ba1434002778109812172c5516d23a"
+    },
+    {
+      "path": "reviewers/auth-runtime-module32-payload.mjs",
+      "bytes": 5351,
+      "sha256": "ee613ccfc1b8b7182d943328e3331daeff7fb9371e84b5ad3f4e9880464c3218"
+    },
+    {
+      "path": "reviewers/review-runtime-module32-payload.mjs",
+      "bytes": 12216,
+      "sha256": "cf63ef85a02e630669a9f7cd7d3271099cdb2ed09759aac9fdf783a6155f8fb6"
+    },
+    {
+      "path": "reviewers/assert-compute-desktop32.mjs",
+      "bytes": 7027,
+      "sha256": "c5338e66940f79109faa34178ce1d2855f43ed83cd59aa353950cacc50e41221"
+    },
+    {
+      "path": "reviewers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "path": "reviewers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "path": "reviewers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "path": "reviewers/runtime-detached-file-red.test.mjs",
+      "bytes": 5735,
+      "sha256": "54ed5e068d56229209774451582ccc3c656696e7c8dbd075c37ef34f236f19f4"
+    },
+    {
+      "path": "reviewers/runtime-detached-file-red.log",
+      "bytes": 1675,
+      "sha256": "d9a7206455d9c8158c3c8fd1414c0e31a651382353b07bf6a06d334cdedbfe34"
+    },
+    {
+      "path": "reviewers/firefox-payload-unit-final.log",
+      "bytes": 2218,
+      "sha256": "6b9bb3617d1bc5f2483420f9a9d11340ec50eb959a816a1e986a98a5a843a65a"
+    },
+    {
+      "path": "reviewers/firefox-payload-unit-red.log",
+      "bytes": 1610,
+      "sha256": "146fe68e1ab115579aa3388ca49ec14914c79282d33cb78bf753527cc6d04d6d"
+    },
+    {
+      "path": "reviewers/firefox-continuation-red.log",
+      "bytes": 1620,
+      "sha256": "0ced51389a919f28a7f17745493703540a4881e6eba5f2f4cf08a09c42d6fc35"
+    },
+    {
+      "path": "reviewers/original-inputs-ui.js",
+      "bytes": 2768,
+      "sha256": "ca24c00d045d19b229e503c353865847d87a7cc8a05571120cfe9aefbfec3835"
+    }
+  ]
+}
