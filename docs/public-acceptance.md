@@ -19,6 +19,7 @@
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
+| Firefox／WebKit 現行功能 | [preview.30 跨引擎結果](desktop-runtime.md#最終核對結果)：Hosted Linux Firefox 142.0.1／WebKit 26.0 各十六項原生操作，包含獨立 CPU／IO、四種分佈、const、v3 草稿、組合／匯出重開及指南；各六十模型／十六 runtime Workers 關閉。原始失敗與觀察界線保留，不代替數小時或其他 OS |
 | 固定部署及下載 | [最終獨立核對](results/preview30-published-2026-10-29.json)：1,400 檔 SHA／MIME、root、權威部署與四份固定下載一致；31 項原生操作、五組指南、19 種執行／分佈情境、v3 草稿及 71 model／16 runtime Workers 關閉，四工作 attempt 1 成功 |
 
 ## 第一次使用

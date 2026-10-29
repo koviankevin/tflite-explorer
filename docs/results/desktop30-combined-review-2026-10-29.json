@@ -1,0 +1,417 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "a9dcc78ea48e8dec0b6dd6c25565dcafddde2f0f",
+    "tree": "567f0194b496b5371585ee7a117b19db748594a2",
+    "committedAt": "2026-10-29T19:51:58+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "release": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.30",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "0ee55ba2803038b22b0c11dfc38b6f890aedca5c",
+      "tree": "d70b6d131004f872b4fec3ae3667433e04f47199",
+      "committedAt": "2026-10-29T19:03:11+08:00",
+      "dirty": false
+    },
+    "buildId": "f3ff13b75b83ee57"
+  },
+  "site": {
+    "siteId": "ff1f2e3d7bafb505f8f0bf1037977746625f4c1e4c98e84779bbd301df76d956",
+    "manifestSHA256": "6e56f7a3b3f468804c6c46f9ca1b9ae5a5a6f0fb295e6a09a89499610294c634",
+    "current": "f3ff13b75b83ee57",
+    "legacy": "163f38ab1dc856e4",
+    "retainedBuildIds": [
+      "ad6db9bb06620139",
+      "b1a823b72e94f81b"
+    ],
+    "files": 1400
+  },
+  "engines": [
+    {
+      "engine": "webkit",
+      "runId": 40865708321,
+      "attempt": 1,
+      "jobId": 123419840628,
+      "artifactId": 12894126331,
+      "providerDigest": "sha256:88f05be72b4ef220b7f65849af2273231602b1f3e00d425a95fef79edf58744c",
+      "reportSHA256": "f876caa29c4ef82238986d12d0ccd786489ea0a8eaa219710d4ab0ec907f2571",
+      "source": {
+        "commit": "eef235153d9a732d61f4d2ac1651cbd00a30b137",
+        "tree": "8563d3a3f563946a6db1ff20a7601a40b7dcf143",
+        "committedAt": "2026-10-29T19:28:35+08:00",
+        "dirty": false
+      },
+      "browser": "26.0",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "exact published demo original and reopened edit run with zero/random inputs on the selected engine",
+        "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout",
+        "in-app guide, F1/manual tabs/focus, preserved editing state, safe model navigation, explicit inference and laptop layout"
+      ],
+      "proof": {
+        "runtimeRequestObservation": {
+          "requests": 40,
+          "jsModuleEvents": "observed"
+        },
+        "unobservedFinalPageLayoutClose": 1,
+        "guideCases": 5,
+        "checks": 16,
+        "demoCPU": 4,
+        "modelWorkers": 60,
+        "runtimeWorkers": 16,
+        "runtimeCases": 19,
+        "randomDistributions": 4,
+        "portableDistributionDraftVersion": 3,
+        "contextualSelection": true,
+        "restart": true,
+        "layouts": 2
+      },
+      "layout": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "run": {
+            "x": 0,
+            "y": 125,
+            "width": 1366,
+            "height": 485,
+            "top": 125,
+            "right": 1366,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1366,
+            "height": 113,
+            "top": 0,
+            "right": 1366,
+            "bottom": 113,
+            "left": 0
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "run": {
+            "x": 0,
+            "y": 125,
+            "width": 1280,
+            "height": 485,
+            "top": 125,
+            "right": 1280,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 125,
+            "top": 0,
+            "right": 1280,
+            "bottom": 125,
+            "left": 0
+          }
+        }
+      ],
+      "guideLayouts": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "height": 640,
+          "dialog": {
+            "x": 223,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1143,
+            "bottom": 608,
+            "left": 223
+          },
+          "content": {
+            "x": 250,
+            "y": 195,
+            "width": 866,
+            "height": 347,
+            "top": 195,
+            "right": 1116,
+            "bottom": 542,
+            "left": 250
+          },
+          "close": {
+            "x": 1038,
+            "y": 55,
+            "width": 78,
+            "height": 38,
+            "top": 55,
+            "right": 1116,
+            "bottom": 93,
+            "left": 1038
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "height": 640,
+          "dialog": {
+            "x": 180,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1100,
+            "bottom": 608,
+            "left": 180
+          },
+          "content": {
+            "x": 207,
+            "y": 195,
+            "width": 866,
+            "height": 347,
+            "top": 195,
+            "right": 1073,
+            "bottom": 542,
+            "left": 207
+          },
+          "close": {
+            "x": 995,
+            "y": 55,
+            "width": 78,
+            "height": 38,
+            "top": 55,
+            "right": 1073,
+            "bottom": 93,
+            "left": 995
+          }
+        }
+      ],
+      "sourceReport": "build/qa/desktop-40865708321-initial-scoped/webkit/desktop-webkit.json",
+      "zip": "build/qa/desktop30-original-40865708321/webkit.zip",
+      "screenshotSHA256": "a611fa10f5effba8fa5bd26e08be69f8de96636d3954ab6eec510cf6c7eceab7"
+    },
+    {
+      "engine": "firefox",
+      "runId": 40868692321,
+      "attempt": 1,
+      "jobId": 123429890364,
+      "artifactId": 12894399556,
+      "providerDigest": "sha256:bc827c6c2231b961ae9acf6b8b18c8f383e27784e430e7fa84c0b7d1c00fbfad",
+      "reportSHA256": "e3bf5f1215e01ef20639a498607330f65c792fa47c0be26f656e1b8d1ea30aae",
+      "source": {
+        "commit": "a9dcc78ea48e8dec0b6dd6c25565dcafddde2f0f",
+        "tree": "567f0194b496b5371585ee7a117b19db748594a2",
+        "committedAt": "2026-10-29T19:51:58+08:00",
+        "dirty": false
+      },
+      "browser": "142.0.1",
+      "checks": [
+        "public demo: local worker, 32px graph, exact layer lookup and location",
+        "actual file chooser and native pattern import/export preserve the structural query",
+        "TFLite submodel downloads and reopens with exactly one original pattern match",
+        "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+        "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+        "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+        "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+        "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+        "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+        "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+        "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+        "exact published demo original and reopened edit run with zero/random inputs on the selected engine",
+        "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout",
+        "in-app guide, F1/manual tabs/focus, preserved editing state, safe model navigation, explicit inference and laptop layout"
+      ],
+      "proof": {
+        "runtimeRequestObservation": {
+          "requests": 10,
+          "jsModuleEvents": "not observed"
+        },
+        "unobservedFinalPageLayoutClose": 1,
+        "guideCases": 5,
+        "checks": 16,
+        "demoCPU": 4,
+        "modelWorkers": 60,
+        "runtimeWorkers": 16,
+        "runtimeCases": 19,
+        "randomDistributions": 4,
+        "portableDistributionDraftVersion": 3,
+        "contextualSelection": true,
+        "restart": true,
+        "layouts": 2
+      },
+      "layout": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "run": {
+            "x": 0,
+            "y": 115,
+            "width": 1366,
+            "height": 495,
+            "top": 115,
+            "right": 1366,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1366,
+            "height": 115,
+            "top": 0,
+            "right": 1366,
+            "bottom": 115,
+            "left": 0
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "run": {
+            "x": 0,
+            "y": 128,
+            "width": 1280,
+            "height": 482,
+            "top": 128,
+            "right": 1280,
+            "bottom": 610,
+            "left": 0
+          },
+          "header": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 128,
+            "top": 0,
+            "right": 1280,
+            "bottom": 128,
+            "left": 0
+          }
+        }
+      ],
+      "guideLayouts": [
+        {
+          "width": 1366,
+          "scrollWidth": 1366,
+          "height": 640,
+          "dialog": {
+            "x": 223,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1143,
+            "bottom": 608,
+            "left": 223
+          },
+          "content": {
+            "x": 250,
+            "y": 196.60000610351562,
+            "width": 866,
+            "height": 344.5999755859375,
+            "top": 196.60000610351562,
+            "right": 1116,
+            "bottom": 541.1999816894531,
+            "left": 250
+          },
+          "close": {
+            "x": 1038,
+            "y": 55,
+            "width": 78,
+            "height": 38.399993896484375,
+            "top": 55,
+            "right": 1116,
+            "bottom": 93.39999389648438,
+            "left": 1038
+          }
+        },
+        {
+          "width": 1280,
+          "scrollWidth": 1280,
+          "height": 640,
+          "dialog": {
+            "x": 180,
+            "y": 32,
+            "width": 920,
+            "height": 576,
+            "top": 32,
+            "right": 1100,
+            "bottom": 608,
+            "left": 180
+          },
+          "content": {
+            "x": 207,
+            "y": 196.60000610351562,
+            "width": 866,
+            "height": 344.5999755859375,
+            "top": 196.60000610351562,
+            "right": 1073,
+            "bottom": 541.1999816894531,
+            "left": 207
+          },
+          "close": {
+            "x": 995,
+            "y": 55,
+            "width": 78,
+            "height": 38.399993896484375,
+            "top": 55,
+            "right": 1073,
+            "bottom": 93.39999389648438,
+            "left": 995
+          }
+        }
+      ],
+      "sourceReport": "build/qa/desktop-40868692321-firefox-final/firefox/desktop-firefox.json",
+      "zip": "build/qa/desktop-40868692321-firefox-final/firefox.zip",
+      "screenshotSHA256": "0d3964df9b8dbe9c9a363c616bf46f350035734f116de025f7ec67721028fa29"
+    }
+  ],
+  "sourceReuse": {
+    "applicationAndBuildInputsUnchanged": true,
+    "fixturesAndPolicyUnchanged": true,
+    "changedPaths": [
+      "docs/desktop-runtime.md",
+      "test/browser/runtime-workspace-flow.mjs",
+      "test/browser/usage-guide-flow.mjs"
+    ],
+    "driverDiff": "diff --git a/test/browser/runtime-workspace-flow.mjs b/test/browser/runtime-workspace-flow.mjs\nindex 60dcad0..02ae769 100644\n--- a/test/browser/runtime-workspace-flow.mjs\n+++ b/test/browser/runtime-workspace-flow.mjs\n@@ -59,7 +59,16 @@ export async function runtimeWorkspaceFlow({page,read,base,directory,check,keybo\n         await page.locator('#edit-new-ops details').first().locator('summary').click();await until(()=>!!document.querySelector('#edit-builtin'));await page.locator('#edit-builtin').selectOption('18');await page.locator('#edit-builtin-apply').click();await until(()=>document.querySelector('[data-edit-node=\"new:1\"] .edit-node-title').textContent==='MUL');await page.locator('#edit-expose').check();\n         const before=await download('#edit-export','runtime-before.tflite');await until(()=>!document.querySelector('#edit-open-result').disabled);const untested=JSON.parse(await readFile(await download('#edit-download-report','runtime-before.report.json'),'utf8'));assert.equal(untested.checks.find(c=>c.id==='runtime-load').status,'not-run');assert.equal(report.workers.length,0);assert.equal(report.requests.length,0);report.cases.push('opening/editing/exporting never starts interpreter or downloads runtime');\n         await page.locator('#edit-font').selectOption('32');await enterRuntime();\n-        report.runLayouts=[];for(const viewport of [{width:1366,height:640},{width:1280,height:640}]){await page.setViewportSize(viewport);const layout=await read(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,run:document.querySelector('#run-workspace').getBoundingClientRect().toJSON(),header:document.querySelector('.app-header').getBoundingClientRect().toJSON()}));assert.ok(layout.scrollWidth<=layout.width+1&&layout.run.top>=layout.header.bottom-1&&layout.run.height>=300,JSON.stringify(layout));report.runLayouts.push(layout);}\n+        report.runLayouts=[];report.runLayoutTransitions=[];\n+        const layoutSnapshot=()=>read(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,run:document.querySelector('#run-workspace').getBoundingClientRect().toJSON(),header:document.querySelector('.app-header').getBoundingClientRect().toJSON()}));\n+        for(const viewport of [{width:1366,height:640},{width:1280,height:640}]){\n+            await page.setViewportSize(viewport);const initial=await layoutSnapshot();\n+            // ResizeObserver deliberately defers header writes to the next\n+            // animation frame. Observe actual aligned geometry before taking\n+            // the acceptance snapshot; a persistent overlap still times out.\n+            await until(width=>innerWidth===width&&Math.abs(document.querySelector('#run-workspace').getBoundingClientRect().top-Math.ceil(document.querySelector('.app-header').getBoundingClientRect().bottom))<=1,viewport.width);\n+            const layout=await layoutSnapshot();assert.ok(layout.scrollWidth<=layout.width+1&&layout.run.top>=layout.header.bottom-1&&layout.run.height>=300,JSON.stringify(layout));report.runLayouts.push(layout);report.runLayoutTransitions.push({width:viewport.width,initial,settled:layout});\n+        }\n         if(keyboardInputs)await keyboardDismissal();\n         const a=path.join(directory,'runtime-a.bin'),b=path.join(directory,'runtime-b.bin'),bad=path.join(directory,'runtime-invalid.bin');await writeFile(a,Buffer.from(Float32Array.of(1,2).buffer),{flag:'wx'});await writeFile(b,Buffer.from(Float32Array.of(3,4).buffer),{flag:'wx'});await writeFile(bad,Buffer.of(1,2,3),{flag:'wx'});\n         await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);assert.equal(await read(()=>document.querySelectorAll('#edit-runtime-inputs fieldset').length),2);\ndiff --git a/test/browser/usage-guide-flow.mjs b/test/browser/usage-guide-flow.mjs\nindex a2adbd7..19ec97c 100644\n--- a/test/browser/usage-guide-flow.mjs\n+++ b/test/browser/usage-guide-flow.mjs\n@@ -31,9 +31,12 @@ export async function usageGuideFlow({page,read,directory,check}){\n         await guide('run');const count=report.runtimeWorkers.length;await action('run');await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='false');await assertWorkspaceMode(page,'run');assert.equal(report.runtimeWorkers.length,count);assert.match(await page.locator('#run-model-name').textContent(),/示範模型/);\n         await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await until(()=>document.querySelector('#edit-runtime-result').dataset.status==='passed'&&document.querySelector('#run-workspace').getAttribute('aria-busy')==='false');\n         const download=page.waitForEvent('download');await page.locator('#edit-runtime-download').click();const item=await download;assert.equal(await item.failure(),null);const io=path.join(directory,'guide-runtime-io.zip');await item.saveAs(io);await item.delete();const zip=Archive.open(new Uint8Array(await readFile(io)),'zip'),manifest=JSON.parse(new TextDecoder().decode(zip.entries.get('manifest.json').peek()));assert.equal(manifest.modelSHA256,createHash('sha256').update(await readFile(path.join(directory,'demo.tflite'))).digest('hex'));report.cases.push('guide opens draft management without changing history; Run navigation never executes a draft and explicit zero-input execution produces IO for the original opened demo bytes');\n-        let release,observed;const held=new Promise(r=>{observed=r;}),waiting=new Promise(r=>{release=r;}),pattern='**/litert_wasm_compat_internal.wasm',route=async request=>{observed();await waiting;await request.abort().catch(()=>{});};await page.context().route(pattern,route);\n+        // Hold a real static WASM request to observe busy state, then allow\n+        // successful completion. A network abort does not guarantee a runtime\n+        // failure on every engine (cached/fallback instantiation may succeed).\n+        let release,observed;const held=new Promise(r=>{observed=r;}),waiting=new Promise(r=>{release=r;}),pattern='**/litert_wasm_compat_internal.wasm',route=async request=>{observed();await waiting;await request.continue();};await page.context().route(pattern,route);\n         try{\n-            await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await Promise.race([held,new Promise((_,reject)=>setTimeout(()=>reject(Error('Guide busy runtime was not observed')),15000))]);await guide('edit');assert.equal(await page.locator('[data-guide-action=edit]').isDisabled(),true);assert.match(await page.locator('#guide-reasons').textContent(),/操作進行中/);release();await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='false'&&!document.querySelector('[data-guide-action=edit]').disabled);assert.equal(await page.locator('#usage-guide').isVisible(),true);assert.equal(await page.locator('#edit-runtime-result').getAttribute('data-status')==='passed',false);await action('edit');await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');assert.equal((await editState()).changes,before.changes);\n+            await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);await page.locator('#edit-runtime-run').click();await Promise.race([held,new Promise((_,reject)=>setTimeout(()=>reject(Error('Guide busy runtime was not observed')),15000))]);await guide('edit');assert.equal(await page.locator('[data-guide-action=edit]').isDisabled(),true);assert.match(await page.locator('#guide-reasons').textContent(),/操作進行中/);release();await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='false'&&!document.querySelector('[data-guide-action=edit]').disabled);assert.equal(await page.locator('#usage-guide').isVisible(),true);assert.equal(await page.locator('#edit-runtime-result').getAttribute('data-status'),'passed');report.busyCompletion={wasDisabled:true,status:'passed',guideOpen:true,reEnabled:true};await action('edit');await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');assert.equal((await editState()).changes,before.changes);\n         }finally{release();await page.context().unroute(pattern,route);}\n         await page.locator('#edit-clear').click();await page.locator('#close-model').click();await until(()=>document.querySelector('#model-tabs').hidden);report.cases.push('a running interpreter disables guide navigation; completion refreshes eligibility in the open guide and existing draft survives');\n         const mlir=path.join(directory,'guide-local.mlir');await writeFile(mlir,MLIR_BRANCH,{flag:'wx'});await guide();const chooser=page.waitForEvent('filechooser');await page.locator('[data-guide-action=open]').click();await(await chooser).setFiles(mlir);await ready();const original=await page.locator('[data-model-tab]').first().textContent();",
+    "driverDiffSHA256": "b2204c73a1b8b57d6ea1ca02ca004912731fca792ef3193afb55b971d819bf63",
+    "reason": "Only native layout observation waiting and guide request completion strategy changed. Original WebKit covers the same application, CPU/IO, distributions, draft, model export and guide guards; no successful-engine rerun."
+  },
+  "failures": [
+    {
+      "runId": 40865708321,
+      "engine": "firefox",
+      "error": "AssertionError [ERR_ASSERTION]: {\"width\":1280,\"scrollWidth\":1280,\"run\":{\"x\":0,\"y\":115,\"width\":1280,\"height\":495,\"top\":115,\"right\":1280,\"bottom\":610,\"left\":0},\"header\":{\"x\":0,\"y\":0,\"width\":1280,\"height\":128,\"top\":0,\"right\":1280,\"bottom\":128,\"left\":0}}\n    at runtimeWorkspaceFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/runtime-workspace-flow.mjs:62:402)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:89:90"
+    },
+    {
+      "runId": 40867450185,
+      "engine": "firefox",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at usageGuideFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/usage-guide-flow.mjs:36:718)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/desktop-engines.mjs:91:73"
+    }
+  ],
+  "assertionSHA256CanonicalLF": "3dcbdc995705606dfa7a6f56790e661010fafb2536adfc257cb5f4e67c8b2665",
+  "scope": "Hosted Linux Firefox142.0.1/WebKit26 functional acceptance of unchanged fixed preview30. Dedicated model/runtime close events observed; one final page-layout Worker shutdown event unobserved per engine. Firefox JS module request events unobserved. No all-network/all-process/RSS/hours-long/other-OS/full-screenreader claim."
+}

@@ -1,0 +1,87 @@
+{
+  "authentication": "passed",
+  "source": {
+    "commit": "d868f40055357ec0c91d7b02050f45ffcce85900",
+    "tree": "ce3baaffcb33e0ca58f40566e7dded675fcf9d76",
+    "committedAt": "2026-10-29T19:42:19+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "rows": [
+    {
+      "engine": "firefox",
+      "artifact": {
+        "id": 12893966364,
+        "node_id": "MDg6QXJ0aWZhY3QxMjg5Mzk2NjM2NA==",
+        "name": "desktop-firefox-eef235153d9a732d61f4d2ac1651cbd00a30b137-1",
+        "size_in_bytes": 158180,
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12893966364",
+        "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12893966364/zip",
+        "expired": false,
+        "digest": "sha256:79eaa846d1584adecc09e448f6e3ac739f7fd7f077359b25c9326e0efb922efc",
+        "created_at": "2026-10-29T11:30:55Z",
+        "updated_at": "2026-10-29T11:30:55Z",
+        "expires_at": "2026-11-28T11:30:54Z",
+        "workflow_run": {
+          "id": 40865708321,
+          "repository_id": 1428663853,
+          "head_repository_id": 1428663853,
+          "head_branch": "main",
+          "head_sha": "eef235153d9a732d61f4d2ac1651cbd00a30b137"
+        }
+      },
+      "members": [
+        {
+          "name": "desktop-firefox.json",
+          "bytes": 286925,
+          "sha256": "e4907123efed0d2354b942905ec6c0fcf08a94f53b876278430d958e780f29b7"
+        },
+        {
+          "name": "desktop-firefox.png",
+          "bytes": 160850,
+          "sha256": "700124de69d3804359c3a7cf4012d120d852a8a249a0bb1606a614d20284c095"
+        }
+      ],
+      "acceptance": "failed",
+      "previousReview": "build/qa/desktop-40865708321-initial-scoped/firefox/review.json"
+    },
+    {
+      "engine": "webkit",
+      "artifact": {
+        "id": 12894126331,
+        "node_id": "MDg6QXJ0aWZhY3QxMjg5NDEyNjMzMQ==",
+        "name": "desktop-webkit-eef235153d9a732d61f4d2ac1651cbd00a30b137-1",
+        "size_in_bytes": 222504,
+        "url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12894126331",
+        "archive_download_url": "https://api.github.com/repos/koviankevin/tflite-explorer/actions/artifacts/12894126331/zip",
+        "expired": false,
+        "digest": "sha256:88f05be72b4ef220b7f65849af2273231602b1f3e00d425a95fef79edf58744c",
+        "created_at": "2026-10-29T11:32:14Z",
+        "updated_at": "2026-10-29T11:32:14Z",
+        "expires_at": "2026-11-28T11:32:13Z",
+        "workflow_run": {
+          "id": 40865708321,
+          "repository_id": 1428663853,
+          "head_repository_id": 1428663853,
+          "head_branch": "main",
+          "head_sha": "eef235153d9a732d61f4d2ac1651cbd00a30b137"
+        }
+      },
+      "members": [
+        {
+          "name": "desktop-webkit.json",
+          "bytes": 755663,
+          "sha256": "f876caa29c4ef82238986d12d0ccd786489ea0a8eaa219710d4ab0ec907f2571"
+        },
+        {
+          "name": "desktop-webkit.png",
+          "bytes": 204688,
+          "sha256": "a611fa10f5effba8fa5bd26e08be69f8de96636d3954ab6eec510cf6c7eceab7"
+        }
+      ],
+      "acceptance": "passed",
+      "previousReview": "build/qa/desktop-40865708321-initial-scoped/webkit/review.json"
+    }
+  ],
+  "scope": "Original provider ZIP/digest/CRC and byte equality with already authenticated extracted reports/images; no functional rerun."
+}
