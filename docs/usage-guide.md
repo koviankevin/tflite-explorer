@@ -1,6 +1,6 @@
 # 網站內操作指南
 
-Preview.30 候選增加頂端「說明」、歡迎畫面的第一次使用入口及 F1。五個主題分別說明開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復；名稱對應目前可見控制項，不再指向已移除的舊 interpreter 按鈕。
+Preview.30 增加頂端「說明」、歡迎畫面的第一次使用入口及 F1。五個主題分別說明開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復；名稱對應目前可見控制項，不再指向已移除的舊 interpreter 按鈕。
 
 指南預設開啟目前工作區的主題。閱讀、切換說明或關閉不會修改選取、搜尋、草稿、模型或已完成的 IO；操作按鈕需由使用者明確選擇，關閉說明後才前往相應功能。示範模型開在新的模型分頁，原模型保留。前往執行工作區只讀取介面，必須再指定 input 並手動執行。
 
@@ -8,7 +8,7 @@ Preview.30 候選增加頂端「說明」、歡迎畫面的第一次使用入口
 
 主題分頁用方向鍵移動，Enter／Space 才切換內容；Tab／Shift+Tab 保持在 modal 內，Escape 關閉並返回原先焦點。指南內部捲動，頂端關閉與主題入口保留；開啟新主題從說明頂端開始。背景圖的 32px、縮放、選取與編輯歷史不因閱讀指南而重設。
 
-驗收選測涵蓋無模型、TFLite／MLIR 導覽界線、忙碌狀態、F1／manual tabs／焦點、實際本機選檔、示範新分頁、32px／1280×640 與 1366×640、草稿管理、手動 CPU／IO，以及背景執行結束時在開啟的指南更新按鈕。瀏覽器只在 Hosted CI 操作公開合成模型；未將此流程當成真人易用性或完整螢幕閱讀器驗收。正式發布與結果仍待候選驗證。
+驗收選測涵蓋無模型、TFLite／MLIR 導覽界線、忙碌狀態、F1／manual tabs／焦點、實際本機選檔、示範新分頁、32px／1280×640 與 1366×640、草稿管理、手動 CPU／IO，以及背景執行結束時在開啟的指南更新按鈕。瀏覽器只在 Hosted CI 操作公開合成模型；未將此流程當成真人易用性或完整螢幕閱讀器驗收。正式發布與結果見下方正式交付。
 
 
 ## main 與 Hosted 驗收
@@ -29,6 +29,17 @@ Preview.30 候選增加頂端「說明」、歡迎畫面的第一次使用入口
 
 [實體 1.25 GiB／21,005 OP 八輪 40859648810](https://github.com/koviankevin/tflite-explorer/actions/runs/40859648810) 的[原始 ZIP](results/guide30-main-physical-2026-10-29.zip)與[獨立核對](results/guide30-main-physical-review-2026-10-29.json)通過既有 policy，權重、opaque custom options、固定 SHA、pattern 正負例、完整／局部匯出重開、模型及指紋 Workers 與觀察到的 PID／start-ticks 釋放均通過，無強制 GC 或程序清理。
 
-[四關卡收據](results/guide30-main-gates-review-2026-10-29.json)核對 provider digest／CRC、原始數據、run／job 與依賴來源。核心 40847067607 的 87 檔指紋與本版相同，沿用該次成功結果；browser 40859648810、contract 40859653330、site 40859657744 使用本次 main 的成功結果。全部嚴格本機讀取器實際 exit 0 後才寫入此證據。正式發布與固定下載仍待後續核對。
+[四關卡收據](results/guide30-main-gates-review-2026-10-29.json)核對 provider digest／CRC、原始數據、run／job 與依賴來源。核心 40847067607 的 87 檔指紋與本版相同，沿用該次成功結果；browser 40859648810、contract 40859653330、site 40859657744 使用本次 main 的成功結果。全部嚴格本機讀取器實際 exit 0 後才寫入此證據。正式發布與固定下載結果見下方正式交付。
 
 有限八輪與合成原生操作不代表所有模型、其他 OS／引擎或數小時 interpreter 皆無問題；五主題自動流程也不代替真人新手易用性與完整螢幕閱讀器驗收。其餘範圍保留在[品質清單](product-readiness.md)。
+
+
+## preview.30 正式交付
+
+[正式站](https://koviankevin.github.io/tflite-explorer/)／[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.30)為 build `f3ff13b75b83ee57`，來源 `0ee55ba2803038b22b0c11dfc38b6f890aedca5c`／tree `d70b6d131004f872b4fec3ae3667433e04f47199`。準備 [40862411404](https://github.com/koviankevin/tflite-explorer/actions/runs/40862411404) 的[原始包審閱](results/preview30-prepared-2026-10-29.json)與[乾淨重建](results/preview30-rebuild-2026-10-29.json)通過後，以精確 build／site ID 執行 [40863041172](https://github.com/koviankevin/tflite-explorer/actions/runs/40863041172)；prepare／deploy／verify_live／release 在 attempt 1 全部成功。
+
+[最終獨立核對](results/preview30-published-2026-10-29.json)核對 provider artifact digest／CRC／來源／時段、全站 1,400 檔 SHA／MIME、root、部署權威及四份實際固定下載，均符合原準備包。正式站 31 項原生操作、五組指南、19 種執行／分佈情境、71 個模型及 16 個 runtime Workers 全部關閉通過。F1／manual tabs／Escape、選檔後的可見返回焦點、1280×640／1366×640 與 32px 背景圖、草稿／選取／縮放保留、忙碌／MLIR 格式防護、示範新分頁和原模型 IO SHA 均通過。
+
+新說明不自動執行 interpreter；原本的四種分佈 const／inputs、v3 草稿／Redo／相同 bytes 重匯出、pattern 搜尋、SSA／控制流程、custom options、TFLite／MLIR 匯出重開、CPU／IO、取消與分頁釋放均保持通過。最初焦點及測試等待的失敗證據原樣保留，沒有以正式成功改寫歷史。
+
+[完整 site manifest](results/preview30-site-manifest-2026-10-29.json) SHA `6e56f7a3b3f468804c6c46f9ca1b9ae5a5a6f0fb295e6a09a89499610294c634`；site ID `ff1f2e3d7bafb505f8f0bf1037977746625f4c1e4c98e84779bbd301df76d956`；固定 ZIP SHA `790e76b5f3ec3eb1fd67b856ad59d77a43c551f1a43cc0d050e8d0c92e01f4b8`。保留[正式站原始 ZIP](results/preview30-live-release-verification-2026-10-29.zip)與[固定 Release 原始 ZIP](results/preview30-published-release-verification-2026-10-29.zip)。有限八輪／合成 CPU 及指南自動流程不代表任意模型、所有引擎、數小時執行、真人新手易用性或完整螢幕閱讀器皆已驗收；其餘範圍見[已知問題](known-issues.md)，整體商品等級目標仍在進行。

@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [preview.29](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.29)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `ad6db9bb06620139`，來源 `42e0771e49891becfd68ace7cea2d444ca989c51`。外網更新不會自動更新公司內網站台。
+固定版本為 [preview.30](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.30)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `f3ff13b75b83ee57`，來源 `0ee55ba2803038b22b0c11dfc38b6f890aedca5c`。外網更新不會自動更新公司內網站台。
 
 ## 已核對的公開流程
 
@@ -19,11 +19,11 @@
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
-| 固定部署及下載 | [最終獨立核對](results/preview29-published-2026-10-29.json)：1,393 檔 SHA／MIME、root、權威部署與四份固定下載一致；30 項原生操作、19 種執行／分佈情境、v3 草稿及 68 model／14 runtime Workers 關閉，四工作 attempt 1 成功 |
+| 固定部署及下載 | [最終獨立核對](results/preview30-published-2026-10-29.json)：1,400 檔 SHA／MIME、root、權威部署與四份固定下載一致；31 項原生操作、五組指南、19 種執行／分佈情境、v3 草稿及 71 model／16 runtime Workers 關閉，四工作 attempt 1 成功 |
 
 ## 第一次使用
 
-1. 開啟網站，先用示範模型熟悉操作，或按「開啟模型」選本機 `.tflite`／文字 `.mlir`。
+1. 開啟網站，頂端「說明」或 F1 可查看五主題指南並前往對應工作區；先用示範模型熟悉操作，或按「開啟模型」選本機 `.tflite`／文字 `.mlir`。指南閱讀保留目前選取、草稿和縮放；執行仍需另外手動啟動。
 2. 左側 Layers／Tensors（MLIR 為 SSA Values）可搜尋並點選定位；拖曳側欄右邊界可調整寬度。大型模型預設局部圖，可按需求開完整圖／Canvas 總覽。
 3. 按「選取 pattern」後拖曳框選 OP；跨 block 可繼續加入選取。Alt＋拖曳平移、滾輪縮放，已選 OP 會保留。
 4. 按「儲存並搜尋」尋找同結構；要調整搜尋條件用「編輯選取 pattern」。Pattern JSON 可匯出備份，再由另一個瀏覽器匯入。
