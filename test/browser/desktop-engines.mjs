@@ -3,6 +3,8 @@ import {installIdentityWorkerAudit,identityWorkerDiagnostics} from './identity-w
 import {workerStartupControl} from './worker-startup-control.mjs';
 import {desktopRuntimeRSSFlow} from './desktop-runtime-rss-flow.mjs';
 import {firefoxNetworkMemoryControl} from './firefox-network-memory-control.mjs';
+import {firefoxPayloadMemoryControl} from './firefox-payload-memory-control.mjs';
+import {preserveRSSFailure} from './rss-diagnostic-continuation.mjs';
 // The browser runs only on the hosted Linux runner. Gestures, chooser and
 // download events use Playwright's browser protocol. Observations read DOM;
 // Firefox diagnosis may query a native Worker context for a data-free constant.
@@ -111,18 +113,21 @@ try{
     report.desktopRuntimeRSSRequired=report.activeComputeRequired&&Number(manifest.release.version.match(/^0\.2\.0-preview\.(\d+)$/)?.[1]??31)>=31;
     if(engine==='firefox'&&report.desktopRuntimeRSSRequired){
         const asset=manifest.files.find(f=>f.path==='vendor/litert/2.6.0/litert_wasm_compat_internal.wasm');assert.ok(asset);report.firefoxNetworkControls=[];
-        for(const mode of ['empty','fetch','file']){phase=`firefox-network-control-${mode}`;report.firefoxNetworkControls.push(await firefoxNetworkMemoryControl({browserType:firefox,base,assetURL:new URL(coreBasePath+asset.path,base).href,expectedBytes:asset.bytes,expectedSHA256:asset.sha256,mode}));}
+        report.firefoxPayloadControlsRequired=manifest.files.some(f=>f.path==='src/runtime-module.js');
+        // The unchanged HTTP/one-File diagnostics are already authenticated in
+        // runtime-module32-native-originals.zip. The cached candidate needs a
+        // fresh empty baseline and separate per-input/IO/module comparisons.
+        for(const mode of report.firefoxPayloadControlsRequired?['empty']:['empty','fetch','file']){phase=`firefox-network-control-${mode}`;report.firefoxNetworkControls.push(await firefoxNetworkMemoryControl({browserType:firefox,base,assetURL:new URL(coreBasePath+asset.path,base).href,expectedBytes:asset.bytes,expectedSHA256:asset.sha256,mode}));}
+        if(report.firefoxPayloadControlsRequired){report.firefoxPayloadControls=[];for(const mode of ['file-read','file-io','module-clone']){phase=`firefox-payload-control-${mode}`;report.firefoxPayloadControls.push(await firefoxPayloadMemoryControl({browserType:firefox,base,asset:{url:new URL(coreBasePath+asset.path,base).href,bytes:asset.bytes,sha256:asset.sha256},mode}));}}
     }
+    report.runtimeModuleColdRequired=manifest.files.some(f=>f.path==='src/runtime-module.js');const runCold=report.runtimeModuleColdRequired?async()=>{phase='runtime-module-cold';return runtimeModuleColdFlow({browser,base,coreBasePath,buildId:expectedBuild,modelFile:demo,modelEntry:demoEntry,createReader:desktopDOMReader});}:undefined;
     if(report.desktopRuntimeRSSRequired){
-        phase='desktop-runtime-rss';report.desktopRuntimeRSS=await desktopRuntimeRSSFlow({browserType:{firefox,webkit}[engine],engine,base});
-        assert.equal(report.desktopRuntimeRSS.evaluation.status,'passed');
-        await diagnostics?.snapshot('after-desktop-runtime-rss');
-    }
-    report.runtimeModuleColdRequired=manifest.files.some(f=>f.path==='src/runtime-module.js');if(report.runtimeModuleColdRequired){phase='runtime-module-cold';report.runtimeModuleCold=await runtimeModuleColdFlow({browser,base,coreBasePath,buildId:expectedBuild,modelFile:demo,modelEntry:demoEntry,createReader:desktopDOMReader});}
+        const outcome=await preserveRSSFailure(async()=>{phase='desktop-runtime-rss';const rss=await desktopRuntimeRSSFlow({browserType:{firefox,webkit}[engine],engine,base});assert.equal(rss.evaluation.status,'passed');await diagnostics?.snapshot('after-desktop-runtime-rss');return rss;},runCold);report.desktopRuntimeRSS=outcome.rss;if(runCold){report.runtimeModuleCold=outcome.cold;assert.equal(outcome.cold.status,'passed');}
+    }else if(runCold)report.runtimeModuleCold=await runCold();
     await target.verifyUnchanged();
     const end=gitSource();report.sourceUnchanged=end.commit===report.source.commit&&end.tree===report.source.tree&&!end.dirty;assert.equal(report.sourceUnchanged,true);await diagnostics?.snapshot('before-browser-close',{probe:true});
     await copyFile(report.activeCompute?.screenshot?path.join(directory,'active-cpu-timeout.png'):report.usageGuide?.screenshot?path.join(directory,'usage-guide.png'):path.join(process.env.RUNNER_TEMP,'production-smoke.png'),imagePath);report.screenshotSHA256=sha256(await readFile(imagePath));report.status='passed';phase='complete';
-}catch(error){report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide','activeCompute','workerStartupControl','desktopRuntimeRSS','firefoxNetworkControl','runtimeModuleCold'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
+}catch(error){if(error.diagnosticContinuation){report.diagnosticContinuation=error.diagnosticContinuation;phase='desktop-runtime-rss';}report.error=error.stack||String(error);for(const key of ['mlirKeyboard','demoRuntime','tfliteRuntime','usageGuide','activeCompute','workerStartupControl','desktopRuntimeRSS','firefoxNetworkControl','firefoxPayloadControl','runtimeModuleCold'])if(error[key])report[key]=error[key];process.exitCode=1;if(readDOM)report.failureState=await readDOM(()=>({active:document.activeElement?.id,documentFocus:document.hasFocus(),openHandler:typeof document.querySelector('#open-model')?.onclick,inputFiles:document.querySelector('#model-file')?.files.length,inputDisabled:document.querySelector('#model-file')?.disabled,openDialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id),status:document.querySelector('#status')?.textContent,modelTabs:document.querySelector('#model-tabs')?.getAttribute('aria-busy')})).catch(e=>({observationError:e.message}));if(page)await page.screenshot({path:imagePath}).catch(()=>{});}
 finally{
     try{await context?.close();if(browser)await browser.close();report.browserClosed=Boolean(browser);}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
     try{await target?.close();}catch(error){report.status='failed';report.errors.push(error.message);process.exitCode=1;}
