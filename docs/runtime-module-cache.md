@@ -58,7 +58,7 @@ Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model
 
 獨立讀取器的兩項格式修正亦保留：WebKit reader 起初錯用早於 desktop RSS 檔案加入的正式版基準，改為與 app 修正前 `940a9e5` 的四個完全相同 protocol／policy／fixture 檔比較；Chromium reader 起初誤要求 Desktop 專有的 `crcVerified` 欄位，原 Chromium schema 記錄的是完整 input／output SHA 和 `bytesVerified`。僅修讀取器並重核原檔，沒有重跑成功流程、改寫觀測或宣稱未記錄的 Chromium IO CRC。最終 WebKit、Chromium 與 Firefox 失敗診斷讀取器皆 exit 0。
 
-## 下一步：限量 File／IO／module 對照（待 Hosted）
+## 限量 File／IO／module 對照
 
 保留應用程式、原 RSS flow／policy／baseline 與 workflow 檔案不變。Cached candidate 的 Firefox 額外診斷先跑相同 fresh empty Worker baseline，再分開量：每輪重新選擇公開 4 MiB input File 與模型大小 File；同樣流程加上 Worker 傳回 8 MiB IO Blob、每輪第三次實際下載並等待原生 60 秒 URL 期限；單次完整 SHA 驗證／編譯公開 WASM 後複製 module 到 24 個 fresh Workers，只讀 exports 數量，不建立 Instance。每組八輪、每輪三個 Worker，要求真正 native close 與完整 owned-process 退出。這些都是診斷協定，沒有模型解析、LiteRT 執行或效能合格判定。
 
@@ -66,4 +66,23 @@ Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model
 
 公開輸入固定為 byte 25／7，IO 為完整 input bytes 與逐值加一後的 bytes；實際下載逐檔核對完整 SHA。只有固定三個新檔名可由暫存 helper 使用；先 flush 意圖，核對大小、SHA、dev／inode／mtime，來源 File 在原生消費者關閉後清理，完成下載的 owned copy 精確刪除並移除空目錄，失敗則保留原因。沒有 recursive delete、使用者模型或隱藏的清理操作。
 
-另加入明確的失敗傳遞：只有完整結束且 browser／owned processes 都退出的純數值 RSS 失敗，才接著收集獨立 cold-page 證據，最後仍拋回同一個原始 RSS error。協定／Worker close／程序退出失敗直接停止；後續 cold 失敗也不能取代原始失敗。十九項 Node 選測通過，包含真實 Blob／公開 WASM compile、檔案清理與四組失敗傳遞；尚未取得這批新 Hosted 對照結果。
+另加入明確的失敗傳遞：只有完整結束且 browser／owned processes 都退出的純數值 RSS 失敗，才接著收集獨立 cold-page 證據，最後仍拋回同一個原始 RSS error。協定／Worker close／程序退出失敗直接停止；後續 cold 失敗也不能取代原始失敗。十九項 Node 選測通過，包含真實 Blob／公開 WASM compile、檔案清理與四組失敗傳遞；Hosted 結果列於下段。
+
+### 已取得的結果與下一個修正
+
+[40948691875](https://github.com/koviankevin/tflite-explorer/actions/runs/40948691875) 使用來源 `878b48d9b27b9832c8b04e69cd422fec76d0bbbd`、tree `fae2abf98311ea0e840a166fff4b6185b9453061`、build `9e4320a0110c2522`。應用、原 RSS flow／policy 與 workflows 與上批相同；provider／CRC／全部 305 core 檔認證及獨立讀取器均 exit 0。[原始失敗與讀取器](results/firefox-payload32-originals.zip)、[SHA inventory／退出紀錄](results/firefox-payload32-originals.json)保留，沒有改寫結果。
+
+| 公開合成對照 | 六輪 closed RSS slope（bytes／輪） | 等自然 URL 釋放後 drift（bytes） |
+| --- | ---: | ---: |
+| 重新選 File／讀取，無 IO Blob | 3,180,836.57 | 15,216,640 |
+| 同樣 File，加 IO Blob 回傳與下載 | 27,688,725.94 | −1,818,624 |
+| 一次公開 compile，24 module clones，無 Instance | 1,210,777.60 | 6,823,936 |
+| 原應用實際 runtime／IO | **27,718,217.14，原驗收失敗** | 120,291,328 |
+
+三組新對照各 24 個 native Worker close、51 個 settled component observations 全部可讀；十二個來源／下載副本均核對完整 SHA／身分並清除，八個下載仍使用自然 60 秒 URL。公開 compiled module 只取得一次，沒有模型解析或推論。較大 slope 可在不建立 WASM Instance 的 IO 路徑重現；這是下一步修改配置／傳送的依據，不能推論特定 Firefox 物件洩漏，也不能把負 final drift 當作原應用已合格。Slope 窗口仍含尚未到期的 URL，沒有扣除其 bytes 或改門檻。
+
+原應用仍完成 17 功能、19 runtime／分佈、5 指南、67 model／20 runtime close、原八輪 24 CPU 與完整 IO。這次在保留原 RSS 失敗的前提下，也完成獨立 cold context：一次 GET、三個 runtime／一個 model close、取消後兩次 CPU 及三次輸入清理。整個 job 仍為 **failure**。
+
+另有新的 Node ownership seam 反例：保留指向已移除 File input 的參考時，確認後的元素仍包含選取 File；原有「清空 DOM／確認回呼」斷言無法涵蓋這個狀態。已確認的 BIN 身分仍正確傳回。此測試以 [HTML filename-mode 設定空值會清空 selected files 的規則](https://html.spec.whatwg.org/multipage/input.html#dom-input-value-filename)作為清理契約，尚不是實際瀏覽器或 RSS 所有權證據。
+
+接下來補上移除前明確清空 File input，並將 runtime IO 改為有界 bytes 的 Worker ownership transfer，下載時才建立 Blob；保留直接 Node reference 的既有 Blob 預設、ZIP manifest／CRC／內容、30 秒取消和自然 URL 期限。先取得回歸失敗與真實傳送／CPU 證據，再執行原有三引擎及 RSS 驗收。尚未完成修正，preview.32 維持未發布。
