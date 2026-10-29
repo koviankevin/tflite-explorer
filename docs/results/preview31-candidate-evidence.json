@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "source": "3256ee92d8487395c4f9d34b6203fca205081860",
+  "tree": "44812dcb04763c5c5bb5e307d5ca819eb5c1341b",
+  "build": "d3941c81d3119920",
+  "archiveSHA256": "8417aad7b526737bff7b1490aaa6f5bd32e27846c94009300c49ed4d257cf207",
+  "members": [
+    {
+      "name": "gates/artifact-13.zip",
+      "bytes": 735,
+      "sha256": "13744a1ca98e12b4523b429f7c606f5fbc4be4cccdd995dc322a847acdfd2cf0"
+    },
+    {
+      "name": "gates/artifact-17.zip",
+      "bytes": 4634,
+      "sha256": "886e9e5ab62270742a0dac196a6da496d1207dfc445c6ac97be935f92c78cd9b"
+    },
+    {
+      "name": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "name": "gates/artifact-9.zip",
+      "bytes": 29591,
+      "sha256": "b050a6f19bba56ff6974df50940fce624d34b017734419bb7dd085b6b2b30f2c"
+    },
+    {
+      "name": "gates/metadata-1.json",
+      "bytes": 2611,
+      "sha256": "48019836309f001fc0c4f684d4ab892a59addd16c29f1b61afc23ede24b2e3f9"
+    },
+    {
+      "name": "gates/metadata-10.json",
+      "bytes": 14423,
+      "sha256": "d79f05279152fe574a9b8eb5eb8545fbe913455c2e6aaa4450e368654f58394b"
+    },
+    {
+      "name": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "5e69fdca296b936bd97ab2a45e328d42acc24ba70dbf0b507e924460195a4089"
+    },
+    {
+      "name": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "81117e94e5c1d7b1a395e0eed323c9e5ef728cc789fe61365a94027dc71f8c73"
+    },
+    {
+      "name": "gates/metadata-14.json",
+      "bytes": 14431,
+      "sha256": "c3b320af3098319eb02590144de909637bab165ee2e1aab534f18b76aa941acc"
+    },
+    {
+      "name": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "fcaf37664fe715d00a73c429caa5f8cea2d210a52af0386fc5f7db74c7acf05e"
+    },
+    {
+      "name": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "ddd12988e502bcfc69ca93aa5fa54c59e6a94d8cf0b7a236240d43e35faadb6f"
+    },
+    {
+      "name": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "name": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "name": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "name": "gates/metadata-6.json",
+      "bytes": 14455,
+      "sha256": "3c5d16a3e5b6034342cbe0a3c8bf3309b9c3e831029c3ab37ac55a0e0c0543af"
+    },
+    {
+      "name": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "bc1c4f30757f51755e8bd6ffc0b7f642fac4616a7fe7e37d7900c7b9adfe46d9"
+    },
+    {
+      "name": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "652b2b8fc38f22e13e2487fbdd837cd4bdb6ab3995acee8e374478d6e76df2d3"
+    },
+    {
+      "name": "gates/review.json",
+      "bytes": 192592,
+      "sha256": "9f89bb06426cd73306bfec5f253025fbf8743faeffbd5a0c8ca983f2cad1c4dc"
+    },
+    {
+      "name": "desktop/artifacts.json",
+      "bytes": 1851,
+      "sha256": "bd7c082ac8070e204abeff7c1c8bf3f335217b18e7c5913c902e6d3c2c1ef13a"
+    },
+    {
+      "name": "desktop/firefox.zip",
+      "bytes": 197845,
+      "sha256": "5d0860fc30d1c60995011d0f376941f4544b3a8e173e3bc7808670d7d5efed22"
+    },
+    {
+      "name": "desktop/jobs.json",
+      "bytes": 7900,
+      "sha256": "e5bec7e3a08be1d0a653ff20c23758cbbaf1c712b6beb2d81002fc4b7450e7bf"
+    },
+    {
+      "name": "desktop/review.json",
+      "bytes": 109179,
+      "sha256": "4e29aba2f9189102947b42ed9feb681f9fb696bbc5b9b3ec0452c9e1b360bff2"
+    },
+    {
+      "name": "desktop/run.json",
+      "bytes": 14435,
+      "sha256": "6134d18cb5513fe5833fe324d1c1ca6ca3e4028f2e18eb72101f03fb22e57ee6"
+    },
+    {
+      "name": "desktop/webkit.zip",
+      "bytes": 196045,
+      "sha256": "e9b292904122b0094c76805e22d961fad9db559ea88deee7d0014788e4bc74b7"
+    },
+    {
+      "name": "chromium/jobs.json",
+      "bytes": 5633,
+      "sha256": "fcaf37664fe715d00a73c429caa5f8cea2d210a52af0386fc5f7db74c7acf05e"
+    },
+    {
+      "name": "chromium/listing.json",
+      "bytes": 1866,
+      "sha256": "ddd12988e502bcfc69ca93aa5fa54c59e6a94d8cf0b7a236240d43e35faadb6f"
+    },
+    {
+      "name": "chromium/native-artifact.json",
+      "bytes": 832,
+      "sha256": "58cd63b3acfc23efd08241555d886aeba0022653a6395554e28ea4a5e0c61a49"
+    },
+    {
+      "name": "chromium/native.zip",
+      "bytes": 208189,
+      "sha256": "4d5562472d1cf9dd9526dd13111434ee9e17e7366973875932109227bab177b8"
+    },
+    {
+      "name": "chromium/production-smoke.json",
+      "bytes": 423847,
+      "sha256": "5a798ab331ddd9d21bb316b41a497d594644d8e20f1910d0041b01ed625758c0"
+    },
+    {
+      "name": "chromium/review.json",
+      "bytes": 40888,
+      "sha256": "a58694ac444968360910fe1ece86519f0f3e5481bba9ac30020098780cdb0053"
+    },
+    {
+      "name": "chromium/run.json",
+      "bytes": 14431,
+      "sha256": "c3b320af3098319eb02590144de909637bab165ee2e1aab534f18b76aa941acc"
+    },
+    {
+      "name": "chromium/site-artifact.json",
+      "bytes": 828,
+      "sha256": "6f2a097608f36ea5b7abd3cde42164e4f7a936a0e0dbad61d604b0347c997d92"
+    },
+    {
+      "name": "chromium/site.zip",
+      "bytes": 4634,
+      "sha256": "886e9e5ab62270742a0dac196a6da496d1207dfc445c6ac97be935f92c78cd9b"
+    },
+    {
+      "name": "chromium/versioned-site-browser.json",
+      "bytes": 93620,
+      "sha256": "161055fcd1385b460a9d069528f379d90089bd289a3e9381e59bddb15221dd3b"
+    },
+    {
+      "name": "desktop/firefox/review.json",
+      "bytes": 50285,
+      "sha256": "468a10284278c0c18910dc72eec757040c5f0d061b25dd17269f0175b5bad875"
+    },
+    {
+      "name": "desktop/webkit/review.json",
+      "bytes": 46079,
+      "sha256": "c5505488d40f18cb2ff1804fd0a0f28172c3a05a91fc8d5332abd2a5c8ff10dc"
+    },
+    {
+      "name": "desktop/firefox/fingerprint-review.json",
+      "bytes": 650,
+      "sha256": "e0b5bd85024496594185ecb646b690e99674983267ebbce1a5d110dc87ff5534"
+    },
+    {
+      "name": "auditors/review-fingerprint-fix31-gates.mjs",
+      "bytes": 2159,
+      "sha256": "b85b60a706e99b54986ec7449fdbc32cf82a79956cce309287f27ad86ed817f6"
+    },
+    {
+      "name": "auditors/review-input-cleanup31-main.mjs",
+      "bytes": 6868,
+      "sha256": "1f31f9b107408f87423f86d7e043a733361a498f12fa779ff9bd38c9871871d1"
+    },
+    {
+      "name": "auditors/review-input-cleanup31-desktop.mjs",
+      "bytes": 10301,
+      "sha256": "483d09ced623ad0d287c129badbf93c0d206f67331c352810d11259ba86f8f28"
+    },
+    {
+      "name": "auditors/assert-fingerprint-fix31.mjs",
+      "bytes": 2928,
+      "sha256": "9ba4908421f78aee74cbf28acb721b02f5b1e67e7ffeb17815220ab5210fee91"
+    },
+    {
+      "name": "auditors/assert-compute-desktop31.mjs",
+      "bytes": 6760,
+      "sha256": "255d15ce79f517b2ad50bfe24d83a4a989c9d978ec43a4898c481ad763307d10"
+    },
+    {
+      "name": "auditors/assert-runtime-io-chromium30.mjs",
+      "bytes": 5836,
+      "sha256": "5adb81a3d8cafca8c57a28d84ef9855f607f362311b888b81f7cbf12bdd0f0b8"
+    },
+    {
+      "name": "auditors/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "auditors/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "auditors/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    }
+  ],
+  "runs": {
+    "core": 40885892195,
+    "browser": 40899579343,
+    "contract": 40899584574,
+    "site": 40899590990,
+    "desktop": 40899573179
+  },
+  "readers": {
+    "gates": {
+      "actualExit": 0,
+      "chunk": "b37055"
+    },
+    "desktop": {
+      "actualExit": 0,
+      "chunk": "bd51e4"
+    },
+    "identity": {
+      "actualExit": 0,
+      "chunk": "93b3a8"
+    },
+    "chromium": {
+      "actualExit": 0,
+      "chunk": "517c32"
+    }
+  },
+  "scope": "Provider ZIP originals with SHA/CRC/source and unchanged strict resource policies; hosted synthetic Linux only. Includes data-free32Worker control, not private/company data. Auditor scripts must be restored to original build/qa locations with the recorded source and dependencies for replay."
+}
