@@ -16,6 +16,7 @@ export function editNewOpsUI({$,make,rpc,state,selected,apply,message,isBusy}){
         $('edit-builtin-outputs').oninput=redrawOutputs;redrawOutputs();
         for(const f of info.fields){let e;if(f.kind==='bool_'){e=make('input');e.type='checkbox';e.checked=!!(n.builtin?.code===info.code?n.builtin.settings[f.key]??f.value:f.value);}else {e=make('input');const v=n.builtin?.code===info.code?n.builtin.settings[f.key]??f.value:f.value;e.value=Array.isArray(v)?JSON.stringify(v):v===null?'null':String(v);e.type='text';}e.dataset.builtinOption=f.key;e.dataset.optionKind=f.kind;body.append(field(`${f.key} (${f.kind})`,e));}
         const infer=make('input');infer.id='edit-infer-outputs';infer.type='checkbox';infer.checked=n.builtin?.inferOutputs!==false;body.append(field('自動推導已支援 OP 的輸出 shape',infer));
+        if(info.fields.some(f=>['int64_','uint64_','int64s_'].includes(f.kind)))body.append(make('p','64-bit 整數超過 ±9007199254740991 時請使用十進位整數文字；JSON 陣列元素需加雙引號，例如 ["9007199254740993"]，避免數字被捨入。','hint'));
         if(n.inference)body.append(make('p',`${n.inference.status==='inferred'?'已推導':'使用參考'}：${n.inference.reason}`,'hint'));
         body.append(make('p','輸入／輸出數量需符合該 OP；list 為可變長度。dtype／量化沿用參考；無法推導的 shape 保留參考值，匯出前以 LiteRT 檢查。','hint'));
     }
