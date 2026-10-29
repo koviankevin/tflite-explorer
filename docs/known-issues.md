@@ -10,6 +10,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 功能限制
 
+**輸入視窗的回呼清理（preview.31 候選）**：preview.30 關閉手動輸入視窗後，執行按鈕仍保留上一組控制項／File 的回呼。候選已加入解除回呼、請求身分隔離與開窗失敗清理；相關 24 項測試成功，正式部署及 native 量測尚待完成，見[診斷與原始失敗](runtime-input-cleanup.md)。有限 RSS 通過不等於物件保留已完全排除。
+
 組合模型目前限同一 TFLite／subgraph，暫不搬移控制流程或有狀態 OP；大型組合已通過 [Hosted Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)；數小時組合與其他引擎尚待驗收，見 [功能與驗收範圍](model-composition.md)。
 
 - **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。量化規則與任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
