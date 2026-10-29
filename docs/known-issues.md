@@ -2,6 +2,10 @@
 
 目前固定版本為 preview.26／build `5846ee3c3a5e0a37`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
 
+## 待修：工作區切換按鈕選取標示
+
+從組合編輯返回探索、關閉再開啟模型後，探索與「加入組合草稿」可能同時顯示選取狀態；[真實大檔還原截圖](results/large-composition-draft-reopen-2026-10-29.png)已確認。`model-edit-workspace-ui.js` 的 `mode(false)` 更新探索與編輯兩個按鈕，組合按鈕在另一個 availability 路徑更新，仍待補齊並做原生回歸。此輪[大型 v2 還原及匯出](large-composition-draft.md#已核對的結果)資料檢查通過，按鈕標示缺陷另列待修。
+
 ## 待查：一次啟動逾時的根因
 
 Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒。[原始失敗](results/preview22-startup-failure-review-2026-10-29.json)保留；當時缺少請求級診斷，無法確定成因。之後相同應用的診斷、經授權的一次失敗驗證補跑，以及 preview.23 的正式驗證均成功；沒有把後續成功當成已找到或修好根因。

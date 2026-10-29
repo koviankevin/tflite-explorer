@@ -38,3 +38,6 @@ Preview.16 的完整大型原模型自動指紋（八輪各最多 1 MiB／次）
 
 
 Firefox／WebKit 較早加入 [實體 1.25 GiB 八輪程序 RSS 驗收](desktop-physical.md)。當時重測已完成八輪完整改模、子模型匯出重開、權重／options 比對與原生 Worker close；兩個引擎都因 RSS 峰值成長超過既定上限而失敗，不能由功能成功推論記憶體合格。原始 provider 認證與失敗數據保留；後續修正及新三引擎八輪結果見上方 preview.22 候選，不以後續成功改寫歷史失敗。共用 Chromium runner 的原八輪來源與歷史長測範圍另見 [實際證據](lifecycle-soak.md#共用-runner-的原八輪模式)；不能延伸成所有新版來源或數小時負載都已通過。
+
+
+大型 v2 組合草稿的 [手動儲存、取消及重新選原模型還原](large-composition-draft.md#已核對的結果)已補驗，包含 32px 視角、Redo、完整權重／options、相同 bytes 重匯出及原生程序清理；截圖確認的工作區按鈕選取殘留仍列為待修。

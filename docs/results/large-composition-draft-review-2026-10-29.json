@@ -1,0 +1,313 @@
+{
+  "format": "model-lens-large-composition-draft-review",
+  "version": 1,
+  "authentication": "passed",
+  "status": "passed",
+  "runId": 40822713475,
+  "head": "36caf856dc0f7dd778e0a23c1299a7d234a86b26",
+  "testedCommit": "8bb76dc69a2fc9c71899b50292ec01c15236e271",
+  "testedTree": "4f4d19a8a215c6c9c6e70982831496bb8bfd1b9b",
+  "runConclusion": "success",
+  "jobId": 123278599216,
+  "jobConclusion": "success",
+  "artifactId": 12874849651,
+  "artifactDigest": "sha256:d7f5d4cc147c61c81ff79d6f01024bf13c48693e7fa4c2e2fad23ab1f1acf124",
+  "reportSHA256": "92d5b654f26e4a5cab3488ff8b076cd0e965e39f44f73539a095d14eee799319",
+  "reportStatus": "passed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied",
+    "fresh native original File restores JSON history, redo and view at 1280×640 / 32px; editing continues",
+    "restored full TFLite reopens at 21,006 OP, all source weight/custom-option ranges match and both original patterns remain unique",
+    "large composition v2 JSON retains two groups, wiring, explicit IO, redo and 32px view; first real export matches the fixed composition hash",
+    "large v2 restore cancels during actual fingerprint IO without applying any imported OP, connection or interface",
+    "restored v2 composition continues Undo/Redo, exports byte-identically with full weights/options, reopens nine OPs and retains positive/negative pattern results",
+    "exact full identity coverage, original parser limits, main responsiveness, bounded owned-process RSS/Worker heaps and all eight native Worker closes"
+  ],
+  "error": null,
+  "composition": {
+    "version": 1,
+    "save": {
+      "name": "composition-v2-save",
+      "startedAt": 46085.9,
+      "ticks": 164,
+      "maxGapMs": 51.90000000000873,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 54264.6,
+      "elapsedMs": 8206.5
+    },
+    "document": {
+      "version": 2,
+      "bytes": 2320,
+      "fingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+      "nodes": 8,
+      "commands": 6,
+      "redo": 1
+    },
+    "firstExport": {
+      "name": "composition-first-export",
+      "startedAt": 54333.9,
+      "ticks": 294,
+      "maxGapMs": 53.80000000000291,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 69014.6,
+      "elapsedMs": 14683.999999999993
+    },
+    "cancellation": {
+      "responseMs": 32,
+      "name": "composition-cancelled-restore",
+      "startedAt": 72017.5,
+      "ticks": 17,
+      "maxGapMs": 62.70000000001164,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 72814.6,
+      "elapsedMs": 809.6999999999825,
+      "partialBytes": 15728640,
+      "readsStopped": true,
+      "noChangesApplied": true
+    },
+    "restore": {
+      "name": "composition-v2-restore",
+      "startedAt": 73731.19999999998,
+      "ticks": 178,
+      "maxGapMs": 53.79999999998836,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 82614.69999999998,
+      "elapsedMs": 8925.900000000023
+    },
+    "restored": {
+      "nodes": 9,
+      "groups": 2,
+      "interface": true,
+      "wiring": true,
+      "redo": true,
+      "view": true,
+      "font": 32,
+      "width": 1280,
+      "left": 0,
+      "top": 60,
+      "zoom": "19%"
+    },
+    "export": {
+      "name": "composition-restored-export",
+      "startedAt": 82769.79999999999,
+      "ticks": 294,
+      "maxGapMs": 60.69999999998254,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 97414.6,
+      "elapsedMs": 14653.700000000012
+    },
+    "receipt": {
+      "outputBytes": 1345938408,
+      "outputSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "comparison": {
+        "status": "passed",
+        "ranges": [
+          {
+            "sourceOffset": 3530592,
+            "outputOffset": 3758912,
+            "bytes": 8,
+            "kind": "custom-options-inline",
+            "reference": "graph:0:operator:0",
+            "sha256": "49630c5ecc029f1bbc04fe4a2a044ce8779f59f835ba65f35f2e7a6878423401"
+          },
+          {
+            "sourceOffset": 7787212,
+            "outputOffset": 3760164,
+            "bytes": 8,
+            "kind": "custom-options-inline",
+            "reference": "graph:0:operator:6",
+            "sha256": "49630c5ecc029f1bbc04fe4a2a044ce8779f59f835ba65f35f2e7a6878423401"
+          },
+          {
+            "sourceOffset": 7787936,
+            "outputOffset": 3761088,
+            "bytes": 1342177280,
+            "kind": "buffer",
+            "reference": "buffer:1",
+            "sha256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525"
+          },
+          {
+            "sourceOffset": 7787788,
+            "outputOffset": 1345938368,
+            "bytes": 8,
+            "kind": "buffer",
+            "reference": "buffer:2",
+            "sha256": "34fb5c825de7ca4aea6e712f19d439c1da0c92c37b423936c5f618545ca4fa1f"
+          },
+          {
+            "sourceOffset": 7787844,
+            "outputOffset": 1345938384,
+            "bytes": 8,
+            "kind": "buffer",
+            "reference": "buffer:3",
+            "sha256": "01acecb507abfe1a354aa8064f4af5d3f1acd019e37db3c11c97523b71c76e9d"
+          },
+          {
+            "sourceOffset": 7787900,
+            "outputOffset": 1345938400,
+            "bytes": 8,
+            "kind": "buffer",
+            "reference": "buffer:4",
+            "sha256": "2fd848aa90e817e10e20985de4e8ac6a09b0fe70623d6b952e46800be6b025b9"
+          }
+        ],
+        "bytes": 1342177320
+      },
+      "outputOperators": 9,
+      "equalReexport": true,
+      "options": true
+    },
+    "patterns": {
+      "prefix": 1,
+      "branch": 1,
+      "wrongEdge": 0,
+      "reshape": 1
+    }
+  },
+  "processCleanup": {
+    "identities": [
+      {
+        "pid": 3090,
+        "startTicks": "6165"
+      },
+      {
+        "pid": 3092,
+        "startTicks": "6166"
+      },
+      {
+        "pid": 3093,
+        "startTicks": "6166"
+      },
+      {
+        "pid": 3109,
+        "startTicks": "6168"
+      },
+      {
+        "pid": 3122,
+        "startTicks": "6180"
+      },
+      {
+        "pid": 3135,
+        "startTicks": "6187"
+      }
+    ],
+    "remaining": [],
+    "allReaped": true,
+    "observations": 1
+  },
+  "measurements": {
+    "save": {
+      "name": "manual-json-save",
+      "startedAt": 2209.7000000000044,
+      "ticks": 161,
+      "maxGapMs": 59,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 10214.599999999999,
+      "elapsedMs": 8052.800000000003
+    },
+    "restore": {
+      "name": "manual-json-restore",
+      "startedAt": 12118.099999999999,
+      "ticks": 196,
+      "maxGapMs": 95,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 21864.6,
+      "elapsedMs": 9792.800000000003
+    },
+    "cancellation": {
+      "responseMs": 24,
+      "name": "cancelled-restore",
+      "startedAt": 10401.799999999996,
+      "ticks": 16,
+      "maxGapMs": 67.19999999999709,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 11164.599999999999,
+      "elapsedMs": 810.3000000000029,
+      "readsStopped": true,
+      "partialBytes": 12582912,
+      "noChangesApplied": true
+    },
+    "export": {
+      "name": "restored-full-model-export",
+      "startedAt": 21963.6,
+      "ticks": 357,
+      "maxGapMs": 52.10000000000582,
+      "longTasks": 0,
+      "maxLongTaskMs": 0,
+      "lastAt": 39764.700000000004,
+      "elapsedMs": 17823
+    },
+    "memory": {
+      "baselineRssBytes": 509542400,
+      "peakRssBytes": 905646080,
+      "peakGrowthBytes": 396103680
+    },
+    "workerHeaps": [
+      {
+        "phase": "after-manual-save",
+        "targetId": "6E24F2E84B50A2F38771B8BB76F1A901",
+        "usedSize": 57084812,
+        "totalSize": 60567552,
+        "embedderHeapUsedSize": 338472,
+        "backingStorageSize": 23210087
+      },
+      {
+        "phase": "restored-and-edited",
+        "targetId": "CC4A29FEB1E9EDABD882F6EC16D0D243",
+        "usedSize": 58114160,
+        "totalSize": 62574592,
+        "embedderHeapUsedSize": 497640,
+        "backingStorageSize": 9166139
+      },
+      {
+        "phase": "exported-model-reopened",
+        "targetId": "55BD6B472056E233F04DCEC417B2D702",
+        "usedSize": 87936600,
+        "totalSize": 137158656,
+        "embedderHeapUsedSize": 760432,
+        "backingStorageSize": 16001363
+      },
+      {
+        "phase": "composition-v2-saved",
+        "targetId": "A94A086C1A3F758261BF4066D3F0DA82",
+        "usedSize": 57507648,
+        "totalSize": 59518976,
+        "embedderHeapUsedSize": 481424,
+        "backingStorageSize": 16925094
+      },
+      {
+        "phase": "composition-v2-restored",
+        "targetId": "9119DC97EE87EE5CCE84FACA7E493034",
+        "usedSize": 58386132,
+        "totalSize": 61788160,
+        "embedderHeapUsedSize": 468256,
+        "backingStorageSize": 9173370
+      },
+      {
+        "phase": "composition-reopened",
+        "targetId": "E0FF49DA4F3117A5BE341137D8E9D1BC",
+        "usedSize": 24617524,
+        "totalSize": 42405888,
+        "embedderHeapUsedSize": 770608,
+        "backingStorageSize": 4600686
+      }
+    ]
+  },
+  "source": {
+    "commit": "8bb76dc69a2fc9c71899b50292ec01c15236e271",
+    "tree": "4f4d19a8a215c6c9c6e70982831496bb8bfd1b9b",
+    "committedAt": "2026-10-29T13:19:19+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true
+}

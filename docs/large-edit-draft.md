@@ -36,3 +36,6 @@
 既有失敗不改寫：第一輪 [40637741724](https://github.com/koviankevin/tflite-explorer/actions/runs/40637741724)把新增 OP 的 output 設定誤當第二筆變更，見 [原始失敗](results/large-draft-initial-failure-2026-10-28.json)／[來源核對](results/large-draft-initial-review-2026-10-28.json)；第二輪 [40638261043](https://github.com/koviankevin/tflite-explorer/actions/runs/40638261043)把排版 Worker 計入四個模型 Worker，見 [原始失敗](results/large-draft-redo-failure-2026-10-28.json)／[來源核對](results/large-draft-redo-review-2026-10-28.json)；第三輪 [40638626480](https://github.com/koviankevin/tflite-explorer/actions/runs/40638626480)在頁面尚未關閉時要求頁面級 Worker close，見 [原始失敗](results/large-draft-workers-failure-2026-10-28.json)／[來源核對](results/large-draft-workers-review-2026-10-28.json)。修正的是測試預期及檢查時間點，沒有放寬效能上限，也沒有修改正式網站程式。
 
 計時包含原生操作、CI 觀察器及完整指紋讀取的開銷；不把此數值承諾為所有實機的延遲。公司實模／compiler／runtime、其他引擎、固定實體硬體 SLA、長時間負載及其餘商品化條件仍待驗收。
+
+
+現行應用另完成原 v1 及大型 v2 組合的同次 [手動還原驗收](large-composition-draft.md#已核對的結果)，保留所有原門檻並增加程序所有權及 v2 接線／介面／Redo／相同 bytes 重匯出。此頁上方 preview.16 原始量測仍維持歷史來源。

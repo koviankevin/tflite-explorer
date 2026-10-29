@@ -44,3 +44,6 @@ Hosted 真實八輪的 source、job、provider artifact digest／CRC、原始報
 [四關卡相依及 provider 核對](results/composition-physical-gates-review-2026-10-29.json)確認 browser 與 [main contract 40819859749](https://github.com/koviankevin/tflite-explorer/actions/runs/40819859749) 為修正後新結果，[原始契約 ZIP](results/composition-physical-contract-2026-10-29.zip)保留；core 40700051621 與 site 40814696559 的模組 scope fingerprint 完全相同，可沿用。正式站程式、套件及工作流程未變，不重新部署。
 
 此結果只涵蓋所列 Hosted Chromium 的有限八輪。大型 v2 手動匯入恢復、數小時組合、其他引擎、公司模型與 custom kernel 執行仍不在此證據範圍。
+
+
+此八輪本身不測手動 v2 還原；另有獨立 [大型組合 v2 手動還原驗收](large-composition-draft.md#已核對的結果)已通過，證據範圍分開保存。
