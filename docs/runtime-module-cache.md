@@ -153,3 +153,19 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 輸入選擇期間的 buffer 由特定 request 持有；取消、reset、換模型、metadata／同步 client 錯誤均清理該 request。client 接手後，在準備失敗、取消、clone／Worker 建構失敗或 ineligible plan 清理未送出的 buffer；成功則以真正 postMessage transfer list 移交，callback 不把私有資料留在公開 Module promise。每次 executeRuntime 仍驗證模型及輸入、產生新 manifest 與完整 ZIP。
 
 舊 archive API 忽略 ioBuffer 而重新配置 ZIP 的實際 identity 斷言先失敗。修改後 **66 項 Node 選測通過**：same-size backing identity、resize／無 transfer fallback、部分／shared／超限拒絕、零化及 detachment、取消／錯誤／換模型、三個 fresh 真實 Workers 的完整 8 MiB IO 與獨立 CRC，以及真正 CPU 跨 fresh Instance／memory 重用 IO 後的 `[4,6]`／`[40,60]`。這些只證明有界分配與內容正確性，仍待原 Hosted Firefox RSS；不宣稱此候選已達標或已發布。
+
+### ZIP 重用候選仍未改善 RSS
+
+[Firefox 40967529897](https://github.com/koviankevin/tflite-explorer/actions/runs/40967529897) 使用來源 `0ad9cfa12a6a607c49372fcb90cf7be1d4c72f56`、tree `43245f1cae91f652a9c4be973355703a29c2d2ae`、build `393210e4d4747a8a`。**closed RSS slope 18,691,686.4 bytes／輪仍失敗**；final drift 121,061,376、sampled peak growth 286,449,664、最大取樣缺口 603 ms。這批沒有改善約 18 MiB／輪的剩餘問題，不繼續憑配置猜測修改應用，不重跑碰綠燈，也沒有發布。
+
+17 功能／19 runtime／5 指南、完整 CPU／IO、native Worker／程序退出、cold 與 retained File input 清理仍通過；306 core／provider／SHA／CRC 及獨立失敗讀取器均實際 exit 0，原 workflow watch exit 1 保留。[25 檔原始證據及研究紀錄](results/runtime-io-reuse32-originals.zip)、[SHA inventory](results/runtime-io-reuse32-originals.json)已逐檔核對，ZIP SHA `3f1537489570def7f3657844c0e8e4a142f79c3e2e725e03eace0f5b3fd1f98d`。核心 87 檔 scope 不變；其餘範圍改變仍須新證據，未在 Firefox 失敗時啟動整批發布關卡。
+
+### 獨立原生持有者診斷（待 Hosted）
+
+新增純測試的獨立 raw IO 控制頁：公開 4 MiB model-size／input Files，24 個 fresh Workers、八份 8 MiB 原始 input／逐 byte 加一 output 下載。主頁使用同一份受核對的 IO ownership helper，交接前清零／detach，Worker 真正 transfer 回傳，最後才建立 octet-stream Blob；沿用自然 60 秒 URL 與完整下載 SHA／身分／清理。沒有模型解析、LiteRT／WASM Instance 或推論，也不宣稱 raw 控制檔是 TFLite／ZIP。原 RSS flow／policy／fixture 及發布安全規則完全不變。
+
+獨立控制的原 RSS／settled observations 全部結束後，才開啟一次原生 about:memory，以 verbose／anonymize 及普通 Measure 讀取有界 DOM 文字，不用私有 Services／gCurrentReports API，不按 GC、CC 或 Minimize。開始前先讀實際安裝的公開 Firefox omni.ja，核對來源 SHA、Measure 按鈕 wiring、ordinary getReports handler 沒有顯式 collection 呼叫；不能用主分支原始碼假裝成受測版本。最多 512 KiB 原文及 hash 放入既有 artifact，超限、未完成或關頁失敗都明確報錯，不截斷後宣稱完整。它是含 reporter 自身成本的單次原生分類快照，不能替代原 RSS、連續 Worker heap 或可歸因的 allocation trace。
+
+此設計參考 [Mozilla about:memory 說明](https://firefox-source-docs.mozilla.org/performance/memory/about_colon_memory.html)及 [Measure 的原始實作](https://github.com/mozilla-firefox/firefox/blob/main/toolkit/components/aboutmemory/content/aboutMemory.js)。固定工具的 [NetworkObserver](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/juggler/NetworkObserver.js) request hook 只接受 HTTP channels，不能直接據此認定它的 response cache 持有 blob 下載；[DownloadInterceptor](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/juggler/TargetRegistry.js)完成事件也會刪除 handler／UUID map，這仍不足以證明 native channel 已釋放。先取得實際物件分類再歸因。
+
+新診斷只在 candidate Firefox 執行，先完成原有 RSS／cold 流程，再獨立啟動控制瀏覽器。只有完整結束且 owned processes 全退出的純數值 RSS 失敗才繼續診斷，最後仍拋回同一原始失敗；protocol／live-process 失敗不繼續，診斷失敗不能取代原 RSS 或較早 cold error。25 項選測通過，涵蓋來源／按鈕／非 forcing 邊界、一次 Measure／關頁／容量、實際 ArrayBuffer transfer 的 raw 控制程式、舊三組控制、公共暫存清理及失敗傳遞；沒有在本機啟動瀏覽器，原生 UI 與 bundle 路徑仍待 Hosted 證據。
