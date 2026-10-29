@@ -1,0 +1,32 @@
+{
+  "format": "model-lens-large-composition-draft-review",
+  "version": 1,
+  "authentication": "passed",
+  "status": "failed",
+  "runId": 40824341555,
+  "head": "622bbf7c83e88b1e720411811d867246c63c3007",
+  "testedCommit": "c89d5c875f7f7ca5720038341ef36769622eea51",
+  "testedTree": "ff0bd6ea9c8a927a5b40a90158a59aae2da19438",
+  "runConclusion": "failure",
+  "jobId": 123283802096,
+  "jobConclusion": "failure",
+  "artifactId": 12875893047,
+  "artifactDigest": "sha256:977a3f35a1761695402b3b45f517b1245727d0a3afd3946633de502eb6855029",
+  "reportSHA256": "b36827822da0889afc2600d1f912e128b37a0236e027f99c8224c25723fe1a00",
+  "reportStatus": "failed",
+  "checks": [
+    "physical 1.25 GiB / 21,005 OP fixture and independent complete bounded identity",
+    "native portable JSON saves wiring history, redo and 32px view after full original-file verification",
+    "native cancel remains responsive mid-hash; reads stop and no partial edit is applied",
+    "fresh native original File restores JSON history, redo and view at 1280×640 / 32px; editing continues",
+    "restored full TFLite reopens at 21,006 OP, all source weight/custom-option ranges match and both original patterns remain unique"
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: workspace mode explore: navigation must select exactly the visible workspace\n+ actual - expected\n\n  [\n    'true',\n    'false',\n+   'true'\n-   'false'\n  ]\n\n    at assertWorkspaceMode (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/workspace-mode-proof.mjs:7:12)\n    at async largeCompositionDraft (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-composition-draft.mjs:21:49)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/large-edit-draft.mjs:96:44",
+  "source": {
+    "commit": "c89d5c875f7f7ca5720038341ef36769622eea51",
+    "tree": "ff0bd6ea9c8a927a5b40a90158a59aae2da19438",
+    "committedAt": "2026-10-29T13:36:06+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true
+}
