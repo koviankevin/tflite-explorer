@@ -1,4 +1,4 @@
-# preview.31 候選與發布證據
+# preview.31 發布與驗收
 
 本版整理三個已重現的資源／隔離問題：測試輸入視窗完成或取消後清除 File 控制項與確認回呼；TFLite lazy buffer decoder 限於各個 reader，避免匯入 parser 改變示範模型的建置 bytes；草稿核對取消時不再建立同一輪即被取消的 Worker，並在終止前清除回呼。對應 PR #131、#132、#135。模型仍全程本機處理，interpreter 維持手動啟動。
 
@@ -20,4 +20,10 @@ CPU／IO 八輪使用 4 MiB const／input／output；它與 1.25 GiB 的開檔�
 
 ## 發布狀態
 
-尚未準備或部署 preview.31；正式站與固定 Release 仍為 preview.30。發布前需以更新後的 `release-evidence.json` 核對最終凍結來源，受控 prepare、原始準備包與乾淨重建一致，再提升同一份產物並核對正式站／固定下載。既有 tag、Release 與部署結果不覆寫。
+[preview.31 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.31)與[正式站](https://koviankevin.github.io/tflite-explorer/)均已完成獨立核對。凍結來源 `adc870fee659611bf1a0fa78113642c1a3961afc`／tree `a0b7dd0c2cf3f1d904fd131510ce02256209d0d6`／build `3061076374227547`；與上述受測程式的四項 dependency scopes 相同，驗證結果沿用，不重跑成功功能。PR #136 head／merge 完整 tree 一致。
+
+準備 [40903603540](https://github.com/koviankevin/tflite-explorer/actions/runs/40903603540)僅產生原始 ZIP／Pages tar；獨立 reader 核對來源、provider SHA／CRC、304 核心檔與全站 1,406 檔。第一次讀取中繼資料遭 GitHub core API quota 403；原報告保留，等官方重設後只重試 reader，沒有重跑工作流程。另一次乾淨重建的核心 manifest SHA `58f7277b5fcf93b901a1b8a166463cd9762a73503fa83a8fbfe2394eb32f23ff`與原準備包相同。
+
+發布 [40904804639](https://github.com/koviankevin/tflite-explorer/actions/runs/40904804639)的 prepare／deploy／verify_live／release 均 attempt 1 成功。最終獨立 reader 實際 exit 0：全站 1,406 檔 SHA／MIME、root、權威 deployment `7417035286`及四份實際固定下載吻合原準備包。site ID `ebd6b08ec1bb92fb0844c13ecc8710a5980b29589308b5db4e65ffac752ab4bb`；固定 ZIP SHA `e46fbe50582e8ea294d3f20639a9a02fecef4e8591c3a5329e9a765d49c3f349`。舊 preview.30／29 與 legacy preview.7 保留；既有 tag、Release 和成功部署未覆寫或重跑。
+
+正式原生 33 項操作、五組指南、19 種執行／分佈情境、82 model／44 runtime Workers close、14 次一般及 24 次 IO 生命週期輸入清理通過；真正 WHILE invoke 取消／30 秒逾時／恢復與八輪 CPU／IO／自然 URL 釋放也通過。[正式獨立收據](results/preview31-published-final.json)、[原始 provider ZIP／準備失敗及成功／乾淨重建／稽核程式](results/preview31-published-originals.zip)與[逐檔 SHA／實際退出紀錄](results/preview31-published-originals.json)保留。這是本版的交付結果，整體商品等級目標仍在進行。

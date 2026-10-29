@@ -1,5 +1,7 @@
 # 測試輸入視窗的回呼與控制項清理
 
+本頁記錄的修正已在 [preview.31 正式交付](preview31.md#發布狀態)核對；原始失敗、診斷與當時的待驗證狀態保留於下文，不改寫歷史。
+
 preview.31 候選修正手動執行的輸入視窗。原本成功／取消時雖清空可見欄位，`edit-runtime-run.onclick` 仍持有 `specs` 的 getter、已移出 DOM 的控制項與最後選取的 File；沒有 pending promise 時，session reset 也直接返回。這是 callback ownership 的清理缺口，前一輪有限 RSS 通過不證明沒有任何物件被保留。
 
 隔離重現直接呼叫真正 `runtimeInputsUI`、輸入驗證與共用亂數控制項，只模擬必要 DOM，不啟動瀏覽器／interpreter，也不用 WeakRef 或強制 GC。[初始五項失敗](results/input-cleanup31-unit.zip)包含成功／三種取消後仍有回呼、明確保留的舊確認函式能關閉新請求，以及 showModal 失敗留下控制項。這個舊回呼案例是單元層的 ownership 重播，不宣稱已在原生使用者事件中量到相同競態。

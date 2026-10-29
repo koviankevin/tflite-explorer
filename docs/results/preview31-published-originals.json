@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "e5cc179da80b3c6170aee72952ac35f5d9282ccd91f2b5d38f9c9a3fc742292d",
+  "members": [
+    {
+      "name": "12910952504.zip",
+      "bytes": 762,
+      "sha256": "33cbded301f122a6c7fb83f14a572f6c3cd4ccf0913ddde43745da14ab5a362f"
+    },
+    {
+      "name": "12911377459.zip",
+      "bytes": 239344,
+      "sha256": "2067db3b5e4d66df790467703494111031852434a8ac151f651dd25d9bbf2224"
+    },
+    {
+      "name": "report.json",
+      "bytes": 58711,
+      "sha256": "32817958e99fe984ac45e9fc037cb1fece944ec26e78304ea5d60e5a61f45dcc"
+    },
+    {
+      "name": "prepare-initial403.json",
+      "bytes": 1207,
+      "sha256": "36c26457267ffc185db5527d4489b3f0dff02621551dc60774065f12cb99bfcf"
+    },
+    {
+      "name": "prepare-review.json",
+      "bytes": 5289,
+      "sha256": "17d961fd22fb605f7b8af9d85abf37b5ecb98bbc4b919923e530ec4f34e73b40"
+    },
+    {
+      "name": "clean-rebuild-review.json",
+      "bytes": 935,
+      "sha256": "17ef7e57cecb601930ab96c599ec5bd542e973db6f57e7cd65f938c8569bcd1c"
+    },
+    {
+      "name": "frozen-gates-review.json",
+      "bytes": 192589,
+      "sha256": "8bce8130ddfb1f3f6a0455b37516dd7aed754fc80662d9e79786adf15b251355"
+    },
+    {
+      "name": "auditors/review-publication.mjs",
+      "bytes": 13226,
+      "sha256": "4b022a73c4a49544ce15c4a4e964b3b466e9d4767c79170cd2fc171654ec07cd"
+    },
+    {
+      "name": "auditors/review-preparation.mjs",
+      "bytes": 8604,
+      "sha256": "e4f929e3087a446da62a6bfa989ea48cf9de835549cd7c6116d515974eaef954"
+    },
+    {
+      "name": "auditors/review-rebuild.mjs",
+      "bytes": 1605,
+      "sha256": "7061556a42833a0be3e3a4a27959cb633d1847d19edeac71f2f8f90a052f8df9"
+    }
+  ],
+  "source": {
+    "commit": "adc870fee659611bf1a0fa78113642c1a3961afc",
+    "tree": "a0b7dd0c2cf3f1d904fd131510ce02256209d0d6",
+    "committedAt": "2026-10-29T23:35:59+08:00",
+    "dirty": false
+  },
+  "prepare": 40903603540,
+  "publish": 40904804639,
+  "readers": {
+    "frozenGates": {
+      "exit": 0,
+      "chunk": "00a61c"
+    },
+    "prepareFirst": {
+      "exit": 1,
+      "chunk": "2b697a",
+      "reason": "API core quota; originalreport retained, workflow not rerun"
+    },
+    "prepareRetry": {
+      "exit": 0,
+      "chunk": "cef329"
+    },
+    "cleanRebuild": {
+      "exit": 0,
+      "chunk": "f20afe"
+    },
+    "publishCLI": {
+      "exit": 0,
+      "chunk": "9b2477"
+    },
+    "formal": {
+      "exit": 0,
+      "chunk": "9b9d65"
+    }
+  },
+  "scope": "Only original hosted public synthetic QA artifacts, independent reports, fixed published download hashes and reader sources. No company model, user attachment or auth headers; successful deployment never rerun."
+}
