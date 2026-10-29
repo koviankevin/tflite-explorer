@@ -26,7 +26,13 @@ export function initUsageGuide({getContext,perform}){
         }
         const reasons=make('div');reasons.id='guide-reasons';content.insertBefore(actions,list);content.insertBefore(reasons,list);content.scrollTop=0;refreshActions();
     }
-    function open(){if(document.querySelector('dialog[open]'))return;topic=guideTopicFor(getContext());status.textContent='';render();dialog.showModal();watch();$(`guide-tab-${topic}`).focus();}
+    function open(){
+        if(document.querySelector('dialog[open]'))return;
+        // A native file chooser may return focus to body or a closed dialog.
+        // Give showModal a visible return target before moving focus inside it.
+        const active=document.activeElement;if(!active||active===document.body||dialog.contains(active)||!active.getClientRects().length)$('usage-guide-button').focus({preventScroll:true});
+        topic=guideTopicFor(getContext());status.textContent='';render();dialog.showModal();watch();$(`guide-tab-${topic}`).focus();
+    }
     for(const page of GUIDE_TOPICS){const tab=make('button',page.label);tab.type='button';tab.id=`guide-tab-${page.id}`;tab.dataset.guideTopic=page.id;tab.setAttribute('role','tab');tab.setAttribute('aria-controls','guide-content');tab.onclick=()=>{topic=page.id;status.textContent='';render();};tabs.append(tab);}
     tabs.addEventListener('keydown',event=>{if(event.ctrlKey||event.metaKey||event.altKey)return;const items=[...tabs.querySelectorAll('button')],next=guideTabIndex(event.key,items.indexOf(event.target),items.length);if(next===null)return;event.preventDefault();items.forEach((b,i)=>{b.tabIndex=i===next?0:-1;});items[next].focus();});
     tabs.addEventListener('focusout',event=>{if(!tabs.contains(event.relatedTarget))for(const tab of tabs.querySelectorAll('button'))tab.tabIndex=tab.dataset.guideTopic===topic?0:-1;});
@@ -34,6 +40,6 @@ export function initUsageGuide({getContext,perform}){
     $('close-usage-guide').onclick=()=>dialog.close();
     dialog.addEventListener('close',()=>{if(!dialog.open){observer?.disconnect();observer=null;}});
     dialog.addEventListener('keydown',event=>{if(event.key==='F1')event.preventDefault();});
-    document.addEventListener('keydown',event=>{if(event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey||event.key!=='F1'||document.querySelector('dialog[open]'))return;event.preventDefault();open();});
+    document.addEventListener('keydown',event=>{if(event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey||event.key!=='F1'||document.querySelector('dialog[open]'))return;event.preventDefault();open();},true);
     return {refresh(){if(dialog.open)refreshActions();}};
 }
