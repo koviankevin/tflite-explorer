@@ -23,6 +23,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 preview.31 相同應用另完成 [WebKit 手動 CPU／IO 八輪 RSS](desktop-runtime-io.md#首次原始結果)，24 次 CPU／八份完整 IO、URL／Worker／程序清理通過。Firefox 同次量測則在 closed-RSS slope 超過原 16 MiB／輪，原始失敗保留；最終 URL 釋放後 drift 未超限，不足以證明洩漏或排除問題。下一步只補 Firefox 的程序記憶體分類，沒有修改正式應用、重跑成功部署或放寬門檻。
 
+Firefox 的[分類診斷](desktop-runtime-io.md#分類結果與無模型對照)亦重現 slope 超標；共享欄位不變，較大波動在父程序匿名記憶體。工具的網路回應複製是待驗證疑點；將以 empty／只 fetch 公開 WASM 的無模型控制比較，尚不歸因應用或工具，也不以較小分類值替代 RSS。
+
 歷史 preview.30 已核對 [Firefox 142.0.1／WebKit 26.0 的十六項功能](desktop-runtime.md#最終核對結果)，包含獨立執行、分佈／const／草稿與指南；這是 Hosted Linux 的短流程，不改變下列長期、其他 OS 與完整無障礙驗收缺口。
 
 另補齊[三引擎真實 CPU 運算中的取消與 30 秒逾時](runtime-active-compute.md#三引擎實際結果)，含 UI 回應、Worker close 及恢復執行；Chromium 32 項、Firefox／WebKit 各 17 項功能通過。這組有限合成迴圈不涵蓋所有模型、背景節流、數小時 runtime 或 RSS；跨引擎 layout Worker 最後 close 與 Firefox module request 的觀察界線保持明列。
