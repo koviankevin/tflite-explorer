@@ -57,3 +57,13 @@ Firefox 的八輪原 RSS context 確實只有 **一次 WASM GET**，八個 model
 [1.25 GiB／21,005 OP 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/40941943495)、[main 發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/40941944769)及上述版本切換關卡均成功；核心範圍與可信 main run `40885892195` 的 87 檔 fingerprint 完全相同而沿用。四關卡的 provider／CRC／來源範圍認證 exit 0。它們不取代額外 Firefox RSS 的失敗，也不代表 preview.32 已正式交付。
 
 獨立讀取器的兩項格式修正亦保留：WebKit reader 起初錯用早於 desktop RSS 檔案加入的正式版基準，改為與 app 修正前 `940a9e5` 的四個完全相同 protocol／policy／fixture 檔比較；Chromium reader 起初誤要求 Desktop 專有的 `crcVerified` 欄位，原 Chromium schema 記錄的是完整 input／output SHA 和 `bytesVerified`。僅修讀取器並重核原檔，沒有重跑成功流程、改寫觀測或宣稱未記錄的 Chromium IO CRC。最終 WebKit、Chromium 與 Firefox 失敗診斷讀取器皆 exit 0。
+
+## 下一步：限量 File／IO／module 對照（待 Hosted）
+
+保留應用程式、原 RSS flow／policy／baseline 與 workflow 檔案不變。Cached candidate 的 Firefox 額外診斷先跑相同 fresh empty Worker baseline，再分開量：每輪重新選擇公開 4 MiB input File 與模型大小 File；同樣流程加上 Worker 傳回 8 MiB IO Blob、每輪第三次實際下載並等待原生 60 秒 URL 期限；單次完整 SHA 驗證／編譯公開 WASM 後複製 module 到 24 個 fresh Workers，只讀 exports 數量，不建立 Instance。每組八輪、每輪三個 Worker，要求真正 native close 與完整 owned-process 退出。這些都是診斷協定，沒有模型解析、LiteRT 執行或效能合格判定。
+
+原 HTTP／單一 File 對照程式未修改，已有上方 authenticated 原始結果；非 cached 舊版本保留其三組流程。新 cached 候選改測本次假設，不把舊對照假裝成新來源執行，也不略過原有功能與實際 runtime RSS 驗收。新診斷的 summed RSS 每 500 ms 觀察；匿名／file／shared 只在 settled windows 擷取，不能宣稱連續 component 峰值或獨立 Worker heap。報告仍使用既有有界 artifact，不放寬讀取上限。
+
+公開輸入固定為 byte 25／7，IO 為完整 input bytes 與逐值加一後的 bytes；實際下載逐檔核對完整 SHA。只有固定三個新檔名可由暫存 helper 使用；先 flush 意圖，核對大小、SHA、dev／inode／mtime，來源 File 在原生消費者關閉後清理，完成下載的 owned copy 精確刪除並移除空目錄，失敗則保留原因。沒有 recursive delete、使用者模型或隱藏的清理操作。
+
+另加入明確的失敗傳遞：只有完整結束且 browser／owned processes 都退出的純數值 RSS 失敗，才接著收集獨立 cold-page 證據，最後仍拋回同一個原始 RSS error。協定／Worker close／程序退出失敗直接停止；後續 cold 失敗也不能取代原始失敗。十九項 Node 選測通過，包含真實 Blob／公開 WASM compile、檔案清理與四組失敗傳遞；尚未取得這批新 Hosted 對照結果。
