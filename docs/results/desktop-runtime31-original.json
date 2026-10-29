@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "f15f75b5fa8692307fa52d0b83bd1b7a0bb2dee8d6a04003950304f41dc9e0b0",
+  "members": [
+    {
+      "name": "artifacts.json",
+      "bytes": 1851,
+      "sha256": "f38e7ce6ccfde3a280ec5b07d2dbf3d775f322167867194998ec63264299b24d"
+    },
+    {
+      "name": "firefox.zip",
+      "bytes": 197471,
+      "sha256": "dc22677344f80499d209a4bf45c6f0ce1a1733442a81d5242c4d8b6139d5eb9f"
+    },
+    {
+      "name": "jobs.json",
+      "bytes": 7900,
+      "sha256": "776087ce0e46d56809841a4051a53c24f3e4d3f12df1ab43d1aa768e89198b50"
+    },
+    {
+      "name": "review.json",
+      "bytes": 108594,
+      "sha256": "750c238732a64b9397d444be6a3701063a89ccc19520ef70e7b4caa4e39e549e"
+    },
+    {
+      "name": "run.json",
+      "bytes": 14423,
+      "sha256": "6cf62911ec114985ffb8194b50a44331f8b9fc1aebc5a2bebb9bed30f74a48ab"
+    },
+    {
+      "name": "webkit.zip",
+      "bytes": 209446,
+      "sha256": "218463b7fdd76f08b3bc509a75f02a99aae2ec22829618be60eb3800b7eabc96"
+    },
+    {
+      "name": "firefox/review.json",
+      "bytes": 49703,
+      "sha256": "9a4834b751a63dabc9f166da11c0c1a0b6839787a2e0f1649353dd9d1b171f82"
+    },
+    {
+      "name": "webkit/review.json",
+      "bytes": 46220,
+      "sha256": "b45b16fc5b7f48389bd636efdc69db2778cef8a81cea89247ef890688fed3479"
+    },
+    {
+      "name": "webkit/runtime-rss-review.json",
+      "bytes": 2754,
+      "sha256": "89e2f8c8fa52e5094cbccfe76b0cfaf9841a565356b1306a0f5a33f5d705d5b5"
+    },
+    {
+      "name": "auditors/review-desktop-runtime31.mjs",
+      "bytes": 12923,
+      "sha256": "076524773eeb8139961dd51e0ab35fbaf040ab159dbf592cb9df456f3be03090"
+    },
+    {
+      "name": "auditors/audit-desktop-runtime31-firefox-failure.mjs",
+      "bytes": 4160,
+      "sha256": "c3e304d39829fab2d3197fd25de04e936f491b611890da74186ba75b4ce9d3d4"
+    },
+    {
+      "name": "unit-final.log",
+      "bytes": 3495,
+      "sha256": "d50f177e97f6d860567772d3a60be529f5837c954fb0fc81ce9f697042a784e3"
+    }
+  ],
+  "run": 40911201837,
+  "source": "77fa037ce2e58d4606318e357652b52031c04bf6",
+  "build": "5e40f9c11ec3a0e8",
+  "authentication": "passed",
+  "matrixAcceptance": "failed",
+  "readers": {
+    "firefoxFailure": {
+      "actualExit": 0,
+      "chunk": "6f5186",
+      "acceptance": "failed"
+    },
+    "matrix": {
+      "actualExit": 0,
+      "chunk": "bc7ce9",
+      "firefox": "failed",
+      "webkit": "passed-rss-only"
+    }
+  },
+  "firefox": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-slope"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 28348416,
+      "closedRssSlopeBytesPerCycle": 24380328.22857143,
+      "sampledPeakRssBytes": 1175240704,
+      "maxSampleGapMs": 547,
+      "sampledPeakGrowthBytes": 398712832
+    }
+  },
+  "webkit": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 42733568,
+      "closedRssSlopeBytesPerCycle": 13783742.17142857,
+      "sampledPeakRssBytes": 972832768,
+      "maxSampleGapMs": 594,
+      "sampledPeakGrowthBytes": 311021568
+    }
+  },
+  "limits": "OriginalFirefox slope failure preserved. Final RSS afterURLs only28,348,416B abovewarmup; this does not prove a leak or repair. WebKit finite8cycles/24CPU/8IO, native closes/exit/cleanup passed; no standaloneHeap or hours/OS claims. Supplemental Firefoxclassification is pending; no originalthreshold changed."
+}
