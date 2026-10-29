@@ -15,7 +15,7 @@
 | TFLite 實際模型編輯 | 正式操作涵蓋圖上接線、tensor 自動建立、OP 複製／builtin catalog、參數、型別亂數、Undo／Redo、完整修改與子模型下載重開 |
 | 片段組合模型 | [組合模型](model-composition.md#preview26-正式交付)驗證 A／B 匹配分次加入、重疊去重、新 OP 接線、獨立普通／組合歷史、輸入／輸出選擇、v2 草稿、CPU `[14,28]`、custom options／權重／編號及匯出重開；目前限同一 TFLite／subgraph |
 | 編輯草稿與模型分頁 | 正式操作涵蓋 JSON 保存／重選原模型指紋、分頁狀態、衝突／分叉及專屬測試瀏覽器強制終止後恢復；不宣稱 OS 斷電後永不遺失 |
-| 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的 14 種參數／runtime／組合情境：原模型／候選、raw .bin、型別亂數、實際 IO ZIP、錯誤／取消、custom／signature 明確未驗證；開檔／一般匯出不自動推論 |
+| 手動 interpreter | [手動執行](tflite-runtime.md)及正式操作的 19 種執行／分佈情境：目前分頁已開啟的原模型、編輯／組合／子模型匯出重開、raw .bin、四種亂數、實際 CPU／IO ZIP、錯誤／取消、custom／signature 明確未驗證；編輯與一般匯出不自動推論 |
 | 14 吋桌面操作與 32px | 正式流程使用 1366×640／1280×640 viewport，驗證 32px、平移／縮放後接線、選取、鍵盤焦點與下載；不測手機，也不將螢幕吋數當成固定像素尺寸 |
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
@@ -30,7 +30,7 @@
 5. 圈選後匯出局部 TFLite／MLIR，再按「開啟匯出結果」建立模型分頁；原模型留在另一頁。模型匯出與 pattern JSON 是不同檔案。
 6. 要修改實際 TFLite，用頂端「編輯模型」；選 OP 後複製或從 builtin 選單新增，點選／拖曳 output 與 input 端點接線。先看變更預覽，再匯出；MLIR 不提供實際 OP 編輯。
 7. 需跨電腦接續時，下載編輯草稿 JSON，另保留原模型；重新選原模型並核對完整指紋後恢復。瀏覽器本機保存不會跨 origin／電腦同步。
-8. 需要執行時才開「檢查能否執行（選用）」；每個輸入選 raw `.bin`、零值或亂數，手動執行後可下載 input／output ZIP。亂數只保證所選 dtype 的數值範圍，索引／token／shape 等仍有 OP 語意限制。
+8. 要試跑時，先開啟目標 TFLite，再進入頂端「執行模型」，按「設定輸入並執行一次」。每個輸入可選 raw `.bin`、全 0 或有預設的亂數規則；確認後才執行，可下載 input／output ZIP。局部或編輯結果須先匯出並開啟；執行不使用草稿，亂數也不保證索引／token 等 OP 語意正確。
 
 ## 使用界線
 

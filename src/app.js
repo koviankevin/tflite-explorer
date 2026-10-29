@@ -6,6 +6,7 @@ import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
 import {initReleaseInfo} from './release-info.js';
+import {initUsageGuide} from './usage-guide-ui.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
@@ -30,6 +31,7 @@ import {diagnosticUI} from './diagnostics-ui.js';
 
 const $ = (id) => document.getElementById(id);
 const diagnostics=diagnosticJournal();
+let usageGuide;
 window.addEventListener('error',event=>diagnostics.record('global','error',event.error));
 window.addEventListener('unhandledrejection',event=>diagnostics.record('global','error',event.reason));
 const exportReports=exportReportUI({exportFile:(name,blob)=>host.export(name,blob)});
@@ -203,6 +205,7 @@ function stopWorker() {
     worker?.terminate(); worker = null;
     for (const { reject } of pending.values()) reject(new DOMException('已取消', 'AbortError'));
     pending.clear();
+    usageGuide?.refresh();
 }
 function rpc(action, args = {}) {
     return new Promise((resolve, reject) => {
@@ -211,7 +214,8 @@ function rpc(action, args = {}) {
         if (!worker) { fail(new Error('請先開啟模型。')); return; }
         const id = ++requestId;
         pending.set(id, { resolve:data=>{finish(data?.cancelled?'cancelled':'success');resolve(data);},reject:fail });
-        try{worker.postMessage({ id, action, args });}catch(error){pending.delete(id);fail(error);}
+        usageGuide?.refresh();
+        try{worker.postMessage({ id, action, args });}catch(error){pending.delete(id);fail(error);usageGuide?.refresh();}
     });
 }
 function createWorker() {
@@ -222,8 +226,9 @@ function createWorker() {
         if (!entry) return;
         pending.delete(data.id);
         if (data.error) entry.reject(Object.assign(new Error(data.error),{validation:data.validation})); else entry.resolve(data.data);
+        usageGuide?.refresh();
     };
-    worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。');diagnostics.record('worker','error',error); for (const entry of pending.values()) entry.reject(error); pending.clear(); };
+    worker.onerror = (event) => { const error = new Error(event.message || '背景解析失敗。');diagnostics.record('worker','error',error); for (const entry of pending.values()) entry.reject(error); pending.clear();usageGuide?.refresh(); };
 }
 function reset() {
     sessions?.detach();
@@ -1163,14 +1168,10 @@ refreshPatternLibrary();
 
 for (const id of ['open-model', 'welcome-open']) $(id).onclick = () => { $('model-file').value = ''; $('model-file').click(); };
 $('model-file').onchange = () => { if ($('model-file').files[0]) openFile($('model-file').files[0]); };
-$('open-demo').onclick = async () => { try { const r = await fetch('./demo.tflite'); if (!r.ok) throw new Error('無法讀取示範模型。'); await openFile(new File([await r.blob()], '示範模型.tflite')); } catch (error) { report(error); } };
-$('open-mlir-demo').onclick = async () => {
-    try {
-        const r = await fetch('./demo.mlir'); if (!r.ok) throw new Error('無法讀取 MLIR 示範。');
-        setKind('layers', false);
-        await openFile(new File([await r.blob()], '示範分支.mlir'));
-    } catch (error) { report(error); }
-};
+async function openDemo(){const r=await fetch('./demo.tflite');if(!r.ok)throw new Error('無法讀取示範模型。');return openFile(new File([await r.blob()],'示範模型.tflite'));}
+$('open-demo').onclick=()=>openDemo().catch(report);
+async function openMLIRDemo(){const r=await fetch('./demo.mlir');if(!r.ok)throw new Error('無法讀取 MLIR 示範。');setKind('layers',false);return openFile(new File([await r.blob()],'示範分支.mlir'));}
+$('open-mlir-demo').onclick=()=>openMLIRDemo().catch(report);
 $('open-lora-demo').onclick = async () => {
     try {
         const r = await fetch('./lora-demo.tflite'); if (!r.ok) throw new Error('無法讀取 LoRA 結構示範。');
@@ -1476,6 +1477,18 @@ new MutationObserver(() => {
 resizeInFrame($('capture-toolbar'),()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`));
 // Version metadata is independent of graph startup and must respond immediately.
 initReleaseInfo({exportFile:host.export});
+usageGuide=initUsageGuide({
+    getContext:()=>({hasModel:!!model,format:model?.sourceFormat,mode:runWorkspace.active?'run':editWorkspace.active?'edit':'explore',busy:exportBusy||workspaceBusy||tabs.busy||pending.size>0||!$('loading-card').hidden||$('target').getAttribute('aria-busy')==='true'||$('run-workspace').getAttribute('aria-busy')==='true'}),
+    perform:async action=>{
+        if(action==='open'){$('open-model').click();return;}
+        if(action==='demo'){if(await openDemo()===false)throw Error('未能開啟示範模型，請確認本機原分頁狀態後再試。');return;}
+        if(action==='mlir-demo'){if(await openMLIRDemo()===false)throw Error('未能開啟 MLIR 示範，請確認本機原分頁狀態後再試。');return;}
+        if(action==='drafts'){$('open-edit-draft').click();return;}
+        if(action==='edit'){await editWorkspace.open();$('edit-find').focus({preventScroll:true});return;}
+        if(action==='run'){runWorkspace.open();$('edit-runtime-check').focus({preventScroll:true});return;}
+        editWorkspace.explore();const target=kind==='patterns'?$('patterns-tab'):$('query');target.focus({preventScroll:true});
+    }
+});
 const viewReady = view.start().then(() => { reset(); renderPattern(); });
 await viewReady;
 libraryReady=refreshStoredPatterns();
