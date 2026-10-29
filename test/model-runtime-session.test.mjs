@@ -47,3 +47,14 @@ test('actual Worker metadata RPC works without an editor session and returns no 
     await context.self.onmessage({data:{id:1,action:'modelRuntimeInfo',args:{}}});assert.equal(messages.length,1);assert.equal(messages[0].data.eligible,true);assert.equal(messages[0].data.blob,undefined);assert.equal(messages[0].data.inputs.length,2);
     context.index={mlir:{}};await context.self.onmessage({data:{id:2,action:'modelRuntimeInfo',args:{}}});assert.match(messages[1].error,/TFLite/);
 });
+
+const byteIO=()=>({archive:Uint8Array.of(1,2,3),manifest:{format:'public-test'}});
+test('reset, cancel and source replacement retire the old owned IO bytes',async()=>{
+    for(const action of ['reset','cancel','source']){const io=byteIO(),view=io.archive,f=fixture({check:async()=>({status:'passed',io})});await f.session.run();assert.equal(view.byteLength,3);if(action==='source'){f.switch(new File(['new'],'same.tflite'));await f.session.inspect();}else f.session[action]();assert.equal(f.session.state.io,null);assert.equal(io.archive,null,action);assert.equal(view.byteLength,0,action);}
+});
+test('starting a new input selection retires prior IO even if selection is cancelled',async()=>{
+    const io=byteIO(),view=io.archive,pending=deferred();let count=0;const f=fixture({choose:()=>++count===1?[]:pending.promise,check:async()=>({status:'passed',io})});await f.session.run();const task=f.session.run();await tick();assert.equal(view.byteLength,0);assert.equal(io.archive,null);assert.equal(f.session.state.io,null);pending.resolve(null);await task;assert.equal(f.session.state.busy,false);
+});
+test('a stale result is retired while the restarted execution keeps its own IO intact',async()=>{
+    const pending=deferred(),old=byteIO(),oldView=old.archive,next=byteIO(),nextView=next.archive;let count=0;const f=fixture({check:async()=>++count===1?pending.promise:{status:'passed',io:next}});const first=f.session.run();await tick();f.session.cancel();await f.session.run();assert.equal(f.session.state.io,next);pending.resolve({status:'passed',io:old});await first;assert.equal(old.archive,null);assert.equal(oldView.byteLength,0);assert.equal(f.session.state.io,next);assert.deepEqual([...nextView],[1,2,3]);f.session.reset();assert.equal(nextView.byteLength,0);
+});
