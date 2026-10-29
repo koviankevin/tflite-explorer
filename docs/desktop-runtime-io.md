@@ -32,3 +32,13 @@
 依序區分：(1) Blob／跨程序共享頁保留到 revoke，預測其變化與未到期 URL 數及釋放時間對應；(2) Worker／WASM 配置器或程式碼快取延後歸還，預測匿名或檔案頁變化不僅取決於 IO URL；(3) 關閉後的應用 File／IO 參照仍保留，需實際所有權證據，不能只由 RSS 推論。
 
 只為 Firefox 加上既有 `process-memory-profile.mjs` 的輔助分類：每筆原 RSS 樣本後，對同一組已知 PID／start-ticks 讀取 RssAnon／RssFile／RssShmem，記錄較晚的觀測起訖、與原 RSS 差額及 missing／reused，不校正或取代原值、不使用較小的 PSS 取得綠燈，也不稱為 JS heap。原 500ms／3 秒缺口與全部門檻不變，額外讀取成本也算在實測中。WebKit 原始成功證據沿用，不為此診斷重跑；新的 Firefox 原始資料尚待取得，即使診斷時通過也不能將原始失敗寫成已修復的應用 bug。
+
+## 分類結果與無模型對照
+
+[Firefox 分類 40914299113](https://github.com/koviankevin/tflite-explorer/actions/runs/40914299113) 已終止，來源 `b80eacfd06d1469437f287ca93494052054da8c6`／tree `72ee06f57a80682042ab50e0e42ae1f9444e0129`／build `c6bcc615b830264c`。獨立 provider SHA／CRC／來源／304 manifest、全部 IO 預期 SHA、原 RSS 判定與分類錨點重算通過，讀取器實際 exit 0；量測本身仍因 slope 21,842,446.63 bytes／輪失敗。416 筆分類完整，沒有 exited／reused 缺值；最終 RSS drift 28,364,800 bytes、peak growth 397,369,344 bytes。七個觀測程序正常退出。[原始資料／離線歸屬／讀取器](results/firefox-runtime31-profile.zip)及[逐檔雜湊與明確結果](results/firefox-runtime31-profile.json)保留。
+
+大幅鋸齒主要出現在父程序匿名記憶體，其 window median 在約 213～343 MB 間變動，最終只比 warmup 高 1,556,480 bytes。頁面程序匿名記憶體最終高 25,133,056 bytes；整組共享欄位保持 4,239,360 bytes，file 欄位變化較小。這反駁「共享頁隨每份 IO 大量線性增加」的簡單解釋，不能把匿名記憶體直接稱為 JS heap，亦未排除頁面參照問題。各程序中位數與較晚讀取的總量不校正為原 RSS。
+
+固定工具版本的[網路觀察原始碼](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/juggler/NetworkObserver.js)會收集回應片段並合併，再決定是否超過每份 10 MiB 的保留上限；整頁上限是 100 MiB。本案 WASM 為 10,948,854 bytes，超過單份上限；這提供暫時複製／GC 成本的疑點，不是已確認的根因。來源 URL／取得時間／SHA 保存在封存檔，沒有修改第三方工具或減去這些記憶體取得綠燈。
+
+下一步只在 Hosted Firefox 加入兩個獨立 browser 的無模型對照：empty／fetch 各八輪、每輪三個原生 Worker。empty 只回報 0 bytes；fetch 僅完整讀取同一份已核對的公開 WASM，回報長度，**不載入或編譯模型、不呼叫 runtime／app API、不產生 IO ZIP**。兩組均保留原始 RSS／每程序分類、五樣本中位數、真實 close 與正常程序退出。只清除對照用的小型 Worker-script URL，網站的 60 秒 IO URL 行為不變。對照本身不給 RSS 驗收綠燈；隨後原應用八輪仍跑相同門檻，保留原判定。結果尚待取得，WebKit 成功不重跑，正式 preview.31 不重發。

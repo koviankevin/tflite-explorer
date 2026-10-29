@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "archiveSHA256": "efa2dddc8cff4cfa9425020738162616c8734742b510fa80d8b3f2720521e277",
+  "members": [
+    {
+      "name": "original.zip",
+      "bytes": 231271,
+      "sha256": "1d643ba3970c25c7a9a86ca40800018a1040d0b704ab94319aa081e122f98910"
+    },
+    {
+      "name": "run.json",
+      "bytes": 14434,
+      "sha256": "ffc3ed43f68108f89aec880cf2bb1497f957f3078b556837b525bc595745bcef"
+    },
+    {
+      "name": "jobs.json",
+      "bytes": 3970,
+      "sha256": "e09071db1a418c6fa4186fd242f02731ae490fa61707bed3023addacc3b592a1"
+    },
+    {
+      "name": "listing.json",
+      "bytes": 948,
+      "sha256": "dfc6e30ce3dd380ef52d0f392f0eee13e41b0d4f5a2295dbb727bcab82479960"
+    },
+    {
+      "name": "review.json",
+      "bytes": 177311,
+      "sha256": "36805283187343555b812bb4a2e22bfcf603cfc8f23ace0ea6f4a86f408ca964"
+    },
+    {
+      "name": "attribution.json",
+      "bytes": 13231,
+      "sha256": "15c51bc99460f21b21bd3f4cef57230159f6066526151a6c870a6bc3577a19bf"
+    },
+    {
+      "name": "network-source-reference.json",
+      "bytes": 270,
+      "sha256": "b6d39e0e5a062c660ae26cfa59da496bd5caef84b528febc1d7a97e935f74fcb"
+    },
+    {
+      "name": "auditors/review-profile.mjs",
+      "bytes": 8142,
+      "sha256": "3ef7424e51d850a01bbdcca3e963c56bb34746d097ea68b1ee4539c8883516e6"
+    },
+    {
+      "name": "unit-network.log",
+      "bytes": 3829,
+      "sha256": "b11a71fb6ccef5ac78eeb2522af6c93a4ba7ca6d6705f328dab91989f1a7f55b"
+    }
+  ],
+  "source": {
+    "commit": "b80eacfd06d1469437f287ca93494052054da8c6",
+    "tree": "72ee06f57a80682042ab50e0e42ae1f9444e0129",
+    "committedAt": "2026-10-30T00:42:51+08:00",
+    "dirty": false
+  },
+  "run": 40914299113,
+  "authentication": "passed",
+  "acceptance": "diagnostic-only-root-cause-unverified",
+  "reader": {
+    "actualExit": 0,
+    "chunk": "ada167"
+  },
+  "producerStatus": "failed",
+  "rss": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-slope"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 28364800,
+      "closedRssSlopeBytesPerCycle": 21842446.62857143,
+      "sampledPeakRssBytes": 1177907200,
+      "maxSampleGapMs": 540,
+      "sampledPeakGrowthBytes": 397369344
+    }
+  },
+  "profile": {
+    "observations": 416,
+    "completeObservations": 416,
+    "exitedObservations": 0,
+    "reusedPidObservations": 0
+  },
+  "scope": "OriginalRSS unchanged and classification read-time differences retained. ParentAnon variation narrows hypotheses, not proof of app or tool cause. No model/BIN uploaded; no latergreen-as-fix claim."
+}
