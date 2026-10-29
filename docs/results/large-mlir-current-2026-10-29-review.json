@@ -1,0 +1,66 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "304348fd7965bccb2fb455d2daff44995a5477d5",
+    "tree": "d84e9b86c55cfd04a072064bdfb12b09077915ec",
+    "committedAt": "2026-10-29T07:54:02+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40791134897,
+  "attempt": 1,
+  "jobId": 123176356147,
+  "artifactId": 12861198360,
+  "digest": "sha256:2b6e5ff92730431cae73ea5c6165e2abaee66d9e7d89a62f7461e1c8490730cf",
+  "members": [
+    {
+      "name": "acceptance-report.json",
+      "bytes": 5035,
+      "sha256": "7438b0974a47af0a6f0e61ceb409ddc8e827c09bef87317aa294d7f12a273611"
+    },
+    {
+      "name": "fixture.json",
+      "bytes": 449,
+      "sha256": "ab660a4100ff5c401957de8b0beef9f09174b5f8af6ca8dedbe8d44daff2d33e"
+    },
+    {
+      "name": "node-report.json",
+      "bytes": 799,
+      "sha256": "2bb07ef9627aaf596e62ce83314faf0a39e626bdf52a061934cc1032a6f5341c"
+    },
+    {
+      "name": "plan.json",
+      "bytes": 615,
+      "sha256": "37a0313313059d431bc8d07b8a0316ed81e1922afad622510664e37e6bfda0ac"
+    },
+    {
+      "name": "events.jsonl",
+      "bytes": 2336,
+      "sha256": "01f5b332d163298601cd498862778d7b87253fe50414ac9600c6dc2e4ed10eee"
+    },
+    {
+      "name": "branch-loop-pattern.json",
+      "bytes": 4763,
+      "sha256": "96092e050b7a3faaca6210fb816839db7e52cdf466733db36b64a8b502c46b59"
+    }
+  ],
+  "node": "v24.22.1",
+  "sourceBytes": 2684355495,
+  "sourceSHA256": "91f73e977e3d7787657a11cfa9b8369da58249faed0b63ebbd5187105402d3b4",
+  "outputBytes": 2684362324,
+  "outputSHA256": "e636ec892616af6ca17ea06a6a6306ac4ad2e957a2616e0f5eec2d33787bffe2",
+  "payloadSHA256": "bee4d7dfdad770188e021938c81fd7d8e41e4e899f2a0fca4da0250822f0f560",
+  "patternMatches": 1,
+  "reopenedPatternMatches": 1,
+  "ssaDominance": true,
+  "structureBytes": 983,
+  "openMs": 8954.043274,
+  "totalMs": 27529.761469,
+  "maxRSS": 300179456,
+  "limitations": [
+    "Node physical synthetic file only; no browser/process/Worker memory measurement",
+    "Project syntax/SSA/dominance checks, no full LLVM/dialect/native compiler verification",
+    "No private company models or runtime acceptance"
+  ]
+}

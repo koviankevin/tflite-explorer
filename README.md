@@ -2,7 +2,7 @@
 
 **Model Lens** — 看清結構，找到連接。
 
-公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。商品等級的完整驗收及尚未完成項目另列於 [工作清單](docs/product-readiness.md)。
+公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。第一次使用、公開版驗收與限制見 [公開版指引](docs/public-acceptance.md)；本輪只驗收外網，內網修改由使用者自行處理。後續品質工作另列於 [工作清單](docs/product-readiness.md)。
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 

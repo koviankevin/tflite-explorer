@@ -1,0 +1,87 @@
+{
+  "authentication": "passed",
+  "acceptance": "passed",
+  "source": {
+    "commit": "304348fd7965bccb2fb455d2daff44995a5477d5",
+    "tree": "d84e9b86c55cfd04a072064bdfb12b09077915ec",
+    "committedAt": "2026-10-29T07:54:02+08:00",
+    "dirty": false
+  },
+  "sourceUnchanged": true,
+  "runId": 40790518295,
+  "attempt": 1,
+  "jobId": 123174311222,
+  "artifactId": 12862131873,
+  "digest": "sha256:12503c4133b78e9f0508d40b5d9d0fd0981714db375d47222a8e4b029555f37b",
+  "rawSHA256": "8c611792174ab9ed7587fadd45183a766d7ae4ba0c668e8da96889464498f2d9",
+  "rawBytes": 264652,
+  "build": {
+    "schemaVersion": 1,
+    "version": "0.2.0-preview.22",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "304348fd7965bccb2fb455d2daff44995a5477d5",
+      "tree": "d84e9b86c55cfd04a072064bdfb12b09077915ec",
+      "committedAt": "2026-10-29T07:54:02+08:00",
+      "dirty": false
+    },
+    "buildId": "73f24f9ba7ff17fd"
+  },
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 1275728.4571428571,
+      "rssDriftBytes": 6004736,
+      "mainHeapDriftBytes": 157220,
+      "sampledPeakRssBytes": 1004761088,
+      "sampledPeakGrowthBytes": 490409984
+    }
+  },
+  "errors": [],
+  "cycles": 8,
+  "ownership": {
+    "observedOwnedIdentities": 6,
+    "allObservedOwnedReaped": true,
+    "forcedCleanup": false,
+    "root": {
+      "pid": 3566,
+      "startTicks": "24647"
+    },
+    "cleanupObservations": 1,
+    "measurement": "observed PID/start-tick identities including reparented descendants; shared pages may be double-counted and unobserved short-lived processes are not claimed"
+  },
+  "cleanup": {
+    "identities": [
+      {
+        "pid": 3566,
+        "startTicks": "24647"
+      },
+      {
+        "pid": 3568,
+        "startTicks": "24649"
+      },
+      {
+        "pid": 3569,
+        "startTicks": "24649"
+      },
+      {
+        "pid": 3585,
+        "startTicks": "24650"
+      },
+      {
+        "pid": 3598,
+        "startTicks": "24662"
+      },
+      {
+        "pid": 3610,
+        "startTicks": "24672"
+      }
+    ],
+    "remaining": [],
+    "allReaped": true,
+    "observations": 1
+  }
+}
