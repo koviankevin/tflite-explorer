@@ -28,16 +28,21 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     const message=text=>{$('edit-message').textContent=text;};
     const live=ticket=>ticket===generation&&owner===getSource();
     const changes=()=>draft?editChanges(snapshot,draft.state):[];
+    const modeButtons=()=>{
+        $('explore-mode').setAttribute('aria-pressed',String(!active));
+        $('edit-mode').setAttribute('aria-pressed',String(active&&!snapshot?.composition));
+        $('compose-mode').setAttribute('aria-pressed',String(active&&!!snapshot?.composition));
+    };
     const mode=value=>{
-        if(value===active)return;
+        if(value===active){modeButtons();return;}
         if(value){const t=$('target'),p=document.scrollingElement;exploreScroll={left:t.scrollLeft,top:t.scrollTop,x:p.scrollLeft,y:p.scrollTop};}
         active=value;root.hidden=!value;document.body.classList.toggle('editing-model',value);
-        $('explore-mode').setAttribute('aria-pressed',String(!value));$('edit-mode').setAttribute('aria-pressed',String(value));
+        modeButtons();
         if(!value&&exploreScroll)requestAnimationFrame(()=>{$('target').scrollTo({left:exploreScroll.left,top:exploreScroll.top,behavior:'instant'});document.scrollingElement.scrollTo({left:exploreScroll.x,top:exploreScroll.y,behavior:'instant'});});
         if(value){availability();schedule();}
     };
     function availability(){
-        const composing=!!snapshot?.composition;$('edit-mode').disabled=busy||getFormat()!=='tflite';$('compose-mode').disabled=busy||getFormat()!=='tflite';$('compose-mode').setAttribute('aria-pressed',String(active&&composing));$('edit-mode').setAttribute('aria-pressed',String(active&&!composing));
+        const composing=!!snapshot?.composition;$('edit-mode').disabled=busy||getFormat()!=='tflite';$('compose-mode').disabled=busy||getFormat()!=='tflite';modeButtons();
         $('edit-workspace-title').textContent=composing?'組合模型草稿':'編輯實際模型';$('edit-export-description').textContent=composing?'本機處理 · 匯出所選片段組成的獨立模型':'模型全程在本機處理 · 先驗證，再匯出整份模型';$('edit-export').textContent=composing?'驗證並匯出組合模型':'驗證並匯出模型';$('edit-add-selection').textContent=composing?'加入圖上選取':'同步圖上選取';
         const valid=!!draft,dirty=changes().length>0;
         for(const id of ['edit-add-before','edit-add-after','edit-delete','edit-restore','edit-clear','edit-add-selection','edit-undo','edit-redo','edit-export'])$(id).disabled=busy||!valid;
