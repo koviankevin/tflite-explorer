@@ -1,0 +1,62 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-29T17:25:58.073356+00:00",
+  "purpose": "Preserve exact failed Firefox run and both successful diagnostic protocols without changing original RSS verdict.",
+  "source": {
+    "commit": "88e3ad10f67dce4752db896914a8ed61dab04b13",
+    "tree": "d02b2c853547bbc313c8c2fdf72d2576d49d5074",
+    "committedAt": "2026-10-30T01:13:31+08:00",
+    "dirty": false
+  },
+  "run": 40919347381,
+  "runURL": "https://github.com/koviankevin/tflite-explorer/actions/runs/40919347381",
+  "authentication": "passed",
+  "acceptance": "original-application-failed-closed-rss-slope; controls-diagnostic-only",
+  "readerActualExit": 0,
+  "readerExitChunk": "8d55fb",
+  "archive": {
+    "path": "firefox-runtime31-network.zip",
+    "bytes": 272532,
+    "sha256": "28cff5cbf89a3992d8fee84913c5744886225d8a233fcb81b4ccaf356eef6d1f"
+  },
+  "files": [
+    {
+      "path": "provider-original.zip",
+      "bytes": 258568,
+      "sha256": "84eb6d3206a06c9f9899e2335b124a0c9adbb0e6717a4a63c14d251b4d9002d6"
+    },
+    {
+      "path": "run.json",
+      "bytes": 14421,
+      "sha256": "daae9d708507993f3da6822758f3fdcf231596bdf6ef3ea5dd7d891f214b8517"
+    },
+    {
+      "path": "jobs.json",
+      "bytes": 3970,
+      "sha256": "37af2c24a77f2f820f0be8e75e8640076648f23fd97e631aa297f6d48ee35c1d"
+    },
+    {
+      "path": "listing.json",
+      "bytes": 948,
+      "sha256": "1dbdba18d8200dc496c32c04253c6eff44f21ad78cb29e6ea8ebe3f24e1de651"
+    },
+    {
+      "path": "independent-review.json",
+      "bytes": 222127,
+      "sha256": "8cf000ee8d120dc914cdb17e9b9dfe1aa1de031eeee69e63e76cdf6cd9218158"
+    },
+    {
+      "path": "comparison.json",
+      "bytes": 206095,
+      "sha256": "b2a75cb486d7dff59d812b265568136f6c2cb41ae4362a7171fbf1b377084f2f"
+    },
+    {
+      "path": "independent-reader.mjs",
+      "bytes": 13166,
+      "sha256": "af0663215a83c9709ae038c57f50cad3f56f056c99abbb20d70c215595764b0e"
+    }
+  ],
+  "privacy": "Public synthetic fixtures only; no model/BIN payload, user attachment, auth headers or credentials. Provider PNG inspected: public empty welcome screen, 1280x640/32px.",
+  "boundary": "No model/runtime/IO in controls. Parent anonymous values are not JavaScript heap. Per-response full length observed; asset digest from independently verified static source, not a claimed per-response digest."
+}
