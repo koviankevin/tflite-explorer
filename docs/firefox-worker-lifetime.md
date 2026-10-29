@@ -15,3 +15,9 @@ preview.31 來源 `3f26db6283ea13edc943ca93fa2947c9e8719dc0` 的四個 main 關�
 這是診斷：包裝與觀察可能擾動排程。所有原有功能、model／runtime close 與已知 layout 界線維持；新資料用於判斷下一步，尚不是 Firefox 資源驗收通過的聲明。五項相關 Node 檢查已驗證原生參數／回傳、觀察 listener 解除、payload 排除、唯讀 native probe 與不偽造 closed 狀態。應用 src／vendor／建置／workflow 未修改；四個發布關卡是否可沿用仍按真正 dependency fingerprint 核對，contract 因涵蓋測試源碼須重新取得 main 證據。
 
 [原始 provider ZIP 與獨立收據](results/firefox-worker31-original.zip)及[來源／SHA／讀取器狀態清單](results/firefox-worker31-original.json)保留，原 Firefox strict reader 失敗與後續 authentication-only 稽核分開記錄。
+
+## 啟動取消的最小對照
+
+來源 `7e094d26ebbe627f61e70840ba9bdb26bff0ee94` 的 [Firefox 診斷 40893435879](https://github.com/koviankevin/tflite-explorer/actions/runs/40893435879) 已終止。獨立讀取器實際 exit 0，核對原始 provider ZIP digest／CRC、來源、304 檔 manifest、十四組輸入清理與真正 CPU 取消／逾時；資源驗收仍為 **unverified**。27 個建構均有原生 terminate 回傳，但 15 個 identity close 未觀察；對照建立時間，這 15 個皆在 0～1ms 內終止且沒有回覆。四次常數探測皆逾時，不能由此推論 context 已關閉或仍活著。監聽加入後缺少事件由一個增加為十五個，須考慮觀察對時序的影響。[原始資料封存](results/firefox-worker31-diagnostic.zip)及[雜湊與明確界線](results/firefox-worker31-diagnostic.json)保留。
+
+下一個測試只在 Hosted Firefox 的獨立空白 context，以固定按鈕建立無資料的 classic／module Blob Worker，各比較八次立即 terminate 與收到原生 ready 訊息後 terminate。新 context 沒有 identity constructor wrapper；沿用原生 Worker，不用 app API、模型資料、forced GC 或新例外。分別保存建構、ready、terminate、實際 close、頁面關閉前後和最多四次有上限的常數探測。未知 close 保持未知；所有 URL 在 terminate 後撤銷。七項本機 Node 檢查通過，只驗證合成文件腳本及既有觀察工具，未在本機啟動瀏覽器。這個對照的執行結果尚待取得。
