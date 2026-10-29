@@ -1,0 +1,17 @@
+{
+  "source": "37963102ddd4ff52daee77791dd3fb87c8fc2b7f",
+  "reference": "68bea6eb200ed48262d6d6ca150743438b24fe33",
+  "producers": [
+    {
+      "file": "build/qa/options29-physical-oracle.mjs",
+      "bytes": 10049,
+      "sha256": "457238524aa47fb714dca60aa8acc04f6c6b35d616a7354694bdf3e787aeb6be"
+    },
+    {
+      "file": "build/qa/options29-oracle-resume.mjs",
+      "bytes": 10263,
+      "sha256": "1024ef42ddbcfa53a21b9683d573a7ce3d7e360dcf48a86394702feb33f774a1"
+    }
+  ],
+  "scope": "Historical producer text retained for audit; original invocation stopped on source-lineage mismatch, continuation passed. Copy scripts into their original build/qa paths in the exact source checkout to resolve imports; not a fresh-run one-command recipe. Synthetic TFLite payload files excluded."
+}

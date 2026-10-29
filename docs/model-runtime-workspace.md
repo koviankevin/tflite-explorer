@@ -23,3 +23,16 @@
 有效 ADD 子模型曾在正確計算 `[4,6]` 的同時，因原本不存在的 `custom_options` 被重新寫成長度 0 的向量而收到 LiteRT `Found builtin operator ADD with custom options` 診斷。[修正前 regression](results/runtime29-builtin-options-red.json)與[單一變因隔離](results/runtime29-builtin-options-isolation.json)保留；修正只省略已知 builtin OP 的空 custom options，不過濾 runtime 訊息，也不移除實際 custom bytes 或 external options。
 
 [1.25 GiB／21,005 OP 獨立序列化比對](results/runtime29-physical-writer-oracle.json)在 clean `3796310` 執行，四項舊 SHA 均以凍結 writer 重現，修改後與僅將 builtin 空 options 正規化的獨立輸出一致；來源 payload ranges、權重及 custom options 保留。完整編輯與組合 SHA 不變，兩個子模型 SHA 因修正向量欄位而更新。最初將子模型切自原檔而非完整編輯結果的 lineage 不符仍記錄為失敗；修正測試來源後的 continuation 實際 exit 0，沒有改低門檻或改寫舊證據。這是有限合成 bytes 證據，並非公司 kernel 或所有模型相容性保證。
+
+
+## main 與 Hosted 驗收
+
+來源 `e9689bc0cd2f2c46525ef47db0db5baca02594e7`／tree `d8676d76bcd91600e2557e2d2a02e2cd260b05be` 與 PR #117 最終受測 tree 相同，build `f114327186463f60`。main [站台關卡 40847098088](https://github.com/koviankevin/tflite-explorer/actions/runs/40847098088) 與 [原生 ZIP](results/runtime29-main-native-2026-10-29.zip)、[版本切換 ZIP](results/runtime29-main-versioning-2026-10-29.zip)、[獨立核對](results/runtime29-main-native-review-2026-10-29.json)保留；[精確斷言](results/runtime29-main-assertions-2026-10-29.json)驗 30 項原生操作、19 種執行情境、68 個模型及 14 個 runtime Workers 全部關閉。原模型、編輯與組合結果、實際切圖都走開啟後才執行的流程，IO 以真實匯出 SHA 核對；匯出報告保持未執行。
+
+四種亂數共用預設、實際 const／input bytes 與 CPU outputs、v3 草稿匯入／Redo／32px 視角／再次匯出相同 bytes 均通過。Node CI 40846038129 曾因新控制項缺少測試 DOM 工廠及舊預設期望而失敗，保留 [CI 原始輸出](results/runtime29-node-ci-red-2026-10-29.log)與[本機 red](results/runtime29-inspector-unit-red-2026-10-29.log)；修正後 48 項相關 Node 與最終 PR [Node／建置 40846766245](https://github.com/koviankevin/tflite-explorer/actions/runs/40846766245)成功，未將原失敗改寫為通過。
+
+![main 32px 分支編輯與獨立執行入口](results/runtime29-main-editor-2026-10-29.png)
+
+[1.25 GiB／21,005 OP 八輪 40847076914](https://github.com/koviankevin/tflite-explorer/actions/runs/40847076914)的 [原始 ZIP](results/runtime29-main-physical-2026-10-29.zip)及[獨立核對](results/runtime29-main-physical-review-2026-10-29.json)通過原有門檻：兩輪暖機後 RSS 漂移 9,973,760 bytes，斜率約 770,282 bytes／輪，main heap 漂移 234,964 bytes，取樣峰值 1,004,158,976 bytes；40 個模型／16 個指紋 Workers 關閉，6 個觀察到的 PID／start-ticks 身分正常退出，無強制清理。權重、opaque custom options、固定 SHA、pattern 正負例及匯出重開保持正確。有限八輪不代表所有模型或長期記憶體狀況均已驗證；本次未跑兩小時或手機。
+
+[四關卡獨立收據](results/runtime29-main-gates-review-2026-10-29.json)驗 provider digest／CRC、run／來源、原始數值與依賴 scope；本次 main core 40847067607、browser 40847076914、contract 40847087035、site 40847098088 均成功。全部嚴格讀取器實際 exit 0 後才寫入此批證據；正式準備、發布與固定下載驗證尚待完成。歷史 writer [產製程式](results/runtime29-writer-oracle-producer-2026-10-29.mjs.txt)、[continuation](results/runtime29-writer-oracle-resume-2026-10-29.mjs.txt)、[計畫](results/runtime29-writer-oracle-plan-2026-10-29.json)、[append-only 事件](results/runtime29-writer-oracle-events-2026-10-29.jsonl)與[來源說明](results/runtime29-writer-producer-provenance-2026-10-29.json)保留，未將超過 1 GiB 模型加入 repository。
