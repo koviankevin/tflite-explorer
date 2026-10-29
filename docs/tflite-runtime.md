@@ -1,6 +1,6 @@
 # TFLite 手動執行檢查
 
-目前固定公開版為 [preview.24](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.24)／build `d0676e3b7609c608`。正式站 30 項操作與九種相關情境核對 raw .bin、型別亂數、實際 input／output ZIP、錯誤／取消與不支援情況；新增 optional-only custom OP 的空參考表單防護也通過，沒有額外啟動 interpreter。見 [最新正式交付](random-reference-guard.md#preview24-正式交付)。下方保留各版歷史紀錄。
+目前固定公開版為 [preview.25](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.25)／build `95784ae94cb97575`。正式站 30 項操作與十種參數／runtime 情境核對 raw .bin、型別亂數、實際 input／output ZIP、錯誤／取消與不支援情況；64-bit 表單拒絕已捨入數字且不額外啟動 interpreter。見 [最新正式交付](op-integer-precision.md#preview25-正式交付)。下方保留各版歷史紀錄。
 
 開檔、編輯、一般匯出不會載入 interpreter，也不會自動跑推論。編輯工作區另提供「檢查能否執行（選用）」：沒有變更時檢查目前原模型，有變更時先建立並重新解析候選模型。按鈕準備完成後才列出 model inputs，再按「以這組輸入執行一次」啟動本機 LiteRT.js 2.6.0 CPU WASM。
 

@@ -19,3 +19,13 @@ Preview.24 的新增 OP 表單會以 JSON 解析陣列；例如 `[90071992547409
 [四關卡](results/int64-main-gates-review-2026-10-29.json)核對來源／scope fingerprint／原始報告：core 沿用未改的 main 40700051621，browser 40805999342、contract 40806002140、site 40806005437 為新的成功 main run。
 
 [實體八輪](results/int64-main-owned-review-2026-10-29.json)核對原固定完整／局部 bytes、權重、custom options、pattern 正負例、24 個模型與八個指紋 Workers；RSS 漂移 14307328 bytes、斜率 2705583.543 bytes／輪。觀察到的 6 個 PID／start-ticks 全部正常退出，沒有強制清理。這是有限八輪證據，沒有宣稱新兩小時或其他引擎長測。
+
+## preview.25 正式交付
+
+固定 [Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.25)／[正式站](https://koviankevin.github.io/tflite-explorer/)為 build `95784ae94cb97575`，來源 `3427c4a02911edac35fe48ebf3d94fd628223e9d`／tree `e06724bfc84029214b0eebfad8773a6193b9a155`。準備 [40807567057](https://github.com/koviankevin/tflite-explorer/actions/runs/40807567057) 的[完整產物審閱](results/preview25-prepared-2026-10-29.json)與[獨立乾淨重建](results/preview25-rebuild-2026-10-29.json)通過，再以精確 build／site ID 執行 [40807845606](https://github.com/koviankevin/tflite-explorer/actions/runs/40807845606)，四個工作在 attempt 1 成功。
+
+[最終核對](results/preview25-published-2026-10-29.json)驗 provider digest／ZIP CRC、job 來源與時段、正式站 1,376 檔 SHA／MIME／root／權威 deployment、四份固定 Release 實際下載與準備包一致。30 項原生操作、十種參數／runtime 情境與 38 個模型／四個 runtime Workers 關閉通過。1280×640／32px 表單拒絕不安全 Number 且保留草稿，字串 scalar／vector 保留 `9007199254740993`；沒有額外推論或下載。其餘 raw BIN／CPU／IO ZIP、取消焦點、optional-only custom 表單與搜尋／pattern／匯出重開保持通過。
+
+原始 ZIP：[正式站](results/preview25-live-release-verification-2026-10-29.zip)、[Release](results/preview25-published-release-verification-2026-10-29.zip)；完整 [site manifest](results/preview25-site-manifest-2026-10-29.json) SHA `31f4c3ebd5c65c23132a109da972016813659192bbc766e76226069c6e62effc`，site ID `0aa40bcb518931e0b8233196fef7aab148da5b3a2d6624a719b550d0487cd0a2`，固定部署 ZIP SHA `35ff8d19ccd5aace1801a1899daa8f0c3bd33f9a4d78d8bbee4e0c88e52d0862`。歷史固定 tag 不覆寫。
+
+這次沒有測手機、內網或新的兩小時／其他引擎長測；任意 OP kernel 語意、啟動逾時根因與其他公開驗收限制仍見 [已知問題](known-issues.md)。
