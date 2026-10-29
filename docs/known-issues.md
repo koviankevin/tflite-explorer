@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 preview.27／build `7d7884ad7a1d1ce2`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
+目前固定版本為 preview.28／build `b1a823b72e94f81b`。本頁列出公開版仍待處理的現象、功能界線與驗收缺口；內網與私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -32,3 +32,5 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 合法多輸入 CONCATENATION 的固定 port 誤判、SQUEEZE 非單位 axes 仍可匯出，已在 preview.26 修正並完成正式站／CPU 正負例驗收，見 [正式交付](model-composition.md#preview26-正式交付)。
 
 返回探索、模型分頁及草稿還原後工作區按鈕選取殘留，已在 preview.27 修正並完成正式站十二次互斥導覽驗收；原 red、修正版與正式證據分開保留，見 [正式交付](workspace-mode-state.md#preview27-正式交付)。
+
+舊示範檔缺少 RESHAPE shape 與 TRANSPOSE permutation，造成原模型及編輯後均在配置 tensors 失敗，已於 preview.28 的新版示範檔補齊；舊下載檔不會自動修改。四種實際 CPU 與正式站驗收通過，見 [根因](demo-runtime.md)及[正式交付](contextual-model-editing.md#preview28-正式交付)。同版也完成片段操作、框選切換、重置確認及分支排版，沒有擴大任意 OP／custom kernel 的語意保證。

@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 [preview.27](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.27)，保留 [獨立片段組合工作區](model-composition.md)，並修正切換後導覽選取殘留；[正式交付](workspace-mode-state.md#preview27-正式交付)已核對 32px、草稿、12 次互斥工作區狀態與匯出重開。下方保留各版歷史範圍與證據。
+目前正式交付為 [preview.28](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.28)，新增情境式片段加入、重複框選取消、重置確認及分層分支排版，保留普通／組合草稿、接線與匯出重開；見 [正式交付](contextual-model-editing.md#preview28-正式交付)。新版示範也已通過原模型／編輯後的全 0／亂數 CPU 檢查，舊下載檔需重新開啟新版。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 

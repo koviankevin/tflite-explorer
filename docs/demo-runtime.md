@@ -9,3 +9,6 @@
 執行前的輕量檢查也會對缺少 shape 的 `RESHAPE`、缺少 permutation 的 `TRANSPOSE` 顯示 subgraph／OP 編號與原因，避免只出現泛用 C++ 配置錯誤。這不是所有算子的語意 verifier；公開 runtime／custom kernels／大型模型的限制維持 [既有範圍](tflite-runtime.md)。一般讀取、編輯、匯出不會自動跑 interpreter。
 
 舊下載檔與既有編輯草稿不會偷偷修改。部署後需重新開啟網站新版示範模型，再重做或移植編輯；舊示範檔仍可能因缺參數不能執行。連接模式示範 `lora-demo.tflite` 仍是結構展示，不列為可執行模型。
+
+
+preview.28 已完成 [正式交付](contextual-model-editing.md#preview28-正式交付)：四種 CPU 情境在候選、main 與正式站均通過，先前整體 red 與原始失敗證據保留。
