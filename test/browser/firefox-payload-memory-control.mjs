@@ -2,6 +2,7 @@
 // New component observations cover settled windows, not continuous isolate heap.
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
+import {isAbsolute as pathIsAbsolute} from 'node:path';
 import {gitSource,sha256} from '../../scripts/lib/release-artifact.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
 import {createProcessMemoryProbe} from './process-memory-profile.mjs';
@@ -31,7 +32,7 @@ $('download').onclick=()=>{if(active||!archive||urls.length>=8)throw Error('No c
 </script>`;
 }
 
-export async function firefoxPayloadMemoryControl({browserType,base,asset,mode,documentBuilder=null,afterFinal=null}){
+export async function firefoxPayloadMemoryControl({browserType,base,asset,mode,documentBuilder=null,afterFinal=null,diagnosticTemp=null}){
     assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_ACTIONS,'true');assert.ok(asset.url.startsWith(base));assert.ok(documentBuilder===null||typeof documentBuilder==='function');assert.ok(afterFinal===null||typeof afterFinal==='function');const html=documentBuilder?documentBuilder({mode,asset}):payloadControlDocument(mode,asset),source=gitSource();assert.equal(source.dirty,false);
     const report={format:'model-lens-firefox-payload-control',version:1,status:'failed',source,mode,asset,startedAt:new Date().toISOString(),modelsLoaded:0,runtimeInvocations:0,wasmInstances:0,forcedGC:false,fakeTimers:false,shortenedURLTimer:false,samples:[],settledProfiles:[],cycles:[],nativeWorkers:[],requests:[],errors:[],fixtures:[],downloads:[],browserClosed:false};
     const wait=ms=>new Promise(r=>setTimeout(r,ms));let browser,context,page,tree,timer,clock,pending=Promise.resolve(),sampling=false,phase='setup',model,input;const profile=createProcessMemoryProbe({now:()=>Date.now()-clock});
@@ -46,7 +47,8 @@ export async function firefoxPayloadMemoryControl({browserType,base,asset,mode,d
         if(mode!=='module-clone'){
             const a=new Uint8Array(PAYLOAD_BYTES).fill(25),b=new Uint8Array(PAYLOAD_BYTES).fill(7);model=await publicControlFile(a,{expectedBytes:PAYLOAD_BYTES,expectedSHA256:sha256(a),name:'public-payload-model.bin'});report.fixtures.push(model.record);input=await publicControlFile(b,{expectedBytes:PAYLOAD_BYTES,expectedSHA256:sha256(b),name:'public-payload-input.bin'});report.fixtures.push(input.record);
         }
-        const marker=randomBytes(16).toString('hex');browser=await browserType.launch({headless:true,env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:marker}});report.browserVersion=browser.version();const root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker);tree=new OwnedProcessTree(root);report.ownership={root,parentPid:process.pid,method:'direct Node child plus exact per-launch random environment marker'};
+        if(diagnosticTemp){assert.equal(typeof afterFinal,'function');assert.ok(pathIsAbsolute(diagnosticTemp));}
+        const marker=randomBytes(16).toString('hex');browser=await browserType.launch({headless:true,env:{...process.env,...(diagnosticTemp?{TMPDIR:diagnosticTemp}:{}),MODEL_LENS_PHYSICAL_OWNER:marker}});report.browserVersion=browser.version();const root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker);tree=new OwnedProcessTree(root);report.ownership={root,parentPid:process.pid,method:'direct Node child plus exact per-launch random environment marker'};if(diagnosticTemp)report.nativeSignalTarget={root,parentPid:process.pid,marker,executable:browserType.executablePath()};
         context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});const documentURL=new URL(`__payload_control_${mode}__.html`,base).href;
         await context.route('**/*',async route=>{const request=route.request(),u=new URL(request.url());if(['blob:','data:'].includes(u.protocol)){await route.continue();return;}const allowed=request.method()==='GET'&&(request.url()===documentURL||mode==='module-clone'&&request.url()===asset.url);report.requests.push({url:request.url(),method:request.method(),allowed});assert.ok(report.requests.length<=3);if(!allowed){report.errors.push('Unexpected network request');await route.abort();}else if(request.url()===documentURL)await route.fulfill({status:200,contentType:'text/html',body:html});else await route.continue();});
         page=await context.newPage();page.on('filechooser',()=>{});page.on('pageerror',e=>report.errors.push(e.message));page.on('crash',()=>report.errors.push('Page crash'));page.on('worker',worker=>{const row={url:worker.url(),createdObservedAt:Date.now(),closed:false,closeObservedAt:null};report.nativeWorkers.push(row);worker.once('close',()=>{row.closed=true;row.closeObservedAt=Date.now();});});await page.goto(documentURL,{waitUntil:'domcontentloaded'});await page.bringToFront();assert.equal(await page.locator('html').evaluate(()=>document.visibilityState),'visible');
@@ -65,7 +67,7 @@ export async function firefoxPayloadMemoryControl({browserType,base,asset,mode,d
         if(afterFinal){deadline();report.nativeMemory=await afterFinal({context,page,report});deadline();}
     }catch(error){if(error.controlAsset)report.failedControlAsset=error.controlAsset;report.error=error.stack||String(error);throw Object.assign(error,{firefoxPayloadControl:report});}
     finally{
-        clearInterval(timer);await pending;if(afterFinal&&tree)try{tree.sample(await readProcessTable());report.postDiagnosticOwnership={scope:'Additional native-page descendant witness, outside RSS acceptance samples',identities:tree.identities};}catch(error){report.errors.push('Post-diagnostic ownership: '+error.message);}try{await context?.close();await browser?.close();report.browserClosed=Boolean(browser);if(tree){report.ownedProcesses=tree.identities;report.processCleanup=await waitOwnedProcessExit(tree);assert.equal(report.processCleanup.allReaped,true);}}catch(error){report.errors.push('Shutdown: '+error.message);}
+        clearInterval(timer);await pending;if(afterFinal&&tree)try{tree.sample(await readProcessTable());report.postDiagnosticOwnership={scope:'Additional native-report descendant witness, outside RSS acceptance samples',identities:tree.identities};}catch(error){report.errors.push('Post-diagnostic ownership: '+error.message);}try{await context?.close();await browser?.close();report.browserClosed=Boolean(browser);if(tree){report.ownedProcesses=tree.identities;report.processCleanup=await waitOwnedProcessExit(tree);assert.equal(report.processCleanup.allReaped,true);}}catch(error){report.errors.push('Shutdown: '+error.message);}
         for(const file of [input,model])if(file){if(report.browserClosed&&report.nativeWorkers.every(w=>w.closed))try{await file.cleanup();}catch(error){report.errors.push('Public File cleanup: '+error.message);}else file.record.retainedReason='Missing observed native consumer closure';}
         const end=gitSource();report.sourceUnchanged=end.commit===source.commit&&end.tree===source.tree&&!end.dirty;report.finishedAt=new Date().toISOString();
     }

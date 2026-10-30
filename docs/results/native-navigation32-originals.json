@@ -1,0 +1,97 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-30T00:15:35.148399+00:00",
+  "source": "dd3d12284988d033ad8117a3e124df1d876944d7",
+  "run": 40977788545,
+  "authentication": "passed",
+  "acceptance": "Native access failed with commit timeout and protocol URL about:blank; zero model/runtime/Measure, no functional or RSS run. Six observed probe processes reaped. No native heap collected.",
+  "archive": {
+    "path": "native-navigation32-originals.zip",
+    "bytes": 56055,
+    "sha256": "51293c3bac65e520ecd2e7ddf03da4df0f2ecb32151e47d30bf6aafc88eade69",
+    "members": 16
+  },
+  "files": [
+    {
+      "path": "build/qa/native-navigation32-firefox/authentication.json",
+      "bytes": 6005,
+      "sha256": "7daaaa131dc701188576f9a0f9ef05595a421b74bc1d528f42b3b13ea66ba105"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/desktop-firefox.json",
+      "bytes": 75663,
+      "sha256": "849ac7154fdfae58116ea22d85516bd0e5c071f152f1f4f2e0591b8d52a2709e"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "55796076cbd1b775b125caa14db0ac0c1407058a9156d19b1502783d39295b52"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/listing.json",
+      "bytes": 947,
+      "sha256": "b9aa0b5665b04caa29a64329e5f9b345ac4df328ccdf8ae466a42536a2321b4d"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/original.zip",
+      "bytes": 17883,
+      "sha256": "b462e9164ec983cecd39e08b8eb42f751eefda171d45a9fb88c0147f0a203f7e"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/preflight-review.json",
+      "bytes": 830,
+      "sha256": "3c7ab707d9580435601a9daf47f46a3cb2df73ab2ca22231cf00b338f4fdb73e"
+    },
+    {
+      "path": "build/qa/native-navigation32-firefox/run.json",
+      "bytes": 14434,
+      "sha256": "2be3a111ddca6536e04f4d523c796cdd672ea33e1ff20fafdb9821a0da78df58"
+    },
+    {
+      "path": "build/qa/auth-native-navigation32.mjs",
+      "bytes": 5774,
+      "sha256": "1cc10f049cdeb9949c41f67131214eb6a02c673888e6c9b8924b30bf72249eb8"
+    },
+    {
+      "path": "build/qa/review-native-navigation32.mjs",
+      "bytes": 3073,
+      "sha256": "dcabc07d98d274b51da1c4fe3e4b33f26ba6e7c764155ddf83272a5b207d816c"
+    },
+    {
+      "path": "build/qa/native-navigation32-build.log",
+      "bytes": 449,
+      "sha256": "ac1496c265b4ae97142e2c72a50e08b433ec652a9a09655c281a30ca29789b97"
+    },
+    {
+      "path": "build/qa/native-navigation32-watch.log",
+      "bytes": 4171,
+      "sha256": "6b3c72a2cce10b39c807e41ad423becf7876c74091845421105e50e387554726"
+    },
+    {
+      "path": "build/qa/native-navigation32-auth.log",
+      "bytes": 736,
+      "sha256": "c56d29520093e6258695bc94801c1fba190513571a35c97d04f0a2166c9493c9"
+    },
+    {
+      "path": "build/qa/native-navigation32-review.log",
+      "bytes": 718,
+      "sha256": "ea63eb0cd08214dc6190a08bbb7397c97755e9737a51e0bca81ddf516ae0fc12"
+    },
+    {
+      "path": "build/qa/firefox-native-navigation-red.log",
+      "bytes": 4567,
+      "sha256": "39ef736fe233881930f343f73fd7a7706765dee83122c2d9775215cca9a694a0"
+    },
+    {
+      "path": "build/qa/firefox-native-navigation-final.log",
+      "bytes": 3879,
+      "sha256": "42369d794f870728c3fa9119a69357c9faaa53f952b2906af3593753c68ea58c"
+    },
+    {
+      "path": "build/qa/native-navigation32-signal-research.json",
+      "bytes": 7213,
+      "sha256": "64c559d14cafb4b85cf020bacbf3df4bbbca0ffd2218d8f33ec213a553b4face"
+    }
+  ]
+}

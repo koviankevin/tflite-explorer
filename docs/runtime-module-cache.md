@@ -178,3 +178,12 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 實際安裝 bundle 的 ordinary Measure 來源與 wiring 核對成功，來源 83,368 bytes／SHA `9e0e1f941213265e86f257d802e34026e336816df6445d447406ebb156fbc480`；但 `about:memory` 等待 DOMContentLoaded 十秒逾時，**Measure 呼叫為零，沒有取得物件分類或 heap 資料**。[21 檔原始證據](results/firefox-native32-originals.zip)及[逐檔 SHA／讀取器紀錄](results/firefox-native32-originals.json)保留，包括首次 reader 錯把建置後帶 cache query 的 helper 與 source helper 相比而失敗的 log。改用固定乾淨 source 與 Linux LF 後，控制與原始失敗核對真正 exit 0；未修改 producer 原文。
 
 測試工具改以 commit 導頁，要求實際 page URL、DOM ownerDocument.URL 及可見 Measure 按鈕都符合原生頁面。只允許 TimeoutError 在這些條件下恢復；錯 URI、缺按鈕或其他協定錯誤仍失敗，保留導頁觀測及正常關頁。另在完整流程前，以獨立 marked browser 做一次原生入口探測，失敗即清楚停下；成功才執行原完整驗收及熱 IO 後的另一份快照。各瀏覽器只 Measure 一次，不強制 GC／CC／minimize、不改原 RSS 協定或門檻。診斷後另記錄新觀測的 descendant identities 再正常關閉，不把此 witness 加入 RSS samples。Node 邊界測試通過；實際原生入口修正仍待 Hosted，候選未發布。
+
+
+### commit 導頁仍無法讀取原生頁面
+
+[40977788545](https://github.com/koviankevin/tflite-explorer/actions/runs/40977788545)／來源 `dd3d12284988d033ad8117a3e124df1d876944d7`、build `d9192af10f1a2d68` 在獨立前置探測十秒逾時，協定 page URL 仍為 `about:blank`；尚未觀察 DOM URL，因此不能斷言實際原生畫面沒有開啟。零次 Measure、零模型／runtime，沒有進入原功能或 RSS 流程；探測頁正常關閉，六個觀察到的程序全部退出。provider／CRC／來源與 306 檔、獨立 preflight reader 均實際 exit 0。完整 [16 檔原始 archive](results/native-navigation32-originals.zip)／[逐檔 SHA](results/native-navigation32-originals.json)保留；ZIP SHA `51293c3bac65e520ecd2e7ddf03da4df0f2ecb32151e47d30bf6aafc88eade69`。這是診斷入口失敗，不是新的 RSS 或功能合格證據。
+
+下一個純測試改動使用 Linux 原生 ordinary SIGRTMIN 報告，僅對獨立空白／公開 raw IO 瀏覽器執行一次。依固定 [Playwright upstream config](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/UPSTREAM_CONFIG.sh) 的 Firefox revision `361373160356d92cb5cd4d67783a3806c776ee78`，[nsMemoryInfoDumper.cpp](https://github.com/mozilla-firefox/firefox/blob/361373160356d92cb5cd4d67783a3806c776ee78/xpcom/base/nsMemoryInfoDumper.cpp) 將普通訊號與 minimize／GC／CC 訊號分開。此為固定上游來源依據，不假稱已獨立重建安裝的 binary。每次另核對固定 Firefox 版本、pidfd、PID／start-ticks／parent、每次 launch marker、bundle executable 及實際 SigCgt handler bit；不支援即失敗，不向名稱搜尋到的程序送訊號，不送 SIGRTMIN+1／+2。
+
+Firefox 使用事前登記的獨占 TMPDIR。完整 gzip 最多 512 KiB，解壓最多 16 MiB，版本／schema／root PID 均檢查，原始 compressed／uncompressed SHA 與全部 gzip bytes 放入既有 4 MiB provider 容量；不截斷後聲稱完整。另整理各程序 explicit 類別，不將百分比／count 當 bytes、不以其扣除 RSS。原生訊號輸出沒有匿名化，因此只能用空白或公開控制資料，不能接使用者的模型或應用瀏覽器。正常關閉及所有觀察程序退出後，僅刪除完全相同的已知報告，再移除空目錄；變動／未知檔保留且顯示失敗。原 RSS flow／fixture／policy、自然 60 秒 URL、runtime 30 秒與 workflow YAML 不變。39 項 Node 選測涵蓋實際 Python guard、拒絕／gzip／暫存身分及舊失敗傳遞；真實原生訊號與候選完整驗收仍待 Hosted，沒有發布。
