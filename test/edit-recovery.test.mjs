@@ -6,6 +6,12 @@ import {parseEditSession,exportEditSession,EDIT_DRAFT_LIMIT} from '../src/model-
 const owner='a'.repeat(32),key='b'.repeat(32);
 const document=()=>({format:'model-lens-edit-draft',version:1,source:{name:'original.tflite',bytes:123456,format:'tflite',algorithm:'sha256-chunks-v1',fingerprint:'a'.repeat(64)},scope:{nodes:[{graph:0,node:0}],selected:['op:0:0'],signature:'b'.repeat(64)},history:{commands:[{kind:'clone',node:'op:0:0',side:'after'}],redo:[]},view:{selected:'new:1',zoom:.6,font:32,left:123,top:456},options:{updateSignatures:false}});
 function memoryStore(){const records=new Map();return {records,async save(args){const record=nextEditRecovery(records.get(args.key),args,records.size);records.set(args.key,record);return record;}};}
+test('an active database AbortError remains visibly unsaved and explicit retry commits the original draft',async()=>{
+    const store=memoryStore(),save=store.save;let fail=true,state;
+    store.save=async args=>{if(fail)throw new DOMException('','AbortError');return save(args);};
+    const session=editRecoverySession({store,owner,delay:60000,capture:document,changed:s=>state=s});
+    try{session.attach();session.change();await session.flush();assert.equal(state.failed,true);assert.equal(state.saved,false);assert.match(state.message,/尚未完成保存/);assert.equal(store.records.size,0);fail=false;await session.retry();assert.equal(state.failed,false);assert.equal(state.saved,true);assert.deepEqual(readEditRecovery([...store.records.values()][0]).document,document());}finally{session.setEnabled(false);await session.detach();}
+});
 test('recovery records preserve canonical history/view, a last-good backup and deletion CAS; unknown data stays untouched',()=>{
     const d=document(),first=nextEditRecovery(null,{key,owner,revision:0,document:d});assert.deepEqual(readEditRecovery(first).document,d);const changed=structuredClone(d);changed.history.redo=[changed.history.commands.pop()];const second=nextEditRecovery(first,{key,owner,revision:1,document:changed});assert.deepEqual(readEditRecovery(second).document.history,changed.history);assert.deepEqual(parseEditSession(second.previous),d);
     const corrupt={...second,text:'{torn'};assert.equal(readEditRecovery(corrupt).recoveredPrevious,true);assert.deepEqual(readEditRecovery(corrupt).document,d);

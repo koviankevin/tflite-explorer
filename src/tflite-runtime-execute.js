@@ -23,6 +23,6 @@ export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>(
         const values=await model.run(ins);outs=Array.isArray(values)?values:Object.values(values);invoked=true;
         if(!matches(outs.map(t=>({dtype:t.dtype,shape:t.shape})),plan.outputs))return capture('failed','執行後輸出 shape 或 dtype 與模型宣告不符。');
         stage='complete';return capture('passed','已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。');
-    }catch(error){const reason=String(error?.message||error).slice(0,1024),unsupported=/not supported|unsupported|缺少|尚不支援/i.test(reason);return capture(unsupported?'not-verified':'failed',`${stage==='invoke'?'指定輸入執行':stage==='inputs'?'測試輸入':'runtime 載入／配置'}失敗：${reason}。需依此 runtime／輸入的診斷確認原因。`);}
+    }catch(error){const reason=String(error?.message||error).slice(0,1024),unsupported=/not supported|unsupported|缺少|尚不支援/i.test(reason),allocation=stage==='compile'&&/allocate|allocation|prepare.*fail/i.test(reason);return capture(unsupported?'not-verified':'failed',`${stage==='invoke'?'指定輸入執行':stage==='inputs'?'測試輸入':'runtime 載入／配置'}失敗：${reason}。${allocation?'失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請檢查 OP 參數、tensor shape、量化與 runtime 支援，並查看原始診斷。':'需依此 runtime／輸入的診斷確認原因。'}`);}
     finally{for(const t of new Set([...outs,...ins]))try{t.delete();}catch{}try{model?.delete();}catch{}try{environment?.delete();}catch{}}
 }

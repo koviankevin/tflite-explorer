@@ -89,7 +89,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
                 const candidate=await openModelFile(candidateFile,{readAt:(offset,length)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(offset,offset+length))),readMetadata:async format=>{const r=await fetch(new URL(`../vendor/netron/${format}-metadata.json`,import.meta.url));if(!r.ok)throw Error('無法載入候選模型 metadata。');return r.text();},dialects:mlirDialects});
                 if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
-                else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const c of result.changes)validateTfliteModelGraph(candidate.raw,c.graph);}
+                else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js'),{validateTfliteConstants}=await import('./tflite-constant-checks.js');result.semanticValidation=[];for(const c of result.changes){validateTfliteModelGraph(candidate.raw,c.graph);result.semanticValidation.push(validateTfliteConstants(candidate.raw,c.graph,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(o,o+n)))));}}
                 if(index!==sourceIndex||file!==sourceFile||editWorkspace!==session){send(id,{cancelled:true});return;}
                 const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
                 const {replayEditDraft}=await import('./model-edit-draft.js'),state=replayEditDraft(session.snapshot,args.commands),targets=[...new Map(result.workspaceChanges.map(c=>{const n=state.nodes.find(n=>n.id===c.node);return [`${n.source.graph}:${n.source.node}`,n.source];})).values()];
@@ -111,7 +111,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const candidateFile=new File([result.blob],`edited.${result.format}`),reader=new FileReaderSync();
             const candidate=await openModelFile(candidateFile,{readAt:(offset,length)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(offset,offset+length))),readMetadata:async format=>{const response=await fetch(new URL(`../vendor/netron/${format}-metadata.json`,import.meta.url));if(!response.ok)throw Error('無法載入候選模型 metadata。');return response.text();},dialects:mlirDialects});
             if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
-            else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js');for(const change of result.changes)validateTfliteModelGraph(candidate.raw,change.graph);}
+            else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js'),{validateTfliteConstants}=await import('./tflite-constant-checks.js');result.semanticValidation=[];for(const change of result.changes){validateTfliteModelGraph(candidate.raw,change.graph);result.semanticValidation.push(validateTfliteConstants(candidate.raw,change.graph,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(o,o+n)))));}}
             if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
             const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
             try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,args,{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}
@@ -121,6 +121,8 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'workspaceIdentity') {
             const {workspaceIdentity}=await import('./workspace.js');
             identity ||= await workspaceIdentity(index,file);send(id,identity);
+        } else if(action==='previewTfliteExport'){
+            const {tfliteExportPreview}=await import('./tflite-export-preview.js');send(id,tfliteExportPreview(index,args.graph,args.nodes));
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');

@@ -65,7 +65,7 @@ export function patternStore({indexedDB=globalThis.indexedDB,legacyStorage=()=>g
             request.onupgradeneeded=()=>request.result.createObjectStore('patterns',{keyPath:'key'});
             request.onerror=()=>reject(request.error);
             request.onblocked=()=>{abandoned=true;reject(new Error('Pattern 資料庫被其他版本分頁阻擋，請先關閉舊分頁。'));};
-            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();if(connection===attempt)connection=null;};resolve(db);};
+            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}const invalidate=()=>{if(connection===attempt)connection=null;};db.onclose=invalidate;db.onversionchange=()=>{db.close();invalidate();};resolve(db);};
         });
         connection=attempt;
         // Match failure cleanup to this attempt, including synchronous throws.

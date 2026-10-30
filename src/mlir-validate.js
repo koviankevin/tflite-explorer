@@ -22,13 +22,14 @@ export function validateMLIR(index,{graphIndex}={}) {
     if (!data.validationCache) data.validationCache=new Map();
     const key=graphIndex===undefined ? 'all' : `context:${data.ir.byBlock.get(data.graphs[graphIndex]?.block)?.owner?.context || 0}`;
     if(!data.validationCache.has(key)) data.validationCache.set(key,inspect(data,graphIndex===undefined ? undefined : data.graphs[graphIndex]?.block));
-    return {scope:MLIR_VALIDATION_SCOPE+(data.payloads?.length?'；大型權重保留原文，未逐值驗證':''),diagnostics:data.validationCache.get(key)};
+    const dense=index.stats.denseValidation;
+    return {scope:MLIR_VALIDATION_SCOPE+(data.payloads?.length?`；大型權重保留原文，${dense?.checked||0} 段已核對元素數／hex bytes，${dense?.unchecked||0} 段編碼未檢查；不含逐值數值／dialect 語意驗證`:''),dense,diagnostics:data.validationCache.get(key)};
 }
 
 export function assertValidMLIR(index,options={},stage='來源模型') {
     const result=validateMLIR(index,options);
     if (result.diagnostics.length) throw new MLIRValidationError(result.diagnostics,stage);
-    return {scope:result.scope,passed:true,deferredPayloads:index.mlir.payloads?.length || 0};
+    return {scope:result.scope,passed:true,dense:result.dense,deferredPayloads:index.mlir.payloads?.length || 0};
 }
 
 export async function validateMLIRText(text,options={}) {

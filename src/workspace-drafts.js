@@ -20,7 +20,7 @@ export function draftStore({indexedDB=globalThis.indexedDB,notify=()=>{}}={}) {
             request.onupgradeneeded=()=>{const store=request.result.createObjectStore('drafts',{keyPath:'key'});store.createIndex('modelKey','modelKey');};
             request.onerror=()=>reject(request.error);
             request.onblocked=()=>{abandoned=true;reject(new Error('本機草稿資料庫被舊分頁阻擋，請關閉舊版分頁後再試。'));};
-            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();if(connection===attempt)connection=null;notify();};resolve(db);};
+            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}const invalidate=()=>{if(connection===attempt)connection=null;};db.onclose=invalidate;db.onversionchange=()=>{db.close();invalidate();try{notify();}catch{/* Advisory refresh only. */}};resolve(db);};
         });
         connection=attempt;
         // Synchronous open throws and request errors invalidate only their own
@@ -33,7 +33,8 @@ export function draftStore({indexedDB=globalThis.indexedDB,notify=()=>{}}={}) {
             const db=await database();return new Promise((resolve,reject)=>{
                 const tx=db.transaction('drafts','readonly'),store=tx.objectStore('drafts');
                 const request=identity?store.index('modelKey').getAll(draftModelKey(identity)):store.getAll();
-                request.onsuccess=()=>resolve(request.result.sort((a,b)=>b.updatedAt-a.updatedAt));request.onerror=()=>reject(request.error);
+                let result;request.onsuccess=()=>{result=request.result.sort((a,b)=>b.updatedAt-a.updatedAt);};request.onerror=()=>reject(request.error);
+                tx.oncomplete=()=>resolve(result);tx.onabort=()=>reject(tx.error||new Error('草稿讀取未完成；未套用資料，請重試。'));tx.onerror=()=>{};
             });
         },
         async save({key,revision,owner,workspace}) {
@@ -50,14 +51,14 @@ export function draftStore({indexedDB=globalThis.indexedDB,notify=()=>{}}={}) {
                     const write=()=>{result={schemaVersion:1,key,modelKey,revision:revision+1,owner,updatedAt:Date.now(),text,previous:backup};store.put(result);};
                     if(previous)write();else{const count=store.count();count.onsuccess=()=>{if(count.result>=20){failure=new Error('已達 20 份本機草稿上限；請先下載並移除不需要的草稿。');tx.abort();}else write();};}
                 };
-                tx.oncomplete=()=>{notify(result);resolve(result);};tx.onabort=()=>reject(failure || tx.error || new Error('自動儲存未完成。'));tx.onerror=()=>{};
+                tx.oncomplete=()=>{resolve(result);try{notify(result);}catch{/* The save is already committed. */}};tx.onabort=()=>reject(failure || tx.error || new Error('自動儲存未完成。'));tx.onerror=()=>{};
             });
         },
         async remove({key,revision,owner}) {
             const db=await database();return new Promise((resolve,reject)=>{
                 const tx=db.transaction('drafts','readwrite'),store=tx.objectStore('drafts'),request=store.get(key);let failure,notice;
                 request.onsuccess=()=>{const record=request.result;if(!record || record.revision!==revision){failure=new DraftConflict();tx.abort();return;}try{readDraft(record);}catch(error){failure=error;tx.abort();return;}store.delete(key);notice={key,revision:revision+1,owner,deleted:true};};
-                tx.oncomplete=()=>{notify(notice);resolve(notice);};tx.onabort=()=>reject(failure || tx.error);tx.onerror=()=>{};
+                tx.oncomplete=()=>{resolve(notice);try{notify(notice);}catch{/* The removal is already committed. */}};tx.onabort=()=>reject(failure || tx.error);tx.onerror=()=>{};
             });
         },
         async close(){if(connection){const db=await connection;db.close();connection=null;}}

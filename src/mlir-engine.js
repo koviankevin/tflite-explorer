@@ -4,6 +4,7 @@ import { indexModel } from './model-engine.js';
 import { prepareMLIR, opName } from './mlir-ir.js';
 import { MLIR_STRUCTURE_LIMIT, readMLIRFile, deferredAttribute, mlirLocation, prepareDeferredAttributes } from './mlir-file.js';
 import {typeSpelling} from './mlir-types.js';
+import {checkDensePayloads} from './mlir-dense-check.js';
 export {typeSpelling} from './mlir-types.js';
 
 export const MLIR_TEXT_LIMIT = MLIR_STRUCTURE_LIMIT;
@@ -55,6 +56,7 @@ export async function parseMLIRFile(file, options={}) {
 }
 
 export async function parseMLIRSource(source, { identifier = 'model.mlir', metadata = '[]', dialects = [], progress = () => {}, payloads = [], locations = [], sourceStats = {} } = {}) {
+    sourceStats={...sourceStats,denseValidation:checkDensePayloads(source,payloads)};
     if(source.length>MLIR_STRUCTURE_LIMIT)throw new Error('MLIR 結構文字超過 256 MiB，請拆分 function。');
     const start=performance.now(),payloadMap=new Map(payloads.map(p=>[p.token,p]));
     const graphs = [];
