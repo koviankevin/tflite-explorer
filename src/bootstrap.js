@@ -12,6 +12,7 @@ if (globalThis.document) {
     const title=document.getElementById('application-startup-title');
     const message=document.getElementById('application-startup-message');
     const reload=document.getElementById('application-startup-reload');
+    const status=document.getElementById('status');
     let failed=false;
     // On failure, stop partial application shortcuts; native browser reload and
     // the recovery button's default keyboard activation remain available.
@@ -20,12 +21,13 @@ if (globalThis.document) {
     reload.onclick=()=>location.reload();reload.hidden=false;
     void startApplication(()=>import('./app.js'),state=>{
         panel.dataset.state=state;
+        if(state==='loading')status.textContent='正在載入網站';
         if(state==='ready'){
             const returnFocus=panel.contains(document.activeElement);
             panel.hidden=true;window.removeEventListener('keydown',guard,true);
             if(returnFocus)document.getElementById('open-model').focus({preventScroll:true});
         }else if(state==='failed'){
-            failed=true;
+            failed=true;status.textContent='網站啟動未完成';
             // An initialization error can occur while the independent version
             // dialog is open. Remove that modal before presenting recovery.
             for(const dialog of document.querySelectorAll('dialog[open]'))dialog.close();
