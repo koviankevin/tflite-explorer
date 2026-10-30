@@ -44,7 +44,14 @@ export async function readFirefoxNativeMemory(context,proof){
     let page,failure;
     try{
         page=await context.newPage();page.on('pageerror',error=>{if(report.errors.length<12)report.errors.push(String(error.message).slice(0,512));else report.errorOverflow=true;});
-        await page.goto('about:memory',{waitUntil:'domcontentloaded',timeout:10000});
+        report.navigation={waitUntil:'commit',ready:false,timeoutRecovered:false};
+        try{await page.goto('about:memory',{waitUntil:'commit',timeout:10000});}
+        catch(error){report.navigation.error=String(error.message).slice(0,1024);report.navigation.url=page.url();if(error.name!=='TimeoutError')throw error;}
+        report.navigation.url=page.url();assert.equal(report.navigation.url,'about:memory','Native page URI mismatch');
+        report.navigation.documentURL=await page.locator('html').evaluate(element=>element.ownerDocument.URL,null,{timeout:5000});
+        assert.equal(report.navigation.documentURL,'about:memory','Native document URI mismatch');
+        await page.locator('#measureButton').waitFor({state:'visible',timeout:5000});
+        report.navigation.ready=true;report.navigation.timeoutRecovered=Boolean(report.navigation.error);
         await page.locator('#verbose').check({timeout:5000});await page.getByLabel('anonymize',{exact:true}).check({timeout:5000});
         await page.locator('#measureButton').click({timeout:5000});report.measureCalls++;
         await page.getByText(/Main Process/).first().waitFor({state:'visible',timeout:15000});

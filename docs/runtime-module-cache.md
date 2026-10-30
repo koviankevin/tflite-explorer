@@ -169,3 +169,12 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 此設計參考 [Mozilla about:memory 說明](https://firefox-source-docs.mozilla.org/performance/memory/about_colon_memory.html)及 [Measure 的原始實作](https://github.com/mozilla-firefox/firefox/blob/main/toolkit/components/aboutmemory/content/aboutMemory.js)。固定工具的 [NetworkObserver](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/juggler/NetworkObserver.js) request hook 只接受 HTTP channels，不能直接據此認定它的 response cache 持有 blob 下載；[DownloadInterceptor](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/juggler/TargetRegistry.js)完成事件也會刪除 handler／UUID map，這仍不足以證明 native channel 已釋放。先取得實際物件分類再歸因。
 
 新診斷只在 candidate Firefox 執行，先完成原有 RSS／cold 流程，再獨立啟動控制瀏覽器。只有完整結束且 owned processes 全退出的純數值 RSS 失敗才繼續診斷，最後仍拋回同一原始失敗；protocol／live-process 失敗不繼續，診斷失敗不能取代原 RSS 或較早 cold error。25 項選測通過，涵蓋來源／按鈕／非 forcing 邊界、一次 Measure／關頁／容量、實際 ArrayBuffer transfer 的 raw 控制程式、舊三組控制、公共暫存清理及失敗傳遞；沒有在本機啟動瀏覽器，原生 UI 與 bundle 路徑仍待 Hosted 證據。
+
+
+### 原生入口首次失敗與修正
+
+[40973263249](https://github.com/koviankevin/tflite-explorer/actions/runs/40973263249)／來源 `26039faf706ebbf48de2f4b9405b6fee1b7183df`、build `2dec27637311cc63` 的原 RSS 仍以 **17,782,725.49 bytes／輪失敗**。17 功能／19 runtime／5 指南、cold、retained inputs、完整 IO 與 native 清理通過。獨立 raw IO 在零模型、零 WASM Instance 下重現 **20,104,689.37 bytes／輪**，24 個 Workers 全 close、八份下載及兩份來源檔完整 SHA／身分／清理、自然 60 秒 URL 與 51 組 settled observations 均核對；不做 RSS 扣除，也不據此歸因 Firefox 或工具。
+
+實際安裝 bundle 的 ordinary Measure 來源與 wiring 核對成功，來源 83,368 bytes／SHA `9e0e1f941213265e86f257d802e34026e336816df6445d447406ebb156fbc480`；但 `about:memory` 等待 DOMContentLoaded 十秒逾時，**Measure 呼叫為零，沒有取得物件分類或 heap 資料**。[21 檔原始證據](results/firefox-native32-originals.zip)及[逐檔 SHA／讀取器紀錄](results/firefox-native32-originals.json)保留，包括首次 reader 錯把建置後帶 cache query 的 helper 與 source helper 相比而失敗的 log。改用固定乾淨 source 與 Linux LF 後，控制與原始失敗核對真正 exit 0；未修改 producer 原文。
+
+測試工具改以 commit 導頁，要求實際 page URL、DOM ownerDocument.URL 及可見 Measure 按鈕都符合原生頁面。只允許 TimeoutError 在這些條件下恢復；錯 URI、缺按鈕或其他協定錯誤仍失敗，保留導頁觀測及正常關頁。另在完整流程前，以獨立 marked browser 做一次原生入口探測，失敗即清楚停下；成功才執行原完整驗收及熱 IO 後的另一份快照。各瀏覽器只 Measure 一次，不強制 GC／CC／minimize、不改原 RSS 協定或門檻。診斷後另記錄新觀測的 descendant identities 再正常關閉，不把此 witness 加入 RSS samples。Node 邊界測試通過；實際原生入口修正仍待 Hosted，候選未發布。
