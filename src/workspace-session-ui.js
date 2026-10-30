@@ -8,7 +8,8 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
     const store=draftStore({notify:record=>{if(record)channel?.postMessage({key:record.key,revision:record.revision,owner:record.owner,deleted:!!record.deleted});}});
     session=workspaceSession({store,capture,apply,ready,settle,enabled,changed:state=>{
         diagnosticState=Object.fromEntries(['enabled','attached','pending','conflict','busy','saving','storageFailed'].map(key=>[key,state[key]]));
-        $('autosave-enabled').checked=state.enabled;if($('draft-status').textContent!==state.message)$('draft-status').textContent=state.message;
+        $('autosave-enabled').checked=state.enabled;if($('draft-status').textContent!==state.message)$('draft-status').textContent=state.message;$('draft-status').dataset.error=String(state.storageFailed);
+        $('retry-workspace-save').hidden=!state.storageFailed;$('retry-workspace-save').disabled=!state.enabled||state.busy||state.saving;
         $('undo-workspace').disabled=!state.canUndo;$('redo-workspace').disabled=!state.canRedo;
         $('fork-draft').hidden=!state.pending&&!state.conflict;$('resume-draft-prompt').hidden=!state.pending&&!state.conflict;
     }});
@@ -41,6 +42,7 @@ export function workspaceSessionUI({capture,apply,ready,settle,restoreDraft,expo
     $('draft-remove-confirm').onchange=()=>{$('remove-draft').disabled=!selected || !$('draft-remove-confirm').checked;};
     $('remove-draft').onclick=async()=>{if(!selected || !$('draft-remove-confirm').checked)return;try{session.external(await store.remove({key:selected.key,revision:selected.revision,owner:session.owner}));await open();}catch(e){$('draft-description').textContent=e.message;}};
     $('fork-draft').onclick=()=>session.fork().catch(error);
+    $('retry-workspace-save').onclick=()=>session.retry().catch(error);
     $('undo-workspace').onclick=()=>session.travel(-1).catch(error);$('redo-workspace').onclick=()=>session.travel(1).catch(error);
     $('autosave-enabled').onchange=()=>{const value=$('autosave-enabled').checked;session.setEnabled(value);try{localStorage.setItem('model-lens.autosave.v1',value?'on':'off');}catch{/* Setting remains applied in memory. */}};
     $('autosave-enabled').disabled=false;

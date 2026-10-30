@@ -1,5 +1,7 @@
 # 商品等級工作與完成條件
 
+2026-10-30 使用者調整本輪交付：「挑重要的做就好，先完成一版再慢慢修」。本輪只補 [探索草稿儲存失敗與安全重試](workspace-storage.md)，完成必要驗證及固定版本發布後交付；下列尚未完成的廣泛商品化項目改列後續，不繼續擴大本輪關卡。
+
 [preview.33 已正式交付](preview33.md#發布狀態)：啟動失敗重載、開檔就緒與指南更新已部署，310 核心檔、全站 1,418 檔、四份固定 Release 下載及權威 deployment 均獨立核對。Chromium 33 項原操作、五個啟動情境、1.25 GiB／21,005 OP 八輪及 CPU／IO 八輪通過；必要門檻未放寬，整體商品等級目標保持進行中。
 
 最新 [preview.33 候選驗收](preview33.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.33 的正式準備、部署與固定 Release 核對均已完成。

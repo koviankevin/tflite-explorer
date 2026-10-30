@@ -65,6 +65,91 @@ test('IDB unavailable still allows in-memory history and visible failure without
     try{await controller.attach(identity);assert.match(ui.message,/無法讀取/);current.state.query='edited';await controller.flush();assert.equal(ui.canUndo,true);await controller.travel(-1);assert.equal(current.state.query,'');}
     finally{controller.detach();}
 });
+
+test('a failed committed write stays visibly failed, preserves history and stops automatic retries',async()=>{
+    const store=memoryStore(),save=store.save;let current=fixture(),ui,blocked=false,calls=0;
+    store.save=async args=>{calls++;if(blocked)throw new DOMException('Storage quota exceeded','QuotaExceededError');return save(args);};
+    const controller=workspaceSession({store,owner:'quota-tab',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);await controller.flush();const committed=[...store.records.values()][0];
+        blocked=true;current.state.query='unsaved selection';await controller.flush();
+        assert.equal(ui.storageFailed,true,'a transaction failure must not look like autosave is protecting new changes');
+        assert.equal(ui.saving,false);assert.equal(ui.conflict,false);assert.match(ui.message,/尚未儲存|無法保存/);
+        assert.equal(readDraft([...store.records.values()][0]).workspace.state.query,'');assert.equal(store.records.get(committed.key).revision,1);
+        const failures=calls;current.state.query='newer unsaved selection';controller.change();await controller.flush();
+        assert.equal(calls,failures,'ordinary editing must not continually retry a failing database');assert.equal(ui.storageFailed,true);
+        assert.equal(parseWorkspace(controller.current).state.query,'newer unsaved selection');
+        await controller.travel(-1);assert.equal(current.state.query,'unsaved selection');assert.equal(ui.canRedo,true);assert.equal(ui.storageFailed,true);
+    }finally{await controller.detach();}
+});
+
+test('explicit retry saves the latest unsaved state only after the database commits',async()=>{
+    const store=memoryStore(),save=store.save;let current=fixture(),ui,blocked=true,release,entered;
+    const started=new Promise(resolve=>entered=resolve);
+    store.save=async args=>{if(blocked)throw new DOMException('Denied','SecurityError');entered();await new Promise(resolve=>release=resolve);return save(args);};
+    const controller=workspaceSession({store,owner:'retry-tab',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);current.state.query='first';await controller.flush();
+        current.state.query='latest';controller.change();blocked=false;const retry=controller.retry();await started;
+        assert.equal(ui.saving,true);assert.equal(store.records.size,0);
+        release();await retry;assert.equal(ui.storageFailed,false);assert.equal(ui.saving,false);
+        assert.match(ui.message,/已自動儲存/);assert.equal(readDraft([...store.records.values()][0]).workspace.state.query,'latest');
+        assert.equal(ui.canUndo,true);
+    }finally{release?.();await controller.detach();}
+});
+
+test('retry after a failed initial read discovers existing drafts without overwriting or discarding local edits',async()=>{
+    const store=memoryStore(),list=store.list;let current=fixture(),ui,blocked=true;
+    const saved=fixture();saved.state.query='previous saved work';const record=await store.save({key:draftModelKey(identity),revision:0,owner:'previous',workspace:saved});
+    store.list=async id=>{if(blocked)throw new DOMException('Denied','SecurityError');return list(id);};
+    const controller=workspaceSession({store,owner:'retry-read',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);current.state.query='new unsaved work';await controller.flush();blocked=false;await controller.retry();
+        assert.equal(ui.storageFailed,false);assert.equal(ui.pending,true);assert.equal(current.state.query,'new unsaved work');
+        assert.equal(store.records.size,1);assert.equal(store.records.get(record.key).revision,1);assert.equal(readDraft(record).workspace.state.query,'previous saved work');
+        await controller.fork();assert.equal(store.records.size,2);assert.equal(ui.pending,false);
+        assert.deepEqual([...store.records.values()].map(r=>readDraft(r).workspace.state.query).sort(),['new unsaved work','previous saved work']);
+    }finally{await controller.detach();}
+});
+
+test('a late read retry cannot attach an old draft to a different model',async()=>{
+    const store=memoryStore(),list=store.list;let current=fixture(),ui,reads=0,release,entered;
+    const started=new Promise(resolve=>entered=resolve);
+    store.list=async id=>{reads++;if(reads===1)throw new Error('unavailable');if(reads===2){entered();await new Promise(resolve=>release=resolve);}return list(id);};
+    const controller=workspaceSession({store,owner:'switch-read',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);const retry=controller.retry();await started;await controller.detach();
+        current=fixture();current.identity={...identity,name:'other.mlir',sourceFormat:'mlir',signature:'c'.repeat(64)};
+        await controller.attach(current.identity);release();await retry;await controller.flush();
+        assert.equal(ui.storageFailed,false);assert.equal(controller.identity.name,'other.mlir');
+        assert.equal(store.records.size,1);assert.equal(readDraft([...store.records.values()][0]).workspace.identity.sourceFormat,'mlir');
+    }finally{release?.();await controller.detach();}
+});
+
+test('failed retry remains retryable, paused autosave cannot commit and a peer revision still wins',async()=>{
+    const store=memoryStore(),save=store.save;let current=fixture(),ui,blocked=true;
+    store.save=args=>{if(blocked)throw new DOMException('Quota exceeded','QuotaExceededError');return save(args);};
+    const controller=workspaceSession({store,owner:'safe-retry',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);await controller.flush();await controller.retry();assert.equal(ui.storageFailed,true);assert.equal(ui.saving,false);
+        controller.setEnabled(false);blocked=false;await controller.retry();assert.equal(store.records.size,0);assert.equal(ui.storageFailed,true);
+        controller.setEnabled(true);await controller.retry();assert.equal(ui.storageFailed,false);const old=[...store.records.values()][0];
+        blocked=true;current.state.query='local';await controller.flush();assert.equal(ui.storageFailed,true);
+        const peer=fixture();peer.state.query='peer';blocked=false;await save({key:old.key,revision:old.revision,owner:'peer',workspace:peer});
+        await controller.retry();assert.equal(ui.conflict,true);assert.equal(ui.storageFailed,false);assert.equal(current.state.query,'local');
+        await controller.retry();assert.equal(readDraft(store.records.get(old.key)).workspace.state.query,'peer');assert.equal(store.records.size,1);
+    }finally{await controller.detach();}
+});
+
+test('a synchronous read retry failure does not leave a permanently pending retry',async()=>{
+    const store=memoryStore(),list=store.list;let current=fixture(),ui,blocked=true;
+    store.list=id=>{if(blocked)throw new Error('unavailable');return list(id);};
+    const controller=workspaceSession({store,owner:'sync-read',capture:()=>current,apply:async w=>current=w,changed:s=>ui=s,delay:60000});
+    try {
+        await controller.attach(identity);await controller.retry();assert.equal(ui.storageFailed,true);assert.equal(ui.saving,false);
+        blocked=false;await controller.retry();assert.equal(ui.storageFailed,false);assert.equal(store.records.size,1);
+    }finally{await controller.detach();}
+});
 test('an old in-flight save cannot write a newly opened model under its old identity',async()=>{
     const store=memoryStore(),save=store.save;let release,started;
     const entered=new Promise(resolve=>started=resolve);store.save=async args=>{if(args.workspace.identity.signature===identity.signature){started();await new Promise(resolve=>release=resolve);}return save(args);};
