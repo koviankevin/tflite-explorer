@@ -1,12 +1,12 @@
-# 資料庫連線失敗重試候選
+# 資料庫連線失敗重試與穩定版驗收
 
-目前正式站回報 [v1.0.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.0.0)／build `09ca06bdfff83b76`，來源 `af88a158e8f2506358ece6ce162458bbe68fa061`，承接 preview.34 功能。本候選已同步該版本起點，只調整探索草稿、編輯草稿及 pattern 清單的連線生命週期，尚未發布；不改資料庫名稱、版本、資料格式、保存上限或既有記錄。
+目前正式站為 [v1.0.1](v1.0.1.md#發布狀態)／build `715374fe3dc2ecf7`，來源 `9506611a11ae702e6fe55116c029a853cdf56cc6`。連線重試與穩定版驗收選擇已交付；資料庫名稱、版本、資料格式、保存上限及既有記錄保持不變。
 
 ## 問題與修正
 
 三個資料庫 adapter 原先用 `connection ||= new Promise(...)` 保存連線結果，只在 request 的 `error`／`blocked` 事件中清除快取。如果 `indexedDB.open()` 同步拋出錯誤，事件不會執行，後續呼叫會重用同一個失敗 Promise，無法真正重試。[IndexedDB 規範](https://www.w3.org/TR/IndexedDB-3/#dom-idbfactory-open)允許在取得 storage key 失敗時同步拋出 `SecurityError`；這不代表已在特定正式站瀏覽器遇到或量到發生頻率。
 
-候選明確記住每次連線嘗試。失敗時，只有快取仍指向該次嘗試才清除；同步拋錯與非同步 request 失敗都適用。多個同時讀取仍共用一個嘗試。被阻擋的舊 request 若延遲成功，會立即關閉該連線；舊 request 的失敗或舊 database 的 `versionchange` 不會清除新連線。
+現在明確記住每次連線嘗試。失敗時，只有快取仍指向該次嘗試才清除；同步拋錯與非同步 request 失敗都適用。多個同時讀取仍共用一個嘗試。被阻擋的舊 request 若延遲成功，會立即關閉該連線；舊 request 的失敗或舊 database 的 `versionchange` 不會清除新連線。
 
 ## 驗證範圍
 
@@ -25,4 +25,4 @@
 
 保留 preview.28／31／34 三個邊界，涵蓋 v1.0.0、v1.0.1、次版／主版、預發行及 build metadata。重構時先保留舊判斷，七項測試中穩定版／未知標籤／無效資料三項重現失敗，四項歷史正向控制通過；修正後連同既有發布／桌面政策共 13 項通過。Hosted driver 報告明列實際選用的 `releaseFeatures`，供獨立核對。Firefox／WebKit 的 driver 共用判斷，但不新增這兩個引擎的執行。
 
-[v1.0.1 固定候選](v1.0.1.md)已完成主分支原生、大檔八輪及四關卡獨立核對，尚待正式發布。必要瀏覽器與發布關卡依既有 main-only 規則執行，不把草稿分支結果冒充正式發布證據；未改 workflow、安全設定、RSS 或 timer 上限。
+[v1.0.1 已交付](v1.0.1.md#發布狀態)：主分支原生、大檔八輪、原始 provider 及正式站／四份固定下載均完成獨立核對。必要關卡沿用 main-only 規則，沒有改 workflow、安全、RSS 或 timer 上限。

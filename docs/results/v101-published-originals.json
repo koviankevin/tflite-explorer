@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "9506611a11ae702e6fe55116c029a853cdf56cc6",
+    "tree": "77ddba391fac1e8c01fe60b9b4f8871bfdd17016",
+    "committedAt": "2026-10-30T19:48:52+08:00",
+    "dirty": false
+  },
+  "build": "715374fe3dc2ecf7",
+  "site": "dbf7f39f3e0b9a8c70f60e2831c39638c4fe0a2e8735ce88edfd7f475c952eb0",
+  "archiveSHA256": "1b37b84ac0bad467e1766c6ef7d8ec8c7ff14347ef1226f5eb18bb21fd94fb2e",
+  "members": [
+    {
+      "name": "prepared/rebuild-review.json",
+      "bytes": 931,
+      "sha256": "203c472b7312c9328eb15a4162d1bc8cfa8ce2b1d6c552d8bd69e67632310c5f"
+    },
+    {
+      "name": "prepared/release-gates.json",
+      "bytes": 187841,
+      "sha256": "819722d4eca6989689712b295825f5284b153942d1ff455cdec2f1c8a9c305f5"
+    },
+    {
+      "name": "prepared/release-manifest.json",
+      "bytes": 50168,
+      "sha256": "78afd0ba8fc143012ea903ce4ce746309a5ab7082ae17fede11921b36b7030b9"
+    },
+    {
+      "name": "prepared/report.json",
+      "bytes": 5223,
+      "sha256": "17b28d2191eb59adb4238c45370de950b86efba04291ac5e1eb1b4f9e3dc7fa7"
+    },
+    {
+      "name": "prepared/site-manifest.json",
+      "bytes": 263303,
+      "sha256": "84b3efc90d887256a8270e1a69adce463dce3b2a5be962d6326df45f5300d6d6"
+    },
+    {
+      "name": "published/12974943603.zip",
+      "bytes": 751,
+      "sha256": "c4e25525da9fa4ecb5abbd9ba9a4c193f5d02861be7fa26b9f691ef7e98fbc2a"
+    },
+    {
+      "name": "published/12976170092.zip",
+      "bytes": 549302,
+      "sha256": "95de88f669cba1da70caaba7b1c28603b0461c0bdeb23631c51e4321535d5e89"
+    },
+    {
+      "name": "published/live-release-verification/pages-live-report.json",
+      "bytes": 375929,
+      "sha256": "ac0d04856505f58d872d35ba667e7b5df59508cb7f06a570862735d7d05729e8"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.json",
+      "bytes": 829834,
+      "sha256": "e7c5449bdb2e7291e190ab605f48bf6c53051c837976100a319135b3a84d9c03"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.png",
+      "bytes": 149347,
+      "sha256": "8b85ecd9b7280ecd0939b154f66c3e551bec9eb02dc1e28dd07592271dd784b3"
+    },
+    {
+      "name": "published/published-release-verification/pages-release-report.json",
+      "bytes": 1229,
+      "sha256": "1d700f7e0021dff44329ab7b1c1da02a70d5ef8e3d7e1bde9f192ec3829ef2ad"
+    },
+    {
+      "name": "published/report.json",
+      "bytes": 116088,
+      "sha256": "db6619ea6f8c12af33f94a981611e375a051f58a0b3ef78f04bf220d7b084cba"
+    },
+    {
+      "name": "published/startup-failure.png",
+      "bytes": 147371,
+      "sha256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b"
+    },
+    {
+      "name": "published/storage-failure.png",
+      "bytes": 155394,
+      "sha256": "c5737f0ff787ae47723b7889c85b0ab79c6d5475fcb9228fc4b248bd75b02c24"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-preview17-mlir.mjs",
+      "bytes": 1426,
+      "sha256": "699d6afa324806caa0f7157595442b658d73011811820aa79d02d77b4d90e728"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-stable-coverage101.mjs",
+      "bytes": 705,
+      "sha256": "59c9dc8b9c1430628ad31e5591a0889293fce8f897715236734f2dfab94d58ab"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/assert-workspace-storage34.mjs",
+      "bytes": 1726,
+      "sha256": "324980b90865cd98718cc06903e4dd11f8c217940173e9add37c463b49ccc35a"
+    },
+    {
+      "name": "readers/freeze-v101-final.mjs",
+      "bytes": 2659,
+      "sha256": "d5e3f8e50fe401994ffd60d9eccb78cc135614764be6b39ccc993ead5e177e3c"
+    },
+    {
+      "name": "readers/review-prepared-site.mjs",
+      "bytes": 8604,
+      "sha256": "e4f929e3087a446da62a6bfa989ea48cf9de835549cd7c6116d515974eaef954"
+    },
+    {
+      "name": "readers/review-v101-publication.mjs",
+      "bytes": 14818,
+      "sha256": "d48fffb9710826ca21e8f08357053effb9ff6750755e25f1dee0fecd756824c9"
+    },
+    {
+      "name": "readers/verify-prepared101-rebuild.mjs",
+      "bytes": 1579,
+      "sha256": "aab6b95542af09ccfe48f3d2435e181efaebbee1e5e4d62c68c9ff3be7e4df1d"
+    }
+  ],
+  "publicationReader": {
+    "exit": 0,
+    "toolChunk": "5235f4"
+  },
+  "scope": "Small provider originals/reports/manifests and authenticated PNGs retained. Large application assets remain immutable Release downloads; actual bytes match preparation. Hosted Linux Chromium. Adapter denial/late events are Node boundary tests, not OS/browser permission/power-loss acceptance. No new Firefox/WebKit/mobile/company/2hour run."
+}
