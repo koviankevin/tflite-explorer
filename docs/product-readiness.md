@@ -4,7 +4,7 @@
 
 最新 [preview.32 候選驗收](preview32.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.32 的正式準備、部署與固定 Release 核對均已完成。
 
-下一項具體缺口是 [preview.33 的啟動失敗恢復](startup-recovery.md)：入口載入或初始化失敗要能明確提示、原生鍵盤重新載入並恢復正常，仍待 Hosted Chromium 與正式交付核對。以下為歷史輪次的進度紀錄；早期「待測／未發布」不覆蓋頁首 preview.32 已交付的狀態。
+[preview.33 候選](preview33.md)已完成啟動錯誤重載、快速開檔、指南就緒更新等五情境，原 33 項操作與 1.25 GiB／21,005 OP 八輪均通過；原始資料與四項 dependency scopes 已獨立核對。尚待正式準備、部署與固定下載核對。以下為歷史輪次進度，早期待測／未發布不覆蓋頁首目前正式版及此段候選狀態。
 
 歷史應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 
