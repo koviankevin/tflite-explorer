@@ -30,7 +30,7 @@
     <div class="session-tools" aria-label="本機草稿與操作歷史">
       <div class="session-actions"><button id="undo-workspace" class="text-button" disabled title="Ctrl／⌘ Z（輸入框保留文字復原）">復原</button><button id="redo-workspace" class="text-button" disabled title="Ctrl／⌘ Shift Z 或 Ctrl Y">重做</button><button id="open-drafts" class="text-button" aria-haspopup="dialog">探索草稿</button><label><input id="autosave-enabled" type="checkbox" checked disabled>自動儲存</label></div>
       <p id="draft-status" role="status">開啟模型後開始保存本機草稿。</p>
-      <button id="resume-draft-prompt" class="text-button" hidden>選擇草稿以恢復</button><button id="fork-draft" class="text-button" hidden>另開草稿，保留原版本</button>
+      <button id="retry-workspace-save" class="text-button" aria-describedby="draft-status" hidden>重試儲存草稿</button><button id="resume-draft-prompt" class="text-button" hidden>選擇草稿以恢復</button><button id="fork-draft" class="text-button" hidden>另開草稿，保留原版本</button>
     </div>
     <p id="workspace-hint" class="hint" hidden></p>
     <button id="choose-workspace-model" class="quiet" hidden>選取模型以恢復</button>

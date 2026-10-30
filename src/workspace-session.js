@@ -7,7 +7,8 @@ const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString
 // IndexedDB are adapters; model objects/File/Blob never enter this module.
 export function workspaceSession({store,capture,apply,ready=()=>true,settle=async()=>{},changed=()=>{},enabled=true,owner=id(),delay=600}) {
     const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,operation=null,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
-    const emit=()=>changed({message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing,storageFailed:!!active?.storageError});
+    const failureMessage=current=>current.loadFailed?`無法讀取本機草稿：${current.storageError.message}；Undo／Redo 仍可使用，請重試或手動下載備份。`:`草稿尚未儲存：${current.storageError.message}；目前操作保留，請重試或手動下載工作階段備份。`;
+    const emit=()=>changed({message:active?.storageError?failureMessage(active):message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing||!!active?.retrying,storageFailed:!!active?.storageError});
     const sample=(force=false,internal=false)=>{if(!active || (applying&&!internal) || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
     const savedMessage=current=>current.savedAt?`已自動儲存 ${new Date(current.savedAt).toLocaleTimeString()} · 僅含操作狀態`:'自動草稿已就緒。';
     const schedule=()=>{
@@ -35,11 +36,11 @@ export function workspaceSession({store,capture,apply,ready=()=>true,settle=asyn
         if(text===current.saved){if(active===current){message=savedMessage(current);emit();}return;}
         const sequence=current.changeSequence;
         if(active===current)message='正在自動儲存…';
-        const saving=store.save({key:current.key,revision:current.revision,owner,workspace:parseWorkspace(text)});writing=saving;if(active===current)emit();
+        const saving=(async()=>store.save({key:current.key,revision:current.revision,owner,workspace:parseWorkspace(text)}))();writing=saving;if(active===current)emit();
         try {
             const record=await saving;current.revision=record.revision;current.saved=text;current.savedAt=record.updatedAt;
             if(active===current){message=current.changeSequence===sequence?savedMessage(current):'新的操作待儲存…';}
-        }catch(error){current.conflict=error instanceof DraftConflict;if(active===current)message=error.message;}
+        }catch(error){current.conflict=error instanceof DraftConflict;if(!current.conflict)current.storageError=error;if(active===current)message=error.message;}
         finally{if(writing===saving)writing=null;if(active===current){emit();if(!current.conflict && history.current!==text)schedule();}else if(active)schedule();}
     }
     return {
@@ -52,7 +53,7 @@ export function workspaceSession({store,capture,apply,ready=()=>true,settle=asyn
             if(token!==generation)return;
             await settle();if(token!==generation)return;
             const found=resumed?records.find(r=>r.key===resumed.key):records[0];
-            active={identity,key:found?.key || draftModelKey(identity)+(loadError?'~'+id():''),revision:resumed?.revision ?? found?.revision ?? 0,saved:resumed?exportWorkspace(readDraft(resumed).workspace):null,savedAt:resumed?.updatedAt,pending:!!found&&!resumed,conflict:!!resumed && found?.revision!==resumed.revision,storageError:loadError};
+            active={identity,key:resumed?.key || found?.key || draftModelKey(identity)+(loadError?'~'+id():''),revision:resumed?.revision ?? found?.revision ?? 0,saved:resumed?exportWorkspace(readDraft(resumed).workspace):null,savedAt:resumed?.updatedAt,pending:!!found&&!resumed,conflict:!!resumed && found?.revision!==resumed.revision,storageError:loadError,loadFailed:!!loadError};
             sample();message=loadError?`無法讀取本機草稿：${loadError.message}；Undo／Redo 仍可使用，請手動下載備份。`:active.conflict?'草稿在恢復期間已由另一分頁更新；請恢復新版或另開草稿。':active.pending?'找到本機草稿。請恢復，或另開草稿以保留兩份。':'自動草稿已就緒。';emit();if(!active.pending&&!active.conflict&&!loadError)schedule();
         },
         detach() {
@@ -63,7 +64,27 @@ export function workspaceSession({store,capture,apply,ready=()=>true,settle=asyn
             return flushing;
         },
         change:schedule,flush,
-        setEnabled(value){enabled=!!value;if(enabled&&active)active.storageError=null;message=enabled?'自動草稿已啟用。':'自動草稿已暫停；仍可手動下載工作階段。';emit();if(enabled)schedule();},
+        setEnabled(value){enabled=!!value;message=enabled?'自動草稿已啟用。':'自動草稿已暫停；仍可手動下載工作階段。';emit();if(enabled)schedule();},
+        retry() {
+            const current=active;if(!current||!enabled||applying||!current.storageError)return Promise.resolve();
+            if(current.retrying)return current.retrying;
+            const task=Promise.resolve().then(async()=>{
+                try {
+                    if(current.loadFailed){
+                        const records=await store.list(current.identity);if(active!==current)return;
+                        // A failed initial read never authorizes overwriting a
+                        // record discovered later. Preserve the local history.
+                        const resumed=current.saved!==null,found=resumed?records.find(r=>r.key===current.key):records[0];
+                        if(resumed){current.conflict=found?.revision!==current.revision;message=current.conflict?'草稿在恢復期間已由另一分頁更新；請恢復新版或另開草稿。':savedMessage(current);}
+                        else if(found){current.key=found.key;current.revision=found.revision;current.pending=true;message='找到本機草稿。請恢復，或另開草稿以保留兩份。';}
+                        current.loadFailed=false;
+                    }
+                    if(active!==current||!enabled)return;
+                    current.storageError=null;await flush();
+                }catch(error){current.storageError=error;}
+                finally{current.retrying=null;if(active===current)emit();}
+            });current.retrying=task;emit();return task;
+        },
         async fork() {
             if(!active || applying)return;
             if(writing)await writing.catch(()=>{});
