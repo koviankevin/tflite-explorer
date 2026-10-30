@@ -15,3 +15,7 @@ Hosted Chromium 將用三個獨立 context 阻擋一次入口檔、阻擋一次�
 [40994498640](https://github.com/koviankevin/tflite-explorer/actions/runs/40994498640) 的既有 33 項操作、真實 CPU／IO、cold 及 retained input 清理均完成，新恢復情境則在第一個 request 觀察失敗。實際檔案請求包含 `?v=buildId`，注入器原先比對未帶版本 query 的 URL，因此零次故障注入、零個恢復案例，不能宣稱功能已通過。獨立 reader 核對 provider digest／CRC、來源、完成階段及實際 URL 後 exit 0，保留[原始 ZIP／報告](results/startup-recovery33-first-failure.zip)與[雜湊／失敗界線](results/startup-recovery33-first-failure.json)。
 
 修正只讓注入器比對實際版本 URL，應用未再改動。必要網站關卡仍按既有流程完整執行，新的三個故障恢復案例尚待通過；沒有放寬計時、改寫失敗或啟動大模型關卡。
+
+## 第二輪：觀察順序錯誤
+
+[40995960246](https://github.com/koviankevin/tflite-explorer/actions/runs/40995960246) 已實際命中版本 URL，第一個情境走到原生鍵盤重載與正常初始化檢查，卻在關閉 context 後繼續讀取 viewport 而失敗。這是新增測試的順序錯誤；當輪仍是零個完整案例收據，不能當成三種恢復情境已通過。獨立 reader 核對原始 provider／CRC／來源、context close 與程式順序後 exit 0，[原始 ZIP](results/startup-recovery33-observation-failure.zip)及[失敗收據](results/startup-recovery33-observation-failure.json)保留。修正僅將版面讀取移至 context 關閉前，保留所有 assertion 及真正 Worker close 要求，應用未更動。

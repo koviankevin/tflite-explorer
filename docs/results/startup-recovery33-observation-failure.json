@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "39d51f98b96bf975e3b78691200d42e4fa6aba91",
+    "tree": "ba87f6da1ae7177d4394ae9e33a850cef7600b8a",
+    "committedAt": "2026-10-30T11:10:28+08:00",
+    "dirty": false
+  },
+  "run": 40995960246,
+  "acceptance": "FAILED: viewport read after context close; no deployment acceptance",
+  "archiveSHA256": "a6d48f896da2067084c94f0c784ac58864e0c49d8598c614daf302146355ef7a",
+  "members": [
+    {
+      "name": "originals/failure-review.json",
+      "bytes": 3261,
+      "sha256": "b2bfd6a0ac38e7882e34c56bd6da500d5669fd376fafabc2baf5561ed7cee7e7"
+    },
+    {
+      "name": "originals/jobs.json",
+      "bytes": 5633,
+      "sha256": "76d8a5c23b98a39cde7321dc37899613839901972177141f5bb08146236582c5"
+    },
+    {
+      "name": "originals/listing.json",
+      "bytes": 1866,
+      "sha256": "c304444ac81cd47ce83d33cdc15bd325ddeda94c204134144cabfdd95244d177"
+    },
+    {
+      "name": "originals/native-artifact.json",
+      "bytes": 832,
+      "sha256": "eadfd92e117895245c00c62edc0319a4ae9f925cb8084c687cfafe675b612547"
+    },
+    {
+      "name": "originals/native.zip",
+      "bytes": 196618,
+      "sha256": "551d3aa7f68971fb971a5b191d1ad9c6b9fe01885d1adb849bf9c826d99aebac"
+    },
+    {
+      "name": "originals/production-smoke.json",
+      "bytes": 533985,
+      "sha256": "5e6f78e4b3ef2b2dc91eb0a90e6a2ceb14b1ed599257e233d6ed5e49150e87e6"
+    },
+    {
+      "name": "originals/production-smoke.png",
+      "bytes": 130091,
+      "sha256": "32e6483311be73d054dbaa92c4efc80f06d768448d0ff8936954b358d67bea5c"
+    },
+    {
+      "name": "originals/run.json",
+      "bytes": 14415,
+      "sha256": "608b73b63a6c61267040635eabe8593321cd7ba15c4ee890a7f17b46108c9e83"
+    },
+    {
+      "name": "originals/site-artifact.json",
+      "bytes": 828,
+      "sha256": "6188d7fe1c82a9de4e47cb50c0a2f454fa7d0031eda2956307e397f1b52c64b5"
+    },
+    {
+      "name": "originals/site.zip",
+      "bytes": 4719,
+      "sha256": "e3a39147d960d19e19350c68151dc6743897936943ea97ed6382641525af3a61"
+    },
+    {
+      "name": "originals/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "5de8d523ec8fad69068c7ccbc00e5ef024a868831cf242c059f0d6cdffac49ea"
+    },
+    {
+      "name": "readers/assert-startup-recovery33-second-completed-stages.mjs",
+      "bytes": 5945,
+      "sha256": "ca8b4df85ceb4f7710f142cc61a15d4847751bf71ba3163a997f405a1bd404de"
+    },
+    {
+      "name": "readers/review-startup-recovery33-read-after-close.mjs",
+      "bytes": 6075,
+      "sha256": "7b1193ad059c296b56f7131faf3b087acd92bc71201398aebb375e962ccd81a3"
+    }
+  ],
+  "reader": {
+    "exit": 0,
+    "chunk": "9b646a"
+  },
+  "cause": {
+    "actualRequest": "http://127.0.0.1:45523/tflite-explorer/versions/8611d7c823f3835d/src/app.js?v=8611d7c823f3835d",
+    "requests": 2,
+    "acceptedCases": 0,
+    "contextWorkersClosed": true,
+    "failureStage": "DOM read after context.close; earlier recovery checks reached but no completed case receipt"
+  },
+  "scope": "Producer FAILED. First native reload reached post-close observation, but no case receipt completed; other two modes not accepted. Source-order fault in test observer, not relaxed application or RSS acceptance."
+}
