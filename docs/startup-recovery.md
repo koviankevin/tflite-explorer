@@ -31,3 +31,5 @@ Hosted Chromium 將用三個獨立 context 阻擋一次入口檔、阻擋一次�
 頁尾修正版 [40998526593](https://github.com/koviankevin/tflite-explorer/actions/runs/40998526593) 的三情境與原 33 操作再次通過；獨立實體關卡 [40998532591](https://github.com/koviankevin/tflite-explorer/actions/runs/40998532591) 卻在第一個 chooser 逾時，零輪完成，六個已觀察程序正常退出。動態 bootstrap 讓靜態按鈕先出現，使用者可能在 handler 安裝前點擊；本候選將所有模型開啟／示範入口預設停用，完整初始化後才啟用。版本控制於圖形初始化等待期間仍可操作。
 
 另增加第四個早期開檔情境：真正暫停主程式載入，確認按鈕停用；放行後由原生操作開啟 chooser，取消檔案選取，確認零模型／runtime／下載與真正 Worker close。原始[大檔失敗與網站成功資料](results/startup-recovery33-early-chooser.zip)和[認證界線](results/startup-recovery33-early-chooser.json)保留；不能拿三情境成功覆蓋這次開檔失敗。
+
+指南的模型操作同樣在啟動期間維持忙碌，並監看啟動提示隱藏以即時恢復可用；另加第五個保留指南對話框的情境，要求啟動前停用、就緒後啟用且焦點不被搶走。這避免只新增忙碌判定卻忘記重新整理可用狀態。

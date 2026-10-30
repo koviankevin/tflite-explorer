@@ -10,7 +10,7 @@ export function initUsageGuide({getContext,perform}){
             if(reason){if(!reasons.has(reason)){const p=make('p',reason);p.id=`guide-reason-${reasons.size}`;p.className='hint';notes.append(p);reasons.set(reason,p.id);}button.setAttribute('aria-describedby',reasons.get(reason));}else button.removeAttribute('aria-describedby');
         }
     }
-    function watch(){observer?.disconnect();observer=new MutationObserver(refreshActions);for(const id of ['edit-workspace','run-workspace','model-tabs','target','results','loading-card'])observer.observe($(id),{attributes:true,attributeFilter:['aria-busy','hidden']});}
+    function watch(){observer?.disconnect();observer=new MutationObserver(refreshActions);for(const id of ['edit-workspace','run-workspace','model-tabs','target','results','loading-card'])observer.observe($(id),{attributes:true,attributeFilter:['aria-busy','hidden']});const startup=$('application-startup');if(startup)observer.observe(startup,{attributes:true,attributeFilter:['hidden']});}
     function render(){
         const page=GUIDE_TOPICS.find(t=>t.id===topic);
         for(const tab of tabs.querySelectorAll('button')){tab.setAttribute('aria-selected',String(tab.dataset.guideTopic===topic));tab.tabIndex=tab.dataset.guideTopic===topic?0:-1;}
