@@ -7,7 +7,7 @@ import {sha256} from '../../scripts/lib/release-artifact.mjs';
 export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
     assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
     const report={format:'model-lens-startup-recovery',version:1,status:'failed',cases:[],errors:[],workers:[],requests:[],downloads:0};
-    const appURL=new URL(coreBasePath+'src/app.js',base).href,zipURL=new URL(coreBasePath+'vendor/netron/zip.js',base).href;
+    const appURL=new URL(coreBasePath+'src/app.js?v='+buildId,base).href,zipURL=new URL(coreBasePath+'vendor/netron/zip.js?v='+buildId,base).href;
     for(const mode of ['entry-failure','dependency-failure','pending-recovery']){
         let context,page,read,release,observed;const held=new Promise(resolve=>{release=resolve;}),seen=new Promise(resolve=>{observed=resolve;});
         const rows=[],requests=[],errors=[];let inject=true,contextsClosed=false,bounds;

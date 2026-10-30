@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "d988ecbeaae7fe8ec21f4788d7d9cfe02d52e30a",
+    "tree": "6917190f62b51a9ec1e338540e78fe2601a835e0",
+    "committedAt": "2026-10-30T10:54:55+08:00",
+    "dirty": false
+  },
+  "run": 40994498640,
+  "acceptance": "FAILED: new startup injection did not execute; no deployment acceptance",
+  "archiveSHA256": "9e8f08d6c965743db015f100f72f5d29e074e4a48ae153aff18b644a27f92253",
+  "members": [
+    {
+      "name": "originals/failure-review.json",
+      "bytes": 3210,
+      "sha256": "049b09b4d4e2780747eaf626799dcb38fd76aa39c6b3230ecbb7dc58378a211d"
+    },
+    {
+      "name": "originals/jobs.json",
+      "bytes": 5633,
+      "sha256": "2dc2ba6d3134e39bb118b21776e862c1a34302c475b236ed16d26f1c6c31ddd4"
+    },
+    {
+      "name": "originals/listing.json",
+      "bytes": 1866,
+      "sha256": "20468e2b5b057c5f06f8e0e83e14c3720cbca69bdd0af8d5ba346a66897879d9"
+    },
+    {
+      "name": "originals/native-artifact.json",
+      "bytes": 832,
+      "sha256": "345ff3ac83d3ef32ce479e624f6aa10da686baac677c969960def3da5c7b3a79"
+    },
+    {
+      "name": "originals/native.zip",
+      "bytes": 196660,
+      "sha256": "0a024c88697d116ce15f0d184b255f4486fcf5cadf499d2c00b5245955ff55be"
+    },
+    {
+      "name": "originals/production-smoke.json",
+      "bytes": 530717,
+      "sha256": "23e05cab2f818e87fe5550e15c19536eee93296e80bc69e4010ff8f6ccc1cf9c"
+    },
+    {
+      "name": "originals/production-smoke.png",
+      "bytes": 130091,
+      "sha256": "32e6483311be73d054dbaa92c4efc80f06d768448d0ff8936954b358d67bea5c"
+    },
+    {
+      "name": "originals/run.json",
+      "bytes": 14402,
+      "sha256": "ec0416aa7c8240316afecaa553d442bc380f3097bec2f0867c2f866c97257372"
+    },
+    {
+      "name": "originals/site-artifact.json",
+      "bytes": 828,
+      "sha256": "4f7ba62e81df376936ef33b67da8958105533ee7004df5ea839e33d3da5dd218"
+    },
+    {
+      "name": "originals/site.zip",
+      "bytes": 4705,
+      "sha256": "979ebe91714da7be6110d889487c0b37dd87b81e7a5102b4630d0031832b993d"
+    },
+    {
+      "name": "originals/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "0038f9b02c2dde3c081acaf174d9119e498f319b5f8910331cf240755e88465f"
+    },
+    {
+      "name": "readers/assert-startup-recovery33-completed-stages.mjs",
+      "bytes": 5936,
+      "sha256": "d9de308b889161a4c964255fd7d84dd7e489788400a6111edc3bf3b8856922a0"
+    },
+    {
+      "name": "readers/review-startup-recovery33-missed-fault.mjs",
+      "bytes": 5665,
+      "sha256": "b420645db0e93c71fef7d331e9ea64e2ff980dfc41dec894b4516b868020edab"
+    }
+  ],
+  "reader": {
+    "exit": 0,
+    "chunk": "9f2aae"
+  },
+  "cause": {
+    "actualRequest": "http://127.0.0.1:35595/tflite-explorer/versions/96b1a9be47be670f/src/app.js?v=96b1a9be47be670f",
+    "incorrectTarget": "http://127.0.0.1:35595/tflite-explorer/versions/96b1a9be47be670f/src/app.js",
+    "matchedCases": 0,
+    "normalAppLoaded": true
+  },
+  "scope": "Producer FAILED because the new fault injector missed versioned URLs. Original33 operations and CPU/IO/cold/retained stages independently checked, but zero recovery cases executed. No deployment acceptance. Original normal-operation PNG is not a startup-failure image."
+}
