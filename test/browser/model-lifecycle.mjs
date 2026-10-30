@@ -25,6 +25,7 @@ import {recoveryCapacityPreflight} from './soak-recovery-preflight.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
 import {windowsProcessObserver,windowsAllocatedBytes} from './windows-process-memory.mjs';
+import {verifyArtifact} from '../../scripts/lib/release-artifact.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
@@ -159,8 +160,11 @@ try{
     report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));report.fixture.editFingerprint=await sourceFingerprint(report.fixture.file);
     if(windows){report.fixture.allocatedBytes=windowsAllocatedBytes(python,report.fixture.file);report.fixture.allocationMethod='Windows GetCompressedFileSizeW,owned generated fixture only';}
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
-    execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
-    server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
+    const suppliedBuild=windows?process.env.LIFECYCLE_BUILD:undefined;
+    if(suppliedBuild){const manifest=await verifyArtifact(path.resolve(suppliedBuild),{expectedCommit:report.environment.sourceCommit,requireClean:true,publicOnly:true});report.build=manifest.release;report.buildReused=true;assert.equal(report.build.source.tree,report.environment.sourceTree);}
+    else{execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));}
+    assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
+    server=createStaticServer(suppliedBuild?path.resolve(suppliedBuild):undefined);server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
     if(soak){phase='draft-capacity-preflight';report.recoveryPreflight={};await recoveryCapacityPreflight({base,directory:temporary,report:report.recoveryPreflight});await persistReport();check('real 22-session draft backup/remove/retry preflight, other nineteen unchanged and owned browser reaped');}
     const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,...(windows?{channel}:{}),args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
     let root;

@@ -30,4 +30,6 @@ $env:LIFECYCLE_REPORT = 'build/qa/windows-large/chrome-1.json'
 node test/browser/model-lifecycle.mjs --allow-local-browser
 ```
 
+Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建置一次，再設定 `$env:LIFECYCLE_BUILD = 'build/qa/windows-large/site'`，讓兩個 channel 使用同一份產物。每次仍逐檔核對 manifest、完整來源 commit／tree 與乾淨公開產物；不接受不同來源或內網包，不覆寫仍在使用的建置。這只省去重複建置，實體檔案生成及八輪流程照常執行。未設定時及原 Linux CI 仍沿用原本的建置方式。
+
 必要本機驗收範圍為 Chrome／Edge、1280×640／32px，不啟動手機、Firefox／WebKit、公司模型或兩小時測試。沒有放寬既有門檻、成功部署重跑或 workflow 改動。待取得原生大檔報告後再補充來源、實際退出碼、原始 counters、判定與獨立收據。
