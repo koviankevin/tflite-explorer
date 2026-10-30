@@ -56,9 +56,9 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             if(mode==='pending-recovery')assert.equal(await read(()=>document.activeElement===document.querySelector('#open-model')),true);
             assert.ok(!requests.some(r=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)|\/vendor\/litert\//.test(r.url)));
             assert.equal(rows.filter(w=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(w.url)).length,0);
-            await context.close();contextsClosed=true;assert.ok(rows.every(w=>w.closed));assert.deepEqual(errors,[]);
             assert.ok(await read(()=>document.documentElement.scrollWidth<=1280));
-            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:false,runtimeFetched:false,keyboardReload:mode!=='pending-recovery',pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...bounds?{failureBounds:bounds}:{}});
+            await context.close();contextsClosed=true;assert.ok(rows.every(w=>w.closed));assert.deepEqual(errors,[]);
+            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:false,runtimeFetched:false,keyboardReload:mode!=='pending-recovery',pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...(bounds?{failureBounds:bounds}:{})});
         }catch(error){report.error=error.stack||String(error);throw Object.assign(error,{startupRecovery:report});}
         finally{release();if(context&&!contextsClosed)await context.close();report.workers.push(...rows);report.requests.push(...requests);report.errors.push(...errors);}
     }
