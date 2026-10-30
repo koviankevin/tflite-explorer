@@ -7,7 +7,7 @@ import {foldPatternSnapshot} from './pattern-fold.js';
 import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
 import {createExportReport} from './export-report.js';
 import {assertModelEditAction} from './model-edit-policy.js';
-import {prepareExportResult} from './blob-memory-parts.js';
+import {prepareExportResult,roundTripReadStats} from './blob-memory-parts.js';
 let index;
 let overview;
 let results = [];
@@ -91,7 +91,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
                 if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
                 else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js'),{validateTfliteConstants}=await import('./tflite-constant-checks.js');result.semanticValidation=[];for(const c of result.changes){validateTfliteModelGraph(candidate.raw,c.graph);result.semanticValidation.push(validateTfliteConstants(candidate.raw,c.graph,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(o,o+n)))));}}
                 if(index!==sourceIndex||file!==sourceFile||editWorkspace!==session){send(id,{cancelled:true});return;}
-                const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
+                const verified={...result,roundTrip:true,roundTripStats:roundTripReadStats(candidate.stats,candidateFile.size,result.semanticValidation)};
                 const {replayEditDraft}=await import('./model-edit-draft.js'),state=replayEditDraft(session.snapshot,args.commands),targets=[...new Map(result.workspaceChanges.map(c=>{const n=state.nodes.find(n=>n.id===c.node);return [`${n.source.graph}:${n.source.node}`,n.source];})).values()];
                 try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,{...targets[0],mode:'workspace',workspaceTargets:targets},{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}catch(reason){verified.reportError=reason.message;}
                 send(id,verified);
@@ -113,7 +113,7 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             if(candidate.mlir){const {assertValidMLIR}=await import('./mlir-validate.js');assertValidMLIR(candidate);}
             else {const {validateTfliteModelGraph}=await import('./tflite-model-edit.js'),{validateTfliteConstants}=await import('./tflite-constant-checks.js');result.semanticValidation=[];for(const change of result.changes){validateTfliteModelGraph(candidate.raw,change.graph);result.semanticValidation.push(validateTfliteConstants(candidate.raw,change.graph,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(candidateFile.slice(o,o+n)))));}}
             if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
-            const verified={...result,roundTrip:true,roundTripStats:{bytesRead:candidate.stats.bytesRead,fileBytes:candidateFile.size}};
+            const verified={...result,roundTrip:true,roundTripStats:roundTripReadStats(candidate.stats,candidateFile.size,result.semanticValidation)};
             try{const {createModelEditReport}=await import('./model-edit-report.js');verified.report=createModelEditReport(sourceIndex,sourceFile,verified,candidate,args,{outputName:args.outputName,buildId:new URL(import.meta.url).searchParams.get('v')});}
             catch(reason){verified.reportError=reason.message;}
             send(id,verified);

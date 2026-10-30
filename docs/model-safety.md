@@ -35,3 +35,9 @@ Node 邊界測試先取得五個失敗、修正後與既有保存／恢復等 53
 `node test/browser/windows-acceptance.mjs <乾淨候選目錄> <全新報告目錄> --allow-local-browser` 僅在 Windows 且使用者明確允許時執行，不安裝瀏覽器、不用個人 profile。依序開啟已安裝的 Chrome／Edge，驗證 native 選檔、搜尋、32px、大小預覽、子模型分頁、clone／接線、JSON 草稿匯入與重選原模型、Undo／Redo、匯出重開、實際 quota 失敗／備份／重試及測試 origin 儲存清除後的恢復。
 
 兩個瀏覽器都必須成功；未知能力、未安裝或測試錯誤不略過。原始 JSON、bytes hashes 與截圖保留，正式發布仍遵守既有 main-only 關卡，不變更 workflow、安全、RSS 或計時門檻。
+
+## 新常數讀取的統計修正
+
+首個 main 實體八輪 [41069901739](https://github.com/koviankevin/tflite-explorer/actions/runs/41069901739)完成八輪功能／bytes 比對，但在最後的讀取量對帳失敗：每個修改／組合候選新增 16 bytes 常數讀取，原先的 `roundTripStats.bytesRead` 只包含重新解析。原始 provider ZIP／JSON 已認證保留，該輪仍列失敗，不宣稱已通過 RSS 或整個關卡。
+
+兩個實際修改 RPC 改用同一個統計函式，回報 `parseBytesRead`、`semanticBytesRead` 及兩者總量；不調整獨立 FileReaderSync 觀察值或減去任何讀取。記憶體內既有常數的檢視另外計 `inspectedBytes`，不假裝成 File 讀取。真實序列化 TRANSPOSE 的小型案例先重現 1104／1112 的差異，修正後連同資料保留、報告與既有修改等 24 項通過；新 main 實體關卡仍待完成。

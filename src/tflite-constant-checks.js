@@ -1,16 +1,16 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
-    const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map();let bytesRead=0,checked=0,unchecked=0;
+    const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map();let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
     const shape=t=>t?.has_rank!==false&&!t?.shape_signature?.some(d=>d<0)&&t?.shape&&Array.from(t.shape).every(d=>d>=0)?Array.from(t.shape):null;
     const values=id=>{
         if(cache.has(id))return cache.get(id);
         const t=g.tensors[id],b=model.buffers[t?.buffer],dims=shape(t);if(!t||!b||t.is_variable||inputs.has(id)||produced.has(id)||!dims||![2,4].includes(t.type))return null;
         const count=dims.reduce((a,b)=>a*b,1),width=t.type===2?4:8,size=count*width;
-        if(!Number.isSafeInteger(size)||size>1024**2||bytesRead+size>budget)return null;
+        if(!Number.isSafeInteger(size)||size>1024**2||inspectedBytes+size>budget)return null;
         const length=Number(b.size||b.data?.length||0);if(!length||length!==size)return null;
         const data=b.size?readAt(Number(b.offset),size):b.data;if(!(data instanceof Uint8Array)||data.byteLength!==size)throw Error(`Tensor #${id} 常數資料讀取不完整。`);
-        bytesRead+=size;const dv=new DataView(data.buffer,data.byteOffset,data.byteLength),result=Array.from({length:count},(_,i)=>t.type===2?BigInt(dv.getInt32(i*4,true)):dv.getBigInt64(i*8,true));
+        if(b.size)bytesRead+=size;inspectedBytes+=size;const dv=new DataView(data.buffer,data.byteOffset,data.byteLength),result=Array.from({length:count},(_,i)=>t.type===2?BigInt(dv.getInt32(i*4,true)):dv.getBigInt64(i*8,true));
         if(cache.size<128)cache.set(id,result);return result;
     };
     for(const [node,op]of g.operators.entries()){
@@ -38,5 +38,5 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         if(expected&&(expected.length!==out.length||expected.some((d,i)=>d!==out[i])))fail(`output tensor #${op.outputs[0]} shape 應為 [${expected.join(', ')}]。`);
         checked++;
     }
-    return {checked,unchecked,bytesRead,scope:'只檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER；最多讀取 4 MiB，不含未知值、custom kernel 與數值等價。'};
+    return {checked,unchecked,bytesRead,inspectedBytes,scope:'只檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER；最多檢視 4 MiB，不含未知值、custom kernel 與數值等價。'};
 }
