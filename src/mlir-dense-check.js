@@ -16,12 +16,13 @@ export function denseCounter(){
     return {char,hex:n=>{hexDigits+=BigInt(n);},text(text){for(const part of text.matchAll(/[^\s,\[\]()"/]+|[\s,\[\]()"/]/g)){const s=part[0];if(s.length>1&&!quoted&&!comment&&!slash){if(token.length+s.length<=256)token+=s;else unknown=true;}else for(const c of s)char(c);}},finish(){flush();return {status:unknown||quoted||slash?'unchecked':'counted',count:String(count),hex,hexDigits:String(hexDigits),array};}};
 }
 export function checkDensePayloads(source,payloads){
-    if(!payloads.some(p=>p.kind==='dense'))return {checked:0,unchecked:0,payloads:[]};
+    if(!payloads.length)return {checked:0,unchecked:0,payloads:[]};
     const positions=new Map(Array.from(source.matchAll(/"0x01000000[0-9a-f]{40}"/g),m=>[m[0],m.index]));
     const rows=[];
     for(const p of payloads){
-        if(p.kind!=='dense')continue;
         const at=positions.get(p.token);if(at===undefined)continue;
+        if(p.kind==='resource'){rows.push({kind:'resource',status:'unchecked',reason:'Resource 只保留原文並檢查 hex 完整性；型別對應、packing 與 dialect 語意未驗證。'});continue;}
+        if(p.kind!=='dense'){rows.push({kind:p.kind,status:'unchecked',reason:'未知 payload 格式，未驗證其內容。'});continue;}
         const before=source.slice(Math.max(0,at-4096),at),after=source.slice(at+p.token.length,at+p.token.length+4096);
         const type=(/dense\s*<\s*((?:tensor|vector)\s*<[^<>]*>)\s*:\s*$/.exec(before)?.[1]||/^\s*>\s*:\s*((?:tensor|vector)\s*<[^<>]*>)/.exec(after)?.[1]||'').replace(/\s/g,'');
         const m=/^(?:tensor|vector)<((?:\d+x)*)([su]?i\d+|f16|f32|f64|bf16)>$/.exec(type),c=p.count;

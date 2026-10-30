@@ -2,6 +2,8 @@
 
 整份 MLIR 不再受 64 MiB 上限限制。原本的整檔 `arrayBuffer → UTF-8 string` 和權重陣列解析，改成 File-backed 的結構文字及權重區段。模型仍只在瀏覽器本機 Worker 處理。
 
+開發中修正：延後 resource payload 也會計入「編碼未檢查」數量；先前只計算 dense，resource-only 檔會誤列 0 段未檢查。小型重現先取得失敗，再完成 resource-only、混合 dense／resource、匯出／重開及 byte 保留驗收；未增加 resource packing 或 dialect 語意驗證能力。本項尚未發布。
+
 ## 讀取與匯出
 
 - 每次掃描 1 MiB，檢查完整 UTF-8。超過 4 KiB 的 dense literal，以及檔案 metadata 內的 resource hex string，保留原始 File 的 byte ranges。

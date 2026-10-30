@@ -49,7 +49,9 @@ let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=
 let windowsObserver;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
-const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},(soak?160:22)*60000);
+const watchdogMinutes=soak?160:windows?30:22;
+report.watchdogMinutes=watchdogMinutes;
+const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},watchdogMinutes*60000);
 
 const patterns=[
     reusablePattern('Lifecycle prefix',{nodes:[{alias:'N1',type:'HugeWeightProject'},{alias:'N2',type:'Reshape'},{alias:'N3',type:'Transpose'},{alias:'N4',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'},{from:'N3',to:'N4'}],induced:true}),
@@ -59,7 +61,7 @@ if(!soak)patterns.push(reusablePattern('Lifecycle branch wrong edge',{...pattern
 async function processRss(){
     assert.ok(processTree,'Cannot locate owned Chromium identities.');
     if(!windows)return processTree.sample(await readProcessTable());
-    const native=await windowsObserver.sample();return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
+    const native=await windowsObserver.sample();report.windowsObservedIdentities=native.identities;return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
 }
 async function sample(){
     const memory=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
@@ -153,7 +155,7 @@ try{
     const available=memoryLimit&&memoryLimit!=='max'?Number(memoryLimit)-Number(memoryCurrent):os.freemem();assert.ok(available>=4*1024**3,'Need 4 GiB available RAM.');assert.ok(disk.bavail*disk.bsize>=8*1024**3,'Need 8 GiB free disk.');
     report.environment={platform:os.platform(),release:os.release(),node:process.version,cpu:os.cpus()[0]?.model,cpus:os.cpus().length,totalMemory:os.totalmem(),availableMemoryBytes:available,memoryLimit,memoryCurrent,tempFreeBytes:disk.bavail*disk.bsize,imageVersion:process.env.ImageVersion||null,runId:process.env.GITHUB_RUN_ID||null,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceTree:execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),sourceDirty:Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())};assert.equal(report.environment.sourceDirty,false);
     temporary=await mkdtemp(path.join(os.tmpdir(),'model-lens-lifecycle-'));phase='physical-fixture';
-    if(windows){report.fixtureIntent={directory:temporary,file:path.join(temporary,'physical-1_25GiB.tflite'),expectedBytes:PHYSICAL_SOURCE_BYTES,producer:'writePhysicalFixture',retain:'Keep generated source and remaining small files for evidence review;verified per-cycle regenerated downloads are removed by exact filename after closure'};await persistReport();}
+    if(windows){report.status='running';report.fixtureIntent={directory:temporary,file:path.join(temporary,'physical-1_25GiB.tflite'),expectedBytes:PHYSICAL_SOURCE_BYTES,producer:'writePhysicalFixture',retain:'Keep generated source and remaining small files for evidence review;verified per-cycle regenerated downloads are removed by exact filename after closure'};await persistReport();}
     report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));report.fixture.editFingerprint=await sourceFingerprint(report.fixture.file);
     if(windows){report.fixture.allocatedBytes=windowsAllocatedBytes(python,report.fixture.file);report.fixture.allocationMethod='Windows GetCompressedFileSizeW,owned generated fixture only';}
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
@@ -208,6 +210,7 @@ try{
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);
         await rm(child);for(const filename of [...editedFiles,...compositionFiles])await rm(filename);
         if(soak){entry.activeEndMs=activeElapsed();report.soak.activeDurationMs=entry.activeEndMs;if(cycle%policy.cycles===0)await persistReport();}
+        else if(windows)await persistReport();
         console.log(`PASS cycle ${cycle}/${soak?'two-hour soak':policy.cycles}: ${entry.kind}, full edit ${entry.modelEdit.bytes} bytes in ${entry.modelEdit.exportMs}ms, submodel ${entry.bytes} bytes, closed RSS ${(entry.closedRssBytes/1024**2).toFixed(1)} MiB`);
     }
     if(soak){clearInterval(timer);await pending;report.soak.activeDurationMs=activeElapsed();}

@@ -16,7 +16,9 @@
 
 既有 `model-lifecycle.mjs` 的 Windows 入口僅能明確授權啟動已安裝 Chrome／Edge，禁止 Windows soak。沿用 v3 的實體合成 1.25 GiB、21,005 OP、全權重非零寫入／fsync／完整 SHA-256 readback、實際選檔、pattern 正負例、整份編輯、組合草稿與匯出／重開流程。Windows 另以 GetCompressedFileSizeW 核對實體儲存量；只接受該次新建 OS 暫存目錄中的固定合成 fixture，拒絕 symlink／reparse root。原檔與尚留的小型檔案保留供後續核對，逐輪已核對並關閉的生成下載仍按精確檔名移除。
 
-原 8 輪、2 輪 warmup、500ms 取樣、RSS／heap／讀取量門檻、22 分鐘 watchdog、80 秒 URL 釋放觀察上限、應用 60 秒 URL 壽命均不變。Worker `Runtime.getHeapUsage` 仍在既有檢查點量測 isolate used／backing storage，不稱為獨立 OS RSS 或連續峰值。有限輪數與 500ms 取樣不能證明永不洩漏，也可能漏掉短暫尖峰及從未觀察的程序。
+原 8 輪、2 輪 warmup、500ms 取樣、RSS／heap／讀取量門檻、80 秒 URL 釋放觀察上限、應用 60 秒 URL 壽命均不變。Linux gate 的 22 分鐘 watchdog 不變；Windows 測試工具的總 watchdog 為 30 分鐘，不是網站 runtime 或 URL 的計時器。Worker `Runtime.getHeapUsage` 仍在既有檢查點量測 isolate used／backing storage，不稱為獨立 OS RSS 或連續峰值。有限輪數與 500ms 取樣不能證明永不洩漏，也可能漏掉短暫尖峰及從未觀察的程序。
+
+首輪 Windows Chrome 原始結果為失敗：沿用 Linux 的 22 分鐘總 watchdog 時，八輪實際選檔、整份編輯、切圖／組合、下載重開、權重／options 及 pattern 正負例已完成，但在 `cycle-8-release` 等待最後一批 URL 自然釋放時退出。第八輪缺少完整釋放／settle、整體判定與正常 browser close 證據，不能算八輪通過。原始報告及 exit 1 保留於 `build/qa/windows-large/chrome-1.json`／`.log`。為涵蓋這台 Windows 主機的原生下載、完整本機 bytes 比對與最後正常釋放，僅增加 Windows 測試總 watchdog；不減輪數、跳過驗證或縮短應用 timer。
 
 先提交乾淨來源，再用獨立且尚不存在的報告檔，每個 channel 分開執行：
 

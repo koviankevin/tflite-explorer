@@ -9,7 +9,7 @@
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 進行中：卷積／pooling 共用靜態推導與檢查；已取得真正 LiteRT allocation 失敗的 kernel/node 診斷，獨立 Windows 小型 UI 已通過，其他 OP 與正式關卡仍待完成 |
 | Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | [引用契約](custom-reference-contracts.md)本機證據已核對：建置隔離與十二份 Windows 下載的原始 bytes／編號／pattern；公開程序 exit 0，合成內網報告通過但退出碼遺失。未知格式仍完整保留；尚待正式關卡與發布 |
 | Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | [原生觀察器與入口](windows-large-model.md)開發中；空頁原生所有權／正常退出及實體 allocation API 前置測試通過。實體 1.25 GiB 八輪仍待執行；小型 UI 與 Linux 大檔證據分開保留 |
-| Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | 計數與既有擴充已交付；resource／packing 等仍待處理，不宣稱通過公司 verifier |
+| Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | 已重現並修正 resource-only 檔誤列 0 段未檢查；resource／混合 dense、bytes、匯出重開與 SSA 的 44 項選測通過，尚待打包後 UI／正式關卡。不宣稱完整 packing／公司 verifier |
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |
 | 保存、操作及發布 | 草稿／pattern 異常與遷移可恢復；主要新手流程與鍵盤可操作；固定產物、相依 scope、必要關卡、正式站與 Release 一致，回退不破壞使用者資料 | 既有功能與交付證據沿用；新功能仍須補受影響驗收；OS 斷電、完整螢幕閱讀器與任意格式遷移仍未證實 |
 
