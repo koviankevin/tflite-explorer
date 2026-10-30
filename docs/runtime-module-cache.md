@@ -209,3 +209,12 @@ Firefox 使用事前登記的獨占 TMPDIR。完整 gzip 最多 512 KiB，解壓
 候選修正只在使用者明確下載 runtime IO 時，以 `new Response(ownedBytes, {headers: ...}).blob()` 消費本機、完整且有界的 ZIP。這沿用既有大型模型 prefix 轉換的方式，不呼叫 fetch、不加入 OPFS／應用持久快取或新 Worker，也不處理模型權重。固定 Firefox 的 [FetchBody::ConsumeBody](https://github.com/mozilla-firefox/firefox/blob/361373160356d92cb5cd4d67783a3806c776ee78/dom/fetch/Fetch.cpp) 會在已知、非 private 的 principal 下允許 [MutableBlobStorage](https://github.com/mozilla-firefox/firefox/blob/361373160356d92cb5cd4d67783a3806c776ee78/dom/file/MutableBlobStorage.cpp) 使用瀏覽器管理的 temporary file，預設門檻 1 MiB；private browsing 仍限記憶體，其他引擎／設定也不保證同一實作。這是候選機制的來源依據，改善仍須實際原 RSS 驗證。
 
 同一 IO 的 in-flight 請求去重；完成且型別／長度正確、來源結果仍有效才快取 Blob 並 retire 原 bytes。reset、take buffer／新執行取消舊準備，舊 promise 不能覆蓋新 request；每個 terminal path 清理 WeakMap，沒有完成結果的全域快取。UI 顯示準備狀態、避免重複點選，換來源／重置不下載舊結果，錯誤可重試且不重新推論。host.export／URL create/revoke 60 秒、原 RSS flow／fixture／policy、runtime 30 秒均不改。54 項 Node 選測通過，包含完整 8 MiB ZIP SHA／獨立 CRC、真實 CPU、transfer／reuse、取消／錯誤／來源代次及套件邊界；Firefox 原生記憶體仍待候選 Hosted。未發布。
+
+
+### 本機 Response 修正的既有八輪通過
+
+[40985499197](https://github.com/koviankevin/tflite-explorer/actions/runs/40985499197)／來源 `769707e17ad5bbbe904048a96888fed80c5598bd`、tree `1b6c834757bc9c6678742fc32ffe55e82869ab66`、build `95baa2d69d0d3a46` 已完成。原 RSS policy／fixture／flow／URL 60 秒／runtime 30 秒不變，closed RSS slope **7,556,066.74 bytes／輪通過**，較前一輪 18,839,727.54 低；drift 56,414,208、peak growth 258,711,552、最大缺口 588 ms，全部原門檻通過。17 功能／19 runtime／5 指南、完整 CPU／IO、cold／retained input、native Worker／程序／來源清理均通過。
+
+獨立 direct-Blob raw 控制仍約 19,844,417.83 bytes／輪，作為未使用新下載轉換的對照；它不載入模型／WASM，也不扣除或替代應用 RSS。冷熱完整 native gzip、307 core 檔、provider digest／CRC、SHA／來源與獨立成功 reader 均實際 exit 0；完整 [22 檔原始證據](results/runtime-io-response32-originals.zip)／[SHA inventory](results/runtime-io-response32-originals.json)保存，ZIP SHA `4a29d5311b3f4a0cdde1f3a0cc8d4fe02b5024e580a74547cd9d9c3c283a87ed`。這是有限 Hosted Linux 正常流程的改善，不證明所有 engine／private mode／數小時或任意模型；候選尚未發布。
+
+使用者在本輪完成時明確調整 Firefox 為選做，見[現行驗收範圍](desktop-engines.md#現行驗收範圍)。已完成的這輪只讀取並保存結果，後續不排 Firefox、不作部署阻擋。受影響 Chromium／WebKit 與正式發布完整性仍須驗證。核心效能 87 檔 dependency fingerprint 與已交付來源完全相同，值為 `2172ba567df7da91fedf1790ad56b1e05a2b49cfd718574f305bb3835f5f741d`；可於 provider／scope 再核對後沿用既有 core 結果，其餘三關卡須按新來源核對。

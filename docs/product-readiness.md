@@ -2,7 +2,7 @@
 
 preview.31 的資源清理與 reader 隔離修正已完成[正式交付](preview31.md#發布狀態)：三引擎候選、1.25 GiB／21,005 OP 八輪及手動 CPU／IO 八輪通過，四關卡原始來源／digest／scope 已核對。正式站 1,406 檔、33 項原生操作及四份固定下載吻合原準備包；整體目標保持進行中。
 
-最新[冷熱原生分類](runtime-module-cache.md#冷熱原生報告完整核對與本機-response-候選)已取得完整且核對的兩份報告；原 Firefox RSS 18,839,727.54 bytes／輪仍失敗。公開 IO 熱對照有六份 8 MiB memory-file-data 留在 web 程序，依這份具體線索改用本機 Response 準備 IO 下載；54 項選測通過，但原生改善待 Hosted。原 RSS／計時與正式版不變，preview.32 未發布。
+最新[本機 Response 候選八輪](runtime-module-cache.md#本機-response-修正的既有八輪通過)已在原 RSS 門檻下通過，slope 7,556,066.74 bytes／輪；17 功能／19 runtime／5 指南、CPU／IO、cold／retained inputs 與 native 清理均核對。2026-10-30 依使用者明確指示，Firefox 改為選做相容性／手動診斷，不列必要驗收，也不再阻擋部署；後續不自行排 Firefox 補測。手動入口與歷史成功／失敗原文保留，網站不封鎖 Firefox。Chromium 正式完整性關卡及受影響的 WebKit 驗證照常；不修改安全規則、RSS 門檻、計時或 workflow YAML。 目前繼續受影響 Chromium／WebKit 及發布／正式站／固定 Release 核對，preview.32 未發布。
 
 現行應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 
