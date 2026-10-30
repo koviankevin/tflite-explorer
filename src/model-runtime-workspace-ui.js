@@ -4,7 +4,7 @@ import {runtimeInputsUI} from './tflite-runtime-inputs-ui.js';
 import {runtimeSummary} from './tflite-runtime-policy.js';
 import {runtimeIODownload} from './runtime-io-download.js';
 
-export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,saveFile}){
+export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,saveFile,onLocate}){
     const $=id=>document.getElementById(id),root=$('run-workspace');let active=false,downloader=null;
     const session=modelRuntimeSession({getSource,getFormat,prepare:()=>rpc('modelRuntimeInfo'),runtime:runtimeClient(),inputs:runtimeInputsUI(),onChange:render});
     downloader=runtimeIODownload({getState:()=>session.state,getSource,saveFile,onChange:render});
@@ -18,6 +18,15 @@ export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,sav
         if(validation)$('edit-runtime-result').dataset.status=validation.status;else delete $('edit-runtime-result').dataset.status;
         $('run-progress').textContent=busy?message:download.pending?'正在準備 IO 下載…':'';
         const body=$('run-interface');body.replaceChildren();
+        if(validation?.failureLocations?.length){
+            const heading=document.createElement('h3');heading.textContent='錯誤位置候選';body.append(heading);
+            const source=getSource();
+            for(const location of validation.failureLocations)for(const candidate of location.candidates){
+                const button=document.createElement('button');button.type='button';button.className='runtime-location';button.dataset.runtimeLocate=`${candidate.graph}:${candidate.node}`;
+                button.textContent=`查看 Subgraph #${candidate.graph} · OP #${candidate.node} ${location.kernel}${location.unique?'':'（候選）'}`;
+                button.disabled=busy||!onLocate;button.onclick=()=>{if(source!==getSource()||session.state.busy)return;onLocate?.(candidate,source);};body.append(button);
+            }
+        }
         if(plan){
             if(!plan.eligible){const p=document.createElement('p');p.textContent=plan.reason;body.append(p);}
             for(const side of ['inputs','outputs']){

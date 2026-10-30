@@ -41,7 +41,7 @@ const exportedModels=exportedModelUI({button:$('open-export-model'),open:nextFil
 const modelEditor=modelEditUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,onStart:()=>{exportedModels.clear();exportReports.clear();},onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(!result.roundTrip)throw Error('修改結果尚未重新解析，已停止下載。');if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);},openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),error:reason=>report(reason)});
 let runWorkspace;
 const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,getCompositionTargets:compositionTargets,getCompositionLabel:()=>kind==='patterns'?$('saved-pattern').value||$('condition-pattern-name').value:'',chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),onMode:()=>runWorkspace?.leave(),isRunning:()=>!!runWorkspace?.active});
-runWorkspace=modelRuntimeWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,leaveEditor:()=>editWorkspace.explore(),saveFile:(name,blob)=>host.export(name,blob)});
+runWorkspace=modelRuntimeWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,leaveEditor:()=>editWorkspace.explore(),saveFile:(name,blob)=>host.export(name,blob),onLocate:(location,source)=>locateRuntimeOperator(location,source).catch(report)});
 const explorer=explorerResize($('explorer-resize'));
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
@@ -430,6 +430,16 @@ function setCurrentGraph(graph) {
     $('graph-select').value = String(graph);
     const option = $('scope').querySelector('option[value="current"]');
     if (option) option.textContent = `目前 subgraph（子圖 ${graph}）`;
+}
+async function locateRuntimeOperator({graph,node},source){
+    if(source!==file||model?.sourceFormat!=='tflite'||!Number.isInteger(graph)||!model.graphs[graph]||!Number.isInteger(node)||node<0)return;
+    runWorkspace.leave();editWorkspace.explore();setCurrentGraph(graph);setKind('layers',false);
+    $('scope').value='current';$('query').value=`#${node}`;
+    await runSearch();if(source!==file)return;
+    const index=page.items.findIndex(item=>item.graph===graph&&item.index===node);
+    if(index<0){notice('此 runtime 位置尚無可確認的模型 OP，請查看原始診斷。');return;}
+    await selectResult(page.offset+index,{whole:false});
+    if(source===file)document.querySelector(`[data-result-index="${page.offset+index}"]`)?.focus({preventScroll:true});
 }
 function renderMatchBlocks(item) {
     const nav=$('match-blocks');nav.hidden=overviewMode || !item.blocks;

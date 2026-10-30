@@ -10,6 +10,10 @@ import {exportTflite} from '../src/tflite-export.js';
 import {runtimePlan} from '../src/tflite-runtime-policy.js';
 import {executeRuntime} from '../src/tflite-runtime-execute.js';
 import {Archive} from '../vendor/netron/zip.js';
+import {FlatbufferWriter} from '../src/flatbuffer-writer.js';
+import {editTfliteModel} from '../src/tflite-model-edit.js';
+import {editWorkspaceSnapshot,exportEditWorkspace} from '../src/model-edit-workspace.js';
+import {modelEditDraft} from '../src/model-edit-draft.js';
 
 test('a valid ADD submodel executes without acquiring custom options diagnostics on round trip',async()=>{
     const base=new URL('../vendor/litert/2.6.0/',import.meta.url),messages=[];
@@ -24,5 +28,15 @@ test('a valid ADD submodel executes without acquiring custom options diagnostics
         assert.deepEqual(await run(f.blob,f.model),[],'the original ADD fixture is a clean runtime control');
         const index=await parse(f.bytes),result=exportTflite(index,0,[0],new Blob([f.bytes])),bytes=new Uint8Array(await result.blob.arrayBuffer()),reopened=await parse(bytes);
         assert.deepEqual(await run(result.blob,reopened.raw),[],'cutting a valid builtin OP must not add a custom-options error');
+        const legacy=await runtimeFixture();legacy.model.buffers.push({data:null,offset:0n,size:0n});
+        for(const t of legacy.model.subgraphs[0].tensors)t.buffer=1;
+        const original=new FlatbufferWriter().finish(legacy.model,new Blob()),originalBytes=new Uint8Array(await original.arrayBuffer()),legacyIndex=await parse(originalBytes),file=new File([original],'nonzero-runtime-buffer.tflite');
+        assert.deepEqual(await run(original,legacyIndex.raw),[],'nonzero absent-data Buffer is valid before editing');
+        const snapshot=editWorkspaceSnapshot(legacyIndex,{targets:[{graph:0,node:0}],composition:true}),draft=modelEditDraft(snapshot);
+        draft.apply({kind:'import',node:'op:0:0',nodes:['op:0:0'],label:'public A'});
+        for(const output of [editTfliteModel(legacyIndex,file,[{graph:0,operators:[{template:0,inputs:[0,1]}]}]),exportTflite(legacyIndex,0,[0],file),await exportEditWorkspace(legacyIndex,file,snapshot,draft.commands)]){
+            const roundTrip=await parse(new Uint8Array(await output.blob.arrayBuffer()));
+            assert.deepEqual(await run(output.blob,roundTrip.raw),[],'full edit,cut and composition must still execute with nonzero absent-data buffers');
+        }
     }finally{rt.unloadLiteRt();}
 });

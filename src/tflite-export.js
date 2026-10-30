@@ -51,7 +51,7 @@ export function exportTflite(index, graphIndex, selected, file) {
         const source = index.raw.buffers[id];
         if (!source) throw new Error('權重 buffer 編號無效。');
         const { offset, size } = range(source.offset, source.size);
-        return Object.assign(new schema.Buffer(), { data: size ? null : source.data || new Uint8Array(), offset: 0n, size: 0n, ...(size ? { sourceRange: { offset, size, kind:'buffer', reference:`buffer:${id}` } } : {}) });
+        return Object.assign(new schema.Buffer(), { data: size ? null : source.data ?? null, offset: 0n, size: 0n, ...(size ? { sourceRange: { offset, size, kind:'buffer', reference:`buffer:${id}` } } : {}) });
     });
     const tensors = tensorIds.map((id) => {
         const source = graph.tensors[id];

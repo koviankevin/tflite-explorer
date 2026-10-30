@@ -13,11 +13,15 @@ export const CUSTOM_OPTIONS_PREVIEW_LIMIT = 64 * 1024;
 // range path; importing the parser must not change subsequent model bytes.
 const decodeBuffer = (reader, position) => {
     const buffer = new schema.Buffer();
-    buffer.data = new Uint8Array(0);
+    // An absent data vector is a runtime allocation, even at a nonzero buffer
+    // index. An explicitly present empty vector is a different FlatBuffer value.
+    // Preserve presence while nonempty payloads remain zero-copy File ranges.
+    buffer.data = null;
     buffer.offset = reader.uint64_(position, 6, 0n);
     buffer.size = reader.uint64_(position, 8, 0n);
     const field = reader.__offset(position, 4);
     if (field) {
+        buffer.data = new Uint8Array(0);
         const vector = position + field + reader.int32(position + field);
         const length = reader.uint32(vector);
         if (length) { buffer.offset = BigInt(vector + 4); buffer.size = BigInt(length); }
