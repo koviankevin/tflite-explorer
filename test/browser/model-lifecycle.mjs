@@ -26,12 +26,14 @@ import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
 import {windowsProcessObserver,windowsAllocatedBytes} from './windows-process-memory.mjs';
 import {verifyArtifact} from '../../scripts/lib/release-artifact.mjs';
+import {trustedDocument} from './trusted-document.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
 await mkdir(path.dirname(reportPath),{recursive:true});
 const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
 const windows=process.platform==='win32',channel=windows?process.env.MODEL_LENS_BROWSER_CHANNEL:undefined,python=windows?process.env.MODEL_LENS_QA_PYTHON:undefined;
+const trustedBootstrap=windows&&process.env.MODEL_LENS_TRUSTED_BOOTSTRAP==='1';
 const policy=soak?MODEL_EDIT_LIFECYCLE_POLICY:MODEL_COMPOSITION_LIFECYCLE_POLICY;
 const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[],samples:[],checks:[],limitations:[
     soak?'At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.':'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
@@ -152,6 +154,7 @@ try{
     assert.ok(['gate','soak'].includes(mode),'Unknown lifecycle profile.');if(soak)assertSoakExecution(process.env,os.platform());
     if(windows){assert.ok(process.argv.includes('--allow-local-browser'),'Local Windows browser requires explicit authorization.');assert.ok(['chrome','msedge'].includes(channel)&&python,'Choose installed Chrome/Edge and Python.');assert.equal(soak,false,'No Windows two-hour soak is authorized.');report.limitations[2]='Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.';}
     else assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI or authorized Windows.');
+    if(trustedBootstrap)assert.ok(process.env.LIFECYCLE_BUILD,'Trusted Windows bootstrap requires an authenticated explicit artifact.');
     const disk=await statfs(os.tmpdir()),memoryLimit=windows?null:await optionalRead('/sys/fs/cgroup/memory.max'),memoryCurrent=windows?null:await optionalRead('/sys/fs/cgroup/memory.current');
     const available=memoryLimit&&memoryLimit!=='max'?Number(memoryLimit)-Number(memoryCurrent):os.freemem();assert.ok(available>=4*1024**3,'Need 4 GiB available RAM.');assert.ok(disk.bavail*disk.bsize>=8*1024**3,'Need 8 GiB free disk.');
     report.environment={platform:os.platform(),release:os.release(),node:process.version,cpu:os.cpus()[0]?.model,cpus:os.cpus().length,totalMemory:os.totalmem(),availableMemoryBytes:available,memoryLimit,memoryCurrent,tempFreeBytes:disk.bavail*disk.bsize,imageVersion:process.env.ImageVersion||null,runId:process.env.GITHUB_RUN_ID||null,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceTree:execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),sourceDirty:Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())};assert.equal(report.environment.sourceDirty,false);
@@ -160,8 +163,9 @@ try{
     report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));report.fixture.editFingerprint=await sourceFingerprint(report.fixture.file);
     if(windows){report.fixture.allocatedBytes=windowsAllocatedBytes(python,report.fixture.file);report.fixture.allocationMethod='Windows GetCompressedFileSizeW,owned generated fixture only';}
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
-    const suppliedBuild=windows?process.env.LIFECYCLE_BUILD:undefined;
-    if(suppliedBuild){const manifest=await verifyArtifact(path.resolve(suppliedBuild),{expectedCommit:report.environment.sourceCommit,requireClean:true,publicOnly:true});report.build=manifest.release;report.buildReused=true;assert.equal(report.build.source.tree,report.environment.sourceTree);}
+    const suppliedBuild=windows?process.env.LIFECYCLE_BUILD:undefined;let documentFixture;
+    if(trustedBootstrap)assert.ok(suppliedBuild,'Trusted Windows bootstrap requires an authenticated explicit artifact.');
+    if(suppliedBuild){const manifest=await verifyArtifact(path.resolve(suppliedBuild),{expectedCommit:report.environment.sourceCommit,requireClean:true,publicOnly:true});report.build=manifest.release;report.buildReused=true;assert.equal(report.build.source.tree,report.environment.sourceTree);if(trustedBootstrap){documentFixture=await trustedDocument(path.resolve(suppliedBuild),manifest);report.documentFixture=documentFixture.proof;report.limitations.push('Windows bootstrap HTML is delivered verbatim from the authenticated artifact via a local test fixture with its original CSP. Other assets use HTTP. This measures native file/browser/process behavior, not HTTP document transport or antivirus compatibility. Raw HTTP injection/close failures are retained separately.');}}
     else{execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));}
     assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer(suppliedBuild?path.resolve(suppliedBuild):undefined);server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
@@ -173,7 +177,7 @@ try{
     processTree=new OwnedProcessTree(root);
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
     context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
-    await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
+    await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){const rejected=new URL(request.url());errors.push(`Unexpected network ${request.method()} ${rejected.origin}${rejected.pathname}`);await route.abort();}else if(!documentFixture||!await documentFixture.handle(route,base))await route.continue();});
     await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
@@ -225,7 +229,7 @@ try{
     const recoveryWorkers=report.audit.workers.filter(w=>w.recoveryAudit);assert.equal(recoveryWorkers.length,report.cycles.length*(soak?1:2));assert.ok(recoveryWorkers.every(w=>w.terminated&&w.recoveryAudit.complete&&w.recoveryAudit.bytes===report.fixture.bytes&&w.recoveryAudit.maxRead<=1024**2&&w.recoveryAudit.violations.length===0&&w.recoveryAudit.fingerprint===report.fixture.editFingerprint));check(`${recoveryWorkers.length} full original-file recovery fingerprints match independent bounded Node reads, strict committed recovery status and terminated workers`);
     for(const audit of [report.audit.audit,...report.audit.workers.map(w=>w.audit).filter(Boolean)]){assert.deepEqual(audit.violations,[]);assert.ok(audit.maxRead<=policy.maxReadBytes&&audit.bytes<=policy.realmReadBytes);}
     assert.equal(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),report.environment.sourceCommit);assert.equal(execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),report.environment.sourceTree);assert.equal(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim(),'');report.sourceUnchanged=true;
-    assert.deepEqual(errors,[]);report.evaluation=soak?evaluateLifecycleSoak(report):evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check(`${report.cycles.length} physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits`);report.status='passed';
+    assert.deepEqual(errors,[]);if(documentFixture)assert.equal(report.documentFixture.deliveries,1);report.evaluation=soak?evaluateLifecycleSoak(report):evaluateLifecycle(report);assert.equal(report.evaluation.status,'passed',report.evaluation.issues.join(', '));check(`${report.cycles.length} physical-file cycles, alternating custom branch/prefix, stable hashes, no retained File/Worker/Blob URL and fixed memory limits`);report.status='passed';
 }catch(error){report.status='failed';report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
 finally{
     clearInterval(timer);await pending;shuttingDown=true;
@@ -237,6 +241,7 @@ finally{
     }catch(error){report.status='failed';errors.push(`Cleanup: ${error.message}`);report.forcedCleanup=[];
         try{if(!windows&&processTree)for(const candidate of processTree.remaining(await readProcessTable())){const live=processTree.remaining(await readProcessTable()).find(p=>p.pid===candidate.pid&&p.startTicks===candidate.startTicks);if(live&&live.pid>1&&live.pid!==process.pid){try{process.kill(live.pid,'SIGKILL');report.forcedCleanup.push({pid:live.pid,startTicks:live.startTicks});}catch(e){if(e.code!=='ESRCH')errors.push('Owned process termination failed.');}}}}catch{errors.push('Ownership proof unavailable; no unverified PID signalled.');}
     }
+    if(windows&&processTree&&!report.processCleanup){try{report.cleanupObservationAfterDriverError=true;report.processCleanup=await waitOwnedProcessExit(processTree,{readTable:async()=>{const native=await windowsObserver.remaining();report.windowsObservedIdentities=native.identities;return native.rows;}});}catch(error){errors.push(`Native cleanup observation: ${error.message}`);}}
     if(windowsObserver){try{report.windowsObserverClose=await windowsObserver.close();}catch(error){report.status='failed';errors.push(`Observer close: ${error.message}`);}}
     if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
     // Only this invocation's mkdtemp directory; no model from the user's filesystem.

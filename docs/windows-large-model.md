@@ -33,3 +33,13 @@ node test/browser/model-lifecycle.mjs --allow-local-browser
 Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建置一次，再設定 `$env:LIFECYCLE_BUILD = 'build/qa/windows-large/site'`，讓兩個 channel 使用同一份產物。每次仍逐檔核對 manifest、完整來源 commit／tree 與乾淨公開產物；不接受不同來源或內網包，不覆寫仍在使用的建置。這只省去重複建置，實體檔案生成及八輪流程照常執行。未設定時及原 Linux CI 仍沿用原本的建置方式。
 
 必要本機驗收範圍為 Chrome／Edge、1280×640／32px，不啟動手機、Firefox／WebKit、公司模型或兩小時測試。沒有放寬既有門檻、成功部署重跑或 workflow 改動。待取得原生大檔報告後再補充來源、實際退出碼、原始 counters、判定與獨立收據。
+
+## 本機文件傳輸的第三方注入
+
+第二輪 Chrome 八輪功能及原始記憶體子判定通過，但整輪仍為 exit 1：攔到 Kaspersky 外部 script 請求並拒絕，且 browser close 超過原 10 秒。21 個先前已證明所有權的 PID／creation 身分在事後唯讀檢查中全部消失；這不是原 10 秒內正常關閉的通過證據。完整失敗仍保留於 `chrome-2.json`／`.log`，不清除錯誤或改判綠燈。
+
+小型控制測例重現了 HTML 中出現原始檔沒有的 script，連 HTTP CSP 標頭也被加入第三方 host。單加標頭並不足以隔離；[Kaspersky 官方說明](https://support.kaspersky.com/kav/21.2/en-US/97156.htm)也記錄其流量 script 注入能力。未修改防毒、系統信任、瀏覽器安全規則或請求拒絕規則。
+
+本機 Windows 的功能／記憶體量測可明確設定 `$env:MODEL_LENS_TRUSTED_BOOTSTRAP = '1'`，同時必須指定 `LIFECYCLE_BUILD`。測試工具先驗證完整公開產物，再逐 byte 核對 index.html，使用 [Playwright route.fulfill](https://playwright.dev/docs/api/class-route#route-fulfill) 提供原樣 HTML 及原本的 CSP。只處理指定 origin 的 GET `/`／`/index.html` document；不攔截其他資產、外部 origin、POST 或 query。其餘資產仍走 HTTP，實際選檔、下載、Worker 與原生程序量測不變。小型 Chrome／Edge 的前後測已證明外部請求仍遭拒絕、相同建置可啟動及正常退出。
+
+報告明列 `documentFixture.httpDocumentTransportVerified=false`，因為這項隔離量測不驗證初始 HTML 的 HTTP 傳輸，也不代表防毒相容性通過。正式站與 Linux 必要關卡仍使用正常 HTTP／HTTPS，分開保存證據。若 native browser close 再失敗，仍記為失敗，另記錄原有 10 秒 native reap 觀察；不延長關閉／reap 上限、不送強制終止訊號。
