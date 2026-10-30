@@ -12,14 +12,22 @@ export function readDraft(record) {
 }
 export function draftStore({indexedDB=globalThis.indexedDB,notify=()=>{}}={}) {
     let connection;
-    const database=()=>connection ||= new Promise((resolve,reject)=>{
-        if(!indexedDB){reject(new Error('此瀏覽器無法使用本機草稿；可改用工作階段檔案。'));return;}
-        const request=indexedDB.open(DRAFT_DATABASE,1);let abandoned=false;
-        request.onupgradeneeded=()=>{const store=request.result.createObjectStore('drafts',{keyPath:'key'});store.createIndex('modelKey','modelKey');};
-        request.onerror=()=>{connection=null;reject(request.error);};
-        request.onblocked=()=>{abandoned=true;connection=null;reject(new Error('本機草稿資料庫被舊分頁阻擋，請關閉舊版分頁後再試。'));};
-        request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();connection=null;notify();};resolve(db);};
-    });
+    const database=()=>{
+        if(connection)return connection;
+        const attempt=new Promise((resolve,reject)=>{
+            if(!indexedDB){reject(new Error('此瀏覽器無法使用本機草稿；可改用工作階段檔案。'));return;}
+            const request=indexedDB.open(DRAFT_DATABASE,1);let abandoned=false;
+            request.onupgradeneeded=()=>{const store=request.result.createObjectStore('drafts',{keyPath:'key'});store.createIndex('modelKey','modelKey');};
+            request.onerror=()=>reject(request.error);
+            request.onblocked=()=>{abandoned=true;reject(new Error('本機草稿資料庫被舊分頁阻擋，請關閉舊版分頁後再試。'));};
+            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();if(connection===attempt)connection=null;notify();};resolve(db);};
+        });
+        connection=attempt;
+        // Synchronous open throws and request errors invalidate only their own
+        // attempt. Late events must not evict a replacement connection.
+        attempt.catch(()=>{if(connection===attempt)connection=null;});
+        return attempt;
+    };
     return {
         async list(identity) {
             const db=await database();return new Promise((resolve,reject)=>{
