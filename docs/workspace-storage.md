@@ -16,4 +16,4 @@
 
 Hosted Chromium 新流程使用隔離 context，以原生選檔／按鈕真正建立 20 份探索草稿，讓第 21 份觸發既有上限，再下載備份、移除一份、Enter 重試及重載恢復。CDP 僅讀 DOM；不直接改 IndexedDB、不注入 quota、不改安全設定或使用 fake timers。容量上限案例不冒充 OS 磁碟已滿或斷電測試。
 
-目前為 preview.34 候選，尚待必要 CI、原生流程、正式站及固定 Release 核對；正式站仍為 [preview.33](preview33.md#發布狀態)。
+[preview.34 固定候選](preview34.md)已完成必要 CI、真實容量上限／重試／重開及大檔八輪，原始 provider、來源與依賴範圍均核對；尚待正式站及固定 Release 發布驗證。正式站仍為 [preview.33](preview33.md#發布狀態)。

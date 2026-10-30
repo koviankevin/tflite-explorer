@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "ce8ce8c94e41626556d4d7658cbd1f8e66641035",
+    "tree": "6d897e8f7abe6247d947cdaf5af9d1bf3182939e",
+    "committedAt": "2026-10-30T13:08:54+08:00",
+    "dirty": false
+  },
+  "archiveSHA256": "8ec474b23b9fb7fa2ea0966426d435dc21843df06a139cb15d1cdfb4988bb11f",
+  "members": [
+    {
+      "name": "gates/artifact-13.zip",
+      "bytes": 737,
+      "sha256": "2f1845cdf82b8f8ae87f1aca6260122b47076ae8e4f533e7eef6e63589db211f"
+    },
+    {
+      "name": "gates/artifact-13.zip.json",
+      "bytes": 1172,
+      "sha256": "8177b5a38d34f4be2a05664cc64bb72fc66a8da6698cdb9ae97b63ca0969df42"
+    },
+    {
+      "name": "gates/artifact-17.zip",
+      "bytes": 4719,
+      "sha256": "5f067ef5818b7c90a32f56c304166180aff65c8b9a73746e63732eaf174006ab"
+    },
+    {
+      "name": "gates/artifact-17.zip.json",
+      "bytes": 94646,
+      "sha256": "5021562ac58964e07ad17da03208adfff8b27d09255a8ff2dacfcd378d18ae0b"
+    },
+    {
+      "name": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "name": "gates/artifact-5.zip.json",
+      "bytes": 59676,
+      "sha256": "ed22fcd9d1f6c7cf44b0af61da50456252b3781426efd3949950129a959566ed"
+    },
+    {
+      "name": "gates/artifact-9.zip",
+      "bytes": 29391,
+      "sha256": "55ba5d1a5d0240ebb62b29935c01433d3dd4e1a648463bf96ec474b54305c6d3"
+    },
+    {
+      "name": "gates/artifact-9.zip.json",
+      "bytes": 366203,
+      "sha256": "4aa2fe335eba8c1c32cee67f2d503ba97ca310e25e96a426ec81f081898785d1"
+    },
+    {
+      "name": "gates/metadata-1.json",
+      "bytes": 2595,
+      "sha256": "93368ecb0fb42242ee6855827f536e22cb1ad6626a2958b08a11ca7c7240ea12"
+    },
+    {
+      "name": "gates/metadata-10.json",
+      "bytes": 14415,
+      "sha256": "885e72cd0e9b6270798f0f14b7ab4086f449fdb8550f969fa14dfbafba22ae13"
+    },
+    {
+      "name": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "928cc7b65e162a2611c6d5fd0492878e9e13139fb320220644f66761d326fd61"
+    },
+    {
+      "name": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "290f006ba4d7c263fea8f0a0dc05e5c0bb0ad873d369b03f7609c5f5dfc0245d"
+    },
+    {
+      "name": "gates/metadata-14.json",
+      "bytes": 14423,
+      "sha256": "ca94fd3d0474b045e783c73e00d2c116973c318f0c210a164e2ed89735cf5fe8"
+    },
+    {
+      "name": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "d27004b7126d15f9418d5a2370b2a920d05270a1f2e90bd03e607f1a64d4b8a3"
+    },
+    {
+      "name": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "450a3d6642ff116d21b2f4b5e54f5e40173b60e1562ad7471e9b17d0d41eea9a"
+    },
+    {
+      "name": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "name": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "name": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "name": "gates/metadata-6.json",
+      "bytes": 14447,
+      "sha256": "c59079d15ea6d309e105ea1e4a8f19b73afacaaddfeb72cc5e2656519cf8b223"
+    },
+    {
+      "name": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "d07c60ff74e8add95a999e555e070107858a711fe2b6d7f4a1a2ce3b8cf2ead9"
+    },
+    {
+      "name": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "e4b7bfae8e4840b57a4e571a9948451e8e539d106781ae0b34a51dca57dd3cf5"
+    },
+    {
+      "name": "gates/review.json",
+      "bytes": 201163,
+      "sha256": "767b7f2141ac65a537bff30b29a3ab952bcf2ece68396b70c01a4bd81e728455"
+    },
+    {
+      "name": "native/jobs.json",
+      "bytes": 5633,
+      "sha256": "d27004b7126d15f9418d5a2370b2a920d05270a1f2e90bd03e607f1a64d4b8a3"
+    },
+    {
+      "name": "native/listing.json",
+      "bytes": 1866,
+      "sha256": "450a3d6642ff116d21b2f4b5e54f5e40173b60e1562ad7471e9b17d0d41eea9a"
+    },
+    {
+      "name": "native/native-artifact.json",
+      "bytes": 832,
+      "sha256": "80dc94d743db35e9584761a4dd4599b1cee996d763637c9196f1e76f172b8b41"
+    },
+    {
+      "name": "native/native.zip",
+      "bytes": 516922,
+      "sha256": "0c29e8eaebdf28b4f0013163491b51fefcef63e64f153f5ba3bd2022979c2d40"
+    },
+    {
+      "name": "native/production-smoke.json",
+      "bytes": 1033789,
+      "sha256": "88d054ac0de69e6a0bf561efd93c2efbc87675bc5dd83466bf583571797606b8"
+    },
+    {
+      "name": "native/production-smoke.png",
+      "bytes": 149504,
+      "sha256": "8f3edb4d3201cb389b50bfc42e5033c4a4c38367694c3ed4e5ec4d980f68f8bb"
+    },
+    {
+      "name": "native/review.json",
+      "bytes": 89143,
+      "sha256": "0dca09c0dbc0658bf506866d125972a5f506e48c531ce859bb87761733cee9cb"
+    },
+    {
+      "name": "native/run.json",
+      "bytes": 14423,
+      "sha256": "ca94fd3d0474b045e783c73e00d2c116973c318f0c210a164e2ed89735cf5fe8"
+    },
+    {
+      "name": "native/site-artifact.json",
+      "bytes": 828,
+      "sha256": "3930408c47197347b65a62c0b58bf18ef7ba0c6d5181031fb7f8bebfdcacbe87"
+    },
+    {
+      "name": "native/site.zip",
+      "bytes": 4719,
+      "sha256": "5f067ef5818b7c90a32f56c304166180aff65c8b9a73746e63732eaf174006ab"
+    },
+    {
+      "name": "native/startup-failure.png",
+      "bytes": 147352,
+      "sha256": "1c96094ecead07d317292f9e51356e566be5ebb09a4dfa3d48bfdbb24b90703a"
+    },
+    {
+      "name": "native/storage-failure.png",
+      "bytes": 155394,
+      "sha256": "c5737f0ff787ae47723b7889c85b0ab79c6d5475fcb9228fc4b248bd75b02c24"
+    },
+    {
+      "name": "native/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "5021562ac58964e07ad17da03208adfff8b27d09255a8ff2dacfcd378d18ae0b"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/assert-workspace-storage34.mjs",
+      "bytes": 1726,
+      "sha256": "324980b90865cd98718cc06903e4dd11f8c217940173e9add37c463b49ccc35a"
+    },
+    {
+      "name": "readers/review-storage34-gates.mjs",
+      "bytes": 2234,
+      "sha256": "ca4bcd6d5e24ec3e40029cee348a8924f538b75b145fc521d42aaf909c82d8f6"
+    },
+    {
+      "name": "readers/review-storage34-native.mjs",
+      "bytes": 8407,
+      "sha256": "51d22384bea4ac10065b6b886cfb292206c1ac00efdef5da9a57bd8b2a144761"
+    }
+  ],
+  "actualReaderExits": {
+    "native": {
+      "exit": 0,
+      "toolChunk": "2cf68c"
+    },
+    "gates": {
+      "exit": 0,
+      "toolChunk": "7b4d94"
+    }
+  },
+  "scope": "Hosted Linux Chromium only. Original 33 operations/runtime/8-cycle policies unchanged; new native 20-record failure/retry/reload and 22 model Worker closes. Capacity limit is not OS quota/power-loss coverage. No company/mobile/Firefox/WebKit/2-hour run."
+}
