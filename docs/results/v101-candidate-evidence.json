@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "31fc2e356f226303165b33055427aa700f67368a",
+    "tree": "0c48c35d6fcd9bb5e5f2d8dce6b5e8c76a50e999",
+    "committedAt": "2026-10-30T19:26:15+08:00",
+    "dirty": false
+  },
+  "archiveSHA256": "4487bdf5ccc6be5bfa1b4eb0d7e9474e6f1d044dd021e31ce17dd5daa40e5bd6",
+  "members": [
+    {
+      "name": "gates/artifact-13.zip",
+      "bytes": 735,
+      "sha256": "e8903b02c14f5636e720b07da82ca68f2bd9527cf77ab64b6624d4ead88db187"
+    },
+    {
+      "name": "gates/artifact-13.zip.json",
+      "bytes": 1172,
+      "sha256": "fa4aaa978377537aca49f95d0bde9dd6bbd872a76df7e415a77882af6c71642c"
+    },
+    {
+      "name": "gates/artifact-17.zip",
+      "bytes": 4707,
+      "sha256": "81a57da078329630ad1214f78ec70232d630ded07d3b700d0f66dc7d5fd210f2"
+    },
+    {
+      "name": "gates/artifact-17.zip.json",
+      "bytes": 94635,
+      "sha256": "654224ee710f1273ce7dac4f2278fc2c2c73ee390d12779d93030fde543d165c"
+    },
+    {
+      "name": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "name": "gates/artifact-5.zip.json",
+      "bytes": 59676,
+      "sha256": "ed22fcd9d1f6c7cf44b0af61da50456252b3781426efd3949950129a959566ed"
+    },
+    {
+      "name": "gates/artifact-9.zip",
+      "bytes": 29700,
+      "sha256": "2d8ea03d488055629ca4795d9e8f1a6f25e5041019838da165bf9e89833337c1"
+    },
+    {
+      "name": "gates/artifact-9.zip.json",
+      "bytes": 366504,
+      "sha256": "88f7d2efbd0808a68c2cebdb4406dead09c6c3bf84d9e3731a740fc4d9183069"
+    },
+    {
+      "name": "gates/metadata-1.json",
+      "bytes": 3013,
+      "sha256": "08a506c875caee9d5e8764865fc071cf27871e9ac312eeb6ebf2438f2d288519"
+    },
+    {
+      "name": "gates/metadata-10.json",
+      "bytes": 14624,
+      "sha256": "339c3cfa9519003820b057b4c99a56c0927fbefec98b71849748601c9308dbfd"
+    },
+    {
+      "name": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "f4fef8a121251ffa30d1835c3ccab9ed3a9f648f90c0e355257c2b68cba62b32"
+    },
+    {
+      "name": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "d2a11a5882aedd21f2f57356396d0d74cfa9f799746f25557bec484b7aef8981"
+    },
+    {
+      "name": "gates/metadata-14.json",
+      "bytes": 14632,
+      "sha256": "e55c0aec44566752be0a9838b258013104042176636668bab56d12bf357865da"
+    },
+    {
+      "name": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "e2fb57025d244fb8ca2a3e6ce56ebd0d809a999d89558cd6ca7adc1e810fc2ba"
+    },
+    {
+      "name": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "ac594e02b6372cc330767a1578e7922d5a8363c139660319975e3f8ca39e11ca"
+    },
+    {
+      "name": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "name": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "name": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "name": "gates/metadata-6.json",
+      "bytes": 14656,
+      "sha256": "f5be25d7f69d3335abc5693049857fd2988e86a4823f5cd333b2c2fca7815259"
+    },
+    {
+      "name": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "12c922cf56f0c2f4ff1a82b1f2c71da45c24b5721cf8fc1a85adc479a6650817"
+    },
+    {
+      "name": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "bb2af778a3830130edc65209fd4772513447e11bc032a9bffcc396d1a1217098"
+    },
+    {
+      "name": "gates/review.json",
+      "bytes": 201749,
+      "sha256": "e3b020b2b181a8582c0ccf2c2a63bf8d3f6469e99981cc78f88a41bfd143512f"
+    },
+    {
+      "name": "native/jobs.json",
+      "bytes": 5633,
+      "sha256": "e2fb57025d244fb8ca2a3e6ce56ebd0d809a999d89558cd6ca7adc1e810fc2ba"
+    },
+    {
+      "name": "native/listing.json",
+      "bytes": 1866,
+      "sha256": "ac594e02b6372cc330767a1578e7922d5a8363c139660319975e3f8ca39e11ca"
+    },
+    {
+      "name": "native/native-artifact.json",
+      "bytes": 832,
+      "sha256": "50ef8e6d73a903ecd10853f409ca643de56c89e53d35f8ac2ec97ad5937f5e87"
+    },
+    {
+      "name": "native/native.zip",
+      "bytes": 516782,
+      "sha256": "bc8b1516a46afe0cdb62454feb7ebdf594a5915787f0d695933ea145b47eee97"
+    },
+    {
+      "name": "native/production-smoke.json",
+      "bytes": 1031325,
+      "sha256": "b0bb097ce94c8067267c9d35e6fffc1b6b585d3d67c392e3675773a3f4d3a35f"
+    },
+    {
+      "name": "native/production-smoke.png",
+      "bytes": 149654,
+      "sha256": "a4ef5cb5c9e1169e5ea16c0b558d31498199bde16bd14a99d1e5971e42ee1cd4"
+    },
+    {
+      "name": "native/review.json",
+      "bytes": 89429,
+      "sha256": "9a8337fb100db06bdf160ffb21dd659ab1ce1be5f05ad081b1eb11fc83a2ecef"
+    },
+    {
+      "name": "native/run.json",
+      "bytes": 14632,
+      "sha256": "e55c0aec44566752be0a9838b258013104042176636668bab56d12bf357865da"
+    },
+    {
+      "name": "native/site-artifact.json",
+      "bytes": 828,
+      "sha256": "008e3ca2d504b9369a706bc2f56dc48d26f2547ca49766b7c91d94e42f3fa473"
+    },
+    {
+      "name": "native/site.zip",
+      "bytes": 4707,
+      "sha256": "81a57da078329630ad1214f78ec70232d630ded07d3b700d0f66dc7d5fd210f2"
+    },
+    {
+      "name": "native/startup-failure.png",
+      "bytes": 147371,
+      "sha256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b"
+    },
+    {
+      "name": "native/storage-failure.png",
+      "bytes": 155394,
+      "sha256": "c5737f0ff787ae47723b7889c85b0ab79c6d5475fcb9228fc4b248bd75b02c24"
+    },
+    {
+      "name": "native/versioned-site-browser.json",
+      "bytes": 94635,
+      "sha256": "654224ee710f1273ce7dac4f2278fc2c2c73ee390d12779d93030fde543d165c"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-stable-coverage101.mjs",
+      "bytes": 705,
+      "sha256": "59c9dc8b9c1430628ad31e5591a0889293fce8f897715236734f2dfab94d58ab"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/assert-workspace-storage34.mjs",
+      "bytes": 1726,
+      "sha256": "324980b90865cd98718cc06903e4dd11f8c217940173e9add37c463b49ccc35a"
+    },
+    {
+      "name": "readers/review-database101-gates.mjs",
+      "bytes": 2236,
+      "sha256": "4ca68efdc80977e66fbca48c249cb13162e0fd42e1194cec4db71acdd8d71e97"
+    },
+    {
+      "name": "readers/review-database101-native.mjs",
+      "bytes": 8535,
+      "sha256": "bb8431e8cce7e492c6fc7a3ab30bac23e4cb35a5ce2eb23e0ac668c1bd870dad"
+    }
+  ],
+  "actualReaderExits": {
+    "native": {
+      "exit": 0,
+      "toolChunk": "67de12"
+    },
+    "gates": {
+      "exit": 0,
+      "toolChunk": "24c165"
+    }
+  },
+  "scope": "Hosted Linux Chromium candidate. Stable selection flags all true; unchanged33 operations/runtime/8-cycle policies plus native storage/startup proofs. Adapter synchronous-denial/late-event cases are Node boundary tests, not native browser permission/power-loss evidence. No new Firefox/WebKit/mobile/company/2hour run."
+}
