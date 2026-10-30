@@ -1,6 +1,6 @@
 # 資料庫連線失敗重試候選
 
-目前正式站仍為 [preview.34](preview34.md#發布狀態)。本候選只調整探索草稿、編輯草稿及 pattern 清單的連線生命週期，尚未發布；不改資料庫名稱、版本、資料格式、保存上限或既有記錄。
+目前正式站回報 [v1.0.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.0.0)／build `09ca06bdfff83b76`，來源 `af88a158e8f2506358ece6ce162458bbe68fa061`，承接 preview.34 功能。本候選已同步該版本起點，只調整探索草稿、編輯草稿及 pattern 清單的連線生命週期，尚未發布；不改資料庫名稱、版本、資料格式、保存上限或既有記錄。
 
 ## 問題與修正
 
