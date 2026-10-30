@@ -1,5 +1,6 @@
 // Estimates are admission checks, not a hard cap on native kernel scratch memory.
 // Large-file exploration/export does not read or instantiate the WASM runtime.
+import {runtimeDiagnosticContext,runtimeLocationSummary} from './tflite-runtime-diagnostics.js';
 export const RUNTIME_LIMITS=Object.freeze({modelBytes:128*1024**2,estimatedBytes:512*1024**2,ioBytes:16*1024**2,timeoutMs:30000});
 export const RUNTIME_ENGINE='LiteRT.js 2.6.0 / CPU WASM';
 const types={0:['float32',4],1:['float16',2],2:['int32',4],3:['uint8',1],4:['int64',8],6:['bool',1],7:['int16',2],9:['int8',1],10:['float64',8],12:['uint64',8],15:['uint32',4],16:['uint16',2]};
@@ -33,7 +34,7 @@ export function runtimePlan(model,bytes){
     if(io>RUNTIME_LIMITS.ioBytes)return skip('模型輸入／輸出合計超過 16 MiB，未執行。');
     result.estimatedBytes=bytes*3+allocation*2+64*1024**2;
     if(result.estimatedBytes>RUNTIME_LIMITS.estimatedBytes)return skip('模型與 tensor 的保守配置估算超過 512 MiB，未執行。');
-    return {...result,eligible:true};
+    return {...result,eligible:true,diagnosticContext:runtimeDiagnosticContext(model)};
 }
 export function runtimeSkipped(reason){return {schemaVersion:1,engine:RUNTIME_ENGINE,status:'not-verified',stage:'preflight',reason,compiled:false,invoked:false,scope:'主 subgraph；未執行時不代表通過。'};}
-export function runtimeSummary(result){const status={passed:'通過',failed:'失敗','not-verified':'未能驗證'}[result.status]||'未能驗證';return `LiteRT 本機檢查：${status}。${result.reason}`;}
+export function runtimeSummary(result){const status={passed:'通過',failed:'失敗','not-verified':'未能驗證'}[result.status]||'未能驗證',locations=runtimeLocationSummary(result.failureLocations);return `LiteRT 本機檢查：${status}。${result.reason}${locations?'\n'+locations:''}`;}

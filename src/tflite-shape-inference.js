@@ -1,13 +1,14 @@
 // Conservative metadata-only inference. Tensor-valued axes/permutations are not
 // guessed; an unsupported rule keeps an explicit reference tensor.
 import {inferStaticTransform} from './tflite-static-transform.js';
+import {inferSpatialTransform} from './tflite-spatial-checks.js';
 const unary=new Set(['ABS','NEG','EXP','LOG','SQRT','RSQRT','SQUARE','FLOOR','CEIL','ROUND','RELU','RELU6','RELU_N1_TO_1','LOGISTIC','TANH','ELU','LEAKY_RELU','HARD_SWISH','GELU','SOFTMAX','LOG_SOFTMAX','SIN','COS']);
 const binary=new Set(['ADD','MUL','SUB','DIV','MAXIMUM','MINIMUM','POW','SQUARED_DIFFERENCE']);
 export function inferTfliteOutputs(name,inputs,outputs,options={}){
     const manual=reason=>({status:'manual',reason});
     if(outputs.length!==1||!inputs.length||inputs.some(t=>!t))return manual('請補齊輸入；此推導需要單一輸出。');
     if([...inputs,...outputs].some(t=>t.shape_signature?.some(n=>n<0)||!Array.isArray(t.shape)||t.shape.length>128||t.shape.some(n=>!Number.isInteger(n)||n<0||n>2147483647)))return manual('動態或未知 shape 需明確指定，未自動推測。');
-    let shape;const transform=inferStaticTransform(name,inputs,options);
+    let shape;const transform=inferStaticTransform(name,inputs,options)||inferSpatialTransform(name,inputs,options);
     if(transform){if(transform.status!=='inferred')return manual(transform.reason);shape=transform.shapes[0];}
     else if(unary.has(name)&&inputs.length===1)shape=[...inputs[0].shape];
     else if(binary.has(name)&&inputs.length===2){

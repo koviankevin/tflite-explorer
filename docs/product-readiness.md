@@ -1,5 +1,7 @@
 # 商品等級工作與完成條件
 
+2026-10-31 使用者接續「商品等級」目標，[後續工作及完成條件](product-readiness-next.md)另行記錄；以下 v1.1.0 是已發布基準，新工作不縮減為既有成功案例，尚未完成的項目保留。
+
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
 目前固定版本為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，build `9338194b51c14371`。315 核心檔、全站 1,432 檔、四份固定下載與權威 deployment 均獨立核對；必要四項關卡、1.25 GiB TFLite 實體八輪及 2.5 GiB MLIR 串流計數／匯出重開通過。原 RSS、安全與計時規則未放寬。
