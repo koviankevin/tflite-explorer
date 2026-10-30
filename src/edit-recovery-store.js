@@ -29,13 +29,20 @@ export function nextEditRecovery(previous,{key:recordKey,revision,owner,document
 }
 export function editRecoveryStore({indexedDB=globalThis.indexedDB,notify=()=>{}}={}){
     let connection;
-    const database=()=>connection ||= new Promise((resolve,reject)=>{
-        if(!indexedDB){reject(Error('無法使用本機編輯草稿資料庫，請下載編輯草稿 JSON 備份。'));return;}
-        const request=indexedDB.open(EDIT_RECOVERY_DATABASE,1);let abandoned=false;
-        request.onupgradeneeded=()=>request.result.createObjectStore('drafts',{keyPath:'key'});
-        request.onerror=()=>{connection=null;reject(request.error);};request.onblocked=()=>{abandoned=true;connection=null;reject(Error('本機編輯草稿資料庫被舊分頁阻擋；請關閉舊版分頁後再試。'));};
-        request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();connection=null;};resolve(db);};
-    });
+    const database=()=>{
+        if(connection)return connection;
+        const attempt=new Promise((resolve,reject)=>{
+            if(!indexedDB){reject(Error('無法使用本機編輯草稿資料庫，請下載編輯草稿 JSON 備份。'));return;}
+            const request=indexedDB.open(EDIT_RECOVERY_DATABASE,1);let abandoned=false;
+            request.onupgradeneeded=()=>request.result.createObjectStore('drafts',{keyPath:'key'});
+            request.onerror=()=>reject(request.error);request.onblocked=()=>{abandoned=true;reject(Error('本機編輯草稿資料庫被舊分頁阻擋；請關閉舊版分頁後再試。'));};
+            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();if(connection===attempt)connection=null;};resolve(db);};
+        });
+        connection=attempt;
+        // Match failure cleanup to this attempt, including synchronous throws.
+        attempt.catch(()=>{if(connection===attempt)connection=null;});
+        return attempt;
+    };
     const advisory=record=>{try{notify(record);}catch{/* The transaction is already committed. */}};
     return {
         async list(){const db=await database();return new Promise((resolve,reject)=>{const tx=db.transaction('drafts','readonly'),request=tx.objectStore('drafts').getAll(null,EDIT_RECOVERY_COUNT+1);request.onsuccess=()=>{if(request.result.length>EDIT_RECOVERY_COUNT){reject(Error('本機編輯草稿數量超過本版上限，請使用建立記錄的版本整理；原資料保留。'));return;}resolve(request.result.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)));};request.onerror=()=>reject(request.error);});},

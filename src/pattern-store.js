@@ -57,14 +57,21 @@ export function mutatePatternLibrary(current,operation) {
 }
 export function patternStore({indexedDB=globalThis.indexedDB,legacyStorage=()=>globalThis.localStorage,notify=()=>{}}={}) {
     let connection;
-    const database=()=>connection ||= new Promise((resolve,reject)=>{
-        if(!indexedDB){reject(new Error('此瀏覽器無法保存 pattern 清單；目前編輯仍可搜尋，可下載工作階段備份。'));return;}
-        const request=indexedDB.open(PATTERN_DATABASE,1);let abandoned=false;
-        request.onupgradeneeded=()=>request.result.createObjectStore('patterns',{keyPath:'key'});
-        request.onerror=()=>{connection=null;reject(request.error);};
-        request.onblocked=()=>{abandoned=true;connection=null;reject(new Error('Pattern 資料庫被其他版本分頁阻擋，請先關閉舊分頁。'));};
-        request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();connection=null;};resolve(db);};
-    });
+    const database=()=>{
+        if(connection)return connection;
+        const attempt=new Promise((resolve,reject)=>{
+            if(!indexedDB){reject(new Error('此瀏覽器無法保存 pattern 清單；目前編輯仍可搜尋，可下載工作階段備份。'));return;}
+            const request=indexedDB.open(PATTERN_DATABASE,1);let abandoned=false;
+            request.onupgradeneeded=()=>request.result.createObjectStore('patterns',{keyPath:'key'});
+            request.onerror=()=>reject(request.error);
+            request.onblocked=()=>{abandoned=true;reject(new Error('Pattern 資料庫被其他版本分頁阻擋，請先關閉舊分頁。'));};
+            request.onsuccess=()=>{const db=request.result;if(abandoned){db.close();return;}db.onversionchange=()=>{db.close();if(connection===attempt)connection=null;};resolve(db);};
+        });
+        connection=attempt;
+        // Match failure cleanup to this attempt, including synchronous throws.
+        attempt.catch(()=>{if(connection===attempt)connection=null;});
+        return attempt;
+    };
     const transaction=async(operation)=>{
         const db=await database();
         return new Promise((resolve,reject)=>{
