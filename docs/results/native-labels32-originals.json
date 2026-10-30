@@ -1,0 +1,154 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-30T01:10:28.645130+00:00",
+  "source": "702f3e380807362be5a7ae97b5bcd2fdc39f3bc5",
+  "run": 40981715597,
+  "authentication": "passed",
+  "acceptance": "OriginalRSS18,839,727.54 B/cycle stillfailed; complete cold/hot nativegzip + fullrawIO/cleanup independently verified. Six8MiB memory-file-data leaves remain inhotwebprocess afterURLsrevoked; notowner/reachability/growthproof. No publication.",
+  "readerExits": [
+    {
+      "kind": "provider",
+      "exit": 0,
+      "chunk": "6b1003"
+    },
+    {
+      "kind": "cold+hotnative/control",
+      "exit": 0,
+      "chunk": "5f6cff"
+    },
+    {
+      "kind": "functional/originalRSS",
+      "exit": 0,
+      "chunk": "a38a5c"
+    },
+    {
+      "kind": "descriptiveanalysis",
+      "exit": 0,
+      "chunk": "cb0972"
+    }
+  ],
+  "archive": {
+    "path": "native-labels32-originals.zip",
+    "bytes": 900362,
+    "sha256": "8d04c95c29e4666c784b7efc288a0a077764696d0e34ea91d403f7fcfeead982",
+    "members": 23
+  },
+  "files": [
+    {
+      "path": "build/qa/native-labels32-firefox/authentication.json",
+      "bytes": 214223,
+      "sha256": "fdef897896da979a8b83905535ef49948c16990890ae5fc3422302377d3d6f47"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/desktop-firefox.json",
+      "bytes": 2544208,
+      "sha256": "484e6b0a4dcd7665a80118a60d4695b4e1b0dc4c083e00b3f4d939c1961715fe"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/desktop-firefox.png",
+      "bytes": 156538,
+      "sha256": "fe97d06b5fd5d160b88d793b6bf96946b0d2c39ae7dd188e69ba4199a28a85b3"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/failed-rss-review.json",
+      "bytes": 35485,
+      "sha256": "b144cd13784535899aeeb603d75818469ca463092c25b84b9b08fd63325e6d3a"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "863b407f0b63105a6f66ceeb4254a50478384966f3706c713f16207cff8bb004"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/listing.json",
+      "bytes": 948,
+      "sha256": "16bb84fe55d19e474b7cadb0e9162c6086a3974a12f5c3ebc34cedfedb3fd786"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/native-analysis.json",
+      "bytes": 28044,
+      "sha256": "7aed5d6e51c88cc8be4d0226feb51fa3e22dac2e129083be6caa37b36641deeb"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/native-review.json",
+      "bytes": 16601,
+      "sha256": "73e8fa144f7243b108e07438d551869b9d5e763ec02fa041f70d0c81a338a05a"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/original.zip",
+      "bytes": 388762,
+      "sha256": "a0bb4231a15050882a212f9686fca13e616ec9e762953e78df8457369b84cccc"
+    },
+    {
+      "path": "build/qa/native-labels32-firefox/run.json",
+      "bytes": 14432,
+      "sha256": "3afd1e32fe5f495d214c77b4157b617ff393b308c3b899c8e451d854ce8661bf"
+    },
+    {
+      "path": "build/qa/auth-native-labels32.mjs",
+      "bytes": 5762,
+      "sha256": "50b9ff51f8cd8831bce5b7e65c749eb788cb4d2882d22878ab1791c43e0bee44"
+    },
+    {
+      "path": "build/qa/review-native-labels32.mjs",
+      "bytes": 8954,
+      "sha256": "d03bd868633127badab18fd1782ec3a0bae0e4e3d00ba8d63e0474a4d031f4e2"
+    },
+    {
+      "path": "build/qa/review-native-labels32-functional-failure.mjs",
+      "bytes": 6483,
+      "sha256": "40435d063eccafc0f070e542d0328d15069f59f3e134c038fa7ac8a67b07cb74"
+    },
+    {
+      "path": "build/qa/analyze-native-labels32.mjs",
+      "bytes": 2714,
+      "sha256": "e10a859a51b505dc8555d91cb7bc33457abccb27f4393c2969662809f3422b21"
+    },
+    {
+      "path": "build/qa/native-labels32-build.log",
+      "bytes": 445,
+      "sha256": "04b645c79c789e5148fd0bd766a3f746ef55e6737e89226b9ff1653cd21a364a"
+    },
+    {
+      "path": "build/qa/native-labels32-watch.log",
+      "bytes": 35444,
+      "sha256": "01454211e915fb11f5e703296900d15a3326d18b4e3309decfcb24a1ce6e4d4e"
+    },
+    {
+      "path": "build/qa/native-labels32-auth.log",
+      "bytes": 1748,
+      "sha256": "fcd096a3908ee4bb4de3987829522dcc169010049f3b2c804de8d09eb19a141e"
+    },
+    {
+      "path": "build/qa/native-labels32-native-review.log",
+      "bytes": 657,
+      "sha256": "cb6ebc234d1413293973afcfa1f4390c0d35f6ea41f449ad825c651758a94fb6"
+    },
+    {
+      "path": "build/qa/native-labels32-functional-review.log",
+      "bytes": 20492,
+      "sha256": "5990a356208b823658b0c2df133459f373d113aa5276f2c176ac0d5ed835a6d3"
+    },
+    {
+      "path": "build/qa/native-labels32-analysis.log",
+      "bytes": 19604,
+      "sha256": "8b6cfc5606aaa926bb0eed77f5a6a0c13e3a0d2966244512c1222af8ef6ca21b"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-research.json",
+      "bytes": 2111,
+      "sha256": "809b0b1317a27caa88a953bc02a6bf4e8f9e14d8d54ccede868ab0e3892391ff"
+    },
+    {
+      "path": "build/qa/firefox-native-labels-red.log",
+      "bytes": 2636,
+      "sha256": "6d1e6a194b1fadc8d6cd642127a68b60d8329f35fad00b15a1380a4fa3d40972"
+    },
+    {
+      "path": "build/qa/firefox-native-labels-final.log",
+      "bytes": 4655,
+      "sha256": "0594422808b28e741c293e8eed864fe01b45ae0e94ff1f87205df0c4b611ac46"
+    }
+  ]
+}
