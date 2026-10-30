@@ -25,3 +25,9 @@ Hosted Chromium 將用三個獨立 context 阻擋一次入口檔、阻擋一次�
 [40997283556](https://github.com/koviankevin/tflite-explorer/actions/runs/40997283556) 的三個恢復情境全部通過；四個 Netron Worker 都收到 close，無模型、runtime 或下載。33 項原操作、19 runtime、CPU／IO、cold 與 retained input 也通過。獨立 reader 真正 exit 0，核對 provider digest／CRC、來源、截圖 SHA 與 1280×640 邊界；[原始資料](results/startup-recovery33-first-success.zip)與[收據](results/startup-recovery33-first-success.json)保留。
 
 目視截圖發現失敗時頁尾仍是舊的「準備就緒」。候選另將載入中與失敗頁尾同步，並在三情境加入狀態文字檢查；這個小修正仍需新的原生核對，未拿舊成功直接當新來源發布資格。
+
+## 快速開檔的就緒競態
+
+頁尾修正版 [40998526593](https://github.com/koviankevin/tflite-explorer/actions/runs/40998526593) 的三情境與原 33 操作再次通過；獨立實體關卡 [40998532591](https://github.com/koviankevin/tflite-explorer/actions/runs/40998532591) 卻在第一個 chooser 逾時，零輪完成，六個已觀察程序正常退出。動態 bootstrap 讓靜態按鈕先出現，使用者可能在 handler 安裝前點擊；本候選將所有模型開啟／示範入口預設停用，完整初始化後才啟用。版本控制於圖形初始化等待期間仍可操作。
+
+另增加第四個早期開檔情境：真正暫停主程式載入，確認按鈕停用；放行後由原生操作開啟 chooser，取消檔案選取，確認零模型／runtime／下載與真正 Worker close。原始[大檔失敗與網站成功資料](results/startup-recovery33-early-chooser.zip)和[認證界線](results/startup-recovery33-early-chooser.json)保留；不能拿三情境成功覆蓋這次開檔失敗。

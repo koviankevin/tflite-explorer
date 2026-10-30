@@ -6,18 +6,18 @@ import {sha256} from '../../scripts/lib/release-artifact.mjs';
 
 export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
     assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
-    const report={format:'model-lens-startup-recovery',version:1,status:'failed',cases:[],errors:[],workers:[],requests:[],downloads:0};
+    const report={format:'model-lens-startup-recovery',version:1,status:'failed',earlyOpenRequired:true,cases:[],errors:[],workers:[],requests:[],downloads:0};
     const appURL=new URL(coreBasePath+'src/app.js?v='+buildId,base).href,zipURL=new URL(coreBasePath+'vendor/netron/zip.js?v='+buildId,base).href;
-    for(const mode of ['entry-failure','dependency-failure','pending-recovery']){
+    for(const mode of ['entry-failure','dependency-failure','pending-recovery','early-open']){
         let context,page,read,release,observed;const held=new Promise(resolve=>{release=resolve;}),seen=new Promise(resolve=>{observed=resolve;});
-        const rows=[],requests=[],errors=[];let inject=true,contextsClosed=false,bounds;
+        const rows=[],requests=[],errors=[],delayed=mode==='pending-recovery'||mode==='early-open';let inject=true,contextsClosed=false,bounds,earlyClick,earlyChooser,earlyClicked=false,earlyProof;
         try{
             context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});
             await context.route('**/*',async route=>{
                 const request=route.request(),url=request.url();requests.push({url,method:request.method()});
                 if(request.method()!=='GET'||!url.startsWith(base)){errors.push('Unexpected external/non-GET request.');await route.abort();return;}
                 const target=mode==='dependency-failure'?zipURL:appURL;
-                if(url===target&&inject){inject=false;observed();if(mode!=='entry-failure')await held;if(mode!=='pending-recovery'){await route.abort('failed');return;}}
+                if(url===target&&inject){inject=false;observed();if(mode!=='entry-failure')await held;if(!delayed){await route.abort('failed');return;}}
                 await route.continue();
             });
             page=await context.newPage();page.setDefaultTimeout(30000);
@@ -30,9 +30,15 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             if(mode==='dependency-failure'){
                 await page.locator('#release-info-button').click();await page.getByText(buildId,{exact:true}).waitFor();release();
             }
-            if(mode==='pending-recovery'){
-                await panel.locator('[id=application-startup-reload]').focus();
+            if(delayed){
+                if(mode==='pending-recovery')await panel.locator('[id=application-startup-reload]').focus();
                 assert.equal(await panel.getAttribute('data-state'),'loading');assert.equal(await panel.isVisible(),true);assert.equal(await page.locator('#status').textContent(),'正在載入網站');
+                assert.equal(await page.locator('#open-model').isDisabled(),true);assert.equal(await read(()=>document.querySelector('#open-model').onclick===null),true);
+                if(mode==='early-open'){
+                    earlyChooser=page.waitForEvent('filechooser');earlyChooser.catch(()=>{});
+                    earlyClick=page.locator('#open-model').click().then(()=>{earlyClicked=true;});earlyClick.catch(()=>{});
+                    await page.waitForTimeout(100);assert.equal(earlyClicked,false);
+                }
                 assert.equal(await page.locator('#model-file').inputValue(),'');release();
             }else{
                 await page.locator('#application-startup[data-state=failed]').waitFor();
@@ -51,6 +57,13 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
                 await page.locator('#application-startup-reload').press('Enter');await navigation;
             }
             const deadline=Date.now()+30000;while(!await read(()=>document.querySelector('#autosave-enabled').disabled===false&&document.querySelector('#application-startup').hidden)){assert.ok(Date.now()<deadline,'Application did not recover after native reload/releasing the held request.');await page.waitForTimeout(50);}
+            assert.equal(await page.locator('#open-model').isDisabled(),false);assert.equal(await read(()=>typeof document.querySelector('#open-model').onclick),'function');
+            if(mode==='early-open'){
+                await earlyClick;const chooser=await earlyChooser,handle=chooser.element();
+                try{assert.equal(await read(()=>document.querySelector('#application-startup').hidden&&!document.querySelector('#open-model').disabled),true);await chooser.setFiles([]);}finally{await handle.dispose();}
+                assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);
+                earlyProof={disabledWhilePending:true,clickWaitedForReady:true,nativeChooser:true,selectedFiles:0};
+            }
             assert.equal(await page.locator('#model-file').inputValue(),'');assert.equal(await read(()=>document.querySelector('.app-header').inert),false);
             assert.equal(await page.locator('#status').textContent(),'準備就緒');assert.equal(await page.locator('#model-tabs').isVisible(),false);assert.equal(await page.locator('#layer-count').textContent(),'—');
             if(mode==='pending-recovery')assert.equal(await read(()=>document.activeElement===document.querySelector('#open-model')),true);
@@ -58,7 +71,7 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             assert.equal(rows.filter(w=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(w.url)).length,0);
             assert.ok(await read(()=>document.documentElement.scrollWidth<=1280));
             await context.close();contextsClosed=true;assert.ok(rows.every(w=>w.closed));assert.deepEqual(errors,[]);
-            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:false,runtimeFetched:false,keyboardReload:mode!=='pending-recovery',pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...(bounds?{failureBounds:bounds}:{})});
+            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:false,runtimeFetched:false,keyboardReload:!delayed,pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...(bounds?{failureBounds:bounds}:{}),...(earlyProof?{earlyOpen:earlyProof}:{})});
         }catch(error){report.error=error.stack||String(error);throw Object.assign(error,{startupRecovery:report});}
         finally{release();if(context&&!contextsClosed)await context.close();report.workers.push(...rows);report.requests.push(...requests);report.errors.push(...errors);}
     }

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "f2a3c51277515558516c2e3799ead05123ef9e35",
+    "tree": "72db48123b04903d5949b65f9d931823facedcf9",
+    "committedAt": "2026-10-30T11:38:10+08:00",
+    "dirty": false
+  },
+  "runs": {
+    "native": 40998526593,
+    "physical": 40998532591
+  },
+  "acceptance": "Three recovery modes passed; physical first chooser failed, zero completed model cycles, no release authority.",
+  "archiveSHA256": "a6dc9d0ec18443e758bc33c4a316944e9335d4ca2c9a16b3ca48216c7dbe6c24",
+  "members": [
+    {
+      "name": "native/jobs.json",
+      "bytes": 5633,
+      "sha256": "bce00d294ec4d4036898a10197e5be5d9fb8c8f75d34c86a403f827e9a9a1339"
+    },
+    {
+      "name": "native/listing.json",
+      "bytes": 1866,
+      "sha256": "06573412898740d064fc1b3ec34ba8d65fffaa0eb1ab41cc136e4c0ad8576d98"
+    },
+    {
+      "name": "native/native-artifact.json",
+      "bytes": 832,
+      "sha256": "564e11744912c3c655d2edddb55afc6650709f82329649cc4cd21448ed540577"
+    },
+    {
+      "name": "native/native.zip",
+      "bytes": 362467,
+      "sha256": "b25da2ee30956e93a45f489403b6d38d01875e99b08cb792e563e15601bca301"
+    },
+    {
+      "name": "native/production-smoke.json",
+      "bytes": 785898,
+      "sha256": "cdc652cab0d69d997558fdb1c01c07a7d206eb7016772237d09eda73665c42b1"
+    },
+    {
+      "name": "native/production-smoke.png",
+      "bytes": 149506,
+      "sha256": "ecb95198cb87c9f9ec271df23af57f6fc11d6f583c35a1961ec2b0aacac97436"
+    },
+    {
+      "name": "native/review.json",
+      "bytes": 82844,
+      "sha256": "7f9005c15caefe59b7f5ff7c7099b02f109a88a4e7f2295a0bba30906f4e9583"
+    },
+    {
+      "name": "native/run.json",
+      "bytes": 14415,
+      "sha256": "28544910df7e15eb65f0bbd0839db91b0435e54dbb65c804ad51c01d7d07acc9"
+    },
+    {
+      "name": "native/site-artifact.json",
+      "bytes": 828,
+      "sha256": "e75507d10999b08fde4cad8cd72b7ef02b0de288c278d717151463e7bc51ea7d"
+    },
+    {
+      "name": "native/site.zip",
+      "bytes": 4718,
+      "sha256": "a868943ccc0b97ff12fbae5dd9a68e33fdc91129290190c06adb54056e4c6bdc"
+    },
+    {
+      "name": "native/startup-failure.png",
+      "bytes": 148318,
+      "sha256": "0dc16e8b465269099cfaca4e467be5e4fae7af5f9fd7c25db767298f2deda462"
+    },
+    {
+      "name": "native/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "5808b2a01756ff64342a595d6c1ee667b32a4ec7312d67ce6b1e62324bc5bd95"
+    },
+    {
+      "name": "physical/jobs.json",
+      "bytes": 4238,
+      "sha256": "5604a7bfd1414b9e5ae0f2d7b21beb45ba2136954194c072ee902e938b8aa1f2"
+    },
+    {
+      "name": "physical/listing.json",
+      "bytes": 948,
+      "sha256": "61a747b51d424508b980b78b727eb18d4c54a025e86a16664f60261e3fd9396a"
+    },
+    {
+      "name": "physical/original.json",
+      "bytes": 14182,
+      "sha256": "b65c2aab8d3310676e63ac6cf2be090793ad93a2d954462ff4d66109191e42b8"
+    },
+    {
+      "name": "physical/original.zip",
+      "bytes": 2727,
+      "sha256": "f346c780f01c78116bf32c9652ae2fbf9498658b29d25a81cb0e86cca9581ad3"
+    },
+    {
+      "name": "physical/review.json",
+      "bytes": 3433,
+      "sha256": "84c8b7b20e9c24c2b1ff1bed33c83a991b47fed3ee68446a361015ab6e3ccf25"
+    },
+    {
+      "name": "physical/run.json",
+      "bytes": 14439,
+      "sha256": "62c3b039c9a1a06de2114439ec5db70017056ca2b0fca8a1ceaec0473a79e97b"
+    },
+    {
+      "name": "readers/review-startup33-physical-failure-saved.mjs",
+      "bytes": 3171,
+      "sha256": "5041f01b0d6d566519ce73274fd0f5d0e99bc64c2d1e3ea97d0c0376cf250548"
+    }
+  ],
+  "readers": [
+    {
+      "exit": 0,
+      "chunk": "291661",
+      "scope": "Physical provider originals, report.build binding and zero completed cycles"
+    },
+    {
+      "exit": 0,
+      "chunk": "60ade8",
+      "scope": "Native3cases, status consistency and all original33 stages"
+    }
+  ],
+  "diagnosis": "Driver starts native open after static welcome element appears; newly dynamic bootstrap allows that element/button before the model-file click handler is installed. Initial HTML has no disabled flag. Add readiness gating and verify early-click behavior."
+}

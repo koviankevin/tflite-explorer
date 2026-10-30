@@ -1479,7 +1479,7 @@ resizeInFrame($('capture-toolbar'),()=>document.documentElement.style.setPropert
 // Version metadata is independent of graph startup and must respond immediately.
 initReleaseInfo({exportFile:host.export});
 usageGuide=initUsageGuide({
-    getContext:()=>({hasModel:!!model,format:model?.sourceFormat,mode:runWorkspace.active?'run':editWorkspace.active?'edit':'explore',busy:exportBusy||workspaceBusy||tabs.busy||pending.size>0||!$('loading-card').hidden||$('target').getAttribute('aria-busy')==='true'||$('run-workspace').getAttribute('aria-busy')==='true'}),
+    getContext:()=>({hasModel:!!model,format:model?.sourceFormat,mode:runWorkspace.active?'run':editWorkspace.active?'edit':'explore',busy:$('application-startup')?.hidden===false||exportBusy||workspaceBusy||tabs.busy||pending.size>0||!$('loading-card').hidden||$('target').getAttribute('aria-busy')==='true'||$('run-workspace').getAttribute('aria-busy')==='true'}),
     perform:async action=>{
         if(action==='open'){$('open-model').click();return;}
         if(action==='demo'){if(await openDemo()===false)throw Error('未能開啟示範模型，請確認本機原分頁狀態後再試。');return;}
