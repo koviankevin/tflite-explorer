@@ -105,3 +105,7 @@ test('downloadable report records contract pruning separately from unverified ru
     const f=detectionPostprocessFixture(),index=await parse(new Uint8Array(await f.blob.arrayBuffer())),result=exportTflite(index,0,[0],f.file),report=createExportReport(index,f.file,result,{graph:0,nodes:[0],outputName:'cut.tflite'}),json=JSON.parse(await report.blob.text());
     assert.equal(json.preservation.referencePlan.mode,'custom-contract');assert.equal(json.preservation.referencePlan.elidedBufferCount,1);assert.equal(json.checks.find(c=>c.id==='custom-references').status,'passed');assert.equal(json.checks.find(c=>c.id==='runtime-load').status,'not-run');assert.equal(json.checks.find(c=>c.id==='runtime-equivalence').status,'not-run');
 });
+test('connected public two-OP fixture preserves reshape operands, custom branches and preview bytes',async()=>{
+    const f=detectionPostprocessFixture({withReshape:true}),index=await parse(new Uint8Array(await f.blob.arrayBuffer())),preview=tfliteExportPreview(index,0,[0,1]),result=exportTflite(index,0,[0,1],f.file),bytes=new Uint8Array(await result.blob.arrayBuffer()),after=await parse(bytes);
+    assert.equal(preview.retainedBytes,72);assert.equal(after.raw.subgraphs[0].operators.length,2);assert.deepEqual([...after.raw.subgraphs[0].operators[1].inputs],[3,9]);assert.deepEqual([...after.raw.subgraphs[0].outputs],[4,5,6,8]);assert.equal(after.raw.buffers[3].size,8n);assert.equal(after.raw.buffers[2].data,null);
+});
