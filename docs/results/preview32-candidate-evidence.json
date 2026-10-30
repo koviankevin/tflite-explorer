@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "3ca2036198c146b2ba0c6757d2552a36482c5cd6",
+    "tree": "c1d4ab2f8a6b2b91f9280d7db3ffb4b8f9bcbf6d",
+    "committedAt": "2026-10-30T09:47:51+08:00",
+    "dirty": false
+  },
+  "build": "a5de3383cd23b3eb",
+  "archiveSHA256": "b58f5cc7b10e81153bb71422d73f62de6eaa633c99689ff9cdaa8f69c5110c1d",
+  "members": [
+    {
+      "name": "gates/artifact-13.zip",
+      "bytes": 738,
+      "sha256": "f8d583300b44eeeba52adbf557bbf477f81eeaebb9f3ba14cb14f481d6a3704e"
+    },
+    {
+      "name": "gates/artifact-13.zip.json",
+      "bytes": 1172,
+      "sha256": "9d4ee4e6b6a906475003f20af8b04e5cb80ddedd33b3b7aa455e414f446ddae8"
+    },
+    {
+      "name": "gates/artifact-17.zip",
+      "bytes": 4684,
+      "sha256": "f42d555ba163981c7c53c9a9f6217da2c0b9777dd70422f580a9167927c2e918"
+    },
+    {
+      "name": "gates/artifact-17.zip.json",
+      "bytes": 94140,
+      "sha256": "382071d673b3906f9968d119e73f47bc2b3c690cf23731110b6b3d484e7f1fa0"
+    },
+    {
+      "name": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "name": "gates/artifact-5.zip.json",
+      "bytes": 59676,
+      "sha256": "ed22fcd9d1f6c7cf44b0af61da50456252b3781426efd3949950129a959566ed"
+    },
+    {
+      "name": "gates/artifact-9.zip",
+      "bytes": 30144,
+      "sha256": "ca4d532ce8f60c91219cf9d642976f43d25030f113f9d1b03514411d56faf180"
+    },
+    {
+      "name": "gates/artifact-9.zip.json",
+      "bytes": 373112,
+      "sha256": "ee1db31970ab8437f2a9f444b32efa2232a1f659a58c09fc9ffa9033e8616af7"
+    },
+    {
+      "name": "gates/metadata-1.json",
+      "bytes": 2867,
+      "sha256": "5dc0ef391ff9bceea6db5bb295a5dde520ee5b0e945d3068488c2bd60a0c3282"
+    },
+    {
+      "name": "gates/metadata-10.json",
+      "bytes": 14551,
+      "sha256": "06dbc41914992a04b1796521c15ff6590bd07242aed1d19f0dbaed292bc93282"
+    },
+    {
+      "name": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "36c610c80e1fcdbefc4803d447aaf44bcbbe0e01ecb85907681a773b606ef6a5"
+    },
+    {
+      "name": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "7d9f23eb2e31cfeea4080130eef735a139687160030e59996eeb31dfad9fcf83"
+    },
+    {
+      "name": "gates/metadata-14.json",
+      "bytes": 14559,
+      "sha256": "49c51bb662242980f9b0dd3f86f9dfbcda143796bcc36175ecb15ca173cba296"
+    },
+    {
+      "name": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "c86509f9ec7a7ae79b07ef203b1d6f4e27c207e40a8372dcf13d2685547572e7"
+    },
+    {
+      "name": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "c9baeb577a39beb56ce0ea729fb1b0d64f9fc69707b92bfb8d6dc44dca130369"
+    },
+    {
+      "name": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "name": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "name": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "name": "gates/metadata-6.json",
+      "bytes": 14583,
+      "sha256": "f4ad3fe343f0ec22971068c7d32f7a0db49402d7e2a349b38083b6c0408335eb"
+    },
+    {
+      "name": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "122f4cb261e70e6b918f280dd79f9eb7748fb48f6b39e5cb5fb5a1d98ff8e096"
+    },
+    {
+      "name": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "e5616e23526b76b8e0440b30bac45a20b2d5b0db33ea56cb08910ce92331e713"
+    },
+    {
+      "name": "gates/review.json",
+      "bytes": 199075,
+      "sha256": "5f0dcd234d4c464c9cadf9381dbb6cf1530f79c49b96e277d86e9f1dbaab70f7"
+    },
+    {
+      "name": "native/jobs.json",
+      "bytes": 5633,
+      "sha256": "c86509f9ec7a7ae79b07ef203b1d6f4e27c207e40a8372dcf13d2685547572e7"
+    },
+    {
+      "name": "native/listing.json",
+      "bytes": 1866,
+      "sha256": "c9baeb577a39beb56ce0ea729fb1b0d64f9fc69707b92bfb8d6dc44dca130369"
+    },
+    {
+      "name": "native/native-artifact.json",
+      "bytes": 832,
+      "sha256": "ceffda500e91c78ecee8bbd21ff8c6c98415d8043e6ab3282bc2b9cad9f29b41"
+    },
+    {
+      "name": "native/native.zip",
+      "bytes": 212961,
+      "sha256": "e374a72f4669a27aec0250963bbcb5f05e9b263232645d872ff0487089a787af"
+    },
+    {
+      "name": "native/production-smoke.json",
+      "bytes": 506337,
+      "sha256": "fc6b464fc1c7e579f910d9276080871418e9e0337f6d4d01b9a1b2b18eb16a32"
+    },
+    {
+      "name": "native/production-smoke.png",
+      "bytes": 149546,
+      "sha256": "7d92a402cfeeed1ed9b03a249cf2a46d6bec4f0be8913db36750b96192955907"
+    },
+    {
+      "name": "native/review.json",
+      "bytes": 31730,
+      "sha256": "8e8bf0c860804412c9c4e8dd345d9d46e1c196022b32b05c1cca2fb3afecf714"
+    },
+    {
+      "name": "native/run.json",
+      "bytes": 14559,
+      "sha256": "49c51bb662242980f9b0dd3f86f9dfbcda143796bcc36175ecb15ca173cba296"
+    },
+    {
+      "name": "native/site-artifact.json",
+      "bytes": 828,
+      "sha256": "d1d95bf476cd24facc4a18a1c67ab726f6c5a50ad68a9479f8c5d33d5d4e69b1"
+    },
+    {
+      "name": "native/site.zip",
+      "bytes": 4684,
+      "sha256": "f42d555ba163981c7c53c9a9f6217da2c0b9777dd70422f580a9167927c2e918"
+    },
+    {
+      "name": "native/versioned-site-browser.json",
+      "bytes": 94140,
+      "sha256": "382071d673b3906f9968d119e73f47bc2b3c690cf23731110b6b3d484e7f1fa0"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/review-preview32-main-gates.mjs",
+      "bytes": 2152,
+      "sha256": "7a9149271423b24533300cdae516a1ea4b45c539ca04d3a0127e98bc1561b568"
+    },
+    {
+      "name": "readers/review-preview32-native-saved.mjs",
+      "bytes": 5645,
+      "sha256": "515aa8697bd419a2222058fbf6fe25b0974bbed0323c72adc43fe46763e5db7f"
+    }
+  ],
+  "readers": [
+    {
+      "name": "review-preview32-main-gates.mjs",
+      "exit": 0,
+      "toolChunk": "c4770e"
+    },
+    {
+      "name": "review-preview32-native-saved.mjs",
+      "exit": 0,
+      "toolChunk": "be984d"
+    }
+  ],
+  "scope": "Hosted Linux Chromium required gates only, public synthetic fixtures. Original provider metadata, ZIPs, JSON and independent readers retained. Core87 dependency fingerprint reused. Human requires Chrome/Edge only; no new Firefox/WebKit dispatch and no branded Windows binary coverage claimed."
+}
