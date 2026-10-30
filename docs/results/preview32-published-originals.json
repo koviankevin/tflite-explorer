@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "412dd958c77f564c4dc044cb42e07238757190a4",
+    "tree": "896f518b267f4e5328de8150e0ff7c245a0ef445",
+    "committedAt": "2026-10-30T10:11:07+08:00",
+    "dirty": false
+  },
+  "build": "816c3e9c03814cb4",
+  "site": "49f552766fff40f1bcb813307440c834b0af6f92526455f3d70e14cf36c459c0",
+  "archiveSHA256": "aca3d7227df97e61b9e6e072f8d572a538a41d5c14fdd90db49b26343655ad9e",
+  "members": [
+    {
+      "name": "prepared/rebuild-review.json",
+      "bytes": 935,
+      "sha256": "93bc0d7ba4355ebed3704666049dec14b2d302b688c4dc3932320743a0eb1983"
+    },
+    {
+      "name": "prepared/release-gates.json",
+      "bytes": 185319,
+      "sha256": "f59113d7db8f6f66231d2972107e727382ee165ef106a123f2626d4aa57e326c"
+    },
+    {
+      "name": "prepared/release-manifest.json",
+      "bytes": 49725,
+      "sha256": "32af0bc1e2694b1e1e0bdfb54cf4198b49d0d1f1b98cb1ee077db7c6cc9d5aab"
+    },
+    {
+      "name": "prepared/report.json",
+      "bytes": 5277,
+      "sha256": "30da98747fba74c69fcbc556b6c8257468099237216ca26ed24854148db99907"
+    },
+    {
+      "name": "prepared/site-manifest.json",
+      "bytes": 260646,
+      "sha256": "8d53e5cda5e07735afd53b607e7dc104518ce9cf02658dea183b6e8308b833b6"
+    },
+    {
+      "name": "published/12948534220.zip",
+      "bytes": 765,
+      "sha256": "0672465332d0edc697a67b033057f0717c6d3c3db4500c967e49761fb21d0b3e"
+    },
+    {
+      "name": "published/12949685305.zip",
+      "bytes": 244557,
+      "sha256": "1fb2aa56d59c6d63065a760f46458db3ad5cb9c6a8a073d211a19bac6825f132"
+    },
+    {
+      "name": "published/live-release-verification/pages-live-report.json",
+      "bytes": 372047,
+      "sha256": "7c93caa72bbf305a93e50787f3807e7e14acbbc3cfbaf3ef2f49da992faf4e0d"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.json",
+      "bytes": 298651,
+      "sha256": "b46a7ca62caae8d5a68511d2cd1813b6fba2b8e328129dcaefff9dcf342bfda4"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.png",
+      "bytes": 149558,
+      "sha256": "b331a90b5a96c8eddd1c10e81bcac31db1f055c3b1cecda7d73d28344af4ccde"
+    },
+    {
+      "name": "published/published-release-verification/pages-release-report.json",
+      "bytes": 1273,
+      "sha256": "1127e79a18f6f3396a21ec9841122599785acec31d43ba972e76d5c08c3abfd8"
+    },
+    {
+      "name": "published/report.json",
+      "bytes": 107574,
+      "sha256": "a1a3e7b18e07f325b2a21737e85af50299560c0b61f2a5c7d4935944df74e09b"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-preview17-mlir.mjs",
+      "bytes": 1426,
+      "sha256": "699d6afa324806caa0f7157595442b658d73011811820aa79d02d77b4d90e728"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/freeze-preview32-final.mjs",
+      "bytes": 1609,
+      "sha256": "9ac5044ace1bb98ff4e0a394957435bdb32267f2a3cb76b6baf4c7fe6bf9c24a"
+    },
+    {
+      "name": "readers/review-prepared-site.mjs",
+      "bytes": 8604,
+      "sha256": "e4f929e3087a446da62a6bfa989ea48cf9de835549cd7c6116d515974eaef954"
+    },
+    {
+      "name": "readers/review-preview32-publication.mjs",
+      "bytes": 14259,
+      "sha256": "bda7b1d60b8c92959f45b981b1959a3b36b203463f2bb6b8b5abefbbb7ffdbba"
+    },
+    {
+      "name": "readers/verify-prepared32-rebuild.mjs",
+      "bytes": 1599,
+      "sha256": "86566a7db8837f9c43fac3795f65e1fccd0d05349c211289fe8eb20075bd42a2"
+    }
+  ],
+  "publicationReader": {
+    "exit": 0,
+    "toolChunk": "fd4fc2",
+    "reader": "readers/review-preview32-publication.mjs"
+  },
+  "scope": "Complete small provider ZIP originals and reports retained; large prepared application ZIP/Pages tar not duplicated in Git. Their source, provider digest, inventory and successful independent prepared/live checks are recorded. All four immutable Release assets were downloaded and compared with the prepared bytes; the Release retains those application assets permanently. Hosted Linux Chromium; no Firefox/WebKit/browser rerun."
+}

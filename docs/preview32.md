@@ -21,4 +21,10 @@ CPU／IO 八輪共 24 次執行、八份完整 IO bytes 比對，URL 自然約 6
 
 ## 發布狀態
 
-四項候選關卡已核對，準備以同一組來源範圍發布 preview.32。此紀錄尚不代表部署完成；正式站目前仍為 [preview.31](preview31.md#發布狀態)。正式準備、完整 site ID、固定 Release 及部署收據將在實際完成後補入。
+[preview.32 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.32)與[正式站](https://koviankevin.github.io/tflite-explorer/)已完成核對。正式來源 `412dd958c77f564c4dc044cb42e07238757190a4`／tree `896f518b267f4e5328de8150e0ff7c245a0ef445`／build `816c3e9c03814cb4`；PR #160 head 與 main 完整 tree 相同，四項 dependency scopes 與上述受測候選完全相同，沿用成功功能證據。
+
+準備 [40990290444](https://github.com/koviankevin/tflite-explorer/actions/runs/40990290444)的原始 ZIP／Pages tar、307 核心檔與全站 1,412 檔經 provider digest／CRC／來源核對；乾淨重建的核心 manifest SHA `32af0bc1e2694b1e1e0bdfb54cf4198b49d0d1f1b98cb1ee077db7c6cc9d5aab`一致。發布 [40990636352](https://github.com/koviankevin/tflite-explorer/actions/runs/40990636352)的 prepare／deploy／verify_live／release 均 attempt 1 成功，未重跑。
+
+最終獨立 reader 真正 exit 0：正式站 1,412 檔 SHA／MIME、root、權威 Pages deployment 與四份實際固定下載皆吻合原準備包；33 項原生操作、86 model／44 runtime close、八輪 CPU／IO、cold 取消與兩個保留 native handle 的輸入清理通過。site ID `49f552766fff40f1bcb813307440c834b0af6f92526455f3d70e14cf36c459c0`，固定 ZIP SHA `6313caa581dbbb5adb47b57c355d895fcc6aec74ea96253e0384f27ba7766937`。
+
+[正式獨立收據](results/preview32-published-final.json)、[原始小型 provider ZIP／報告／manifest／稽核程式](results/preview32-published-originals.zip)與[逐檔 SHA／實際退出紀錄](results/preview32-published-originals.json)保留；大型應用交付包直接保留於不可變 Release，未重複加入 Git。舊 preview.31／30 與 legacy preview.7 保留；沒有同步 Sites、覆寫舊 tag 或改動安全規則。此版完成交付，整體商品等級目標仍在進行。
