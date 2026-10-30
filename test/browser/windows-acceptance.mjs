@@ -54,7 +54,7 @@ try{
             await until(()=>!document.querySelector('#edit-draft-banner').hidden);const sourceChooser=page.waitForEvent('filechooser');await page.locator('#choose-edit-draft-model').click();await(await sourceChooser).setFiles(original);
             await until(()=>document.body.classList.contains('editing-model')&&document.querySelectorAll('.edit-node.added').length===1&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false');
             assert.equal(await page.locator('#edit-font').inputValue(),'32');await page.locator('#edit-undo').click();await page.locator('#edit-redo').click();const resumed=await download('#edit-export','resumed.tflite');assert.equal(sha256(resumed.bytes),sha256(edited.bytes));row.cases.push('native JSON import and original-model reselection after a fresh page; view/history restored, Undo/Redo and identical re-export');
-            await page.locator('#explore-mode').click();await ready();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#draft-status').textContent.startsWith('已自動儲存'));
+            await page.locator('#explore-mode').click();await ready();await page.locator('#fork-draft').click();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#draft-status').textContent.startsWith('已自動儲存'));
             const cdp=await context.newCDPSession(page),origin=new URL(base).origin;await cdp.send('Storage.overrideQuotaForOrigin',{origin,quotaSize:0});
             row.quota=await cdp.send('Storage.getUsageAndQuota',{origin});assert.equal(row.quota.quota,0);
             await page.locator('#fork-draft').click();await until(()=>document.querySelector('#draft-status').dataset.error==='true');assert.match(await page.locator('#draft-status').textContent(),/quota/i);
@@ -65,7 +65,7 @@ try{
             row.cases.push('real browser quota rejection, backup, quota restored/retry, isolated-origin IndexedDB removal, state retained and explicit new draft');
             assert.equal(await read(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:path.join(directory,channel+'-32px.png')});
             await context.close();context=null;await browser.close();browser=null;assert.deepEqual(row.errors,[]);assert.ok(row.workers.every(w=>w.closed));row.status='passed';
-        }catch(error){row.error=error.stack||String(error);throw error;}
+        }catch(error){row.error=error.stack||String(error);if(page&&!page.isClosed())try{row.failureDOM=await desktopDOMReader(page)(()=>({mode:document.body.className,dialogs:Array.from(document.querySelectorAll('dialog[open]'),e=>e.id),notice:document.querySelector('#notice')?.textContent,edit:document.querySelector('#edit-message')?.textContent,draft:document.querySelector('#draft-status')?.textContent,banner:document.querySelector('#edit-draft-hint')?.textContent}));await page.screenshot({path:path.join(directory,channel+'-failure.png')});}catch{}throw error;}
         finally{await context?.close();await browser?.close();}
     }
     assert.deepEqual(gitSource(),source);report.status='passed';

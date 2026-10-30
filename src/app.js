@@ -955,7 +955,7 @@ $('export-submodel').onclick = async () => {
 };
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path],selection.blocks?.map(b=>({graph:b.graph,nodes:[...b.path]}))); };
 $('preview-submodel').onclick=async()=>{
-    const source=file,targets=captureSelections();if(!model?.capabilities?.tfliteExport||!targets.length)return;
+    const source=file,targets=$('capture-cfg').checked?captureSelections():[{graph:currentGraph,nodes:[...pickedNodes]}];if(!model?.capabilities?.tfliteExport||!targets[0]?.nodes.length)return;
     try{const preview=await rpc('previewTfliteExport',targets[0]);if(file!==source)return;$('export-size-description').textContent=exportPreviewText(preview);$('export-size-dialog').showModal();}catch(error){if(file===source)report(error);}
 };
 $('close-export-size').onclick=()=>$('export-size-dialog').close();
