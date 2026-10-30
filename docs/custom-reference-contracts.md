@@ -42,6 +42,12 @@ export const tfliteCustomContracts = [{
 
 ## 驗收範圍
 
-已增加小型正負例：明確與隱含引用、optional sentinel、不存在的引用、未知版本／prefix／metadata、外部 options、同名版本重疊、模型自帶註冊無效、量化依賴與預覽／實際 bytes。公開 Detection PostProcess 介面有切圖、組合、權重／options 保留及三次匯出重開；另以 2 MiB 未引用資料確認不會建立其 File slice。內網／公開建置隔離及打包後 Chrome／Edge 仍待本階段驗收。
+已增加小型正負例：明確與隱含引用、optional sentinel、不存在的引用、未知版本／prefix／metadata、外部 options、同名版本重疊、模型自帶註冊無效、量化依賴與預覽／實際 bytes。公開 Detection PostProcess 介面有切圖、組合、權重／options 保留及三次匯出重開；另以 2 MiB 未引用資料確認不會建立其 File slice。
+
+打包後 Windows Chrome／Edge 在 1280×640、32px，以原生選檔測公開 Detection PostProcess → Reshape、未知版本及 custom 雙輸出 → Add；預覽、儲存 pattern、唯一匹配、下載切圖／報告及重開均有報告。公開流程已取得實際 exit 0；合成內網流程報告通過，但原工具輸出遺失且 handle 已不存在，未取得退出碼，不把報告冒充程序退出證據，也未重跑。沒有執行 custom runtime。
+
+獨立讀取器重新驗證兩份建置的逐檔 manifest／來源，確認公開 JS／JSON 不含合成內網契約、內網包拒絕公開發布，並重新解析十二份下載檔，核對 ports、原編號、custom options、所有保留 buffer bytes 及報告的每段 provenance。公開已知格式由 527,304 bytes 降為 3,384 bytes；未知版本仍為 527,656 bytes；合成私有格式僅在帶契約的內網包縮至 3,608 bytes，公開包仍保留 1,052,192 bytes。各重開 pattern 均只有一筆；全部觀察到的 Workers 原生 close，無 pageerror 或 runtime 請求。
+
+[階段收據](results/product-readiness-stage2.json)與[原始證據](results/product-readiness-stage2-originals.zip)保留失敗的單 OP 測例、修正後兩節點測例、模型、下載、報告、截圖、公開 kernel 來源及獨立檢查程式。原本單 OP 不符合既有 pattern 最少兩節點規則；只改測例，沒有放寬應用規則。仍待新版本正式關卡與部署。
 
 本功能尚未發布，整體「商品等級」目標及 Windows 大模型記憶體等工作仍在進行。
