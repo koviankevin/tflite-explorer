@@ -22,3 +22,13 @@
 實際的 channel 負例出現 `Node number 0 (CONV_2D) failed to prepare`，allocation 失敗是在 `run()` 階段才回報。診斷保留原階段及原文，不能單憑「invoke」判斷為測試輸入問題。來源對照最多帶 512 個 OP／每側 32 個 port，截斷明列；依 node 編號與 builtin 名稱列出候選，重複日誌去重，多 subgraph／delegate 或不完整 context 不冒充唯一定位。來源模型改變後不得用舊位置導覽。
 
 這些仍是開發中結果；尚未發布、尚未完成新 UI／打包後瀏覽器與現行必要關卡。先前使用者那份 allocation 失敗模型並未提供，不宣稱已確認其根因。
+
+## 公開模型驗收找到的空 buffer 問題
+
+另取 TensorFlow 官方 tflite-micro 固定修訂 `9c74b4e7f9cb7afabea9859ef85f7df885148485` 的 hello_world_float、hello_world_int8、micro_speech_quantized 與 seanet/conv/conv10 共四份小型模型；原始 bytes、Git blob SHA、SHA-256、來源及 Apache License 保留於本機 QA。它們不是公司模型，也不包含新增的私有 dialect。
+
+第一次驗收中，micro_speech_quantized 與 int16 conv10 原檔都成功 CPU invoke，完整 identity edit 後卻失敗：`Tensor ... is invalidly specified in schema`／`required_bytes <= bytes`。直接檢查 FlatBuffer 欄位後，將缺陷縮成三個確定失敗的回歸：整份模型、子模型及組合模型都把原本不存在的 `Buffer.data` 欄位重建成明確存在的零長度 vector。若 activation tensor 使用非零 buffer 編號，runtime 會將其視為不足長度的唯讀資料。
+
+修正只保留欄位的原始存在性：不存在維持 null，明確空 vector 仍存在；非空權重仍以原始 File range 保留，不讀整份權重或合併 buffer 編號。三個存在性回歸及解析、切圖、custom、組合、真正 CPU 等受影響 35 項已通過；真實公開模型的修正後驗收尚待完成。
+
+兩個 hello_world 原檔宣告 dynamic shape signature，現行手動 runtime 按既有政策拒絕；不為了讓樣本通過而抹掉 signature 或放寬限制。仍應驗證其結構、匯出重開及保留 bytes，執行結果列為未能驗證，不冒充 CPU 通過。
