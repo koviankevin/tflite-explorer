@@ -1,6 +1,6 @@
 # 模型檢查與保存補強（v1.1.0 候選）
 
-本輪依使用者指示完成五項重要工作；目前程式為候選，尚待 Windows 實測、main 發布關卡、正式站與固定 Release 核對，不宣稱已發布。
+本輪依使用者指示完成五項重要工作；Windows Chrome／Edge、main 四項關卡與實體 2.5 GiB MLIR 均已通過並獨立核對；目前尚待固定準備包、正式站與 Release 驗證，不宣稱已發布。
 
 ## 編輯匯出
 
@@ -40,4 +40,19 @@ Node 邊界測試先取得五個失敗、修正後與既有保存／恢復等 53
 
 首個 main 實體八輪 [41069901739](https://github.com/koviankevin/tflite-explorer/actions/runs/41069901739)完成八輪功能／bytes 比對，但在最後的讀取量對帳失敗：每個修改／組合候選新增 16 bytes 常數讀取，原先的 `roundTripStats.bytesRead` 只包含重新解析。原始 provider ZIP／JSON 已認證保留，該輪仍列失敗，不宣稱已通過 RSS 或整個關卡。
 
-兩個實際修改 RPC 改用同一個統計函式，回報 `parseBytesRead`、`semanticBytesRead` 及兩者總量；不調整獨立 FileReaderSync 觀察值或減去任何讀取。記憶體內既有常數的檢視另外計 `inspectedBytes`，不假裝成 File 讀取。真實序列化 TRANSPOSE 的小型案例先重現 1104／1112 的差異，修正後連同資料保留、報告與既有修改等 24 項通過；新 main 實體關卡仍待完成。
+兩個實際修改 RPC 改用同一個統計函式，回報 `parseBytesRead`、`semanticBytesRead` 及兩者總量；不調整獨立 FileReaderSync 觀察值或減去任何讀取。記憶體內既有常數的檢視另外計 `inspectedBytes`，不假裝成 File 讀取。真實序列化 TRANSPOSE 的小型案例先重現 1104／1112 的差異，修正後連同資料保留、報告與既有修改等 24 項通過；修正後 main 的實體八輪與完整讀取量對帳已通過，原失敗仍保留。
+
+## 固定候選驗收
+
+來源 `b30f42dd724deb3673baac80ba0b89f2f2b0c2da`／tree `4b9d9f72222c8736c482f294e393820ef7495278`／build `046a929575350202`，315 核心檔。PR #177 最終 head 與 main 完整 tree 相同；五項功能來自 PR #176，必要 Linux Node／建置／合約與效能成功；沒有在 main 重跑相同 Node 套件。
+
+- [core 41073913643](https://github.com/koviankevin/tflite-explorer/actions/runs/41073913643)：provider 原始 ZIP、digest、CRC、來源與 scope 核對通過。
+- [browser 41073918917](https://github.com/koviankevin/tflite-explorer/actions/runs/41073918917)：provider 原始 ZIP、digest、CRC、來源與 scope 核對通過。
+- [contract 41073924463](https://github.com/koviankevin/tflite-explorer/actions/runs/41073924463)：provider 原始 ZIP、digest、CRC、來源與 scope 核對通過。
+- [site 41073929648](https://github.com/koviankevin/tflite-explorer/actions/runs/41073929648)：provider 原始 ZIP、digest、CRC、來源與 scope 核對通過。
+
+Windows Chrome／Edge 分別為 156.0.8078.76／156.0.4314.50，觀察到的全部 Workers（模型／圖形）均已原生關閉；1280×640／32px 的編輯與配額失敗截圖已核對。真實配額為 1 byte；獨立對照證實該 Chrome 的零配額仍可寫入，因此沒有把零配額結果冒充拒絕驗收。早期失敗、控制與成功檔案均保留，舊第五輪名為32px的最終圖實際為14px，不作為32px證據；第六、七輪明確設定字級並驗證幾何。
+
+[實體 MLIR 41073935420](https://github.com/koviankevin/tflite-explorer/actions/runs/41073935420)：2,684,355,495 bytes、1342177280 個 i8 元素，dense hex 計數／SHA、SSA／dominance、分支迴圈 pattern 各一筆與匯出重開通過；Node peak RSS 288,948,224 bytes，開啟約 9.47 秒，非瀏覽器或公司 verifier 驗收。
+
+[候選原始資料](results/model-safety-candidate-originals.zip)與[逐檔 SHA／reader 實際退出](results/model-safety-candidate-originals.json)保留。正式站與固定 Release 尚待發布。
