@@ -1,10 +1,10 @@
 # 商品等級工作與完成條件
 
-[preview.32 已正式交付](preview32.md#發布狀態)：共用公開 WASM module、IO 轉移／重用與本機 Blob 準備修正已部署，307 核心檔、全站 1,412 檔、四份固定 Release 下載與權威 deployment 均完成獨立核對。Chromium 33 項操作、1.25 GiB／21,005 OP 八輪及 CPU／IO 八輪通過，必要門檻未放寬；整體商品等級目標保持進行中。
+[preview.33 已正式交付](preview33.md#發布狀態)：啟動失敗重載、開檔就緒與指南更新已部署，310 核心檔、全站 1,418 檔、四份固定 Release 下載及權威 deployment 均獨立核對。Chromium 33 項原操作、五個啟動情境、1.25 GiB／21,005 OP 八輪及 CPU／IO 八輪通過；必要門檻未放寬，整體商品等級目標保持進行中。
 
-最新 [preview.32 候選驗收](preview32.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.32 的正式準備、部署與固定 Release 核對均已完成。
+最新 [preview.33 候選驗收](preview33.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.33 的正式準備、部署與固定 Release 核對均已完成。
 
-[preview.33 候選](preview33.md)已完成啟動錯誤重載、快速開檔、指南就緒更新等五情境，原 33 項操作與 1.25 GiB／21,005 OP 八輪均通過；原始資料與四項 dependency scopes 已獨立核對。尚待正式準備、部署與固定下載核對。以下為歷史輪次進度，早期待測／未發布不覆蓋頁首目前正式版及此段候選狀態。
+以下為歷史輪次進度，早期待測／未發布不覆蓋頁首目前正式版及交付狀態。
 
 歷史應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 
@@ -29,7 +29,7 @@ Pages 與固定 Release 已完成本輪正式核對；第一次啟動逾時與�
 | 公開核心與內網擴充可獨立升級 | 不修改核心即可建立帶 dialect 的內網包；公開發布拒絕內網產物；版本及檔案完整性可核對 | 通用建置／封裝與合成 adapter 驗收通過；公司內網仍須自行驗收 |
 | 真實模型相容性 | 公司環境的 TFLite／MLIR／custom runtime 正負例、支援版本與限制清單 | 合成測試已有；公司實模尚待內網驗收 |
 | 匯出可信度 | 可下載的來源對照、輸出介面、權重與檢查範圍報告；公司 compiler／runtime 驗證接點 | 本機報告、串流 bytes 比對及可指定 native compiler 的 CLI 已實作；公司 compiler／runtime 正負例仍待內網驗收 |
-| 效能標準 | 固定硬體／引擎、檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | 核心九筆、Linux 三引擎實體 1.25 GiB／21,005 OP 八輪、現行應用 Chromium 80 輪／約 2 小時 12 分均已核對。另完成逐 PID／start-ticks 八輪與 2.5 GiB MLIR Hosted Node 驗收。長測仍保留原根程序／descendants RSS 與 Worker V8 checkpoints 範圍，不倒算新能力；其他 OS／固定硬體 SLA、其他引擎長時間與手動 runtime 數小時量測未證實 |
+| 效能標準 | 固定硬體／引擎、檔案與 OP 規模、瀏覽器及 Worker 記憶體、反覆操作與可取消性 | 核心九筆、Linux 三引擎實體 1.25 GiB／21,005 OP 八輪、歷史 preview.22 應用 Chromium 80 輪／約 2 小時 12 分均已核對。另完成逐 PID／start-ticks 八輪與 2.5 GiB MLIR Hosted Node 驗收。長測仍保留原根程序／descendants RSS 與 Worker V8 checkpoints 範圍，不倒算新能力；其他 OS／固定硬體 SLA、其他引擎長時間與手動 runtime 數小時量測未證實 |
 | 保存及復原 | 草稿自動保存、Undo／Redo、跨分頁衝突、崩潰後恢復與格式遷移 | 已加入 IndexedDB 工作草稿、有限歷史、revision 衝突／分叉與 v1／v2 讀取；已驗證重載及兩分頁恢復。Pattern library 已加入交易合併、同名衝突副本與舊 key 保留，實際雙分頁與跨 block 保存／匯出重開通過；preview.16 已有 TFLite 編輯本機自動保存、嚴格交易／revision 衝突與副本、專屬瀏覽器程序強制終止後的恢復；OS 斷電／儲存回收與公司環境仍需補齊驗收 |
 | 操作與診斷 | 新使用者完整操作流程、原文定位、鍵盤及焦點驗收、可預覽且不含模型的診斷報告 | 白名單本機診斷預覽／下載、有限操作紀錄及版本缺失已實作；敏感字串排除、Escape 保留跨 block 選取與手機版面已驗收。Preview.9 另完成 TFLite 原生鍵盤開檔／定位、16→32px 焦點、手動 tabs、五種 modal 邊界／關閉後焦點、繼續選取並保存／搜尋／JSON 及子模型下載重開，正式站八項操作均通過。preview.18 正式版本已通過 MLIR validation modal、分支／匯合／迴圈 Canvas 的跨 block 鍵盤選取、pattern 及 MLIR 匯出重開，見 [MLIR／Canvas 歷史範圍](mlir-keyboard.md)及 [preview.18 桌面功能驗收](desktop-fixes.md)；已完成固定交付與正式站核對。完整新手流程、其他鍵盤／螢幕閱讀器與公司環境仍待補，歷史見 [鍵盤驗收](keyboard-acceptance.md) |
 | 發布及回退 | 固定版本部署包、建置來源／清單、公開與內網區分、受影響功能關卡、回退演練 | 受控 Pages 已強制核對四項 main CI、artifact digest、受測依賴 scope、原始量測與乾淨候選重建；main-only environment／必要 PR 檢查及錯誤整站 ID 拒絕已驗收。前次 preview.8／preview.7 實際回退再恢復、同一 browser context 保存／lazy imports／匯出重開通過，見 [正式切換驗收](production-transition-verification.md)。preview.18 的歷史正式交付已完成，1,318 檔 SHA／MIME、29 項正式原生操作、八份 TFLite 編輯匯出收據與四份固定 Release 實際 bytes、部署權威及 root 均核對；模型分頁、刪除／復原、獨立圖形編輯與 32px 筆電版面見 [preview.18 驗收](desktop-fixes.md)。任意資料格式升降級及公司內網實際切換仍需驗收 |
