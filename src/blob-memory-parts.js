@@ -2,6 +2,11 @@
 // eliminate Firefox's mixed-body allocation; prepareExportResult converts the
 // freshly serialized prefix before it crosses the Worker/download boundary.
 const prefixSizes=new WeakMap();
+export function roundTripReadStats(parsed,fileBytes,checks=[]){
+    const parseBytesRead=parsed.bytesRead,semanticBytesRead=checks.reduce((sum,c)=>sum+c.bytesRead,0),bytesRead=parseBytesRead+semanticBytesRead;
+    if(![fileBytes,parseBytesRead,semanticBytesRead,bytesRead,...checks.map(c=>c.bytesRead)].every(n=>Number.isSafeInteger(n)&&n>=0))throw Error('候選讀取統計無效。');
+    return {bytesRead,fileBytes,parseBytesRead,semanticBytesRead};
+}
 export function memoryBlobParts(bytes,BlobType=Blob){
     if(!(bytes instanceof Uint8Array)||bytes.byteLength>64*1024**2)throw Error('Blob 結構資料無效或超過 64 MiB。');
     const size=65536;
