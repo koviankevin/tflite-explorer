@@ -1,13 +1,14 @@
 import {exportWorkspace,parseWorkspace} from './workspace.js';
 import {WorkspaceHistory} from './workspace-history.js';
 import {draftModelKey,DraftConflict,readDraft} from './workspace-drafts.js';
+import {storageErrorMessage} from './storage-errors.js';
 const id=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join('');
 
 // The controller owns history, save ordering and optimistic concurrency. UI and
 // IndexedDB are adapters; model objects/File/Blob never enter this module.
 export function workspaceSession({store,capture,apply,ready=()=>true,settle=async()=>{},changed=()=>{},enabled=true,owner=id(),delay=600}) {
     const history=new WorkspaceHistory();let active=null,timer=null,generation=0,applying=false,operation=null,writing=null,observed=null,message='開啟模型後開始保存本機草稿。';
-    const failureMessage=current=>current.loadFailed?`無法讀取本機草稿：${current.storageError.message}；Undo／Redo 仍可使用，請重試或手動下載備份。`:`草稿尚未儲存：${current.storageError.message}；目前操作保留，請重試或手動下載工作階段備份。`;
+    const failureMessage=current=>current.loadFailed?`無法讀取本機草稿：${storageErrorMessage(current.storageError)}；Undo／Redo 仍可使用，請重試或手動下載備份。`:`草稿尚未儲存：${storageErrorMessage(current.storageError)}；目前操作保留，請重試或手動下載工作階段備份。`;
     const emit=()=>changed({message:active?.storageError?failureMessage(active):message,enabled,attached:!!active,pending:!!active?.pending,conflict:!!active?.conflict,busy:applying,canUndo:history.canUndo&&!applying,canRedo:history.canRedo&&!applying,saving:!!writing||!!active?.retrying,storageFailed:!!active?.storageError});
     const sample=(force=false,internal=false)=>{if(!active || (applying&&!internal) || (!force&&!ready()))return false;const text=exportWorkspace(capture(active.identity));if(text!==observed){history.push(text);observed=text;}return true;};
     const savedMessage=current=>current.savedAt?`已自動儲存 ${new Date(current.savedAt).toLocaleTimeString()} · 僅含操作狀態`:'自動草稿已就緒。';

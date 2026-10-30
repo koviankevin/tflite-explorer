@@ -1,5 +1,6 @@
 import {exportEditSession} from './model-edit-session.js';
 import {EditRecoveryConflict} from './edit-recovery-store.js';
+import {storageErrorMessage} from './storage-errors.js';
 export const editRecoveryId=()=>Array.from(crypto.getRandomValues(new Uint32Array(4)),v=>v.toString(16).padStart(8,'0')).join('');
 
 // Owns save ordering/CAS only. capture takes a synchronous UI snapshot before
@@ -23,7 +24,7 @@ export function editRecoverySession({store,capture,changed=()=>{},enabled=true,o
         const task=(async()=>{
             if(previous)await previous;
             try{await persist(binding,prepared,sequence);}
-            catch(error){if(error.name==='AbortError')return;binding.failure=error;binding.conflict=error instanceof EditRecoveryConflict;if(current===binding)message=`編輯草稿尚未保存：${error.message}`;}
+            catch(error){if(error.name==='AbortError'&&(current!==binding||!enabled||suspended))return;binding.failure=error;binding.conflict=error instanceof EditRecoveryConflict;if(current===binding)message=`編輯草稿尚未保存：${storageErrorMessage(error)}`;}
         })();binding.work=task;if(current===binding)emit();
         task.finally(()=>{if(binding.work!==task)return;binding.work=null;
             if(current===binding){if(!binding.failure&&!binding.conflict){message=!enabled?'編輯自動保存已暫停。':binding.savedSequence===binding.sequence&&binding.revision?`已保存本機編輯草稿 · ${new Date(binding.savedAt).toLocaleTimeString()} · 第 ${binding.revision} 版`:'新的編輯待保存…';if(binding.savedSequence!==binding.sequence)schedule();}emit();}
@@ -47,7 +48,7 @@ export function editRecoverySession({store,capture,changed=()=>{},enabled=true,o
             if(!suspended&&enabled&&binding.sequence&&!binding.failure&&!binding.conflict&&binding.savedSequence!==binding.sequence)task=queue(binding,prepare(),binding.sequence);
             current=null;message='開始編輯後，自動保存會先核對完整原模型。';emit();return task;
         },
-        setEnabled(value){enabled=!!value;clearTimeout(timer);timer=null;message=current?.conflict?'這份編輯草稿有跨分頁衝突；請另存副本。':current?.failure?`編輯草稿尚未保存：${current.failure.message}`:enabled?'編輯自動保存已啟用。':'編輯自動保存已暫停；既有本機草稿保留。';emit();if(enabled&&current?.sequence)schedule();},
+        setEnabled(value){enabled=!!value;clearTimeout(timer);timer=null;message=current?.conflict?'這份編輯草稿有跨分頁衝突；請另存副本。':current?.failure?`編輯草稿尚未保存：${storageErrorMessage(current.failure)}`:enabled?'編輯自動保存已啟用。':'編輯自動保存已暫停；既有本機草稿保留。';emit();if(enabled&&current?.sequence)schedule();},
         retry(){if(!current)return Promise.resolve();if(current.conflict){message='這份草稿有跨分頁衝突，請另存副本保留雙方內容。';emit();return Promise.resolve();}current.failure=null;return flush();},
         fork(){if(!current)return Promise.resolve();const previous=current;current={...previous,key:editRecoveryId(),revision:0,savedText:null,savedAt:null,savedSequence:-1,work:null,conflict:false,failure:null,reference:null};if(!current.sequence)current.sequence=1;message='正在另存編輯草稿副本，原記錄保留。';return flush();},
         external(record,force=false){if(current&&record?.key===current.key&&(force||record.owner!==owner)&&record.revision>current.revision){current.conflict=true;clearTimeout(timer);message='這份編輯草稿已更新或移除；目前操作保留，請另存副本。';emit();}}
