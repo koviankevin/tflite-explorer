@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "697d9dfb6d128a522ac213c10cf8f072f643cab9",
+    "tree": "75924bef7f57207158ea9b8025b526806e92e28b",
+    "committedAt": "2026-10-30T23:07:22+08:00",
+    "dirty": false
+  },
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.1.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "697d9dfb6d128a522ac213c10cf8f072f643cab9",
+      "tree": "75924bef7f57207158ea9b8025b526806e92e28b",
+      "committedAt": "2026-10-30T23:07:22+08:00",
+      "dirty": false
+    },
+    "buildId": "9338194b51c14371"
+  },
+  "deployment": {
+    "deploymentId": 7441806221,
+    "controllerSource": "697d9dfb6d128a522ac213c10cf8f072f643cab9",
+    "runId": 41078689147,
+    "attempt": 1,
+    "jobId": 124142114920,
+    "siteId": "af02f3beb6ae54b78b30111d0c6b612a93c684ae900ca4f3b166af4d2095e83a",
+    "legacy": false
+  },
+  "archiveSHA256": "19ec679394a891d2ebc249e6c61456b141fbd46e4a289c75980ae06bfa0cdfcb",
+  "members": [
+    {
+      "name": "prepared/delivery/release-gates.json",
+      "bytes": 190808,
+      "sha256": "7b8b1ec7de722ee6da788f12d318f9f43b923a8aa6344c2bc397dc9efd2661cb"
+    },
+    {
+      "name": "prepared/delivery/release-manifest.json",
+      "bytes": 50973,
+      "sha256": "b7b7a9016fc7e8498e5f6fec61cf55c70c97dc75986f2f1afe5751f032d4e5f1"
+    },
+    {
+      "name": "prepared/rebuild-review.json",
+      "bytes": 931,
+      "sha256": "d0075737bd8ba7dcbc72d279a52a6ccc2c39667a66cc526557b95e145fbe9d14"
+    },
+    {
+      "name": "prepared/report.json",
+      "bytes": 5228,
+      "sha256": "5aa95d5e0e6cb781862b47a9c7d214e5344226959d1501717bfae9156d1daa22"
+    },
+    {
+      "name": "prepared/site-manifest.json",
+      "bytes": 264227,
+      "sha256": "99d2f48e335e7d127cf6260118f6c6c1d268c03ba70fcda7042b5da38eb51577"
+    },
+    {
+      "name": "published/12988957433.zip",
+      "bytes": 550514,
+      "sha256": "92d6bbb9fb2a601e37bca28e86bd66b99c30d9147c534ad742b45a5dcc674cfb"
+    },
+    {
+      "name": "published/12989167113.zip",
+      "bytes": 755,
+      "sha256": "937d3b4acb717905021d1e8f073579929e63bb2ffa8bd14a1ff24199b30272a3"
+    },
+    {
+      "name": "published/live-release-verification/pages-live-report.json",
+      "bytes": 377279,
+      "sha256": "a6e25eca9a084c0467dfda0d39e3b80fe569116dbf6a313275d64c7ade830b27"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.json",
+      "bytes": 833856,
+      "sha256": "39972944c68e0cbb74d8c5f2bb1ef5a865694475f4b311bdab9e5e440f4b539f"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.png",
+      "bytes": 149463,
+      "sha256": "0c8810fc61f18092ab3108c6b6bac9c32b02eb17f85ca72119fe713a0d112e8c"
+    },
+    {
+      "name": "published/published-release-verification/pages-release-report.json",
+      "bytes": 1229,
+      "sha256": "b42045893401fcc3fea21f9782c525ea3520231692c3da83b784e075fe594ba1"
+    },
+    {
+      "name": "published/report.json",
+      "bytes": 116777,
+      "sha256": "ac19b33982cf03f09465f535edd92b35c9f22532e7f59e3575447baf5a67de07"
+    },
+    {
+      "name": "published/startup-failure.png",
+      "bytes": 147371,
+      "sha256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b"
+    },
+    {
+      "name": "published/storage-failure.png",
+      "bytes": 155537,
+      "sha256": "2d25df8da13059a8d8c02af2f92c8cdf03a15a1521ca8b9378154ff66f5b8724"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-preview17-mlir.mjs",
+      "bytes": 1426,
+      "sha256": "699d6afa324806caa0f7157595442b658d73011811820aa79d02d77b4d90e728"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-stable-coverage101.mjs",
+      "bytes": 705,
+      "sha256": "59c9dc8b9c1430628ad31e5591a0889293fce8f897715236734f2dfab94d58ab"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/assert-workspace-storage34.mjs",
+      "bytes": 1726,
+      "sha256": "324980b90865cd98718cc06903e4dd11f8c217940173e9add37c463b49ccc35a"
+    },
+    {
+      "name": "readers/freeze-model-safety-final.mjs",
+      "bytes": 2679,
+      "sha256": "877b358452bed478b46b109afe7df8420dacecd533eb3e5e7f3a09a4d023ffc6"
+    },
+    {
+      "name": "readers/model-safety-frozen-review.json",
+      "bytes": 2184,
+      "sha256": "6a4faafa69d6dd11a55b53da8530f7d48d6a57b4f7d7ea6d90e22ad6fef62f16"
+    },
+    {
+      "name": "readers/model-safety-windows-public.mjs",
+      "bytes": 13149,
+      "sha256": "5d84a1b236e370ece4bc3275bff6d435fd8cd96a8002e5bb139e6953745f88ce"
+    },
+    {
+      "name": "readers/review-model-safety-publication.mjs",
+      "bytes": 14834,
+      "sha256": "9419f84640d46db3fc49464cf3b53e629ae0fea2ceaae3beae5ca12168018d2f"
+    },
+    {
+      "name": "readers/review-prepared-site.mjs",
+      "bytes": 8604,
+      "sha256": "e4f929e3087a446da62a6bfa989ea48cf9de835549cd7c6116d515974eaef954"
+    },
+    {
+      "name": "readers/verify-prepared110-rebuild.mjs",
+      "bytes": 1587,
+      "sha256": "ae9c0fb28d7471a9db039e32b768eedc4c98ca0c4b6d33e300915e38ad093c45"
+    },
+    {
+      "name": "windows-public/chrome-edit-32px.png",
+      "bytes": 101737,
+      "sha256": "0b54bf033044a8a1a3660b106ed189aba3af251f9449e0c713ee94a23c6def8a"
+    },
+    {
+      "name": "windows-public/chrome-edit-draft.json",
+      "bytes": 988,
+      "sha256": "baad30b2c9f7cc6442873d5db636627ba4d7e49c2ec127c8f10f6e6b6e700e6c"
+    },
+    {
+      "name": "windows-public/chrome-edited.tflite",
+      "bytes": 3832,
+      "sha256": "9b0113caafd5573fc7b65b971b185792113f5d13e0154a9578f9b70682fbd927"
+    },
+    {
+      "name": "windows-public/chrome-quota-32px.png",
+      "bytes": 69442,
+      "sha256": "bf6ea4314eeb46d5f76fbbda56a2efb8dc84ae047d374b25a4ddaf0e83411efa"
+    },
+    {
+      "name": "windows-public/chrome-resumed.tflite",
+      "bytes": 3832,
+      "sha256": "9b0113caafd5573fc7b65b971b185792113f5d13e0154a9578f9b70682fbd927"
+    },
+    {
+      "name": "windows-public/chrome-storage-recovered.png",
+      "bytes": 63838,
+      "sha256": "980a866ea70ed9e366d3acc1910b80d32b61094f6b639b6489d7a2277567fe29"
+    },
+    {
+      "name": "windows-public/chrome-submodel.tflite",
+      "bytes": 1352,
+      "sha256": "964e191779c6a50e78827f056ebbfd085ed283dcd0daca8afde7b0954221480d"
+    },
+    {
+      "name": "windows-public/chrome-workspace.json",
+      "bytes": 2577,
+      "sha256": "53b09adc816c2bb62147745448213434ab985ed71378890d7601556c6c49afc7"
+    },
+    {
+      "name": "windows-public/msedge-edit-32px.png",
+      "bytes": 101737,
+      "sha256": "0b54bf033044a8a1a3660b106ed189aba3af251f9449e0c713ee94a23c6def8a"
+    },
+    {
+      "name": "windows-public/msedge-edit-draft.json",
+      "bytes": 988,
+      "sha256": "baad30b2c9f7cc6442873d5db636627ba4d7e49c2ec127c8f10f6e6b6e700e6c"
+    },
+    {
+      "name": "windows-public/msedge-edited.tflite",
+      "bytes": 3832,
+      "sha256": "9b0113caafd5573fc7b65b971b185792113f5d13e0154a9578f9b70682fbd927"
+    },
+    {
+      "name": "windows-public/msedge-quota-32px.png",
+      "bytes": 69442,
+      "sha256": "bf6ea4314eeb46d5f76fbbda56a2efb8dc84ae047d374b25a4ddaf0e83411efa"
+    },
+    {
+      "name": "windows-public/msedge-resumed.tflite",
+      "bytes": 3832,
+      "sha256": "9b0113caafd5573fc7b65b971b185792113f5d13e0154a9578f9b70682fbd927"
+    },
+    {
+      "name": "windows-public/msedge-storage-recovered.png",
+      "bytes": 63834,
+      "sha256": "d1c27be95c6e11a4de52369f68fb4341d5f4d8d3a740e37579bb78c31299e3f4"
+    },
+    {
+      "name": "windows-public/msedge-submodel.tflite",
+      "bytes": 1352,
+      "sha256": "964e191779c6a50e78827f056ebbfd085ed283dcd0daca8afde7b0954221480d"
+    },
+    {
+      "name": "windows-public/msedge-workspace.json",
+      "bytes": 2577,
+      "sha256": "53b09adc816c2bb62147745448213434ab985ed71378890d7601556c6c49afc7"
+    },
+    {
+      "name": "windows-public/public-custom.tflite",
+      "bytes": 3245,
+      "sha256": "f49bada5a186e0deb4994ca572873c0d8543fbd6ca81abd17e7be05c9ed67dfa"
+    },
+    {
+      "name": "windows-public/report.json",
+      "bytes": 9579,
+      "sha256": "4fbb4fcb05d10e10395edc16f5b7b3fd02e4aa4bde9c6c4d76982cd8651118b2"
+    }
+  ],
+  "readerExits": {
+    "publication": {
+      "exit": 0,
+      "toolChunk": "de440e"
+    },
+    "windowsPublic": {
+      "exit": 0,
+      "toolChunk": "dc5d34"
+    }
+  },
+  "scope": "Provider artifacts, every public file and four immutable Release assets authenticated; actual Windows Chrome/Edge isolated native UI, 1280x640/32px, quota rejection/backup/retry and isolated-context origin IndexedDB removal. No personal browser profile, OS power loss, physical disk exhaustion or browser permission-setting claim. Large immutable Release ZIP retained at Release, not duplicated here."
+}

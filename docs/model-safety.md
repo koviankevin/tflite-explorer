@@ -1,6 +1,6 @@
-# 模型檢查與保存補強（v1.1.0 候選）
+# 模型檢查與保存補強（v1.1.0）
 
-本輪依使用者指示完成五項重要工作；Windows Chrome／Edge、main 四項關卡與實體 2.5 GiB MLIR 均已通過並獨立核對；目前尚待固定準備包、正式站與 Release 驗證，不宣稱已發布。
+本輪依使用者指示完成五項重要工作；Windows Chrome／Edge、main 四項關卡與實體 2.5 GiB MLIR 均已通過並獨立核對；固定準備包、正式站與四份 Release 下載已驗證，v1.1.0 正式交付。
 
 ## 編輯匯出
 
@@ -16,7 +16,7 @@
 
 三個 IndexedDB adapter 的異常 close 只清除自己的連線快取，舊 close 不會清掉新連線。探索／編輯草稿的讀取要等交易 complete 才算成功，abort 不套用半途讀到的資料。已 commit 的探索草稿保存／移除不受通知通道例外影響。
 
-Node 邊界測試先取得五個失敗、修正後與既有保存／恢復等 53 項通過。這不冒充真實 browser quota、權限設定或 OS 斷電驗收；Windows 驗收另使用獨立 context 的實際 Chromium quota override 及本機測試 origin 資料清除。清除只作用於新建的 localhost 測試 origin，不接觸正式站或個人資料。OS 斷電及實體磁碟耗盡仍不在此測試範圍。
+Node 邊界測試先取得五個失敗、修正後與既有保存／恢復等 53 項通過。這不冒充真實 browser quota、權限設定或 OS 斷電驗收；Windows 驗收另使用獨立 context 的實際 Chromium quota override 及本機測試 origin 資料清除。候選測試只清除新建 localhost context 的資料；正式站補驗只清除新建隔離 context 的正式站 IndexedDB，不接觸個人 profile、其他分頁或伺服器資料。OS 斷電及實體磁碟耗盡仍不在此測試範圍。
 
 ## Custom 子模型大小
 
@@ -55,4 +55,16 @@ Windows Chrome／Edge 分別為 156.0.8078.76／156.0.4314.50，觀察到的全�
 
 [實體 MLIR 41073935420](https://github.com/koviankevin/tflite-explorer/actions/runs/41073935420)：2,684,355,495 bytes、1342177280 個 i8 元素，dense hex 計數／SHA、SSA／dominance、分支迴圈 pattern 各一筆與匯出重開通過；Node peak RSS 288,948,224 bytes，開啟約 9.47 秒，非瀏覽器或公司 verifier 驗收。
 
-[候選原始資料](results/model-safety-candidate-originals.zip)與[逐檔 SHA／reader 實際退出](results/model-safety-candidate-originals.json)保留。正式站與固定 Release 尚待發布。
+[候選原始資料](results/model-safety-candidate-originals.zip)與[逐檔 SHA／reader 實際退出](results/model-safety-candidate-originals.json)保留。正式站與固定 Release 已發布，最終證據如下。
+
+## 正式發布
+
+[v1.1.0 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)及[正式站](https://koviankevin.github.io/tflite-explorer/)已交付。發布來源 `697d9dfb6d128a522ac213c10cf8f072f643cab9`／tree `75924bef7f57207158ea9b8025b526806e92e28b`／build `9338194b51c14371`；315 核心檔、全站 1,432 檔。
+
+[準備 41078001959](https://github.com/koviankevin/tflite-explorer/actions/runs/41078001959)的原始產物與獨立乾淨重建相同；[發布 41078689147](https://github.com/koviankevin/tflite-explorer/actions/runs/41078689147)四工作均 attempt 1 成功。權威 deployment `7441806221`、全站檔案與 root、版本歷史及四份實際 Release 下載一致。固定 ZIP SHA-256 為 `db77bda84cdb3933366847858c173a49634ac3ed3527dbb0736636ded7a13ada`，site ID 為 `af02f3beb6ae54b78b30111d0c6b612a93c684ae900ca4f3b166af4d2095e83a`。
+
+正式站 Hosted Chromium 的 33 項原生操作、五組指南、19 種執行／分佈情境、86 model／44 runtime Worker close、14＋24 次輸入清理、既有 30／60 秒自然計時、容量／啟動恢復及八輪 CPU／IO 均通過；不更動 workflow、安全或 RSS／timer 規則。候選到發布來源只有已排除的文件／憑證變更，實際執行 scope fingerprint 相同，必要成功關卡沿用，沒有重跑成功部署。
+
+發布後另用已安裝的 Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 開正式 HTTPS 站，核對 model Worker 都來自 build `9338194b51c14371`。兩者在 1280×640／32px 完成 native 選檔、搜尋定位、大小預覽、子模型下載重開／分頁、clone／接線、JSON 草稿下載／重選原模型恢復、Undo／Redo、修改模型下載重開、真實 1-byte quota 拒絕／備份／重試，以及隔離 context 的 IndexedDB 清除後保留操作並另存草稿；全部觀察到的 Worker 原生 close，無 pageerror。已檢視正式 Windows quota 與編輯截圖；不代表 OS 斷電、實體磁碟耗盡、權限設定切換、固定硬體 SLA 或所有 kernel／dialect 已驗證。
+
+[正式獨立核對](results/model-safety-published-final.json)、[原始 provider／Windows 截圖與小型下載](results/model-safety-published-originals.zip)及[逐檔 SHA／實際退出](results/model-safety-published-originals.json)保留。41 MB 固定部署 ZIP 在 Release 保留，不重複放入驗收 ZIP，也不包含瀏覽器 profile。後續只補交付文件，不重新部署同一版本。

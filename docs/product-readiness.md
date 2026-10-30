@@ -1,10 +1,10 @@
 # 商品等級工作與完成條件
 
-2026-10-30 使用者調整本輪交付：「挑重要的做就好，先完成一版再慢慢修」。本輪只補 [探索草稿儲存失敗與安全重試](workspace-storage.md)，完成必要驗證及固定版本發布後交付；下列尚未完成的廣泛商品化項目改列後續，不繼續擴大本輪關卡。
+2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-[v1.0.1 已正式交付](v1.0.1.md#發布狀態)：資料庫連線失敗重試及穩定版驗收選擇已修正，310 核心檔、全站 1,427 檔、四份固定下載與權威 deployment 均獨立核對。原生功能、大檔八輪與穩定版全部現行案例通過。依使用者優先順序交付重要修正，其餘品質項目列為後續。
+目前固定版本為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，build `9338194b51c14371`。315 核心檔、全站 1,432 檔、四份固定下載與權威 deployment 均獨立核對；必要四項關卡、1.25 GiB TFLite 實體八輪及 2.5 GiB MLIR 串流計數／匯出重開通過。原 RSS、安全與計時規則未放寬。
 
-最新 [v1.0.1 候選驗收](v1.0.1.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。v1.0.1 的正式準備、部署與固定 Release 核對均已完成。
+完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 
 以下為歷史輪次進度，早期待測／未發布不覆蓋頁首目前正式版及交付狀態。
 
