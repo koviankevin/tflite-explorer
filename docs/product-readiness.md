@@ -1,8 +1,8 @@
 # 商品等級工作與完成條件
 
-preview.31 的資源清理與 reader 隔離修正已完成[正式交付](preview31.md#發布狀態)：三引擎候選、1.25 GiB／21,005 OP 八輪及手動 CPU／IO 八輪通過，四關卡原始來源／digest／scope 已核對。正式站 1,406 檔、33 項原生操作及四份固定下載吻合原準備包；整體目標保持進行中。
+[preview.32 已正式交付](preview32.md#發布狀態)：共用公開 WASM module、IO 轉移／重用與本機 Blob 準備修正已部署，307 核心檔、全站 1,412 檔、四份固定 Release 下載與權威 deployment 均完成獨立核對。Chromium 33 項操作、1.25 GiB／21,005 OP 八輪及 CPU／IO 八輪通過，必要門檻未放寬；整體商品等級目標保持進行中。
 
-最新 [preview.32 候選驗收](preview32.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.32 尚待正式準備、部署與固定 Release 核對。
+最新 [preview.32 候選驗收](preview32.md)的必要四項發布關卡已核對通過：核心效能依相同 87 檔 dependency fingerprint 沿用，Chromium 實體大檔八輪、版本切換／33 項操作與發布合約均成功，原 RSS 規則未放寬。依使用者指示，必要瀏覽器只保留 Chrome／Edge，Firefox 與 Safari／WebKit 為選做；實際環境為 Hosted Linux Chromium，不宣稱 Windows 兩個廠牌本體已獨立驗收。preview.32 的正式準備、部署與固定 Release 核對均已完成。
 
 現行應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 

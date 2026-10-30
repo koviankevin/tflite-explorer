@@ -1,6 +1,6 @@
 # 共用公開 runtime module 與 IO 下載修正
 
-最新 [preview.32 候選](preview32.md)已通過必要 Chromium 四項關卡與獨立原始資料核對，尚未部署。Firefox 最後一次八輪亦在原 RSS 政策下通過；依使用者指示，之後 Firefox 與 Safari／WebKit 為選做，不再自行補跑。以下保留各次診斷的來源與當時結果，早期失敗或待測文字屬歷史紀錄。
+最新 [preview.32](preview32.md#發布狀態)已完成必要 Chromium 四項關卡、正式站與不可變 Release 核對並交付。Firefox 最後一次八輪亦在原 RSS 政策下通過；依使用者指示，之後 Firefox 與 Safari／WebKit 為選做，不再自行補跑。以下保留各次診斷的來源與當時結果，早期失敗或待測文字屬歷史紀錄。
 
 [原始 File／HTTP 對照](desktop-runtime-io.md#本機-file-對照的實際結果)顯示：空 Worker 與同 bytes 的本機 File 走勢接近，HTTP fetch 則重現較大父程序波動。原應用 RSS slope 仍失敗；此修正針對反覆載入相同公開 WASM 的成本，不將診斷值扣除或放寬門檻。
 
