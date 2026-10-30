@@ -24,12 +24,12 @@ export async function buildSite({output='dist',profile:profilePath}={}) {
             .replace('<title>Netron</title>','<title>模鏡｜TFLite・MLIR 模型探索</title>')
             .replace('Visualizer for neural network, deep learning and machine learning models.','在本機搜尋 TFLite、MLIR operations、SSA values 與連接模式。')
             .replace("script-src 'self'; frame-src 'none'","default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'")
-            .replace('<script type="text/javascript" src="index.js"></script>','<script type="module" src="src/app.js"></script>')
+            .replace('<script type="text/javascript" src="index.js"></script>','<script type="module" src="src/bootstrap.js"></script>')
             .replaceAll('href="grapher.css"','href="vendor/netron/grapher.css"')
             .replaceAll('href="favicon.ico"','href="vendor/netron/favicon.ico"')
             .replaceAll('href="icon.png"','href="vendor/netron/icon.png"')
             .replace('<body class="welcome spinner">',`<body class="welcome">\n${await readFile(source('src/shell.html'),'utf8')}`);
-        const styles=['app','pattern-workspace','mobile','model-visibility','typography','overview-canvas','explorer-resize','workspace','laptop','release','model-edit-workspace','model-tabs','usage-guide'];
+        const styles=['app','pattern-workspace','mobile','model-visibility','typography','overview-canvas','explorer-resize','workspace','laptop','release','model-edit-workspace','model-tabs','usage-guide','startup'];
         html=html.replace('</head>',styles.map(s=>`<link rel="stylesheet" href="src/${s}.css">`).join('\n')+'\n</head>');
         await writeFile(dest('index.html'),html);
         await writeFile(dest('.nojekyll'),'');

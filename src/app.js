@@ -28,6 +28,7 @@ import { loadPatterns, reusablePattern, exportPatterns, parsePatternFile, planPa
 import {patternStore,PATTERN_CHANNEL} from './pattern-store.js';
 import {diagnosticJournal} from './diagnostics.js';
 import {diagnosticUI} from './diagnostics-ui.js';
+import {startView} from './view-startup.js';
 
 const $ = (id) => document.getElementById(id);
 const diagnostics=diagnosticJournal();
@@ -1489,7 +1490,7 @@ usageGuide=initUsageGuide({
         editWorkspace.explore();const target=kind==='patterns'?$('patterns-tab'):$('query');target.focus({preventScroll:true});
     }
 });
-const viewReady = view.start().then(() => { reset(); renderPattern(); });
+const viewReady = startView(view).then(() => { reset(); renderPattern(); });
 await viewReady;
 libraryReady=refreshStoredPatterns();
 libraryReady.then(()=>{$('pattern-library-status').textContent=`本機清單第 ${patternRevision} 版 · 多分頁更新會合併，同名衝突另存副本`;}).catch(()=>{});
