@@ -6,7 +6,7 @@
 
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
-| 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 進行中：卷積／pooling 共用靜態推導與檢查；已取得真正 LiteRT allocation 失敗的 kernel/node 診斷，UI 尚待驗收 |
+| 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 進行中：卷積／pooling 共用靜態推導與檢查；已取得真正 LiteRT allocation 失敗的 kernel/node 診斷，獨立 Windows 小型 UI 已通過，其他 OP 與正式關卡仍待完成 |
 | Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | 尚待處理，v1.1.0 僅提供 metadata 大小預覽 |
 | Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 尚待處理；先前 Windows 小型 UI 與 Linux 大檔證據分開保留，不混成 Windows 大檔記憶體通過 |
 | Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | 計數與既有擴充已交付；resource／packing 等仍待處理，不宣稱通過公司 verifier |
@@ -21,7 +21,7 @@
 
 實際的 channel 負例出現 `Node number 0 (CONV_2D) failed to prepare`，allocation 失敗是在 `run()` 階段才回報。診斷保留原階段及原文，不能單憑「invoke」判斷為測試輸入問題。來源對照最多帶 512 個 OP／每側 32 個 port，截斷明列；依 node 編號與 builtin 名稱列出候選，重複日誌去重，多 subgraph／delegate 或不完整 context 不冒充唯一定位。來源模型改變後不得用舊位置導覽。
 
-這些仍是開發中結果；尚未發布、尚未完成新 UI／打包後瀏覽器與現行必要關卡。先前使用者那份 allocation 失敗模型並未提供，不宣稱已確認其根因。
+這些仍是開發中結果；尚未發布；新 UI／打包後 Windows 小型瀏覽器流程已通過，現行必要發布關卡仍待完成。先前使用者那份 allocation 失敗模型並未提供，不宣稱已確認其根因。
 
 ## 公開模型驗收找到的空 buffer 問題
 
@@ -29,6 +29,14 @@
 
 第一次驗收中，micro_speech_quantized 與 int16 conv10 原檔都成功 CPU invoke，完整 identity edit 後卻失敗：`Tensor ... is invalidly specified in schema`／`required_bytes <= bytes`。直接檢查 FlatBuffer 欄位後，將缺陷縮成三個確定失敗的回歸：整份模型、子模型及組合模型都把原本不存在的 `Buffer.data` 欄位重建成明確存在的零長度 vector。若 activation tensor 使用非零 buffer 編號，runtime 會將其視為不足長度的唯讀資料。
 
-修正只保留欄位的原始存在性：不存在維持 null，明確空 vector 仍存在；非空權重仍以原始 File range 保留，不讀整份權重或合併 buffer 編號。三個存在性回歸及解析、切圖、custom、組合、真正 CPU 等受影響 35 項已通過；真實公開模型的修正後驗收尚待完成。
+修正只保留欄位的原始存在性：不存在維持 null，明確空 vector 仍存在；非空權重仍以原始 File range 保留，不讀整份權重或合併 buffer 編號。三個存在性回歸及解析、切圖、custom、組合、真正 CPU 等受影響 35 項已通過；修正後四份公開模型的結構、identity／切圖／組合匯出重開通過；其中兩個可執行模型共八次真正 CPU invoke 的輸出 bytes 與原檔一致，八份 IO ZIP 已獨立核對 CRC。另兩個 dynamic 模型仍明列 runtime 未驗證，不讀取 body 或啟動 runtime。
 
 兩個 hello_world 原檔宣告 dynamic shape signature，現行手動 runtime 按既有政策拒絕；不為了讓樣本通過而抹掉 signature 或放寬限制。仍應驗證其結構、匯出重開及保留 bytes，執行結果列為未能驗證，不冒充 CPU 通過。
+
+## 本機階段證據（未發布）
+
+[階段收據](results/product-readiness-stage1.json)與[原始模型／授權、失敗及成功報告、截圖、IO、檢查程式](results/product-readiness-stage1-originals.zip)保留。打包來源 `e48fc535a914bbc7ade3d3aa6f4ab081f88b57d3`／build `6a38729a362a50dc`，317 核心檔；仍為開發候選，不能用其版本欄位冒充公開 v1.1.0 的固定產物。
+
+Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 均在新建的隔離 context 完成原生選檔、真正 CPU allocation 負例、日誌／IO 候選對照、點選後實際 OP 畫出且焦點回到結果、32px，以及非零 absent-data buffer 的切圖和 clone／編輯匯出重開／CPU。每個瀏覽器觀察到的 12 個 Workers 全部原生 close、無 pageerror；沒有讀取個人 profile。早期定位圖在 render 完成前擷取，保留為較弱觀察，不作最終完成證據。
+
+目前只完成這個本機階段；custom 引用契約、Windows 大檔記憶體、其他公開商品化項目與新版本正式關卡仍依上表推進。沒有重跑成功部署、修改安全規則或放寬記憶體／timer 門檻。

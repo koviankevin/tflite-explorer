@@ -1,0 +1,722 @@
+{
+  "format": "model-lens-product-readiness-stage1",
+  "status": "local-stage-passed-not-published",
+  "goal": "active;remaining product-readiness work retained",
+  "source": {
+    "commit": "e48fc535a914bbc7ade3d3aa6f4ab081f88b57d3",
+    "tree": "7e239c88f13b090bf8f99b4466d7b687276f464d",
+    "committedAt": "2026-10-31T03:11:21+08:00",
+    "dirty": false
+  },
+  "build": {
+    "schemaVersion": 1,
+    "version": "1.1.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "e48fc535a914bbc7ade3d3aa6f4ab081f88b57d3",
+      "tree": "7e239c88f13b090bf8f99b4466d7b687276f464d",
+      "committedAt": "2026-10-31T03:11:21+08:00",
+      "dirty": false
+    },
+    "buildId": "6a38729a362a50dc"
+  },
+  "windows": [
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.76",
+      "located": {
+        "operator": "Conv2D0",
+        "focused": "0",
+        "busy": "false",
+        "font": "32"
+      },
+      "workersClosed": 12,
+      "cases": [
+        "native chooser and true invalid-channel CPU allocation failure,raw diagnostics, bounded OP/tensor candidates,real IO ZIP and graph location at32px",
+        "switching model drops old diagnostic locations and valid model still invokes",
+        "nonzero absent-data runtime buffers remain executable after native cut/reopen and32px clone/edit/export/reopen"
+      ]
+    },
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.50",
+      "located": {
+        "operator": "Conv2D0",
+        "focused": "0",
+        "busy": "false",
+        "font": "32"
+      },
+      "workersClosed": 12,
+      "cases": [
+        "native chooser and true invalid-channel CPU allocation failure,raw diagnostics, bounded OP/tensor candidates,real IO ZIP and graph location at32px",
+        "switching model drops old diagnostic locations and valid model still invokes",
+        "nonzero absent-data runtime buffers remain executable after native cut/reopen and32px clone/edit/export/reopen"
+      ]
+    }
+  ],
+  "corpusSource": {
+    "commit": "fc6f6e1dfee2a3ab65bf7652346cdc7658dc6495",
+    "tree": "8542f47d28afde838a1210bb6d719f5be517f99d",
+    "committedAt": "2026-10-31T03:08:33+08:00",
+    "dirty": false
+  },
+  "onlyLaterChange": [
+    "test/browser/product-readiness-flow.mjs"
+  ],
+  "corpus": {
+    "structuralModels": 4,
+    "admittedCPUModels": 2,
+    "dynamicModelsNotVerified": 2,
+    "actualCPUExecutions": 8,
+    "ioCRCReader": {
+      "exit": 0,
+      "chunk": "96aeea"
+    }
+  },
+  "actualExits": {
+    "selected44": {
+      "exit": 0,
+      "chunk": "4763fb"
+    },
+    "bufferRelated35": {
+      "exit": 0,
+      "chunk": "89a16b"
+    },
+    "bufferCPU43": {
+      "exit": 0,
+      "chunk": "121c4e"
+    },
+    "corpusAllExports": {
+      "exit": 0,
+      "chunk": "200a57"
+    },
+    "windowsFinal": {
+      "exit": 0,
+      "chunk": "b6e8d5"
+    }
+  },
+  "archive": {
+    "path": "product-readiness-stage1-originals.zip",
+    "bytes": 1587025,
+    "sha256": "e818f1d31cb12901325a4579da09c65c026e7c63ff45b79027ff02e2f3a03f54",
+    "members": [
+      {
+        "name": "local-qa/buffer-cpu-regression.log",
+        "bytes": 7066,
+        "sha256": "b6419bb207deb31a5247c8452d2cc2437a50ba145b4ef77deb972e2546ba1a9a"
+      },
+      {
+        "name": "local-qa/buffer-presence-after.log",
+        "bytes": 6778,
+        "sha256": "4a1ec5eb805d58a34c9b438f1ee78f4ddf874f599360b83ce46deead4c4dd82b"
+      },
+      {
+        "name": "local-qa/buffer-presence-before.log",
+        "bytes": 2847,
+        "sha256": "e0ce1daa69a43b60fcf47fb332e4e0aa7a046eaee3ecda4b775775f9a08a9a83"
+      },
+      {
+        "name": "local-qa/plan.json",
+        "bytes": 6697,
+        "sha256": "cb91672baf08c3cba3a5625bb14d82506f9c0b201d6cb09b637762ffd0392447"
+      },
+      {
+        "name": "local-qa/public-corpus-check-1.log",
+        "bytes": 5332,
+        "sha256": "ce3f0b8164682f72fb5467f3bf310b21d4c687a34ca25faa5b2e052c8c1443b1"
+      },
+      {
+        "name": "local-qa/public-corpus-check-2.log",
+        "bytes": 996,
+        "sha256": "2ec529a384a2978a3ae905b0a7c8e7eed480d01bc37ad0a8d115a91cf8c876e1"
+      },
+      {
+        "name": "local-qa/public-corpus-check-3.log",
+        "bytes": 1002,
+        "sha256": "6fec34b5cef945f8844819c85ad5e522ac4df824ad0d6fa5412cc096f92a943d"
+      },
+      {
+        "name": "local-qa/public-corpus-check-all-exports.mjs",
+        "bytes": 8172,
+        "sha256": "3c0862041aeb67b70e9698f360c58f95e31e79c737d083799c733782519b0d0d"
+      },
+      {
+        "name": "local-qa/public-corpus-check-fixed.mjs",
+        "bytes": 5826,
+        "sha256": "45547be9f44f773d0ab4f18f5d6644a595dd06dcbc617df46b77a5a99f1b1bc4"
+      },
+      {
+        "name": "local-qa/public-corpus-check.mjs",
+        "bytes": 5396,
+        "sha256": "a319b276d734ae3e7d5a795c020878b135243e860bd15fab738ae283d376ef79"
+      },
+      {
+        "name": "local-qa/runtime-location-after.log",
+        "bytes": 4275,
+        "sha256": "9a903487ba7a7fb450e7e2a3cd52c89edfca9bff2c28558a5f4cabf2e6f72593"
+      },
+      {
+        "name": "local-qa/runtime-location-before.log",
+        "bytes": 3128,
+        "sha256": "2799f8769b044de8fd4ebc817d11d711c0c02704976616ab6c6643c7e52e7dfb"
+      },
+      {
+        "name": "local-qa/selected-1.log",
+        "bytes": 7541,
+        "sha256": "29277771dd310c84304dd6c74bdcea3e778380186c6b30ae1121c4cd747c21a0"
+      },
+      {
+        "name": "local-qa/spatial-after.log",
+        "bytes": 2320,
+        "sha256": "4a78334fde9e9a194cf298334a7db6059e55c2f91d62b46a9eecb5b3330158d8"
+      },
+      {
+        "name": "local-qa/spatial-before.log",
+        "bytes": 6274,
+        "sha256": "864acb0c043e4fc3eccca412be877150250b82823b9d8068414c36260b10f1de"
+      },
+      {
+        "name": "local-qa/spatial-cpu-2.log",
+        "bytes": 1906,
+        "sha256": "552d008a18dcc9022866b4b5fb784a25bf73352e2c99ccfe3a5b798f63e91ed5"
+      },
+      {
+        "name": "local-qa/spatial-cpu-3.log",
+        "bytes": 2297,
+        "sha256": "9f3b7c9a7a0123263f528f4c292f38d555625126303836d040aae9abf55edb03"
+      },
+      {
+        "name": "local-qa/spatial-cpu.log",
+        "bytes": 1693,
+        "sha256": "89f1a4541bb20f0c24953aca094bbdc073683080d9110573ab341ed7e72b2706"
+      },
+      {
+        "name": "public-corpus-check-1/conv10.tflite.edited.tflite",
+        "bytes": 54128,
+        "sha256": "d232f6699ce0930cc24ff755098df167b8c385b44ca1e39ea50052472374454c"
+      },
+      {
+        "name": "public-corpus-check-1/conv10.tflite.original.io.zip",
+        "bytes": 7735,
+        "sha256": "ddfa3a01bcbcce05044103eefe830c2c0e195077562979ddadffda45582771f0"
+      },
+      {
+        "name": "public-corpus-check-1/hello_world_float.tflite.edited.tflite",
+        "bytes": 6516,
+        "sha256": "54930171070db9b7055c544b86cd69eb2da8d64f5f76a96eb9cdf8a0554e25de"
+      },
+      {
+        "name": "public-corpus-check-1/hello_world_int8.tflite.edited.tflite",
+        "bytes": 5816,
+        "sha256": "275dd329e1a1979ea835520a64e790d4b51359191999e3b67e7ae6c95da8ebb9"
+      },
+      {
+        "name": "public-corpus-check-1/micro_speech_quantized.tflite.edited.tflite",
+        "bytes": 21957,
+        "sha256": "7a9582836e73fb40edeb96169c9e18dc71a873a7f28aa797b739fdb89afd449e"
+      },
+      {
+        "name": "public-corpus-check-1/micro_speech_quantized.tflite.original.io.zip",
+        "bytes": 4522,
+        "sha256": "39e868ac7b812f18b4b263d0cc6f7e7383e29d3fbe1364e46bcec5f2fd8b73e3"
+      },
+      {
+        "name": "public-corpus-check-1/report.json",
+        "bytes": 17761,
+        "sha256": "57bc19a26bcf2c5aaa496a8d7d802c933ffef990e4a5d16baba00811bda857e8"
+      },
+      {
+        "name": "public-corpus-check-2/conv10.tflite.edited.io.zip",
+        "bytes": 7735,
+        "sha256": "bb69e243f25d72585329935f94c8609061ada90b1455a10ff77ee300f74922d7"
+      },
+      {
+        "name": "public-corpus-check-2/conv10.tflite.edited.tflite",
+        "bytes": 54128,
+        "sha256": "5fff1ef37f5fac6f7c3165ee78fcf6e4cdc2dbe654c6ac768fadc2eea4ea14d4"
+      },
+      {
+        "name": "public-corpus-check-2/conv10.tflite.original.io.zip",
+        "bytes": 7735,
+        "sha256": "253dc3dbec2636811c12c819244c31a9cc8880db676c0f6d649c22762292d225"
+      },
+      {
+        "name": "public-corpus-check-2/hello_world_float.tflite.edited.tflite",
+        "bytes": 6516,
+        "sha256": "cc0de90f82a91a784d8ff51477cd481dace3586290920299ac763d7cc264fd02"
+      },
+      {
+        "name": "public-corpus-check-2/hello_world_int8.tflite.edited.tflite",
+        "bytes": 5816,
+        "sha256": "cd1a4f13c096bee006066ec443deaaa045eaec21cc367a38ade60c00174f473a"
+      },
+      {
+        "name": "public-corpus-check-2/micro_speech_quantized.tflite.edited.io.zip",
+        "bytes": 4109,
+        "sha256": "66207537c5a9bf9416536b7ca75287d1059dce97d6b68074170944b44f31b3d7"
+      },
+      {
+        "name": "public-corpus-check-2/micro_speech_quantized.tflite.edited.tflite",
+        "bytes": 21957,
+        "sha256": "1784c42df5c4e018e68bdee4fcb1bfe297a2cfa495d64963aafcad18f13059fb"
+      },
+      {
+        "name": "public-corpus-check-2/micro_speech_quantized.tflite.original.io.zip",
+        "bytes": 4522,
+        "sha256": "6d8220bbfd209005ad4e2c020c8ac55d95104ece40b83c6bc4a3e440448cdb16"
+      },
+      {
+        "name": "public-corpus-check-2/report.json",
+        "bytes": 15893,
+        "sha256": "b1852a2e26357e8a9b07ecbed10bd94532b5909bd43299ab735e926170978fda"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.composition.io.zip",
+        "bytes": 7735,
+        "sha256": "c31284a61341015f5b8ac71b21e332433a0521e6242a34441ea4772b4f6625c2"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.composition.tflite",
+        "bytes": 54224,
+        "sha256": "d93266108dde968c8232b5aa5ba1902ae97474f58707472fa9c5c0f49e01ec59"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.cut.io.zip",
+        "bytes": 7735,
+        "sha256": "6afe84b26211a4f0605eb37eecb92c6cb17a9aef544ee790dfcbfc61041ecb9d"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.cut.tflite",
+        "bytes": 54320,
+        "sha256": "26451201c15eb06ef0f4a442250170b63c3c499de49c6b8b7cec115ae2dbf47e"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.edited.io.zip",
+        "bytes": 7735,
+        "sha256": "c83ec97729311cbeb4bed9ea4798b0b9aed4214bbc7e560a05678bf81aa5f785"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.edited.tflite",
+        "bytes": 54128,
+        "sha256": "5fff1ef37f5fac6f7c3165ee78fcf6e4cdc2dbe654c6ac768fadc2eea4ea14d4"
+      },
+      {
+        "name": "public-corpus-check-3/conv10.tflite.original.io.zip",
+        "bytes": 7735,
+        "sha256": "d7e5fa0d50248b57753e517d8bf5461a1cba280c9933f578538ffed94eae85d2"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_float.tflite.composition.tflite",
+        "bytes": 6016,
+        "sha256": "cda3b524a3b9b96017a01136d20aa0fe9cecfdaa5820f04cdad9f811d4ea6755"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_float.tflite.cut.tflite",
+        "bytes": 6160,
+        "sha256": "fc0c25277940fd5e592f124974cb99cd3b9722a9c098c32c14e0e67b654cadc1"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_float.tflite.edited.tflite",
+        "bytes": 6516,
+        "sha256": "cc0de90f82a91a784d8ff51477cd481dace3586290920299ac763d7cc264fd02"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_int8.tflite.composition.tflite",
+        "bytes": 5312,
+        "sha256": "f42fcbe52a8622a52ad77c1ff89df474d34e41f8afb3da3f798bc2bbe66d4cf8"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_int8.tflite.cut.tflite",
+        "bytes": 5456,
+        "sha256": "9a83a3b7fe117dc74029a7296dcb7e1eb00394a0cd31f0f41d3e5539b8dde41d"
+      },
+      {
+        "name": "public-corpus-check-3/hello_world_int8.tflite.edited.tflite",
+        "bytes": 5816,
+        "sha256": "cd1a4f13c096bee006066ec443deaaa045eaec21cc367a38ade60c00174f473a"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.composition.io.zip",
+        "bytes": 4109,
+        "sha256": "674c8bb7e011351f0a9202e1f5187f45d4cdb48a4d5ad09f5aebfedebd8415c4"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.composition.tflite",
+        "bytes": 21856,
+        "sha256": "666c34b6efbe90f7817104c247dfbb324c973f320feca23738b80e3d75ba45e4"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.cut.io.zip",
+        "bytes": 4109,
+        "sha256": "f00d7d9175f1434449ace43dd2f63b7168349f3023111c59d8408f8ab379d081"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.cut.tflite",
+        "bytes": 22000,
+        "sha256": "bec9f8088e208edcce4c820bed972cc6f5f029f8574b7a9ebf96f7e677419b69"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.edited.io.zip",
+        "bytes": 4109,
+        "sha256": "5fe49358258edc9c219ed533492e4216354173d43d1d38667db74fdc416c8b00"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.edited.tflite",
+        "bytes": 21957,
+        "sha256": "1784c42df5c4e018e68bdee4fcb1bfe297a2cfa495d64963aafcad18f13059fb"
+      },
+      {
+        "name": "public-corpus-check-3/micro_speech_quantized.tflite.original.io.zip",
+        "bytes": 4522,
+        "sha256": "9dbc290d44a18c68833110a77873bb5a46e2f4a9b2285b02f0e1ff5f4f58cd84"
+      },
+      {
+        "name": "public-corpus-check-3/report.json",
+        "bytes": 22625,
+        "sha256": "c71bacc461d9ac60eef6af7deec83321326c8e06bf3c81cebdf7d5a3823f8e37"
+      },
+      {
+        "name": "public-corpus/LICENSE",
+        "bytes": 11358,
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "name": "public-corpus/conv10.tflite",
+        "bytes": 53000,
+        "sha256": "dde72adebf7916d43dc7fc0f86e3378f1722c0c464ef5ce60f1db2716c4464be"
+      },
+      {
+        "name": "public-corpus/hello_world_float.tflite",
+        "bytes": 3164,
+        "sha256": "ee939863195ca37ce063b18e14fb82aa0d98db6596ba41095757f6b560da1070"
+      },
+      {
+        "name": "public-corpus/hello_world_int8.tflite",
+        "bytes": 2704,
+        "sha256": "505ee4fae7fa46ab67bea4c08b4969eb3eb8b9114c50595ec4a29d9a27993202"
+      },
+      {
+        "name": "public-corpus/manifest.json",
+        "bytes": 2184,
+        "sha256": "b1c31c87c4365acec23afbc73d80366bf5817468849f9894ac4f86bfb30febd2"
+      },
+      {
+        "name": "public-corpus/micro_speech_quantized.tflite",
+        "bytes": 18800,
+        "sha256": "09e5e2a9dfb2d8ed78802bf18ce297bff54281a66ca18e0c23d69ca14f822a83"
+      },
+      {
+        "name": "references/conv.cc",
+        "bytes": 68280,
+        "sha256": "62d212ca6e470683d9487622e387171c8159c550b84ba69d628f811aa848eecf"
+      },
+      {
+        "name": "references/depthwise_conv.cc",
+        "bytes": 32489,
+        "sha256": "197d301033e6c2a38a3008e40581b7d95bf011a65ead2926722183ca55c7f35a"
+      },
+      {
+        "name": "references/manifest.json",
+        "bytes": 1542,
+        "sha256": "2de7db823ccbdeaae3316968ace2fe1008b6ea7cdeb9742ee7a1b9378b6469de"
+      },
+      {
+        "name": "references/padding.h",
+        "bytes": 11385,
+        "sha256": "3bf0e6e46aae8f831f10bf9bd1e1a66bcba2ece1f5cde61925820b1381e00cd3"
+      },
+      {
+        "name": "references/pooling.cc",
+        "bytes": 24427,
+        "sha256": "636369196683421ccf33f1ac446a125071b059c75add57748d0f3ad9f6d97b2f"
+      },
+      {
+        "name": "source/src/tflite-runtime-diagnostics.js",
+        "bytes": 2502,
+        "sha256": "80370b044d903fc85a14f4ef6c0f0269033e14aab174cfd63bebda95886a41ae"
+      },
+      {
+        "name": "source/src/tflite-spatial-checks.js",
+        "bytes": 4614,
+        "sha256": "88547161278f88408f2bd4672814a4e9fc5437adddf9c0f7266e9b70f6628896"
+      },
+      {
+        "name": "source/test/browser/product-readiness-flow.mjs",
+        "bytes": 10371,
+        "sha256": "4f74b4ace3e457ff4001aa03c15e07890d850b665d7f808fe09f55bc52269fe6"
+      },
+      {
+        "name": "source/test/builtin-options-diagnostics.test.mjs",
+        "bytes": 4095,
+        "sha256": "a676c9a812064dcb330000942339440d341192f91b16d26bba8824f618e876f5"
+      },
+      {
+        "name": "source/test/spatial-fixture.mjs",
+        "bytes": 2079,
+        "sha256": "98d4c1e0e0a4797350b99055d8dc5c6850f90e322559a7b563bef70c774e94c8"
+      },
+      {
+        "name": "source/test/tflite-buffer-presence.test.mjs",
+        "bytes": 2781,
+        "sha256": "c23240e49961898645e5102e58c57990e470b4f93cf3cf482ca769ee87e230a0"
+      },
+      {
+        "name": "source/test/tflite-runtime-diagnostics.test.mjs",
+        "bytes": 2074,
+        "sha256": "4aded65f7e60118e8aa4a1cbf02fed1c9d09af51dd586a10514321d29a3d4a04"
+      },
+      {
+        "name": "source/test/tflite-spatial-checks.test.mjs",
+        "bytes": 4005,
+        "sha256": "7aee8edc821df1642fb9a8fd12fe6052564d19e5d6a5131f3b97820ad1ab0899"
+      },
+      {
+        "name": "source/test/tflite-spatial-runtime.test.mjs",
+        "bytes": 4319,
+        "sha256": "fe714cff41079d89f85edf3836949661983fac7add67d1265df355a32f95b369"
+      },
+      {
+        "name": "source/vendor/litert/2.6.0/provenance.json",
+        "bytes": 2091,
+        "sha256": "9250712827a38fb74783b3fd9fc74cf819b8b0114ebabda1922a5e0cc8ede366"
+      },
+      {
+        "name": "windows-1/bad.tflite",
+        "bytes": 1468,
+        "sha256": "73fd1efe0e9cafe16cb944dab25f588c7aa2c68efed06f2cef4b33d0f1009b08"
+      },
+      {
+        "name": "windows-1/chrome-failure-32px.png",
+        "bytes": 75007,
+        "sha256": "1e0cd1dd5776c9afb268a76a4b8b20cb139f0945f7f03cb48ea6cb3620cfc1f0"
+      },
+      {
+        "name": "windows-1/chrome-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "d1e4ca3c249fc268643fb1f562e86acd7143bb75a033c34562c4ff8530cf94f3"
+      },
+      {
+        "name": "windows-1/chrome-located-32px.png",
+        "bytes": 73250,
+        "sha256": "e62fce081c23464e4c84eefa5214060a1bde66623e4e4a99222f0317338405c2"
+      },
+      {
+        "name": "windows-1/msedge-failure-32px.png",
+        "bytes": 75045,
+        "sha256": "786d70e5bf786f694259aa7cf4f564ac63b50ea68be6715da72ef6981036a0ca"
+      },
+      {
+        "name": "windows-1/msedge-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "ddb2294040d4c9684f9a8fcabb036b0ad37500cb5c757c6948c86f610fc1e2f9"
+      },
+      {
+        "name": "windows-1/msedge-located-32px.png",
+        "bytes": 53156,
+        "sha256": "f958777a6baec51210b4eab8eb89696336bbd19c8b31d693b427628b0135932e"
+      },
+      {
+        "name": "windows-1/report.json",
+        "bytes": 7921,
+        "sha256": "9088368f5c1f66f1d94683e991eabca68681a13777cc0420ff3ecd3caef009cc"
+      },
+      {
+        "name": "windows-1/valid.tflite",
+        "bytes": 1436,
+        "sha256": "fee540ac50ff115370109806dfa75b6ffe63f9af54c670b36715708f80ef096d"
+      },
+      {
+        "name": "windows-2/bad.tflite",
+        "bytes": 1468,
+        "sha256": "73fd1efe0e9cafe16cb944dab25f588c7aa2c68efed06f2cef4b33d0f1009b08"
+      },
+      {
+        "name": "windows-2/chrome-failure-32px.png",
+        "bytes": 74069,
+        "sha256": "f0d0a0e8e0bb321c3585c21508bedfe789f4a8b915559dd2af2a867bd34bc405"
+      },
+      {
+        "name": "windows-2/chrome-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "1146719c62b03cf38b8c5debff86cb79ec7f9e8ed86e727e440a83338ffe018a"
+      },
+      {
+        "name": "windows-2/chrome-located-32px.png",
+        "bytes": 53156,
+        "sha256": "f958777a6baec51210b4eab8eb89696336bbd19c8b31d693b427628b0135932e"
+      },
+      {
+        "name": "windows-2/msedge-failure-32px.png",
+        "bytes": 74065,
+        "sha256": "72969f8b709de3f12938b67de2a78634edc95e20c2e1e5a2c124126a29fd93b9"
+      },
+      {
+        "name": "windows-2/msedge-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "d0263f8939f539f5c306e53c1cc77816ab138c685c7c9f9cdebef215c8a0a279"
+      },
+      {
+        "name": "windows-2/msedge-located-32px.png",
+        "bytes": 53156,
+        "sha256": "f958777a6baec51210b4eab8eb89696336bbd19c8b31d693b427628b0135932e"
+      },
+      {
+        "name": "windows-2/report.json",
+        "bytes": 8205,
+        "sha256": "b31fc3cb6d3f73970c1d5db9dc7709a7417300578e45d2c87f8285d2e9f277f6"
+      },
+      {
+        "name": "windows-2/valid.tflite",
+        "bytes": 1436,
+        "sha256": "fee540ac50ff115370109806dfa75b6ffe63f9af54c670b36715708f80ef096d"
+      },
+      {
+        "name": "windows-3/absent.tflite",
+        "bytes": 1132,
+        "sha256": "12cfae7b386055f624f0411e081a6c852e67bde9aaf0ea33ca29d106448e4d25"
+      },
+      {
+        "name": "windows-3/bad.tflite",
+        "bytes": 1468,
+        "sha256": "73fd1efe0e9cafe16cb944dab25f588c7aa2c68efed06f2cef4b33d0f1009b08"
+      },
+      {
+        "name": "windows-3/chrome-absent-cut.tflite",
+        "bytes": 1292,
+        "sha256": "67e724041a6a8be69c887aac9eb0de8c239d1f02e065c7e0fcfa1bae80c89a54"
+      },
+      {
+        "name": "windows-3/chrome-absent-edited.tflite",
+        "bytes": 1556,
+        "sha256": "a77b07ba3249796cafd1de68713adbd71e893c633c5a2aded1259f0e516d8660"
+      },
+      {
+        "name": "windows-3/chrome-failure-32px.png",
+        "bytes": 74112,
+        "sha256": "816aae7a5e988f3133431f9eaa0be291ce2acea02992f0cf12253ad92176aace"
+      },
+      {
+        "name": "windows-3/chrome-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "bfa399f7c6c46f339a5ac8f233af667970821d3e8684e6a825151a143756e9d3"
+      },
+      {
+        "name": "windows-3/chrome-located-32px.png",
+        "bytes": 72807,
+        "sha256": "69d823a8586aa69e24f4107c6c59d946613bf53b4d4387f27eb07f044cd5d194"
+      },
+      {
+        "name": "windows-3/msedge-absent-cut.tflite",
+        "bytes": 1292,
+        "sha256": "67e724041a6a8be69c887aac9eb0de8c239d1f02e065c7e0fcfa1bae80c89a54"
+      },
+      {
+        "name": "windows-3/msedge-absent-edited.tflite",
+        "bytes": 1556,
+        "sha256": "a77b07ba3249796cafd1de68713adbd71e893c633c5a2aded1259f0e516d8660"
+      },
+      {
+        "name": "windows-3/msedge-failure-32px.png",
+        "bytes": 74063,
+        "sha256": "0ebf8da267e2b537d60bd002009d0ecc4b7f69af85c7ea4ab363382a5aaada1d"
+      },
+      {
+        "name": "windows-3/msedge-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "60ce9d4aee486b912487a9a1b15c63835d2a932060ec91e9b4b86ba34c615353"
+      },
+      {
+        "name": "windows-3/msedge-located-32px.png",
+        "bytes": 53162,
+        "sha256": "4dd52d0810ede510ffea0dd1197009493f57488cacdf58be96b8ee738b8de807"
+      },
+      {
+        "name": "windows-3/report.json",
+        "bytes": 11053,
+        "sha256": "bc9723be04412d1508463a9c027300d7d63404241fe263c95d5d15154b6f6f63"
+      },
+      {
+        "name": "windows-3/valid.tflite",
+        "bytes": 1436,
+        "sha256": "fee540ac50ff115370109806dfa75b6ffe63f9af54c670b36715708f80ef096d"
+      },
+      {
+        "name": "windows-4/absent.tflite",
+        "bytes": 1132,
+        "sha256": "12cfae7b386055f624f0411e081a6c852e67bde9aaf0ea33ca29d106448e4d25"
+      },
+      {
+        "name": "windows-4/bad.tflite",
+        "bytes": 1468,
+        "sha256": "73fd1efe0e9cafe16cb944dab25f588c7aa2c68efed06f2cef4b33d0f1009b08"
+      },
+      {
+        "name": "windows-4/chrome-absent-cut.tflite",
+        "bytes": 1292,
+        "sha256": "67e724041a6a8be69c887aac9eb0de8c239d1f02e065c7e0fcfa1bae80c89a54"
+      },
+      {
+        "name": "windows-4/chrome-absent-edited.tflite",
+        "bytes": 1556,
+        "sha256": "a77b07ba3249796cafd1de68713adbd71e893c633c5a2aded1259f0e516d8660"
+      },
+      {
+        "name": "windows-4/chrome-failure-32px.png",
+        "bytes": 74065,
+        "sha256": "72969f8b709de3f12938b67de2a78634edc95e20c2e1e5a2c124126a29fd93b9"
+      },
+      {
+        "name": "windows-4/chrome-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "4c05534f3f84d187b8d79ebb99988edf6f0c280f1d8876315762d3bb6be36961"
+      },
+      {
+        "name": "windows-4/chrome-located-32px.png",
+        "bytes": 72788,
+        "sha256": "f866f8387ebebfbaf2db46a7feb335f239484b75c312bad63a8784e3fde0e354"
+      },
+      {
+        "name": "windows-4/msedge-absent-cut.tflite",
+        "bytes": 1292,
+        "sha256": "67e724041a6a8be69c887aac9eb0de8c239d1f02e065c7e0fcfa1bae80c89a54"
+      },
+      {
+        "name": "windows-4/msedge-absent-edited.tflite",
+        "bytes": 1556,
+        "sha256": "a77b07ba3249796cafd1de68713adbd71e893c633c5a2aded1259f0e516d8660"
+      },
+      {
+        "name": "windows-4/msedge-failure-32px.png",
+        "bytes": 74024,
+        "sha256": "9e7484cccfe3fc9939fbbfc546200a2b498c902c9e445e30925be5783ed1dd7a"
+      },
+      {
+        "name": "windows-4/msedge-failure-io.zip",
+        "bytes": 3393,
+        "sha256": "c0d06f21591f54ffca8114b8f04f6895b4c3c490da7ffe8782250c84d12393bd"
+      },
+      {
+        "name": "windows-4/msedge-located-32px.png",
+        "bytes": 73447,
+        "sha256": "e7f50fa7e4a84393d3db12d75cfa7188522d26399707fd460149cf6fa02098d7"
+      },
+      {
+        "name": "windows-4/report.json",
+        "bytes": 11287,
+        "sha256": "f499f701ade3f0e7c1a75881009c572c314b28c80c3a2e08493de983c8e6c115"
+      },
+      {
+        "name": "windows-4/valid.tflite",
+        "bytes": 1436,
+        "sha256": "fee540ac50ff115370109806dfa75b6ffe63f9af54c670b36715708f80ef096d"
+      }
+    ]
+  },
+  "limitations": [
+    "Not published;current public v1.1.0 unchanged",
+    "Earlier location screenshots captured before graph render and are not final location evidence;windows-4 requires actual OP draw and focus",
+    "Two dynamic official models are runtime-not-verified;policies unchanged",
+    "Not Windows large-model RSS,arbitrary custom or private model validation,OS power loss or complete product-goal acceptance"
+  ]
+}
