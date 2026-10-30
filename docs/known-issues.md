@@ -21,6 +21,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
+[原生入口前置探測](runtime-module-cache.md#commit-導頁仍無法讀取原生頁面)在 commit 導頁後仍只回報 about:blank，尚無 DOM URI 或物件分類；本輪停在零模型、零 Measure，沒有重跑原 RSS。接著改用有程序身分／pidfd／handler guard 的 Linux 普通報告訊號，只量獨立空白／公開 IO 控制，保留原 RSS 失敗與門檻。
+
 最新[獨立 raw IO 與原生入口結果](runtime-module-cache.md#原生入口首次失敗與修正)已核對：原 Firefox RSS 17,782,725.49 bytes／輪仍失敗，零模型／零 WASM raw IO 也重現成長。原生頁面在導頁等待逾時，零次 Measure，尚無物件分類；接著修正診斷入口並先做獨立前置探測，沒有修改應用配置、放寬門檻或發布候選。
 
 最新 [ZIP 重用候選](runtime-module-cache.md#zip-重用候選仍未改善-rss)仍以 18,691,686.4 bytes／輪超過 Firefox 原門檻，沒有改善剩餘 slope。應用配置調整先停止，改做獨立 raw IO／原生 about:memory 持有者診斷；原失敗、門檻和 source-bound 證據保留，preview.32 未發布。

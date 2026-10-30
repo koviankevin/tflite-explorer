@@ -5,7 +5,8 @@ import {readFile} from 'node:fs/promises';
 import {RUNTIME_LIMITS} from '../../src/tflite-runtime-policy.js';
 import {gitSource,sha256} from '../../scripts/lib/release-artifact.mjs';
 import {PAYLOAD_BYTES,firefoxPayloadMemoryControl} from './firefox-payload-memory-control.mjs';
-import {installedFirefoxReporterProof,readFirefoxNativeMemory} from './firefox-native-memory-report.mjs';
+import {installedFirefoxReporterProof} from './firefox-native-memory-report.mjs';
+import {nativeReportDirectory,captureFirefoxSignalReport} from './firefox-native-signal-report.mjs';
 
 export function ownedIOControlDocument(helperSource){
     const line="import {RUNTIME_LIMITS} from './tflite-runtime-policy.js';";
@@ -31,14 +32,18 @@ $('download').onclick=()=>{if(active||!archive||urls.length>=8)throw Error('No c
 }
 
 export async function firefoxOwnedIOMemoryControl({browserType,base,asset}){
-    let bundle;
+    let bundle,temp,result,failure;
     try{
         bundle=installedFirefoxReporterProof(browserType.executablePath());
-        const helper=await readFile(new URL('../../src/runtime-io.js',import.meta.url),'utf8'),html=ownedIOControlDocument(helper),variant='owned-zeroed-transferable-io-native-report';
-        const report=await firefoxPayloadMemoryControl({browserType,base,asset,mode:'file-io',documentBuilder:()=>html,afterFinal:async({context,report})=>{
+        temp=await nativeReportDirectory();
+        const helper=await readFile(new URL('../../src/runtime-io.js',import.meta.url),'utf8'),html=ownedIOControlDocument(helper),variant='owned-zeroed-transferable-io-native-signal';
+        const report=await firefoxPayloadMemoryControl({browserType,base,asset,mode:'file-io',diagnosticTemp:temp.directory,documentBuilder:()=>html,afterFinal:async({report})=>{
             report.variant=variant;report.helperSHA256=sha256(Buffer.from(helper));report.documentSHA256=sha256(Buffer.from(html));report.nativeReportAfterMeasurement=true;
             assert.ok(report.rows.every((r,i)=>r.zeroBefore===true&&r.reused===(i%3>0)),'Owned IO control handoff mismatch');
-            return readFirefoxNativeMemory(context,bundle);
-        }});assert.equal(report.nativeMemory.status,'passed');return report;
-    }catch(error){const report=error.firefoxPayloadControl||{format:'model-lens-firefox-payload-control',version:1,status:'failed',source:gitSource(),phase:'native-source-preflight'};report.variant='owned-zeroed-transferable-io-native-report';if(bundle)report.nativeSourceProof=bundle;if(error.firefoxNativeMemory)report.nativeMemory=error.firefoxNativeMemory;report.error=error.stack||String(error);throw Object.assign(error,{firefoxNativeControl:report});}
+            assert.equal(report.modelsLoaded,0);assert.equal(report.runtimeInvocations,0);assert.equal(report.wasmInstances,0);
+            return captureFirefoxSignalReport({...report.nativeSignalTarget,temp,publicOnly:true,browserVersion:report.browserVersion});
+        }});assert.equal(report.nativeMemory.status,'passed');result=report;
+    }catch(error){failure=error;result=error.firefoxPayloadControl||{format:'model-lens-firefox-payload-control',version:1,status:'failed',source:gitSource(),phase:'native-source-preflight'};result.variant='owned-zeroed-transferable-io-native-signal';if(bundle)result.nativeSourceProof=bundle;result.error=error.stack||String(error);}
+    finally{if(temp){result ||= {status:'failed'};result.errors ||= [];result.nativeTemp=temp.record;try{await temp.cleanup({browserClosed:result.browserClosed,processCleanup:result.processCleanup});}catch(error){failure ||= error;result.status='failed';result.errors.push('Native report cleanup: '+error.message);}}}
+    if(failure)throw Object.assign(failure,{firefoxNativeControl:result});return result;
 }
