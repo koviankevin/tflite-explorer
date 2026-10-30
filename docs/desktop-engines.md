@@ -1,5 +1,11 @@
 # 桌面瀏覽器相容性
 
+## 現行驗收範圍
+
+2026-10-30 依使用者明確指示，必要瀏覽器驗收只保留 Chrome／Edge；Firefox 與 Safari／WebKit 均為選做，不列部署阻擋，後續不自行排這兩個引擎補測。手動入口與歷史成功／失敗原文保留，網站不封鎖這些瀏覽器。必要流程沿用 Chromium 桌面與正式完整性關卡；不修改安全規則、RSS 門檻、計時或 workflow YAML。目前實測執行環境是 Hosted Linux Chromium，不將它宣稱為 Windows 或兩個廠牌瀏覽器本體的獨立實測。
+
+以下兩引擎的輪次為歷史紀錄，維持各自原始來源及結果；不因範圍調整改寫成通過。
+
 既有正式關卡使用 Hosted Linux Chromium。`Desktop engine compatibility` 另以 lockfile 固定的 Playwright Firefox／WebKit，唯讀驗收已發布的完整 site ID 與 build ID。preview.18 的正式站兩引擎各十三項操作已通過，最新固定交付見 [桌面修正與交付](desktop-fixes.md#正式交付)。下文早期失敗保留當時結果，不代表本版仍失敗。這是桌面引擎驗收，不代表 Windows Firefox、macOS Safari、公司實模、超過 1 GiB 或數小時負載已通過。畫面範圍為 14 吋筆電的 1366×640／1280×640，字級包含 32px，不測手機。
 
 工作流程只有手動入口、`contents: read` 權限，僅允許此 repository 的 main／Hosted Linux runner。先逐檔核對正式站 SHA／MIME 及 root，再啟動獨立瀏覽器；結束時再次核對正式 site／core 身分，並保存 driver Git tree、實際引擎版本、原始操作報告及截圖。模型只有原始公開合成 fixtures，所有非 GET 或站外請求都拒絕。沒有部署、重跑正式發布或操作個人瀏覽器。

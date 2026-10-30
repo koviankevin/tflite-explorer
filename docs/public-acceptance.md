@@ -4,6 +4,10 @@
 
 固定版本為 [preview.31](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.31)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `3061076374227547`，來源 `adc870fee659611bf1a0fa78113642c1a3961afc`；[本版正式交付](preview31.md#發布狀態)已核對。外網更新不會自動更新公司內網站台。
 
+## 本輪瀏覽器驗收範圍
+
+2026-10-30 依使用者明確指示，必要瀏覽器驗收只保留 Chrome／Edge；Firefox 與 Safari／WebKit 均為選做，不列部署阻擋，後續不自行排這兩個引擎補測。手動入口與歷史成功／失敗原文保留，網站不封鎖這些瀏覽器。必要流程沿用 Chromium 桌面與正式完整性關卡；不修改安全規則、RSS 門檻、計時或 workflow YAML。目前實測執行環境是 Hosted Linux Chromium，不將它宣稱為 Windows 或兩個廠牌瀏覽器本體的獨立實測。
+
 ## 已核對的公開流程
 
 | 使用需求 | 證據與範圍 |

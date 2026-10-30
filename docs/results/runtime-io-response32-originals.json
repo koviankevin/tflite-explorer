@@ -1,0 +1,163 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-30T01:38:02.098336+00:00",
+  "source": "769707e17ad5bbbe904048a96888fed80c5598bd",
+  "build": "95baa2d69d0d3a46",
+  "run": 40985499197,
+  "authentication": "passed",
+  "acceptance": "OriginalFirefoxRSS7,556,066.74 B/cycle passed, all17functional/19runtime/5guide/CPU/IO/cold/retained/nativecleanup passed; olddirectBlobrawcontrol19,844,417.83 remainsdiagnosticonly. Core87scope unchanged. Firefoxnowoptionalperhuman; nofuturedispatchrequired. Candidate notpublished.",
+  "readerExits": [
+    {
+      "kind": "provider",
+      "exit": 0,
+      "chunk": "20adcf"
+    },
+    {
+      "kind": "functional/originalRSS",
+      "exit": 0,
+      "chunk": "db98f4"
+    },
+    {
+      "kind": "native/control",
+      "exit": 0,
+      "chunk": "16c5bb"
+    },
+    {
+      "kind": "scope",
+      "exit": 0,
+      "chunk": "4ce2d1"
+    }
+  ],
+  "archive": {
+    "path": "runtime-io-response32-originals.zip",
+    "bytes": 922947,
+    "sha256": "4a29d5311b3f4a0cdde1f3a0cc8d4fe02b5024e580a74547cd9d9c3c283a87ed",
+    "members": 22
+  },
+  "files": [
+    {
+      "path": "build/qa/runtime-io-response32-firefox/authentication.json",
+      "bytes": 213564,
+      "sha256": "26576d2b360feef361633c42bb9bd922fec6be33754a1c470ec6b5393f679390"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/desktop-firefox.json",
+      "bytes": 2553727,
+      "sha256": "ff4294f53d0a957848b80500bb214d8db1263f92da9e4a4011e6943aa47c570a"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/desktop-firefox.png",
+      "bytes": 172647,
+      "sha256": "7e3653d8cfb26d96120308350d796d14fa263976fa9f2dca89e2dad34edd0dbc"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "ec6ff0527bcc3877ed458fd14ff59e2818ce3e4f342f8e4fa463124804d835ec"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/listing.json",
+      "bytes": 948,
+      "sha256": "2ba62e035a09835a895fba42932174cd06db86cf3ae8b90f47af5d0e10299447"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/native-review.json",
+      "bytes": 16571,
+      "sha256": "6d347db00693933e931c822320e129ea0282c68c81ea9445ac70a8cc686bc7b2"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/original.zip",
+      "bytes": 403125,
+      "sha256": "2a69dbbbb192e4e68c8b10a2b90dc9c5b51f3dc43733eb4784ca89fbeacff6f0"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/run.json",
+      "bytes": 14428,
+      "sha256": "7b0aa89c81f0412c0c33694158c7bd2107641a4e9583dff1abe32f3e3e62f5db"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-firefox/strict-review.json",
+      "bytes": 38341,
+      "sha256": "fe1653c9afc33b191889c523b3035620a917bac7ade18f777b3c1e663fb8bbdd"
+    },
+    {
+      "path": "build/qa/auth-runtime-io-response32.mjs",
+      "bytes": 5780,
+      "sha256": "41d686a6c8f1d31064f92a20de89e35ff12be4629307401862068c9d9ce23682"
+    },
+    {
+      "path": "build/qa/review-runtime-io-response32-native.mjs",
+      "bytes": 8966,
+      "sha256": "8cdec9805341f2b5f469ee88898b68f82b949511f35b4c13032d8f3834c8e39b"
+    },
+    {
+      "path": "build/qa/review-runtime-io-response32-functional-success.mjs",
+      "bytes": 6069,
+      "sha256": "627c55b778881aaf72a6d60ff766058a74e6af649a56067e61e4fd5feb11679c"
+    },
+    {
+      "path": "build/qa/check-runtime-io-response32-scopes.mjs",
+      "bytes": 1042,
+      "sha256": "f9613f6b61e41e00ae21f372b5e7c59bc7630526295c513db662c270a2963d9c"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-scope.json",
+      "bytes": 4644,
+      "sha256": "bc122067339c86569672182a9c439005f9c0e074b575a8e3d291c5ab16126e47"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-scope.log",
+      "bytes": 3437,
+      "sha256": "d74625dec62d69fa20ac5db07f2a917efac1c174ae7c261e9f7211fea4a6c9db"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-build.log",
+      "bytes": 451,
+      "sha256": "199dc57e6c53eb988af6408b81c4ef699c2c279d036133db99ee8e13a7701c2c"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-watch.log",
+      "bytes": 30291,
+      "sha256": "ec45cb6b0eb671f076691ce2c8efed9762df764a0102303a12e617908fef5f3f"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-auth.log",
+      "bytes": 786,
+      "sha256": "e6a6513d3b91b03a1b5a998e665e9da7408cdfb6f13973ee0f64423660a61bdd"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-functional-review.log",
+      "bytes": 22056,
+      "sha256": "c77e31084bcac0c1b77f17bb3e30e972b8b22107e42cfb39e9a309c7d0ee4050"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-native-review.log",
+      "bytes": 638,
+      "sha256": "81433dd14c225acf76ad0017692682e6104338c2eb187a6040345333c564f32e"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-selected.log",
+      "bytes": 10593,
+      "sha256": "087fe7f7a15d00d46581983b9a9214a956ed1abc1ed25e5d07194c343172e376"
+    },
+    {
+      "path": "build/qa/runtime-io-response32-red.log",
+      "bytes": 4174,
+      "sha256": "2c64642230d73a854b7af0a735d2f658739e0d9030f121b14a8d23d195788855"
+    }
+  ],
+  "browserPolicy": {
+    "date": "2026-10-30",
+    "required": [
+      "Chrome",
+      "Edge"
+    ],
+    "execution": "Hosted Linux Chromium; not independent vendor-binary or Windows acceptance",
+    "optional": [
+      "Firefox",
+      "Safari/WebKit"
+    ],
+    "instruction": "Only Chrome/Edge required; no further Firefox or WebKit dispatch without human request. Existing completed originals retained."
+  }
+}
