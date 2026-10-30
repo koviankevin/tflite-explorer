@@ -1,12 +1,16 @@
 # 模鏡｜TFLite・MLIR 模型探索
 
+## v1.0.0 · 統一版本起點
+
+自本次起，GH Studio 工具統一以 **v1.0.0** 作為新起點。這是版本命名重整，保留既有功能與歷史紀錄；後續各工具依變更分別遞增：修正用修正版、相容功能用次版、不相容變更用主版。對外正式版本不加 preview；資料格式版本不隨產品版本重設。
+
 **Model Lens** — 看清結構，找到連接。
 
 公開核心與公司 dialect 現可分開建置。使用 `node scripts/build.mjs` 建公開版，或以 `--profile` 及獨立輸出接入內部擴充；可產生固定版本 ZIP、校驗逐檔雜湊，並在網站右上查看版本。見 [內網更新與回退](docs/intranet-release.md)。第一次使用、公開版驗收與限制見 [公開版指引](docs/public-acceptance.md)及[已知問題](docs/known-issues.md)；本輪只驗收外網，內網修改由使用者自行處理。後續品質工作另列於 [工作清單](docs/product-readiness.md)。
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前固定正式版為 [preview.31](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.31)／build `3061076374227547`。頂端「說明」或 F1 提供開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復指南；導覽不自動執行推論，閱讀保留選取、草稿與縮放。正式站 1,406 檔、33 項原生操作、五組指南、19 種執行／分佈情境及四份固定下載已核對；輸入回呼、reader 隔離與草稿 Worker 清理修正已交付，見 [正式交付](docs/preview31.md#發布狀態)。
+目前對外版本為 [v1.0.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.0.0)，承接原 preview.34 的功能。以下 preview.31 的驗證數字與版本文件保留為歷史紀錄。頂端「說明」或 F1 提供開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復指南；導覽不自動執行推論，閱讀保留選取、草稿與縮放。正式站 1,406 檔、33 項原生操作、五組指南、19 種執行／分佈情境及四份固定下載已核對；輸入回呼、reader 隔離與草稿 Worker 清理修正已交付，見 [正式交付](docs/preview31.md#發布狀態)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
