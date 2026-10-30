@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [preview.32](preview32.md#發布狀態)／build `816c3e9c03814cb4`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [preview.33](preview33.md#發布狀態)／build `d01d68c57f3eb1ef`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -21,7 +21,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前 [preview.32](preview32.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境與大檔八輪候選驗收，尚待正式發布；它不代表已重現或修復上述歷史逾時根因。
+目前 [preview.33](preview33.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 以下保留各輪歷史診斷中的來源及當時狀態；其中「最新／尚未發布」不覆蓋本段現況。
 

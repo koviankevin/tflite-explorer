@@ -23,4 +23,12 @@
 
 ## 發布狀態
 
-候選關卡已核對，尚待同一來源範圍的正式準備、部署與固定 Release 核對。目前正式站仍為 [preview.32](preview32.md#發布狀態)。
+[preview.33 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.33)與[正式站](https://koviankevin.github.io/tflite-explorer/)已完成獨立核對。固定來源 `0cbff2eb0a72826932a9f643ebb6f1d4c8610b90`／tree `106d05b100db475f0b8d479f1d932f3cd15f9d2b`／build `d01d68c57f3eb1ef`；PR #167 與 main 完整 tree 相同，與受測候選只差不執行的文件及 evidence 選擇，四個 dependency scopes 全部沿用，沒有重跑成功功能。
+
+準備 [41003598791](https://github.com/koviankevin/tflite-explorer/actions/runs/41003598791) 的 ZIP／Pages tar、310 核心檔與全站 1,418 檔經 provider digest／CRC／來源核對；乾淨重建的核心 manifest SHA `1438c1dcc21813a2ae7a5d96dff5d517013f46f1e62250e23528e0726892eab4`一致。發布 [41003975767](https://github.com/koviankevin/tflite-explorer/actions/runs/41003975767) 的 prepare／deploy／verify_live／release 均 attempt 1 成功，未重跑。
+
+最終獨立 reader 實際 exit 0：正式站 1,418 檔 SHA／MIME、root、權威 Pages deployment 與四份固定下載均吻合原準備包；原 33 項操作、19 種運算／分佈、86 model／44 runtime close、八輪 CPU／IO／自然 URL 期限、cold 與 retained FileList 清理，以及五個啟動／早期選檔／指南情境的六個 Netron Worker close 均通過。故障截圖再次核對 SHA 與目視，沒有錯誤就緒文字或啟動前可點的開檔入口。
+
+site ID `b9d3c0dc97ecd91ad40cc0caed8b59ed4d1f06d4deb2def28c0e79146a66fd14`，固定 ZIP SHA `3dfaceb9c65c40b9ecf30b80c2b7d75b6f57c7c785ac65b290de43c67effc1ad`。[正式獨立收據](results/preview33-published-final.json)、[小型 provider 原始 ZIP／報告／manifest／截圖／reader](results/preview33-published-originals.zip)與[逐檔 SHA／實際退出紀錄](results/preview33-published-originals.json)保留；大型應用包保留於不可變 Release，未重複加入 Git。
+
+preview.32／31 與 legacy preview.7 保留；沒有同步 Sites、覆寫舊 tag／Release 或改動安全規則。歷史 preview.22 的一次啟動逾時根因仍未穩定重現，本版改善失敗與等待時的恢復能力，沒有將該根因寫成已修好。整體商品等級目標保持進行中。

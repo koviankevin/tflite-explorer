@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "0cbff2eb0a72826932a9f643ebb6f1d4c8610b90",
+    "tree": "106d05b100db475f0b8d479f1d932f3cd15f9d2b",
+    "committedAt": "2026-10-30T12:32:58+08:00",
+    "dirty": false
+  },
+  "build": "d01d68c57f3eb1ef",
+  "site": "b9d3c0dc97ecd91ad40cc0caed8b59ed4d1f06d4deb2def28c0e79146a66fd14",
+  "archiveSHA256": "3a42bf23ee74d929778b7e48655125d80fa244bc4f941aec05c23ec9d2abe3ea",
+  "members": [
+    {
+      "name": "prepared/rebuild-review.json",
+      "bytes": 935,
+      "sha256": "2692413781ca8321111ab89819e35864c2e0dc0edbc92a2508e85918d5048399"
+    },
+    {
+      "name": "prepared/release-gates.json",
+      "bytes": 186995,
+      "sha256": "e24d07fadf1da14bb52e3def5f69af1db0d51ad6f9928bc4d605ad217412001b"
+    },
+    {
+      "name": "prepared/release-manifest.json",
+      "bytes": 50178,
+      "sha256": "1438c1dcc21813a2ae7a5d96dff5d517013f46f1e62250e23528e0726892eab4"
+    },
+    {
+      "name": "prepared/report.json",
+      "bytes": 5277,
+      "sha256": "7c09f3fa021b6482aff6d0addbb6a75b3c13f1558aa1890f8aebf792ca136ff8"
+    },
+    {
+      "name": "prepared/site-manifest.json",
+      "bytes": 261724,
+      "sha256": "5571b0e69590c4e0440c7b8df87272b20977ab757d5c102504d2bee989e7a805"
+    },
+    {
+      "name": "published/12954537940.zip",
+      "bytes": 765,
+      "sha256": "86d237eba3f5fd25938eda02683922733fbefce05d13da0c136b732c19914afd"
+    },
+    {
+      "name": "published/12955505013.zip",
+      "bytes": 394321,
+      "sha256": "b7deff4b914398ff379b595ee17e2aaa08d30832cebbc38547bba974991a4b19"
+    },
+    {
+      "name": "published/live-release-verification/pages-live-report.json",
+      "bytes": 373609,
+      "sha256": "f2b0189f76e08c12b3b65664f1198929549b5dfb6baa3254c559d0949fb76659"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.json",
+      "bytes": 614635,
+      "sha256": "fab8487ef4b2266c154fcfa4a8d903c33eb329321a63fe6e3d1b2c35c44c815d"
+    },
+    {
+      "name": "published/live-release-verification/production-smoke.png",
+      "bytes": 149610,
+      "sha256": "933acdcc95be2abc737717e9b3c5cc3becdf90af84dcefd7c985df6b0285bae2"
+    },
+    {
+      "name": "published/published-release-verification/pages-release-report.json",
+      "bytes": 1273,
+      "sha256": "693f00ba1b5154b01b18fc0f6c4b12abf5a37aaf629585419e7a904c64e2d179"
+    },
+    {
+      "name": "published/report.json",
+      "bytes": 110653,
+      "sha256": "7aecb17599d3f6c61591bf75ef7790f1e79c6fe963a19600e2c90d8422d62776"
+    },
+    {
+      "name": "published/startup-failure.png",
+      "bytes": 147371,
+      "sha256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-preview17-mlir.mjs",
+      "bytes": 1426,
+      "sha256": "699d6afa324806caa0f7157595442b658d73011811820aa79d02d77b4d90e728"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/freeze-preview33-final.mjs",
+      "bytes": 2789,
+      "sha256": "669e5006ab3e6a8e47799906b089f9a9901c91e6cdea58c3a0d7c27993a353a4"
+    },
+    {
+      "name": "readers/review-prepared-site.mjs",
+      "bytes": 8604,
+      "sha256": "e4f929e3087a446da62a6bfa989ea48cf9de835549cd7c6116d515974eaef954"
+    },
+    {
+      "name": "readers/review-preview33-publication.mjs",
+      "bytes": 14493,
+      "sha256": "8b9eb7099e4c172579e0740eb80159f08374cc0e962c3f850bdb3ebb7f7961ef"
+    },
+    {
+      "name": "readers/verify-prepared33-rebuild.mjs",
+      "bytes": 1599,
+      "sha256": "b93798ce1125eb20007e1c4f3623c7fe6debc380e2dcda889cc31a5f13c5e3f5"
+    }
+  ],
+  "publicationReader": {
+    "exit": 0,
+    "toolChunk": "430354"
+  },
+  "scope": "Complete small provider originals, reports, manifests, both native PNGs and auditors retained. Large prepared ZIP/Pages tar are not duplicated in Git; successful independent prepared/live checks, provider digests and exact asset hashes are recorded, and four immutable Release assets were downloaded/compared with prepared bytes. Hosted Linux Chromium, no other browser/mobile/company/2hour run."
+}
