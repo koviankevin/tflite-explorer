@@ -19,3 +19,9 @@ Hosted Chromium 將用三個獨立 context 阻擋一次入口檔、阻擋一次�
 ## 第二輪：觀察順序錯誤
 
 [40995960246](https://github.com/koviankevin/tflite-explorer/actions/runs/40995960246) 已實際命中版本 URL，第一個情境走到原生鍵盤重載與正常初始化檢查，卻在關閉 context 後繼續讀取 viewport 而失敗。這是新增測試的順序錯誤；當輪仍是零個完整案例收據，不能當成三種恢復情境已通過。獨立 reader 核對原始 provider／CRC／來源、context close 與程式順序後 exit 0，[原始 ZIP](results/startup-recovery33-observation-failure.zip)及[失敗收據](results/startup-recovery33-observation-failure.json)保留。修正僅將版面讀取移至 context 關閉前，保留所有 assertion 及真正 Worker close 要求，應用未更動。
+
+## 首次三情境成功與目視修正
+
+[40997283556](https://github.com/koviankevin/tflite-explorer/actions/runs/40997283556) 的三個恢復情境全部通過；四個 Netron Worker 都收到 close，無模型、runtime 或下載。33 項原操作、19 runtime、CPU／IO、cold 與 retained input 也通過。獨立 reader 真正 exit 0，核對 provider digest／CRC、來源、截圖 SHA 與 1280×640 邊界；[原始資料](results/startup-recovery33-first-success.zip)與[收據](results/startup-recovery33-first-success.json)保留。
+
+目視截圖發現失敗時頁尾仍是舊的「準備就緒」。候選另將載入中與失敗頁尾同步，並在三情境加入狀態文字檢查；這個小修正仍需新的原生核對，未拿舊成功直接當新來源發布資格。

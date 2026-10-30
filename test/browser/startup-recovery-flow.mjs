@@ -32,11 +32,11 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             }
             if(mode==='pending-recovery'){
                 await panel.locator('[id=application-startup-reload]').focus();
-                assert.equal(await panel.getAttribute('data-state'),'loading');assert.equal(await panel.isVisible(),true);
+                assert.equal(await panel.getAttribute('data-state'),'loading');assert.equal(await panel.isVisible(),true);assert.equal(await page.locator('#status').textContent(),'正在載入網站');
                 assert.equal(await page.locator('#model-file').inputValue(),'');release();
             }else{
                 await page.locator('#application-startup[data-state=failed]').waitFor();
-                assert.equal(await panel.getAttribute('role'),'alert');assert.equal(await page.locator('dialog[open]').count(),0);
+                assert.equal(await panel.getAttribute('role'),'alert');assert.equal(await page.locator('#status').textContent(),'網站啟動未完成');assert.equal(await page.locator('dialog[open]').count(),0);
                 const text=await panel.textContent();assert.ok(text.includes('網站啟動未完成'));assert.ok(!text.includes('app.js')&&!text.includes('zip.js')&&!text.includes(base));
                 assert.equal(await read(()=>document.activeElement===document.querySelector('#application-startup-reload')),true);
                 assert.equal(await read(()=>document.querySelector('.app-header').inert),true);
@@ -52,7 +52,7 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             }
             const deadline=Date.now()+30000;while(!await read(()=>document.querySelector('#autosave-enabled').disabled===false&&document.querySelector('#application-startup').hidden)){assert.ok(Date.now()<deadline,'Application did not recover after native reload/releasing the held request.');await page.waitForTimeout(50);}
             assert.equal(await page.locator('#model-file').inputValue(),'');assert.equal(await read(()=>document.querySelector('.app-header').inert),false);
-            assert.equal(await page.locator('#model-tabs').isVisible(),false);assert.equal(await page.locator('#layer-count').textContent(),'—');
+            assert.equal(await page.locator('#status').textContent(),'準備就緒');assert.equal(await page.locator('#model-tabs').isVisible(),false);assert.equal(await page.locator('#layer-count').textContent(),'—');
             if(mode==='pending-recovery')assert.equal(await read(()=>document.activeElement===document.querySelector('#open-model')),true);
             assert.ok(!requests.some(r=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)|\/vendor\/litert\//.test(r.url)));
             assert.equal(rows.filter(w=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(w.url)).length,0);

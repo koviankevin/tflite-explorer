@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "87312ea48fdf37258bfbda4dc4cfe64528511879",
+    "tree": "a0e1175e38350eef19f4c95e75b64a7ec4261b0b",
+    "committedAt": "2026-10-30T11:24:54+08:00",
+    "dirty": false
+  },
+  "run": 40997283556,
+  "acceptance": "All three native recovery cases passed on this source; visual audit found the old footer still saying ready on failure. No final release acceptance.",
+  "archiveSHA256": "4dd05fc73224c04248a0222148118d127a06bec195e0186663055abc6569d9f3",
+  "members": [
+    {
+      "name": "originals/jobs.json",
+      "bytes": 5633,
+      "sha256": "8deefb0b235a90bb2867e3c71894f6d28471f1f7b23620d573ec3a0221b88c10"
+    },
+    {
+      "name": "originals/listing.json",
+      "bytes": 1866,
+      "sha256": "d92df7b1d3adff4149094e510772d8a3294d511cec22572af8a596f1db2c6145"
+    },
+    {
+      "name": "originals/native-artifact.json",
+      "bytes": 832,
+      "sha256": "69155cc081f8a8cb706a2c5a46735237703f5bf66cf73f1fe514b7234ddd6a1a"
+    },
+    {
+      "name": "originals/native.zip",
+      "bytes": 361706,
+      "sha256": "d825c0c4a58d3a08b59dea58520af1483ffd127fad709776453dcd7dbd2492f5"
+    },
+    {
+      "name": "originals/production-smoke.json",
+      "bytes": 784316,
+      "sha256": "b9bd33058a77f18e9833cf272e0acf6a9003f9de756c5a571010921a3cd96eba"
+    },
+    {
+      "name": "originals/production-smoke.png",
+      "bytes": 149712,
+      "sha256": "a2e41c98151930632942d8d86c1f48ec680557f7de65fe6f885c447234992c5c"
+    },
+    {
+      "name": "originals/review.json",
+      "bytes": 82846,
+      "sha256": "633a50750479198c51a91b6826599215df8620285568d671ad4647bd8f5665c3"
+    },
+    {
+      "name": "originals/run.json",
+      "bytes": 14412,
+      "sha256": "b7a0cba6f76adeab282ae581ef5be392090da92d6078080ef8e9bdffc5558397"
+    },
+    {
+      "name": "originals/site-artifact.json",
+      "bytes": 828,
+      "sha256": "2493decffb6c1381215e0cd0439c8f9b39fbee8118afecf65192987eb79003cb"
+    },
+    {
+      "name": "originals/site.zip",
+      "bytes": 4726,
+      "sha256": "8b5fd5f5d96fc83c559d0e950212f5e89b4aa4f858aa2959fa641f1cb587f15a"
+    },
+    {
+      "name": "originals/startup-failure.png",
+      "bytes": 147298,
+      "sha256": "619d20f74bd760f6a6804a12b1226e120fcc9a576f2c4b3991a7634129e9bb9f"
+    },
+    {
+      "name": "originals/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "8cb58e6983d03c8346a61656adbfd54b9c62b14ec6d43107e8442b427f74fcd9"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2409,
+      "sha256": "fe72399107c67f5d8235c7681dca6fb0d78c866a11c7f6a9c6b7f22f3e8f80bf"
+    }
+  ],
+  "reader": {
+    "exit": 0,
+    "chunk": "58f58b"
+  },
+  "startup": {
+    "cases": [
+      {
+        "mode": "entry-failure",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": true,
+        "pendingFocusRestored": false,
+        "workers": 1,
+        "failureBounds": {
+          "x": 360,
+          "y": 204.8203125,
+          "width": 560,
+          "height": 230.359375
+        }
+      },
+      {
+        "mode": "dependency-failure",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": true,
+        "pendingFocusRestored": false,
+        "workers": 2,
+        "failureBounds": {
+          "x": 360,
+          "y": 204.8203125,
+          "width": 560,
+          "height": 230.359375
+        }
+      },
+      {
+        "mode": "pending-recovery",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": false,
+        "pendingFocusRestored": true,
+        "workers": 1
+      }
+    ],
+    "workers": 4,
+    "allWorkersClosed": true,
+    "zeroModelAndRuntime": true,
+    "downloads": 0,
+    "screenshotSHA256": "619d20f74bd760f6a6804a12b1226e120fcc9a576f2c4b3991a7634129e9bb9f",
+    "screenshotPath": "build/qa/startup-recovery33-native-main-40997283556-passed/startup-failure.png",
+    "scope": "Hosted Linux Chromium real one-shot network faults, actual Enter reload and delayed successful startup; no inference or private model. This is not rootcause proof for the historical unexplained timeout."
+  },
+  "visual": "619d20f74bd760f6a6804a12b1226e120fcc9a576f2c4b3991a7634129e9bb9f, observed via view_image; 1280x640 card entirely visible, stale ready footer needs correction."
+}
