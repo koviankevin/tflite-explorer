@@ -24,6 +24,7 @@ for fn in ['Process32FirstW','Process32NextW']:
     getattr(k,fn).argtypes=[w.HANDLE,c.POINTER(ENTRY)];getattr(k,fn).restype=w.BOOL
 k.CloseHandle.argtypes=[w.HANDLE];k.CloseHandle.restype=w.BOOL
 k.OpenProcess.argtypes=[w.DWORD,w.BOOL,w.DWORD];k.OpenProcess.restype=w.HANDLE
+k.WaitForSingleObject.argtypes=[w.HANDLE,w.DWORD];k.WaitForSingleObject.restype=w.DWORD
 k.GetProcessTimes.argtypes=[w.HANDLE]+[c.POINTER(w.FILETIME)]*4;k.GetProcessTimes.restype=w.BOOL
 k.K32GetProcessMemoryInfo.argtypes=[w.HANDLE,c.POINTER(COUNTERS),w.DWORD];k.K32GetProcessMemoryInfo.restype=w.BOOL
 if len(sys.argv)==3 and sys.argv[1]=='--allocated-size':
@@ -48,22 +49,26 @@ def snapshot():
         return rows
     finally:k.CloseHandle(handle)
 def inspect(row,memory=False):
-    handle=k.OpenProcess(0x1000|(0x10 if memory else 0),False,row['pid'])
+    handle=k.OpenProcess(0x1000|0x100000|(0x10 if memory else 0),False,row['pid'])
     if not handle:
         error=c.get_last_error()
         if error in [87,1168]:return None
         raise c.WinError(error)
     try:
+        state=k.WaitForSingleObject(handle,0)
+        if state==0:return None
+        if state!=258:raise RuntimeError('Native liveness unavailable')
         basic=BASIC();length=w.ULONG();status=native(handle,0,c.byref(basic),c.sizeof(basic),c.byref(length))
         if status<0 or length.value!=c.sizeof(basic):raise RuntimeError('Native parent identity unavailable: '+hex(status&0xffffffff))
         if basic.pid!=row['pid'] or basic.parent!=row['parent']:return None
         times=[w.FILETIME() for _ in range(4)]
         if not k.GetProcessTimes(handle,*[c.byref(t) for t in times]):raise c.WinError(c.get_last_error())
-        # An exited process may remain in the snapshot; do not sum its old RSS.
-        if times[1].dwLowDateTime or times[1].dwHighDateTime:return None
+        # lpExitTime is unspecified for a live process. Use the zero-time handle
+        # wait above instead; never infer liveness from those FILETIME fields.
         result={**row,'startTicks':str((times[0].dwHighDateTime<<32)|times[0].dwLowDateTime),'state':'R'}
         if row.get('startTicks') and row['startTicks']!=result['startTicks']:return None
         if memory:
+            if k.WaitForSingleObject(handle,0)==0:return None
             values=COUNTERS();values.cb=c.sizeof(values)
             if not k.K32GetProcessMemoryInfo(handle,c.byref(values),values.cb):raise c.WinError(c.get_last_error())
             if values.workingSet<=0:raise RuntimeError('Owned working set missing')
