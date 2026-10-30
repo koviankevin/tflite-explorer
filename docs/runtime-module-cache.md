@@ -217,4 +217,4 @@ Firefox 使用事前登記的獨占 TMPDIR。完整 gzip 最多 512 KiB，解壓
 
 獨立 direct-Blob raw 控制仍約 19,844,417.83 bytes／輪，作為未使用新下載轉換的對照；它不載入模型／WASM，也不扣除或替代應用 RSS。冷熱完整 native gzip、307 core 檔、provider digest／CRC、SHA／來源與獨立成功 reader 均實際 exit 0；完整 [22 檔原始證據](results/runtime-io-response32-originals.zip)／[SHA inventory](results/runtime-io-response32-originals.json)保存，ZIP SHA `4a29d5311b3f4a0cdde1f3a0cc8d4fe02b5024e580a74547cd9d9c3c283a87ed`。這是有限 Hosted Linux 正常流程的改善，不證明所有 engine／private mode／數小時或任意模型；候選尚未發布。
 
-使用者在本輪完成時明確調整 Firefox 為選做，見[現行驗收範圍](desktop-engines.md#現行驗收範圍)。已完成的這輪只讀取並保存結果，後續不排 Firefox、不作部署阻擋。受影響 Chromium／WebKit 與正式發布完整性仍須驗證。核心效能 87 檔 dependency fingerprint 與已交付來源完全相同，值為 `2172ba567df7da91fedf1790ad56b1e05a2b49cfd718574f305bb3835f5f741d`；可於 provider／scope 再核對後沿用既有 core 結果，其餘三關卡須按新來源核對。
+使用者在本輪完成時明確調整 Firefox 為選做，見[現行驗收範圍](desktop-engines.md#現行驗收範圍)。已完成的這輪只讀取並保存結果，後續不排 Firefox、不作部署阻擋。使用者隨後明確將 Safari／WebKit 也改為選做，必要範圍只保留 Chrome／Edge；後續僅排 Chromium 與正式發布完整性核對。核心效能 87 檔 dependency fingerprint 與已交付來源完全相同，值為 `2172ba567df7da91fedf1790ad56b1e05a2b49cfd718574f305bb3835f5f741d`；可於 provider／scope 再核對後沿用既有 core 結果，其餘三關卡須按新來源核對。

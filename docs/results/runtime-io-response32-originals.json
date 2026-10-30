@@ -146,5 +146,18 @@
       "bytes": 4174,
       "sha256": "2c64642230d73a854b7af0a735d2f658739e0d9030f121b14a8d23d195788855"
     }
-  ]
+  ],
+  "browserPolicy": {
+    "date": "2026-10-30",
+    "required": [
+      "Chrome",
+      "Edge"
+    ],
+    "execution": "Hosted Linux Chromium; not independent vendor-binary or Windows acceptance",
+    "optional": [
+      "Firefox",
+      "Safari/WebKit"
+    ],
+    "instruction": "Only Chrome/Edge required; no further Firefox or WebKit dispatch without human request. Existing completed originals retained."
+  }
 }
