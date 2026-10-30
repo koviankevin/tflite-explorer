@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [preview.33](preview33.md#發布狀態)／build `d01d68c57f3eb1ef`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [preview.34](preview34.md#發布狀態)／build `b4e7d23b66e9d9c5`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -9,6 +9,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 目前已加入有上限的靜態請求／console 診斷，若再發生可追查來源；尚未取得能穩定重現該次逾時的條件。詳細證據見 [啟動診斷與正式交付](desktop-physical.md)。
 
 ## 功能限制
+
+**探索草稿寫入失敗已在 preview.34 修正**：持續顯示尚未儲存，保留操作與 Undo／Redo，明確重試並保留跨分頁衝突保護；真實容量上限／備份／移除／重試及重載恢復通過。這不代表 OS 磁碟已滿或斷電已驗收，見 [交付與範圍](workspace-storage.md)。
 
 **輸入視窗與草稿 Worker 清理已在 preview.31 交付**：解除確認回呼、請求身分隔離及開窗失敗清理；同一輪取消不再建立指紋 Worker，終止前清除回呼。正式站 14 次一般與 24 次 IO 生命週期輸入清理、候選 Firefox 指紋 Worker 四次 native close 均核對，見[正式交付](preview31.md#發布狀態)及[原始診斷](runtime-input-cleanup.md)。這些具體缺口已修正；有限量測不等於所有物件、所有負載永不保留。
 
@@ -21,7 +23,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前 [preview.33](preview33.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
+目前 [preview.34](preview34.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 以下保留各輪歷史診斷中的來源及當時狀態；其中「最新／尚未發布」不覆蓋本段現況。
 

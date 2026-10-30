@@ -23,4 +23,12 @@
 
 ## 發布狀態
 
-候選關卡已核對，尚待固定來源準備、正式站與四份 Release 下載驗證。正式站仍為 [preview.33](preview33.md#發布狀態)。
+[preview.34 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.34)與[正式站](https://koviankevin.github.io/tflite-explorer/)均已完成獨立核對。固定來源 `20ec63305ca0dfb23ea06cb185d964896d5ad287`／tree `f7cb6405f80e3484e5855bd6f583c1c790056d8a`／build `b4e7d23b66e9d9c5`。候選與最終來源只差明列的非執行文件／收據選擇，四個執行 dependency scopes 相同；正式準備仍重新核對 provider、來源、scope 及乾淨建置。
+
+[準備 41008715430](https://github.com/koviankevin/tflite-explorer/actions/runs/41008715430)的 provider ZIP／Pages tar、310 核心檔、全站 1,424 檔及乾淨重建 manifest 通過。[發布 41008988653](https://github.com/koviankevin/tflite-explorer/actions/runs/41008988653)四工作 attempt 1 成功，成功部署未重跑。
+
+最終 reader 實際 exit 0，核對全站 SHA／MIME、root、權威 deployment 和四份實際固定下載，均與原準備包相同。原 33 項操作、19 種運算／分佈、86 model／44 runtime close、CPU／IO 八輪、自然 URL 期限、cold／retained 清理、五個啟動情境，以及新草稿容量／備份／移除／重試／重載恢復全部通過；新增 22 個模型 Worker 均原生關閉。草稿失敗截圖已再次驗 SHA 並目視核對。
+
+site ID `4b520a6d3e647e3c00ae92a5a32554f9c0c140f7dbba81cd0f623168af4077b8`。[正式獨立收據](results/preview34-published-final.json)、[原始 provider／manifest／截圖／reader](results/preview34-published-originals.zip)及[逐檔 SHA／實際退出紀錄](results/preview34-published-originals.json)保留；大型成品保留於不可變 Release。preview.33／32 與 legacy preview.7 保留，未同步 Sites、覆寫舊版或改安全／RSS／runtime 規則。
+
+依使用者「先完成一版再慢慢修」，本輪重要保存修正及交付完成，其餘品質項目列為後續；不宣稱 OS 磁碟已滿／斷電、Windows 兩廠牌實機、完整無障礙、數小時 interpreter 或歷史偶發啟動根因已全部解決。
