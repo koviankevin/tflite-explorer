@@ -21,6 +21,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
+最新[獨立 raw IO 與原生入口結果](runtime-module-cache.md#原生入口首次失敗與修正)已核對：原 Firefox RSS 17,782,725.49 bytes／輪仍失敗，零模型／零 WASM raw IO 也重現成長。原生頁面在導頁等待逾時，零次 Measure，尚無物件分類；接著修正診斷入口並先做獨立前置探測，沒有修改應用配置、放寬門檻或發布候選。
+
 最新 [ZIP 重用候選](runtime-module-cache.md#zip-重用候選仍未改善-rss)仍以 18,691,686.4 bytes／輪超過 Firefox 原門檻，沒有改善剩餘 slope。應用配置調整先停止，改做獨立 raw IO／原生 about:memory 持有者診斷；原失敗、門檻和 source-bound 證據保留，preview.32 未發布。
 
 raw BIN copy 移除後的[新一批原始結果](runtime-module-cache.md#raw-bin-候選原始結果)仍是 18,495,546.51 bytes／輪，沒有改善剩餘 Firefox RSS slope。所有功能／內容與 native 清理仍通過；接著驗證同一模型的零化 ZIP buffer 重用，候選尚未發布。較早 d0f3ff9 結果保留如下。

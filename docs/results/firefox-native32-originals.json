@@ -1,0 +1,146 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-30T00:04:33.258296+00:00",
+  "source": {
+    "commit": "26039faf706ebbf48de2f4b9405b6fee1b7183df",
+    "tree": "d19f31f0538e3c82b5fef7181de2f00c4c27a376",
+    "committedAt": "2026-10-30T07:26:59+08:00",
+    "dirty": false
+  },
+  "buildId": "2dec27637311cc63",
+  "run": 40973263249,
+  "authentication": "passed",
+  "acceptance": "Original RSS failed 17782725.485714287 B/cycle; independent raw IO 20104689.37142857 B/cycle without models/WASM. Native navigation failed before any Measure; no native heap classification.",
+  "sourceBoundReaders": [
+    {
+      "kind": "provider/source/CRC/306core",
+      "exit": 0,
+      "chunk": "ff679e"
+    },
+    {
+      "kind": "functional/originalRSS",
+      "exit": 0,
+      "chunk": "d653ac"
+    },
+    {
+      "kind": "raw IO/control/failure/source",
+      "exit": 0,
+      "chunk": "7cd64f",
+      "correction": "Initial reader incorrectly compared built cache-busted helper with source helper; corrected to exact clean source and Linux LF. Original failed reader log preserved."
+    }
+  ],
+  "archive": {
+    "path": "firefox-native32-originals.zip",
+    "bytes": 536751,
+    "sha256": "0cf5c3bde4e20dcb6d50ca486ed277a7d67c53d3b6dd3c79b1da80023c3ca1e8",
+    "members": 21
+  },
+  "files": [
+    {
+      "path": "build/qa/firefox-native32-firefox/authentication.json",
+      "bytes": 87797,
+      "sha256": "c0c8aa6df602d04149e174f6aadb426745d5a96c88ec94e041dad4a27460c9b2"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/control-review.json",
+      "bytes": 2112,
+      "sha256": "adf6f9f36264345c63d7f3c93990e463638b913341115a185dbc939a4ee7e90c"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/desktop-firefox.json",
+      "bytes": 2325787,
+      "sha256": "570f4ecac1cb4fe0fdfc770517849ca7268c6087b4de4f1fd4ac68c6b13d1128"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/desktop-firefox.png",
+      "bytes": 156538,
+      "sha256": "fe97d06b5fd5d160b88d793b6bf96946b0d2c39ae7dd188e69ba4199a28a85b3"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/failed-rss-review.json",
+      "bytes": 38418,
+      "sha256": "32ca43c4c0b0048912adf91a762c5c69120f1378edf9afdebf4eb50c30e9d1b0"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/inspection.json",
+      "bytes": 6555,
+      "sha256": "7f2d43ea31868173ae7934b50bbb89fa61ddb4e71ca66a4be88fff1c4d2bf50a"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "93bacf8bf09976abf0fc2e9b3866a4b5c6db79f946854416833b803032864ca0"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/listing.json",
+      "bytes": 948,
+      "sha256": "5ad9f7bbff7b9f794e1b0204feef1edd15de39269f3b613a085de348df1c942f"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/original.zip",
+      "bytes": 252170,
+      "sha256": "94f9c134ebfe1d1cffd740c09b2ae26acac6e672aa9866f1c5db24beee0f6c3b"
+    },
+    {
+      "path": "build/qa/firefox-native32-firefox/run.json",
+      "bytes": 14430,
+      "sha256": "19e9c319c1907b74ee43f673e3206ff518b73045329bea4edba1cea7994b5acf"
+    },
+    {
+      "path": "build/qa/auth-firefox-native32.mjs",
+      "bytes": 5542,
+      "sha256": "90fc1553a3cf0603a889f13a97d5974d35f5ac41c32860e77f0924fe11953871"
+    },
+    {
+      "path": "build/qa/review-firefox-native32-functional-failure.mjs",
+      "bytes": 6511,
+      "sha256": "f030b7c840035f5d181803fc88ae1d29ed3e69973a78fb6039a3d8210b525e32"
+    },
+    {
+      "path": "build/qa/review-firefox-native32-control.mjs",
+      "bytes": 6269,
+      "sha256": "2fc55a35c04d17f6be611e1b021439d1c0e07b52656ece044f7ce657c060a685"
+    },
+    {
+      "path": "build/qa/inspect-firefox-native32.mjs",
+      "bytes": 1992,
+      "sha256": "5480800e17c84bddca3e1d5f46142632138ccfab5359d56f8b2fd74fa5c06bab"
+    },
+    {
+      "path": "build/qa/firefox-native32-build.log",
+      "bytes": 446,
+      "sha256": "b546abd8466f3f4375bc2e7d794cc9a792762598434fdd5d99bd1442a136d449"
+    },
+    {
+      "path": "build/qa/firefox-native32-auth.log",
+      "bytes": 1749,
+      "sha256": "526268a22b88928a438bc04759b9a3c60162311683b36da9c7f85c50cdb79df1"
+    },
+    {
+      "path": "build/qa/firefox-native32-watch.log",
+      "bytes": 7807,
+      "sha256": "a93b09680bd2d6439830906c0864ebb896c02a24ee84c4dc62786573df3551a2"
+    },
+    {
+      "path": "build/qa/firefox-native32-functional-review.log",
+      "bytes": 22121,
+      "sha256": "a9b9d1508f966638d057d5abcc8b24af1e09d814cc3a2b40229cfbf65c298fc2"
+    },
+    {
+      "path": "build/qa/firefox-native32-control-review.log",
+      "bytes": 736,
+      "sha256": "d05c1310c1d12cd9863bb792005925ece59407af6a041762d2a2c28bfff3fc9e"
+    },
+    {
+      "path": "build/qa/firefox-native32-control-review-corrected.log",
+      "bytes": 1752,
+      "sha256": "36308938705425b1dfc3a11e40d88256bd4a03f64887e6bf3ddfc0c64f04b4db"
+    },
+    {
+      "path": "build/qa/firefox-native32-inspection.log",
+      "bytes": 5453,
+      "sha256": "2e64a157d411c0c4c530d8fade4b38014b94667ef1518395a39f66f8a09b5252"
+    }
+  ]
+}
