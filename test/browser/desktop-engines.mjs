@@ -1,3 +1,4 @@
+import {browserReleaseFeatures} from './release-features.mjs';
 import {firefoxOwnedIOMemoryControl} from './firefox-owned-io-control.mjs';
 import {firefoxNativeAccessProbe} from './firefox-native-access-probe.mjs';
 import {afterRSSDiagnostics} from './rss-native-diagnostic-continuation.mjs';
@@ -44,7 +45,7 @@ try{
     target=await openDesktopTarget(settings,report.source);
     const {base,expectedBuild,expectedSiteId,manifest,coreBasePath}=target;
     report.expectedBuild=expectedBuild;report.expectedSiteId=expectedSiteId;report.base=base;
-    report.release=manifest.release;report.coreBasePath=coreBasePath;report.staticVerification=target.staticVerification;
+    const features=browserReleaseFeatures(manifest.release.version);report.releaseFeatures=features;report.release=manifest.release;report.coreBasePath=coreBasePath;report.staticVerification=target.staticVerification;
     const directory=await mkdtemp(path.join(process.env.RUNNER_TEMP,`desktop-${engine}-`)),demoEntry=manifest.files.find(f=>f.path==='demo.tflite');assert.ok(demoEntry&&demoEntry.bytes<1024**2);
     const demoBytes=(await readStaticFile(base,coreBasePath+demoEntry.path,{maxBytes:demoEntry.bytes})).bytes;assert.equal(sha256(demoBytes),demoEntry.sha256);
     const demo=path.join(directory,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
@@ -101,7 +102,7 @@ try{
     report.usageGuideRequired=manifest.files.some(f=>f.path==='src/usage-guide-ui.js');
     if(report.runtimeWorkspaceRequired){
         phase='published-demo-runtime';const before=modelWorkers().length;report.demoRuntime=await demoRuntimeFlow({page,read,directory});assert.equal(modelWorkers().length-before,3);await diagnostics?.snapshot('after-demo-runtime');check('exact published demo original and reopened edit run with zero/random inputs on the selected engine');
-        phase='model-runtime';const afterDemo=modelWorkers().length;report.tfliteRuntime=await tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs:true,referenceInputs:true,precisionInputs:true,shapeInputs:true,compositionInputs:true,sharedRuntimeModule:manifest.files.some(f=>f.path==='src/runtime-module.js'),inputCleanup:Number(manifest.release.version.match(/^0\.2\.0-preview\.(\d+)$/)?.[1])>=31});assert.equal(report.tfliteRuntime.cases.length,19);assert.equal(modelWorkers().length-afterDemo,33+(manifest.files.some(f=>f.path==='src/runtime-module.js')?2:0));await diagnostics?.snapshot('after-runtime');
+        phase='model-runtime';const afterDemo=modelWorkers().length;report.tfliteRuntime=await tfliteRuntimeFlow({page,read,base,directory,check,keyboardInputs:true,referenceInputs:true,precisionInputs:true,shapeInputs:true,compositionInputs:true,sharedRuntimeModule:manifest.files.some(f=>f.path==='src/runtime-module.js'),inputCleanup:features.inputCleanup});assert.equal(report.tfliteRuntime.cases.length,19);assert.equal(modelWorkers().length-afterDemo,33+(manifest.files.some(f=>f.path==='src/runtime-module.js')?2:0));await diagnostics?.snapshot('after-runtime');
     }
     if(report.usageGuideRequired){phase='usage-guide';report.usageGuide=await usageGuideFlow({page,read,directory,check,sharedRuntimeModule:manifest.files.some(f=>f.path==='src/runtime-module.js')});assert.equal(report.usageGuide.cases.length,5);await diagnostics?.snapshot('after-guide');}
     report.activeComputeRequired=report.runtimeWorkspaceRequired&&report.usageGuideRequired;
@@ -116,7 +117,7 @@ try{
         assert.ok(report.workerStartupControl.rows.filter(row=>row.timing==='ready').every(row=>row.readyAt!==null));
         assert.equal(report.workerStartupControl.pageClosed,true);
     }
-    report.desktopRuntimeRSSRequired=report.activeComputeRequired&&Number(manifest.release.version.match(/^0\.2\.0-preview\.(\d+)$/)?.[1]??31)>=31;
+    report.desktopRuntimeRSSRequired=report.activeComputeRequired&&features.desktopRuntimeRSS;
     report.runtimeIOTransferRequired=manifest.files.some(f=>f.path==='src/runtime-io.js');
     if(engine==='firefox'&&report.desktopRuntimeRSSRequired&&!report.runtimeIOTransferRequired){
         const asset=manifest.files.find(f=>f.path==='vendor/litert/2.6.0/litert_wasm_compat_internal.wasm');assert.ok(asset);report.firefoxNetworkControls=[];
