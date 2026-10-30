@@ -25,6 +25,7 @@ if (globalThis.document) {
         if(state==='ready'){
             const returnFocus=panel.contains(document.activeElement);
             panel.hidden=true;window.removeEventListener('keydown',guard,true);
+            for(const id of ['open-model','welcome-open','open-demo','open-lora-demo','open-mlir-demo'])document.getElementById(id).disabled=false;
             if(returnFocus)document.getElementById('open-model').focus({preventScroll:true});
         }else if(state==='failed'){
             failed=true;status.textContent='網站啟動未完成';
