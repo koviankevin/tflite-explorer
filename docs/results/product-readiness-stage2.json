@@ -1,0 +1,892 @@
+{
+  "format": "model-lens-product-readiness-stage2",
+  "status": "local-evidence-reviewed-not-published",
+  "goal": "active;Windows big-model and remaining product work still required",
+  "source": {
+    "commit": "dc0046e890da657f8e3085f3479dbaf4dbfe39c8",
+    "tree": "18ea566c666e3c5681915e59f7d722ba977b784d",
+    "committedAt": "2026-10-31T03:54:25+08:00",
+    "dirty": false
+  },
+  "builds": [
+    {
+      "distribution": "public",
+      "build": "583e64c2a1104f13",
+      "files": 322,
+      "manifestSHA256": "482defe202a92cf1265b014c083030c0d59b00f17adc03c773bdc225596b57ce"
+    },
+    {
+      "distribution": "internal",
+      "build": "ad6f4926f1e81730",
+      "files": 323,
+      "manifestSHA256": "b2173b32397b954944b1e6a060306738ab18d7fe5af24ffa03327aa705a5e0aa"
+    }
+  ],
+  "checks": [
+    "All current build manifest file bytes and source trees authenticated",
+    "Public JS/JSON contains no synthetic private contract; internal artifact rejected for public publishing",
+    "Twelve native downloads independently parsed: original port IDs/options,all retained buffer bytes and all provenance ranges match",
+    "All pattern counts one;32px bounds and all native worker closes recorded;no runtime requests"
+  ],
+  "nativeDownloads": [
+    {
+      "distribution": "public",
+      "browser": "chrome",
+      "case": "public-known",
+      "mode": "custom-contract",
+      "bytes": 3384,
+      "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "public",
+      "browser": "chrome",
+      "case": "unknown-version",
+      "mode": "custom-opaque",
+      "bytes": 527656,
+      "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 2,
+          "bytes": 524288,
+          "sha256": "07854d2fef297a06ba81685e660c332de36d5d18d546927d30daad6d7fda1541"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 4,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "public",
+      "browser": "chrome",
+      "case": "synthetic-private",
+      "mode": "custom-opaque",
+      "bytes": 1052192,
+      "sha256": "1a294bfb0cc99f689963f7deaa5e49639737243bb71405b47e80ca906338bfb6",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 8,
+          "sha256": "a8407efb96983910726cf9381bb31e2c0cf6f5591da8689a1bd3527835d0704a"
+        },
+        {
+          "id": 2,
+          "bytes": 7,
+          "sha256": "7109ec0807d8f2bd40aa93347ea112977e316242f2d457864041f59dfb684fc0"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "2fd848aa90e817e10e20985de4e8ac6a09b0fe70623d6b952e46800be6b025b9"
+        },
+        {
+          "id": 4,
+          "bytes": 1048576,
+          "sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58"
+        }
+      ],
+      "provenanceRanges": 5,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "public",
+      "browser": "msedge",
+      "case": "public-known",
+      "mode": "custom-contract",
+      "bytes": 3384,
+      "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "public",
+      "browser": "msedge",
+      "case": "unknown-version",
+      "mode": "custom-opaque",
+      "bytes": 527656,
+      "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 2,
+          "bytes": 524288,
+          "sha256": "07854d2fef297a06ba81685e660c332de36d5d18d546927d30daad6d7fda1541"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 4,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "public",
+      "browser": "msedge",
+      "case": "synthetic-private",
+      "mode": "custom-opaque",
+      "bytes": 1052192,
+      "sha256": "1a294bfb0cc99f689963f7deaa5e49639737243bb71405b47e80ca906338bfb6",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 8,
+          "sha256": "a8407efb96983910726cf9381bb31e2c0cf6f5591da8689a1bd3527835d0704a"
+        },
+        {
+          "id": 2,
+          "bytes": 7,
+          "sha256": "7109ec0807d8f2bd40aa93347ea112977e316242f2d457864041f59dfb684fc0"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "2fd848aa90e817e10e20985de4e8ac6a09b0fe70623d6b952e46800be6b025b9"
+        },
+        {
+          "id": 4,
+          "bytes": 1048576,
+          "sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58"
+        }
+      ],
+      "provenanceRanges": 5,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "chrome",
+      "case": "public-known",
+      "mode": "custom-contract",
+      "bytes": 3384,
+      "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "chrome",
+      "case": "unknown-version",
+      "mode": "custom-opaque",
+      "bytes": 527656,
+      "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 2,
+          "bytes": 524288,
+          "sha256": "07854d2fef297a06ba81685e660c332de36d5d18d546927d30daad6d7fda1541"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 4,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "chrome",
+      "case": "synthetic-private",
+      "mode": "custom-contract",
+      "bytes": 3608,
+      "sha256": "3992a604bd33375222051e66e66b5a7ecc86bd90d740c9a6c19e988c55023ab9",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 8,
+          "sha256": "a8407efb96983910726cf9381bb31e2c0cf6f5591da8689a1bd3527835d0704a"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "2fd848aa90e817e10e20985de4e8ac6a09b0fe70623d6b952e46800be6b025b9"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "msedge",
+      "case": "public-known",
+      "mode": "custom-contract",
+      "bytes": 3384,
+      "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "msedge",
+      "case": "unknown-version",
+      "mode": "custom-opaque",
+      "bytes": 527656,
+      "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 64,
+          "sha256": "18c400ac8d14c6361030dccfd82cbfeb7cc534a290db7175c7db04507eaa6671"
+        },
+        {
+          "id": 2,
+          "bytes": 524288,
+          "sha256": "07854d2fef297a06ba81685e660c332de36d5d18d546927d30daad6d7fda1541"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "8dafa05b06304801f24f861b617af3286921a414d986366d7f21c9f84dda4a58"
+        }
+      ],
+      "provenanceRanges": 4,
+      "workersClosed": 7,
+      "patternMatches": 1
+    },
+    {
+      "distribution": "internal",
+      "browser": "msedge",
+      "case": "synthetic-private",
+      "mode": "custom-contract",
+      "bytes": 3608,
+      "sha256": "3992a604bd33375222051e66e66b5a7ecc86bd90d740c9a6c19e988c55023ab9",
+      "keptBuffers": [
+        {
+          "id": 1,
+          "bytes": 8,
+          "sha256": "a8407efb96983910726cf9381bb31e2c0cf6f5591da8689a1bd3527835d0704a"
+        },
+        {
+          "id": 3,
+          "bytes": 8,
+          "sha256": "2fd848aa90e817e10e20985de4e8ac6a09b0fe70623d6b952e46800be6b025b9"
+        }
+      ],
+      "provenanceRanges": 3,
+      "workersClosed": 7,
+      "patternMatches": 1
+    }
+  ],
+  "browserProducer": {
+    "public": {
+      "exit": 0,
+      "toolChunk": "db4b93"
+    },
+    "internal": {
+      "exit": null,
+      "reportStatus": "passed",
+      "limitation": "Handle64439 is missing; terminal output was lost. Independent download/report checks passed; not rerun."
+    }
+  },
+  "historicalFailure": {
+    "exit": 1,
+    "toolChunk": "880dd7",
+    "reason": "Fixture selected one OP although saved patterns require two. Application rule unchanged; connected fixture used next."
+  },
+  "independentReview": {
+    "exit": 0,
+    "toolChunk": "17910c",
+    "path": "build/qa/custom-references/review-native.mjs"
+  },
+  "limitations": [
+    "Internal browser producer handle is missing after output truncation; report says passed but terminal exit code was not recovered. No repeat run.",
+    "Synthetic/public custom options preservation, not execution of a custom kernel.",
+    "Not deployed; Windows large-model process memory remains pending."
+  ],
+  "archive": {
+    "path": "product-readiness-stage2-originals.zip",
+    "bytes": 2450560,
+    "sha256": "80e75c142b65f236760cc2a075143eb7063b0d7098d09fc31b7a6fd72335e452",
+    "members": [
+      {
+        "path": "LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "build/qa/custom-references/after-integration.log",
+        "bytes": 2635,
+        "sha256": "a3a78cee3faacc551a3e51e9d304514508ede2f109a758aa0b6b339f30315a9c"
+      },
+      {
+        "path": "build/qa/custom-references/archive-stage2.py",
+        "bytes": 2934,
+        "sha256": "194018c179eb0ba2835e9e14136d7b39c01a1611d2f3ede1f132179867a1c185"
+      },
+      {
+        "path": "build/qa/custom-references/before-integration.log",
+        "bytes": 1497,
+        "sha256": "38b4365267ca0b6efd52d9b0148faf393454d6dde4756d0dbb75875ab5c5262c"
+      },
+      {
+        "path": "build/qa/custom-references/build-isolation.json",
+        "bytes": 1801,
+        "sha256": "1aa4fde7628f1304742dcb2a3c2d21df29cbdbf830cb2ae968ab643945925793"
+      },
+      {
+        "path": "build/qa/custom-references/connected-fixtures.log",
+        "bytes": 1540,
+        "sha256": "3b73ab2eb6d3f329416eb4c259649b6b30168fcd06b34cd47356d8a62a12790d"
+      },
+      {
+        "path": "build/qa/custom-references/detection_postprocess.cc",
+        "bytes": 40206,
+        "sha256": "b15be166b93a8907f6cd1f1e58979a1e7fad00a4835d8eabc981269eef6a7811"
+      },
+      {
+        "path": "build/qa/custom-references/events.jsonl",
+        "bytes": 291,
+        "sha256": "56532cba3dd31f0c8a662f5b43e549b0184e68ec7933893f08589d7ff3f54cb0"
+      },
+      {
+        "path": "build/qa/custom-references/internal-2/release-manifest.json",
+        "bytes": 52495,
+        "sha256": "b2173b32397b954944b1e6a060306738ab18d7fe5af24ffa03327aa705a5e0aa"
+      },
+      {
+        "path": "build/qa/custom-references/internal-2/release.json",
+        "bytes": 527,
+        "sha256": "215be8ced2d2cf5a6f49460ecd614f5dfecc9e8f6446be0e29378f273ccb875f"
+      },
+      {
+        "path": "build/qa/custom-references/native-review.json",
+        "bytes": 10503,
+        "sha256": "38c37778c110b73bd6e11998ebc9613f0831a26b94fde5b2ee033c9b7149c51b"
+      },
+      {
+        "path": "build/qa/custom-references/plan.json",
+        "bytes": 4355,
+        "sha256": "2491566d2b2b54a199e62561cf84564d6d08b2eb424411aedfc250ab18fb003c"
+      },
+      {
+        "path": "build/qa/custom-references/profile-and-contracts.log",
+        "bytes": 4394,
+        "sha256": "a5058d9569b920800973013a6f8d71f26d4fab06ef0a9d39b644ea6b9fc12a6c"
+      },
+      {
+        "path": "build/qa/custom-references/profile/dialects/index.js",
+        "bytes": 403,
+        "sha256": "3b5a02c70166697d6102a4b7461da40728ccb679933cb58e8ac562addd7b2c52"
+      },
+      {
+        "path": "build/qa/custom-references/profile/profile.json",
+        "bytes": 212,
+        "sha256": "435ea4c9abff91713440d892c45d62c2908f1651a53023f30e0c620741b1da81"
+      },
+      {
+        "path": "build/qa/custom-references/public-2/release-manifest.json",
+        "bytes": 52123,
+        "sha256": "482defe202a92cf1265b014c083030c0d59b00f17adc03c773bdc225596b57ce"
+      },
+      {
+        "path": "build/qa/custom-references/public-2/release.json",
+        "bytes": 329,
+        "sha256": "0d98850d0e7da87f82363cdc613a14604cd519baaf681c24a639339afc9c9233"
+      },
+      {
+        "path": "build/qa/custom-references/reference-contracts-2.log",
+        "bytes": 3007,
+        "sha256": "4d29d01187a1a27835f32780f57bc4bc86d521df1ab79e734540d35f5e6b96e4"
+      },
+      {
+        "path": "build/qa/custom-references/reference-contracts-3.log",
+        "bytes": 2861,
+        "sha256": "b0c8db1adf05e7fc7cccfdc187fd6871e9d69ec8ab0c4a12a45ca9ee4f5f3300"
+      },
+      {
+        "path": "build/qa/custom-references/reference.json",
+        "bytes": 355,
+        "sha256": "54bd43661010b1ee7d907c7362fbba6ad64a69eb1afe1c238d461f61e84f9020"
+      },
+      {
+        "path": "build/qa/custom-references/report-integration.log",
+        "bytes": 2844,
+        "sha256": "83ad6c06a9c739fb46166102ad48ddf3c19641d7e56d7b4575b23f64e276936e"
+      },
+      {
+        "path": "build/qa/custom-references/review-native.mjs",
+        "bytes": 5881,
+        "sha256": "b73615f3317ac1cfef81e261822e592e97e33eb1b4e755c3cf988a0db9ba6ef0"
+      },
+      {
+        "path": "build/qa/custom-references/selected-final-1.log",
+        "bytes": 4467,
+        "sha256": "967b3cd4bf76bc37c90338c3b1342388316ae6970d4773957c3d8c272852dd9f"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-public-known-cut.tflite",
+        "bytes": 3384,
+        "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-public-known-preview-32px.png",
+        "bytes": 96595,
+        "sha256": "8507b407d4e7b3bb85a25d71ee26295aabdc07ef0b381a2bb90fe3bb10e5c963"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-public-known-reopened-32px.png",
+        "bytes": 86386,
+        "sha256": "95f81290560327e59a11925ef67aee6df631ef3b15ed43c325149cc0c05f3cd2"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-public-known-report.json",
+        "bytes": 5881,
+        "sha256": "8c33f80b75db671b76d3d26e8923d6009f0f6618aabaeeaf7646be4273143c10"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-synthetic-private-cut.tflite",
+        "bytes": 3608,
+        "sha256": "3992a604bd33375222051e66e66b5a7ecc86bd90d740c9a6c19e988c55023ab9"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-synthetic-private-preview-32px.png",
+        "bytes": 80985,
+        "sha256": "06e9a4faf2bb9c74d359c34e6fe955ed63d8421885fc6c78eab035fc0a1b7468"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-synthetic-private-reopened-32px.png",
+        "bytes": 76649,
+        "sha256": "a6371c2e78ea1efd1e7590f48e1ba20966bdad5dceead825fb5f4d5d5889f1a8"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-synthetic-private-report.json",
+        "bytes": 5028,
+        "sha256": "5ad29418589128175f88ad47a79b730197c36f02cae1eaa2f95eb225468284fd"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-unknown-version-cut.tflite",
+        "bytes": 527656,
+        "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-unknown-version-preview-32px.png",
+        "bytes": 100036,
+        "sha256": "e8261befaef135f9a0fb37c441f79b51bac6a17e56a82aeef6836b62b8dd4e85"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-unknown-version-reopened-32px.png",
+        "bytes": 88588,
+        "sha256": "aa7422371101da77bf6bd492a9b054306fb43154ee786e87631c782986cc4f59"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/chrome-unknown-version-report.json",
+        "bytes": 5957,
+        "sha256": "386c1acd7d231eaed58d5b7ec433ebef9e4c13fe5b4d8627ae939d7ad9b376ac"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-public-known-cut.tflite",
+        "bytes": 3384,
+        "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-public-known-preview-32px.png",
+        "bytes": 96569,
+        "sha256": "4f820b11d4026eab520b8d6ad6d42ab847ff00b6b3752116fddd5fa6fd78cddb"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-public-known-reopened-32px.png",
+        "bytes": 95328,
+        "sha256": "57946b0c483a43028231076e0f8ed14e28dab4a32b912dbccb9bf39817f221c4"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-public-known-report.json",
+        "bytes": 5881,
+        "sha256": "a8f5431f9ad486982d70c835e5513895f8a3a4facc71d3994c0a1394d2e6a50f"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-synthetic-private-cut.tflite",
+        "bytes": 3608,
+        "sha256": "3992a604bd33375222051e66e66b5a7ecc86bd90d740c9a6c19e988c55023ab9"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-synthetic-private-preview-32px.png",
+        "bytes": 80985,
+        "sha256": "06e9a4faf2bb9c74d359c34e6fe955ed63d8421885fc6c78eab035fc0a1b7468"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-synthetic-private-reopened-32px.png",
+        "bytes": 75564,
+        "sha256": "3d29f2bf7c421d86c39fb2bc4b78877c3e440bf7c73b1c64b5c497930056cbdc"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-synthetic-private-report.json",
+        "bytes": 5028,
+        "sha256": "8517ec5ca98c4ddbce46c7b7d89a5240db303ab273db4b2754de53b439ec9e8a"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-unknown-version-cut.tflite",
+        "bytes": 527656,
+        "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-unknown-version-preview-32px.png",
+        "bytes": 100011,
+        "sha256": "42d03c41d0bd7d3ab4584565d9f4737d66529dd53d2b591faf8218d657468ace"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-unknown-version-reopened-32px.png",
+        "bytes": 95509,
+        "sha256": "02e7e854a24c23de6c90ccdd6c51dac05d60f4aa4901d0d7b121ccc073c44f6c"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/msedge-unknown-version-report.json",
+        "bytes": 5957,
+        "sha256": "4041b1a1eeae73626b0da4fdd664d661f60800896675ea5d43f149bf8fb31e4f"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/public-known.tflite",
+        "bytes": 527304,
+        "sha256": "aa935723b30487c02c8c331fc14b34c2e16f2cb985f64237978958f8f48d9218"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/report.json",
+        "bytes": 14562,
+        "sha256": "16adf66de584bac860a1c6c0204a46ac3dd534bbb53d782d83e41e39c04d8ddf"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/synthetic-private.tflite",
+        "bytes": 1051996,
+        "sha256": "c2328430add3f79846a34ff34bb65765c3be271c63f69dbee122bee0a8845466"
+      },
+      {
+        "path": "build/qa/custom-references/windows-internal-2/unknown-version.tflite",
+        "bytes": 527304,
+        "sha256": "66c9a93ad25109e4dc2b9aa72054376762a8b4964b2ede5f8ff5fb87f0813535"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/chrome-failure.png",
+        "bytes": 96783,
+        "sha256": "f67e99482da1ce0c8e182a2a6de1a56ba192bc1f152615a068c0b310e567d0cd"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/chrome-public-known-preview-32px.png",
+        "bytes": 87344,
+        "sha256": "8c4162e12402f16a9c0a4d228fdddac06858f0ac9aac5905da111169ce4619c8"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/public-known.tflite",
+        "bytes": 526664,
+        "sha256": "14381ab1dd74caee9038ca2a8c54241a05b9c7af5ee6e9f14f93b5d0a69ddeb6"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/report.json",
+        "bytes": 4175,
+        "sha256": "0de8531e5fb697fea0c93802dc5a8eaca0775423deae4b6ffe290faa68a25880"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/synthetic-private.tflite",
+        "bytes": 1051996,
+        "sha256": "c2328430add3f79846a34ff34bb65765c3be271c63f69dbee122bee0a8845466"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-1/unknown-version.tflite",
+        "bytes": 526664,
+        "sha256": "0e506b6af6a80651a6e0f1060a6d8e137dafa13d78e3c8c34b9da79f9fb8926e"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-public-known-cut.tflite",
+        "bytes": 3384,
+        "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-public-known-preview-32px.png",
+        "bytes": 96569,
+        "sha256": "4f820b11d4026eab520b8d6ad6d42ab847ff00b6b3752116fddd5fa6fd78cddb"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-public-known-reopened-32px.png",
+        "bytes": 95334,
+        "sha256": "2293d229b95b656db1c18ca9ad90950fdcc4b1b3a475d04117dc53ca7277c7ab"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-public-known-report.json",
+        "bytes": 5881,
+        "sha256": "f267029253d3ebafeb7bc23b0d6c29044ebfc14ad64b7f7e4ab6d38a557275c2"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-synthetic-private-cut.tflite",
+        "bytes": 1052192,
+        "sha256": "1a294bfb0cc99f689963f7deaa5e49639737243bb71405b47e80ca906338bfb6"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-synthetic-private-preview-32px.png",
+        "bytes": 81833,
+        "sha256": "8a10582aa57cb1d79f9659d073761f58cfd23aa50004804ba1bd17b44edfa57a"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-synthetic-private-reopened-32px.png",
+        "bytes": 77027,
+        "sha256": "9c0752b1e291229b4240398defd427f90ecac92d0cc00db2ef1ec47efbf50b17"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-synthetic-private-report.json",
+        "bytes": 5186,
+        "sha256": "2421470eea2266de9723e6367d4bf1ba3b635e3e67c07b18e11163d1c31a40eb"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-unknown-version-cut.tflite",
+        "bytes": 527656,
+        "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-unknown-version-preview-32px.png",
+        "bytes": 100011,
+        "sha256": "42d03c41d0bd7d3ab4584565d9f4737d66529dd53d2b591faf8218d657468ace"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-unknown-version-reopened-32px.png",
+        "bytes": 97024,
+        "sha256": "4aedcd7be652c5dc4fc40bee8ecc0ff48cab33df3b75716f50f900c939662afe"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/chrome-unknown-version-report.json",
+        "bytes": 5957,
+        "sha256": "97725fb9a33e8b5f63f49e8b2d40636c89b449d1be3ae9ab0717658b5cdb6c48"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-public-known-cut.tflite",
+        "bytes": 3384,
+        "sha256": "fd43304e664b35edd744302c60eec44c103a7190b42ee0f157f3f13db9064d12"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-public-known-preview-32px.png",
+        "bytes": 96569,
+        "sha256": "4f820b11d4026eab520b8d6ad6d42ab847ff00b6b3752116fddd5fa6fd78cddb"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-public-known-reopened-32px.png",
+        "bytes": 93298,
+        "sha256": "dd02818c855cb0bbdec5b05728917910824bc97e6b08ba723372a48e81f86fff"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-public-known-report.json",
+        "bytes": 5881,
+        "sha256": "c58baf58d11f636bbe8f435cf16aea3fa71da004b17404a3ae0d55382a83ffdf"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-synthetic-private-cut.tflite",
+        "bytes": 1052192,
+        "sha256": "1a294bfb0cc99f689963f7deaa5e49639737243bb71405b47e80ca906338bfb6"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-synthetic-private-preview-32px.png",
+        "bytes": 87638,
+        "sha256": "b02757950f82ea590d91794308aaacb8685ebcb08456cded206d4da6fee41be5"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-synthetic-private-reopened-32px.png",
+        "bytes": 76901,
+        "sha256": "27d408eeff013bf8021f693a9fa11e45aa3c1686085cbf8d9102a2bbe5e87621"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-synthetic-private-report.json",
+        "bytes": 5186,
+        "sha256": "0e3eb93cd9abb06ebcaa4fced313fc35bc4ab791a59d48e2011d022eca0f0702"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-unknown-version-cut.tflite",
+        "bytes": 527656,
+        "sha256": "60bc76df3e638290eec61eebefa627a6d37f4c49b3a56f92e1877900898f8a34"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-unknown-version-preview-32px.png",
+        "bytes": 100011,
+        "sha256": "42d03c41d0bd7d3ab4584565d9f4737d66529dd53d2b591faf8218d657468ace"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-unknown-version-reopened-32px.png",
+        "bytes": 97541,
+        "sha256": "e66a2b406737b2edc7a85a4504d91be3ce179b65edf91c91e9901a99f6ae01fe"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/msedge-unknown-version-report.json",
+        "bytes": 5957,
+        "sha256": "48a1f74ea46a734c25fa844b17c9044d3745887ee93f226b88c9efb617589733"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/public-known.tflite",
+        "bytes": 527304,
+        "sha256": "aa935723b30487c02c8c331fc14b34c2e16f2cb985f64237978958f8f48d9218"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/report.json",
+        "bytes": 14266,
+        "sha256": "e7c60d461e9ad85244d3af5be9348c7c8d03f9e8998c39e1aa0eeaf2d1d53aec"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/synthetic-private.tflite",
+        "bytes": 1051996,
+        "sha256": "c2328430add3f79846a34ff34bb65765c3be271c63f69dbee122bee0a8845466"
+      },
+      {
+        "path": "build/qa/custom-references/windows-public-2/unknown-version.tflite",
+        "bytes": 527304,
+        "sha256": "66c9a93ad25109e4dc2b9aa72054376762a8b4964b2ede5f8ff5fb87f0813535"
+      },
+      {
+        "path": "scripts/lib/build-profile.mjs",
+        "bytes": 4249,
+        "sha256": "0e01b35ad2336fdfc212566eca19ff9cdfa601f5ff8415f2cdb74d39b08323df"
+      },
+      {
+        "path": "src/export-report.js",
+        "bytes": 6184,
+        "sha256": "72754d985ebfa7c3b661e8a8c28668db7c8cd458566f0f79b73309142ad1b923"
+      },
+      {
+        "path": "src/flex-scalar-map.js",
+        "bytes": 2819,
+        "sha256": "2f88a878bd5502f4e9d119a3b6b4699bfe8cdd7a75da8fd8f6b731c428cdfba3"
+      },
+      {
+        "path": "src/tflite-composition-export.js",
+        "bytes": 5161,
+        "sha256": "b700855f8d04eac7b70dd4d82ed14377d2e8441dbb850ca6cf0e99f9e43ef5f7"
+      },
+      {
+        "path": "src/tflite-custom-contract.js",
+        "bytes": 3991,
+        "sha256": "0d09defce304b6ce63443c9a4826f14d789fd6e3531dd7750cc71e31723a0634"
+      },
+      {
+        "path": "src/tflite-custom-registry.js",
+        "bytes": 253,
+        "sha256": "51a293d5e8003785558dee9a86959bc14015af507c24b99f41fb801ac069255d"
+      },
+      {
+        "path": "src/tflite-export-preview.js",
+        "bytes": 3056,
+        "sha256": "f19b0a72c896d23b62198afa307f9d47d41d87e4a8b6eab68e6cb575cfc2ccd6"
+      },
+      {
+        "path": "src/tflite-export.js",
+        "bytes": 9983,
+        "sha256": "3c1c8c93802a5ce63890e6752d98ea0db80551e7e98884f743a7f85fb34870c3"
+      },
+      {
+        "path": "src/tflite-public-custom-contracts.js",
+        "bytes": 1038,
+        "sha256": "164122a6c790282c5006f019b7a3c8fc49bcf2c3029a889004301fc3d4301edd"
+      },
+      {
+        "path": "src/tflite-reference-plan.js",
+        "bytes": 4165,
+        "sha256": "2ae1e1bcf935a9f7562d650b46da2113202adacfe077f9d012459d927b5ffae9"
+      },
+      {
+        "path": "test/browser/custom-reference-flow.mjs",
+        "bytes": 10215,
+        "sha256": "dc3466c0e2994dfe2f536bcefaded382e9e5efd03d55f9d7bcc65e1d2613a315"
+      },
+      {
+        "path": "test/detection-postprocess-fixture.mjs",
+        "bytes": 2438,
+        "sha256": "b1a65c2f9986d0737c2440d1b70121cfe5806a2a26dfb7e5b4fd9b76b1779a3d"
+      },
+      {
+        "path": "test/flex-scalar-fixture.mjs",
+        "bytes": 1322,
+        "sha256": "c9ab7bfc71a8b29d7deb5a544b76071751e0e92fe289033650c90fe348a48e97"
+      },
+      {
+        "path": "test/reference-contract-fixture.mjs",
+        "bytes": 1096,
+        "sha256": "91ddd7d3f65c5e506963030f67a131a2512cbbe44a72828ab3ae3ce5aa183d68"
+      },
+      {
+        "path": "test/tflite-custom-contract.test.mjs",
+        "bytes": 14461,
+        "sha256": "e147b08fd5852a4cad7256829c4885d7c73ef3be35898443ae26b9eec57920a8"
+      },
+      {
+        "path": "test/tflite-custom-profile.test.mjs",
+        "bytes": 3502,
+        "sha256": "b31e2016e3fe609e2257e5a19fc5ffed25ff0cc20a9b491355d5d4addcc2b177"
+      },
+      {
+        "path": "vendor/netron/LICENSE",
+        "bytes": 1082,
+        "sha256": "aca642b84119ed57ce6ef700918ce3ff7275b5d6b1759e688c4ad3715105095a"
+      }
+    ]
+  }
+}

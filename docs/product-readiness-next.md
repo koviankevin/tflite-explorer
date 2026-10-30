@@ -7,7 +7,7 @@
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 進行中：卷積／pooling 共用靜態推導與檢查；已取得真正 LiteRT allocation 失敗的 kernel/node 診斷，獨立 Windows 小型 UI 已通過，其他 OP 與正式關卡仍待完成 |
-| Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | 尚待處理，v1.1.0 僅提供 metadata 大小預覽 |
+| Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | [引用契約](custom-reference-contracts.md)本機證據已核對：建置隔離與十二份 Windows 下載的原始 bytes／編號／pattern；公開程序 exit 0，合成內網報告通過但退出碼遺失。未知格式仍完整保留；尚待正式關卡與發布 |
 | Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 尚待處理；先前 Windows 小型 UI 與 Linux 大檔證據分開保留，不混成 Windows 大檔記憶體通過 |
 | Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | 計數與既有擴充已交付；resource／packing 等仍待處理，不宣稱通過公司 verifier |
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |

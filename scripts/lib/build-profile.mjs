@@ -36,4 +36,5 @@ export async function installProfile(stage,profile) {
     await mkdir(target,{recursive:true});
     for(const name of profile.files){await mkdir(path.dirname(path.join(target,name)),{recursive:true});await cp(path.join(profile.directory,name),path.join(target,name));}
     await import('node:fs/promises').then(fs=>fs.writeFile(path.join(stage,'src/mlir-dialect-registry.js'),`import {validateDialectAdapters} from './mlir-dialect-contract.js';\nimport {mlirDialects as internal} from './internal-dialects/index.js';\nexport const mlirDialects=validateDialectAdapters(internal);\n`));
+    await import('node:fs/promises').then(fs=>fs.writeFile(path.join(stage,'src/tflite-custom-registry.js'),`import {validateCustomContracts} from './tflite-custom-contract.js';\nimport {publicCustomContracts} from './tflite-public-custom-contracts.js';\nimport * as internal from './internal-dialects/index.js';\nconst extra=internal.tfliteCustomContracts===undefined?[]:validateCustomContracts(internal.tfliteCustomContracts);\nexport const tfliteCustomContracts=validateCustomContracts([...publicCustomContracts,...extra]);\n`));
 }
