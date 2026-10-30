@@ -24,11 +24,13 @@ import {SOAK_RECOVERY_POLICY,createSoakRecovery} from './soak-recovery.mjs';
 import {recoveryCapacityPreflight} from './soak-recovery-preflight.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessExit} from './owned-processes.mjs';
+import {windowsProcessObserver,windowsAllocatedBytes} from './windows-process-memory.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
 await mkdir(path.dirname(reportPath),{recursive:true});
 const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
+const windows=process.platform==='win32',channel=windows?process.env.MODEL_LENS_BROWSER_CHANNEL:undefined,python=windows?process.env.MODEL_LENS_QA_PYTHON:undefined;
 const policy=soak?MODEL_EDIT_LIFECYCLE_POLICY:MODEL_COMPOSITION_LIFECYCLE_POLICY;
 const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[],samples:[],checks:[],limitations:[
     soak?'At least two active hours, 64 full cycles and two initial warmups; finite measurements cannot prove an absence of all leaks.':'Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.',
@@ -44,6 +46,7 @@ const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,processTree,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
+let windowsObserver;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
 const watchdog=setTimeout(async()=>{report.status='failed';report.error=`Hard timeout during ${phase}`;await persistReport();console.error(report.error);process.exit(1);},(soak?160:22)*60000);
@@ -54,7 +57,9 @@ const patterns=[
 ];
 if(!soak)patterns.push(reusablePattern('Lifecycle branch wrong edge',{...patterns[1],edges:[...patterns[1].edges,{from:'N2',to:'N3'}]}));
 async function processRss(){
-    assert.ok(processTree,'Cannot locate owned Chromium identities.');return processTree.sample(await readProcessTable());
+    assert.ok(processTree,'Cannot locate owned Chromium identities.');
+    if(!windows)return processTree.sample(await readProcessTable());
+    const native=await windowsObserver.sample();return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
 }
 async function sample(){
     const memory=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
@@ -142,18 +147,24 @@ async function editWholeModel(cycle,entry,hashes){
 }
 try{
     assert.ok(['gate','soak'].includes(mode),'Unknown lifecycle profile.');if(soak)assertSoakExecution(process.env,os.platform());
-    assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI.');
-    const disk=await statfs(os.tmpdir()),memoryLimit=await optionalRead('/sys/fs/cgroup/memory.max'),memoryCurrent=await optionalRead('/sys/fs/cgroup/memory.current');
+    if(windows){assert.ok(process.argv.includes('--allow-local-browser'),'Local Windows browser requires explicit authorization.');assert.ok(['chrome','msedge'].includes(channel)&&python,'Choose installed Chrome/Edge and Python.');assert.equal(soak,false,'No Windows two-hour soak is authorized.');report.limitations[2]='Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.';}
+    else assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI or authorized Windows.');
+    const disk=await statfs(os.tmpdir()),memoryLimit=windows?null:await optionalRead('/sys/fs/cgroup/memory.max'),memoryCurrent=windows?null:await optionalRead('/sys/fs/cgroup/memory.current');
     const available=memoryLimit&&memoryLimit!=='max'?Number(memoryLimit)-Number(memoryCurrent):os.freemem();assert.ok(available>=4*1024**3,'Need 4 GiB available RAM.');assert.ok(disk.bavail*disk.bsize>=8*1024**3,'Need 8 GiB free disk.');
     report.environment={platform:os.platform(),release:os.release(),node:process.version,cpu:os.cpus()[0]?.model,cpus:os.cpus().length,totalMemory:os.totalmem(),availableMemoryBytes:available,memoryLimit,memoryCurrent,tempFreeBytes:disk.bavail*disk.bsize,imageVersion:process.env.ImageVersion||null,runId:process.env.GITHUB_RUN_ID||null,sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceTree:execFileSync('git',['rev-parse','HEAD^{tree}'],{encoding:'utf8'}).trim(),sourceDirty:Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim())};assert.equal(report.environment.sourceDirty,false);
     temporary=await mkdtemp(path.join(os.tmpdir(),'model-lens-lifecycle-'));phase='physical-fixture';
+    if(windows){report.fixtureIntent={directory:temporary,file:path.join(temporary,'physical-1_25GiB.tflite'),expectedBytes:PHYSICAL_SOURCE_BYTES,producer:'writePhysicalFixture',retain:'Keep generated source and remaining small files for evidence review;verified per-cycle regenerated downloads are removed by exact filename after closure'};await persistReport();}
     report.fixture=await writePhysicalFixture(path.join(temporary,'physical-1_25GiB.tflite'));report.fixture.editFingerprint=await sourceFingerprint(report.fixture.file);
+    if(windows){report.fixture.allocatedBytes=windowsAllocatedBytes(python,report.fixture.file);report.fixture.allocationMethod='Windows GetCompressedFileSizeW,owned generated fixture only';}
     assert.equal(report.fixture.bytes,PHYSICAL_SOURCE_BYTES);assert.equal(report.fixture.sha256,PHYSICAL_SOURCE_SHA256);assert.equal(report.fixture.weightSHA256,PHYSICAL_WEIGHT_SHA256);assert.ok(report.fixture.allocatedBytes>=report.fixture.bytes*.99);check('dense physical 1.25 GiB / 21,005 OP fixture, complete write/readback SHA-256');
     execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit'});report.build=JSON.parse(await readFile('dist/release.json','utf8'));assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer();server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
     if(soak){phase='draft-capacity-preflight';report.recoveryPreflight={};await recoveryCapacityPreflight({base,directory:temporary,report:report.recoveryPreflight});await persistReport();check('real 22-session draft backup/remove/retry preflight, other nineteen unchanged and owned browser reaped');}
-    const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
-    const root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,ownershipMarker);processTree=new OwnedProcessTree(root);report.processOwnership={format:'model-lens-owned-processes',version:1,root};
+    const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,...(windows?{channel}:{}),args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
+    let root;
+    if(windows){browserCDP=await browser.newBrowserCDPSession();windowsObserver=await windowsProcessObserver({python,cdp:browserCDP,channel});root=windowsObserver.root;report.environment.channel=channel;report.processOwnership={format:'model-lens-owned-processes',version:1,root,backend:windowsObserver.backend,counter:windowsObserver.counter,supplementary:windowsObserver.supplementary};}
+    else{root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,ownershipMarker);report.processOwnership={format:'model-lens-owned-processes',version:1,root};}
+    processTree=new OwnedProcessTree(root);
     browser.on('disconnected',()=>{if(!shuttingDown)errors.push('Browser disconnected.');});
     context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
     await context.route('**/*',async route=>{const request=route.request();if(!request.url().startsWith(base+'/')||request.method()!=='GET'){errors.push(`Unexpected network ${request.method()} ${request.url()}`);await route.abort();}else await route.continue();});
@@ -161,7 +172,7 @@ try{
     await context.route('**/src/edit-recovery-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installRecoveryReadAudit.toString()})(${report.fixture.bytes});\n${await response.text()}`});});
     page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));page.on('crash',()=>errors.push('Page crashed.'));
     page.on('worker',worker=>{const entry={url:worker.url(),closed:false};report.workerClosures.push(entry);worker.once('close',()=>{entry.closed=true;});});
-    browserCDP=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
+    browserCDP??=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
     if(soak)draftRecovery=createSoakRecovery({page,read:readPage,directory:temporary,fixture:report.fixture});
     await page.goto(base);await page.locator('#welcome-open').waitFor();phase='baseline';await sample();
@@ -214,13 +225,15 @@ finally{
     try{
         if(context)await context.close();
         if(browser){let timeout;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Browser close/reap timed out.')),10000);})]);}finally{clearTimeout(timeout);}}
-        if(processTree){report.processCleanup=await waitOwnedProcessExit(processTree);assert.equal(report.processCleanup.allReaped,true,'Observed owned browser identities remained after close.');}
+        if(processTree){report.processCleanup=await waitOwnedProcessExit(processTree,windows?{readTable:async()=>{const native=await windowsObserver.remaining();report.windowsObservedIdentities=native.identities;return native.rows;}}:{});assert.equal(report.processCleanup.allReaped,true,'Observed owned browser identities remained after close.');if(windows){const native=await windowsObserver.remaining();report.windowsObservedIdentities=native.identities;assert.deepEqual(native.rows,[],'Native observed identities remained after close.');}}
         report.browserClosed=true;
     }catch(error){report.status='failed';errors.push(`Cleanup: ${error.message}`);report.forcedCleanup=[];
-        try{if(processTree)for(const candidate of processTree.remaining(await readProcessTable())){const live=processTree.remaining(await readProcessTable()).find(p=>p.pid===candidate.pid&&p.startTicks===candidate.startTicks);if(live&&live.pid>1&&live.pid!==process.pid){try{process.kill(live.pid,'SIGKILL');report.forcedCleanup.push({pid:live.pid,startTicks:live.startTicks});}catch(e){if(e.code!=='ESRCH')errors.push('Owned process termination failed.');}}}}catch{errors.push('Ownership proof unavailable; no unverified PID signalled.');}
+        try{if(!windows&&processTree)for(const candidate of processTree.remaining(await readProcessTable())){const live=processTree.remaining(await readProcessTable()).find(p=>p.pid===candidate.pid&&p.startTicks===candidate.startTicks);if(live&&live.pid>1&&live.pid!==process.pid){try{process.kill(live.pid,'SIGKILL');report.forcedCleanup.push({pid:live.pid,startTicks:live.startTicks});}catch(e){if(e.code!=='ESRCH')errors.push('Owned process termination failed.');}}}}catch{errors.push('Ownership proof unavailable; no unverified PID signalled.');}
     }
+    if(windowsObserver){try{report.windowsObserverClose=await windowsObserver.close();}catch(error){report.status='failed';errors.push(`Observer close: ${error.message}`);}}
     if(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
     // Only this invocation's mkdtemp directory; no model from the user's filesystem.
-    if(temporary && path.dirname(temporary)===os.tmpdir() && path.basename(temporary).startsWith('model-lens-lifecycle-'))await rm(temporary,{recursive:true,force:true});
+    if(windows&&temporary)report.retainedFixtureDirectory=temporary;
+    else if(temporary && path.dirname(temporary)===os.tmpdir() && path.basename(temporary).startsWith('model-lens-lifecycle-'))await rm(temporary,{recursive:true,force:true});
     report.errors=errors;report.finishedAt=new Date().toISOString();await persistReport();clearTimeout(watchdog);console.log(`Report ${reportPath}: ${report.status}`);process.exit(report.status==='passed'?0:1);
 }
