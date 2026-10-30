@@ -22,7 +22,7 @@ export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,sav
             const heading=document.createElement('h3');heading.textContent='錯誤位置候選';body.append(heading);
             const source=getSource();
             for(const location of validation.failureLocations)for(const candidate of location.candidates){
-                const button=document.createElement('button');button.type='button';button.dataset.runtimeLocate=`${candidate.graph}:${candidate.node}`;
+                const button=document.createElement('button');button.type='button';button.className='runtime-location';button.dataset.runtimeLocate=`${candidate.graph}:${candidate.node}`;
                 button.textContent=`查看 Subgraph #${candidate.graph} · OP #${candidate.node} ${location.kernel}${location.unique?'':'（候選）'}`;
                 button.disabled=busy||!onLocate;button.onclick=()=>{if(source!==getSource()||session.state.busy)return;onLocate?.(candidate,source);};body.append(button);
             }
