@@ -2,7 +2,7 @@
 
 preview.31 的資源清理與 reader 隔離修正已完成[正式交付](preview31.md#發布狀態)：三引擎候選、1.25 GiB／21,005 OP 八輪及手動 CPU／IO 八輪通過，四關卡原始來源／digest／scope 已核對。正式站 1,406 檔、33 項原生操作及四份固定下載吻合原準備包；整體目標保持進行中。
 
-最新[原生診斷入口結果](runtime-module-cache.md#原生入口首次失敗與修正)保留 Firefox 原 RSS 失敗；獨立零模型／零 WASM raw IO 也重現成長。實際 bundle 來源核對成功，但原生 about:memory 導頁逾時，尚無 heap 分類。先修正入口與前置探測、取得持有者資料，再決定應用修正；不再憑配置猜測、不放寬門檻，preview.32 未發布。
+最新[原生量測結果](runtime-module-cache.md#取得第一份完整原生報告與解析缺口)已核對空白 Firefox 的 4,304 筆完整報告；原應用 RSS 19,285,723.43 bytes／輪仍失敗。熱報告遇到 PID parser 假設且該輪原文未保留，尚無可驗證的熱分類。先修正可空 PID 與原文 durable checkpoint，再取得熱對照；不據此歸因或修改應用配置，不放寬門檻，preview.32 未發布。
 
 現行應用的 [Firefox／WebKit 手動 CPU／IO 補測](desktop-runtime-io.md)中，WebKit 的八輪 RSS／IO／程序清理通過，Firefox 原應用的 RSS slope 仍超標。新增無模型 HTTP fetch 對照重現父程序波動，排除「必須有模型推論才會發生」的解釋；沒有把來源核對成功或對照完成當成應用修復。本機 File 對照也已完成，走勢接近空 Worker；針對重複 HTTP 成本的共用公開 module 候選已有 48 項 Node 選測，冷啟動原生取消、三引擎／RSS 及 preview.32 發布仍待完成，正式版與原門檻維持。
 

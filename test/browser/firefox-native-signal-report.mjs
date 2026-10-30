@@ -44,7 +44,9 @@ export function parseFirefoxSignalReport(compressed,rootPid){
     assert.equal(r.version,1);assert.equal(typeof r.hasMozMallocUsableSize,'boolean');assert.ok(Array.isArray(r.reports)&&r.reports.length>0&&r.reports.length<=65536,'Invalid native report count');const byProcess=new Map();
     for(const row of r.reports){
         assert.ok(typeof row.process==='string'&&row.process.length<=1024&&typeof row.path==='string'&&row.path.length<=8192&&typeof row.description==='string'&&Number.isSafeInteger(row.amount)&&[0,1,2].includes(row.kind)&&[0,1,2,3].includes(row.units),'Malformed native measurement');
-        const pid=Number(/\(pid (\d+)\)/.exec(row.process)?.[1]);assert.ok(Number.isSafeInteger(pid)&&pid>0,'Native process PID missing');
+        // The IDL defines a process name, not a mandatory PID grammar. Keep
+        // label-only groups intact and never assign them an invented OS PID.
+        const match=/\bpid (\d+)\b/.exec(row.process),pid=match?Number(match[1]):null;assert.ok(pid===null||Number.isSafeInteger(pid)&&pid>0,'Native process PID invalid');
         let value=byProcess.get(row.process);if(!value){assert.ok(byProcess.size<128);value={process:row.process,pid,reportCount:0,explicitBytes:0,explicitCategories:{},otherBytes:{}};byProcess.set(row.process,value);}value.reportCount++;
         if(row.units!==0||row.amount<0)continue;
         if(row.path.startsWith('explicit/')){const category=row.path.split('/')[1];value.explicitBytes+=row.amount;value.explicitCategories[category]=(value.explicitCategories[category]||0)+row.amount;}
@@ -55,6 +57,11 @@ export function parseFirefoxSignalReport(compressed,rootPid){
 }
 
 const identity=s=>({dev:s.dev,ino:s.ino,size:s.size,mtimeMs:s.mtimeMs});
+export async function checkpointNativeEvidence(report,persist){
+    if(!report.nativeMemory&&!report.nativeRawReport)return;
+    assert.equal(typeof persist,'function','Native evidence must be durably checkpointed before temporary cleanup');
+    await persist(report);report.nativeEvidenceCheckpoint='retained-before-file-cleanup';
+}
 export async function nativeReportDirectory({parent=process.env.RUNNER_TEMP||os.tmpdir(),log=buildEvent}={}){
     const id='native-memory-'+randomBytes(8).toString('hex'),prefix=path.join(path.resolve(parent),'model-lens-native-memory-'),record={id,directory:null,path:null,status:'planned',directoryRemoved:false,events:[]};let directory,file,fileIdentity,expectedSHA,removed=false,directoryRemoved=false,preparedPid;
     const event=async(kind,target,extra={})=>{const e={schema_version:1,task_id:'firefox-native-signal',operation_id:id+'-'+target+'-'+kind,artifact_id:id+'-'+target,event:kind,path:target==='directory'?directory??prefix+'<unique>':file??directory,kind:'temporary',purpose:'One complete non-anonymized native memory report from owned empty/public-only Firefox',producer:'test/browser/firefox-native-signal-report.mjs',inputs:{pid:preparedPid??null},cleanup_condition:'Exact unchanged file identity and SHA after normal browser close and all observed consumers reaped; empty directory only',retain_until:'diagnostic report retained in provider evidence',...extra};await log(e);record.events.push({...e,timestamp:new Date().toISOString()});};
@@ -63,7 +70,8 @@ export async function nativeReportDirectory({parent=process.env.RUNNER_TEMP||os.
         async prepare(pid){assert.ok(!preparedPid&&Number.isSafeInteger(pid)&&pid>0);preparedPid=pid;const initial=await readdir(directory);assert.ok(initial.length<=128&&!initial.some(n=>/^(?:incomplete-)?unified-memory-report-/.test(n)),'Native temp directory already contains reports');record.initialEntries=initial;await event('create_intent','report',{expected_name:`unified-memory-report-<identifier>-${pid}.json.gz`});},
         async readCompleted(pid){
             assert.equal(pid,preparedPid);const names=await readdir(directory);assert.ok(names.length<=128);const matches=names.filter(n=>new RegExp('^unified-memory-report-[a-zA-Z0-9_.-]+-'+pid+'\\.json\\.gz$').test(n));assert.ok(matches.length<=1,'Ambiguous native reports');if(!matches.length)return null;
-            file=path.resolve(directory,matches[0]);assert.equal(path.dirname(file),directory);const before=await lstat(file);assert.ok(before.isFile()&&!before.isSymbolicLink()&&before.size>0&&before.size<=512*1024,'Native report file size/kind invalid');const bytes=await readFile(file),after=await lstat(file);assert.deepEqual(identity(after),identity(before),'Native report changed while reading');assert.equal(bytes.length,before.size);fileIdentity=identity(before);expectedSHA=sha256(bytes);record.path=file;record.identity={...fileIdentity};record.bytes=bytes.length;record.sha256=expectedSHA;record.status='captured';await event('created','report',{size_bytes:bytes.length,sha256:expectedSHA});return parseFirefoxSignalReport(bytes,pid);
+            file=path.resolve(directory,matches[0]);assert.equal(path.dirname(file),directory);const before=await lstat(file);assert.ok(before.isFile()&&!before.isSymbolicLink()&&before.size>0&&before.size<=512*1024,'Native report file size/kind invalid');const bytes=await readFile(file),after=await lstat(file);assert.deepEqual(identity(after),identity(before),'Native report changed while reading');assert.equal(bytes.length,before.size);fileIdentity=identity(before);expectedSHA=sha256(bytes);record.path=file;record.identity={...fileIdentity};record.bytes=bytes.length;record.sha256=expectedSHA;record.status='captured';await event('created','report',{size_bytes:bytes.length,sha256:expectedSHA});
+            try{return parseFirefoxSignalReport(bytes,pid);}catch(error){throw Object.assign(error,{firefoxNativeRawReport:{format:'model-lens-firefox-native-raw',version:1,status:'unverified',compressedBytes:bytes.length,compressedSHA256:expectedSHA,gzipBase64:bytes.toString('base64'),error:String(error.message),scope:'Complete bounded original retained after parser failure; no valid native measurements claimed.'}});}
         },
         async cleanup({browserClosed,processCleanup}={}){
             assert.equal(browserClosed,true);assert.equal(processCleanup?.allReaped,true);assert.deepEqual(processCleanup.remaining,[]);

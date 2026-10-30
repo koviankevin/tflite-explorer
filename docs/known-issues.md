@@ -21,6 +21,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
+最新[普通訊號報告](runtime-module-cache.md#取得第一份完整原生報告與解析缺口)已取得並驗證空白 Firefox 的 4,304 筆完整原生量測，但原應用 RSS 仍以 19,285,723.43 bytes／輪失敗。熱 IO 報告遇到 parser 的 PID 假設，該輪原文未保留，不能回推分類；已補可空 PID 與先持久化原文再清理的修正，等待新的 Hosted，沒有發布。
+
 [原生入口前置探測](runtime-module-cache.md#commit-導頁仍無法讀取原生頁面)在 commit 導頁後仍只回報 about:blank，尚無 DOM URI 或物件分類；本輪停在零模型、零 Measure，沒有重跑原 RSS。接著改用有程序身分／pidfd／handler guard 的 Linux 普通報告訊號，只量獨立空白／公開 IO 控制，保留原 RSS 失敗與門檻。
 
 最新[獨立 raw IO 與原生入口結果](runtime-module-cache.md#原生入口首次失敗與修正)已核對：原 Firefox RSS 17,782,725.49 bytes／輪仍失敗，零模型／零 WASM raw IO 也重現成長。原生頁面在導頁等待逾時，零次 Measure，尚無物件分類；接著修正診斷入口並先做獨立前置探測，沒有修改應用配置、放寬門檻或發布候選。

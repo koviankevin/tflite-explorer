@@ -6,7 +6,7 @@ import {RUNTIME_LIMITS} from '../../src/tflite-runtime-policy.js';
 import {gitSource,sha256} from '../../scripts/lib/release-artifact.mjs';
 import {PAYLOAD_BYTES,firefoxPayloadMemoryControl} from './firefox-payload-memory-control.mjs';
 import {installedFirefoxReporterProof} from './firefox-native-memory-report.mjs';
-import {nativeReportDirectory,captureFirefoxSignalReport} from './firefox-native-signal-report.mjs';
+import {nativeReportDirectory,captureFirefoxSignalReport,checkpointNativeEvidence} from './firefox-native-signal-report.mjs';
 
 export function ownedIOControlDocument(helperSource){
     const line="import {RUNTIME_LIMITS} from './tflite-runtime-policy.js';";
@@ -31,7 +31,7 @@ $('download').onclick=()=>{if(active||!archive||urls.length>=8)throw Error('No c
 </script>`;
 }
 
-export async function firefoxOwnedIOMemoryControl({browserType,base,asset}){
+export async function firefoxOwnedIOMemoryControl({browserType,base,asset,persistDiagnostic}){
     let bundle,temp,result,failure;
     try{
         bundle=installedFirefoxReporterProof(browserType.executablePath());
@@ -43,7 +43,7 @@ export async function firefoxOwnedIOMemoryControl({browserType,base,asset}){
             assert.equal(report.modelsLoaded,0);assert.equal(report.runtimeInvocations,0);assert.equal(report.wasmInstances,0);
             return captureFirefoxSignalReport({...report.nativeSignalTarget,temp,publicOnly:true,browserVersion:report.browserVersion});
         }});assert.equal(report.nativeMemory.status,'passed');result=report;
-    }catch(error){failure=error;result=error.firefoxPayloadControl||{format:'model-lens-firefox-payload-control',version:1,status:'failed',source:gitSource(),phase:'native-source-preflight'};result.variant='owned-zeroed-transferable-io-native-signal';if(bundle)result.nativeSourceProof=bundle;result.error=error.stack||String(error);}
-    finally{if(temp){result ||= {status:'failed'};result.errors ||= [];result.nativeTemp=temp.record;try{await temp.cleanup({browserClosed:result.browserClosed,processCleanup:result.processCleanup});}catch(error){failure ||= error;result.status='failed';result.errors.push('Native report cleanup: '+error.message);}}}
+    }catch(error){failure=error;result=error.firefoxPayloadControl||{format:'model-lens-firefox-payload-control',version:1,status:'failed',source:gitSource(),phase:'native-source-preflight'};result.variant='owned-zeroed-transferable-io-native-signal';if(bundle)result.nativeSourceProof=bundle;if(error.firefoxNativeRawReport)result.nativeRawReport=error.firefoxNativeRawReport;result.error=error.stack||String(error);}
+    finally{if(temp){result ||= {status:'failed'};result.errors ||= [];result.nativeTemp=temp.record;try{await checkpointNativeEvidence(result,persistDiagnostic);await temp.cleanup({browserClosed:result.browserClosed,processCleanup:result.processCleanup});}catch(error){failure ||= error;result.status='failed';result.nativeTemp.retainedReason=error.message;result.errors.push('Native report checkpoint/cleanup: '+error.message);}}}
     if(failure)throw Object.assign(failure,{firefoxNativeControl:result});return result;
 }

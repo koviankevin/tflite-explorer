@@ -30,6 +30,22 @@ test('the actual Python signal guard rejects reused/unowned roots and unsupporte
     assert.match(FIREFOX_SIGNAL_PYTHON,/pidfd_send_signal\(fd, signal\.SIGRTMIN, None, 0\)/);assert.doesNotMatch(FIREFOX_SIGNAL_PYTHON,/SIGRTMIN\s*\+|SIGKILL|SIGTERM/);
 });
 
+test('native process labels may have no PID or extra metadata without inventing a process identity',async()=>{
+    const {parseFirefoxSignalReport}=await import('./browser/firefox-native-signal-report.mjs'),doc=fixture();doc.reports.push({...doc.reports[0],process:'Shared report group',amount:123},{...doc.reports[1],process:'Web Content (pid 200, additional metadata)',amount:456});
+    const r=parseFirefoxSignalReport(gzipSync(JSON.stringify(doc)),100);assert.equal(r.processes.find(x=>x.process==='Shared report group').pid,null);assert.equal(r.processes.find(x=>x.process.includes('additional metadata')).pid,200);assert.equal(r.processes.length,3);assert.throws(()=>parseFirefoxSignalReport(gzipSync(JSON.stringify({...doc,reports:doc.reports.filter(x=>!x.process.startsWith('Main Process'))})),100),/owned root/);
+});
+
+test('failed native parsing keeps complete original gzip before exact temporary file cleanup',async()=>{
+    const {nativeReportDirectory}=await import('./browser/firefox-native-signal-report.mjs'),temp=await nativeReportDirectory({log:buildEvent}),file=path.join(temp.directory,'unified-memory-report-public-100.json.gz'),bytes=gzipSync(JSON.stringify({...fixture(),version:99}));await temp.prepare(100);await writeFile(file,bytes,{flag:'wx'});
+    try{await assert.rejects(temp.readCompleted(100),error=>{const raw=error.firefoxNativeRawReport;assert.ok(raw,'Failed parse must retain original evidence');assert.equal(raw.status,'unverified');assert.equal(raw.compressedSHA256,sha256(bytes));assert.deepEqual(Buffer.from(raw.gzipBase64,'base64'),bytes);return true;});}finally{await temp.cleanup({browserClosed:true,processCleanup:{allReaped:true,remaining:[]}});}assert.equal(temp.record.status,'removed');
+});
+
+test('native evidence checkpoint awaits the durable writer and never authorizes cleanup on persistence failure',async()=>{
+    const {checkpointNativeEvidence}=await import('./browser/firefox-native-signal-report.mjs'),report={nativeRawReport:{status:'unverified',gzipBase64:'complete-original'}};let observed;
+    await checkpointNativeEvidence(report,async value=>{assert.equal(value.nativeEvidenceCheckpoint,undefined);await Promise.resolve();observed=structuredClone(value);});assert.equal(observed.nativeRawReport.gzipBase64,'complete-original');assert.equal(report.nativeEvidenceCheckpoint,'retained-before-file-cleanup');
+    for(const persist of [undefined,async()=>{throw Error('Disk full');}]){const r={nativeMemory:{status:'passed'}};await assert.rejects(checkpointNativeEvidence(r,persist));assert.equal(r.nativeEvidenceCheckpoint,undefined);}
+});
+
 test('native temp report records flushed intents and removes only unchanged owned bytes after process closure',async()=>{
     const {nativeReportDirectory}=await import('./browser/firefox-native-signal-report.mjs'),events=[],temp=await nativeReportDirectory({log:async e=>{await buildEvent(e);events.push(e);}}),file=path.join(temp.directory,'unified-memory-report-public-100.json.gz'),bytes=gzipSync(JSON.stringify(fixture()));
     assert.deepEqual(events.map(e=>e.event),['create_intent','created']);await temp.prepare(100);assert.equal(events.at(-1).event,'create_intent');await writeFile(file,bytes,{flag:'wx'});const r=await temp.readCompleted(100);assert.equal(r.compressedSHA256,sha256(bytes));

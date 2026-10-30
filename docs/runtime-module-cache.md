@@ -187,3 +187,14 @@ Hosted 瀏覽器另加入 fresh context，在確認執行與取消後保留原�
 下一個純測試改動使用 Linux 原生 ordinary SIGRTMIN 報告，僅對獨立空白／公開 raw IO 瀏覽器執行一次。依固定 [Playwright upstream config](https://github.com/microsoft/playwright/blob/v1.56.1/browser_patches/firefox/UPSTREAM_CONFIG.sh) 的 Firefox revision `361373160356d92cb5cd4d67783a3806c776ee78`，[nsMemoryInfoDumper.cpp](https://github.com/mozilla-firefox/firefox/blob/361373160356d92cb5cd4d67783a3806c776ee78/xpcom/base/nsMemoryInfoDumper.cpp) 將普通訊號與 minimize／GC／CC 訊號分開。此為固定上游來源依據，不假稱已獨立重建安裝的 binary。每次另核對固定 Firefox 版本、pidfd、PID／start-ticks／parent、每次 launch marker、bundle executable 及實際 SigCgt handler bit；不支援即失敗，不向名稱搜尋到的程序送訊號，不送 SIGRTMIN+1／+2。
 
 Firefox 使用事前登記的獨占 TMPDIR。完整 gzip 最多 512 KiB，解壓最多 16 MiB，版本／schema／root PID 均檢查，原始 compressed／uncompressed SHA 與全部 gzip bytes 放入既有 4 MiB provider 容量；不截斷後聲稱完整。另整理各程序 explicit 類別，不將百分比／count 當 bytes、不以其扣除 RSS。原生訊號輸出沒有匿名化，因此只能用空白或公開控制資料，不能接使用者的模型或應用瀏覽器。正常關閉及所有觀察程序退出後，僅刪除完全相同的已知報告，再移除空目錄；變動／未知檔保留且顯示失敗。原 RSS flow／fixture／policy、自然 60 秒 URL、runtime 30 秒與 workflow YAML 不變。39 項 Node 選測涵蓋實際 Python guard、拒絕／gzip／暫存身分及舊失敗傳遞；真實原生訊號與候選完整驗收仍待 Hosted，沒有發布。
+
+
+### 取得第一份完整原生報告與解析缺口
+
+[40979528580](https://github.com/koviankevin/tflite-explorer/actions/runs/40979528580)／來源 `c332e82dac18b287f3dac46e9d5e7f20fac9c484`、build `ba844c084162f6da` 完成 17 功能／19 runtime／5 指南、cold／retained inputs 與原有 CPU／IO／native 清理；原 RSS **19,285,723.43 bytes／輪仍失敗**，drift 77,115,392、peak growth 253,444,096、最大缺口 565 ms。獨立 raw IO 以零模型／零 WASM 重現 19,913,113.6 bytes／輪，24 Workers、八份下載、兩份來源與自然 60 秒 URL／51 組 settled observations 都核對。
+
+空白 Firefox 的 ordinary SIGRTMIN 已實際成功：pidfd／caught handler／PID／start-ticks／parent／launch marker／bundle executable 核對，完整 gzip 74,320 bytes、解壓 1,287,990 bytes、4,304 筆／五個 report groups。壓縮 SHA `70638954df3a63de2a1658cdd85092e37139df2284c1b8f00fea4e034cb09efc`，解壓 SHA `4319c3941b5a3590b7eb491c2342439170808f48c068eaf2677c1a61e666f853`；所有觀察程序正常退出、身分／SHA 清理及空目錄移除通過。這是第一份已獨立核對的完整原生資料，沒有把它當成應用修復。
+
+熱 IO 報告則在 parser 要求每個 process label 都包含 PID 時失敗。該輪程式只保存檔案 SHA／大小，解析失敗後仍清理了 76,800-byte 原文，**無法還原或驗證熱報告內容，不提供虛構分類或歸因**。provider／CRC／306 檔／原 RSS／cold 完整 gzip／hot 控制協定的獨立 reader 均實際退出；[21 檔原始證據](results/native-signal32-originals.zip)／[SHA inventory](results/native-signal32-originals.json)包含首次嚴格 reader 的失敗 log。ZIP SHA `bc03a4f7df6f4796287162cd67f059fac986fbfeb0e3d1a266b3a744f4b5fa18`。
+
+固定 [nsIMemoryReporter.idl](https://github.com/mozilla-firefox/firefox/blob/361373160356d92cb5cd4d67783a3806c776ee78/xpcom/base/nsIMemoryReporter.idl) 將 process 定義為名稱，沒有 PID 格式保證。修正後完整保留標籤，無 PID 群組使用 null，額外 metadata 不會讓已存在的 PID 遺失；root 仍須匹配實際 sender PID。任何 schema／解壓／root 檢查失敗，都在失敗物件附完整、有界的原始 gzip 與 SHA，不將它標成有效量測。成功與失敗的 native bytes 都先透過 driver 的 flush checkpoint 寫入既有 provider JSON，再准許清理暫存；checkpoint 缺少或寫入失敗就保留原檔並回報。兩個實際回歸先紅、42 項選測通過；修正後熱報告仍待新 Hosted。應用、原 RSS、計時與 workflow 不變，未發布。

@@ -1,0 +1,139 @@
+{
+  "format": "model-lens-original-evidence-archive",
+  "version": 1,
+  "createdAt": "2026-10-30T00:37:21.730908+00:00",
+  "source": "c332e82dac18b287f3dac46e9d5e7f20fac9c484",
+  "run": 40979528580,
+  "authentication": "passed",
+  "acceptance": "OriginalRSSfailed19285723.43; cold complete native valid4304 measurements. Hot control protocol complete/native parse failed missingPID, full hot raw was not retained; SHA/size cannot reconstruct or prove contents. No publication.",
+  "readerExits": [
+    {
+      "kind": "provider",
+      "exit": 0,
+      "chunk": "2b55c2"
+    },
+    {
+      "kind": "functional/originalRSS",
+      "exit": 0,
+      "chunk": "af9d71"
+    },
+    {
+      "kind": "cold native and hot failure",
+      "exit": 0,
+      "chunk": "11d91c"
+    }
+  ],
+  "archive": {
+    "path": "native-signal32-originals.zip",
+    "bytes": 772476,
+    "sha256": "bc03a4f7df6f4796287162cd67f059fac986fbfeb0e3d1a266b3a744f4b5fa18",
+    "members": 21
+  },
+  "files": [
+    {
+      "path": "build/qa/native-signal32-firefox/authentication.json",
+      "bytes": 215539,
+      "sha256": "2da3564fc3698e419c4bd431a31673b835fe8c622d615df42ae02eed91ab14b1"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/desktop-firefox.json",
+      "bytes": 2439344,
+      "sha256": "3047ab89706b841c68afdc12585eb50a5a07874490116d757ea1af7a7df19f9d"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/desktop-firefox.png",
+      "bytes": 156538,
+      "sha256": "fe97d06b5fd5d160b88d793b6bf96946b0d2c39ae7dd188e69ba4199a28a85b3"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/failed-rss-review.json",
+      "bytes": 38782,
+      "sha256": "63296ee493cc5cf9d863aafa439be53ec967cafb096c19ac1a055d10077bfbb8"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/jobs.json",
+      "bytes": 3970,
+      "sha256": "27460b4bc5da85ea2ca7b731dfd74be6d866f3d270338e2b194284af9317a577"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/listing.json",
+      "bytes": 948,
+      "sha256": "007b5cf6e9b3c96e0653a8973598ef1fff17a411a717f8c38cca08bf2a56b811"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/native-review.json",
+      "bytes": 8765,
+      "sha256": "65460e4aeb14696511e1e72df1d1bd9f8af863532dc7acffbb05b1d8c23861d2"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/original.zip",
+      "bytes": 329919,
+      "sha256": "618c8216ed1e6878d9b7e1d858ff1da949fc15615ffe2c63fc5a9e62287ba4ee"
+    },
+    {
+      "path": "build/qa/native-signal32-firefox/run.json",
+      "bytes": 14433,
+      "sha256": "502bf12a768ecdf4f59e57d2af627cd011060cd8da71942040e1bb092e86a955"
+    },
+    {
+      "path": "build/qa/auth-native-signal32.mjs",
+      "bytes": 5762,
+      "sha256": "0925ee52f6b27b1dd8dcc96ddacff3c4890ee427acae95b9fd774df5a1a41cf8"
+    },
+    {
+      "path": "build/qa/review-native-signal32.mjs",
+      "bytes": 9051,
+      "sha256": "7afeb11c952a377775365b763c213b3e2934ea626869d12bbfe55e393057c175"
+    },
+    {
+      "path": "build/qa/review-native-signal32-functional-failure.mjs",
+      "bytes": 6483,
+      "sha256": "a75670fc59bee7763a466300136a9bb626096bfde0bef8b027175224cf87f4ab"
+    },
+    {
+      "path": "build/qa/native-signal32-build.log",
+      "bytes": 445,
+      "sha256": "47e59ac939afff8737a30f45352ca99ece01cda18bd32be2e24b6f08de91bae4"
+    },
+    {
+      "path": "build/qa/native-signal32-watch.log",
+      "bytes": 32535,
+      "sha256": "f2dc65a48e555c3afa23eaba8f3ffdb4598b16424e8a03907bdd708cc2d98f16"
+    },
+    {
+      "path": "build/qa/native-signal32-auth.log",
+      "bytes": 1744,
+      "sha256": "27c0403026761b34caeddbfdbdfaf09a76d5531a2b669d66385968047e90251b"
+    },
+    {
+      "path": "build/qa/native-signal32-functional-review.log",
+      "bytes": 22323,
+      "sha256": "c6216b6ada2e9f6e669b90c6cb7e14932d5c55a65e237e9130b627dde0b64752"
+    },
+    {
+      "path": "build/qa/native-signal32-review.log",
+      "bytes": 474,
+      "sha256": "742c74617b15bd45f4548d693a05b00b209172d554133d54f2cc101a13f3fbe9"
+    },
+    {
+      "path": "build/qa/native-signal32-review-corrected.log",
+      "bytes": 780,
+      "sha256": "796e27933ae59a69a6002edcad2b171e54997830035c6fe3bcade9923111bc79"
+    },
+    {
+      "path": "build/qa/firefox-native-signal-red.log",
+      "bytes": 5897,
+      "sha256": "5bc34da48ebc6828033ad47ee855e6dd0997496fec18252972d74cb26bf110b6"
+    },
+    {
+      "path": "build/qa/firefox-native-signal-selected.log",
+      "bytes": 4320,
+      "sha256": "4fbf4808028e468986f3850294e9af70f40e753091c205e320eba7adea95a18f"
+    },
+    {
+      "path": "build/qa/firefox-native-signal-final.log",
+      "bytes": 559,
+      "sha256": "7193d92d914130dc32ac944eefe6713ef962d4a70b59ccbb27e306644aabab3f"
+    }
+  ]
+}
