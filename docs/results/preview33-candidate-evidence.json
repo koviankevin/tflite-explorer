@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "commit": "e163f27a8b463f991ca7a9c2761fb5a4f7f1e0a2",
+    "tree": "27618b7b7edebada52e233c9673297e2cea6a0c8",
+    "committedAt": "2026-10-30T12:06:06+08:00",
+    "dirty": false
+  },
+  "build": "bbcbc6d186066875",
+  "archiveSHA256": "63b4519cd61df22208fce2a1a1fa4591c85c45309ec67d308312396910f4ba11",
+  "members": [
+    {
+      "name": "gates/artifact-13.zip",
+      "bytes": 735,
+      "sha256": "92e34bddb1a749798bdd338d3022c89fe497f9ef0dd0ddf4df5772e8b62d7cb2"
+    },
+    {
+      "name": "gates/artifact-13.zip.json",
+      "bytes": 1172,
+      "sha256": "8b285905c60231f24c62cb55c4de2dac12531cdb1f5ecc2417cd478d452d51fd"
+    },
+    {
+      "name": "gates/artifact-17.zip",
+      "bytes": 4709,
+      "sha256": "7b4e886b69bb8e828e511b7a64c50283aa95fbb69da0cec198efc6ca5e1e3db5"
+    },
+    {
+      "name": "gates/artifact-17.zip.json",
+      "bytes": 94646,
+      "sha256": "7accd4f6fc81e6c2fafaba93ba4c0452b01597c9d38024c946903693f75f88cc"
+    },
+    {
+      "name": "gates/artifact-5.zip",
+      "bytes": 17447,
+      "sha256": "5c6a56bee2a0eee89c52c5d61bd3a81ce206dacf32e5da1c6c8a4e805311d32a"
+    },
+    {
+      "name": "gates/artifact-5.zip.json",
+      "bytes": 59676,
+      "sha256": "ed22fcd9d1f6c7cf44b0af61da50456252b3781426efd3949950129a959566ed"
+    },
+    {
+      "name": "gates/artifact-9.zip",
+      "bytes": 29995,
+      "sha256": "7cccb03daca7ceecfbcdfd46cf2568a933682dc7ba04a10fccd4430ab9883fc4"
+    },
+    {
+      "name": "gates/artifact-9.zip.json",
+      "bytes": 397926,
+      "sha256": "72f641eeeede244d7e51a9a91737b806859361e087a3a9f2f6448e816cee1e29"
+    },
+    {
+      "name": "gates/metadata-1.json",
+      "bytes": 2797,
+      "sha256": "5453ad79b2918d18c63d349c865ee27b57f12d70b95ab4c5eadcf956ff43dc5a"
+    },
+    {
+      "name": "gates/metadata-10.json",
+      "bytes": 14516,
+      "sha256": "443ee91e796008d1b164d5326eb783a32f2a3dbd37dfb46ff01d302c3cdb0c4a"
+    },
+    {
+      "name": "gates/metadata-11.json",
+      "bytes": 3686,
+      "sha256": "c428f840b520f79fa901bfd243b4c8e7d84226310dbbe7f60339bb8771f6bb6a"
+    },
+    {
+      "name": "gates/metadata-12.json",
+      "bytes": 946,
+      "sha256": "f6beca954772bef92c809675a57b0d617e708c390bc7c7cfa419ef1af84585d1"
+    },
+    {
+      "name": "gates/metadata-14.json",
+      "bytes": 14524,
+      "sha256": "ab96686d2bae6b72890028a511768ecf92f0fb3701def6bc61739ac57cce51f6"
+    },
+    {
+      "name": "gates/metadata-15.json",
+      "bytes": 5633,
+      "sha256": "e596ea46a5dd7a302886b9e005812e3936c1509f555e1a803209709d43eaf195"
+    },
+    {
+      "name": "gates/metadata-16.json",
+      "bytes": 1866,
+      "sha256": "a55c2aaf762c27109ba818226fe7c32a16ae485cdc5b3f33f1768d355ae7bfa7"
+    },
+    {
+      "name": "gates/metadata-2.json",
+      "bytes": 14407,
+      "sha256": "a00163ab643e2bd465e2ceeaa454baa6f1a3178ef12ca8262c3241501a6e6846"
+    },
+    {
+      "name": "gates/metadata-3.json",
+      "bytes": 3654,
+      "sha256": "5504a874d04242aaef4dc498f3c273beabe2cc6dd86b1f8c05510a5996e3fa2f"
+    },
+    {
+      "name": "gates/metadata-4.json",
+      "bytes": 948,
+      "sha256": "ab2e2881f5ffebff3bddf29ceca7b96d77d3e89e593546a5bcdd34c2df79ee1f"
+    },
+    {
+      "name": "gates/metadata-6.json",
+      "bytes": 14548,
+      "sha256": "65981ac905c1ea211ff83efe9a5d317a5a1a73b3c001a00c63b06bc8b16c5060"
+    },
+    {
+      "name": "gates/metadata-7.json",
+      "bytes": 4238,
+      "sha256": "d5c7f7891c2f2abacefdc6fa48aa0dc6f7b31d0b8cf82c9dfe2c38b3fffb74f1"
+    },
+    {
+      "name": "gates/metadata-8.json",
+      "bytes": 949,
+      "sha256": "c4ed3ee4fdf3c355fe6c8d22ae22413d5d1858a750e15b14d29daeda4f38389b"
+    },
+    {
+      "name": "gates/review.json",
+      "bytes": 200855,
+      "sha256": "4e00590688573f98d9e7194548010154d4fcd92d3134e3635120cdb16d2331c3"
+    },
+    {
+      "name": "native/jobs.json",
+      "bytes": 5633,
+      "sha256": "e596ea46a5dd7a302886b9e005812e3936c1509f555e1a803209709d43eaf195"
+    },
+    {
+      "name": "native/listing.json",
+      "bytes": 1866,
+      "sha256": "a55c2aaf762c27109ba818226fe7c32a16ae485cdc5b3f33f1768d355ae7bfa7"
+    },
+    {
+      "name": "native/native-artifact.json",
+      "bytes": 832,
+      "sha256": "f29789ba2a851aef363bfd85fa1390549dd4e4c74cb148529f57c6aceebdbef9"
+    },
+    {
+      "name": "native/native.zip",
+      "bytes": 362496,
+      "sha256": "9da60f288a07b629db22e6c219d284058131d560c7566290da356aa1d1939dfe"
+    },
+    {
+      "name": "native/production-smoke.json",
+      "bytes": 822377,
+      "sha256": "15727aaf301e0cd2ef673f961ed7f5e1e283c4075185f2b931823521c086184c"
+    },
+    {
+      "name": "native/production-smoke.png",
+      "bytes": 149481,
+      "sha256": "d9a31f5cdde482456db2834b4e35b805833a1b9d0f2e70c81a3385de3ce4613d"
+    },
+    {
+      "name": "native/review.json",
+      "bytes": 83796,
+      "sha256": "b9947b9f496dc72b2f1767dc382f747e03ba835643e257f8c1c62c48236af768"
+    },
+    {
+      "name": "native/run.json",
+      "bytes": 14524,
+      "sha256": "ab96686d2bae6b72890028a511768ecf92f0fb3701def6bc61739ac57cce51f6"
+    },
+    {
+      "name": "native/site-artifact.json",
+      "bytes": 828,
+      "sha256": "61ee287f668a0acfb949e9afeb7f549d5844f7b953f8acef3afe2881cb34fc0c"
+    },
+    {
+      "name": "native/site.zip",
+      "bytes": 4709,
+      "sha256": "7b4e886b69bb8e828e511b7a64c50283aa95fbb69da0cec198efc6ca5e1e3db5"
+    },
+    {
+      "name": "native/startup-failure.png",
+      "bytes": 147371,
+      "sha256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b"
+    },
+    {
+      "name": "native/versioned-site-browser.json",
+      "bytes": 94646,
+      "sha256": "7accd4f6fc81e6c2fafaba93ba4c0452b01597c9d38024c946903693f75f88cc"
+    },
+    {
+      "name": "readers/assert-active-compute31.mjs",
+      "bytes": 3285,
+      "sha256": "7e3f59a4ad78ff518f667f45d3aeb7e8a25d73fbe7e71eb96603276647c301f9"
+    },
+    {
+      "name": "readers/assert-input-cleanup31.mjs",
+      "bytes": 1124,
+      "sha256": "fec48bdb14124a1ada05de971981620deea4a81bd459986005ebd028a452b0e6"
+    },
+    {
+      "name": "readers/assert-runtime-io-chromium32.mjs",
+      "bytes": 5836,
+      "sha256": "9ca01f26dfd02455292c84610b1d4da2ff1c603f3191ec2b821f0a0d475d098b"
+    },
+    {
+      "name": "readers/assert-runtime-io31.mjs",
+      "bytes": 3083,
+      "sha256": "a9e0e76f0dbff129bb5632d9f24b7033a9be2c6a782091354ced534bf752012a"
+    },
+    {
+      "name": "readers/assert-runtime-module32.mjs",
+      "bytes": 6350,
+      "sha256": "3d5a78c74e76ed462418ce373ab266413e698a6159898b5b8175ca66da928ef9"
+    },
+    {
+      "name": "readers/assert-startup-recovery33.mjs",
+      "bytes": 2903,
+      "sha256": "13c76e52789f35e61e646c1a8d5fbb23286be8b630c60362bac24aacc5b27380"
+    },
+    {
+      "name": "readers/review-startup-recovery33-native.mjs",
+      "bytes": 8145,
+      "sha256": "26d2f1ce1a1a319b310373ad08c3e4c519655beaa16ff67c1323a4a40ed46888"
+    },
+    {
+      "name": "readers/review-startup33-gates.mjs",
+      "bytes": 2224,
+      "sha256": "88f92576c32ecf4bb53333a5f8162773fc4ff5fce6a65dc295808ec447afb5e0"
+    }
+  ],
+  "readers": {
+    "gates": {
+      "exit": 0,
+      "toolChunk": "3c822b"
+    },
+    "native": {
+      "exit": 0,
+      "toolChunk": "8f77c4"
+    }
+  },
+  "physical": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 1321018.5142857144,
+      "rssDriftBytes": 4169728,
+      "mainHeapDriftBytes": 100352,
+      "sampledPeakRssBytes": 1011724288,
+      "sampledPeakGrowthBytes": 554885120
+    }
+  },
+  "startup": {
+    "cases": [
+      {
+        "mode": "entry-failure",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": true,
+        "pendingFocusRestored": false,
+        "workers": 1,
+        "failureBounds": {
+          "x": 360,
+          "y": 204.8203125,
+          "width": 560,
+          "height": 230.359375
+        }
+      },
+      {
+        "mode": "dependency-failure",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": true,
+        "pendingFocusRestored": false,
+        "workers": 2,
+        "failureBounds": {
+          "x": 360,
+          "y": 204.8203125,
+          "width": 560,
+          "height": 230.359375
+        }
+      },
+      {
+        "mode": "pending-recovery",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": false,
+        "pendingFocusRestored": true,
+        "workers": 1
+      },
+      {
+        "mode": "early-open",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": false,
+        "pendingFocusRestored": false,
+        "workers": 1,
+        "earlyOpen": {
+          "disabledWhilePending": true,
+          "clickWaitedForReady": true,
+          "nativeChooser": true,
+          "selectedFiles": 0
+        }
+      },
+      {
+        "mode": "guide-ready",
+        "recovered": true,
+        "contextClosed": true,
+        "modelOpened": false,
+        "runtimeFetched": false,
+        "keyboardReload": false,
+        "pendingFocusRestored": false,
+        "workers": 1,
+        "guideReadiness": {
+          "disabledWhileLoading": true,
+          "enabledWhenReady": true,
+          "dialogPreserved": true,
+          "focusPreserved": true
+        }
+      }
+    ],
+    "workers": 6,
+    "allWorkersClosed": true,
+    "zeroModelAndRuntime": true,
+    "downloads": 0,
+    "screenshotSHA256": "8aafa6633f1cca9d919a59122af17f36ac7746c627da0c2397e42d5ad63c434b",
+    "screenshotPath": "build/qa/startup-recovery33-native-main-41001146906-five-passed/startup-failure.png",
+    "scope": "Hosted Linux Chromium real one-shot network faults, actual Enter reload and delayed successful startup; no inference or private model. This is not rootcause proof for the historical unexplained timeout."
+  },
+  "scope": "Four required original main gates authenticated, exact core87 reuse, native5startup plus33normal operations. Hosted Linux Chromium only; original policies/timers, no extra FF/WK/mobile/company/2hour run. Not yet a publication receipt."
+}

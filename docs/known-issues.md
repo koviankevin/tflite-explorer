@@ -21,7 +21,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前 [preview.32](preview32.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)仍在候選驗收中；它不代表已重現或修復上述歷史逾時根因。
+目前 [preview.32](preview32.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境與大檔八輪候選驗收，尚待正式發布；它不代表已重現或修復上述歷史逾時根因。
 
 以下保留各輪歷史診斷中的來源及當時狀態；其中「最新／尚未發布」不覆蓋本段現況。
 
