@@ -29,6 +29,12 @@ const adapters=[
     {name:'pattern library',create:indexedDB=>patternStore({indexedDB,legacyStorage:()=>{assert.fail('Existing pattern record must not read legacy storage.');}}),read:async store=>(await store.load()).patterns}
 ];
 for(const {name,create,read} of adapters){
+    test(`${name}: browser-forced database close allows reopening and stale close is harmless`,async()=>{
+        const idb=factory(),store=create(idb),first=read(store),old=succeed(idb.requests[0]);await first;
+        assert.equal(typeof old.onclose,'function','unexpected IDB close must invalidate its connection');
+        old.onclose();const retry=read(store);assert.equal(idb.calls,2);const fresh=succeed(idb.requests[1]);await retry;
+        old.onclose();assert.deepEqual(await read(store),[]);assert.equal(idb.calls,2);await store.close();assert.equal(fresh.closes,1);
+    });
     test(`${name}: explicit retry reopens after a synchronous open rejection`,async()=>{
         const idb=factory(),store=create(idb);idb.denied=true;
         await assert.rejects(read(store),{name:'SecurityError'});idb.denied=false;
@@ -65,3 +71,8 @@ for(const {name,create,read} of adapters){
         assert.deepEqual(await again,[]);assert.equal(fresh.closes,0);await store.close();assert.equal(fresh.closes,1);
     });
 }
+for(const {name,create,read} of adapters.slice(0,2))test(`${name}: an aborted read transaction never reports successful recovery`,async()=>{
+    const idb=factory(),store=create(idb),pending=read(store),rejected=assert.rejects(pending,{name:'AbortError'});
+    const db={close(){},transaction(){const tx={objectStore:()=>({getAll(){const req={result:[]};queueMicrotask(()=>{req.onsuccess();tx.error=new DOMException('Synthetic read abort','AbortError');tx.onabort?.();});return req;}})};return tx;}};
+    succeed(idb.requests[0],db);await rejected;await store.close();
+});

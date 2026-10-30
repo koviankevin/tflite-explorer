@@ -3,6 +3,7 @@ import {tableFields} from './flatbuffer-writer.js';
 import {TFLITE_OPTIONS,TFLITE_PORTS} from './tflite-op-options.js';
 import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom,randomOptions} from './tensor-random.js';
 import {checkStaticTransform} from './tflite-static-transform.js';
+import {checkOperatorMetadata} from './tflite-semantic-checks.js';
 const normalize=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
 const optionNames=Object.keys(schema).filter(k=>k.endsWith('Options')&&schema[k].decode);
 const types2=new Set([...schema.BuiltinOptions2.decode.toString().matchAll(/tflite\.(\w+)\.decode/g)].map(m=>m[1]));
@@ -46,7 +47,8 @@ export function builtinCatalog(metadata=[]){
 export function checkBuiltinPorts(code,inputs,outputs,options){
     const {name}=builtinInfo(code);
     const ports=TFLITE_PORTS[normalize(name)];
-    for(const [side,actual] of [['inputs',inputs],['outputs',outputs]]){const expected=ports?.[side];if(expected?.length){const min=expected.filter(p=>!p.optional&&!p.list).length;if(actual.length<min||!expected.some(p=>p.list)&&actual.length>expected.length)throw Error(`${name} ${side} 數量不符合 OP 定義。`);}if(actual.some((t,i)=>!t&&!expected?.[i]?.optional))throw Error('請補齊所有必要輸入與輸出型別。');}
+    const legacyReshape=name==='RESHAPE'&&(Array.isArray(options?.new_shape)||ArrayBuffer.isView(options?.new_shape));
+    for(const [side,actual] of [['inputs',inputs],['outputs',outputs]]){const expected=ports?.[side];if(expected?.length){const min=side==='inputs'&&legacyReshape?1:expected.filter(p=>!p.optional&&!p.list).length;if(actual.length<min||!expected.some(p=>p.list)&&actual.length>expected.length)throw Error(`${name} ${side} 數量不符合 OP 定義。`);}if(actual.some((t,i)=>!t&&!expected?.[i]?.optional))throw Error('請補齊所有必要輸入與輸出型別。');}
     for(const [k,v] of Object.entries(options||{}))if(/(?:stride|dilation|filter_(?:width|height)|num_splits|block_size)/.test(k)&&(!Number.isInteger(v)||v<=0))throw Error(k+' 必須是正整數。');
     const shapes=t=>Array.from(t.shape||[]),sameType=(a,b)=>a.type===b.type;
     if(['ADD','MUL','SUB','DIV','MAXIMUM','MINIMUM','POW','SQUARED_DIFFERENCE'].includes(name)){
@@ -57,6 +59,7 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
     if(['RESHAPE','EXPAND_DIMS'].includes(name)&&inputs[0]&&outputs[0]){const a=shapes(inputs[0]),b=shapes(outputs[0]);if(a.every(n=>n>=0)&&b.every(n=>n>=0)&&a.reduce((n,x)=>n*x,1)!==b.reduce((n,x)=>n*x,1))throw Error(name+' 前後元素數不同。');}
     if(['IF','WHILE'].includes(name)&&!options)throw Error(name+' 需要控制流程 subgraph 設定。');
     checkStaticTransform(name,inputs,outputs,options);
+    checkOperatorMetadata(name,inputs,outputs,options||{});
     return {scope:'索引／型別／資料長度／已實作的 shape 與參數規則；不代表全部 kernel／runtime 語意已驗證'};
 }
 export const RANDOM_TENSOR_LIMIT=16*1024*1024;

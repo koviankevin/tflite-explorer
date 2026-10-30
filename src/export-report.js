@@ -24,7 +24,8 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
         ...(format==='mlir'?[{id:'native-compiler',status:'not-run',detail:'尚未使用 LLVM／公司 compiler 驗證下載檔。'}]:[{id:'runtime-load',status:'not-run',detail:'尚未使用 TFLite／公司 runtime 載入下載檔。'}]),
         {id:'runtime-equivalence',status:'not-run',detail:'尚未執行推論、數值比對或 custom dialect／custom runtime 語意驗證。'}
     ];
-    if(format==='mlir')checks.push({id:'dense-values',status:'not-run',detail:'未逐值驗證所有 dense／resource 權重的數值語法、元素數量或有效性。'});
+    if(format==='mlir')checks.push({id:'dense-values',status:'not-run',detail:'已核對支援格式的延後 dense 元素數／hex bytes；不包含全部數值、resource packing 或 dialect 語意驗證。'});
+    if(result.semanticValidation)for(const c of result.semanticValidation)checks.push({id:'constant-operands',status:c.unchecked?'not-run':'passed',detail:`常數 operands：${c.checked} 個已檢查、${c.unchecked} 個未能檢查；讀取 ${c.bytesRead} bytes。${c.scope}`});
     const report={schemaVersion:1,format:'model-lens-export-report',createdAt:new Date().toISOString(),producer:{name:'Model Lens',buildId},
         source:{name:file.name || 'model',bytes:file.size,format,lastModified:file.lastModified || null,identity:'filename-and-size-only'},
         output:{name:outputName,bytes:result.blob.size,format,layers:result.layers,tensors:result.tensors ?? null},

@@ -12,6 +12,11 @@ import {runtimeClient} from '../src/tflite-runtime-client.js';
 import {executeRuntime} from '../src/tflite-runtime-execute.js';
 import {attachRuntimeReport} from '../src/tflite-runtime-report.js';
 import {Archive} from '../vendor/netron/zip.js';
+test('allocation failure is identified before test data is applied and retains raw diagnostics',async()=>{
+    const f=await runtimeFixture(),plan=runtimePlan(f.model,f.blob.size);let deleted=0;
+    const result=await executeRuntime({blob:f.blob,plan,rt:{Environment:{create:async()=>({delete(){deleted++;}})},loadAndCompile:async()=>{throw Error('Failed to allocate tensors');}},diagnostics:()=>['kernel: invalid output shape']});
+    assert.equal(result.status,'failed');assert.equal(result.stage,'compile');assert.equal(result.invoked,false);assert.match(result.reason,/套用測試輸入之前/);assert.deepEqual(result.diagnostics,['kernel: invalid output shape']);assert.equal(deleted,1);
+});
 
 test('runtime policy skips custom, dynamic, unsupported and large models without reading weights',async()=>{
     const {model,blob}=await runtimeFixture();assert.equal(runtimePlan(model,blob.size).eligible,true);

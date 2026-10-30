@@ -10,6 +10,7 @@ import {initUsageGuide} from './usage-guide-ui.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
 import {exportReportUI} from './export-report-ui.js';
 import {exportedModelUI} from './exported-model-ui.js';
+import {exportPreviewText} from './tflite-export-preview.js';
 import {modelEditUI} from './model-edit-ui.js';
 import {modelEditWorkspaceUI} from './model-edit-workspace-ui.js';
 import {modelRuntimeWorkspaceUI} from './model-runtime-workspace-ui.js';
@@ -922,6 +923,8 @@ function refreshPickedNodes() {
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
+    $('preview-submodel').hidden=!model?.capabilities?.tfliteExport;
+    $('preview-submodel').disabled=exportBusy||!count;
     if(virtualOverview)virtualOverview.setPicking(pickingPattern,pickingPattern?renderedNodes.filter(entry=>{const loc=layerLocation(entry,currentGraph);return loc && (across?cfgSelections.get(loc.graph)?.has(loc.node):pickedGraph===loc.graph && pickedNodes.has(loc.node));}).map(entry=>entry.node.identifier):[]);
     for (const entry of renderedNodes) if (entry.element) {
         const location=layerLocation(entry,currentGraph),picked=location && (across?cfgSelections.get(location.graph)?.has(location.node):pickedNodes.has(location.node));
@@ -951,6 +954,12 @@ $('export-submodel').onclick = async () => {
     try {if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes,selections);}catch(error){report(error);}finally{refreshPickedNodes();}
 };
 $('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path],selection.blocks?.map(b=>({graph:b.graph,nodes:[...b.path]}))); };
+$('preview-submodel').onclick=async()=>{
+    const source=file,targets=captureSelections();if(!model?.capabilities?.tfliteExport||!targets.length)return;
+    try{const preview=await rpc('previewTfliteExport',targets[0]);if(file!==source)return;$('export-size-description').textContent=exportPreviewText(preview);$('export-size-dialog').showModal();}catch(error){if(file===source)report(error);}
+};
+$('close-export-size').onclick=()=>$('export-size-dialog').close();
+$('export-size-dialog').addEventListener('keydown',event=>event.stopPropagation());
 $('mlir-export-scope').onchange=refreshPickedNodes;
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
 async function downloadSubmodel(graph, nodes, selections) {
@@ -971,7 +980,7 @@ async function downloadSubmodel(graph, nodes, selections) {
         exportedModels.remember(result.blob,outputName);
         exportReports.set(result.report,outputName,result.reportError);
         if (mlir) {
-            const checks=result.validation?.deferredPayloads ? '結構語法／SSA／dominance 已檢查；大型權重保留原文，未逐值驗證' : '已通過本機語法／SSA／dominance 檢查';
+            const checks=result.validation?.deferredPayloads ? `結構語法／SSA／dominance 已檢查；${result.validation.dense?.checked||0} 段 dense 元素數／hex bytes 已核對，${result.validation.dense?.unchecked||0} 段編碼未檢查；未驗證全部數值語意` : '已通過本機語法／SSA／dominance 檢查';
             if(result.slice) {
                 const added=result.slice.added.length ? ` 補入迴圈必要運算：${[...new Set(result.slice.added)].join('、')}（${result.slice.added.length} 個）。` : '';
                 const conditional=result.slice.conditionalOutputs ? ` ${result.slice.conditionalOutputs} 個條件輸出以 (valid, value) 回傳；未執行時 valid=false，需提供同型別備援輸入。` : '';

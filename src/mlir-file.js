@@ -1,5 +1,6 @@
 // A File-backed structural view. Large dense literals/resource blobs never
 // become a single JavaScript string or an array of decoded weight values.
+import {denseCounter} from './mlir-dense-check.js';
 export const MLIR_STRUCTURE_LIMIT = 256 * 1024 * 1024;
 export const MLIR_PAYLOAD_THRESHOLD = 4 * 1024;
 const tokenPattern = /"0x01000000[0-9a-f]{32}[0-9a-f]{8}"/g;
@@ -45,7 +46,8 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
             if(header)emit(Uint8Array.from(item.prefix.slice(0,header)));
             const token=`"0x01000000${nonce}${payloads.length.toString(16).padStart(8,'0')}"`;
             emit(new TextEncoder().encode(token));
-            payloads.push({token,file,start:item.start+header,end,bytes:length-header,kind:item.kind,compactLine,compactColumn,originalLine:endLine,originalColumn:endColumn});
+            if(item.kind==='dense'&&!item.counter){item.counter=denseCounter();item.counter.text(new TextDecoder().decode(Uint8Array.from(item.prefix.slice(header))));}
+            payloads.push({token,file,start:item.start+header,end,bytes:length-header,kind:item.kind,...(item.counter?{count:item.counter.finish()}:{}),compactLine,compactColumn,originalLine:endLine,originalColumn:endColumn});
         }
         candidate=null;mode='code';word='';pending=false;previous=0;
     };
@@ -57,19 +59,21 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
         let start=mode==='payload'?bytes.length:0;
         for(let i=0;i<bytes.length;i++) {
             const c=bytes[i],at=offset+i;
+            if(candidate?.kind==='dense'&&!candidate.counter&&candidate.prefix.length>captureLimit){candidate.counter=denseCounter();candidate.counter.text(new TextDecoder().decode(Uint8Array.from(candidate.prefix.slice(typedHeader(candidate.prefix)))));}
             // Native scanning keeps multi-GB hex weights out of a per-byte JS
             // loop. Fall back for delimiters/escapes and malformed data.
             if(candidate?.prefix.length>captureLimit && (candidate.kind==='resource' && candidate.hex || candidate.kind==='dense' && candidate.state==='string' && candidate.stringPrefix==='0x' && candidate.stringHex)) {
                 let end=bytes.indexOf(34,i);if(end===-1)end=bytes.length;
                 if(end>i && !/[^0-9a-fA-F]/.test(ascii?chunkText.slice(i,end):new TextDecoder().decode(bytes.subarray(i,end)))) {
                     const count=end-i;originalColumn+=count;
-                    if(candidate.kind==='dense')candidate.stringCount+=count;
+                    if(candidate.kind==='dense'){candidate.stringCount+=count;candidate.counter?.hex(count);}
                     i=end-1;continue;
                 }
             }
             if(ascii && candidate?.kind==='dense' && candidate.state==='code' && candidate.prefix.length>captureLimit) {
                 special.lastIndex=i;const match=special.exec(chunkText),end=match?.index ?? bytes.length;
                 if(end>i) {
+                    candidate.counter?.text(chunkText.slice(i,end));
                     let at=i,next;while((next=chunkText.indexOf('\n',at))!==-1 && next<end){originalLine++;originalColumn=1;at=next+1;}
                     originalColumn+=end-at;candidate.previous=bytes[end-1];i=end-1;continue;
                 }
@@ -78,6 +82,7 @@ export async function readMLIRFile(file,{progress=()=>{},chunkSize=1024*1024,str
             if(c===10){originalLine++;originalColumn=1;}else if(c<128 || c>=192)originalColumn+=c>=240?2:1;
             if(mode==='payload') {
                 const item=candidate;
+                if(item.counter&&!(item.state==='code'&&c===62&&item.previous!==45&&item.depth===1))item.counter.char(String.fromCharCode(c));
                 if(item.kind==='resource') {
                     if(c===34 && !item.escape) {if(item.prefix.length<=captureLimit)item.prefix.push(c);finish(at+1,originalLine,originalColumn);start=i+1;continue;}
                     if(at>item.start+2 && !(c>=48 && c<=57 || c>=65 && c<=70 || c>=97 && c<=102))item.hex=false;

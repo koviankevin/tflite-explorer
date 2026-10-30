@@ -61,14 +61,18 @@ export function prepareTfliteModelEdit(index,file,plans) {
         if(plan.operators!==undefined&&!Array.isArray(plan.operators))throw Error('OP 修改必須是清單。');
         if(plan.operators?.length>original.operators.length+4096)throw Error('單次最多新增 4096 個 OP。');
         const entries=plan.operators||original.operators.map((_,template)=>({template}));
-        const operators=entries.map(entry=>{
+        const operators=entries.map((entry,position)=>{
             const source=original.operators[entry.template];if(!Number.isInteger(entry.template)||!source)throw Error('找不到原始 OP 範本。');
             const op={...source,debug_metadata_index:-1};
             for(const key of Object.keys(entry))if(!['template','inputs','outputs','intermediates','options','options2','builtin'].includes(key))throw Error('未知的 OP 修改欄位：'+key);
             for(const key of ['inputs','outputs','intermediates'])if(entry[key]!==undefined)op[key]=ids(entry[key],tensors.length,key==='inputs');
             if(entry.options!==undefined)op.builtin_options=optionsPatch(source.builtin_options,entry.options);
             if(entry.options2!==undefined)op.builtin_options_2=optionsPatch(source.builtin_options_2,entry.options2);
-            if(entry.builtin){const {info,options}=builtinSettings(entry.builtin.code,entry.builtin.settings),version=entry.builtin.version;if(!Number.isInteger(version)||version<1||version>100)throw Error('OP version 無效。');let id=model.operator_codes.findIndex(c=>c.builtin_code===info.code&&c.version===version&&!c.custom_code);if(id<0){id=model.operator_codes.length;model.operator_codes.push({builtin_code:info.code,deprecated_builtin_code:Math.min(info.code,127),custom_code:null,version});}Object.assign(op,{opcode_index:id,builtin_options:null,builtin_options_2:null,custom_options:null,large_custom_options_offset:0n,large_custom_options_size:0n,mutating_variable_inputs:[],intermediates:[],customOptionsInline:false,customOptionsDeferred:false,customOptionsRange:null});op[info.group]=options;checkBuiltinPorts(info.code,Array.from(op.inputs,id=>tensors[id]),Array.from(op.outputs,id=>tensors[id]),options);}
+            if(entry.builtin){const {info,options}=builtinSettings(entry.builtin.code,entry.builtin.settings),version=entry.builtin.version;if(!Number.isInteger(version)||version<1||version>100)throw Error('OP version 無效。');let id=model.operator_codes.findIndex(c=>c.builtin_code===info.code&&c.version===version&&!c.custom_code);if(id<0){id=model.operator_codes.length;model.operator_codes.push({builtin_code:info.code,deprecated_builtin_code:Math.min(info.code,127),custom_code:null,version});}Object.assign(op,{opcode_index:id,builtin_options:null,builtin_options_2:null,custom_options:null,large_custom_options_offset:0n,large_custom_options_size:0n,mutating_variable_inputs:[],intermediates:[],customOptionsInline:false,customOptionsDeferred:false,customOptionsRange:null});op[info.group]=options;}
+            const code=model.operator_codes[op.opcode_index];
+            if(!code.custom_code&&(entry.builtin||entry.options||entry.options2||entry.inputs||entry.outputs))try{
+                checkBuiltinPorts(Math.max(code.builtin_code,code.deprecated_builtin_code||0),Array.from(op.inputs,id=>id<0?null:tensors[id]),Array.from(op.outputs,id=>tensors[id]),op.builtin_options||op.builtin_options_2);
+            }catch(error){throw Error(`Subgraph #${plan.graph} · OP #${position}（來源 OP #${entry.template}）· inputs [${Array.from(op.inputs).join(', ')}]／outputs [${Array.from(op.outputs).join(', ')}]：${error.message}`,{cause:error});}
             return op;
         });
         const graph={...original,tensors,operators,debug_metadata_index:-1};
