@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.0.1](v1.0.1.md#發布狀態)／build `715374fe3dc2ecf7`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.1.0](model-safety.md#正式發布)／build `9338194b51c14371`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 ## 待查：一次啟動逾時的根因
 
@@ -18,14 +18,14 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 組合模型目前限同一 TFLite／subgraph，暫不搬移控制流程或有狀態 OP；大型組合已通過 [Hosted Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)；數小時組合與其他引擎尚待驗收，見 [功能與驗收範圍](model-composition.md)。
 
-- **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。量化規則與任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
+- **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。v1.1.0 已補 FC／BATCH_MATMUL／GATHER 的常見 shape、dtype 與量化 metadata，以及有預算的常數 operand 檢查，錯誤包含 OP／tensor 位置；未知或超預算明列未檢查，任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
 - **手動 interpreter 的規模與支援範圍**：CPU WASM 限 128 MiB 模型、16 MiB IO、30 秒執行，另有 512 MiB 提前配置估算；此估算不含所有 kernel scratch。公開 runtime 不含任意 custom kernels，動態／未知 shape、部分 dtype 及不明確的 signature 對應會列為未能驗證。大型模型仍可探索、編輯與匯出。見 [完整限制](tflite-runtime.md)。
-- **大型 MLIR 的完整驗證**：dense 大型權重保留原文與 byte ranges，不逐值解析或核對元素數量；外部 resource 檔選取尚未支援。網站的結構、SSA／dominance 檢查也不代替各 dialect 自訂 verifier。見 [大型 MLIR](mlir-large-files.md)。
+- **大型 MLIR 的完整驗證**：dense 大型權重保留原文與 byte ranges；支援型別的元素數與 byte-aligned hex 長度已串流核對，未知 packing／resource 與逐值語意仍未驗證；外部 resource 檔選取尚未支援。網站的結構、SSA／dominance 檢查也不代替各 dialect 自訂 verifier。見 [大型 MLIR](mlir-large-files.md)。
 - **MLIR 編輯與 pattern 範圍**：實際 OP 編輯僅支援 TFLite。MLIR 支援文字 generic 探索、搜尋、圈選及局部匯出；跨 block pattern 需位於同一 function／region，不能任意跨 function 或巢狀 region。見 [公開版指引](public-acceptance.md)。
 
 ## 尚待補齊的公開驗收
 
-目前 [v1.0.1](v1.0.1.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
+目前 [v1.1.0](model-safety.md#正式發布)的必要 Chromium、發布及正式站／固定下載核對均已完成；另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 以下保留各輪歷史診斷中的來源及當時狀態；其中「最新／尚未發布」不覆蓋本段現況。
 

@@ -12,7 +12,7 @@
 - 匯出器對 compact source 做 SSA 邊界修改、投影與重驗，最後用 `Blob([text, File.slice(), …])` 接回原始權重。三條匯出路徑共用這個機制：同 block 局部、跨 block 局部及完整 function。檔案內 resource dictionary 目前整份保留，可能包含未選 OP 的 resources。
 - 關閉模型會終止 Worker，釋放原始 File 與區段索引；已啟動的下載保留既有 Blob URL 生命週期。首次仍須完整掃描磁碟上的檔案，不代表數 GB 可瞬間開啟。
 
-本機檢查涵蓋結構語法、SSA、已註冊的分支傳值與 dominance。大型 payload 檢查 UTF-8、引號／括號閉合及 hex 字元／偶數長度；不逐值解析數值 literal、不檢查權重元素數量，也不取代 LLVM／公司 dialect verifier。下載狀態會明示「大型權重保留原文，未逐值驗證」。檔案診斷在略去 payload 後會映回原始行列；匯出候選文字使用自己的位置。
+本機檢查涵蓋結構語法、SSA、已註冊的分支傳值與 dominance。大型 payload 檢查 UTF-8、引號／括號閉合及 hex 字元／偶數長度；[v1.1.0](model-safety.md#正式發布)另在同次讀取中串流核對支援型別的元素數與 byte-aligned hex 長度，不展開完整值陣列。未知 packing／resource 及逐值數值範圍仍未驗證，也不取代 LLVM／公司 dialect verifier。下載狀態會明示「大型權重保留原文，未逐值驗證」。檔案診斷在略去 payload 後會映回原始行列；匯出候選文字使用自己的位置。
 
 ## 現行來源的 Hosted Node 大檔驗收（2026-10-29）
 

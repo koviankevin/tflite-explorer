@@ -2,11 +2,11 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [v1.0.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.0.1)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `715374fe3dc2ecf7`，來源 `9506611a11ae702e6fe55116c029a853cdf56cc6`；[本版正式交付](v1.0.1.md#發布狀態)已核對。外網更新不會自動更新公司內網站台。
+固定版本為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `9338194b51c14371`，來源 `697d9dfb6d128a522ac213c10cf8f072f643cab9`；[本版正式交付](model-safety.md#正式發布)已核對。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 
-2026-10-30 依使用者明確指示，必要瀏覽器驗收只保留 Chrome／Edge；Firefox 與 Safari／WebKit 均為選做，不列部署阻擋，後續不自行排這兩個引擎補測。手動入口與歷史成功／失敗原文保留，網站不封鎖這些瀏覽器。必要流程沿用 Chromium 桌面與正式完整性關卡；不修改安全規則、RSS 門檻、計時或 workflow YAML。目前實測執行環境是 Hosted Linux Chromium，不將它宣稱為 Windows 或兩個廠牌瀏覽器本體的獨立實測。
+2026-10-30 依使用者明確指示，必要瀏覽器驗收只保留 Chrome／Edge；Firefox 與 Safari／WebKit 均為選做，不列部署阻擋，後續不自行排這兩個引擎補測。手動入口與歷史成功／失敗原文保留，網站不封鎖這些瀏覽器。必要流程沿用 Chromium 桌面與正式完整性關卡；不修改安全規則、RSS 門檻、計時或 workflow YAML。完整自動流程與 RSS 在 Hosted Linux Chromium；另經使用者明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站選檔、編輯／匯出重開、32px、真實 quota／備份／重試與儲存清除恢復，見 [v1.1.0](model-safety.md#正式發布)。兩種環境的證據分開列示。
 
 ## 已核對的公開流程
 
@@ -29,7 +29,7 @@
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
 | Firefox／WebKit 歷史功能證據（選做） | [preview.31 同程式來源核對](preview31.md#固定候選驗收)：Hosted Linux Firefox 142.0.1／WebKit 26.0 各 17 項原生操作、63 model／20 runtime Workers close、14 次輸入清理、19 種執行／分佈情境及五組指南。Firefox 指紋 Worker 四個 native close 全部觀察到；原失敗與 final-page layout 觀察界線保留，不代替數小時或其他 OS |
-| 固定部署及下載 | [v1.0.1 最終獨立核對](results/v101-published-final.json)：1,427 檔 SHA／MIME、root、權威部署及四份實際固定下載一致；33 項原生操作、五組指南、19 種執行／分佈情境、86 model／44 runtime Workers close、14＋24 次輸入清理及八輪 CPU／IO 通過；四工作 attempt 1 成功 |
+| 固定部署及下載 | [v1.1.0 最終獨立核對](results/model-safety-published-final.json)：1,432 檔 SHA／MIME、root、權威部署及四份實際固定下載一致；33 項原生操作、五組指南、19 種執行／分佈情境、86 model／44 runtime Workers close、14＋24 次輸入清理及八輪 CPU／IO 通過；四工作 attempt 1 成功 |
 
 ## 第一次使用
 
@@ -44,10 +44,10 @@
 
 ## 使用界線
 
-公開核心支援 TFLite 及文字 generic MLIR；unknown dialect 可保留型別／屬性／連線，但不代替其自訂 verifier。MLIR 的大型 dense 以 File range 保留原文，不逐值核對元素數量；結構文字上限 256 MiB，外部 resource 檔尚未支援。實際模型編輯只支援 TFLite。
+公開核心支援 TFLite 及文字 generic MLIR；unknown dialect 可保留型別／屬性／連線，但不代替其自訂 verifier。MLIR 的大型 dense 以 File range 保留原文，支援型別的元素數與 byte-aligned hex 長度以串流核對；不逐值驗證數值範圍或未知 packing；結構文字上限 256 MiB，外部 resource 檔尚未支援。實際模型編輯只支援 TFLite。
 
 手動 CPU WASM 仍有 128 MiB 模型、16 MiB IO、512 MiB 提前配置估算與 30 秒執行上限。這不是所有 kernel scratch／整個瀏覽器 RSS 的硬限制，也不包含公司 custom kernel。一次執行通過不證明所有控制流程、精度或與原模型等價。
 
-本輪三引擎與記憶體量測在 Hosted Linux；不同 OS、固定實體硬體 SLA、其他引擎數小時負載、連續 Worker heap 峰值、OS 斷電、任意資料格式升降級及完整螢幕閱讀器驗收仍未證實。既有鍵盤流程與範圍已列上表；沒有把有限案例宣稱為全站無障礙認證。
+歷史三引擎及本輪完整記憶體量測在 Hosted Linux，Windows Chrome／Edge 另有上列有限 UI 驗收；其他 OS、固定實體硬體 SLA、其他引擎數小時負載、連續 Worker heap 峰值、OS 斷電、任意資料格式升降級及完整螢幕閱讀器驗收仍未證實。既有鍵盤流程與範圍已列上表；沒有把有限案例宣稱為全站無障礙認證。
 
 第一次發布驗證曾出現啟動逾時，原因尚未確定，失敗及後續診斷完整保留。相同部署後續診斷與經授權的一次失敗驗證補跑皆通過；不將其寫成已修復的應用 bug。固定 tag／Release 不覆寫，後續修正以新版本交付。
