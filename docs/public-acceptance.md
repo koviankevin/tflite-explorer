@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [preview.31](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.31)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `3061076374227547`，來源 `adc870fee659611bf1a0fa78113642c1a3961afc`；[本版正式交付](preview31.md#發布狀態)已核對。外網更新不會自動更新公司內網站台。
+固定版本為 [preview.32](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.32)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `816c3e9c03814cb4`，來源 `412dd958c77f564c4dc044cb42e07238757190a4`；[本版正式交付](preview32.md#發布狀態)已核對。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 
@@ -26,7 +26,7 @@
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
 | Firefox／WebKit 現行程式候選功能 | [preview.31 同程式來源核對](preview31.md#固定候選驗收)：Hosted Linux Firefox 142.0.1／WebKit 26.0 各 17 項原生操作、63 model／20 runtime Workers close、14 次輸入清理、19 種執行／分佈情境及五組指南。Firefox 指紋 Worker 四個 native close 全部觀察到；原失敗與 final-page layout 觀察界線保留，不代替數小時或其他 OS |
-| 固定部署及下載 | [preview.31 最終獨立核對](results/preview31-published-final.json)：1,406 檔 SHA／MIME、root、權威部署及四份實際固定下載一致；33 項原生操作、五組指南、19 種執行／分佈情境、82 model／44 runtime Workers close、14＋24 次輸入清理及八輪 CPU／IO 通過；四工作 attempt 1 成功 |
+| 固定部署及下載 | [preview.32 最終獨立核對](results/preview32-published-final.json)：1,412 檔 SHA／MIME、root、權威部署及四份實際固定下載一致；33 項原生操作、五組指南、19 種執行／分佈情境、86 model／44 runtime Workers close、14＋24 次輸入清理及八輪 CPU／IO 通過；四工作 attempt 1 成功 |
 
 ## 第一次使用
 

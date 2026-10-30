@@ -21,7 +21,9 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前最新狀態：[本機 Response 修正的既有八輪](runtime-module-cache.md#本機-response-修正的既有八輪通過)已在原門檻下通過，RSS slope 7,556,066.74 bytes／輪；原先各輪失敗保留其時點。依使用者新範圍，Firefox／Safari／WebKit 都改為選做，必要範圍只保留 Chrome／Edge，不再排這兩個引擎的補測或阻擋部署，見[現行驗收範圍](desktop-engines.md#現行驗收範圍)。尚需完成 Chromium、發布及正式站／固定下載核對。以下舊輪次中的「最新／仍未修復」指當時結果，不覆蓋本段狀態。
+目前 [preview.32](preview32.md#發布狀態)的必要 Chromium、發布及正式站／固定下載核對均已完成，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。新的 [preview.33 啟動失敗恢復](startup-recovery.md)仍在候選驗收中；它不代表已重現或修復上述歷史逾時根因。
+
+以下保留各輪歷史診斷中的來源及當時狀態；其中「最新／尚未發布」不覆蓋本段現況。
 
 最新[冷熱原生證據](runtime-module-cache.md#冷熱原生報告完整核對與本機-response-候選)已完整驗證，原 RSS 18,839,727.54 bytes／輪仍失敗。公開 IO 熱對照在 URL 都 revoke 後仍有六份 8 MiB memory-file-data；這是分類線索，不是持有者或洩漏定論。候選改用本機 Response 消費 IO ZIP，保持原 URL／RSS／runtime 計時；54 項選測通過，實際改善仍待 Hosted，尚未發布。
 

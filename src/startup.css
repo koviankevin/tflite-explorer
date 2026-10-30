@@ -1,0 +1,7 @@
+#application-startup{position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 48px));max-height:calc(100vh - 48px);overflow:auto;box-sizing:border-box;padding:28px;border:1px solid #bccdc5;border-radius:12px;background:#fff;color:#182e35;box-shadow:0 12px 48px #18352b24;font:16px/1.7 system-ui,sans-serif}
+#application-startup[hidden]{display:none}
+#application-startup h1{margin:0 0 12px;font-size:24px}
+#application-startup p{margin:0 0 20px}
+#application-startup button{font:inherit;min-height:44px;padding:8px 16px;border:1px solid #14725f;border-radius:6px;background:#14725f;color:#fff;cursor:pointer}
+#application-startup button:focus-visible{outline:3px solid #0b4e8e;outline-offset:4px}
+#application-startup[data-state=failed]{border-color:#a86a34}
