@@ -31,6 +31,8 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 功能限制
 
+**v1.4.1 候選的大模型 RSS slope 未通過**：同一次主分支實體八輪的輸出／權重／options／pattern、Worker 與程序退出通過，但 RSS slope 約 24.39 MiB／輪超過原 16 MiB；原失敗保留，沒有發布。階梯波動的記憶體歸屬仍待診斷；這不證明 v1.4.0 沒有同類波動，也不代表已確認持續洩漏。見[主分支失敗與原始證據](legacy-shape-validation.md#主分支驗收失敗尚未發布)。
+
 **手動 runtime 的 padded／strided 輸出封存尚未支援**：新的公開合成 legacy FC 負例在 invoke 後因輸出 shape 不符失敗，接著 IO ZIP 被 runtime 的 `Tensors with strides or padding are not yet supported` 拒絕；目前回報 ioError，不能宣稱輸入／輸出已保存。此問題與[legacy shape 候選修正](legacy-shape-validation.md)分開，仍待修正；沒有修改已發布 v1.4.0 或重跑其成功部署。
 
 **資料庫連線重試已在 v1.0.1 修正**：同步開啟失敗不再永久快取拒絕結果，舊 error／versionchange 不會清除新連線。三種 adapter 的 Node 邊界測試及既有原生保存／恢復通過，不冒充真實瀏覽器權限切換或 OS 斷電驗收，見 [交付與範圍](database-open-retry.md)。
