@@ -1,0 +1,122 @@
+{
+  "status": "candidate-dtype-coverage-corrected-not-published",
+  "before": "70946a276962915861fa44aa2091a4bb84125f42",
+  "moduleRawSHA256": "b87d1f3af97bb0fc151ab6f87b7f826d69f3f69cca03c751b15354a48ddf76dc",
+  "changedApplicationFiles": [
+    "src/tflite-quantization-checks.js"
+  ],
+  "followupNodeChecks": 20,
+  "rows": [
+    {
+      "name": "native-bad",
+      "modelSHA256": "af7ddb97a30d74e4a10719bf973a0e3d475dc739d7ec98e5671e4fd12753c16b",
+      "metadataSHA256": "dfba197b6573b642f34ed1ef8eed3885927b31d8353257e4619b8f4a5ee38fcd",
+      "total": 3,
+      "failed": 1,
+      "unchecked": 0
+    },
+    {
+      "name": "native-opaque",
+      "modelSHA256": "ed38582d0c768395da191d0398353a1b19c464677d44d144b5ad42915b6c32bf",
+      "metadataSHA256": "bfc360dad37b15e992964513e3f60c7fb3d8ca62ea3de63c8fbb75770f7d3cc6",
+      "total": 3,
+      "failed": 0,
+      "unchecked": 1
+    },
+    {
+      "name": "native-large",
+      "modelSHA256": "027f84e5d666252b404f29c346cbb8b3d02ad2e7640ad6badf52b8a4a99a9007",
+      "metadataSHA256": "4e5af022b13785debd8addebd0592b3f298b6f01abde6960d7ee9b9cf682edbf",
+      "total": 203,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "CPU-original",
+      "modelSHA256": "94b7424a0a0316aa2f861463eb0797c3ef19357fc0f3b5f421ef397415f36a31",
+      "metadataSHA256": "7cb03b104cf8e53b4ed1ba513fff0962dcf58a1a9ef503b1c68ff96c25ed75e1",
+      "total": 3,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "CPU-legacy",
+      "modelSHA256": "b8ea271cecae94eb29e75ffbfe33aec74888e8d0a22b9faf288e52491d021903",
+      "metadataSHA256": "7cb03b104cf8e53b4ed1ba513fff0962dcf58a1a9ef503b1c68ff96c25ed75e1",
+      "total": 3,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "CPU-invalid-axis",
+      "modelSHA256": "06b0adbe70fb23ef2f552a50101723a89247c018408b5cf91a060d6316ac102e",
+      "metadataSHA256": "7d6e1822c61ab1cec72e4627b39d68d58173104e4c88793efdccec6287e67d3c",
+      "total": 3,
+      "failed": 1,
+      "unchecked": 0
+    },
+    {
+      "name": "hello_world_float.tflite",
+      "modelSHA256": "ee939863195ca37ce063b18e14fb82aa0d98db6596ba41095757f6b560da1070",
+      "metadataSHA256": "99382ffae59cb548f594c236ff8fe7b619b547cb7d73023609b23e1e0cc3c187",
+      "total": 0,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "hello_world_int8.tflite",
+      "modelSHA256": "505ee4fae7fa46ab67bea4c08b4969eb3eb8b9114c50595ec4a29d9a27993202",
+      "metadataSHA256": "053e61caf7c3089d7f3f8c4da7bb30bd8ef8da3eb1c2e7bb0de084253d89c524",
+      "total": 10,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "micro_speech_quantized.tflite",
+      "modelSHA256": "09e5e2a9dfb2d8ed78802bf18ce297bff54281a66ca18e0c23d69ca14f822a83",
+      "metadataSHA256": "2bdd8d6bd12c80ab80a3d4dba7981ec4567f5796694c8357c4ca02a0b2cbf3d1",
+      "total": 9,
+      "failed": 0,
+      "unchecked": 0
+    },
+    {
+      "name": "conv10.tflite",
+      "modelSHA256": "dde72adebf7916d43dc7fc0f86e3378f1722c0c464ef5ce60f1db2716c4464be",
+      "metadataSHA256": "77c54d8eab8015d01c3035cbc1540a9441e3c024ac203556fb4d70c4b476b363",
+      "total": 4,
+      "failed": 0,
+      "unchecked": 1
+    },
+    {
+      "name": "person_detect.tflite",
+      "modelSHA256": "808cfdfc0cf3a6fa6f6fa26bfa379ea97c16d5db7334637766e39c3408502e9d",
+      "metadataSHA256": "b9f33b8ab7f7e5461f1ecb90039deb28eb488e56991fe70d475b309fba267558",
+      "total": 88,
+      "failed": 14,
+      "unchecked": 0
+    }
+  ],
+  "scope": "Only unimplemented dtype range classification changes. All three actual native fixture metadata objects, CPU-control objects and four fixed public-model metadata objects are exactly unchanged. conv10 has exactly one INT64 bias reclassified from passed to not-run;counts adjust accordingly,zero failed and all values retained. UI/report/serializer/parser/runtime/vendor unchanged;reuse previous Windows/CPU/preservation with original source scope. New INT4/UINT16/FLOAT32 classification and actual INT4 serialized report have their own Node evidence;no new native primitive-dtype run claimed.",
+  "format": "model-lens-quantization-dtype-followup",
+  "actualINT4Report": "3unverified/0checked/0failed,noCPUclaim",
+  "unsupportedRanges": [
+    "INT64",
+    "INT4",
+    "UINT16",
+    "FLOAT32"
+  ],
+  "rangeRulesImplemented": [
+    "INT8",
+    "UINT8",
+    "INT16",
+    "INT32"
+  ],
+  "originals": {
+    "path": "quantization-dtype-followup-evidence.zip",
+    "bytes": 10715,
+    "sha256": "202cecd4ce40379279d35cb538a2f2f9ff0fc764f7e5e330d9d64b9ac5d65975",
+    "manifestSHA256": "d9e21d29099e92e8728032c2b338993efc46ca9460dca5455babff1c9579be65",
+    "records": 9
+  },
+  "goalComplete": false
+}

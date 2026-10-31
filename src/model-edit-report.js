@@ -1,4 +1,5 @@
 import {createExportReport} from './export-report.js';
+import {inspectTfliteQuantization} from './tflite-quantization-checks.js';
 
 // Bounded metadata only. Native verification/CLI use the same byte-range schema
 // as submodel exports; an edited model never claims numerical equivalence.
@@ -28,5 +29,6 @@ export function createModelEditReport(index,file,result,candidate,args,{outputNa
     if(workspace){modification.workspaceChanges=result.workspaceChanges;modification.mappingScope='工作區列出草稿的新增、刪除與改線；來源標示首項範本，不推測整份模型逐 OP 的位置對照。';}
     if(result.composition){modification.action='compose';modification.mappingScope='組合結果列出每個匯入／新增 OP 的原始範本及輸出位置；輸入／輸出依目前接線重建。';}
     const provenance={mode:'model-edit',ranges:result.ranges,operators:result.composition?.mapping|| (target?[{source:{graph:args.graph,node:args.node},output:{graph:target.graph,node:target.node},role:args.mode==='replace'?'modified':'cloned'}]:[]),generated:[]};
-    return createExportReport(index,file,{...result,provenance,modification,inputs,outputs,layers:total(candidate),tensors:candidate.graphs.reduce((n,g)=>n+g.tensors.size,0),preservedIds:result.preservedIds??!index.mlir,retainedBuffers:candidate.raw?.buffers.length},{graph:args.graph,nodes:[args.node],...(workspace?{selections:args.workspaceTargets?.map(t=>({graph:t.graph,nodes:[t.node]}))}:{}),outputName,buildId});
+    const quantizationValidation=candidate.raw?inspectTfliteQuantization(candidate.raw,result.changes?.map(c=>c.graph)||[args.graph]):undefined;
+    return createExportReport(index,file,{...result,provenance,modification,inputs,outputs,quantizationValidation,layers:total(candidate),tensors:candidate.graphs.reduce((n,g)=>n+g.tensors.size,0),preservedIds:result.preservedIds??!index.mlir,retainedBuffers:candidate.raw?.buffers.length},{graph:args.graph,nodes:[args.node],...(workspace?{selections:args.workspaceTargets?.map(t=>({graph:t.graph,nodes:[t.node]}))}:{}),outputName,buildId});
 }

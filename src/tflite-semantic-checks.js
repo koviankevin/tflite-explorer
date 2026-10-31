@@ -2,6 +2,7 @@
 // optional runtime; they must never be reported as fully kernel-verified.
 import {checkSpatialTransform} from './tflite-spatial-checks.js';
 import {checkOperandMetadata} from './tflite-operand-checks.js';
+import {inspectTensorQuantization} from './tflite-quantization-checks.js';
 const known=t=>t&&t.has_rank!==false&&!t.shape_signature?.some(d=>d<0)&&t.shape&&Array.from(t.shape).every(d=>Number.isSafeInteger(d)&&d>=0);
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
@@ -9,11 +10,8 @@ export function checkOperatorMetadata(name,inputs,outputs,options={}){
     checkSpatialTransform(name,inputs,outputs,options);
     checkOperandMetadata(name,inputs,outputs,options);
     for(const [side,ts] of [['input',inputs],['output',outputs]])for(const [slot,t] of ts.entries()){
-        const q=t?.quantization;if(!q?.scale?.length)continue;
-        if(Array.from(q.scale).some(s=>!Number.isFinite(s)||s<=0)||q.zero_point?.length!==q.scale.length)fail(`${side} ${slot} 量化 scale／zero point 數量或數值無效。`);
-        if(q.scale.length>1&&known(t)&&(!Number.isInteger(q.quantized_dimension)||q.quantized_dimension<0||q.quantized_dimension>=t.shape.length||t.shape[q.quantized_dimension]!==q.scale.length))fail(`${side} ${slot} per-axis 量化維度與 scale 數量不符。`);
-        const range={3:[0n,255n],7:[-32768n,32767n],9:[-128n,127n],2:[-2147483648n,2147483647n]}[t.type];
-        if(range&&Array.from(q.zero_point).some(z=>BigInt(z)<range[0]||BigInt(z)>range[1]))fail(`${side} ${slot} zero point 超出 dtype 範圍。`);
+        const result=inspectTensorQuantization(t);
+        if(result?.status==='failed')fail(`${side} ${slot} ${result.reason}`);
     }
     if(name==='FULLY_CONNECTED'&&known(inputs[0])&&known(inputs[1])&&known(out)&&(options.weights_format??0)===0){
         const a=shape(inputs[0]),w=shape(inputs[1]),bias=inputs[2];

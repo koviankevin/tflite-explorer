@@ -1,6 +1,7 @@
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { FlatbufferWriter } from './flatbuffer-writer.js';
 import {planTfliteReferences,referencePlanSummary} from './tflite-reference-plan.js';
+import {inspectTfliteQuantization} from './tflite-quantization-checks.js';
 
 export function exportTflite(index, graphIndex, selected, file, options={}) {
     if (!index.raw) throw new Error('缺少 TFLite 原始模型資料，請重新開啟模型後匯出。');
@@ -89,5 +90,5 @@ export function exportTflite(index, graphIndex, selected, file, options={}) {
         return {id:mapId(id),sourceId:id,name:t.name,shape:[...t.shape],shapeSignature:[...(t.shape_signature || [])],dtype:schema.TensorType[t.type] || String(t.type),quantization:q ? {min:[...(q.min || [])],max:[...(q.max || [])],scale:[...(q.scale || [])],zeroPoint:[...(q.zero_point || [])].map(String),dimension:q.quantized_dimension,details:details?{type:details.constructor.name,...Object.fromEntries(Object.entries(details).map(([key,value])=>[key,typeof value==='bigint'?String(value):ArrayBuffer.isView(value)?[...value]:value]))}:null}:null};
     };
     const provenance={mode:'tflite-subgraph',ranges,operators:nodes.map((node,i)=>({source:{graph:graphIndex,node},output:{graph:0,node:i}})),tensorMap:[...used].sort((a,b)=>a-b).map(id=>({sourceId:id,outputId:mapId(id)}))};
-    return { blob, provenance, layers: nodes.length, tensors: tensors.length, customOperators, preservedIds, retainedBuffers: buffers.length,referencePlan:referencePlanSummary(referencePlan), inputs: inputs.map(boundary), outputs: outputs.map(boundary) };
+    return { blob, provenance, layers: nodes.length, tensors: tensors.length, customOperators, preservedIds, retainedBuffers: buffers.length,referencePlan:referencePlanSummary(referencePlan), inputs: inputs.map(boundary), outputs: outputs.map(boundary),quantizationValidation:inspectTfliteQuantization(exported,[0]) };
 }

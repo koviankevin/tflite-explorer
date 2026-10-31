@@ -8,6 +8,8 @@ TRANSPOSE permutation 的負軸誤擋與錯誤 dtype 放行已在 v1.2.1 正式�
 
 ## 優先處理與交付狀態
 
+v1.4.0 的[量化欄位檢查與報告候選](quantization-validation.md)已修正 legacy has_rank／單一 scale 的軸檢查，以及其他 QuantizationDetails 被錯用 affine 規則的問題。公開原檔找到 14 個量化軸失敗，原樣與切圖保留資料並明列報告；重接無效欄位則阻擋。相關選測、真正 CPU 差異控制及兩端 32px／分批／匯出重開／正常退出已核對；仍待必要 PR／main 與正式交付，不覆蓋頁首 v1.3.1 現況，也不代表任意 kernel 語意已驗證。
+
 v1.3.0 已完成正式站與固定 Release 核對，13 種新增 OP 靜態規則、逐 OP 報告及大報告分批顯示見[本版交付](operator-validation.md#v130-正式交付)。未知／動態參數、超出預算及沒有規則的 OP 明列未檢查，不承諾任意 kernel 可執行。下表保留仍未解的限制與較早交付修正；原始收據保持各自來源，整體目標見[商品化後續工作](product-readiness-next.md)。
 
 | 優先 | 問題／界線 | 現況 |

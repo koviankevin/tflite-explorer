@@ -1,0 +1,28 @@
+# Affine 量化欄位檢查與報告（v1.4.0 候選）
+
+目前尚未發布；正式站與固定下載仍為 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)。本候選增加量化欄位的靜態結果，不自動執行 interpreter，也不修改原始權重或量化參數。
+
+TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpreter_builder.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/core/interpreter_builder.cc#L615) 會依非空 shape 核對 affine 量化軸，並不以舊檔的 `has_rank=false` 略過；單一 scale 也仍須檢查非空 shape 的軸範圍。[schema](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/schema/schema.fbs#L157) 另規定 QuantizationDetails 會取代 affine 欄位，不能把未知編碼當成 affine 錯誤或已驗證的 codec。
+
+舊版共用檢查只在多個 scale 且完整 known(shape) 時檢查軸，因此漏掉非空 shape／has_rank=false 的來源；同時會錯把其他量化編碼的 affine 欄位拿來判斷。現在共用模組會核對 scale／zero point 數量、有限正 scale、非空 shape 的 quantized_dimension、可知的 per-axis channel 數，以及已支援 dtype 的 zero point 範圍。未知 rank／channel、其他 QuantizationDetails 及超出檢視預算都明列未驗證。
+
+修改／新增／重接 builtin OP 時，確定無效的欄位會附 OP／port 位置阻擋匯出。原樣保留或切出的來源仍可下載，報告列明量化失敗，避免為了通過檢查而修改舊模型。量化檢查通過只代表本段列出的 metadata 規則，不保證 kernel、custom runtime 或數值等價。
+
+報告中的 tensor 編號屬匯出結果。每輪最多檢查 262,144 個 metadata 值、列出 65,536 筆 tensor；省略筆數也計入未驗證。畫面一次只增加 100 筆，完整下載保留同一份界線。既有 4 MiB 常數讀取預算、16 MiB 報告上限、自然 URL／runtime 計時及安全規則不變。檢查只讀已解析 metadata，不增加權重讀取。
+
+四個最小回歸在修改前皆確實失敗，修正後 84 項相關選測及 11 項發布版本選擇通過。真正的 LiteRT.js 2.6.0／CPU WASM 另核對四次有效 int8 ADD 的輸出 bytes（原始、舊 rank flag、重接及切圖），以及只改量化軸後 compile 失敗、零 invoke／IO。第一版 CPU 測試曾要求 runtime 回傳未實際提供的詳細欄位文字而失敗；原文保留，後續用有效軸／無效軸的差異控制，不宣稱取得不存在的詳細日誌。
+
+官方固定 person_detect 原檔的 88 個量化 tensor 中，靜態檢查找到 14 個確定無效的軸，包含舊日誌最後六個；其餘 74 個的本項 metadata 通過。原樣及整圖切出重開後，14 個失敗、量化欄位與 57 份權重 payload 均保留；沒有宣稱原檔 CPU 已可執行。另四份既有官方小型模型的量化 metadata 沒有新增誤擋，原 CPU／dynamic policy 證據保持各自範圍。
+
+來源 `70946a2`／build `aed1e9427c1b7a48` 的 Windows Chrome／Edge 已完成隔離原生選檔、32px、無效欄位阻擋、未知 codec 保留未驗證、204 筆報告的 100→200 分批顯示，以及實際匯出重開／202 個 OP 搜尋。四個模型 Worker、零個自動 runtime Worker 與八／十一個已觀察原生程序身分均正常關閉。初版數值驗收雖通過，截圖仍發現重複說明將真正錯誤推到下方；縮短 UI 並優先／自動展開失敗及未知項目後，再以 tensor #1 而非原本第一筆 tensor #0 補驗排序。初版與調整後的截圖／來源都保留。
+
+這些是原始 HTML 完整性受核對的隔離文件 fixture 與實際原生 UI 操作，不是正式 HTTPS 文件傳輸或實體 RSS 測試，也不表示已修復歷史 Chrome 長負載／OneDrive 關閉問題。報告文字／介面調整只改兩個 app 模組；validator、serializer、parser、runtime／vendor 未變，四種合成 fixture bytes 亦逐項相同，據此沿用已完成的 CPU／公開模型證據，僅補跑受影響的 12 項報告測試與兩端 UI。
+
+[候選收據](results/quantization-validation-candidate.json)與[59 份原始紀錄／截圖及讀取器](results/quantization-validation-evidence.zip)已核對 SHA-256／ZIP CRC。模型、權重、BIN／BMP 與完整 primary-source 檔案只留在本機；公開封存只含 metadata、公開合成操作與雜湊來源。正式 PR／main 發布關卡與交付仍待完成，本頁不宣稱 v1.4.0 已發布。
+
+## 未實作 dtype 的覆蓋界線
+
+後續檢查另找到「數值及軸合法，但 dtype 的 zero point 範圍規則尚未實作」仍被列為通過的問題；先新增負例確實重現，再改為未驗證。目前範圍規則為 INT8／UINT8／INT16／INT32；INT64、INT4、UINT16、FLOAT32 等其他 dtype 的 affine metadata 不會因部分欄位合法而列為已檢查。這不代表該模型一定不能執行。
+
+20 項相關 Node 與實際序列化 INT4 報告通過；INT4 三筆都列為未驗證，零筆誤列已檢查。三種既有原生 UI fixture、CPU 控制，以及四份固定公開模型的完整量化檢查物件逐項未變。conv10 的 INT64 bias 則正確由一筆通過改為未驗證，沒有新增失敗或改動資料；原檔的舊 CPU 通過不會被改標失敗。這批只改量化檢查器的未實作分支，UI、parser、serializer、runtime／vendor 未變，沿用已核對的原生／CPU／資料保留證據，不宣稱另跑未執行的瀏覽器案例。[後續收據](results/quantization-dtype-followup.json)與[原始 red／green 及有限範圍沿用核對](results/quantization-dtype-followup-evidence.zip)保留來源與界線。
+
