@@ -28,6 +28,8 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 ## 各階段原始計畫與範圍
 
+新一輪公開真實模型補測找到 tensor-only runtime 診斷沒有 OP 參照的缺口，已在 [v1.3.1 候選](runtime-tensor-diagnostics.md)修正。原始公開模型的量化參數與目前 LiteRT 不相容，仍保留 compile 失敗，不修改權重／量化或聲稱數值等價。31 項相關測試、六個真正 CPU 負例、四種資料保留匯出，以及兩個 Windows 瀏覽器的 32px／鍵盤定位／來源替換／Worker 和正常退出已核對；發布關卡與正式交付尚待完成。這是新的可重現應用修正，與前述 Chrome 雲端統計阻塞分開處理。
+
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 卷積／pooling 共用靜態規則、真正 allocation 負例及 Windows 小型 UI 已通過，四項 main 關卡與 v1.2.0 正式交付已核對。v1.3.0 另交付 PAD／切片／split／reduction 的 13 種有界規則與逐 OP 報告；其他 OP／任意 kernel 語意仍未驗證，不把結構通過寫成可執行保證 |
