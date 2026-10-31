@@ -28,7 +28,10 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
     const operatorValidation=result.semanticValidation?.flatMap(c=>c.operators||[])||[];
     const quantization=result.quantizationValidation,quantizationValidation=quantization?.tensors||[];
     const quantizationSummary=quantization?Object.fromEntries(Object.entries(quantization).filter(([key])=>key!=='tensors')):null;
-    if(quantization?.total)checks.push({id:'quantization-metadata',status:quantization.failed?'failed':quantization.unchecked?'not-run':'passed',detail:`匯出結果的量化 metadata：${quantization.checked} 個已檢查、${quantization.failed} 個失敗、${quantization.unchecked} 個未驗證，省略 ${quantization.omitted} 筆。修改接線時會攔下確定無效的欄位；原樣保留的模型仍可匯出，請先處理本報告問題再嘗試 runtime。${quantization.scope}`});
+    if(quantization?.total){
+        const issue=quantizationValidation.find(c=>c.status==='failed')||quantizationValidation.find(c=>c.status!=='passed');
+        checks.push({id:'quantization-metadata',status:quantization.failed?'failed':quantization.unchecked?'not-run':'passed',detail:`量化欄位：${quantization.checked} 個已檢查、${quantization.failed} 個失敗、${quantization.unchecked} 個未驗證。${issue?`首項需確認：Subgraph #${issue.graph} · tensor #${issue.tensor}：${issue.reason}`:'此項不代表 kernel 或數值等價已驗證。'}${quantization.omitted?`另省略 ${quantization.omitted} 筆，均列未驗證。`:''}`});
+    }
     if(result.semanticValidation)for(const c of result.semanticValidation)checks.push({id:'constant-operands',status:c.unchecked||!c.checked?'not-run':'passed',detail:`Subgraph #${c.graph??'?'} 常數 operands：${c.checked} 個已檢查、${c.unchecked} 個未能檢查；讀取 ${c.bytesRead} bytes。${c.scope}`});
     const operatorSummary={total:operatorValidation.length,checked:operatorValidation.filter(c=>c.status==='passed').length,unchecked:operatorValidation.filter(c=>c.status!=='passed').length,scope:'只列本次修改／組合的 subgraphs；其他 subgraphs 未重新做常數語意檢查。已檢查只代表列出的靜態規則，不代表可執行或數值等價。'};
     if(operatorValidation.length)checks.push({id:'operator-coverage',status:operatorSummary.unchecked?'not-run':'passed',detail:`逐 OP 靜態規則：${operatorSummary.checked} 個已檢查、${operatorSummary.unchecked} 個未檢查。${operatorSummary.scope}`});

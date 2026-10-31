@@ -30,13 +30,15 @@ export function exportReportUI({exportFile}) {
             if(s.quantizationValidation?.length){
                 const details=document.createElement('details'),heading=document.createElement('summary'),note=document.createElement('p'),list=document.createElement('ol'),more=document.createElement('button'),summary=s.quantizationSummary;
                 heading.textContent=`量化 metadata · ${summary.checked} 個已檢查／${summary.failed} 個失敗／${summary.unchecked} 個未驗證`;
-                note.textContent=`${summary.scope} 省略 ${summary.omitted} 筆；下載報告保留同一份界線。`;note.className='hint';more.type='button';more.className='quiet';
+                note.textContent=`以下為匯出結果的 tensor 編號；只驗證 affine 欄位，不代表可執行。${summary.omitted?`另有 ${summary.omitted} 筆超過上限，列為未驗證。`:''}完整範圍與限制保留在下載報告內。`;note.className='hint';more.type='button';more.className='quiet';
+                const groups=[[],[],[]];for(const row of s.quantizationValidation)groups[row.status==='failed'?0:row.status==='passed'?2:1].push(row);const ordered=groups.flat();
+                details.open=summary.failed>0||summary.unchecked>0;
                 let offset=0;
                 const append=()=>{
                     const end=Math.min(offset+100,s.quantizationValidation.length),fragment=document.createDocumentFragment();
                     for(;offset<end;offset++){
-                        const c=s.quantizationValidation[offset],li=document.createElement('li');
-                        li.textContent=`${c.status==='passed'?'已檢查（affine）':c.status==='failed'?'失敗':'未驗證'} · 匯出 Subgraph #${c.graph} · tensor #${c.tensor} ${c.dtype} · rank ${c.rank}／quantized_dimension ${c.dimension??'?'}／scale ${c.scaleCount}／zero point ${c.zeroPointCount}：${c.reason}`;fragment.append(li);
+                        const c=ordered[offset],li=document.createElement('li');if(c.status==='failed')li.style.fontWeight='600';
+                        li.textContent=`${c.status==='passed'?'已檢查（affine）':c.status==='failed'?'失敗':'未驗證'} · 匯出 Subgraph #${c.graph} · tensor #${c.tensor} ${c.dtype} · rank ${c.rank}／quantized_dimension ${c.dimension??'?'}／scale ${c.scaleCount}／zero point ${c.zeroPointCount}${c.status==='passed'?'':`：${c.reason}`}`;fragment.append(li);
                     }
                     list.append(fragment);more.hidden=offset===s.quantizationValidation.length;more.textContent=`繼續顯示（${offset}／${s.quantizationValidation.length}）`;
                 };

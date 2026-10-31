@@ -19,14 +19,16 @@ export async function quantizationValidationFlow({page,read,base,directory,check
     const assertLayout=l=>assert.ok(l.documentWidth<=l.width+1&&l.left>=0&&l.right<=l.width+1&&l.top>=0&&l.bottom<=l.height+1&&l.scroll<=l.client+1,JSON.stringify(l));
     try{
         await page.goto(base,{waitUntil:'domcontentloaded'});await until(()=>!document.querySelector('#open-model').disabled);await page.setViewportSize({width:1280,height:640});
-        for(const [name,options,expected]of [['bad',{rank:false,scale:[.25,.5],dimension:3},'failed'],['opaque',{dimension:99,customDetails:true},'not-run']]){
+        for(const [name,options,expected]of [['bad',{rank:false,scale:[.25,.5],dimension:3,target:1},'failed'],['opaque',{dimension:99,customDetails:true,target:1},'not-run']]){
             const f=await quantizationFixture(options),source=path.join(directory,'quantization-'+name+'-source.tflite');await writeFile(source,f.bytes,{flag:'wx'});await choose(source);await select();
             await page.locator('#graph-font-size').selectOption('32');await ready();await page.locator('#pick-pattern').click();await page.locator('#target .node[data-model-node="0"] .node-item-type').click();await until(()=>document.querySelector('#capture-count').textContent.startsWith('已選取 1 個'));
             const output=await save('#export-submodel','quantization-'+name+'-cut.tflite');await page.locator('#export-report-button').click();await until(()=>document.querySelector('#export-report-dialog').open);
             const recordPath=await save('#download-export-report','quantization-'+name+'.report.json'),r=JSON.parse(await readFile(recordPath,'utf8'));
-            assert.equal(r.checks.find(c=>c.id==='quantization-metadata').status,expected);assert.equal(r.quantizationValidation[0].status,expected);assert.ok(r.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
-            await page.locator('#export-report-operators summary').filter({hasText:'量化 metadata'}).click();await until(()=>document.querySelectorAll('#export-report-operators details:first-child li').length===3);
-            const text=await page.locator('#export-report-operators').textContent();assert.match(text,expected==='failed'?/失敗.*tensor #0.*quantized_dimension/s:/未驗證.*QuantizationDetails/s);
+            assert.equal(r.checks.find(c=>c.id==='quantization-metadata').status,expected);assert.equal(r.quantizationValidation.find(c=>c.tensor===1).status,expected);assert.ok(r.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
+            await until(()=>document.querySelector('#export-report-operators details:first-child')?.open&&document.querySelectorAll('#export-report-operators details:first-child li').length===3);
+            assert.match(await page.locator('#export-report-checks').textContent(),expected==='failed'?/首項需確認.*tensor #1.*quantized_dimension/s:/首項需確認.*QuantizationDetails/s);
+            assert.match(await page.locator('#export-report-operators details:first-child li').first().textContent(),expected==='failed'?/失敗.*tensor #1/s:/未驗證.*tensor #1/s);
+            const text=await page.locator('#export-report-operators').textContent();assert.match(text,expected==='failed'?/失敗.*tensor #1.*quantized_dimension/s:/未驗證.*QuantizationDetails/s);
             const l=await layout();assertLayout(l);await page.screenshot({path:path.join(directory,'quantization-'+name+'-32px.png')});
             const raw=new Uint8Array(await readFile(output)),reopened=await parseModel((o,n)=>raw.subarray(o,o+n),raw.length,metadata);assert.deepEqual(reopened.raw.subgraphs[0].tensors.map(t=>t.quantization),f.index.raw.subgraphs[0].tensors.map(t=>t.quantization));
             const bytes=await verifyExportFiles({report:r,source,output});assert.ok(['passed','not-applicable'].includes(bytes.byteComparison.status));await page.locator('#close-export-report').click();
