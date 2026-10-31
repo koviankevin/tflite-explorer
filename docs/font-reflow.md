@@ -24,4 +24,6 @@ Netron 在 `render()` 開始時把 `view.target` 暫時設為 null，之後依�
 
 [PR #184](https://github.com/koviankevin/tflite-explorer/pull/184) 的實際 checkout 為 `f476897`，完整 tree 與合併後 `bb3bd37` 一致。原始 job 日誌已核對 813 項測試：778 通過、35 項既有條件略過、零失敗／取消；發布契約 78 項通過。
 
-[Main 網站驗收](https://github.com/koviankevin/tflite-explorer/actions/runs/41174045604)另在正常 HTTP 的隔離候選執行必跑的字級回歸，實際核對 13 個 OP 加兩個輸入／輸出標籤，共 15 組 32px 文字框。完整 34 項操作、TFLite／MLIR 匯出重開與 pattern、19 種手動執行情境、八輪／24 次 CPU／IO、原記憶體判定及正常程序退出通過。原始 artifact digest、CRC、來源、實際報告與 scope 皆已核對；這是 Linux 候選證據，不把它寫成 Windows 完整大檔通過或正式站已更新。正式交付仍待必要關卡、固定準備包與正式站／Release 核對。
+[Main 網站驗收](https://github.com/koviankevin/tflite-explorer/actions/runs/41174045604)另在正常 HTTP 的隔離候選執行必跑的字級回歸，實際核對 13 個 OP 加兩個輸入／輸出標籤，共 15 組 32px 文字框。完整 34 項操作、TFLite／MLIR 匯出重開與 pattern、19 種手動執行情境、八輪／24 次 CPU／IO、原記憶體判定及正常程序退出通過。原始 artifact digest、CRC、來源、實際報告與 scope 皆已核對；這是 Linux 候選證據，不把它寫成 Windows 完整大檔通過或正式站已更新。必要關卡已補齊，正式交付仍待固定準備包與正式站／Release 核對。
+
+後續 [main 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)已完成，原判定、40 個模型 Worker、自然 URL 釋放及正常程序退出通過；[四項關卡收據](results/product-readiness-main-verification.json)與[原始封存](results/product-readiness-main-evidence.zip)保留。核心量測沿用完全相同的 88 個依賴檔案，文件／證據更新不重跑相同程式的已成功驗收。正式發布仍須以精確來源準備、審查產物，再核對正式站與固定下載。

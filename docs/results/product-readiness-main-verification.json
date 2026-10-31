@@ -1,0 +1,394 @@
+{
+  "format": "model-lens-product-readiness-main-verification",
+  "version": 1,
+  "status": "required-main-gates-reviewed-not-published",
+  "at": "2026-10-31T06:12:46.060608+00:00",
+  "testedApplicationSource": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+  "testedApplicationTree": "e255abf8e399538f2a4b31de8e188b0c00bfc4fd",
+  "archiveFromLocalHead": "f3b8697361b3b1f57116c396710c7025f5fe76f8",
+  "core": {
+    "status": "core-evidence-reusable",
+    "source": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+    "testedSource": "2076429c63402ebd79fe99be761a54034485af79",
+    "run": 41159138980,
+    "providerDigest": "sha256:a2ca9cdddce2a3ca962ac0718b5761ce38aa274804b823eb788c46cc0450598f",
+    "reportSHA256": "a1a0fb9b545b47a9c0d7fcfe5873fbaf00148ec7a63d0227cac21f996b6ee03a",
+    "fingerprint": "f818878b214eb2a8d5280683a3e8f9e03580207ebade137ea763d29c324d89be",
+    "files": 88,
+    "samples": 9,
+    "scope": "Exact core module closure and original policy only; does not prove current browser/site, Windows close or formal publication."
+  },
+  "browser": {
+    "status": "passed-original-gate-review",
+    "kind": "browser",
+    "run": 41174035077,
+    "source": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+    "tree": "e255abf8e399538f2a4b31de8e188b0c00bfc4fd",
+    "artifactId": 13031649516,
+    "providerDigest": "sha256:3d794e8d9f75adc029016502e3927a575bb83f93947ab181968787b96bd3929d",
+    "reportSHA256": "36ff2fa9a54f345a795220f6db6515a308d2fa32c0b171d38b2fa01aaff067ae",
+    "scopeFingerprint": "432c336e45c265129ed325e8f7a23acd69616be040886ea3c729fb84c8c30799",
+    "scopeFiles": 342,
+    "errors": [],
+    "browserClosed": true,
+    "sourceUnchanged": true
+  },
+  "contract": {
+    "status": "passed-original-gate-review",
+    "kind": "contract",
+    "run": 41174041946,
+    "source": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+    "tree": "e255abf8e399538f2a4b31de8e188b0c00bfc4fd",
+    "artifactId": 13032242894,
+    "providerDigest": "sha256:2d89af1963cd6378d48bf4588c4af198eb462c1920c645a01ce5ea0abeb0a3ce",
+    "reportSHA256": "76858f033fc6a1daa78cd9f3654fa30bf898b2b19d900af69083d455e3ffca44",
+    "scopeFingerprint": "7f94bcad27094eb9200901f11c76b538e97e98da30cb28262a549b8a8aa144d5",
+    "scopeFiles": 625,
+    "counts": {
+      "tests": 78,
+      "pass": 78,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "sourceUnchanged": true
+  },
+  "site": {
+    "status": "passed-original-gate-review",
+    "kind": "site",
+    "run": 41174045604,
+    "source": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+    "tree": "e255abf8e399538f2a4b31de8e188b0c00bfc4fd",
+    "artifactId": 13032308691,
+    "providerDigest": "sha256:85cd5050a938f833cbb38de5103e8969183d8ed0eebfdd9a8a72077b0df3445a",
+    "reportSHA256": "85b982da76b39506127fdfea302fd515eddc0757ca43403a9447ab0915f08014",
+    "scopeFingerprint": "a041af4b1e834ac66c30694e8a53c5e07f8c886fffed160b45db7bb9890f7e52",
+    "scopeFiles": 383,
+    "errors": [],
+    "browserClosed": true,
+    "sourceUnchanged": true
+  },
+  "fullWebsiteSmoke": {
+    "status": "passed-reviewed",
+    "source": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+    "run": 41174045604,
+    "artifactId": 13032627170,
+    "providerDigest": "sha256:65153ea472b815020fc842165f1727abe5624ebff62e6754536290d534526f5e",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.2.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "bb3bd37d215b30ae46eab97f63776d3e213d0a82",
+        "tree": "e255abf8e399538f2a4b31de8e188b0c00bfc4fd",
+        "committedAt": "2026-10-31T13:47:15+08:00",
+        "dirty": false
+      },
+      "buildId": "0ce79600d6bf17e9"
+    },
+    "reportSHA256": "82ddab4356baf5905317f65ced37f8d21c8ce74d80a1bbb571739c1a87907fbb",
+    "checks": 34,
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "staticFiles": 817,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 3330048,
+        "mainHeapDriftBytes": 49612,
+        "closedRssSlopeBytesPerCycle": 9125068.8,
+        "sampledPeakRssBytes": 742653952,
+        "maxSampleGapMs": 532,
+        "sampledPeakGrowthBytes": 40456192
+      }
+    },
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3181,
+          "startTicks": "5895"
+        },
+        {
+          "pid": 3183,
+          "startTicks": "5896"
+        },
+        {
+          "pid": 3184,
+          "startTicks": "5896"
+        },
+        {
+          "pid": 3198,
+          "startTicks": "5898"
+        },
+        {
+          "pid": 3205,
+          "startTicks": "5898"
+        },
+        {
+          "pid": 3226,
+          "startTicks": "5904"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "limitations": [
+      "Normal HTTP isolated versioned candidate; not publicly deployed v1.2.0.",
+      "Full Windows physical normal-close remains separately failed; this Linux gate does not replace it.",
+      "Finite supported public examples do not verify all kernels/dialects/company models/OS power failure."
+    ]
+  },
+  "priorEvidence": [
+    "product-readiness-stage1.json",
+    "product-readiness-stage2.json",
+    "product-readiness-stage3.json",
+    "product-readiness-stage3-update.json",
+    "font-reflow-verification.json"
+  ],
+  "archive": {
+    "path": "product-readiness-main-evidence.zip",
+    "bytes": 1177031,
+    "sha256": "01b23448abd08b7a55dca6ca53ff20d386a36e1e256c41c01b0fe24012f00c21",
+    "members": [
+      {
+        "path": "browser/font-main-browser-artifact.zip",
+        "bytes": 32337,
+        "sha256": "3d794e8d9f75adc029016502e3927a575bb83f93947ab181968787b96bd3929d"
+      },
+      {
+        "path": "browser/font-main-browser-artifacts.json",
+        "bytes": 774,
+        "sha256": "0c53784d257c3b2abeee545f487c8716cc9a561b1b003847254a4613b68ccbca"
+      },
+      {
+        "path": "browser/font-main-browser-jobs.json",
+        "bytes": 3019,
+        "sha256": "42a97e0bc5abe80016e36d20ce1124af388a484f5dad4a69e7c487967b9074d6"
+      },
+      {
+        "path": "browser/font-main-browser-report.json",
+        "bytes": 407866,
+        "sha256": "36ff2fa9a54f345a795220f6db6515a308d2fa32c0b171d38b2fa01aaff067ae"
+      },
+      {
+        "path": "browser/font-main-browser-review.json",
+        "bytes": 588,
+        "sha256": "c554a80d175f719a6026b97d1585534d65848f1502b1269927dfe58283e08e61"
+      },
+      {
+        "path": "browser/font-main-browser-run.json",
+        "bytes": 13116,
+        "sha256": "829729cd7d08eba6535061b1efeb7a312d0ece90dae15556e6dea8d3e2acd398"
+      },
+      {
+        "path": "contract/font-main-contract-artifact.zip",
+        "bytes": 733,
+        "sha256": "2d89af1963cd6378d48bf4588c4af198eb462c1920c645a01ce5ea0abeb0a3ce"
+      },
+      {
+        "path": "contract/font-main-contract-artifacts.json",
+        "bytes": 946,
+        "sha256": "aafa94dea016834b15a3ffc8fdfcb3186f35f1dd46ed19a3fc917c3aca368d30"
+      },
+      {
+        "path": "contract/font-main-contract-jobs.json",
+        "bytes": 3686,
+        "sha256": "51945e1cd8f78beb7a401e6eee5af512275476c5414bc8df5e1526e70ee37adc"
+      },
+      {
+        "path": "contract/font-main-contract-report.json",
+        "bytes": 1172,
+        "sha256": "76858f033fc6a1daa78cd9f3654fa30bf898b2b19d900af69083d455e3ffca44"
+      },
+      {
+        "path": "contract/font-main-contract-review.json",
+        "bytes": 652,
+        "sha256": "58d15cf3242d7ea796acfd24f6e1900ad98a890b9f2ef21b9c8359a59c78e7d1"
+      },
+      {
+        "path": "contract/font-main-contract-run.json",
+        "bytes": 14526,
+        "sha256": "5b0861db973189ec3c42913bc139e96ca36713fecde47f7f5371bfefa9b16c60"
+      },
+      {
+        "path": "core/main-core-artifact.zip",
+        "bytes": 18337,
+        "sha256": "a2ca9cdddce2a3ca962ac0718b5761ce38aa274804b823eb788c46cc0450598f"
+      },
+      {
+        "path": "core/main-core-artifacts.json",
+        "bytes": 772,
+        "sha256": "01e652ebdf57202cbb2f026c3c20f5f43f5bd1c78f5bffc3a225eafeb748ac93"
+      },
+      {
+        "path": "core/main-core-jobs.json",
+        "bytes": 2614,
+        "sha256": "d49aecd9bf188270bfdb118c4e33d8b42096ed07cb3d13d56b51607f115b6609"
+      },
+      {
+        "path": "core/main-core-review.json",
+        "bytes": 1976,
+        "sha256": "ead1e1eebc61bcd8dcaeb9a7cd390cbbf89f2bcff77a9846f350863903368d54"
+      },
+      {
+        "path": "core/main-core-run.json",
+        "bytes": 13098,
+        "sha256": "984db5b37af63c20fbb4e6533f826cda3d75e579a08f64c51645cf59fe68c370"
+      },
+      {
+        "path": "readers/archive-font-main.py",
+        "bytes": 5704,
+        "sha256": "b7cef02c2b78e75964920f97e4862122c2d7573eab1cbab5bf7bae6cabf58602"
+      },
+      {
+        "path": "readers/download-font-delivery-smoke.py",
+        "bytes": 1692,
+        "sha256": "1596e954cb4bcffe32c96eb3b1a5e976c77d17304272dc807ddf8fc79e5c152b"
+      },
+      {
+        "path": "readers/download-font-main-gate.py",
+        "bytes": 2258,
+        "sha256": "75d4a588b3c4bc4d6217e5f90a2e800befe73cd45618166f934a1de42cead22e"
+      },
+      {
+        "path": "readers/review-font-core-reuse.mjs",
+        "bytes": 1892,
+        "sha256": "2f9c6ae35247897f91d26aa3fb47bef7c74f79980bda85e4dc30448fbd72d867"
+      },
+      {
+        "path": "readers/review-font-delivery-smoke.mjs",
+        "bytes": 7528,
+        "sha256": "4122cbc5da1f9bab08e48891100378722fcd31bcc7569a8eee9acde737d1c929"
+      },
+      {
+        "path": "readers/review-font-main-gate.mjs",
+        "bytes": 2353,
+        "sha256": "a78f885a9de2cbafba235998dbf29ee8f7606af6c0f7175fe0f42b1d689bf4c6"
+      },
+      {
+        "path": "reviews/chrome5-terminal-identities-review.json",
+        "bytes": 941,
+        "sha256": "bae57cc3709a75d6a380085d9b2f2c25ed9fda54f7ff07fbd242479b12c6cf01"
+      },
+      {
+        "path": "reviews/font-main-archive-integrity-review.json",
+        "bytes": 1842,
+        "sha256": "0e41d75e56b27f88efe9dc13872cce58ace7e7a34678b7bcd8d24ff51da85621"
+      },
+      {
+        "path": "reviews/font-main-core-reuse-review.json",
+        "bytes": 618,
+        "sha256": "3dffe4a2f91927d1b1d8c1460167cb5a753b1d157e8241d18727321b67046d0a"
+      },
+      {
+        "path": "reviews/font-main-delivery-smoke-review.json",
+        "bytes": 2040,
+        "sha256": "cac37cce86a621a2e088b653480a294e16691efc9513b081a4cc32613bf2b9c2"
+      },
+      {
+        "path": "reviews/font-main-delivery-smoke.json",
+        "bytes": 1065104,
+        "sha256": "82ddab4356baf5905317f65ced37f8d21c8ce74d80a1bbb571739c1a87907fbb"
+      },
+      {
+        "path": "reviews/font-main-delivery-smoke.png",
+        "bytes": 149546,
+        "sha256": "7d92a402cfeeed1ed9b03a249cf2a46d6bec4f0be8913db36750b96192955907"
+      },
+      {
+        "path": "reviews/font-main-delivery-smoke.zip",
+        "bytes": 519750,
+        "sha256": "65153ea472b815020fc842165f1727abe5624ebff62e6754536290d534526f5e"
+      },
+      {
+        "path": "reviews/font-main-docs-source-reuse-review.json",
+        "bytes": 1098,
+        "sha256": "df8644e57f1b8f957c95561647039d45a4ae4522b9b11074f11ed2265c0f8c2b"
+      },
+      {
+        "path": "reviews/pr184-ci-review.json",
+        "bytes": 1183,
+        "sha256": "8292fed9a3e2891c92abb53d9606628dc2d10df7ddd6f7550adeb2d38a0f38f8"
+      },
+      {
+        "path": "site/font-main-site-artifact.zip",
+        "bytes": 4849,
+        "sha256": "85cd5050a938f833cbb38de5103e8969183d8ed0eebfdd9a8a72077b0df3445a"
+      },
+      {
+        "path": "site/font-main-site-artifacts.json",
+        "bytes": 1866,
+        "sha256": "7485620c1401e2a3134f4c126d9454b3a8b72b0719197d2743e38876cf902794"
+      },
+      {
+        "path": "site/font-main-site-jobs.json",
+        "bytes": 5633,
+        "sha256": "c091a911c48f158fa3115cec26ab24152c426b1a49d8291720deb54c2df267ca"
+      },
+      {
+        "path": "site/font-main-site-report.json",
+        "bytes": 97524,
+        "sha256": "85b982da76b39506127fdfea302fd515eddc0757ca43403a9447ab0915f08014"
+      },
+      {
+        "path": "site/font-main-site-review.json",
+        "bytes": 585,
+        "sha256": "e8fbbcaba6eb4d98ba22a266e1b0244e1601af444c0a8a4dcab3ecd9904f615c"
+      },
+      {
+        "path": "site/font-main-site-run.json",
+        "bytes": 14534,
+        "sha256": "1f4b50a0e928b43ffcf1042c7b98c91873b41b3fa8ba4d605914afece13ce60e"
+      },
+      {
+        "path": "tested-source/LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "tested-source/scripts/lib/release-gates.mjs",
+        "bytes": 17078,
+        "sha256": "b1c70093af50dd235ce57e07b9ff122137738fc10c39be009d84a3411446c03e"
+      },
+      {
+        "path": "tested-source/test/browser/lifecycle-policy.mjs",
+        "bytes": 6454,
+        "sha256": "00f77dea819511a1a7f747b9a2a6ac77ab5ad4640ced1ccb0574b171d04fd05a"
+      },
+      {
+        "path": "tested-source/test/browser/runtime-lifecycle-policy.mjs",
+        "bytes": 3556,
+        "sha256": "b647016f75e4c4087a26a86ec7b271123867fb44f94df155667afdc1b55dd09e"
+      },
+      {
+        "path": "tested-source/test/performance-policy.json",
+        "bytes": 2162,
+        "sha256": "2585d4f7e12b2cd608b6a83696db6837c7af014b19244de133e36865bfd013a3"
+      },
+      {
+        "path": "tested-source/vendor/netron/LICENSE",
+        "bytes": 1062,
+        "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+      }
+    ]
+  },
+  "remaining": [
+    "Formal exact-source prepare, inspected immutable artifact then same-build/site publication, live HTTPS and fixed Release verification.",
+    "Full Windows physical Chrome normal-close remains failed; no root-cause fix is claimed.",
+    "Unknown custom references remain conservative; arbitrary kernel/dialect/packing semantics and historical startup timeout root cause remain unverified."
+  ],
+  "constraints": [
+    "No mobile/Firefox/WebKit/company data/new two-hour soak.",
+    "No automatic interpreter during ordinary edit/export.",
+    "No forced GC, RSS subtraction, changed thresholds/timers/security rules or successful deployment reruns.",
+    "No Sites/GH Studio synchronization per explicit user scope."
+  ],
+  "goal": "active; full product completion unproven"
+}
