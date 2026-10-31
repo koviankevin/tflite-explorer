@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "format": "model-lens-native-stack-followup-delivery",
+  "status": "diagnostics-prepared-Chrome-root-cause-unresolved",
+  "createdAt": "2026-10-31T18:33:25.542858+00:00",
+  "publishedApplicationUnchanged": {
+    "version": "1.3.0",
+    "source": "7debc69df1a1c91e8ed3928a8a4932a493324180",
+    "build": "44782d0412ebc0b8"
+  },
+  "driverSource": "70c32602d7c71ce0eb7687e012e033cbecf4c953",
+  "driverTree": "87895360f8ad30267a123aee4468b935daf98497",
+  "candidateBuild": "d3500ba9cd43f789",
+  "boundedFollowup": {
+    "format": "model-lens-native-stack-followup-review",
+    "status": "bounded-diagnostic-set-reviewed",
+    "at": "2026-10-31T18:27:23.681763+00:00",
+    "directPipe": {
+      "status": "normal-native-exit",
+      "normalCloseMs": 1142.931199999999,
+      "identities": 8,
+      "reportSHA256": "5f5091ee1f9d126f75f6414ad0a31c185560a463f27b72f9eee01ae3dfc0d7dd",
+      "causalInference": "single pass is inconclusive"
+    },
+    "nativeDebugger": {
+      "fixedPackageSHA256": "875678516f9ceed4a1c8b9b106d165106fcaa38723ad7c584c47b95b231600de",
+      "signatures": "five Microsoft signatures Valid; package officialSHA512 andCRC checked",
+      "preflight": "real stack,detach,targetresume andexit0",
+      "UTF8Boundary": "actual old reader red/new byte reader green, actual helper request validated without attach"
+    },
+    "cases": [
+      {
+        "case": "chrome-stack-1",
+        "functionalStatus": "passed",
+        "wholeStatus": "failed",
+        "producerExitCode": 1,
+        "reportSHA256": "f95a4bfc0ee3532ded7300c14e1a6be3c4506657458b697aaf887c3fe9982880",
+        "stackCaptured": false,
+        "reason": "UTF8 stdin failed before attach; original failure preserved"
+      },
+      {
+        "case": "chrome-stack-2",
+        "functionalStatus": "passed",
+        "wholeStatus": "passed",
+        "producerExitCode": 0,
+        "reportSHA256": "25756f077d5fc857afa108428ff0668aa9cfd05e3ff43418af00886cc102831b",
+        "stackCaptured": false,
+        "reason": "normal exit; hook intentionally not called"
+      },
+      {
+        "case": "baseline-stack-1",
+        "wholeStatus": "completed-diagnostic",
+        "producerExitCode": 0,
+        "reportSHA256": "938f15e2461a9df905347e5edb67a66a8d9f8c5fa385e0d437b787731c31851f",
+        "stackCaptured": false,
+        "reason": "normal native exit; no further retry in this predefined set"
+      }
+    ],
+    "applicationFilesUnchangedFromPublishedSource": true,
+    "rootCauseFixed": false,
+    "goalComplete": false,
+    "scope": "Diagnostic evidence only; no changed application, whole physical memory acceptance, website deployment, fixed asset rewrite or relaxed timers."
+  },
+  "reproductionSampling": {
+    "format": "model-lens-bounded-native-reproduction-review",
+    "status": "three-samples-ended-no-failure",
+    "at": "2026-10-31T18:31:56.334856+00:00",
+    "cases": [
+      {
+        "case": "chrome-stack-sampling-1",
+        "wholeStatus": "passed",
+        "producerExitCode": 0,
+        "nativeIdentities": 8,
+        "workers": 7,
+        "reportSHA256": "26ec27c993a0eaa5c7275bcbf9ddb9bcf5ac50cfeffa6c95be295a0aeaba9911",
+        "stackCaptured": false,
+        "normalNativeExit": true
+      },
+      {
+        "case": "chrome-stack-sampling-2",
+        "wholeStatus": "passed",
+        "producerExitCode": 0,
+        "nativeIdentities": 8,
+        "workers": 7,
+        "reportSHA256": "bcb8f504c1a78800646a7884a12bb6aab74f0e32f6bcf605613b3293cb7e5d6d",
+        "stackCaptured": false,
+        "normalNativeExit": true
+      },
+      {
+        "case": "chrome-stack-sampling-3",
+        "wholeStatus": "passed",
+        "producerExitCode": 0,
+        "nativeIdentities": 8,
+        "workers": 7,
+        "reportSHA256": "1e667507eec855aba997f49dadd261a49231f4be9bdecf0fde7921d72df183fd",
+        "stackCaptured": false,
+        "normalNativeExit": true
+      }
+    ],
+    "allSevenDiagnosticBrowserIdentitiesExited": true,
+    "nativeStacksAtActualChromeFailure": "not obtained; original failure before UTF8 repair and later predefined samples did not trigger it",
+    "builtinTFLiteLogCorrelation": [
+      {
+        "case": "baseline-1",
+        "builtinTFLiteStderr": true,
+        "SDKForcedCleanup": true,
+        "logSHA256": "a36a37c407e30f066e36d721a4747b36eb5ed8f61e8965cf8a63368e7d05b0f8"
+      },
+      {
+        "case": "baseline-2",
+        "builtinTFLiteStderr": true,
+        "SDKForcedCleanup": false,
+        "logSHA256": "16520ab68d3d0b599ea5e6a25fe4957e6995b9f58a64163158646f1099479fa5"
+      },
+      {
+        "case": "stdio-2",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "31dea74010587e5d86d991bf3d855114cdd8bbf6c3d0982c8af4417c5af26228"
+      },
+      {
+        "case": "stdio-3",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "bc197cf34c67b8e64625c92ddd1d95de0fc6ef182ea90b41843bf3d80aecad5e"
+      },
+      {
+        "case": "sdk1641-1",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "9a3f64300a69b25b2742d944b1a832837f0d576447a99f8c81eb3810e91bb2e1"
+      },
+      {
+        "case": "sdk1641-2",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "41bc18f212cbe13ad38fc7ff6e8d03d5705f5dd6512b1b2ef6f7ba9ff12a5d54"
+      },
+      {
+        "case": "chrome-ui1641-1",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "61624cf05c49329bde6c4e8fbb606f44e6631ab3c2692fbbe2ff06079d30c773"
+      },
+      {
+        "case": "chrome-nativeproof-2",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": true,
+        "logSHA256": "0b28bf6168a8531c56edec9295b01b3d6a3fcf9f636568b802325c088d7fdb41"
+      },
+      {
+        "case": "chrome-physical1641-2",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": true,
+        "logSHA256": "6d5489e155476bd0a3a65570dfe1ca147c8a20144ffa0fbe053e39184e5aa824"
+      },
+      {
+        "case": "chrome-stack-1",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": true,
+        "logSHA256": "c931c50eddb0db088846e45ce9fc47e5298e0b6a6019ec6c1ec765e3115e306c"
+      },
+      {
+        "case": "chrome-stack-2",
+        "builtinTFLiteStderr": false,
+        "SDKForcedCleanup": false,
+        "logSHA256": "04ec02045b3a80d0d8a601ade70872f67e80cedea0ed600b9b78700a19c6ce94"
+      }
+    ],
+    "logInference": "Marker is neither necessary nor sufficient for native close failure; no inference of website runtime execution.",
+    "previousReview": "native-stack-followup-review.json",
+    "rootCauseFixed": false,
+    "goalComplete": false,
+    "nextEvidenceNeeded": "Native thread stack during an original10s failure. Do not repeat this successful set, rewrite old failures or claim acceptance repair."
+  },
+  "archive": {
+    "file": "windows-close-diagnostics-evidence.zip",
+    "bytes": 2916494,
+    "sha256": "98e4576a940610d422e16f9281507b030cf600e1e4a69c335227ff80d0d32d06",
+    "members": 124,
+    "originalRecords": 147,
+    "manifestSHA256": "8ee311f18653685f80b9f4b5f9a5b43a5695250000e6e0ecdff7b8d273aad2dd",
+    "crc": "passed",
+    "allRecordedSHA256": "passed",
+    "evidenceModified": false
+  },
+  "remaining": "Need actual owned native stack during original10s Chrome failure; root cause not proven, no application fix claimed.",
+  "rootCauseFixed": false,
+  "goalComplete": false,
+  "redeployed": false
+}
