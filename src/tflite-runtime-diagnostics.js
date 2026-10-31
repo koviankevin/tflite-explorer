@@ -21,7 +21,7 @@ export function runtimeFailureLocations(diagnostics,context){
             const candidates=(context?.operators||[]).filter(o=>o.node===node&&o.kernel===kernel).slice(0,8).map(({graph,node,inputs,outputs,portsTruncated})=>({graph,node,inputs,outputs,portsTruncated}));
             result.push({node,kernel,candidates,unique:context?.complete===true&&candidates.length===1,contextComplete:context?.complete===true,scope:'依 runtime 日誌的 node 編號及 builtin 名稱對照來源；多 subgraph／delegate 或超過 metadata 預算時可能無法唯一定位。'});
         }
-        for(const match of line.matchAll(/\bTensor\s+#?(\d+)\b(?=[^\r\n]*(?:invalid|failed|mismatch|out of|exceed))/gi)){
+        for(const match of line.matchAll(/\bTensor\s+#?(\d+)\s+(?:(?:has|is|was)\s+)?(?:invalid|failed|mismatch|out of|exceed)/gi)){
             const tensor=Number(match[1]),key='tensor:'+tensor;if(!Number.isSafeInteger(tensor)||seen.has(key))continue;seen.add(key);
             const related=(context?.operators||[]).filter(o=>o.inputs.includes(tensor)||o.outputs.includes(tensor));
             const candidates=related.slice(0,8).map(({graph,node,kernel,inputs,outputs,portsTruncated})=>({graph,node,kernel,inputs,outputs,portsTruncated,roles:[...(inputs.includes(tensor)?['input']:[]),...(outputs.includes(tensor)?['output']:[])]}));

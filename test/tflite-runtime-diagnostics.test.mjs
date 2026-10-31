@@ -16,6 +16,8 @@ test('actual tensor quantization errors list referring OPs without claiming the 
     const output=runtimeFailureLocations(['Tensor #2 is invalidly specified in schema.'],context);
     assert.deepEqual(output[0].candidates[0].roles,['output']);assert.match(runtimeLocationSummary(output),/定義來源/);
     assert.deepEqual(runtimeFailureLocations(['Tensor 1 loaded successfully.','Tensor 9999999999999999999999 has invalid quantization parameters.'],context),[]);
+    const mixed=runtimeFailureLocations(['Tensor 1 loaded successfully; Tensor 2 has invalid quantization parameters.'],context);
+    assert.deepEqual(mixed.map(x=>x.tensor),[2]);
 });
 
 test('tensor references remain candidates across subgraphs, port truncation and capped consumer lists',async()=>{
