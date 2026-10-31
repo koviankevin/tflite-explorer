@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.2.1](transpose-permutation.md#v121-正式交付)／build `562c77efcc4288a9`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.3.0](operator-validation.md#v130-正式交付)／build `44782d0412ebc0b8`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -16,13 +16,13 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 字級修正已經 [PR #184](https://github.com/koviankevin/tflite-explorer/pull/184) 合併至 `bb3bd37`，完整 tree 與實際 PR checkout 相同。[新 main 網站關卡](https://github.com/koviankevin/tflite-explorer/actions/runs/41174045604)的六種版本切換、正常 HTTP 候選與 34 項實際操作已完成 digest／CRC／來源／原判定核對；新增字級情境的 13 個 OP、兩個輸入／輸出文字框皆符合 32px。19 種手動 runtime 情境及八輪／24 次 CPU、IO 與原記憶體規則通過；[發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/41174041946) 78 項亦核對通過。[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)亦已取得原始報告並核對通過；四項關卡的[收據](results/product-readiness-main-verification.json)與[原始證據](results/product-readiness-main-evidence.zip)保留。後續以精確來源 `f592e3d9df7ed48fae2ca19e353c7215638959a3` 完成 v1.2.0 準備、部署及固定下載核對；這些 Linux 結果不取代 Windows 的原始關閉失敗。
 
-目前外部使用者以 v1.2.1 為準；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41204168493)四個工作 attempt 1 全成功，正式站與固定 Release 已核對。發布後文件更新不移動 tag、不改寫固定資產，也不重跑成功部署；v1.2.0 的交付與失敗證據保持原來源。
+目前外部使用者以 v1.3.0 為準；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41216245433)四個工作 attempt 1 全成功，1,465 個正式檔案、35 項操作、四份實際固定下載及權威 deployment 已核對。新增 PAD／切片／split／reduction 靜態規則與逐 OP 報告，保留[候選失敗、最後四項關卡及正式交付](operator-validation.md#v130-正式交付)。沒有規則、動態或超預算明列未檢查，Chrome 原生關閉與任意 kernel／dialect 語意仍未解。發布後文件更新不移動 tag、不改寫固定資產、不重跑成功部署；舊版證據保持原來源。
 
 ## 各階段原始計畫與範圍
 
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
-| 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 卷積／pooling 共用靜態規則、真正 allocation 負例及 Windows 小型 UI 已通過，四項 main 關卡與 v1.2.0 正式交付已核對。其他 OP／任意 kernel 語意仍未驗證，不把結構通過寫成可執行保證 |
+| 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 卷積／pooling 共用靜態規則、真正 allocation 負例及 Windows 小型 UI 已通過，四項 main 關卡與 v1.2.0 正式交付已核對。v1.3.0 另交付 PAD／切片／split／reduction 的 13 種有界規則與逐 OP 報告；其他 OP／任意 kernel 語意仍未驗證，不把結構通過寫成可執行保證 |
 | Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | [引用契約](custom-reference-contracts.md)本機證據已核對：建置隔離與十二份 Windows 下載的原始 bytes／編號／pattern；公開程序 exit 0，合成內網報告通過但退出碼遺失。公開支援已在 v1.2.0 正式交付；未知格式仍完整保留，不宣稱任意 custom kernel 已可執行 |
 | Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 精確 v1.2.0 的[實體 1.25 GiB 八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；歷史失敗保留，後續小型候選 Chrome 關閉再次逾時，正常關閉根因仍未完成。不以小型 UI／Linux 大檔代替 Windows 大檔，亦不把 f592 結果換標成未來來源 |
 | Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | Resource-only 漏列未檢查段已修正；44 項選測及 Windows Chrome／Edge 打包後原生開檔、32px、pattern 各一筆、匯出重開通過，12,012 bytes resource 原文比對一致、每個瀏覽器三個 Worker 關閉。修正已在 v1.2.0 正式交付；packing／公司 verifier 未驗證，外部 resource 選檔尚未支援 |
