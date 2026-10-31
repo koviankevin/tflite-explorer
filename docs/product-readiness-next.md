@@ -8,7 +8,9 @@
 
 階段一的序列化／常用 OP 修正、階段二的 custom 引用契約、resource-only MLIR 未檢查計數及字級排版修正，已在 v1.2.0 正式交付。[最終收據](results/product-readiness-v1.2-published.json)核對完整來源、部署、34 項正式操作與四份實際固定下載。下表保留各階段的工作界線；早期收據的「待執行／未發布」維持其當時狀態，不覆蓋目前交付結果。
 
-最新 Windows 實體八輪為混合結果：Edge 通過原判定與獨立核對；Chrome 第四輪 RSS slope 超標，第五輪完整內容與記憶體通過，但最後正常 browser close 逾時，兩輪都不是完整通過。[階段三證據](results/product-readiness-stage3.json)及[後續原始證據](results/product-readiness-stage3-update.json)分開保留。Updater 干擾已用測試啟動旗標隔離；空白頁與小型網站對照尚未證明關閉根因，不採用猜測的 CDP detach／teardown 變更。細節見[Windows 大模型](windows-large-model.md#第五輪與小型關閉對照)。
+精確 v1.2.0 固定產物的最新 [Windows 實體八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)在 Chrome／Edge 均通過原判定及正常退出；Edge slope 接近原上限，不宣稱有寬裕餘量。[階段三證據](results/product-readiness-stage3.json)及[後續原始證據](results/product-readiness-stage3-update.json)中的歷史失敗仍保留，根因尚未證實。後續小型 TRANSPOSE 候選又重現 Chrome 正常關閉逾時，不能把功能或稍後 PID 消失寫成整輪通過；新證據見下段。
+
+下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 合法負軸被擋與 int64 錯誤放行，56 項相關測試通過。打包來源 `4b0822e` 的兩瀏覽器實際編輯／匯出／重開／搜尋／raw BIN CPU 內容均核對；Edge 整輪通過，Chrome 最後正常關閉逾時仍判失敗。[原始收據](results/transpose-permutation.json)保留此差別，正式站尚未取得候選修正。
 
 另在實際截圖中發現 32px 字級與框線不同步，原先「沒有頁面溢位」的數值檢查不足。已在未修改候選穩定重現[字級排版回歸](font-reflow.md)，修正非同步 layout 期間 target 暫空的提前返回；來源 `7068a7e` 的 Chrome／Edge 完整七組文字邊界與實際截圖已核對，v1.2.0 正式站另核對 15 組實際文字框。舊來源成功不抵銷曾有的視覺缺口。
 
@@ -22,7 +24,7 @@
 | --- | --- | --- |
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 卷積／pooling 共用靜態規則、真正 allocation 負例及 Windows 小型 UI 已通過，四項 main 關卡與 v1.2.0 正式交付已核對。其他 OP／任意 kernel 語意仍未驗證，不把結構通過寫成可執行保證 |
 | Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | [引用契約](custom-reference-contracts.md)本機證據已核對：建置隔離與十二份 Windows 下載的原始 bytes／編號／pattern；公開程序 exit 0，合成內網報告通過但退出碼遺失。公開支援已在 v1.2.0 正式交付；未知格式仍完整保留，不宣稱任意 custom kernel 已可執行 |
-| Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | [實體 1.25 GiB 八輪](windows-large-model.md)已執行：Edge 通過；Chrome 第四輪 RSS 超標，第五輪內容／記憶體通過但正常關閉逾時，整輪仍失敗。正常關閉根因及新來源的完整 Windows 驗收仍未完成；不以小型 UI／Linux 大檔代替 |
+| Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 精確 v1.2.0 的[實體 1.25 GiB 八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；歷史失敗保留，後續小型候選 Chrome 關閉再次逾時，正常關閉根因仍未完成。不以小型 UI／Linux 大檔代替 Windows 大檔，亦不把 f592 結果換標成未來來源 |
 | Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | Resource-only 漏列未檢查段已修正；44 項選測及 Windows Chrome／Edge 打包後原生開檔、32px、pattern 各一筆、匯出重開通過，12,012 bytes resource 原文比對一致、每個瀏覽器三個 Worker 關閉。修正已在 v1.2.0 正式交付；packing／公司 verifier 未驗證，外部 resource 選檔尚未支援 |
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |
 | 保存、操作及發布 | 草稿／pattern 異常與遷移可恢復；主要新手流程與鍵盤可操作；固定產物、相依 scope、必要關卡、正式站與 Release 一致，回退不破壞使用者資料 | 既有功能與交付證據沿用；新功能仍須補受影響驗收；OS 斷電、完整螢幕閱讀器與任意格式遷移仍未證實 |
