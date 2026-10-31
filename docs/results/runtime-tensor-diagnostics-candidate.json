@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "format": "model-lens-runtime-tensor-diagnostics-candidate",
+  "status": "candidate-targeted-checks-reviewed-not-published",
+  "createdAt": "2026-10-31T20:31:03.912014+00:00",
+  "source": {
+    "commit": "0537afa2a3cd8f11f0b0a61f7f40a095664fa190",
+    "tree": "9757f20c42548c0205946fad4f47229331a6d164",
+    "committedAt": "2026-11-01T04:25:54+08:00",
+    "dirty": false
+  },
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.3.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "0537afa2a3cd8f11f0b0a61f7f40a095664fa190",
+      "tree": "9757f20c42548c0205946fad4f47229331a6d164",
+      "committedAt": "2026-11-01T04:25:54+08:00",
+      "dirty": false
+    },
+    "buildId": "55e5b2f7588ff74c"
+  },
+  "selectedTests": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0,
+    "skipped": 0
+  },
+  "actualCPUNegatives": 6,
+  "originalModelCPUStatus": "failed compile; no invoke, equivalence not verified",
+  "preservationVariants": [
+    {
+      "label": "identity",
+      "operators": 31,
+      "bytes": 326768,
+      "sha256": "1a18eae32c409eb744c4faa0bcb7cab072619dbbcae1d70c6cdb3f53c5f71682",
+      "constantTensorRanges": 57,
+      "patternMatches": 1
+    },
+    {
+      "label": "full-cut",
+      "operators": 31,
+      "bytes": 326928,
+      "sha256": "8e67440386439b066655e7dba905ba1977461d0d056033f8f5720de97e91e623",
+      "constantTensorRanges": 57,
+      "patternMatches": 1
+    },
+    {
+      "label": "composition",
+      "operators": 31,
+      "bytes": 326784,
+      "sha256": "92f9b1357bfceaf7122bb02fa9c5fe2548727553b78bd6c262cbe5ef486090d9",
+      "constantTensorRanges": 57,
+      "patternMatches": 1
+    },
+    {
+      "label": "prefix-cut",
+      "operators": 3,
+      "bytes": 6464,
+      "sha256": "e0f90eed0f54935b8ebc134c36a5f7df4a7d36fbbbcdafd1bdf7521537efafb6",
+      "constantTensorRanges": 6,
+      "patternMatches": 1
+    }
+  ],
+  "windows": [
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.50",
+      "status": "passed",
+      "nativeIdentities": 10,
+      "workers": 4,
+      "runtimeWorkers": 1,
+      "cases": [
+        "official original fails before input; raw tensor diagnostics and noncausal reference buttons at32px",
+        "native keyboard activates tensor consumer reference, renders actual OP and focuses selected layer",
+        "source replacement removes stale tensor links; no automatic inference or IO download"
+      ],
+      "reportSHA256": "9fa42581d478da14f2b47d54d66475e2b17ec0fe68a4e4c478c7b4ed2912b96a"
+    },
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.76",
+      "status": "passed",
+      "nativeIdentities": 8,
+      "workers": 4,
+      "runtimeWorkers": 1,
+      "cases": [
+        "official original fails before input; raw tensor diagnostics and noncausal reference buttons at32px",
+        "native keyboard activates tensor consumer reference, renders actual OP and focuses selected layer",
+        "source replacement removes stale tensor links; no automatic inference or IO download"
+      ],
+      "reportSHA256": "4e49dcf500aa201b0f5c93f05468c2faa68756c584521419cf6e3b024182273e"
+    }
+  ],
+  "initialChromeV2FocusObservationFailurePreserved": true,
+  "nativeFlagsAndBoundsChanged": false,
+  "modelWeightsOrInputsPublished": false,
+  "archive": {
+    "file": "runtime-tensor-diagnostics-evidence.zip",
+    "bytes": 891343,
+    "sha256": "2cbaae11e10931dc0c510211cf5b7a4b693e7b37e366cc626e0e4d92498169f2",
+    "members": 71,
+    "originalRecords": 69,
+    "manifestSHA256": "4abfce6aa2525974f199187f6169090b13e63c411b55751fefc4f2738cfe7ee3",
+    "crc": "passed",
+    "allRecordedSHA256": "passed"
+  },
+  "published": false,
+  "historicalChromeNativeShutdownFixed": false,
+  "goalComplete": false
+}
