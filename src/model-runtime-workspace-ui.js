@@ -23,7 +23,7 @@ export function modelRuntimeWorkspaceUI({rpc,getSource,getFormat,leaveEditor,sav
             const source=getSource();
             for(const location of validation.failureLocations)for(const candidate of location.candidates){
                 const button=document.createElement('button');button.type='button';button.className='runtime-location';button.dataset.runtimeLocate=`${candidate.graph}:${candidate.node}`;
-                button.textContent=`查看 Subgraph #${candidate.graph} · OP #${candidate.node} ${location.kernel}${location.unique?'':'（候選）'}`;
+                button.textContent=location.kind==='tensor'?`查看 tensor #${location.tensor} ${candidate.roles.map(r=>r==='output'?'定義來源':'使用者').join('／')} · Subgraph #${candidate.graph} · OP #${candidate.node} ${candidate.kernel||''}（參照 OP）`:`查看 Subgraph #${candidate.graph} · OP #${candidate.node} ${location.kernel}${location.unique?'':'（候選）'}`;
                 button.disabled=busy||!onLocate;button.onclick=()=>{if(source!==getSource()||session.state.busy)return;onLocate?.(candidate,source);};body.append(button);
             }
         }
