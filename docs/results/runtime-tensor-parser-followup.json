@@ -1,0 +1,40 @@
+{
+  "status": "parser-guard-targeted-and-component-reuse-evidence-reviewed-not-published",
+  "createdAt": "2026-10-31T20:38:08.326358+00:00",
+  "oldSource": {
+    "commit": "0537afa2a3cd8f11f0b0a61f7f40a095664fa190",
+    "tree": "9757f20c42548c0205946fad4f47229331a6d164",
+    "committedAt": "2026-11-01T04:25:54+08:00",
+    "dirty": false
+  },
+  "newSource": {
+    "commit": "bad7a726c743100ba2365f04407c802946e1fed8",
+    "tree": "8acea0cd07b51ed02732dc113a0a3626d946c64f",
+    "committedAt": "2026-11-01T04:36:41+08:00",
+    "dirty": false
+  },
+  "newBuild": "f4a92b2cc2c2f632",
+  "sourceDiff": [
+    "src/tflite-runtime-diagnostics.js"
+  ],
+  "actualCPUNegatives": 6,
+  "knownFailureLocationsAndReasonsIdentical": true,
+  "allExportBytesAndPreservationResultsIdentical": true,
+  "browserUIRendererTransportCSSAndRuntimeUnchanged": true,
+  "reusedWindowsEvidence": "msedge-v2/chrome-v3 on0537afa/build55e5b2f7588ff74c; new parser verified to emit identical observed diagnostic data on all six real cases",
+  "newMixedLineRedGreen": "mixed-tensor-log-red.json / mixed-tensor-log-green.json",
+  "newWindowsRunClaimed": false,
+  "modelCPUInvocationClaimed": false,
+  "archive": {
+    "file": "runtime-tensor-parser-followup-evidence.zip",
+    "bytes": 24321,
+    "sha256": "935f46f5e5ca47719740efd05662c86533a48adbb469f81b4dfd4bd2209cda89",
+    "members": 12,
+    "originalRecords": 11,
+    "manifestSHA256": "e5dd39287699f20a96ea42c699e7d99430aa7f85d3409b43b7ce0187e0918004",
+    "crc": "passed",
+    "allRecordedSHA256": "passed"
+  },
+  "published": false,
+  "goalComplete": false
+}

@@ -17,3 +17,5 @@ compile 階段的失敗現在先列「發生在套用測試輸入之前」，再
 Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 皆完成原生選檔、手動失敗、32px、真正鍵盤啟動參照按鈕、OP 畫出／結果焦點及換模型移除舊位置；零額外推論或 IO 下載，每端一個 runtime Worker 全部原生 close，八／十個已觀察原生程序身分正常退出。Chrome 第二候選曾在 graph busy=false 後、非同步 focus 完成前過早擷取而失敗，保留原檔；只在相同 35 秒 UI 界線內等待實際焦點再讀取，未改應用或原生關閉規則，Edge 不重跑。這些是短流程，不能宣稱歷史較長負載的 Chrome／OneDrive 關閉問題已修復。
 
 [候選收據](results/runtime-tensor-diagnostics-candidate.json)與[71 份原始來源／失敗／成功及截圖](results/runtime-tensor-diagnostics-evidence.zip)已完成 SHA-256／ZIP CRC 核對。必要發布關卡與正式交付尚待接續；本頁目前不宣稱 v1.3.1 已發布。
+
+最後另補「同一行先說 Tensor 1 成功、再說 Tensor 2 失敗」的誤對照負例，先 red 再收緊為 tensor 編號後緊接已知失敗語法。來源 `bad7a72`／build `f4a92b2cc2c2f632` 的六個真實 CPU 負例、所有匯出 bytes／資料保留結果及定位物件／原因文字均與前候選逐項相同；31 項相關測試再次通過。src／vendor 僅此辨識條件變動，UI renderer、傳輸、runtime、CSS 與模型資料未變，因此沿用上述 Windows 實際操作證據，沒有宣稱另跑新版 Windows。[後續收據](results/runtime-tensor-parser-followup.json)及[原始 red／green、實際結果與相同性核對](results/runtime-tensor-parser-followup-evidence.zip)保留明確的來源與沿用界線。
