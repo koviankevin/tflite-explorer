@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [v1.2.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.0)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `d69754e5b6791ecd`，來源 `f592e3d9df7ed48fae2ca19e353c7215638959a3`；[本版正式交付](product-readiness-v1.2.md)已核對。外網更新不會自動更新公司內網站台。
+固定版本為 [v1.2.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `562c77efcc4288a9`，來源 `2160757222460436129e06d27ba57b7adf9c3ac8`；[本版正式交付](transpose-permutation.md#v121-正式交付)已核對。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 
@@ -10,7 +10,7 @@
 
 ## 已核對的公開流程
 
-v1.2.0 的正式操作與完整性另見[本版收據](results/product-readiness-v1.2-published.json)；Windows Chrome／Edge 的字級修正前後測見[字級回歸](font-reflow.md)。下表所引歷史版本保持原來源與範圍，不倒算為每個新版本都完成 Windows 全項驗收；[Windows 大檔](windows-large-model.md)的 Chrome 正常關閉失敗仍未解決。
+v1.2.1 的 34 項正式操作與完整性另見[本版收據](results/product-readiness-v1.2.1-published.json)；Windows Chrome／Edge 的字級修正前後測見[字級回歸](font-reflow.md)。下表所引歷史版本保持原來源與範圍，不倒算為每個新版本都完成 Windows 全項驗收；[Windows 原生關閉](windows-large-model.md#空白頁的原生程序類型與等待鏈)失敗仍未解決。
 
 | 使用需求 | 證據與範圍 |
 | --- | --- |

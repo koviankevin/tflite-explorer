@@ -1,6 +1,6 @@
 # TRANSPOSE permutation 驗證修正
 
-v1.2.1 候選修正，尚未發布；目前固定正式站仍為 [v1.2.0](product-readiness-v1.2.md)。
+修正已在 [v1.2.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1) 正式交付，build `562c77efcc4288a9`；[最終收據](results/product-readiness-v1.2.1-published.json)保留正式站與固定下載的核對。下文候選測試保持各自實際來源，Windows 間歇性原生關閉仍未修復。
 
 含 `TRANSPOSE`、permutation 為 `[-1, 0]` 的合法模型，原檔可由內建 LiteRT CPU 執行，但在編輯區複製另一顆 `ADD` 後，匯出會被誤判為 permutation 不合法。原生 Windows Chrome／Edge 均已重現此錯誤；最小案例只需一顆 OP、一維輸入及 `[-1]`。
 
@@ -18,12 +18,22 @@ Edge 整輪與正常退出通過。Chrome 完成功能、五個 Worker 都原生
 
 候選功能修正已經 [PR #187](https://github.com/koviankevin/tflite-explorer/pull/187) 合併至 `8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32`；最終 PR 的實際 checkout／合併後完整 tree 都是 `25de84fe66ac128a7153b10343fe300e1b74fc01`。必要 Node／建置檢查為 785 passed、35 個原有選做 skips、零失敗，發布契約 78 項零略過；新負軸 CPU 回歸確實執行。應用與測試內容與原生候選 `4b0822e` 相同，沒有把不同 commit 換標成同一份原生驗收。
 
-## 主分支關卡與尚未發布的候選
+## 發布前的主分支關卡
 
 `8bf6c9b`／build `45837dc98a0009a7` 的[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41200613873)、[發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/41200623742)與[網站操作](https://github.com/koviankevin/tflite-explorer/actions/runs/41200635819)均在 attempt 1 完成，provider digest／ZIP CRC／來源／原 policy 及實際報告已核對。核心的 88 檔相依範圍未變，沿用重新核對的既有 main 關卡，沒有重做相同量測。完整[收據](results/transpose-main-verification.json)與[70 份原始證據](results/transpose-main-evidence.zip)保留。
 
 Linux 實體檔為 1,349,965,216 bytes／21,005 OP；八輪含兩輪暖機，closed RSS slope 約 2.1 MiB／輪、drift 約 14.3 MiB，完整／局部／組合的權重、custom options、pattern、草稿及 57 個原生 Worker close／正常程序退出均核對。網站另有 34 項具名情境、15 個 32px 文字框、19 種手動 runtime 情境、八輪／24 次 CPU／IO 與 150 個觀察到的主流程 Worker 全數 close；其中 86 個為模型 Worker，刻意 crash recovery 的程序另記，不能當成正常 close。
 
-目前仍待成功產物準備、精確 build／site 發布與正式站／固定下載核對，**正式站仍為 v1.2.0**。Windows [空白頁關閉診斷](windows-large-model.md#空白頁的原生程序類型與等待鏈)也保留失敗，這些 Linux 成功不等於已修復 Chrome 間歇性關閉。
+以上是發布前的來源關卡；正式交付另見下節，不把不同 commit 的證據混為同一次量測。Windows [空白頁關閉診斷](windows-large-model.md#空白頁的原生程序類型與等待鏈)仍保留失敗，這些 Linux 成功不等於已修復 Chrome 間歇性關閉。
+
+## v1.2.1 正式交付
+
+固定來源 `2160757222460436129e06d27ba57b7adf9c3ac8`／build `562c77efcc4288a9` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41204168493)四個工作 attempt 1 全成功；Pages deployment `7459012309`、[v1.2.1 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1)、Latest 與 tag 指向均核對。網站完整 site ID 是 `5288f32845cddd3553ffee92b45cf8971271346be5fec0e700744443d5c907a0`；保留 v1.2.0、v1.1.0 的版本目錄與固定基準。
+
+322 個核心檔案及 1,457 個正式網站檔案的 HTTPS bytes／SHA／MIME、無 query 的入口與當前版本 metadata、34 項具名正式操作、15 個 32px 文字框、19 種手動 runtime 情境、五組指南與八輪／24 次 CPU／IO 均已核對。150 個觀察到的主流程 Worker 全數原生 close，包含 86 個模型 Worker；刻意 crash recovery 的程序仍另行記錄。原 RSS／URL／timeout 規則沒有調整。
+
+四份實際公開下載逐一與準備包比較，版本 ZIP 為 41,262,457 bytes，SHA-256 `309891e6f16dae9df52be0484a1488950eade0aea71ceef656549c9155d05101`；manifest、校驗檔與發布憑證也相同。[最終收據](results/product-readiness-v1.2.1-published.json)及[43 份原始報告、metadata、截圖、讀取器與實際下載小檔](results/product-readiness-v1.2.1-evidence.zip)保留；完整 ZIP 留在固定 Release 與本機，不重複塞進證據封存。
+
+這次交付完成 TRANSPOSE 驗證修正；整體商品化目標仍進行中，Chrome 原生關閉、未支援的 kernel／dialect／權重 packing 及其他明列界線保持原狀。發布後僅更新文件與收據，不移動 tag、不覆寫固定資產、不重跑成功部署，也不同步 Sites／GH Studio。
 
 一般編輯與匯出仍只做本機結構／資料檢查；需要執行時先開啟匯出結果，再手動到「執行模型」選 raw `.bin` 或其他既有輸入。沒有自動啟動 interpreter，也沒有把這組公開合成模型的配置失敗當成使用者未提供模型的既定根因。

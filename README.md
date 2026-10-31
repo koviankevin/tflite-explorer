@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.2.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.0)，修正部分匯出後的空 buffer 配置問題與 32px 排版競態，加入常用卷積／pooling 檢查、可信 custom 引用契約及 MLIR resource 未驗證提示，見[本版交付與限制](docs/product-readiness-v1.2.md)。322 核心檔、全站 1,445 檔、34 項正式站操作、五組指南、19 種手動執行情境及四份實際固定下載均已核對。頂端「說明」或 F1 提供開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復指南；導覽不自動執行推論，閱讀保留選取、草稿與縮放。Windows 大模型完整正常關閉仍有未解失敗，不能由 Linux 或小型 UI 成功推論已修復；以下舊版本數字保留為歷史紀錄。
+目前對外版本為 [v1.2.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1)，修正合法 TRANSPOSE 負軸被誤擋，以及錯誤 int64 permutation 被放行的驗證問題；原始 tensor bytes 保持不變，見[本版交付與限制](docs/transpose-permutation.md#v121-正式交付)。322 核心檔、全站 1,457 檔、34 項正式站操作、五組指南、19 種手動執行情境及四份實際固定下載均已核對。先前 v1.2.0 的空 buffer、32px 排版、常用卷積／pooling、custom 引用契約及 MLIR resource 提示修正保持可用。頂端「說明」或 F1 提供開檔／搜尋、pattern／切圖、實際模型編輯、執行／IO 與保存／恢復指南；導覽不自動執行推論，閱讀保留選取、草稿與縮放。Chrome 原生關閉仍有可在空白頁重現的逾時，不能由 Linux 成功推論已修復；以下舊版本數字保留為歷史紀錄。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
