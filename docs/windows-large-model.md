@@ -1,6 +1,6 @@
 # Windows 大模型程序記憶體驗收
 
-目前是驗收工具開發階段，尚無本階段 Windows 1.25 GiB 八輪通過結論；正式站仍為 v1.1.0。小型公開／合成模型的 Chrome／Edge 功能成功、Linux 大檔結果及本機空頁量測各有範圍，不互相替代。
+本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻，Chrome 完成內容與正常關閉驗證，但 closed RSS slope 超標。正式站仍為 v1.1.0，不能將主分支修正或診斷對照視為已發布。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
 
 ## 原生觀察與所有權
 
@@ -43,3 +43,20 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 本機 Windows 的功能／記憶體量測可明確設定 `$env:MODEL_LENS_TRUSTED_BOOTSTRAP = '1'`，同時必須指定 `LIFECYCLE_BUILD`。測試工具先驗證完整公開產物，再逐 byte 核對 index.html，使用 [Playwright route.fulfill](https://playwright.dev/docs/api/class-route#route-fulfill) 提供原樣 HTML 及原本的 CSP。只處理指定 origin 的 GET `/`／`/index.html` document；不攔截其他資產、外部 origin、POST 或 query。其餘資產仍走 HTTP，實際選檔、下載、Worker 與原生程序量測不變。小型 Chrome／Edge 的前後測已證明外部請求仍遭拒絕、相同建置可啟動及正常退出。
 
 報告明列 `documentFixture.httpDocumentTransportVerified=false`，因為這項隔離量測不驗證初始 HTML 的 HTTP 傳輸，也不代表防毒相容性通過。正式站與 Linux 必要關卡仍使用正常 HTTP／HTTPS，分開保存證據。若 native browser close 再失敗，仍記為失敗，另記錄原有 10 秒 native reap 觀察；不延長關閉／reap 上限、不送強制終止訊號。
+
+## 已取得的完整結果與後續診斷
+
+[階段三收據](results/product-readiness-stage3.json)及[原始證據封存](results/product-readiness-stage3-evidence.zip)保留同一來源 `2899993`／build `fbf6138d30bb127d` 的完整報告、原生 counters、觀察器、測試程式、失敗及獨立核對。八輪包含兩輪 warmup，原判定使用其後六輪。封存公開副本只遮蔽第三方防毒請求的路徑／query；逐檔列出原檔與封存檔雜湊，未遮蔽的本機原始紀錄仍保留。
+
+| 案例 | 原始結果 | 判讀 |
+| --- | --- | --- |
+| Chrome 第四輪 | exit 1；RSS slope `23,851,710.17` bytes／輪，高於原 16 MiB／輪 | 全部八輪內容、權重、custom options、pattern 正負例與原生正常關閉通過；記憶體仍不合格，不宣稱洩漏根因已確認 |
+| Edge 第一輪 | exit 0；RSS slope `14,591,122.29` bytes／輪，原判定及獨立讀取器均通過 | 同一實體模型與完整八輪流程；保留 renderer 波動，不推論所有負載永不累積 |
+
+短對照的逐程序紀錄另外識別出 Chrome 啟動的 `updater.exe`，可造成約 60–70 MiB 的程序樹波動及瀏覽器退出後仍存活。這推翻「單憑短對照即可歸因於指紋／digest」的推測；同步讀取及 BYOB 原型均未採用。它也沒有解釋完整案例中的所有 renderer 波動。
+
+僅在明確授權的 Windows Chrome 測試啟動中加入 `--disable-updater-scheduler`。[Chromium 自己的 browser tests](https://chromium.googlesource.com/chromium/src.git/+/fc613d7cb460a811be6d8d8a6f5ab147f35e3ad6/chrome/test/base/in_process_browser_test.cc)也使用此旗標；[排程入口](https://chromium.googlesource.com/chromium/src/+/d231b99bf97fa46fee0d7ea4310657538a999dc5/chrome/browser/chrome_browser_main.cc)檢查後直接返回。它只影響該次隔離測試，不改作業系統更新服務、registry、個人瀏覽器、防毒、CSP 或正式網站。Linux 與 Edge 啟動不變；所有實際觀察到的後代仍計入 RSS 並須正常退出，不扣除背景程序。
+
+原產物的 parser-only 對照完成 40 個真實解析 Worker，edit/export-only 對照完成 16 個真實序列化及重新解析 Worker，加入上述旗標後皆正常退出。兩者沒有覆蓋完整網站操作與真實下載，不能取代新的完整 Chrome 八輪驗收。
+
+測試工具另在 Windows 的階段切換或每十秒保存原生逐 PID／creation 身分、CDP 程序類型、main isolate backing storage 與一般 DOM counters。這些唯讀補充不改原 RSS／heap 算法、warmup、取樣間隔或門檻；未呼叫強制 GC、leak-detection 清理或 working-set trimming。新的完整結果仍須在乾淨來源、實際程序結束後獨立核對。

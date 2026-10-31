@@ -1195,10 +1195,10 @@ async function openMLIRDemo(){const r=await fetch('./demo.mlir');if(!r.ok)throw 
 $('open-mlir-demo').onclick=()=>openMLIRDemo().catch(report);
 $('open-lora-demo').onclick = async () => {
     try {
-        const r = await fetch('./lora-demo.tflite'); if (!r.ok) throw new Error('無法讀取 LoRA 結構示範。');
+        const r = await fetch('./lora-demo.tflite'); if (!r.ok) throw new Error('無法讀取分支／匯合結構示範。');
         loraPreset(); $('graph-induced').checked = false; $('graph-input-mode').value = 'visual'; updateGraphInputMode();
         setKind('patterns', false);
-        await openFile(new File([await r.blob()], 'LoRA 結構示範.tflite'));
+        await openFile(new File([await r.blob()], '分支匯合示範.tflite'));
     } catch (error) { report(error); }
 };
 async function captureModelTab(){

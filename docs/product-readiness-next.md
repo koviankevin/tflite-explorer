@@ -4,6 +4,16 @@
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
+## 目前交付狀態
+
+階段一的序列化／常用 OP 修正、階段二的 custom 引用契約，以及 resource-only MLIR 未檢查計數已合併，正式交付仍待完成。下表保留各階段的工作界線；不把早期「待執行」當成最新測試狀態。
+
+最新 Windows 實體八輪為混合結果：Edge 通過原判定與獨立核對；Chrome 完成所有內容檢查及原生正常關閉，但 RSS slope 超過原門檻。169 份報告、測試程式與來源快照已逐檔核對並封存於[階段三證據](results/product-readiness-stage3.json)。測試環境已確認有 Chrome updater 干擾；僅調整獨立測試啟動並新增唯讀逐程序／DOM／backing 觀察，完整 renderer 波動仍待新的完整測例釐清。細節見[Windows 大模型](windows-large-model.md#已取得的完整結果與後續診斷)。
+
+候選版本準備為 v1.2.0，包含一般分支／匯合名稱與文件整理；目前沒有發布該版本，外部使用者仍以 v1.1.0 為準。
+
+## 各階段原始計畫與範圍
+
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 進行中：卷積／pooling 共用靜態推導與檢查；已取得真正 LiteRT allocation 失敗的 kernel/node 診斷，獨立 Windows 小型 UI 已通過，其他 OP 與正式關卡仍待完成 |
