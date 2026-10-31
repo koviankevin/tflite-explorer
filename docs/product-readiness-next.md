@@ -24,6 +24,8 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 再接續一次事先限定的[實體八輪失敗取樣](windows-large-model.md#實體八輪的失敗-stack)，已取得真正 Chrome 原 10 秒失敗時的 43 個執行緒 stack 並 detach。匯出／權重／options／pattern 與原記憶體子判定通過，整輪仍因正常關閉逾時失敗；後續 SDK 強制清理不算修復。新[收據](results/windows-physical-stack.json)更新上述當時尚缺 stack 的狀態，保存原始與離線符號核對；目前仍未證實等待物件或關閉根因，不修改正式 app 或固定交付。
 
+接著以獨立的有界 public-symbol 讀取、stock PE 函式範圍及同版原始碼，已[定位這次等待機制](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)：主執行緒等 TaskTracker shutdown，Chrome 自身的 OneDrive 啟動統計停在 Windows storage／Cloud Files 查詢。兩個預先限定、各一次的空白頁對照中，原設定再次失敗並捕捉相同函式，只有停用該統計功能的隔離對照約 191 ms 正常退出。這更新前段仍缺具體函式的狀態；Windows／provider 底層缺陷及全部歷史失敗尚未證實，必要驗收的設定與失敗判定保持原樣。沒有重跑模型或成功部署，應用不做無證據的資源清理改動；[收據](results/windows-cloud-metric.json)保存來源與界線。
+
 ## 各階段原始計畫與範圍
 
 | 工作 | 要證明的行為 | 狀態 |

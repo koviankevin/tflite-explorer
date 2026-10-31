@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "format": "model-lens-cloud-metric-mechanism-delivery",
+  "status": "local-Chrome-cloud-folder-telemetry-shutdown-mechanism-identified",
+  "createdAt": "2026-10-31T19:54:54.619410+00:00",
+  "pair": {
+    "format": "model-lens-cloud-metric-paired-control-review",
+    "status": "two-predeclared-controls-completed-and-reviewed",
+    "createdAt": "2026-10-31T19:53:46.829642+00:00",
+    "controls": [
+      {
+        "mode": "default",
+        "status": "failed",
+        "exitCode": 1,
+        "normalCloseMs": 10058.535699999997,
+        "nativeIdentities": 8,
+        "allAdmittedObservedExitedAfterCleanup": true,
+        "forcedCleanup": true,
+        "reportSHA256": "36cceebb34ccb82668c61ebd4704274b8251d1fd6efa33f65e7e05c93eb1dd68",
+        "logSHA256": "be0600d19ebe17f079cd5ce1778cdbfcae5b12c18d1cb2ba811066af920a9cfe"
+      },
+      {
+        "mode": "disabled",
+        "status": "normal-native-exit",
+        "exitCode": 0,
+        "normalCloseMs": 191.00630000000092,
+        "nativeIdentities": 8,
+        "allAdmittedObservedExitedAfterCleanup": true,
+        "forcedCleanup": false,
+        "reportSHA256": "95e846d2580924531ea8b9b4de09a472866b93f74374ae180b103e7a86b198c5",
+        "logSHA256": "82199204515b6216eee0415ca95ee682c3a0c540efd1e41d6b5b5e1cb616a6f1"
+      }
+    ],
+    "onlyLaunchDelta": "append CloudSyncedFolderChecker to existing disabled-feature list, apart from independent owned temp profiles",
+    "actualDefaultFailureStack": {
+      "status": "captured-owned-native-stacks",
+      "stackSHA256": "7154485681abf9d63fc03fe013890561de83c7a6b2a915eee8f3dcef05a20447",
+      "functionMatches": [
+        {
+          "thread": 0,
+          "rva": 78668385,
+          "function": [
+            "?Wait@WaitableEvent@base@@QEAAXAEBVLocation@2@@Z"
+          ],
+          "actualPEFunctionRangeMatched": true,
+          "windowsDirectoryQueryInSameStack": false,
+          "windowsCloudFileQueryInSameStack": false
+        },
+        {
+          "thread": 0,
+          "rva": 31519058,
+          "function": [
+            "?CompleteShutdown@TaskTracker@internal@base@@QEAAXXZ"
+          ],
+          "actualPEFunctionRangeMatched": true,
+          "windowsDirectoryQueryInSameStack": false,
+          "windowsCloudFileQueryInSameStack": false
+        },
+        {
+          "thread": 0,
+          "rva": 5423123,
+          "function": [
+            "?ShutdownThreadsAndCleanUp@BrowserMainLoop@content@@QEAAXXZ"
+          ],
+          "actualPEFunctionRangeMatched": true,
+          "windowsDirectoryQueryInSameStack": false,
+          "windowsCloudFileQueryInSameStack": false
+        },
+        {
+          "thread": 29,
+          "rva": 18900150,
+          "function": [
+            "?EvaluateOneDriveSyncStatus@cloud_synced_folder_checker@@YA?AUCloudSyncStatus@1@XZ"
+          ],
+          "actualPEFunctionRangeMatched": true,
+          "windowsDirectoryQueryInSameStack": false,
+          "windowsCloudFileQueryInSameStack": true
+        }
+      ],
+      "mainTaskTrackerShutdown": true,
+      "cloudMetricInsideWindowsDirectoryQuery": false,
+      "cloudMetricInsideWindowsCloudFileQuery": true
+    },
+    "inferenceLimit": "One controlled pair supports a local mechanism; no arbitrary-model or all-historical Chrome guarantee. Diagnostic feature opt-out is not canonical acceptance or an app fix.",
+    "canonicalAcceptanceChanged": false,
+    "rootCauseFixed": false,
+    "goalComplete": false
+  },
+  "sourceAnalysis": {
+    "status": "actual-failure-path-identified-with-source-and-native-range-proof",
+    "createdAt": "2026-10-31T19:50:58.848873+00:00",
+    "sourceVersion": "156.0.8078.76",
+    "stackSHA256": "75fe50c247747fdd76fde632bb64c9cd1920ec60a74cbadc9d7e5f3ab78697ba",
+    "sourceFiles": [
+      {
+        "sourceURL": "https://github.com/chromium/chromium/blob/156.0.8078.76/base/task/thread_pool/task_tracker.cc",
+        "saved": "chromium-156-task_tracker.cc.json",
+        "contentSHA256": "598781e62f3d6237c98b98641cab9efd15636937fd72bcf7793895f9e21eee24"
+      },
+      {
+        "sourceURL": "https://github.com/chromium/chromium/blob/156.0.8078.76/chrome/browser/win/cloud_synced_folder_checker.cc",
+        "saved": "chromium-156-cloud_synced_folder_checker.cc.json",
+        "contentSHA256": "79a3d1f01c3dc8849fa859c27c1059485eb341247f58100d6bbcaa1de14b4245"
+      },
+      {
+        "sourceURL": "https://github.com/chromium/chromium/blob/156.0.8078.76/chrome/browser/metrics/chrome_browser_main_extra_parts_metrics.cc",
+        "saved": "chromium-156-chrome_browser_main_extra_parts_metrics.cc.json",
+        "contentSHA256": "141fc92b95f3cd4d5b2c5f7cfad3bd0cb2fd82c3e3b48cde0634226b7a2a91d5"
+      },
+      {
+        "sourceURL": "https://github.com/chromium/chromium/blob/156.0.8078.76/chrome/browser/win/cloud_synced_folder_checker.h",
+        "saved": "chromium-156-cloud_synced_folder_checker.h.json",
+        "contentSHA256": "5d3f63838baf614e2a496b8ea4321965f65fcdf825622bdbb534eb0af966d584"
+      }
+    ],
+    "functionRangeProof": "chrome-public-key-function-ranges.json",
+    "publicScan": "chrome-public-symbols.json",
+    "facts": [
+      "Main thread is inside WaitableEvent::Wait called from TaskTracker::CompleteShutdown and BrowserMainLoop::ShutdownThreadsAndCleanUp; exact public starts equal PE runtime function boundaries.",
+      "Thread26 is inside EvaluateOneDriveSyncStatus and Windows NtQueryDirectoryFile / storage / property calls; public start equals actual PE runtime function boundary.",
+      "Pinned Chrome startup metrics source calls MaybeRecordOneDriveSyncMetrics -> EvaluateOneDriveSyncStatus on COM STA task runner with SKIP_ON_SHUTDOWN. Running SKIP tasks count as shutdown blockers.",
+      "CloudSyncedFolderChecker gates this metrics path and is enabled by default. It is not an application interpreter or model Worker."
+    ],
+    "inference": "The captured native browser close is blocked by an already-running Chrome startup cloud-folder metric querying the Windows shell/storage provider. A specific cloud provider defect, queried file/directory and all historical failures are not yet proven.",
+    "upstreamCaution": "Chromium issue405035574 was fixed in M136 and concerns loader-lock priority; do not claim this M156 directory-query snapshot is that same already-fixed bug.",
+    "remaining": "Run exactly the predeclared empty-page pair, preserve both outcomes, then decide on a scoped diagnostic workaround. No canonical acceptance modification or app fix is implied.",
+    "normalDebuggerExactMatchProven": false,
+    "rootCauseFixed": false,
+    "canonicalAcceptanceChanged": false
+  },
+  "symbolInterpretation": {
+    "method": "bounded CodeView public scan plus exact stock-PE section/export/function-range checks",
+    "PDBBytesRead": 718242754,
+    "elapsedSeconds": 43.46899999999732,
+    "normalDebuggerExactMatchProven": false,
+    "PEExportAnchors": {
+      "ChromeMain": 5029520,
+      "CrashForExceptionInNonABICompliantCodeRange": 123614176,
+      "GetHandleVerifier": 50308080,
+      "IsSandboxedProcess": 54916336,
+      "sqlite3_dbdata_init": 199723328
+    }
+  },
+  "archive": {
+    "file": "windows-cloud-metric-evidence.zip",
+    "bytes": 115395,
+    "sha256": "b6cf20b685019cca6b57e838d7066c1cca37f7e3d2ca2c0c90fa66ba545770fa",
+    "members": 46,
+    "originalRecords": 44,
+    "manifestSHA256": "603011ae96f16db678520dc975ee818e844eb448855d05e6c56b156849e0e25f",
+    "crc": "passed",
+    "allRecordedSHA256": "passed",
+    "evidenceModified": false
+  },
+  "rootCauseFixed": false,
+  "canonicalWindowsChromeAcceptance": "still failed under original default settings",
+  "applicationChanged": false,
+  "canonicalAcceptanceChanged": false,
+  "redeployed": false,
+  "goalComplete": false
+}

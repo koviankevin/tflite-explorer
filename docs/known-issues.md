@@ -17,7 +17,7 @@ v1.3.0 已完成正式站與固定 Release 核對，13 種新增 OP 靜態規則
 | 5 | Resource-only MLIR 曾漏列未驗證權重編碼 | 計數與持續提示修正已在 v1.2.0 交付，原生匯出重開與 bytes 證據保留；packing／dialect 語意仍未驗證 |
 | 6 | 一次歷史啟動逾時尚無可重現根因 | 已有有界診斷及恢復操作；後續成功不能證明根因已修復 |
 
-Windows Chrome 關閉另有[最新實體八輪失敗 stack](windows-large-model.md#實體八輪的失敗-stack)：已補到真實失敗根程序的 43 個執行緒 stack；匯出與原記憶體子判定通過，整輪仍失敗，根因未修復。SDK 強制清理和符號解碼不等於正常關閉驗收成功。
+Windows Chrome 關閉已[定位本次具體等待路徑](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)：Chrome startup metrics 的 OneDrive 狀態查詢停在 Windows storage／Cloud Files API，主執行緒等待 thread pool shutdown。四個函式範圍、同版原始碼及兩個各一次的空白頁對照已核對；原設定再次失敗，僅停用該統計功能的隔離對照約 191 ms 正常退出。這是外部等待機制的證據；Windows／provider 底層缺陷與所有歷史失敗仍未證實。必要 Chrome 驗收不加入此診斷旗標，原失敗不改列通過；沒有修改 OneDrive、個人設定或正式網站。見[收據](results/windows-cloud-metric.json)。
 
 ## 待查：一次啟動逾時的根因
 
