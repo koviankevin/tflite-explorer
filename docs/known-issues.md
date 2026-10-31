@@ -1,8 +1,8 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.3.0](operator-validation.md#v130-正式交付)／build `44782d0412ebc0b8`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)／build `960b708cb9389164`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
-v1.3.1 候選已補上[手動 runtime 的 tensor 錯誤參照](runtime-tensor-diagnostics.md)：官方公開量化模型的原檔在目前 LiteRT compile 失敗，但日誌的 tensor 編號原先沒有 OP 對照。現在可查看定義／使用者，先顯示套用輸入前失敗的提示，並保留原文與失敗狀態；參照不代表 OP 就是原因。31 項相關選測及固定候選的 Chrome／Edge 原生小型流程已核對，正式版本尚未更新。
+v1.3.1 已交付[手動 runtime 的 tensor 錯誤參照](runtime-tensor-diagnostics.md)：官方公開量化模型的原檔在目前 LiteRT compile 失敗，但日誌的 tensor 編號原先沒有 OP 對照。現在可查看定義／使用者，先顯示套用輸入前失敗的提示，並保留原文與失敗狀態；參照不代表 OP 就是原因。31 項相關選測、四項 main 關卡、正式站 35 項操作與四份實際下載已核對。新增的 Windows 正式站小型流程功能與正常退出通過，但整體網路守門仍失敗；後續一次診斷觀察到 Kaspersky 注入類型的請求，原始失敗及完整本機紀錄保留，沒有關閉防毒或放行外連。見[最終收據](results/runtime-tensor-v1.3.1-published.json)。
 
 TRANSPOSE permutation 的負軸誤擋與錯誤 dtype 放行已在 v1.2.1 正式交付，56 項相關 Node 測試、四項來源關卡、1,457 個正式檔案、34 項正式操作與四份實際 Release 下載已核對，[最終收據](results/product-readiness-v1.2.1-published.json)保留完整來源。打包候選兩瀏覽器的功能與 CPU bytes 均通過，但 Chrome 最後正常關閉逾時，整輪仍失敗，Edge 整輪通過。v1.2.0 固定產物的 [Windows 完整八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；後續[空白頁診斷](windows-large-model.md#空白頁的原生程序類型與等待鏈)仍重現根程序／crashpad-handler 未退出，根因與 Edge 接近原 RSS slope 上限的界線保留。
 

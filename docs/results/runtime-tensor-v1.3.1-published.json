@@ -1,0 +1,281 @@
+{
+  "format": "model-lens-product-readiness-published-review",
+  "version": 1,
+  "status": "passed",
+  "at": "2026-10-31T21:23:06.965Z",
+  "source": "8946d3473ae6952f12fd54d124f2d5f645b6c4a2",
+  "tree": "86227033a2e8fbe0b8d9ffdbe1a29de0e05de185",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.3.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "8946d3473ae6952f12fd54d124f2d5f645b6c4a2",
+      "tree": "86227033a2e8fbe0b8d9ffdbe1a29de0e05de185",
+      "committedAt": "2026-11-01T05:08:07+08:00",
+      "dirty": false
+    },
+    "buildId": "960b708cb9389164"
+  },
+  "run": {
+    "id": 41242450193,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41242450193",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 124658948870,
+        "name": "prepare",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124659110681,
+        "name": "Publish site aab00d1e7b9c71f7b138fe971e5077cb3af6a22bea95d8c27067f8ce5737f54f",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124659280751,
+        "name": "verify_live",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124660947871,
+        "name": "release",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "releaseId": 430193291,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.1",
+  "publishedAt": "2026-10-31T21:20:49Z",
+  "siteId": "aab00d1e7b9c71f7b138fe971e5077cb3af6a22bea95d8c27067f8ce5737f54f",
+  "siteManifestSHA256": "4280776bd614478b61b05906b594fcea4a1c04350b6948d042028dee9de6f5f4",
+  "rootEntrySHA256": "90046114487fb7db84ff6ab3c798f2ccde8149f40dec387f61ae35a7205d7002",
+  "coreFiles": 323,
+  "siteFiles": 1466,
+  "checks": 35,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "mainModelWorkers": 91,
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -9302016,
+      "mainHeapDriftBytes": -12559640,
+      "closedRssSlopeBytesPerCycle": 8418684.342857143,
+      "sampledPeakRssBytes": 819269632,
+      "maxSampleGapMs": 651,
+      "sampledPeakGrowthBytes": 40235008
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.3.1-960b708cb9389164.zip",
+      "bytes": 41282247,
+      "sha256": "bb321ec7921ec6233d66e2ebc4449633d0d4d935ac1f88fda9da8023e548548b"
+    },
+    {
+      "name": "model-lens-public-1.3.1-960b708cb9389164.zip.sha256",
+      "bytes": 111,
+      "sha256": "5df3a9c307cfbe6b102cb77071a42dd55f970dc9123669e4be6ee36c03ce7564"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 198626,
+      "sha256": "2dba4e64476275f745808683c7901d735d3451683afe9b08995d438e9c4bc27c"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52286,
+      "sha256": "1ed1388239dd970e742eb89f12b0dba591d16528cdc91bc6635952a80c5fc891"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7464451347,
+    "controllerSource": "8946d3473ae6952f12fd54d124f2d5f645b6c4a2",
+    "runId": 41242450193,
+    "attempt": 1,
+    "jobId": 124659110681,
+    "siteId": "aab00d1e7b9c71f7b138fe971e5077cb3af6a22bea95d8c27067f8ce5737f54f",
+    "legacy": false
+  },
+  "artifacts": [
+    {
+      "id": 13057673770,
+      "name": "published-release-verification",
+      "bytes": 754,
+      "digest": "sha256:0d193ba74ead66a41e9c638f944d9d9513ec741be7861af179bd241bdc4e6724"
+    },
+    {
+      "id": 13057544171,
+      "name": "live-release-verification",
+      "bytes": 554431,
+      "digest": "sha256:507d52f1f276d2477c7f2e9739ee5f6ab8584ed436ff73ee5b1cf14c1cf77481"
+    }
+  ],
+  "limitations": [
+    "Current formal public release verified; full product goal remains active.",
+    "Historical Windows Chrome long-load shutdown failure remains recorded; Linux/focused results do not repair the native OneDrive statistics wait.",
+    "Intentional crash-recovery process termination is not normal Worker close.",
+    "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+  ],
+  "goalComplete": false,
+  "nativeTensorSupplement": {
+    "format": "model-lens-public-native-tensor-review",
+    "status": "functional-and-native-close-passed-network-guard-failed",
+    "source": "8946d3473ae6952f12fd54d124f2d5f645b6c4a2",
+    "build": "960b708cb9389164",
+    "actualPublicHTTPS": true,
+    "channels": [
+      {
+        "channel": "chrome",
+        "browserVersion": "156.0.8078.76",
+        "status": "failed",
+        "functionalStatus": "passed",
+        "nativeIdentities": 8,
+        "browserClosed": true,
+        "workers": 4,
+        "workersClosed": true,
+        "rawReportSHA256": "a6c64f850bba0960372325a709d818949eed77b3abb6c4ba2d43919f42f82e4f",
+        "cases": [
+          "official original fails before input; raw tensor diagnostics and noncausal reference buttons at32px",
+          "native keyboard activates tensor consumer reference, renders actual OP and focuses selected layer",
+          "source replacement removes stale tensor links; no automatic inference or IO download"
+        ],
+        "located": {
+          "running": false,
+          "query": "#7",
+          "focus": "0",
+          "nodes": [
+            "6",
+            "7",
+            "8"
+          ],
+          "font": "32"
+        },
+        "guardDenials": 2
+      },
+      {
+        "channel": "msedge",
+        "browserVersion": "156.0.4314.50",
+        "status": "failed",
+        "functionalStatus": "passed",
+        "nativeIdentities": 10,
+        "browserClosed": true,
+        "workers": 4,
+        "workersClosed": true,
+        "rawReportSHA256": "60de5b61836fde5a5bc916b6b8c68b653132572560c4cf73c1e1989a59456c58",
+        "cases": [
+          "official original fails before input; raw tensor diagnostics and noncausal reference buttons at32px",
+          "native keyboard activates tensor consumer reference, renders actual OP and focuses selected layer",
+          "source replacement removes stale tensor links; no automatic inference or IO download"
+        ],
+        "located": {
+          "running": false,
+          "query": "#7",
+          "focus": "0",
+          "nodes": [
+            "6",
+            "7",
+            "8"
+          ],
+          "font": "32"
+        },
+        "guardDenials": 2
+      }
+    ],
+    "followup": {
+      "scope": "One predeclared Chrome diagnostic retaining the same abort predicate; not a repeated green acceptance attempt",
+      "status": "failed",
+      "functionalStatus": "passed",
+      "deniedRequests": [
+        {
+          "origin": "https://gc.kis.v2.scr.kaspersky-labs.com",
+          "resourceType": "script",
+          "method": "GET",
+          "pathClass": "main.js",
+          "queryOmitted": true
+        },
+        {
+          "origin": "https://gc.kis.v2.scr.kaspersky-labs.com",
+          "resourceType": "stylesheet",
+          "method": "GET",
+          "pathClass": "main.css",
+          "queryOmitted": true
+        }
+      ],
+      "rawReportSHA256": "1da98e38aaeffc97c12fe4d2eb508715ce83d4a34d843bb9cef93b5c510bae2d",
+      "rawReportLocalOnly": true,
+      "artifactHTMLContainsKaspersky": false,
+      "officialReference": "https://support.kaspersky.com/help/Kaspersky/Win21.7/en-US/201001.htm",
+      "inference": "Observed two Kaspersky script/style requests are consistent with browser-side security software injection and are absent from prepared HTML. This does not prove unrecorded first-attempt Edge requests identical."
+    },
+    "securityPolicyChanged": false,
+    "antivirusSettingsChanged": false,
+    "modelsOrInputsUploaded": false,
+    "overallWindowsAcceptancePassed": false,
+    "historicalChromeLongLoadIssueFixed": false,
+    "privacy": "Full original request URLs/query strings remain local; only origin/resource type and hashes are published."
+  },
+  "originals": {
+    "path": "runtime-tensor-v1.3.1-evidence.zip",
+    "bytes": 1397039,
+    "sha256": "27e15ef6b3a1c0b38fd00d34f4a50502692b139c646d780b43cdac15ebd0aa57",
+    "manifestSHA256": "170f11263913626168060dc216f585fe97746324302f402dcfdbbed10bed34bf",
+    "records": 57,
+    "localOnlyOriginals": [
+      {
+        "path": "v1.3.1-prepared-artifacts/github-pages.zip",
+        "bytes": 29159978,
+        "sha256": "7772a02c89a5cafd77a7198f7c46edfcacf25042733170f63eafe89e79b757e4"
+      },
+      {
+        "path": "v1.3.1-prepared-artifacts/release-delivery.zip",
+        "bytes": 7205677,
+        "sha256": "f11a06cdce32838ff4d8841f81ed30704454fca3853899233f653b5227b08b37"
+      },
+      {
+        "path": "windows-public-chrome/report.json",
+        "bytes": 14801,
+        "sha256": "a6c64f850bba0960372325a709d818949eed77b3abb6c4ba2d43919f42f82e4f"
+      },
+      {
+        "path": "windows-public-msedge/report.json",
+        "bytes": 15904,
+        "sha256": "60de5b61836fde5a5bc916b6b8c68b653132572560c4cf73c1e1989a59456c58"
+      },
+      {
+        "path": "windows-public-chrome-network-diagnostic/report.json",
+        "bytes": 15348,
+        "sha256": "1da98e38aaeffc97c12fe4d2eb508715ce83d4a34d843bb9cef93b5c510bae2d"
+      },
+      {
+        "path": "v1.3.1-release-downloads/model-lens-public-1.3.1-960b708cb9389164.zip",
+        "bytes": 41282247,
+        "sha256": "bb321ec7921ec6233d66e2ebc4449633d0d4d935ac1f88fda9da8023e548548b"
+      },
+      {
+        "path": "v1.3.1-release-downloads/model-lens-public-1.3.1-960b708cb9389164.zip.sha256",
+        "bytes": 111,
+        "sha256": "5df3a9c307cfbe6b102cb77071a42dd55f970dc9123669e4be6ee36c03ce7564"
+      },
+      {
+        "path": "v1.3.1-release-downloads/release-gates.json",
+        "bytes": 198626,
+        "sha256": "2dba4e64476275f745808683c7901d735d3451683afe9b08995d438e9c4bc27c"
+      },
+      {
+        "path": "v1.3.1-release-downloads/release-manifest.json",
+        "bytes": 52286,
+        "sha256": "1ed1388239dd970e742eb89f12b0dba591d16528cdc91bc6635952a80c5fc891"
+      }
+    ]
+  }
+}

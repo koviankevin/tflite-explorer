@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.3.0](operator-validation.md#v130-正式交付)／build `44782d0412ebc0b8`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)／build `960b708cb9389164`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -28,7 +28,7 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 ## 各階段原始計畫與範圍
 
-新一輪公開真實模型補測找到 tensor-only runtime 診斷沒有 OP 參照的缺口，已在 [v1.3.1 候選](runtime-tensor-diagnostics.md)修正。原始公開模型的量化參數與目前 LiteRT 不相容，仍保留 compile 失敗，不修改權重／量化或聲稱數值等價。31 項相關測試、六個真正 CPU 負例、四種資料保留匯出，以及兩個 Windows 瀏覽器的 32px／鍵盤定位／來源替換／Worker 和正常退出已核對；發布關卡與正式交付尚待完成。這是新的可重現應用修正，與前述 Chrome 雲端統計阻塞分開處理。
+新一輪公開真實模型補測找到 tensor-only runtime 診斷沒有 OP 參照的缺口，已在 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)交付。原始公開模型的量化參數與目前 LiteRT 不相容，仍保留 compile 失敗，不修改權重／量化或聲稱數值等價。31 項相關測試、六個真正 CPU 負例、四種資料保留匯出，以及兩個 Windows 候選瀏覽器的 32px／鍵盤定位／來源替換／Worker 和正常退出已核對。四項 main 發布關卡、正式 HTTPS 的 1,466 檔／35 項操作及四份實際下載完成[最終核對](results/runtime-tensor-v1.3.1-published.json)。Windows 正式 HTTPS 功能與正常退出通過，但整體仍因兩筆網路守門失敗而保留失敗；一次獨立診斷記錄到 Kaspersky script／style，未更改防毒或封鎖規則。這與前述 Chrome 長負載的雲端統計阻塞分開處理，完整商品等級目標仍未完成。
 
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
