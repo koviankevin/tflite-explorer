@@ -4,10 +4,14 @@ import {OPERAND_OPERATORS,checkOperandValues,checkOperandMetadata} from './tflit
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
     const shape=t=>t?.has_rank!==false&&!t?.shape_signature?.some(d=>d<0)&&t?.shape&&Array.from(t.shape).every(d=>d>=0)?Array.from(t.shape):null;
-    const values=id=>{
-        if(cache.has(id))return cache.get(id);
+    const values=(id,types=[2,4])=>{
         const skip=reason=>{reasons.set(id,reason);return null;};
         const t=g.tensors[id],b=model.buffers[t?.buffer],dims=shape(t),width={2:4,4:8,7:2,9:1,6:1}[t?.type];
+        if(!t)return skip('沒有常數 tensor（參數可能由 options 提供），本項未檢查。');
+        // PAD supports additional integer encodings. A cached PAD value must
+        // never widen another operator's admitted operand dtypes.
+        if(!types.includes(t.type))return skip('dtype 不在此 OP 已實作的整數常數檢查範圍。');
+        if(cache.has(id))return cache.get(id);
         if(!t||!b||t.is_variable||inputs.has(id)||produced.has(id))return skip('是模型輸入、producer 的動態結果、variable 或沒有可讀 buffer。');
         if(!dims||!width)return skip('shape／整數編碼未知，未讀取常數。');
         const count=dims.reduce((a,b)=>a*b,1),size=count*width;
@@ -28,14 +32,14 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             const inTensors=Array.from(op.inputs,id=>g.tensors[id]),outTensors=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
             try{
                 checkOperandMetadata(name,inTensors,outTensors,options);
-                const attempted=new Set(),proof=checkOperandValues(name,inTensors,outTensors,options,slot=>{const id=op.inputs[slot];attempted.add(id);return values(id);});
+                const attempted=new Set(),proof=checkOperandValues(name,inTensors,outTensors,options,slot=>{const id=op.inputs[slot];attempted.add(id);return values(id,[2,4,7,9,6]);});
                 record.status=proof.status;record.reason=proof.reason;
                 if(proof.status==='passed')checked++;else{unchecked++;const missing=[...attempted].filter(id=>reasons.has(id));if(missing.length)record.reason=missing.map(id=>`tensor #${id}：${reasons.get(id)}`).join(' ');}
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
         if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
-        const v=values(id),a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
+        const v=values(id,name==='GATHER'?[2,4,7]:undefined),a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
         if(!v||!a||!out){unchecked++;record.reason=reasons.get(id)||'input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
         let expected;
         if(name==='TRANSPOSE'){
