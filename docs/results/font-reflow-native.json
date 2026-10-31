@@ -1,0 +1,350 @@
+{
+  "format": "model-lens-font-render-regression",
+  "status": "passed",
+  "artifact": {
+    "schemaVersion": 1,
+    "version": "1.2.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "403352cf4860b1f62b5d899c8f47b9c279f6d362",
+      "tree": "da7dedb2952a959e1e9c914e9408b21e01e7463d",
+      "committedAt": "2026-10-31T13:09:41+08:00",
+      "dirty": false
+    },
+    "buildId": "3469aaf8c86bdc66"
+  },
+  "driverSHA256": "19a2e0559f8e77f022cdf32a0c8a3c75ae91d79b4f50151e45faea9d877d1a00",
+  "browsers": [
+    {
+      "channel": "chrome",
+      "status": "passed",
+      "errors": [],
+      "documentFixture": {
+        "mode": "manifest-pinned-document-fixture",
+        "documentSHA256": "6175cd57c51c1ef2473d5e4d37117ed69f6eaee05c4037af9d21c5e6708d353a",
+        "bytes": 89417,
+        "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'",
+        "deliveries": 1,
+        "httpDocumentTransportVerified": false
+      },
+      "fontRender": {
+        "cases": [
+          {
+            "kind": "font-changed-during-layout",
+            "rows": [
+              {
+                "kind": "operator",
+                "label": "Mul",
+                "fontPx": 32,
+                "text": {
+                  "left": 800.0625,
+                  "right": 859.140625,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 59.078125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 793.0625,
+                  "right": 866.140625,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 73.078125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "FullyConnected",
+                "fontPx": 32,
+                "text": {
+                  "left": 1243.984375,
+                  "right": 1475.765625,
+                  "top": 423,
+                  "bottom": 466,
+                  "width": 231.78125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1236.984375,
+                  "right": 1482.765625,
+                  "top": 419,
+                  "bottom": 470,
+                  "width": 245.78125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 949.53125,
+                  "right": 1153.59375,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 942.53125,
+                  "right": 1160.59375,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 1257.84375,
+                  "right": 1461.90625,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1250.84375,
+                  "right": 1468.90625,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Add",
+                "fontPx": 32,
+                "text": {
+                  "left": 1565.15625,
+                  "right": 1628.28125,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 63.125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1559.15625,
+                  "right": 1636.28125,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 77.125,
+                  "height": 51
+                }
+              }
+            ]
+          }
+        ],
+        "layoutRequestDelayed": true,
+        "geometryModified": false,
+        "barrier": {
+          "held": true,
+          "busy": "true",
+          "measuredNodes": [
+            {
+              "width": 118.8720703125,
+              "height": 27
+            },
+            {
+              "width": 39.8681640625,
+              "height": 27
+            },
+            {
+              "width": 115.736328125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 42.51171875,
+              "height": 27
+            },
+            {
+              "width": 118.421875,
+              "height": 27
+            }
+          ]
+        }
+      },
+      "geometryPassed": true,
+      "browserClosed": true
+    },
+    {
+      "channel": "msedge",
+      "status": "passed",
+      "errors": [],
+      "documentFixture": {
+        "mode": "manifest-pinned-document-fixture",
+        "documentSHA256": "6175cd57c51c1ef2473d5e4d37117ed69f6eaee05c4037af9d21c5e6708d353a",
+        "bytes": 89417,
+        "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'",
+        "deliveries": 1,
+        "httpDocumentTransportVerified": false
+      },
+      "fontRender": {
+        "cases": [
+          {
+            "kind": "font-changed-during-layout",
+            "rows": [
+              {
+                "kind": "operator",
+                "label": "Mul",
+                "fontPx": 32,
+                "text": {
+                  "left": 800.0625,
+                  "right": 859.140625,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 59.078125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 793.0625,
+                  "right": 866.140625,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 73.078125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "FullyConnected",
+                "fontPx": 32,
+                "text": {
+                  "left": 1243.984375,
+                  "right": 1475.765625,
+                  "top": 423,
+                  "bottom": 466,
+                  "width": 231.78125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1236.984375,
+                  "right": 1482.765625,
+                  "top": 419,
+                  "bottom": 470,
+                  "width": 245.78125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 949.53125,
+                  "right": 1153.59375,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 942.53125,
+                  "right": 1160.59375,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 1257.84375,
+                  "right": 1461.90625,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1250.84375,
+                  "right": 1468.90625,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Add",
+                "fontPx": 32,
+                "text": {
+                  "left": 1565.15625,
+                  "right": 1628.28125,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 63.125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1559.15625,
+                  "right": 1636.28125,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 77.125,
+                  "height": 51
+                }
+              }
+            ]
+          }
+        ],
+        "layoutRequestDelayed": true,
+        "geometryModified": false,
+        "barrier": {
+          "held": true,
+          "busy": "true",
+          "measuredNodes": [
+            {
+              "width": 118.8720703125,
+              "height": 27
+            },
+            {
+              "width": 39.8681640625,
+              "height": 27
+            },
+            {
+              "width": 115.736328125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 42.51171875,
+              "height": 27
+            },
+            {
+              "width": 118.421875,
+              "height": 27
+            }
+          ]
+        }
+      },
+      "geometryPassed": true,
+      "browserClosed": true
+    }
+  ]
+}

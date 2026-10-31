@@ -19,12 +19,13 @@ export async function fontRenderFlow({page,read,until,directory,check}){
     const ready=()=>until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node-item-type text').length>0);
     const bounds=()=>read(()=>{
         const rectangle=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-        const pairs=[...document.querySelectorAll('#target .node-item-type')].map(g=>({kind:'operator',text:g.querySelector('text'),frame:g.querySelector('path')}));
+        const pairs=[...document.querySelectorAll('#target .node-item')].map(g=>({kind:g.classList.contains('node-item-type')?'operator':'boundary-or-item',text:g.querySelector(':scope > text'),frame:g.querySelector(':scope > path')}));
         for(const g of document.querySelectorAll('#target .node-argument'))pairs.push({kind:'argument',text:g.querySelector(':scope > text'),frame:g.querySelector(':scope > rect')});
         return pairs.filter(p=>p.text&&p.frame).map(p=>({kind:p.kind,label:p.text.textContent,fontPx:parseFloat(getComputedStyle(p.text).fontSize),text:rectangle(p.text),frame:rectangle(p.frame)}));
     });
     const fit=rows=>{
         assert.ok(rows.some(r=>r.kind==='operator'));
+        assert.ok(rows.filter(r=>r.kind==='boundary-or-item').length>=2,'Graph input/output labels must be included in measured-frame coverage.');
         for(const r of rows){assert.equal(r.fontPx,32);assert.ok(r.frame.width>0&&r.frame.height>0);assert.ok(r.text.left>=r.frame.left-1&&r.text.right<=r.frame.right+1&&r.text.top>=r.frame.top-1&&r.text.bottom<=r.frame.bottom+1,`${r.kind} ${r.label} exceeds its measured frame at32px: ${JSON.stringify(r)}`);}
     };
     const originalFont=await page.locator('#graph-font-size').inputValue();let directionChanged=false;
