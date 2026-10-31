@@ -1,0 +1,48 @@
+{
+  "status": "local-verified-not-published",
+  "source": "2fbd1ef8413eff770b480dbef709edb331e3d4f9",
+  "tree": "40936eed12723e57f6a4adcd2d4cd9a3c755a73e",
+  "tests": {
+    "passCount": 76,
+    "fail": 0,
+    "skipped": 0
+  },
+  "scope": [
+    "per-operator dtype admission before shared constant cache",
+    "EXPAND_DIMS bool/int16, RESHAPE int8, GATHER bool unverified",
+    "legitimate GATHER int16 and PAD bool 0/1 retain validation",
+    "noncanonical bool bytes unverified with actual bytes counted",
+    "unchanged budgets and TRANSPOSE int32 restriction"
+  ],
+  "evidence": {
+    "file": "operator-dtype-validation-evidence.zip",
+    "bytes": 7033,
+    "sha256": "e40c93c8d104512c0ad1a1500aed1a54171fe2a122d355ae3101f5a83466d119",
+    "members": [
+      {
+        "path": "operand-dtype-red.log",
+        "bytes": 5398,
+        "sha256": "95326ba1b79df9dc8f7936eba15c261117ffc048b6dc8e03fffa9f6695a79dc9"
+      },
+      {
+        "path": "operand-dtype-fixed.log",
+        "bytes": 6801,
+        "sha256": "164f82678c03a3982aaf287d77c26e8682fca2733819cb7aa5a52d13631634ad"
+      },
+      {
+        "path": "operand-bool-red.log",
+        "bytes": 5480,
+        "sha256": "202cbbcc87e756e8985bf5b2f78ba030bf72877a7ced9b9a1cb9e05aec32525f"
+      },
+      {
+        "path": "operand-bool-fixed.log",
+        "bytes": 6796,
+        "sha256": "97ca2a5ef58f15fa2d49b45ee153d5495d80680b2975c2b9c39ee9e277ddad13"
+      }
+    ]
+  },
+  "limitations": [
+    "Not native-browser or physical-memory evidence.",
+    "No new runtime execution, rejection of all arbitrary kernel combinations, or formal deployment claim."
+  ]
+}

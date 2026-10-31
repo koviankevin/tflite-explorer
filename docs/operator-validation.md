@@ -43,3 +43,11 @@ PR #190 合併後，來源 `adf7ef7` 的實體 1.25 GiB／21,005 OP 關卡在第
 21 項相關選測通過，包含完整 21,005 OP metadata 報告連續附加三次狀態且零報告 body reads。Windows Chrome／Edge 皆完成實際 Worker 傳送、編輯匯出、大型報告 JSON 全部 21,006 筆，以及畫面 100→200 筆載入。此獨立報告案例使用 64-byte 合成權重，只證明完整 metadata／報告流程；不能代替實體大檔八輪。Edge 正常程序／Worker 退出，Chrome 功能通過但正常關閉仍逾時，整輪仍失敗。
 
 [收據](results/operator-report-prefix.json)及[39 份原始證據](results/operator-report-prefix-evidence.zip)保留首次實體關卡失敗、原始 ZIP digest／CRC、縮小後的 red／green，以及兩個瀏覽器的報告、下載與截圖。修正版的主分支實體八輪及正式交付仍待完成。
+
+## 各 OP 的常數 dtype 邊界
+
+PAD 新增的 int8／int16／bool 常數讀取能力不會擴大其他 OP 的檢查範圍。EXPAND_DIMS／RESHAPE 保留原先 int32／int64 常數範圍；GATHER 可檢查 int16／int32／int64。未支援 dtype 明列未檢查，不能因共用讀取器或先前 PAD 的快取就誤列通過。型別範圍在讀取及快取命中之前檢查；TRANSPOSE 的 int32 強制規則不變。
+
+序列化的 bool EXPAND_DIMS 曾重現誤列已檢查，新增 int8 RESHAPE、bool GATHER、PAD→GATHER 共用快取與合法 int16 GATHER 正負例後，相關 76 項選測通過。此項維持原本的讀取預算及未知狀態，不新增自動 interpreter。
+
+BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知，不把它猜成 padding 數字或 true。已讀取的 bytes 仍計入原有預算。原始 red／green 與來源見 [dtype 驗收收據](results/operator-dtype-validation.json)。

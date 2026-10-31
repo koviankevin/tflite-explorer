@@ -104,3 +104,29 @@ test('shared constants use one bounded read while dynamic output reasons remain 
     const dynamic=validateTfliteConstants(c.model,0,()=>assert.fail('unknown output shape must not read constants'));
     assert.equal(dynamic.unchecked,2);assert.ok(dynamic.operators.every(c=>/動態或未知 shape/.test(c.reason)));
 });
+
+test('PAD integer encodings must not make unrelated operand dtypes look verified',async()=>{
+    for(const [name,inputs,outputs]of [
+        ['EXPAND_DIMS',[tensor([2,3]),tensor([1],6,[0])],[tensor([1,2,3])]],
+        ['EXPAND_DIMS',[tensor([2,3]),tensor([1],7,[1])],[tensor([2,1,3])]],
+        ['RESHAPE',[tensor([2,3]),tensor([2],9,[2,3])],[tensor([2,3])]],
+        ['GATHER',[tensor([2]),tensor([2],6,[0,1])],[tensor([2])]]
+    ]){
+        const c=await operandFixture(name,inputs,outputs);
+        const proof=validateTfliteConstants(c.model,0,c.read);
+        assert.equal(proof.checked,0,`${name}: unsupported dtype must not pass because PAD can read it`);
+        assert.equal(proof.operators[0].status,'not-run');
+    }
+});
+
+test('dtype admission precedes a shared PAD cache hit; legitimate GATHER int16 remains checked',async()=>{
+    const c=await operandFixture('PAD',[tensor([2]),tensor([1,2],6,[0,1])],[tensor([3])]),g=c.model.subgraphs[0],code=s.BuiltinOperator.GATHER;
+    c.model.operator_codes.push({builtin_code:code,deprecated_builtin_code:code,version:1});
+    g.tensors.push({...g.tensors[2],shape:Int32Array.of(1,2)});g.operators.push({...g.operators[0],opcode_index:1,inputs:[0,1],outputs:[3]});
+    const p=validateTfliteConstants(c.model,0,c.read);assert.equal(p.checked,1);assert.equal(p.unchecked,1);assert.equal(p.operators[1].status,'not-run');assert.match(p.operators[1].reason,/dtype/);
+    const valid=await operandFixture('GATHER',[tensor([2]),tensor([2],7,[0,1])],[tensor([2])]);
+    assert.equal(validateTfliteConstants(valid.model,0,valid.read).checked,1);
+    const unknownBool=await operandFixture('PAD',[tensor([2]),tensor([1,2],6,[0,2])],[tensor([4])]);
+    const unknown=validateTfliteConstants(unknownBool.model,0,unknownBool.read);
+    assert.equal(unknown.checked,0);assert.equal(unknown.unchecked,1);assert.match(unknown.operators[0].reason,/bool.*編碼/);assert.equal(unknown.bytesRead,2);
+});
