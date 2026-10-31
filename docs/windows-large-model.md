@@ -87,3 +87,13 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 兩端均核對 1,349,965,216 bytes／21,005 OP、完整／局部／組合匯出、所有權重／custom options bytes、pattern 正負例、草稿與 32px 版面。每端 40 個模型 Worker、16 個全檔指紋 Worker，以及共 57 筆 native worker close 事件均核對；debug log 另確認 SDK 正常 exit 0，沒有事後強制清理冒充正常退出。Worker 記憶體是檢查點的 V8 heap／backing storage，不是獨立 OS RSS 或連續峰值。
 
 **Edge 的 slope 接近原 16 MiB／輪上限，不能宣稱有寬裕餘量或未來永不成長。** 取樣可漏掉瞬間峰值；這是公開合成模型的有限八輪、manifest 固定 HTML 本機啟動，並非公司模型、數小時負載或 HTTPS 文件傳輸驗收。較早 Chrome4／Chrome5 及單次 IO-only 關閉失敗仍保留，後來相同大檔 IO-only 對照正常退出也不證明歷史根因已修復。未重跑成功部署。
+
+## 空白頁的原生程序類型與等待鏈
+
+後續兩個預先指定的短對照各只開一張合成空白頁，不載入網站應用、模型、下載、Worker 或網站 WASM。保留原 25 秒 idle、10 秒 browser close 上限；第一個保留觀察用 CDP session，第二個先解除這些 session，再關閉 context／browser。Chrome `156.0.8078.76` 的兩個 context 均正常關閉，browser 也各在約 30／28 ms 斷線，但程序在原 10 秒內都未退出，兩輪仍判失敗。
+
+本次在每個 PID 的原生建立時間相符前後，僅讀取自有 Chrome 的 `--type` 分類；沒有保存完整 command line、環境或程序記憶體。兩次逾時當下 renderer、GPU、network 與 storage 已退出，仍存活的根程序與子程序可明確對應；子程序類型是 **crashpad-handler**。這只辨識這兩次實際仍存活的 PID，不能回推已消失的歷史 unknown child，也不能由同時存活就認定根程序在等它。
+
+第二輪另以 Windows WCT 讀取 52 個自有執行緒；51 個回傳單一節點，一個查詢回報 error 87。沒有改動偵錯權限、列出同步物件名稱或讀取 stack／記憶體。依 [GetThreadWaitChain 官方說明](https://learn.microsoft.com/windows/win32/api/wct/nf-wct-getthreadwaitchain)，單一節點也可能來自不支援的同步等待，因此這次資料沒有找到可確認的等待相依關係，不能排除阻塞或宣稱已定位根因。
+
+這些結果表示網站模型、推論、下載與這些觀察用 CDP session 不是本次逾時的必要條件；Chrome 自身仍可能啟動內建服務，不能把其 stderr 當成網站執行過 LiteRT。兩次 SDK 隨後 force kill 的日誌均保留，不冒充正常退出。沒有改變正式測試的關閉方式或放寬門檻。[本次主分支收據](results/transpose-main-verification.json)及[原始報告、分類／WCT helper、日誌與讀取器](results/transpose-main-evidence.zip)保留此獨立診斷；同批 Linux 關卡成功不修復這個 Windows 原生問題。
