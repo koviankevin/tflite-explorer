@@ -1,6 +1,6 @@
 # Windows 大模型程序記憶體驗收
 
-本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻，Chrome 完成內容與正常關閉驗證，但 closed RSS slope 超標。正式站仍為 v1.1.0，不能將主分支修正或診斷對照視為已發布。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
+本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻；Chrome 第四輪 RSS slope 超標，第五輪內容與記憶體通過，但最後正常關閉逾時。兩輪都不能當成完整通過。正式站仍為 v1.1.0，不能將主分支修正或診斷對照視為已發布。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
 
 ## 原生觀察與所有權
 
@@ -60,3 +60,15 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 原產物的 parser-only 對照完成 40 個真實解析 Worker，edit/export-only 對照完成 16 個真實序列化及重新解析 Worker，加入上述旗標後皆正常退出。兩者沒有覆蓋完整網站操作與真實下載，不能取代新的完整 Chrome 八輪驗收。
 
 測試工具另在 Windows 的階段切換或每十秒保存原生逐 PID／creation 身分、CDP 程序類型、main isolate backing storage 與一般 DOM counters。這些唯讀補充不改原 RSS／heap 算法、warmup、取樣間隔或門檻；未呼叫強制 GC、leak-detection 清理或 working-set trimming。新的完整結果仍須在乾淨來源、實際程序結束後獨立核對。
+
+## 第五輪與小型關閉對照
+
+[後續原始證據](results/product-readiness-stage3-update.json)保留 Chrome 第五輪實際 exit 1：八輪完整功能、16 份全原檔指紋、權重／custom options／輸出 bytes／pattern 正負例及原記憶體判定均通過，closed RSS slope 為 `265,888.91` bytes／輪；但是最後 `browser.close()` 超過原 10 秒，原生觀察仍有兩個 chrome.exe 身分，故整輪失敗。57 個 worker close 事件不代替整個程序的正常退出。
+
+讀取已安裝 Playwright 原始碼另確認，其 parent process exit handler 可能強制清理仍存活的自有瀏覽器。小型失敗的 debug log 確實保留此行為。因此不能把 driver 結束後 PID 消失視為原 10 秒內正常退出，也不能把沒有手動發訊號等同 SDK 從未清理。原報告、當時 counters 與失敗判定均未改寫。
+
+四個空白頁對照在約 0.2 秒正常退出，保留／先解除 CDP 觀察器皆通過；同一五個 OP 小型網站的兩種關閉順序也都通過，沒有因果證據支持改變正式 teardown。另一次小型 UI 測試在錯選隱藏按鈕後，清理亦重現 close 逾時；修正測試選到可見的桌面搜尋按鈕，不能據此宣稱已修復瀏覽器關閉問題。
+
+小型候選的 Chrome／Edge 1280×640、1366×640、32px、原生選檔、範本標示與搜尋數值檢查通過，並各正常關閉。但人工檢視截圖發現 Chrome 初次切字級時文字超框，表示原數值檢查未覆蓋真正文字尺寸；已補[字級排版回歸](font-reflow.md)。這批小型結果不能寫成完整視覺驗收，也不能抵銷第五輪大模型關閉失敗。
+
+來源相同的主分支 `3eb0415` 另完成正常 HTTP 的 Linux 實體八輪、六種版本切換及完整網站操作，原 artifact digest／CRC／source／原判定皆獨立核對通過。新的字級修正會改變相關來源範圍，仍須補其受影響的正式關卡。
