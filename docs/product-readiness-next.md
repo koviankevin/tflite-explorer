@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)／build `960b708cb9389164`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.0](quantization-validation.md#v140-正式交付)／build `d36b95c7320aa6f2`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -39,7 +39,7 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |
 | 保存、操作及發布 | 草稿／pattern 異常與遷移可恢復；主要新手流程與鍵盤可操作；固定產物、相依 scope、必要關卡、正式站與 Release 一致，回退不破壞使用者資料 | 既有功能與交付證據沿用；新功能仍須補受影響驗收；OS 斷電、完整螢幕閱讀器與任意格式遷移仍未證實 |
 
-接續 OP 驗證的 [v1.4.0 量化候選](quantization-validation.md)已補上非空 shape／legacy has_rank=false 與 per-tensor 的量化軸檢查，並將未知 QuantizationDetails 留為未驗證。每輪值／筆數上限、原樣來源的失敗報告、重接阻擋、100→200 分批與真正 CPU 差異控制均有[候選證據](results/quantization-validation-candidate.json)。Chrome／Edge 的 32px、匯出重開及正常退出通過；正式發布關卡與交付仍待完成，公開版本仍是 v1.3.1。
+接續 OP 驗證的 [v1.4.0 量化欄位與報告](quantization-validation.md#v140-正式交付)已正式交付：補上非空 shape／legacy has_rank=false 與單一 scale 的量化軸檢查，未知 QuantizationDetails／尚未實作 dtype 範圍列為未驗證。重接無效欄位阻擋、原樣來源資料保留、100→200 分批、真正 CPU 差異控制，以及 Chrome／Edge 候選 32px／匯出重開均有各自來源證據。四項 main 關卡、正式站 1,468 檔／36 項操作、四份實際 Release 下載與權威 deployment 均已[最終核對](results/quantization-v1.4.0-published.json)。新增流程零自動 runtime，原政策未放寬；這不修復上述原生 Chrome 問題，也不代表所有 OP 或公司模型語意已驗證。
 
 ## 卷積／pooling 與 allocation 診斷
 
