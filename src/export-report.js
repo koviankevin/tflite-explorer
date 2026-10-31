@@ -26,6 +26,9 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
     ];
     if(format==='mlir')checks.push({id:'dense-values',status:'not-run',detail:'已核對支援格式的延後 dense 元素數／hex bytes；不包含全部數值、resource packing 或 dialect 語意驗證。'});
     const operatorValidation=result.semanticValidation?.flatMap(c=>c.operators||[])||[];
+    const quantization=result.quantizationValidation,quantizationValidation=quantization?.tensors||[];
+    const quantizationSummary=quantization?Object.fromEntries(Object.entries(quantization).filter(([key])=>key!=='tensors')):null;
+    if(quantization?.total)checks.push({id:'quantization-metadata',status:quantization.failed?'failed':quantization.unchecked?'not-run':'passed',detail:`匯出結果的量化 metadata：${quantization.checked} 個已檢查、${quantization.failed} 個失敗、${quantization.unchecked} 個未驗證，省略 ${quantization.omitted} 筆。修改接線時會攔下確定無效的欄位；原樣保留的模型仍可匯出，請先處理本報告問題再嘗試 runtime。${quantization.scope}`});
     if(result.semanticValidation)for(const c of result.semanticValidation)checks.push({id:'constant-operands',status:c.unchecked||!c.checked?'not-run':'passed',detail:`Subgraph #${c.graph??'?'} 常數 operands：${c.checked} 個已檢查、${c.unchecked} 個未能檢查；讀取 ${c.bytesRead} bytes。${c.scope}`});
     const operatorSummary={total:operatorValidation.length,checked:operatorValidation.filter(c=>c.status==='passed').length,unchecked:operatorValidation.filter(c=>c.status!=='passed').length,scope:'只列本次修改／組合的 subgraphs；其他 subgraphs 未重新做常數語意檢查。已檢查只代表列出的靜態規則，不代表可執行或數值等價。'};
     if(operatorValidation.length)checks.push({id:'operator-coverage',status:operatorSummary.unchecked?'not-run':'passed',detail:`逐 OP 靜態規則：${operatorSummary.checked} 個已檢查、${operatorSummary.unchecked} 個未檢查。${operatorSummary.scope}`});
@@ -33,7 +36,7 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
     const report={schemaVersion:1,format:'model-lens-export-report',createdAt:new Date().toISOString(),producer:{name:'Model Lens',buildId},
         source:{name:file.name || 'model',bytes:file.size,format,lastModified:file.lastModified || null,identity:'filename-and-size-only'},
         output:{name:outputName,bytes:result.blob.size,format,layers:result.layers,tensors:result.tensors ?? null},
-        selection:[...picked.values()],provenance,
+        selection:[...picked.values()],provenance,...(quantization?{quantizationValidation,quantizationSummary}:{}),
         interface:{inputs:result.inputs,outputs:result.outputs,conditionalOutputs:result.slice?.conditionalOutputs || 0,exitTag:!!result.slice?.exitTag},
         ...(edited?{modification:result.modification}:{}),operatorValidation,operatorSummary,
         preservation:{method:edited?'original-file-slices-and-explicit-model-edits':'original-file-slices-and-original-parameters',byteRanges:provenance.ranges.length,bytes:provenance.ranges.reduce((n,r)=>n+r.bytes,0),retainedBuffers:result.retainedBuffers ?? null,preservedTensorBufferIds:!!result.preservedIds,customOperators:result.customOperators || [],...(result.referencePlan?{referencePlan:result.referencePlan}:{})},
@@ -45,5 +48,5 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
     const runtimePrefix=new Blob([JSON.stringify(body,null,2).slice(0,-1)]);
     const blob=new Blob([runtimePrefix,',\n  "checks": ',JSON.stringify(reportChecks,null,2),'\n}\n'],{type:'application/json'});
     if(blob.size>EXPORT_REPORT_LIMIT)throw new Error('完整匯出報告超過 16 MiB；模型仍可下載，但本次無法提供報告。');
-    return {blob,runtimePrefix,summary:{source:report.source,output:report.output,selected:report.selection.length,mode:provenance.mode,mapped:provenance.operators.length,generated:provenance.generated?.length || 0,inputs:result.inputs.length,outputs:result.outputs.length,preservation:report.preservation,checks,operatorValidation,operatorSummary,...(edited?{modification:report.modification}:{})}};
+    return {blob,runtimePrefix,summary:{source:report.source,output:report.output,selected:report.selection.length,mode:provenance.mode,mapped:provenance.operators.length,generated:provenance.generated?.length || 0,inputs:result.inputs.length,outputs:result.outputs.length,preservation:report.preservation,checks,operatorValidation,operatorSummary,...(quantization?{quantizationValidation,quantizationSummary}:{}),...(edited?{modification:report.modification}:{})}};
 }

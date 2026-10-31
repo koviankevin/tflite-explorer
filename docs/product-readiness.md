@@ -4,7 +4,7 @@
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前固定版本為 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)，build `44782d0412ebc0b8`。323 核心檔、全站 1,465 檔、35 項正式操作、四份實際固定下載與權威 deployment 均獨立核對；新增 OP 靜態規則與逐 OP 報告見[本版交付](operator-validation.md#v130-正式交付)。原 RSS、安全與 runtime／URL 計時規則未放寬；Windows 正常關閉失敗仍保留，不宣稱整體商品化完成。下方舊版驗收保持原來源與範圍。
+目前固定版本為 [v1.3.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.1)，build `960b708cb9389164`。323 核心檔、全站 1,466 檔、35 項正式操作、四份實際固定下載與權威 deployment 均獨立核對，見[本版交付](runtime-tensor-diagnostics.md#v131-正式交付)。原 RSS、安全與 runtime／URL 計時規則未放寬；Windows 額外網路守門與歷史長負載正常關閉失敗仍保留，完整商品化目標未完成。[量化欄位與報告候選](quantization-validation.md)仍待操作及正式關卡，以下舊版驗收保持原來源與範圍。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 

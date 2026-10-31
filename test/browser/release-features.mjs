@@ -23,3 +23,9 @@ export function operatorValidationRequired(version){
     const preview=/^0\.2\.0-preview\.([1-9]\d*)$/.exec(version);
     return !(preview&&Number(preview[1])<=34)&&!['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1'].includes(version);
 }
+
+export function quantizationValidationRequired(version){
+    browserReleaseFeatures(version);
+    const preview=/^0\.2\.0-preview\.([1-9]\d*)$/.exec(version);
+    return !(preview&&Number(preview[1])<=34)&&!['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1'].includes(version);
+}

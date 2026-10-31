@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired} from './browser/release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired} from './browser/release-features.mjs';
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
+
+test('quantization browser coverage skips only exact immutable pre-feature releases',()=>{
+    for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1'])assert.equal(quantizationValidationRequired(version),false,version);
+    for(const version of ['1.4.0','2.0.0','1.3.2','1.3.1+company.1','0.2.0-preview.35'])assert.equal(quantizationValidationRequired(version),true,version);
+    assert.throws(()=>quantizationValidationRequired('candidate'),/version/);
+});
 
 test('stable and future releases retain all current browser coverage',()=>{
     for(const version of ['1.0.0','1.0.1','1.1.0','2.0.0','1.0.1-rc.1','1.0.0+company.2','0.2.1'])assert.deepEqual(browserReleaseFeatures(version),all,version);
