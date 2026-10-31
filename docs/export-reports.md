@@ -10,7 +10,7 @@ TFLite／MLIR 匯出啟動下載後，搜尋欄的「最近匯出報告」可查
 - MLIR 原 OP 對照、因控制流程需要保留的 OP、新增路由／輸出 OP。輸出座標是匯出 function body 的 block／operation ordinal，巢狀 operation 另列 region／block／operation 路徑，不使用會因精簡圖切換而改變的顯示節點編號。module／function 包裝不算新增運算。選取帶 region 的父 OP 時，其內部 OP 一併保留及列出。
 - 原始權重／deferred dense／resource／custom options 在來源及匯出檔中的 byte offset、byte length。這是從組合 Blob 的相同位置記錄，不重新讀取權重；多次引用同一原文會列出多個輸出範圍。
 - 檢查範圍：已完成的結構檢查與尚未進行的 bytes 比對、native compiler、runtime／dialect 語意、dense 逐值檢查分開列出。
-- TFLite 編輯候選另列逐 OP 的靜態規則狀態、原因與 input／output tensor 編號；動態值、超出常數預算及未支援的 OP 明列未檢查。網站每次顯示 100 筆，完整 JSON 保留全部。適用規則和交付狀態見 [OP 驗證](operator-validation.md)。
+- TFLite 編輯候選另列逐 OP 的靜態規則狀態、原因與 input／output tensor 編號；動態值、超出常數預算及未支援的 OP 明列未檢查。網站每次顯示 100 筆，完整 JSON 保留全部。適用規則和交付狀態見 [OP 驗證](https://github.com/koviankevin/tflite-explorer/blob/main/docs/operator-validation.md)。此連結也適用於部署包內獨立的 tools/export-reports.md。
 
 報告上限 16 MiB、最多 100,000 個原始資料範圍、MLIR 最多 50,000 個保留 OP 對照；超過時模型仍可下載，介面明示本次沒有完整報告，不以截斷對照冒充完整報告。產生報告不計算完整來源檔 SHA-256，檔名及大小不是身分驗證；報告不是簽章或數值等價性保證。
 
