@@ -1,6 +1,6 @@
-# Affine 量化欄位檢查與報告（v1.4.0 候選）
+# Affine 量化欄位檢查與報告（v1.4.0）
 
-目前尚未發布；正式站與固定下載仍為 [v1.3.1](runtime-tensor-diagnostics.md#v131-正式交付)。本候選增加量化欄位的靜態結果，不自動執行 interpreter，也不修改原始權重或量化參數。
+已於 [v1.4.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.0) 正式交付，build `d36b95c7320aa6f2`。新增量化欄位的靜態結果，不自動執行 interpreter，也不修改原始權重或量化參數。下方保留候選與各輪驗收的來源界線，最終結果見[正式交付](#v140-正式交付)。
 
 TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpreter_builder.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/core/interpreter_builder.cc#L615) 會依非空 shape 核對 affine 量化軸，並不以舊檔的 `has_rank=false` 略過；單一 scale 也仍須檢查非空 shape 的軸範圍。[schema](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/schema/schema.fbs#L157) 另規定 QuantizationDetails 會取代 affine 欄位，不能把未知編碼當成 affine 錯誤或已驗證的 codec。
 
@@ -18,7 +18,7 @@ TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpre
 
 這些是原始 HTML 完整性受核對的隔離文件 fixture 與實際原生 UI 操作，不是正式 HTTPS 文件傳輸或實體 RSS 測試，也不表示已修復歷史 Chrome 長負載／OneDrive 關閉問題。報告文字／介面調整只改兩個 app 模組；validator、serializer、parser、runtime／vendor 未變，四種合成 fixture bytes 亦逐項相同，據此沿用已完成的 CPU／公開模型證據，僅補跑受影響的 12 項報告測試與兩端 UI。
 
-[候選收據](results/quantization-validation-candidate.json)與[59 份原始紀錄／截圖及讀取器](results/quantization-validation-evidence.zip)已核對 SHA-256／ZIP CRC。模型、權重、BIN／BMP 與完整 primary-source 檔案只留在本機；公開封存只含 metadata、公開合成操作與雜湊來源。正式 PR／main 發布關卡與交付仍待完成，本頁不宣稱 v1.4.0 已發布。
+[候選收據](results/quantization-validation-candidate.json)與[59 份原始紀錄／截圖及讀取器](results/quantization-validation-evidence.zip)已核對 SHA-256／ZIP CRC。模型、權重、BIN／BMP 與完整 primary-source 檔案只留在本機；公開封存只含 metadata、公開合成操作與雜湊來源。這是候選階段證據；後續 PR／main 與正式發布結果另列下方。
 
 ## 未實作 dtype 的覆蓋界線
 
@@ -28,7 +28,7 @@ TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpre
 
 ## 主分支發布前驗收
 
-PR #203 合併來源 `655e5dd384ac3b9e0a05642d77095bb388333e27`／tree `402703eba099a1f12aa4ddcb2e7b0e583d187e9c` 與實際受測 PR tree 相同；895 項中 860 通過、35 項既有選做略過，78 項發布契約及九筆核心量測已核對。下列四項 main／workflow_dispatch 關卡也完成 provider digest、ZIP CRC、來源 scope 與原始政策重判，[收據](results/quantization-main.json)及[50 份原始紀錄與讀取器](results/quantization-main-evidence.zip)保留。這是發布前結果，尚不代表 v1.4.0 已上線。
+PR #203 合併來源 `655e5dd384ac3b9e0a05642d77095bb388333e27`／tree `402703eba099a1f12aa4ddcb2e7b0e583d187e9c` 與實際受測 PR tree 相同；895 項中 860 通過、35 項既有選做略過，78 項發布契約及九筆核心量測已核對。下列四項 main／workflow_dispatch 關卡也完成 provider digest、ZIP CRC、來源 scope 與原始政策重判，[收據](results/quantization-main.json)及[50 份原始紀錄與讀取器](results/quantization-main-evidence.zip)保留。這些是發布前關卡，正式來源與 HTTPS／Release 結果另列下方。
 
 | 關卡 | 結果 |
 | --- | --- |
@@ -43,3 +43,12 @@ PR #203 合併來源 `655e5dd384ac3b9e0a05642d77095bb388333e27`／tree `402703eb
 
 量化報告只涵蓋本次修改／組合或切出的 scopes；未列出的其他 subgraphs 沒有重新做這項檢查。模型、權重與測試輸入仍全程本機，安全、讀取、RSS、自然 URL／runtime 計時上限均未放寬；Windows Chrome 長負載／OneDrive 的既有關閉問題仍保留。
 
+## v1.4.0 正式交付
+
+證據選用 PR #204 的受測 merge tree 與實際主分支相同。正式來源 `685804b1a2bed1d99926ee3816b38dfa757391b6`／tree `4469b419e7bbe8e5a07e26925c9ee425461e9180`，build `d36b95c7320aa6f2`。先以 [41249891909](https://github.com/koviankevin/tflite-explorer/actions/runs/41249891909) 只準備工件，獨立核對 provider digest、ZIP CRC、324 個核心檔、四項證據來源／scope 與版本歷史後，再由 [41250059080](https://github.com/koviankevin/tflite-explorer/actions/runs/41250059080) 以相同 build／site ID 發布。四個 jobs 皆在第一次 attempt 成功，沒有重跑成功部署。
+
+正式 HTTPS 已逐一核對全站 1,468 檔的 bytes／SHA-256／MIME，36 項瀏覽器操作通過；包括量化失敗／未知／正常三種情境、無效重接阻擋、204 筆報告的 100→200 展開、實際六次下載／202 OP 重開搜尋、四個模型 Worker 關閉，新增流程零自動 runtime。原 15 組 32px 框、19 種手動 runtime、八輪／24 次 CPU／IO 與原 RSS／清理規則也依原政策核對。intentional crash recovery 的強制終止與正常關閉保持不同判定。
+
+實際下載 [v1.4.0 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.0) 的 ZIP、checksum、manifest 與 gates 四個 assets，逐一符合準備工件；ZIP 41,290,170 bytes，SHA-256 `911623417c53fb884a9a6e812531fdb9d99b3f58d45f050558876acd61e5b951`。Tag、Latest、不可變來源及權威 Pages deployment 均核對。Site ID 為 `8f6eff2a2ad97de14a78172e085b73084e163a49a6ebdf6dcb28b92acfbdeb6c`，保留 v1.3.1／v1.3.0 及永久 baseline，舊 assets 不變。
+
+[最終收據](results/quantization-v1.4.0-published.json)與[原始發布紀錄及獨立讀取器](results/quantization-v1.4.0-evidence.zip)保留來源、官方 digest 與有限範圍；大型準備工件及四份實際下載留在本機並記錄雜湊，不在 evidence ZIP 重複嵌入。原 Windows Chrome 長負載／OneDrive 關閉問題、正式站額外網路守門失敗，以及任意 kernel／未知量化編碼／公司環境的未驗證範圍仍保留。僅交付 GitHub 正式站與固定 Release，未同步 Sites／GH Studio；完整商品等級目標仍進行中。

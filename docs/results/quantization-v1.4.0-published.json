@@ -1,0 +1,334 @@
+{
+  "format": "model-lens-quantization-published-review",
+  "version": 1,
+  "status": "passed",
+  "at": "2026-10-31T23:02:53.688Z",
+  "source": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+  "tree": "4469b419e7bbe8e5a07e26925c9ee425461e9180",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.4.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+      "tree": "4469b419e7bbe8e5a07e26925c9ee425461e9180",
+      "committedAt": "2026-11-01T06:49:05+08:00",
+      "dirty": false
+    },
+    "buildId": "d36b95c7320aa6f2"
+  },
+  "run": {
+    "id": 41250059080,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41250059080",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 124681508132,
+        "name": "prepare",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124681679324,
+        "name": "Publish site 8f6eff2a2ad97de14a78172e085b73084e163a49a6ebdf6dcb28b92acfbdeb6c",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124681747604,
+        "name": "verify_live",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124683418536,
+        "name": "release",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "releaseId": 430237637,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.0",
+  "publishedAt": "2026-10-31T23:01:22Z",
+  "siteId": "8f6eff2a2ad97de14a78172e085b73084e163a49a6ebdf6dcb28b92acfbdeb6c",
+  "siteManifestSHA256": "668884751c890e7add6078c1b225f9ce2cbb1f4526e3135ec6e61c7b93f64050",
+  "rootEntrySHA256": "12b50d375d960a186cb040e284a47769d4e1bfb90186ef7ecfe4f91497dc4cc9",
+  "coreFiles": 324,
+  "siteFiles": 1468,
+  "checks": 36,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "quantizationValidation": {
+    "status": "passed",
+    "cases": [
+      {
+        "name": "bad",
+        "status": "failed",
+        "quantization": {
+          "total": 3,
+          "checked": 2,
+          "failed": 1,
+          "unchecked": 0,
+          "omitted": 0,
+          "inspectedValues": 4,
+          "valueLimit": 262144,
+          "tensorLimit": 65536,
+          "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+        },
+        "preserved": true,
+        "blockedRewire": true,
+        "layout": {
+          "width": 1280,
+          "height": 640,
+          "documentWidth": 1280,
+          "left": 260,
+          "right": 1020,
+          "top": 12,
+          "bottom": 628,
+          "scroll": 758,
+          "client": 758
+        }
+      },
+      {
+        "name": "opaque",
+        "status": "not-run",
+        "quantization": {
+          "total": 3,
+          "checked": 2,
+          "failed": 0,
+          "unchecked": 1,
+          "omitted": 0,
+          "inspectedValues": 4,
+          "valueLimit": 262144,
+          "tensorLimit": 65536,
+          "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+        },
+        "preserved": true,
+        "layout": {
+          "width": 1280,
+          "height": 640,
+          "documentWidth": 1280,
+          "left": 260,
+          "right": 1020,
+          "top": 12,
+          "bottom": 628,
+          "scroll": 758,
+          "client": 758
+        }
+      },
+      {
+        "name": "large",
+        "status": "passed",
+        "quantization": {
+          "total": 204,
+          "checked": 204,
+          "failed": 0,
+          "unchecked": 0,
+          "omitted": 0,
+          "inspectedValues": 408,
+          "valueLimit": 262144,
+          "tensorLimit": 65536,
+          "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+        },
+        "visibleRows": 200,
+        "reopenedOperators": 202,
+        "layout": {
+          "width": 1280,
+          "height": 640,
+          "documentWidth": 1280,
+          "left": 260,
+          "right": 1020,
+          "top": 12,
+          "bottom": 628,
+          "scroll": 758,
+          "client": 758
+        }
+      }
+    ],
+    "modelWorkers": 4,
+    "automaticRuntimeWorkers": 0,
+    "errors": [],
+    "workersClosed": true,
+    "downloads": 6
+  },
+  "mainModelWorkers": 95,
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -3526656,
+      "mainHeapDriftBytes": -11038688,
+      "closedRssSlopeBytesPerCycle": 7043364.571428572,
+      "sampledPeakRssBytes": 818434048,
+      "maxSampleGapMs": 736,
+      "sampledPeakGrowthBytes": 61329408
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip",
+      "bytes": 41290170,
+      "sha256": "911623417c53fb884a9a6e812531fdb9d99b3f58d45f050558876acd61e5b951"
+    },
+    {
+      "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip.sha256",
+      "bytes": 111,
+      "sha256": "464bb9fdc8bd7357f1ffb077626edfa1b4f4249b812c8475dcb8e8a5fa71c0d0"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 199921,
+      "sha256": "917bbe014b8efa03bdad839ce382f5c50becb226acaa9f899ac74514b9e9b5dd"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52455,
+      "sha256": "10cec71f280d6e4d4cb114fb5811f7e5079da6f6df197574f5912a5a161c3c90"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7465530053,
+    "controllerSource": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+    "runId": 41250059080,
+    "attempt": 1,
+    "jobId": 124681679324,
+    "siteId": "8f6eff2a2ad97de14a78172e085b73084e163a49a6ebdf6dcb28b92acfbdeb6c",
+    "legacy": false
+  },
+  "artifacts": [
+    {
+      "id": 13061500439,
+      "name": "published-release-verification",
+      "bytes": 754,
+      "digest": "sha256:3f4932ee64c1d39f342fb644b7a77c3ae2ba0dbafe1c94c90a0e7409dbeb0f53"
+    },
+    {
+      "id": 13060878255,
+      "name": "live-release-verification",
+      "bytes": 555350,
+      "digest": "sha256:d3cd8146b3c9dae9fff10450bdedc6861d90adff719452c398107cd8d674efc8"
+    }
+  ],
+  "limitations": [
+    "Current formal public release verified; full product goal remains active.",
+    "Historical Windows Chrome long-load shutdown failure remains recorded; Linux/focused results do not repair the native OneDrive statistics wait.",
+    "Intentional crash-recovery process termination is not normal Worker close.",
+    "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+  ],
+  "goalComplete": false,
+  "preparedReview": {
+    "status": "passed-prepared-artifact-review",
+    "at": "2026-10-31T22:51:40.087Z",
+    "run": 41249891909,
+    "source": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+    "tree": "4469b419e7bbe8e5a07e26925c9ee425461e9180",
+    "buildId": "d36b95c7320aa6f2",
+    "siteId": "8f6eff2a2ad97de14a78172e085b73084e163a49a6ebdf6dcb28b92acfbdeb6c",
+    "siteManifestSHA256": "668884751c890e7add6078c1b225f9ce2cbb1f4526e3135ec6e61c7b93f64050",
+    "expected": {
+      "source": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+      "build": "d36b95c7320aa6f2",
+      "manifest": "10cec71f280d6e4d4cb114fb5811f7e5079da6f6df197574f5912a5a161c3c90",
+      "receipt": "917bbe014b8efa03bdad839ce382f5c50becb226acaa9f899ac74514b9e9b5dd",
+      "zip": "911623417c53fb884a9a6e812531fdb9d99b3f58d45f050558876acd61e5b951"
+    },
+    "coreFiles": 324,
+    "siteFiles": 1468,
+    "assets": [
+      {
+        "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip",
+        "bytes": 41290170,
+        "sha256": "911623417c53fb884a9a6e812531fdb9d99b3f58d45f050558876acd61e5b951"
+      },
+      {
+        "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip.sha256",
+        "bytes": 111,
+        "sha256": "464bb9fdc8bd7357f1ffb077626edfa1b4f4249b812c8475dcb8e8a5fa71c0d0"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 199921,
+        "sha256": "917bbe014b8efa03bdad839ce382f5c50becb226acaa9f899ac74514b9e9b5dd"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 52455,
+        "sha256": "10cec71f280d6e4d4cb114fb5811f7e5079da6f6df197574f5912a5a161c3c90"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 13061075798,
+        "name": "release-delivery",
+        "bytes": 7208096,
+        "digest": "sha256:7d7e535fed5a11c51f497bc24f1ad0ee49c6aada6ac27ed773d71b71b47efac5"
+      },
+      {
+        "id": 13060985997,
+        "name": "github-pages",
+        "bytes": 29170905,
+        "digest": "sha256:5dde3656a2c09ed56be982f1f65b599ee227fdad2027474043806a89e375e7dd"
+      }
+    ],
+    "gates": [
+      {
+        "kind": "core",
+        "runId": 41247699658,
+        "reused": true,
+        "scopeFingerprint": "cd939231fe32a395bc8e1b165d112823b52bbaea169ba5652d82c123f4ec8abc"
+      },
+      {
+        "kind": "browser",
+        "runId": 41247710612,
+        "reused": true,
+        "scopeFingerprint": "bb13b5356d9e0694dc73edca1d871af84a316144d6bd793858e6898e2e00c17e"
+      },
+      {
+        "kind": "contract",
+        "runId": 41247718697,
+        "reused": true,
+        "scopeFingerprint": "7dfde537100a78e04135a1ab018a6249f13c38912f2a19c3d0be6fe0c8a23f3b"
+      },
+      {
+        "kind": "site",
+        "runId": 41247731894,
+        "reused": true,
+        "scopeFingerprint": "7ce5738659ac88b601bb9a56c72c3fa3d6e553a884009086e3802f00828e4d67"
+      }
+    ],
+    "retainedBuildIds": [
+      "960b708cb9389164",
+      "44782d0412ebc0b8"
+    ],
+    "legacyBuild": "163f38ab1dc856e4",
+    "readyForExactSourcePublish": true,
+    "published": false,
+    "goal": "active; intermittent native Chrome close remains unresolved;all13requirements retained"
+  },
+  "sourceSelectionProof": {
+    "status": "tested-tree-equals-merged-main",
+    "pr": 204,
+    "head": "971f964854ffa976ecb1f3e645c3e58a0b4a9f57",
+    "testedMerge": "303f01d5808b5571e8a2ffacfbf70a34201499a9",
+    "mergedMain": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+    "testedTree": "4469b419e7bbe8e5a07e26925c9ee425461e9180",
+    "mergedTree": "4469b419e7bbe8e5a07e26925c9ee425461e9180",
+    "at": "2026-10-31T22:49:30.681705+00:00"
+  },
+  "originals": {
+    "path": "quantization-v1.4.0-evidence.zip",
+    "bytes": 1363865,
+    "sha256": "36becdc2071e878bdd7b83aa428be4bb28b2174d7370d0797778d16274084f1b",
+    "records": 59,
+    "manifestSHA256": "79e8a7e6720460995a030bc26c83c4098dbf9719954804ca044427e891b37106"
+  },
+  "priorEvidence": [
+    "quantization-validation-candidate.json",
+    "quantization-dtype-followup.json",
+    "quantization-main.json"
+  ]
+}
