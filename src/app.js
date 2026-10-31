@@ -991,14 +991,15 @@ async function downloadSubmodel(graph, nodes, selections) {
         exportReports.set(result.report,outputName,result.reportError);
         if (mlir) {
             const checks=result.validation?.deferredPayloads ? `結構語法／SSA／dominance 已檢查；${result.validation.dense?.checked||0} 段 dense 元素數／hex bytes 已核對，${result.validation.dense?.unchecked||0} 段編碼未檢查；未驗證全部數值語意` : '已通過本機語法／SSA／dominance 檢查';
+            const caveat=result.validation?.dense?.unchecked ? ` ${result.validation.dense.unchecked} 段權重編碼尚未驗證（resource／未知型別或 packing）；已保留原文，需另用對應 verifier 檢查。` : '';
             if(result.slice) {
                 const added=result.slice.added.length ? ` 補入迴圈必要運算：${[...new Set(result.slice.added)].join('、')}（${result.slice.added.length} 個）。` : '';
                 const conditional=result.slice.conditionalOutputs ? ` ${result.slice.conditionalOutputs} 個條件輸出以 (valid, value) 回傳；未執行時 valid=false，需提供同型別備援輸入。` : '';
-                notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解，並保留既有 pattern 所需的結構對照。`);
+                notice(`已匯出 ${result.slice.selected} 個選取 layers 的局部 MLIR，含 ${result.slice.blocks} 個控制流程 blocks、${result.inputs.length} 個輸入、${result.outputs.length} 個資料輸出。${added}${conditional}${result.slice.exitTag?' 第一個回傳值是原始出口編號。':''} 輸入／輸出對照已寫在檔案註解，並保留既有 pattern 所需的結構對照。${caveat}`);
                 status(`MLIR 下載已啟動 · ${size(result.blob.size)} · ${checks}`);
                 return;
             }
-            notice(result.controlFlow ? `開始下載 @${result.controlFlow.function} 的完整控制流程 MLIR：${result.controlFlow.blocks} 個 blocks、${result.layers} layers。保留分支、迴圈、block arguments、returns 與 custom op 原文。` : `開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`);
+            notice((result.controlFlow ? `開始下載 @${result.controlFlow.function} 的完整控制流程 MLIR：${result.controlFlow.blocks} 個 blocks、${result.layers} layers。保留分支、迴圈、block arguments、returns 與 custom op 原文。` : `開始下載 ${result.layers} layers 的局部 MLIR；${result.inputs.length} 個輸入、${result.outputs.length} 個輸出。外部 SSA 值已轉為 function arguments；已保留 custom op 原始型別、properties、attributes 與內部連線。`) + caveat);
             status(`MLIR 下載已啟動 · ${size(result.blob.size)} · ${checks}`);
             return;
         }
