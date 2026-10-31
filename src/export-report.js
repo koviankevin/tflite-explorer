@@ -38,7 +38,12 @@ export function createExportReport(index,file,result,{graph,nodes,selections,out
         ...(edited?{modification:result.modification}:{}),operatorValidation,operatorSummary,
         preservation:{method:edited?'original-file-slices-and-explicit-model-edits':'original-file-slices-and-original-parameters',byteRanges:provenance.ranges.length,bytes:provenance.ranges.reduce((n,r)=>n+r.bytes,0),retainedBuffers:result.retainedBuffers ?? null,preservedTensorBufferIds:!!result.preservedIds,customOperators:result.customOperators || [],...(result.referencePlan?{referencePlan:result.referencePlan}:{})},
         checks,limitations:['檔名與大小不是來源檔案的身分驗證；本報告未計算完整來源 SHA-256。','本報告含模型名稱、OP 名稱及型別／介面資訊；全程在本機產生，分享前請自行確認內容。',edited?'此模型已依指定修改，尚未驗證是否符合新需求的推論結果；不宣稱與來源模型等價。':'補入邊界輸入後需提供對應數值；結構有效不代表子模型與原模型可直接替換。']};
-    const blob=new Blob([JSON.stringify(report,null,2)+'\n'],{type:'application/json'});
+    // Keep an immutable JSON prefix so a later runtime-status attachment can
+    // compose a new report without reading this potentially multi-MiB Blob in
+    // the main realm. The prefix has no checks/runtime verdict to accumulate.
+    const {checks:reportChecks,...body}=report;
+    const runtimePrefix=new Blob([JSON.stringify(body,null,2).slice(0,-1)]);
+    const blob=new Blob([runtimePrefix,',\n  "checks": ',JSON.stringify(reportChecks,null,2),'\n}\n'],{type:'application/json'});
     if(blob.size>EXPORT_REPORT_LIMIT)throw new Error('完整匯出報告超過 16 MiB；模型仍可下載，但本次無法提供報告。');
-    return {blob,summary:{source:report.source,output:report.output,selected:report.selection.length,mode:provenance.mode,mapped:provenance.operators.length,generated:provenance.generated?.length || 0,inputs:result.inputs.length,outputs:result.outputs.length,preservation:report.preservation,checks,operatorValidation,operatorSummary,...(edited?{modification:report.modification}:{})}};
+    return {blob,runtimePrefix,summary:{source:report.source,output:report.output,selected:report.selection.length,mode:provenance.mode,mapped:provenance.operators.length,generated:provenance.generated?.length || 0,inputs:result.inputs.length,outputs:result.outputs.length,preservation:report.preservation,checks,operatorValidation,operatorSummary,...(edited?{modification:report.modification}:{})}};
 }
