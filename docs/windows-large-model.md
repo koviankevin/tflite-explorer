@@ -142,3 +142,20 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 **整輪仍失敗。** 原 10 秒截止時根程序與一個未分類子程序仍存活；稍後 SDK 強制清理與全部 12 個已觀察身分消失不算正常退出。本次未分類子程序不沿用較早空白頁的 crashpad-handler 標籤。主執行緒 stack 停在 Windows 單一物件等待，但一份 stack 不足以確認等待物件或歷史根因；原始 stack 的 Chrome 近鄰 export 名稱及大 offset 也不能當作真正函式名稱。
 
 本機另保存官方 Chrome 公開符號的來源、GUID／age、provider MD5、gzip CRC 與完整 SHA-256，僅嘗試對保存的位址離線解碼，沒有上傳 stack 或模型、沒有修改 DLL／PDB 或強制接受不匹配符號。PDB Info age 與 DBI／執行檔 age 分開記錄；單次離線解析未在另設的六分鐘診斷界線內完成，已以同一原生 handle 核對身分後結束該解析程序。正常 debugger 精確匹配及真正 Chrome 函式名稱仍未取得，不把檔案校驗當成解碼成功。符號資料與大型權重留在本機；[本次收據](results/windows-physical-stack.json)及[原始報告、stack、來源與校驗紀錄](results/windows-physical-stack-evidence.zip)保留失敗與解碼狀態。未宣稱 Chrome 根因修復，未重新部署或改寫固定 Release。
+
+## 已定位的 Chrome 雲端資料夾統計阻塞
+
+後續改用有界的離線 CodeView public records 讀取器，43.47 秒內讀取既有 PDB 的 718,242,754 bytes，未重新下載符號或執行模型。除了 GUID／DBI age，另核對 PDB section headers 與實際簽章 DLL 完全相同、沒有 OMAP，以及五個 PE export 的 RVA。四個關鍵 public symbol 起點還逐一對照 DLL 原生 runtime function table：起點相同，保存的返回位址位於其範圍內。因此下列四個函式有額外交叉證據；其他近鄰 public 名稱、大 offset、inline／折疊別名仍不能冒充精確函式或 source line。先前 DbgHelp 精確載入仍未完成，這是獨立的檔案解讀方法，沒有強制接受符號不匹配。
+
+實體大檔失敗的主執行緒位於 `WaitableEvent::Wait` → `TaskTracker::CompleteShutdown` → `BrowserMainLoop::ShutdownThreadsAndCleanUp`；另一個 COM STA 背景執行緒位於 `cloud_synced_folder_checker::EvaluateOneDriveSyncStatus`，上層是 Windows storage／property 與 `NtQueryDirectoryFile`。同版 Chromium `156.0.8078.76` 的 [startup metrics](https://github.com/chromium/chromium/blob/156.0.8078.76/chrome/browser/metrics/chrome_browser_main_extra_parts_metrics.cc) 會在 COM STA、BEST_EFFORT、SKIP_ON_SHUTDOWN task 上呼叫這項 [OneDrive 狀態查詢](https://github.com/chromium/chromium/blob/156.0.8078.76/chrome/browser/win/cloud_synced_folder_checker.cc)；[TaskTracker](https://github.com/chromium/chromium/blob/156.0.8078.76/base/task/thread_pool/task_tracker.cc) 仍等待已開始的 SKIP task。這解釋本次關閉等待的位置，沒有證明 Windows／provider 的底層缺陷、查詢的具體目錄，或所有歷史失敗都相同。
+
+再預先限定兩個依序執行、各一次的空白頁對照；都沒有網站、模型、Worker 或 interpreter。沿用原 25 秒 idle、10 秒正常關閉與 PID／建立時間觀察，只有自有暫存 profile 及下表這一個統計功能差異：
+
+| 隔離對照 | 結果 |
+| --- | --- |
+| 原 SDK 1.64.1 啟動設定 | 10,058.5 ms 後仍未原生退出，整輪失敗；再次捕捉到相同的 shutdown 與 OneDrive 函式範圍，這次停在 Windows Cloud Files `CfRetrieveProperties`／`ZwFsControlFile`；事後強制清理不算通過 |
+| 只把 `CloudSyncedFolderChecker` 加入原有 disabled-feature 清單 | 約 191 ms 正常退出、exit 0；八個已觀察原生身分退出，沒有強制清理 |
+
+這一組對照支持本機 Chrome 啟動統計的雲端儲存查詢是阻塞來源；不代表永久修復或任意模型的可靠性保證。**正式 Chrome 驗收維持原設定與失敗判定，沒有把診斷用統計 opt-out 加入必要測試。** 未更動 OneDrive、個人瀏覽器／registry、sandbox、防毒、安全政策或正式網站；沒有重跑大檔、Edge 或成功部署。Chromium 歷史 issue 405035574 已在 M136 修正且涉及 loader lock，不能因函式名稱相同就把本次 M156 雲端檔案查詢判為同一個舊 bug。
+
+[本次收據](results/windows-cloud-metric.json)與[原始對照、失敗 stack、範圍檢查、來源及授權](results/windows-cloud-metric-evidence.zip)保留。大型符號、權重與 debugger 本體留在本機。本次定位了具體外部等待路徑，未修改應用來掩蓋 Chrome／Windows 相容性問題；預設 Chrome 的原生關閉仍待處理。
