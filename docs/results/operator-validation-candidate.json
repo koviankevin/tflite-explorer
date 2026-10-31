@@ -1,0 +1,282 @@
+{
+  "format": "model-lens-operator-validation-candidate",
+  "status": "reviewed-mixed-native-results-not-published",
+  "createdAt": "2026-10-31T14:23:54.941393+00:00",
+  "source": {
+    "commit": "54a8b6a3efa58db38a0499b83bea85377d4ff5a1",
+    "tree": "592ed25869bddbce276f56e8f5e251b7ec96801b",
+    "committedAt": "2026-10-31T22:19:35+08:00",
+    "dirty": false
+  },
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.3.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "54a8b6a3efa58db38a0499b83bea85377d4ff5a1",
+      "tree": "592ed25869bddbce276f56e8f5e251b7ec96801b",
+      "committedAt": "2026-10-31T22:19:35+08:00",
+      "dirty": false
+    },
+    "buildId": "d0c7296728a41a1b"
+  },
+  "targetedTests": {
+    "passed": 136,
+    "failed": 0,
+    "scope": "semantic, serialized operands, report, editing, composition, shape inference, release-feature selection; source changes since this log only editor report entry and browser driver"
+  },
+  "cpuCases": 14,
+  "browsers": {
+    "chrome": {
+      "functional": "passed",
+      "normalClose": "failed-10s",
+      "wholeAttempt": "failed",
+      "workersClosed": 5
+    },
+    "msedge": {
+      "functional": "passed",
+      "normalClose": "passed",
+      "wholeAttempt": "passed",
+      "workersClosed": 5
+    }
+  },
+  "archive": {
+    "file": "operator-validation-candidate-evidence.zip",
+    "bytes": 687475,
+    "sha256": "66ba07cdb62e717f7db4d27eab6068b42e94b814a0c236b53123d9e46881fb9a",
+    "members": [
+      {
+        "path": "plan.json",
+        "bytes": 1398,
+        "sha256": "4023c86bdd6eb7f117c49f38043a3bbcf65652bc6bd299f1968f06a21c76b617"
+      },
+      {
+        "path": "native-plan.json",
+        "bytes": 849,
+        "sha256": "4f1ccdfccade8dccf19dafbf33bf5b618dec6439c7dbed17d69f2ea2db746d6a"
+      },
+      {
+        "path": "native-plan-2.json",
+        "bytes": 576,
+        "sha256": "f42e3b2d1e71fab3fa2a1fc20d048b1ef222374de95f2fdb2387f3f7315f614b"
+      },
+      {
+        "path": "baseline-red.log",
+        "bytes": 22899,
+        "sha256": "8a92f72be8f538a0fd3f3a35bcb38c8d88b704b1c1907a104a543c7c5bab41d5"
+      },
+      {
+        "path": "first-checks.log",
+        "bytes": 4416,
+        "sha256": "d5408721134b5064763b5703c0b147d89f71e5664a890eb085d509e5b7950415"
+      },
+      {
+        "path": "boundaries.log",
+        "bytes": 4538,
+        "sha256": "1b5e2d5697eac776d7d863be993387f49c05cd188faa84faf90ebf127bc43a25"
+      },
+      {
+        "path": "runtime-report.log",
+        "bytes": 8099,
+        "sha256": "ebc4974620ebcdf3e54a4071bc8f0764bda0134a50babc998bac599e73867b74"
+      },
+      {
+        "path": "split-ports-fixed.log",
+        "bytes": 1224,
+        "sha256": "3763f595bc96872dd93e13a1d7517ec0c46f7f4517a56e1c7c460950bd90de6f"
+      },
+      {
+        "path": "targeted.log",
+        "bytes": 13989,
+        "sha256": "e4e9ee9609d8d5a56b0a53143bc2f4f12a9c85bc6730c891d030ccf1fc4620de"
+      },
+      {
+        "path": "chrome-1.log",
+        "bytes": 3899,
+        "sha256": "bdb74912518db323336635a9fc3d20537e2b77a7dbe3a94999dfc6ae6360cd25"
+      },
+      {
+        "path": "chrome-2.log",
+        "bytes": 2836,
+        "sha256": "d996fcba2be577e178e3b59b168971ec24f12b2dca09b52c7166ffa60822e5cc"
+      },
+      {
+        "path": "msedge-2.log",
+        "bytes": 2112,
+        "sha256": "14bd799c4be04dec012ab0787d493fbe6c5a1023d670f40b58f4a3456b7d15f4"
+      },
+      {
+        "path": "archive-candidate.py",
+        "bytes": 4932,
+        "sha256": "aeec250a1835154ee009aef9af01dd4a7b1489c86011e73a20f92fe33f21a422"
+      },
+      {
+        "path": "chrome-1/failure.png",
+        "bytes": 93706,
+        "sha256": "3ce850a2abd9d07910b04f00c051025191365be39c61706798fb551e9a7b0099"
+      },
+      {
+        "path": "chrome-1/operand-SPLIT-edited.tflite",
+        "bytes": 1924,
+        "sha256": "b249ff5c2919b61c28e10896f872b903ed1dec0b8842239630dfa8707b783919"
+      },
+      {
+        "path": "chrome-1/operand-SPLIT-source.tflite",
+        "bytes": 1300,
+        "sha256": "bee680792379f54cf465bc042522167d07889ecabfaf77fb7698d9af3d40a07f"
+      },
+      {
+        "path": "chrome-1/operand-SPLIT.report.json",
+        "bytes": 7640,
+        "sha256": "a50cfe808d7e15c009f46b386f1caa142e8b1d73cf3a4c1e1cbd9b698b3a82b6"
+      },
+      {
+        "path": "chrome-1/report.json",
+        "bytes": 3716,
+        "sha256": "63236d9af29e2269b493643c292b6b289f8c50f3f7990c53aa420426fcc7b562"
+      },
+      {
+        "path": "chrome-2/failure-checkpoint.json",
+        "bytes": 3911,
+        "sha256": "880f5a59364b817e1961fdacbf4b79d2a6e6b76632a78aea6ac9933fb20f8a8f"
+      },
+      {
+        "path": "chrome-2/operand-PAD-edited.tflite",
+        "bytes": 1472,
+        "sha256": "59e897c9b2c4ec97ef2d706a6b01b7da4f79236a42fa4f1693110120917be5e8"
+      },
+      {
+        "path": "chrome-2/operand-PAD-report.png",
+        "bytes": 135980,
+        "sha256": "bb48d6226b42245c1fa842a8735836cd05958d31308bbc23b4c48adf8f6f9102"
+      },
+      {
+        "path": "chrome-2/operand-PAD-source.tflite",
+        "bytes": 1064,
+        "sha256": "685066f7b9378579d51e53a7c25fed56460dda5b5bcea8115fbb1d62307d9fd1"
+      },
+      {
+        "path": "chrome-2/operand-PAD.report.json",
+        "bytes": 7147,
+        "sha256": "3edba2af76d3493a527a5090232aec61ab55883bf82e71ceb2baafcb29a92270"
+      },
+      {
+        "path": "chrome-2/operand-SLICE-source.tflite",
+        "bytes": 1316,
+        "sha256": "8c8add04105e4c5684fb1562419fe82dfd86497cda1bd3d184a28da05a92b8e1"
+      },
+      {
+        "path": "chrome-2/operand-SPLIT-edited.tflite",
+        "bytes": 1924,
+        "sha256": "b249ff5c2919b61c28e10896f872b903ed1dec0b8842239630dfa8707b783919"
+      },
+      {
+        "path": "chrome-2/operand-SPLIT-report.png",
+        "bytes": 135029,
+        "sha256": "6165bbe0c468fb1666eb97ca2ec2a9ce443c37dfe3cf84c6be24a97aede7f634"
+      },
+      {
+        "path": "chrome-2/operand-SPLIT-source.tflite",
+        "bytes": 1300,
+        "sha256": "bee680792379f54cf465bc042522167d07889ecabfaf77fb7698d9af3d40a07f"
+      },
+      {
+        "path": "chrome-2/operand-SPLIT.report.json",
+        "bytes": 7640,
+        "sha256": "7deec1fe5a136fd058f03eb16d52184c2b4e155f9a47cb31a64dd8e4ab7a389d"
+      },
+      {
+        "path": "chrome-2/report.json",
+        "bytes": 4017,
+        "sha256": "c4ae2c5856b2241f814cdd20d57ab18c3eaa3a0aa21252ee429684369d82d19b"
+      },
+      {
+        "path": "msedge-2/operand-PAD-edited.tflite",
+        "bytes": 1472,
+        "sha256": "59e897c9b2c4ec97ef2d706a6b01b7da4f79236a42fa4f1693110120917be5e8"
+      },
+      {
+        "path": "msedge-2/operand-PAD-report.png",
+        "bytes": 135901,
+        "sha256": "0f868717c42ccc995b2073a88e67b1ac1fbefe6f1be60a6f439668ffb1cf8ebb"
+      },
+      {
+        "path": "msedge-2/operand-PAD-source.tflite",
+        "bytes": 1064,
+        "sha256": "685066f7b9378579d51e53a7c25fed56460dda5b5bcea8115fbb1d62307d9fd1"
+      },
+      {
+        "path": "msedge-2/operand-PAD.report.json",
+        "bytes": 7147,
+        "sha256": "2a5582010d84fc74fe5924f6d2943ff67b29e204c6745b8ba3b78d06bdb2761e"
+      },
+      {
+        "path": "msedge-2/operand-SLICE-source.tflite",
+        "bytes": 1316,
+        "sha256": "8c8add04105e4c5684fb1562419fe82dfd86497cda1bd3d184a28da05a92b8e1"
+      },
+      {
+        "path": "msedge-2/operand-SPLIT-edited.tflite",
+        "bytes": 1924,
+        "sha256": "b249ff5c2919b61c28e10896f872b903ed1dec0b8842239630dfa8707b783919"
+      },
+      {
+        "path": "msedge-2/operand-SPLIT-report.png",
+        "bytes": 134971,
+        "sha256": "815358aa0c8931b009b93ec08f114262d2f5e8a1abb620379880d6c8126014d8"
+      },
+      {
+        "path": "msedge-2/operand-SPLIT-source.tflite",
+        "bytes": 1300,
+        "sha256": "bee680792379f54cf465bc042522167d07889ecabfaf77fb7698d9af3d40a07f"
+      },
+      {
+        "path": "msedge-2/operand-SPLIT.report.json",
+        "bytes": 7640,
+        "sha256": "bfec320c285b202496c030819e03926c50018cd2de570ee58215cc54de29bceb"
+      },
+      {
+        "path": "msedge-2/report.json",
+        "bytes": 3883,
+        "sha256": "adbeb0ababe92665a16f48f8fe9150ee64e583952ad2f6803860eb1cf066242b"
+      },
+      {
+        "path": "upstream/internal-strided_slice_logic.h",
+        "bytes": 9002,
+        "sha256": "3d2bbd34e818cda41fd21111cb0cdd01bb49cc9bca3de135f5b5b5b60b9bffa4"
+      },
+      {
+        "path": "upstream/pad.cc",
+        "bytes": 29956,
+        "sha256": "16d1fa63941f25adca40da7aa6e926874c636d7d44063ee871c404d57dd906ef"
+      },
+      {
+        "path": "upstream/reduce.cc",
+        "bytes": 58151,
+        "sha256": "4c5c1461d5c04a4e4aa8be02ccd7fa1eb49f4086ee93067239b8d5acbddef606"
+      },
+      {
+        "path": "upstream/slice.cc",
+        "bytes": 16802,
+        "sha256": "5c580028ab171785c94b22ae842e418109c148e97d96aef68588fd6c09b3b02c"
+      },
+      {
+        "path": "upstream/split_v.cc",
+        "bytes": 8510,
+        "sha256": "f8c67cbf15c3401a4c2d2c7657d7d8db13ff17eb4cef982d6cef02e70f9fba68"
+      },
+      {
+        "path": "upstream/strided_slice.cc",
+        "bytes": 14644,
+        "sha256": "ab6f0f7578135b794a426a5c066cc47994bc03d2ff4f821e84a8053147b66d80"
+      }
+    ]
+  },
+  "limitations": [
+    "No formal deployment yet.",
+    "Chrome SDK forced cleanup is not normal-close success.",
+    "Other kernels, unknown constants, custom execution and numerical equivalence remain unverified.",
+    "No company, mobile, Firefox/WebKit, new two-hour soak or private data."
+  ]
+}

@@ -28,4 +28,8 @@
 
 保留修正前未檢查的原始失敗，以及實際匯出找到的 SPLIT 多輸出拒絕。選測涵蓋正負例、序列化常數、預算、所有 outputs、實際編輯／匯出／重開及報告；小型公開模型另以固定 CPU WASM 核對結果與原始參數 bytes。瀏覽器驗收包含原生選檔、SPLIT 複製匯出重開、動態 PAD 未檢查原因、錯誤 SLICE 阻擋下載、1280×640／32px，以及零個自動 runtime Worker。
 
-目前相關 Node 選測 136 項通過。瀏覽器、主分支必要關卡、正式站和固定 Release 尚待完成；不以候選結果宣告正式交付，也不宣稱 Windows 歷史關閉問題已修復。
+目前相關 Node 選測 136 項通過，含 14 組真正 CPU／逐 output bytes。乾淨候選 `54a8b6a`／build `d0c7296728a41a1b` 的 Windows Chrome／Edge 原生選檔、SPLIT 匯出重開與權重 ranges 比對、動態 PAD 原因及錯誤 SLICE 零下載通過；編輯區新增「查看驗證報告」，可直接查看逐 OP 清單。1280×640／32px 的實際截圖與每個觀察到的 Worker close 已核對，零個自動 runtime Worker。
+
+Chrome 的功能通過，但最後正常關閉超過 10 秒，整輪仍判失敗；SDK 後續強制清理不能當成正常退出。Edge 整輪與原生程序正常退出通過。第一輪報告入口藏在探索側欄的 UI 失敗、原始關閉失敗與修正後資料都保留在[候選收據](results/operator-validation-candidate.json)及[45 檔原始證據](results/operator-validation-candidate-evidence.zip)。
+
+主分支必要關卡、正式站和固定 Release 尚待完成；不以候選結果宣告正式交付，也不宣稱 Windows 歷史關閉問題已修復。
