@@ -1,0 +1,424 @@
+{
+  "format": "model-lens-legacy-shape-memory-failure",
+  "status": "verified-original-failure-no-retry-no-publish",
+  "at": "2026-10-31T23:48:43.446Z",
+  "source": "02f4288885dc07fc16ede730b361e65891b09fa8",
+  "tree": "e00f06da5ead4fe2924062a9177d4acce60f5b3c",
+  "buildId": "e0554cfed416b2cb",
+  "run": 41252363060,
+  "job": 124688330131,
+  "artifactId": 13062162276,
+  "providerDigest": "sha256:9e26cb97ef7b95a7194f282c6c0d8af0fcabaf6e98818492120bb04e4cae6faa",
+  "reportSHA256": "29ad9528f44f6627d98b71c55ef71470f598105930d00ef4fbb1eee9d5d9519d",
+  "evaluation": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-slope"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 25575775.085714284,
+      "rssDriftBytes": 22220800,
+      "mainHeapDriftBytes": 176148,
+      "sampledPeakRssBytes": 1111064576,
+      "sampledPeakGrowthBytes": 600776704
+    }
+  },
+  "originalPolicy": {
+    "version": 3,
+    "cycles": 8,
+    "warmupCycles": 2,
+    "sampleIntervalMs": 500,
+    "urlReleaseTimeoutMs": 80000,
+    "settleSamples": 5,
+    "maxReadBytes": 1048576,
+    "realmReadBytes": 16777216,
+    "browserPeakGrowthBytes": 805306368,
+    "closedRssDriftBytes": 134217728,
+    "closedRssSlopeBytesPerCycle": 16777216,
+    "closedMainHeapDriftBytes": 33554432,
+    "modelWorkerUsedBytes": 536870912,
+    "modelWorkerBackingBytes": 536870912
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "closedRssBytes": 763625472,
+      "closedMainHeapBytes": 6179488,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 2,
+      "closedRssBytes": 774078464,
+      "closedMainHeapBytes": 6420804,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 3,
+      "closedRssBytes": 625819648,
+      "closedMainHeapBytes": 6393848,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 4,
+      "closedRssBytes": 782295040,
+      "closedMainHeapBytes": 6432988,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 5,
+      "closedRssBytes": 795066368,
+      "closedMainHeapBytes": 6532580,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 6,
+      "closedRssBytes": 796299264,
+      "closedMainHeapBytes": 6571608,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 7,
+      "closedRssBytes": 792899584,
+      "closedMainHeapBytes": 6596952,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    },
+    {
+      "cycle": 8,
+      "closedRssBytes": 798240768,
+      "closedMainHeapBytes": 6637100,
+      "releaseProcessCounts": [
+        6
+      ],
+      "sameSubmodelFullCompositionBytesAndReads": true
+    }
+  ],
+  "workerClosures": 57,
+  "allWorkersClosed": true,
+  "browserClosed": true,
+  "ownedProcessIdentities": 6,
+  "allOwnedProcessesReaped": true,
+  "fixture": {
+    "bytes": 1349965216,
+    "operators": 21005,
+    "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586"
+  },
+  "previous": {
+    "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+    "run": 41247710612,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -19425806.62857143,
+        "rssDriftBytes": 25538560,
+        "mainHeapDriftBytes": 179968,
+        "sampledPeakRssBytes": 1113288704,
+        "sampledPeakGrowthBytes": 599846912
+      }
+    }
+  },
+  "findings": [
+    "All eight full/submodel/composition serialized SHA-256, weights and read bytes match the earlier passing version;this is preservation evidence,not a causal A/B memory proof.",
+    "Original six-point RSS slope25,575,775.09bytes/cycle exceeds16MiB;keep failure. Drift22,220,800bytes/mainheap176,148bytes andclosurepassing do not override slope.",
+    "Low cycle3 RSS625,819,648bytes then cycles4-8 roughly782-798MB;previouspass also has alternating roughly640/790MB levels. Cannot yet identify live retention vsallocator/GC scheduling.",
+    "Each release phase has six observed processes;no count gap found,per-PID memory attribution is missing."
+  ],
+  "nextDiagnostic": [
+    "Reuse existing identity-guarded process-memory-profile probe for Linux nativeanon/file/shared categories,without subtracting from RSS.",
+    "Capture readonly JS heap total and Runtime backing/embedder figures plus CDP process types;no forcedGC/heap snapshots/security/URL/timer changes.",
+    "Separate bounded diagnostic workflow/artifact so a diagnostic green cannot be selected as release evidence;one predeclared run only after PR/source checks."
+  ],
+  "limitations": [
+    "No rootcause ormemoryfix established.",
+    "Originalfailedgate must not be replaced by a rerun-for-green or older browser evidence.",
+    "Publicsite/Release remainv1.4.0;candidate1.4.1notpublished.",
+    "Existingpadded/stridedruntime-outputIOlimitation also remains."
+  ],
+  "goalComplete": false,
+  "otherGates": {
+    "core": {
+      "status": "passed-original-gate-review",
+      "kind": "core",
+      "run": 41247699658,
+      "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "artifactId": 13059649291,
+      "providerDigest": "sha256:abfeff23359c0a8073f52071c3aa39b857bb515295c1ac4c8e1f8290e1fda383",
+      "reportSHA256": "011a4f9b5d4f9bb02aa93c6e67a825f23359b09b3cb40d1c8d2e0a6ca9844226",
+      "scopeFingerprint": "cd939231fe32a395bc8e1b165d112823b52bbaea169ba5652d82c123f4ec8abc",
+      "scopeFiles": 88,
+      "sourceUnchanged": true
+    },
+    "contract": {
+      "status": "passed-original-gate-review",
+      "kind": "contract",
+      "run": 41252367051,
+      "source": "02f4288885dc07fc16ede730b361e65891b09fa8",
+      "tree": "e00f06da5ead4fe2924062a9177d4acce60f5b3c",
+      "artifactId": 13061651683,
+      "providerDigest": "sha256:1ca9bcae311ed0c3feb402e96053080cea64e851211caeb2c6cafde4e3b42ac4",
+      "reportSHA256": "ff25fec247174e0fac58008beee7756c2b0be7660bf129d73019318ed5944497",
+      "scopeFingerprint": "8234d8e1efa61f2e30607dea1fc46eb681a1be6bf82d6842fb63e73284944c07",
+      "scopeFiles": 644,
+      "counts": {
+        "tests": 78,
+        "pass": 78,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    "site": {
+      "status": "passed-original-gate-review",
+      "kind": "site",
+      "run": 41252371471,
+      "source": "02f4288885dc07fc16ede730b361e65891b09fa8",
+      "tree": "e00f06da5ead4fe2924062a9177d4acce60f5b3c",
+      "artifactId": 13061632243,
+      "providerDigest": "sha256:d56b553196b99e0453e6a3d877754b26c30f0e59667204543708d984228c66b3",
+      "reportSHA256": "13c6853223af733f0342f3ee854d5e48534169bbdd22690cba5733082cd1fb47",
+      "scopeFingerprint": "36206612a14afab8c3f29ee94281404b3bb1bb39c95b7a60f088f0e3ab5aa4b3",
+      "scopeFiles": 393,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  },
+  "site37": {
+    "status": "passed-reviewed",
+    "source": "02f4288885dc07fc16ede730b361e65891b09fa8",
+    "run": 41252371471,
+    "artifactId": 13061856705,
+    "providerDigest": "sha256:8beb8ed180f4d70b16b4cc0e1f77a73d39287166f0875445ab374165350db191",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.4.1",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "02f4288885dc07fc16ede730b361e65891b09fa8",
+        "tree": "e00f06da5ead4fe2924062a9177d4acce60f5b3c",
+        "committedAt": "2026-11-01T07:22:42+08:00",
+        "dirty": false
+      },
+      "buildId": "e0554cfed416b2cb"
+    },
+    "reportSHA256": "c4078263c25bb686ca1c895d7880cb69e8dedb507a86c25fd3f804603e1b7044",
+    "checks": 37,
+    "quantizationValidation": {
+      "status": "passed",
+      "cases": [
+        {
+          "name": "bad",
+          "status": "failed",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 1,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "blockedRewire": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "opaque",
+          "status": "not-run",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 0,
+            "unchecked": 1,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "large",
+          "status": "passed",
+          "quantization": {
+            "total": 204,
+            "checked": 204,
+            "failed": 0,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 408,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "visibleRows": 200,
+          "reopenedOperators": 202,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        }
+      ],
+      "modelWorkers": 4,
+      "automaticRuntimeWorkers": 0,
+      "errors": [],
+      "workersClosed": true,
+      "downloads": 6
+    },
+    "legacyShapeValidation": {
+      "status": "passed",
+      "cases": [
+        {
+          "name": "invalid-fc",
+          "status": "rejected",
+          "downloads": 0,
+          "reason": "Subgraph #0 \u00b7 OP #0\uff08\u4f86\u6e90 OP #0\uff09\u00b7 inputs [0, 1, 3]\uff0foutputs [2]\uff1aFULLY_CONNECTED input \u5143\u7d20\u6578\u7121\u6cd5\u6574\u9664 weights input_size\u3002"
+        },
+        {
+          "name": "valid-reshape",
+          "status": "passed",
+          "checked": 2,
+          "unchecked": 0,
+          "flagsPreserved": true,
+          "weights": "identical",
+          "reopenedOperators": 2,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        }
+      ],
+      "modelWorkers": 3,
+      "automaticRuntimeWorkers": 0,
+      "errors": [],
+      "workersClosed": true,
+      "downloads": 2
+    },
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "staticFiles": 820,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": -7659520,
+        "mainHeapDriftBytes": -13191692,
+        "closedRssSlopeBytesPerCycle": 6846171.428571428,
+        "sampledPeakRssBytes": 789651456,
+        "maxSampleGapMs": 532,
+        "sampledPeakGrowthBytes": 19005440
+      }
+    },
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3065,
+          "startTicks": "12073"
+        },
+        {
+          "pid": 3067,
+          "startTicks": "12074"
+        },
+        {
+          "pid": 3068,
+          "startTicks": "12074"
+        },
+        {
+          "pid": 3092,
+          "startTicks": "12076"
+        },
+        {
+          "pid": 3094,
+          "startTicks": "12077"
+        },
+        {
+          "pid": 3117,
+          "startTicks": "12081"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "limitations": [
+      "Normal HTTP isolated versioned candidate; not publicly deployed v1.4.1.",
+      "Historical default Windows Chrome long-load shutdown failure remains separately recorded; this Linux gate does not prove it fixed.",
+      "Finite supported public examples do not verify all kernels/dialects/company models/OS power failure."
+    ]
+  },
+  "originals": {
+    "path": "legacy-shape-memory-failure-evidence.zip",
+    "bytes": 1059423,
+    "sha256": "71c061e0391c4f99e098a7a62d66341fb10bb06eaf97292a7e2feb5e72d67bfb",
+    "manifestSHA256": "596b492c88c69286113f6fe8927394b3f5571a21a68e9eb163ff4b927c1ae8a3",
+    "records": 47
+  }
+}
