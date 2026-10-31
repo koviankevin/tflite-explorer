@@ -10,7 +10,7 @@
 
 精確 v1.2.0 固定產物的最新 [Windows 實體八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)在 Chrome／Edge 均通過原判定及正常退出；Edge slope 接近原上限，不宣稱有寬裕餘量。[階段三證據](results/product-readiness-stage3.json)及[後續原始證據](results/product-readiness-stage3-update.json)中的歷史失敗仍保留，根因尚未證實。後續小型 TRANSPOSE 候選又重現 Chrome 正常關閉逾時，不能把功能或稍後 PID 消失寫成整輪通過；新證據見下段。
 
-下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 合法負軸被擋與 int64 錯誤放行，56 項相關測試通過。打包來源 `4b0822e` 的兩瀏覽器實際編輯／匯出／重開／搜尋／raw BIN CPU 內容均核對；Edge 整輪通過，Chrome 最後正常關閉逾時仍判失敗。[原始收據](results/transpose-permutation.json)保留此差別，正式站尚未取得候選修正。
+下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 合法負軸被擋與 int64 錯誤放行，56 項相關測試通過。打包來源 `4b0822e` 的兩瀏覽器實際編輯／匯出／重開／搜尋／raw BIN CPU 內容均核對；Edge 整輪通過，Chrome 最後正常關閉逾時仍判失敗。[原始收據](results/transpose-permutation.json)保留此差別。PR #187 已合併，`8bf6c9b` 的新主分支大檔八輪、78 項發布契約及 34 項網站操作均已核對；核心 88 檔範圍未變而沿用既有量測，[四關卡收據](results/transpose-main-verification.json)與原始 ZIP 保留。仍待精確產物準備／正式發布，正式站尚未取得候選修正。
 
 另在實際截圖中發現 32px 字級與框線不同步，原先「沒有頁面溢位」的數值檢查不足。已在未修改候選穩定重現[字級排版回歸](font-reflow.md)，修正非同步 layout 期間 target 暫空的提前返回；來源 `7068a7e` 的 Chrome／Edge 完整七組文字邊界與實際截圖已核對，v1.2.0 正式站另核對 15 組實際文字框。舊來源成功不抵銷曾有的視覺缺口。
 

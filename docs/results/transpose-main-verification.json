@@ -1,0 +1,655 @@
+{
+  "format": "model-lens-transpose-main-verification",
+  "version": 1,
+  "status": "passed-four-source-bound-gates-candidate-not-published",
+  "at": "2026-10-31T12:44:32.701953+00:00",
+  "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+  "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+  "candidate": {
+    "schemaVersion": 1,
+    "version": "1.2.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+      "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+      "committedAt": "2026-10-31T20:18:30+08:00",
+      "dirty": false
+    },
+    "buildId": "45837dc98a0009a7"
+  },
+  "gates": {
+    "core": {
+      "status": "core-evidence-reusable",
+      "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+      "testedSource": "2076429c63402ebd79fe99be761a54034485af79",
+      "run": 41159138980,
+      "providerDigest": "sha256:a2ca9cdddce2a3ca962ac0718b5761ce38aa274804b823eb788c46cc0450598f",
+      "reportSHA256": "a1a0fb9b545b47a9c0d7fcfe5873fbaf00148ec7a63d0227cac21f996b6ee03a",
+      "fingerprint": "f818878b214eb2a8d5280683a3e8f9e03580207ebade137ea763d29c324d89be",
+      "files": 88,
+      "samples": 9,
+      "scope": "Exact core module closure and original policy only; does not prove current browser/site, Windows close or formal publication."
+    },
+    "browser": {
+      "status": "passed-original-gate-review",
+      "kind": "browser",
+      "run": 41200613873,
+      "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+      "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+      "artifactId": 13042208937,
+      "providerDigest": "sha256:9b0e4d77d72c6195da3510412177efdc0589ce057bb481863c90aa7a4da1f07e",
+      "reportSHA256": "b6bb890e21a61475448ed8986a18478fb8b9e22c36e14283aa3b06837244b94e",
+      "scopeFingerprint": "6337935890035d0fd1ada79350b4f41ad080e6e1a495b564b6df392de495383c",
+      "scopeFiles": 342,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    },
+    "contract": {
+      "status": "passed-original-gate-review",
+      "kind": "contract",
+      "run": 41200623742,
+      "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+      "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+      "artifactId": 13043000138,
+      "providerDigest": "sha256:ab7e9dfe624214bba9cf2811c4e7b31aae6a48ad14ecf1e5e5a45a3ac88e00f7",
+      "reportSHA256": "cf92e400c3cde79f83bbd41028c78b07a17cdfba6406e598c221c95d71539368",
+      "scopeFingerprint": "a226c2029351b0d32fec6d03149e09b5db5297b6c068128e11e2d20553645447",
+      "scopeFiles": 626,
+      "counts": {
+        "tests": 78,
+        "pass": 78,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    "site": {
+      "status": "passed-original-gate-review",
+      "kind": "site",
+      "run": 41200635819,
+      "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+      "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+      "artifactId": 13043030948,
+      "providerDigest": "sha256:86e9dcb281faeaf07f3d41651e7ed9cf53c6c9095f43878bb474ab946ab410c7",
+      "reportSHA256": "50729cb04a431e9b8ac73c9cc26ea5d1e7ec0a931f07d94db6d44a3a7308e37d",
+      "scopeFingerprint": "2c2c1acf630febdffa94df594565665ca39bcce256fce21f67668de282c1de95",
+      "scopeFiles": 383,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  },
+  "physicalBrowser": {
+    "bytes": 1349965216,
+    "operators": 21005,
+    "weightBytes": 1342177280,
+    "cycles": 8,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 2188551.314285714,
+        "rssDriftBytes": 15020032,
+        "mainHeapDriftBytes": -209528,
+        "sampledPeakRssBytes": 1003446272,
+        "sampledPeakGrowthBytes": 531431424
+      }
+    },
+    "nativeWorkerClosures": 57,
+    "browserClosed": true,
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3301,
+          "startTicks": "14877"
+        },
+        {
+          "pid": 3303,
+          "startTicks": "14879"
+        },
+        {
+          "pid": 3304,
+          "startTicks": "14879"
+        },
+        {
+          "pid": 3317,
+          "startTicks": "14881"
+        },
+        {
+          "pid": 3334,
+          "startTicks": "14999"
+        },
+        {
+          "pid": 3347,
+          "startTicks": "15008"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    }
+  },
+  "website": {
+    "status": "passed-reviewed",
+    "source": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+    "run": 41200635819,
+    "artifactId": 13043125695,
+    "providerDigest": "sha256:f79d8f8fbfd375e02590514645c7fc0b8f60b5026d86cb48e9451251432ee6eb",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.2.1",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "8bf6c9bbeedb2b083f8791e33c9d28d3a4a2bd32",
+        "tree": "25de84fe66ac128a7153b10343fe300e1b74fc01",
+        "committedAt": "2026-10-31T20:18:30+08:00",
+        "dirty": false
+      },
+      "buildId": "45837dc98a0009a7"
+    },
+    "reportSHA256": "84662c497ba106d89e578dfd57c384548e6c2949ac3cbbb1a0e35049fe63559a",
+    "checks": 34,
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "staticFiles": 817,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 2928640,
+        "mainHeapDriftBytes": 98672,
+        "closedRssSlopeBytesPerCycle": 8886213.485714287,
+        "sampledPeakRssBytes": 729841664,
+        "maxSampleGapMs": 714,
+        "sampledPeakGrowthBytes": 19161088
+      }
+    },
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3380,
+          "startTicks": "7859"
+        },
+        {
+          "pid": 3382,
+          "startTicks": "7861"
+        },
+        {
+          "pid": 3383,
+          "startTicks": "7861"
+        },
+        {
+          "pid": 3400,
+          "startTicks": "7863"
+        },
+        {
+          "pid": 3402,
+          "startTicks": "7864"
+        },
+        {
+          "pid": 3424,
+          "startTicks": "7874"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "limitations": [
+      "Normal HTTP isolated versioned candidate; not publicly deployed v1.2.1.",
+      "Exact published v1.2.0 Windows eight cycles passed; later tiny candidate Chrome10s close still failed. This Linux gate does not repair that intermittent native close failure.",
+      "Finite supported public examples do not verify all kernels/dialects/company models/OS power failure."
+    ]
+  },
+  "workerReview": {
+    "status": "passed-exact-named-checks-and-all-main-worker-closures",
+    "at": "2026-10-31T12:40:12.392974+00:00",
+    "reportSHA256": "84662c497ba106d89e578dfd57c384548e6c2949ac3cbbb1a0e35049fe63559a",
+    "checks": 34,
+    "exactNamedChecksMatchPreviousPublicSuite": true,
+    "observedMainWorkers": 150,
+    "modelWorkers": 86,
+    "allObservedMainWorkersClosed": true,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "note": "Runtime cases are named scenarios, including expected rejections;not19successfulinferences. Intentional crash-recoveryprocesses are separately recorded,not normalclosures."
+  },
+  "nativeDiagnostics": [
+    {
+      "status": "original-10s-close-failed-owned-helper-classified",
+      "at": "2026-10-31T12:33:14.201831+00:00",
+      "reportSHA256": "1a9d58a678d7c5ba028cea5306cddccbbac5b976f68a7eee4b9def67ca0aedb3",
+      "root": {
+        "pid": 74464,
+        "startTicks": "134379233523911289",
+        "identityStillMatches": true,
+        "type": "untyped",
+        "utility": null
+      },
+      "remainingHelper": {
+        "pid": 40492,
+        "startTicks": "134379233525184895",
+        "identityStillMatches": true,
+        "type": "crashpad-handler",
+        "utility": null
+      },
+      "disconnectedAfterMs": 30,
+      "failedAfterMs": 10003,
+      "browserVersion": "156.0.8078.76",
+      "modelAcceptance": "not evaluated",
+      "scope": "Single empty website page;no application/model/download/WASM worker. Native Chrome itself can log internal services; that is not a website runtime. No full commands,process memory,unrelated user profiles or environment captured.",
+      "limits": [
+        "Classifies this actual live PID only;cannot retroactively label historical dead unknown children.",
+        "Root and crashpad-handler still live does not prove their wait dependency or root cause.",
+        "SDK later force kill is retained;not normal-close evidence or a passing model acceptance."
+      ]
+    },
+    {
+      "status": "detached-empty-close-still-failed-wait-reason-unresolved",
+      "at": "2026-10-31T12:39:43.998124+00:00",
+      "reportSHA256": "07f751532f35527a8a119104e2c8151575d1b07ab6963eb77292b56cc5b30be4",
+      "observerCDPDetachedBeforeClose": true,
+      "remainingRoles": [
+        {
+          "pid": 78876,
+          "startTicks": "134379238654370167",
+          "identityStillMatches": true,
+          "type": "untyped",
+          "utility": null
+        },
+        {
+          "pid": 79660,
+          "startTicks": "134379238655645306",
+          "identityStillMatches": true,
+          "type": "crashpad-handler",
+          "utility": null
+        }
+      ],
+      "normalCloseFailedAfterMs": 10005,
+      "browserDisconnectedAfterMs": 28,
+      "waitThreads": 52,
+      "singleNodeSuccessfulQueries": 51,
+      "queryErrors": [
+        87
+      ],
+      "privilegeChanges": false,
+      "modelAcceptance": "not evaluated",
+      "scope": "No website model/download/WASM. Own observer CDP sessions are not necessary for this reproduced failure. Only this live role/identity is classified;no historical child attribution.",
+      "limitation": "Single WCT node may mean running or an unsupported synchronization element;no evidence of a wait dependency or proof that no block exists. No object names/stack memory/privilege changes. SDK forcedcleanup is not normal-close.",
+      "apiSource": "https://learn.microsoft.com/windows/win32/api/wct/nf-wct-getthreadwaitchain"
+    }
+  ],
+  "archive": {
+    "file": "transpose-main-evidence.zip",
+    "bytes": 1218318,
+    "sha256": "8bfe7fe4d85fe2a7c4e1e026d7b39dfb1a4e5b1ef1250dd34062105282278002",
+    "members": [
+      {
+        "path": "qa/transpose-main-browser-run.json",
+        "bytes": 14469,
+        "sha256": "24d89307969016c29222b9a47317897109059261de216fb6d8f5d149bb4f7912"
+      },
+      {
+        "path": "qa/transpose-main-browser-jobs.json",
+        "bytes": 4238,
+        "sha256": "fb8a93ce79ed84eafe797d1af7d53a95ec3e003a23e99e2aa8103ce2d9afc951"
+      },
+      {
+        "path": "qa/transpose-main-browser-artifacts.json",
+        "bytes": 949,
+        "sha256": "cf9ade24d5327c758079ba8c726745382d3c88d3e24c0ff7abb306858fada980"
+      },
+      {
+        "path": "qa/transpose-main-browser-artifact.zip",
+        "bytes": 30140,
+        "sha256": "9b0e4d77d72c6195da3510412177efdc0589ce057bb481863c90aa7a4da1f07e"
+      },
+      {
+        "path": "qa/transpose-main-browser-report.json",
+        "bytes": 370840,
+        "sha256": "b6bb890e21a61475448ed8986a18478fb8b9e22c36e14283aa3b06837244b94e"
+      },
+      {
+        "path": "qa/transpose-main-browser-review.json",
+        "bytes": 588,
+        "sha256": "abb1c74265a5adfd6985e190ac2cce0b47e52c7ccc89fa23be4ffab2413cb3aa"
+      },
+      {
+        "path": "qa/transpose-main-contract-run.json",
+        "bytes": 14437,
+        "sha256": "36a82497840e1d10deaf44a9aee13e37a89ba3a56632a2d80cfeba1a578c932f"
+      },
+      {
+        "path": "qa/transpose-main-contract-jobs.json",
+        "bytes": 3686,
+        "sha256": "b1a3ef0d3dcccdc68b96be08434edabdd226f45531de8ad8ca2c9fc8a7381602"
+      },
+      {
+        "path": "qa/transpose-main-contract-artifacts.json",
+        "bytes": 946,
+        "sha256": "ae1246d908004774d1457b2ead1a8a89281797ebf43b55dc1d0b7a5b5a50f813"
+      },
+      {
+        "path": "qa/transpose-main-contract-artifact.zip",
+        "bytes": 733,
+        "sha256": "ab7e9dfe624214bba9cf2811c4e7b31aae6a48ad14ecf1e5e5a45a3ac88e00f7"
+      },
+      {
+        "path": "qa/transpose-main-contract-report.json",
+        "bytes": 1172,
+        "sha256": "cf92e400c3cde79f83bbd41028c78b07a17cdfba6406e598c221c95d71539368"
+      },
+      {
+        "path": "qa/transpose-main-contract-scope-review.json",
+        "bytes": 652,
+        "sha256": "a715824d5bc34593faccb6e73151cd0c534109ecb7f6902de2695f08486f784c"
+      },
+      {
+        "path": "qa/transpose-main-site-run.json",
+        "bytes": 14445,
+        "sha256": "c25d530b59d47f3242ed23e378162b4cbbe25f193feb5730c5e9f1b5d360a602"
+      },
+      {
+        "path": "qa/transpose-main-site-jobs.json",
+        "bytes": 5633,
+        "sha256": "b6765ac0b7779f2fa9545bc1244804cdfb1cf442a1ff7b2aec4ffb69638975ba"
+      },
+      {
+        "path": "qa/transpose-main-site-artifacts.json",
+        "bytes": 1866,
+        "sha256": "2143faa5054f8deeab89c7a67ed632fff7237391ee8b27164bc5a1675ee528e1"
+      },
+      {
+        "path": "qa/transpose-main-site-artifact.zip",
+        "bytes": 4855,
+        "sha256": "86e9dcb281faeaf07f3d41651e7ed9cf53c6c9095f43878bb474ab946ab410c7"
+      },
+      {
+        "path": "qa/transpose-main-site-report.json",
+        "bytes": 97524,
+        "sha256": "50729cb04a431e9b8ac73c9cc26ea5d1e7ec0a931f07d94db6d44a3a7308e37d"
+      },
+      {
+        "path": "qa/transpose-main-site-review.json",
+        "bytes": 585,
+        "sha256": "758613c37352c1363ce390230d9c1ae11d540aad6723ba03007f3ecb31a98354"
+      },
+      {
+        "path": "qa/transpose-main-core-run.json",
+        "bytes": 14427,
+        "sha256": "7252c53c98713c26966a0b2306fd724a96a93e2e7286230e6a983b3db30b2d1e"
+      },
+      {
+        "path": "qa/transpose-main-core-jobs.json",
+        "bytes": 3654,
+        "sha256": "9cf7d9973a562e26ed2b526c1dae03c6a6863167e7e59ef12b84f21d972f15e1"
+      },
+      {
+        "path": "qa/transpose-main-core-artifacts.json",
+        "bytes": 948,
+        "sha256": "fe7fee485619c4955cab6fe3ef2f9db4ca75f53e021c22d7e03ffb16c9ae81aa"
+      },
+      {
+        "path": "qa/main-core-artifact.zip",
+        "bytes": 18337,
+        "sha256": "a2ca9cdddce2a3ca962ac0718b5761ce38aa274804b823eb788c46cc0450598f"
+      },
+      {
+        "path": "qa/transpose-main-core-reuse-review.json",
+        "bytes": 618,
+        "sha256": "62fae96dfd69e85a4c91ca1df49700ccc9fce11263f23c2116edffcc54ad1ebc"
+      },
+      {
+        "path": "qa/transpose-main-delivery-smoke.zip",
+        "bytes": 519567,
+        "sha256": "f79d8f8fbfd375e02590514645c7fc0b8f60b5026d86cb48e9451251432ee6eb"
+      },
+      {
+        "path": "qa/transpose-main-delivery-smoke.json",
+        "bytes": 1064976,
+        "sha256": "84662c497ba106d89e578dfd57c384548e6c2949ac3cbbb1a0e35049fe63559a"
+      },
+      {
+        "path": "qa/transpose-main-delivery-smoke.png",
+        "bytes": 149392,
+        "sha256": "349f052ce9baf8b39d1da8238eb4bec0298238782d80acfa270d773862bbfb9e"
+      },
+      {
+        "path": "qa/transpose-main-delivery-smoke-review.json",
+        "bytes": 2124,
+        "sha256": "5c1f55be9793a9f7ba14514a83bb47b998fe1111dab8f312f91a17de6762fd5e"
+      },
+      {
+        "path": "qa/transpose-main-worker-review.json",
+        "bytes": 601,
+        "sha256": "b2b2560245055cd275f0fdae760701683605e115dd7470351488b897b7e01e41"
+      },
+      {
+        "path": "qa/review-transpose-main-gate.mjs",
+        "bytes": 2412,
+        "sha256": "4c781cf8f39a1b41a041d20034e47cad45789780dbf9bec04926dbfd0050ed05"
+      },
+      {
+        "path": "qa/review-transpose-main-delivery-smoke.mjs",
+        "bytes": 7634,
+        "sha256": "daa48d5e3080f6f9d4ea1135d3672a1d5b12f52d7f0073761f0caab4da85fa2b"
+      },
+      {
+        "path": "qa/review-transpose-contract-scope.mjs",
+        "bytes": 2413,
+        "sha256": "0f11c88a76b7745f62cfa0f584d8b1be6bfed8f4c5cfaa8a5cad0da4ee1286e8"
+      },
+      {
+        "path": "qa/review-transpose-core-reuse.mjs",
+        "bytes": 1927,
+        "sha256": "910e441e638b4084a34fa54242db38a5874711745f5e2ca6241644ee04a20a0f"
+      },
+      {
+        "path": "qa/download-transpose-main-gate.py",
+        "bytes": 2380,
+        "sha256": "79b87082b4750334e8ebcccdaaea1a19646b6f468d13b1755edb949c9d4cf08c"
+      },
+      {
+        "path": "qa/download-transpose-main-smoke.py",
+        "bytes": 2240,
+        "sha256": "ae04a53bf0b79e17269afd685ff0542a166574c47f7c670f6cfd16fa96135723"
+      },
+      {
+        "path": "qa/dispatch-transpose-main-gates.py",
+        "bytes": 4336,
+        "sha256": "510f93a4d44fcb5c62ec50355e8cb7fbe6f6f832feed642ed3c1d3f247362172"
+      },
+      {
+        "path": "qa/transpose-main-gate-dispatch.json",
+        "bytes": 1849,
+        "sha256": "ba96ac58d22fead2de460cc5865e375a0afce4f0342ad9e2bbe91bacfbb99edf"
+      },
+      {
+        "path": "qa/transpose-main-evidence-plan.json",
+        "bytes": 2005,
+        "sha256": "7a7a784d5fc87067cd101f8451dac15a8653cd1f044581c283368f95880ff6b3"
+      },
+      {
+        "path": "qa/pr187-final-ci-review.json",
+        "bytes": 1754,
+        "sha256": "2958a8db5181766daa392cca382265dfddacd9b093f409f39e3775db983c19c5"
+      },
+      {
+        "path": "qa/review-pr187-final.py",
+        "bytes": 7408,
+        "sha256": "c597c10337dce7c4f9459c59900f576e927c9b28028a2063a242987eb4829e82"
+      },
+      {
+        "path": "qa/pr187-merged-review.json",
+        "bytes": 388,
+        "sha256": "ea6f701d40138693ff9168c86428b78fd976c69b0115033c216fd451cde70b26"
+      },
+      {
+        "path": "qa/pr187-main-protection.json",
+        "bytes": 1407,
+        "sha256": "4ab5f55ccd8c385493810d9b54fd0dc6493dc245bcb012d31ccfadd1be25f2f5"
+      },
+      {
+        "path": "qa/close-role-diagnostic-plan.json",
+        "bytes": 1630,
+        "sha256": "be1b3973bb3dd7cee01c30c50a4b293f29c762065c90b860e7b61f88ecb91fc6"
+      },
+      {
+        "path": "qa/close-wait-chain-plan.json",
+        "bytes": 1952,
+        "sha256": "0e44e235c07196d0f7a7289133f46824f3eddb24bc9b227d804050014e70c43b"
+      },
+      {
+        "path": "qa/native-close-probe.mjs",
+        "bytes": 4786,
+        "sha256": "50e6f3528bbc6de5061e648aebe56468fcd22e3a846995d780e1fc268c9d9e1a"
+      },
+      {
+        "path": "qa/native-close-roles.mjs",
+        "bytes": 5569,
+        "sha256": "fa0a4d52351c8b1414c97d1306c7f50bea858c4a5f58d9e01c039a6554c10b84"
+      },
+      {
+        "path": "qa/native-close-waits.mjs",
+        "bytes": 5971,
+        "sha256": "5298a1b2b138980de23e8258b9def1424dc3edab09069d2230541adb5ecafa5c"
+      },
+      {
+        "path": "qa/close-owned-roles.py",
+        "bytes": 2527,
+        "sha256": "2195ad93d5b3268aed9c90ac282de2f3b035b2281d59269ee073f53296ea13cc"
+      },
+      {
+        "path": "qa/close-wait-chain.py",
+        "bytes": 5279,
+        "sha256": "d4769eda87a4e1bdf26a5f5f1648af40db20d3cbe93ce364ca895b8da4445a57"
+      },
+      {
+        "path": "qa/run-native-close-roles.py",
+        "bytes": 1922,
+        "sha256": "8a4d59a3f2bddae14f9823c3fca1b5876208567d05d25a347a21ff5a1e207156"
+      },
+      {
+        "path": "qa/run-native-close-waits.py",
+        "bytes": 1927,
+        "sha256": "2f45c6ac2b29ab86cba7b0c0a3bfbfda3b7fe56fcc817ab48ec41485d19f27b1"
+      },
+      {
+        "path": "qa/review-close-roles-empty.py",
+        "bytes": 3091,
+        "sha256": "af61742d4db60a738f2aa144e86f427c038e87cc5181420aca21930a70965c2a"
+      },
+      {
+        "path": "qa/review-close-waits-detached.py",
+        "bytes": 2819,
+        "sha256": "8e2a1b02ca854b0e06179d174f13165c52f662d08aca01c4ce1943026b89cd36"
+      },
+      {
+        "path": "qa/close-roles-empty-1.json",
+        "bytes": 11264,
+        "sha256": "1a9d58a678d7c5ba028cea5306cddccbbac5b976f68a7eee4b9def67ca0aedb3"
+      },
+      {
+        "path": "qa/close-roles-empty-1.log",
+        "bytes": 3637,
+        "sha256": "0deb3e34b69433a5d13277c9b818bdd2eef48b8d2ee0eca8e1be581120385e83"
+      },
+      {
+        "path": "qa/close-roles-empty-1-status.json",
+        "bytes": 662,
+        "sha256": "ba2eb24113aa1c40d9bfdcf3397300caa512d9e2a5454562cc2a58fe4e46b9e0"
+      },
+      {
+        "path": "qa/close-roles-empty-1-review.json",
+        "bytes": 1240,
+        "sha256": "eee7d423033246ba3b9869f07d96689bcf1737f7ea7b902c5c93d76b3c77f851"
+      },
+      {
+        "path": "qa/close-waits-detached-1.json",
+        "bytes": 32991,
+        "sha256": "07f751532f35527a8a119104e2c8151575d1b07ab6963eb77292b56cc5b30be4"
+      },
+      {
+        "path": "qa/close-waits-detached-1.log",
+        "bytes": 3799,
+        "sha256": "914c5b9257388644c095c91f39ba702a0ca28db4b61ecde81a2943cbc8b53ede"
+      },
+      {
+        "path": "qa/close-waits-detached-1-status.json",
+        "bytes": 676,
+        "sha256": "d2ce9eed40f9cbee46d86c10505891e4f16e6fb42321afb1476832bf31625744"
+      },
+      {
+        "path": "qa/close-waits-detached-1-review.json",
+        "bytes": 1395,
+        "sha256": "eaf80cda7ad7afa84ec792efba6c23ef9b5ffc2a3b7266637fd3e0c3b1301f21"
+      },
+      {
+        "path": "tested-source/LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "tested-source/vendor/netron/LICENSE",
+        "bytes": 1062,
+        "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+      },
+      {
+        "path": "tested-source/src/tflite-constant-checks.js",
+        "bytes": 4314,
+        "sha256": "91310758dce7aa4b86417680b9e012a578f9c50dfae7accaca27866dea743953"
+      },
+      {
+        "path": "tested-source/src/tflite-semantic-checks.js",
+        "bytes": 5106,
+        "sha256": "3f470d67c225bf5b6ff37d916db79a5a90f0ddb06d46a659c88b81bb696d0609"
+      },
+      {
+        "path": "tested-source/test/tflite-transpose-runtime.test.mjs",
+        "bytes": 3987,
+        "sha256": "042de8ffa2ce05a51e43b35f23c5bd53119032eaa9b12e355503bd86cb121339"
+      },
+      {
+        "path": "tested-source/test/browser/lifecycle-policy.mjs",
+        "bytes": 6454,
+        "sha256": "00f77dea819511a1a7f747b9a2a6ac77ab5ad4640ced1ccb0574b171d04fd05a"
+      },
+      {
+        "path": "tested-source/test/browser/runtime-lifecycle-policy.mjs",
+        "bytes": 3556,
+        "sha256": "b647016f75e4c4087a26a86ec7b271123867fb44f94df155667afdc1b55dd09e"
+      },
+      {
+        "path": "tested-source/test/browser/windows-process-memory.py",
+        "bytes": 8881,
+        "sha256": "6d03ecdda68cf9304b009595c393f4c74055f1307eb811cea499915772200e55"
+      },
+      {
+        "path": "tested-source/scripts/lib/release-gates.mjs",
+        "bytes": 17078,
+        "sha256": "b1c70093af50dd235ce57e07b9ff122137738fc10c39be009d84a3411446c03e"
+      },
+      {
+        "path": "tested-source/scripts/lib/site-browser-policy.mjs",
+        "bytes": 5137,
+        "sha256": "021b0cfe85f53ae21f24628252f81bc82e4ad79edefa252d050f9f58467e96b4"
+      }
+    ]
+  },
+  "limitations": [
+    "Current formal site remains v1.2.0;this v1.2.1 candidate has not been prepared or published.",
+    "Linux physical eight cycles and website checks do not repair Windows native Chrome root/crashpad-handler close failures. Full historical Windows v1.2.0 eight-cycle evidence retains its original source and Edge memory margin.",
+    "Two empty Chrome controls fail with and without observer CDP attached;WCT does not identify an actionable wait dependency. No privileges,timers,security or teardown changes.",
+    "No company data,giant models or weights included. Original13product requirements retained;goal not complete."
+  ],
+  "goalComplete": false
+}

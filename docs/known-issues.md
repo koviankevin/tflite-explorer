@@ -2,7 +2,7 @@
 
 目前固定版本為 [v1.2.0](product-readiness-v1.2.md)／build `d69754e5b6791ecd`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
-下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 的負軸誤擋與錯誤 dtype 放行，56 項相關 Node 測試通過；打包後兩瀏覽器的匯出／重開／搜尋／CPU bytes 均核對，但 Chrome 最後正常關閉逾時，整輪仍失敗，Edge 整輪通過。發布仍待完成，正式站尚未取得這個修正。v1.2.0 固定產物的 [Windows 完整八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；間歇性關閉根因與 Edge 接近原 RSS slope 上限的界線保留。
+下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 的負軸誤擋與錯誤 dtype 放行，56 項相關 Node 測試通過；打包後兩瀏覽器的匯出／重開／搜尋／CPU bytes 均核對，但 Chrome 最後正常關閉逾時，整輪仍失敗，Edge 整輪通過。PR #187 已合併，四項[來源綁定關卡](results/transpose-main-verification.json)也已核對；產物準備與正式交付仍待完成，正式站尚未取得這個修正。v1.2.0 固定產物的 [Windows 完整八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；後續[空白頁診斷](windows-large-model.md#空白頁的原生程序類型與等待鏈)仍重現根程序／crashpad-handler 未退出，根因與 Edge 接近原 RSS slope 上限的界線保留。
 
 ## 優先處理與交付狀態
 
