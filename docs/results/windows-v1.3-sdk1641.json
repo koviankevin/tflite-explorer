@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "format": "model-lens-windows-v1.3-sdk1641-review",
+  "createdAt": "2026-10-31T17:54:41.862636+00:00",
+  "status": "mixed-Windows-result-evidence-archived",
+  "productVersion": "1.3.0",
+  "publishedApp": {
+    "schemaVersion": 1,
+    "version": "1.3.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "7debc69df1a1c91e8ed3928a8a4932a493324180",
+      "tree": "68f73b805636224b2023871f0edcab17c68dbf17",
+      "committedAt": "2026-10-31T23:35:52+08:00",
+      "dirty": false
+    },
+    "buildId": "44782d0412ebc0b8"
+  },
+  "siteId": "2a94efad4e9e905a49344335ca17c3efd9ecdcae2bd010a934e43274e77e2242",
+  "testTooling": {
+    "pullRequest": "https://github.com/koviankevin/tflite-explorer/pull/195",
+    "head": "c36f82d8d8f604fd4d110e24b6fa83fd29e4be7c",
+    "mergedCommit": "26523731a00e6bf08954d6f7ba94c29178652d58",
+    "tree": "7446725c68bf0d7dd31b1d2169ff852b5fba8d07",
+    "sdk": "1.64.1",
+    "nativeObservation": {
+      "status": "native-observation-code-change-validated",
+      "at": "2026-10-31T17:35:00.505798+00:00",
+      "source": "c36f82d8d8f604fd4d110e24b6fa83fd29e4be7c",
+      "tree": "7446725c68bf0d7dd31b1d2169ff852b5fba8d07",
+      "candidateBuild": "f6ad04ef17ebbb39",
+      "cases": [
+        {
+          "channel": "chrome",
+          "subtreeObservationCoverage": "passed",
+          "functionalStatus": "passed",
+          "originalWholeStatus": "failed",
+          "producerExitCode": 1,
+          "snapshotRows": [
+            8,
+            8
+          ],
+          "knownNativeIdentities": 8,
+          "workers": 8,
+          "modelWorkers": 5,
+          "normalCloseAcceptance": "failed-original10s; SDK later forced cleanup is not normal exit",
+          "reportSHA256": "639e1af29aa62aa012d3c676d7695fa010a562ea0f4a55fbcc5d8d6486336dce",
+          "logSHA256": "0b28bf6168a8531c56edec9295b01b3d6a3fcf9f636568b802325c088d7fdb41"
+        },
+        {
+          "channel": "msedge",
+          "subtreeObservationCoverage": "passed",
+          "functionalStatus": "passed",
+          "originalWholeStatus": "passed",
+          "producerExitCode": 0,
+          "snapshotRows": [
+            9,
+            10
+          ],
+          "knownNativeIdentities": 11,
+          "workers": 7,
+          "modelWorkers": 5,
+          "normalCloseAcceptance": "passed-original10s-and-observed-native-subtree-exit",
+          "reportSHA256": "556f399359b6b35634db6df9bcb792658ba3573b8f839b07b7f4840af29d56c2",
+          "logSHA256": "d672c93beb642e07d45c28fcf22031127fc44e494391a5f98c3b0dd5f8ae047e"
+        }
+      ],
+      "applicationFilesUnchangedFromPublishedSource": true,
+      "readyForInstrumentationMerge": true,
+      "historicalRootCauseFixed": false,
+      "goalComplete": false,
+      "scope": "Validates observation coverage and preserving the actual known failure. Does not change or replace the Chrome whole-attempt failure or declare Windows acceptance complete."
+    },
+    "ci": {
+      "status": "required-PR-checks-independently-reviewed",
+      "at": "2026-10-31T17:33:32.203Z",
+      "head": "c36f82d8d8f604fd4d110e24b6fa83fd29e4be7c",
+      "checkout": "08bf7ae614eee67b8069db9244a5eca6ccef2c4e",
+      "tree": "7446725c68bf0d7dd31b1d2169ff852b5fba8d07",
+      "details": {
+        "node": {
+          "run": 41223175583,
+          "job": 124601779465
+        },
+        "contract": {
+          "run": 41223175551,
+          "job": 124601779197,
+          "counts": {
+            "tests": 78,
+            "pass": 78,
+            "fail": 0,
+            "skipped": 0,
+            "cancelled": 0
+          },
+          "artifact": 13049979542,
+          "providerDigest": "sha256:af978c0ac6ba54431a7322f53794b04d36893394ae460fa6ba632f7c0aab2c06",
+          "reportSHA256": "3e631a4d3d9a537008e4c7696cdba57bb561fb34fcc04b8f037b2eff3a217b76"
+        },
+        "core": {
+          "run": 41223175547,
+          "job": 124601779305,
+          "samples": 9,
+          "sourceFingerprint": "a999b682b9a743c79bf5a399f5889c49afaea1cc40064ea3393bd739f60f53ce",
+          "artifact": 13050802568,
+          "providerDigest": "sha256:93f47a7870591c4a9134f919847ab33364e29f6df05462f86e57c55a8bc8844a",
+          "reportSHA256": "8be0793a9246a35655a839d5d87258af3b2c94e736e96952a979ca979a9b929e"
+        }
+      },
+      "scope": "PR evidence only; never a substituted main release gate or a claim to repair native Chrome shutdown",
+      "goalComplete": false
+    }
+  },
+  "physicalWindows": {
+    "chrome": {
+      "status": "reviewed-physical-Windows-acceptance-failed",
+      "at": "2026-10-31T17:15:12.938Z",
+      "channel": "chrome",
+      "producerExitCode": 1,
+      "originalWholeStatus": "failed",
+      "source": "3f2115cbb71e9f8797ba0a0a617167de5144e463",
+      "appRelease": {
+        "schemaVersion": 1,
+        "version": "1.3.0",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "7debc69df1a1c91e8ed3928a8a4932a493324180",
+          "tree": "68f73b805636224b2023871f0edcab17c68dbf17",
+          "committedAt": "2026-10-31T23:35:52+08:00",
+          "dirty": false
+        },
+        "buildId": "44782d0412ebc0b8"
+      },
+      "sdk": "1.64.1",
+      "browser": "156.0.8078.76",
+      "fixture": {
+        "bytes": 1349965216,
+        "allocatedBytes": 1349965216,
+        "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525"
+      },
+      "cycles": 8,
+      "samples": 2530,
+      "originalMemoryEvaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 8848296.228571428,
+          "rssDriftBytes": 33849344,
+          "mainHeapDriftBytes": 297620,
+          "sampledPeakRssBytes": 1095442432,
+          "sampledPeakGrowthBytes": 623947776
+        }
+      },
+      "normalNativeExitWithinOriginalBounds": false,
+      "subsequentSDKForcedCleanup": true,
+      "nativeObservedIdentities": 12,
+      "nativeRemainingAtOriginalFailure": [
+        {
+          "pid": 130160,
+          "parent": 143816,
+          "name": "chrome.exe",
+          "startTicks": "134379381421190830",
+          "state": "R"
+        },
+        {
+          "pid": 143844,
+          "parent": 130160,
+          "name": "chrome.exe",
+          "startTicks": "134379381428786941",
+          "state": "R"
+        }
+      ],
+      "errors": [
+        "Cleanup: Browser close/reap timed out."
+      ],
+      "error": null,
+      "workerCloseEvents": 57,
+      "modelWorkers": 40,
+      "recoveryWorkers": 16,
+      "sourceUnchanged": true,
+      "reportSHA256": "feeaf7d677fa8bec3d76af718b2669ffcbb7aca07dab4ba67229164522620114",
+      "logSHA256": "6d5489e155476bd0a3a65570dfe1ca147c8a20144ffa0fbe053e39184e5aa824",
+      "driverSHA256": "a9cb3639b1b96fe49fc741bea44a2ced2cec043eb1270803103fde7117ad7ca8",
+      "policySHA256": "20ae685e49496950959b42e8c794279d50ef63d062bbd9c221bc168beed337dd",
+      "eligibleForWindowsNormalCloseAcceptance": false,
+      "historicalRootCauseFixed": false,
+      "scope": "Exact published v1.3.0 application; separate clean driver3f and isolated verified SDK1.64.1. Full original8cycles,2warmups and native Windows policy. Memory sub-pass does not override whole failure, and later SDK cleanup never counts as normal exit. Not a replacement GitHub release gate."
+    },
+    "msedge": {
+      "status": "reviewed-physical-Windows-acceptance-passed",
+      "at": "2026-10-31T17:16:48.472Z",
+      "channel": "msedge",
+      "producerExitCode": 0,
+      "originalWholeStatus": "passed",
+      "source": "3f2115cbb71e9f8797ba0a0a617167de5144e463",
+      "appRelease": {
+        "schemaVersion": 1,
+        "version": "1.3.0",
+        "distribution": "public",
+        "extension": null,
+        "source": {
+          "commit": "7debc69df1a1c91e8ed3928a8a4932a493324180",
+          "tree": "68f73b805636224b2023871f0edcab17c68dbf17",
+          "committedAt": "2026-10-31T23:35:52+08:00",
+          "dirty": false
+        },
+        "buildId": "44782d0412ebc0b8"
+      },
+      "sdk": "1.64.1",
+      "browser": "156.0.4314.50",
+      "fixture": {
+        "bytes": 1349965216,
+        "allocatedBytes": 1349965216,
+        "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525"
+      },
+      "cycles": 8,
+      "samples": 2054,
+      "originalMemoryEvaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": -11394369.82857143,
+          "rssDriftBytes": 53710848,
+          "mainHeapDriftBytes": 182504,
+          "sampledPeakRssBytes": 1214472192,
+          "sampledPeakGrowthBytes": 738004992
+        }
+      },
+      "normalNativeExitWithinOriginalBounds": true,
+      "subsequentSDKForcedCleanup": false,
+      "nativeObservedIdentities": 13,
+      "nativeRemainingAtOriginalFailure": [],
+      "errors": [],
+      "error": null,
+      "workerCloseEvents": 57,
+      "modelWorkers": 40,
+      "recoveryWorkers": 16,
+      "sourceUnchanged": true,
+      "reportSHA256": "aeeaa0d848e2ac00f5507f92b78c088fbb938de0b2618326a19035630405c2e0",
+      "logSHA256": "7ffa2fcb046fb870cbede19429316c1b097d3c26830b1050ce98b516f433f0af",
+      "driverSHA256": "a9cb3639b1b96fe49fc741bea44a2ced2cec043eb1270803103fde7117ad7ca8",
+      "policySHA256": "20ae685e49496950959b42e8c794279d50ef63d062bbd9c221bc168beed337dd",
+      "eligibleForWindowsNormalCloseAcceptance": true,
+      "historicalRootCauseFixed": false,
+      "scope": "Exact published v1.3.0 application; separate clean driver3f and isolated verified SDK1.64.1. Full original8cycles,2warmups and native Windows policy. Memory sub-pass does not override whole failure, and later SDK cleanup never counts as normal exit. Not a replacement GitHub release gate."
+    },
+    "controller": {
+      "status": "completed-no-retries",
+      "startedAt": "2026-10-31T16:35:19.138881+00:00",
+      "controllerPid": 143432,
+      "cases": [
+        {
+          "channel": "chrome",
+          "report": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\native-close-followup\\chrome-physical1641-2.json",
+          "log": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\native-close-followup\\chrome-physical1641-2.log",
+          "status": "producer-exited",
+          "pid": 143816,
+          "startedAt": "2026-10-31T16:35:21.290033+00:00",
+          "exitCode": 1,
+          "finishedAt": "2026-10-31T16:57:26.524758+00:00",
+          "reportedStatus": "failed",
+          "nativeIdentitiesReconciledExited": true
+        },
+        {
+          "channel": "msedge",
+          "report": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\native-close-followup\\msedge-physical1641-2.json",
+          "log": "D:\\Users\\kovia\\OneDrive\\文件\\ChatGPT\\Tflite\\tflite-explorer\\build\\qa\\native-close-followup\\msedge-physical1641-2.log",
+          "status": "producer-exited",
+          "pid": 133316,
+          "startedAt": "2026-10-31T16:57:26.742390+00:00",
+          "exitCode": 0,
+          "finishedAt": "2026-10-31T17:15:12.868864+00:00",
+          "reportedStatus": "passed",
+          "nativeIdentitiesReconciledExited": true
+        }
+      ],
+      "automaticRetries": false,
+      "sequential": true,
+      "cleanup": "Retain all physical fixtures, reports and raw failures",
+      "finishedAt": "2026-10-31T17:15:13.002484+00:00"
+    }
+  },
+  "publicWebsite": {
+    "status": "new-SDK-current-public-website-verified",
+    "at": "2026-10-31T17:48:21.526Z",
+    "run": 41225507999,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999",
+    "driverSource": "26523731a00e6bf08954d6f7ba94c29178652d58",
+    "appRelease": {
+      "schemaVersion": 1,
+      "version": "1.3.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "7debc69df1a1c91e8ed3928a8a4932a493324180",
+        "tree": "68f73b805636224b2023871f0edcab17c68dbf17",
+        "committedAt": "2026-10-31T23:35:52+08:00",
+        "dirty": false
+      },
+      "buildId": "44782d0412ebc0b8"
+    },
+    "siteId": "2a94efad4e9e905a49344335ca17c3efd9ecdcae2bd010a934e43274e77e2242",
+    "providerArtifact": 13051783557,
+    "providerDigest": "sha256:aea0dfa47107da77da0a86c7ad1992d1401769f4d6d61fe699f9e0b2086c5c9b",
+    "reportSHA256": "018d30c75850bfc4553c53a3f43c5ea5375079d2af23c7d751064e37a2cbc58a",
+    "checks": 35,
+    "fontFrames": 15,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "allObservedMainWorkersClosed": true,
+    "modelWorkers": 91,
+    "runtimeLifecycle": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": -7700480,
+        "mainHeapDriftBytes": -12273376,
+        "closedRssSlopeBytesPerCycle": 7683276.8,
+        "sampledPeakRssBytes": 838287360,
+        "maxSampleGapMs": 832,
+        "sampledPeakGrowthBytes": 84017152
+      }
+    },
+    "scope": "Read-only current public v1.3.0 with merged SDK1.64.1 / Chromium156 generation; not a deployment or replacement fixed asset, physicalWindows acceptance or a fix for native Chrome shutdown.",
+    "goalComplete": false
+  },
+  "archive": {
+    "file": "windows-v1.3-sdk1641-evidence.zip",
+    "bytes": 3578789,
+    "sha256": "d0e8ea02d240cfbf0cdac4f42f4feaced89bac04f6d7c6f053928a824b1f82c3",
+    "members": 189,
+    "originalRecords": 204,
+    "deduplicatedRecords": 17,
+    "manifestSHA256": "521bc6bc929b8e0764c43081edc8f58d70aea2bc5fac8aa4ef66514919ef80ce",
+    "crc": "passed",
+    "allRecordedMemberSHA256": "passed",
+    "originalEvidenceModified": false
+  },
+  "limitations": [
+    "Chrome original 10-second normal close remains failed; later SDK forced cleanup does not repair the result.",
+    "Native observers cover admitted PID/creation identities, not all unobserved short-lived processes.",
+    "Eight cycles and 500ms native samples are bounded observations, not a lifetime leak guarantee.",
+    "Worker heap/backing samples are not independent OS RSS or continuous peaks.",
+    "Physical Windows fixture bootstrap is manifest-exact HTML, not HTTP-document or antivirus compatibility acceptance.",
+    "No new app deployment, tag movement, immutable Release rewrite, private acceptance or extra soak."
+  ],
+  "goalComplete": false,
+  "historicalRootCauseFixed": false
+}

@@ -18,13 +18,15 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 目前外部使用者以 v1.3.0 為準；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41216245433)四個工作 attempt 1 全成功，1,465 個正式檔案、35 項操作、四份實際固定下載及權威 deployment 已核對。新增 PAD／切片／split／reduction 靜態規則與逐 OP 報告，保留[候選失敗、最後四項關卡及正式交付](operator-validation.md#v130-正式交付)。沒有規則、動態或超預算明列未檢查，Chrome 原生關閉與任意 kernel／dialect 語意仍未解。發布後文件更新不移動 tag、不改寫固定資產、不重跑成功部署；舊版證據保持原來源。
 
+最新[Windows v1.3.0／SDK 1.64.1](windows-large-model.md#v130-固定產物與-sdk-1641)已各完成原始實體 1.25 GiB／21,005 OP 八輪，兩端功能、權重／options／pattern 與原記憶體子判定通過；Edge 整輪正常退出，Chrome 最後仍超過原 10 秒關閉上限。已修正 OP UI driver 只有 root、未取樣子程序的觀察缺口，並更新 SDK 與受防護的原生 chooser adapter；[PR #195](https://github.com/koviankevin/tflite-explorer/pull/195)必要 CI 與來源相同的 merge tree 已核對。新版工具的[正式站 35 項](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)完成，混合結果與原始證據見[本次收據](results/windows-v1.3-sdk1641.json)。此處修好的是驗收覆蓋，Chrome 原生關閉根因及完整商品等級目標仍未完成。
+
 ## 各階段原始計畫與範圍
 
 | 工作 | 要證明的行為 | 狀態 |
 | --- | --- | --- |
 | 編輯合法性與錯誤定位 | 常用 OP 的 shape、dtype、常數／量化正負例；實際序列化、原始權重／options 保留與 CPU 結果；runtime 錯誤可對照 OP／tensor，無法唯一對應時明列候選 | 卷積／pooling 共用靜態規則、真正 allocation 負例及 Windows 小型 UI 已通過，四項 main 關卡與 v1.2.0 正式交付已核對。v1.3.0 另交付 PAD／切片／split／reduction 的 13 種有界規則與逐 OP 報告；其他 OP／任意 kernel 語意仍未驗證，不把結構通過寫成可執行保證 |
 | Custom 子模型資料保留 | 未知引用保守保留；有可信引用契約才能安全縮減；預覽與實際匯出一致、契約負例拒絕、擴充不污染公開包 | [引用契約](custom-reference-contracts.md)本機證據已核對：建置隔離與十二份 Windows 下載的原始 bytes／編號／pattern；公開程序 exit 0，合成內網報告通過但退出碼遺失。公開支援已在 v1.2.0 正式交付；未知格式仍完整保留，不宣稱任意 custom kernel 已可執行 |
-| Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 精確 v1.2.0 的[實體 1.25 GiB 八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；歷史失敗保留，後續小型候選 Chrome 關閉再次逾時，正常關閉根因仍未完成。不以小型 UI／Linux 大檔代替 Windows 大檔，亦不把 f592 結果換標成未來來源 |
+| Windows 大模型可靠性 | 在明確環境的有限輪數操作中觀察整個瀏覽器／Worker、原生關閉及匯出後釋放；權重、options、pattern、草稿／視角保留 | 最新固定 v1.3.0 的[實體 1.25 GiB 八輪](windows-large-model.md#v130-固定產物與-sdk-1641)兩端功能及原記憶體子判定通過，Edge 整輪正常退出，Chrome 原 10 秒關閉失敗；新版 canonical OP driver 亦重現。已補正原生子程序觀察，根因仍未完成。歷史 v1.2.0 通過與其他失敗保留，不互相換標 |
 | Generic MLIR 支援邊界 | 支援型別的 dense／hex 計數、SSA／dominance；外部 resource／packing 有明確契約或明列未驗證；公司 dialect 接點可獨立建置 | Resource-only 漏列未檢查段已修正；44 項選測及 Windows Chrome／Edge 打包後原生開檔、32px、pattern 各一筆、匯出重開通過，12,012 bytes resource 原文比對一致、每個瀏覽器三個 Worker 關閉。修正已在 v1.2.0 正式交付；packing／公司 verifier 未驗證，外部 resource 選檔尚未支援 |
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |
 | 保存、操作及發布 | 草稿／pattern 異常與遷移可恢復；主要新手流程與鍵盤可操作；固定產物、相依 scope、必要關卡、正式站與 Release 一致，回退不破壞使用者資料 | 既有功能與交付證據沿用；新功能仍須補受影響驗收；OS 斷電、完整螢幕閱讀器與任意格式遷移仍未證實 |
