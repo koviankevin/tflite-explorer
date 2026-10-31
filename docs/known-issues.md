@@ -2,13 +2,15 @@
 
 目前固定版本為 [v1.2.0](product-readiness-v1.2.md)／build `d69754e5b6791ecd`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
+下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 的負軸誤擋與錯誤 dtype 放行，56 項相關 Node 測試通過；打包後兩瀏覽器的匯出／重開／搜尋／CPU bytes 均核對，但 Chrome 最後正常關閉逾時，整輪仍失敗，Edge 整輪通過。發布仍待完成，正式站尚未取得這個修正。v1.2.0 固定產物的 [Windows 完整八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；間歇性關閉根因與 Edge 接近原 RSS slope 上限的界線保留。
+
 ## 優先處理與交付狀態
 
 v1.2.0 已完成正式站與固定 Release 核對；下表區分仍未解的限制與本版已交付修正。較早階段收據的「未發布」保留其當時狀態，不覆蓋[本版交付](product-readiness-v1.2.md)；整體目標與原始證據見[商品化後續工作](product-readiness-next.md)。
 
 | 優先 | 問題／界線 | 現況 |
 | --- | --- | --- |
-| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | Edge 原八輪通過；Chrome 第四輪 RSS 超標，第五輪內容／記憶體通過但最後 close 逾時，整輪仍失敗。逐程序及小型對照見[Windows 大模型](windows-large-model.md)，尚不能宣稱已修復 |
+| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | 精確 v1.2.0／f592 固定產物的 Chrome／Edge 完整八輪已通過原判定及正常退出；後續小型 [TRANSPOSE 候選](transpose-permutation.md#打包候選與實際下載)的 Chrome 又在最後正常關閉逾時。間歇性關閉根因未證實，Edge 八輪 slope 接近上限，見[Windows 大模型](windows-large-model.md) |
 | 2 | 部分原模型的 activation 使用非零、沒有 data 欄位的 buffer；重建成明確空 data vector 會導致配置失敗 | 完整／局部／組合序列化修正已在 v1.2.0 交付；公開模型與實際 CPU 驗證見[階段一](results/product-readiness-stage1.json)。未提供的使用者原模型不宣稱已確認根因 |
 | 3 | 排版途中切到 32px，文字更新但框仍用舊尺寸 | [真正文字邊界回歸](font-reflow.md)已在 v1.2.0 交付；Chrome／Edge 本機七組邊界及正式站 15 組實際文字框通過。34 項正式操作與固定下載已核對，原失敗保留 |
 | 4 | 未知 custom 格式不能安全辨識隱含引用，因此子模型可能仍很大 | 保守保留仍是預設；可信[引用契約](custom-reference-contracts.md)才能縮減資料，不推測未知 options，也不增加公開 custom kernel |
@@ -38,7 +40,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前 [v1.2.0](product-readiness-v1.2.md)的必要 Chromium、發布及正式站／固定下載核對均已完成。較早 [v1.1.0](model-safety.md#正式發布)另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復；v1.2.0 字級修正另有兩瀏覽器的小型原生證據，均不代替完整 Windows 大檔正常關閉。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
+目前 [v1.2.0](product-readiness-v1.2.md)的必要 Chromium、發布及正式站／固定下載核對均已完成。較早 [v1.1.0](model-safety.md#正式發布)另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復；精確 v1.2.0 固定產物後續亦完成兩瀏覽器的[完整 Windows 大檔八輪與正常關閉](windows-large-model.md#v120-固定產物的完整-windows-驗收)。有限驗收不證明歷史間歇性關閉的根因已修復。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 <details>
 <summary>歷史驗收與失敗紀錄（包含目前選做的 Firefox／WebKit）</summary>

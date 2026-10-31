@@ -6,6 +6,12 @@ import {parseModel} from '../src/model-engine.js';
 import {runtimeFixture} from './runtime-fixture.mjs';
 import {readFile} from 'node:fs/promises';
 const t=(shape,type=0)=>({shape,type});
+
+test('TRANSPOSE permutation requires int32 while GATHER may use int64 indices',()=>{
+    assert.doesNotThrow(()=>check('TRANSPOSE',[t([1,2]),t([2],2)],[t([1,2])]));
+    for(const type of [4,0,7,9])assert.throws(()=>check('TRANSPOSE',[t([1,2]),t([2],type)],[t([1,2])]),/TRANSPOSE.*permutation.*int32/);
+    assert.doesNotThrow(()=>check('GATHER',[t([1,2]),t([2],4)],[t([1,2])],{axis:1,batch_dims:0}));
+});
 test('FC checks flattened/keep_num_dims outputs and bias, retaining hybrid and dynamic cases',()=>{
     assert.doesNotThrow(()=>check('FULLY_CONNECTED',[t([2,3,4]),t([5,4],9),t([5])],[t([6,5])],{}));
     assert.doesNotThrow(()=>check('FULLY_CONNECTED',[t([2,4]),t([5,4]),t([1,5])],[t([2,5])],{}));

@@ -1,0 +1,442 @@
+{
+  "format": "model-lens-transpose-native-review",
+  "version": 1,
+  "status": "functional-correction-proved-chrome-normal-close-remains-failed",
+  "at": "2026-10-31T12:05:17.876226+00:00",
+  "candidateCommit": "4b0822e0df200bfb969a8fa7ea7ab9d387d98484",
+  "candidateBuild": "32a2194e23e040a1",
+  "originalNativeRedBrowsers": 2,
+  "cases": [
+    {
+      "channel": "chrome",
+      "functionalChecks": "passed",
+      "normalClose": "failed-original-10s-limit",
+      "wholeAttempt": "failed",
+      "reportSHA256": "b4d8b9c9b0205526c2603ba183464943a2c45139578ad38f209fd51cabd3b203",
+      "modelSHA256": "ab2a957212ca61f32dccd275e419d6a61c301ad3e87135d4e264f2a8d8b13e8a",
+      "ioSHA256": "fc0b4a966e0abf86429e59de8b998668cf341463d7707fce2c08c278be230793",
+      "decoded": {
+        "ports": [
+          [
+            39,
+            [
+              0,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            0,
+            [
+              2,
+              2
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            0,
+            [
+              2,
+              2
+            ],
+            [
+              4
+            ]
+          ]
+        ],
+        "permutation": [
+          -1,
+          0
+        ],
+        "inputShape": [
+          2,
+          3
+        ],
+        "outputShape": [
+          3,
+          2
+        ]
+      },
+      "nativeWorkerCloses": 5
+    },
+    {
+      "channel": "msedge",
+      "functionalChecks": "passed",
+      "normalClose": "passed",
+      "wholeAttempt": "passed",
+      "reportSHA256": "d66f40ca8ae92833b8aae26c18d6f8143c2b7c05304a641fb6174972fb88d73b",
+      "modelSHA256": "ab2a957212ca61f32dccd275e419d6a61c301ad3e87135d4e264f2a8d8b13e8a",
+      "ioSHA256": "a62cf39cd9e5ec818293d79a879ce6b7033f31c816a0a0a32fe6da1affa8d80b",
+      "decoded": {
+        "ports": [
+          [
+            39,
+            [
+              0,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            0,
+            [
+              2,
+              2
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            0,
+            [
+              2,
+              2
+            ],
+            [
+              4
+            ]
+          ]
+        ],
+        "permutation": [
+          -1,
+          0
+        ],
+        "inputShape": [
+          2,
+          3
+        ],
+        "outputShape": [
+          3,
+          2
+        ]
+      },
+      "nativeWorkerCloses": 4
+    }
+  ],
+  "scope": "Both actual edited model downloads independently decoded; all IO ZIP CRC/bytes/numbers verified. Chrome whole attempt remains failed; SDK force cleanup is not normal close. No private-model root cause or future memory guarantee.",
+  "relatedNodeTests": {
+    "tests": 56,
+    "pass": 56,
+    "fail": 0,
+    "skipped": 0,
+    "raw": "qa/transpose-all-targeted-green.tap"
+  },
+  "archive": {
+    "file": "transpose-permutation-evidence.zip",
+    "bytes": 429772,
+    "sha256": "718bedea6d54475b6c7ffc50890c91991b03974e788f0e92dec6936331e4d839",
+    "members": [
+      {
+        "path": "qa/transpose-native-review.json",
+        "bytes": 2958,
+        "sha256": "275bf69713ecb600103f21a67a69f93201672b0fb956a00818542ac2f586f9bc"
+      },
+      {
+        "path": "qa/review-transpose-native.py",
+        "bytes": 6433,
+        "sha256": "76c6a3c95fab87d9c95b728be6b7624a9479a4eb2f7f3cdcf96b1e6b0ead12a1"
+      },
+      {
+        "path": "qa/review-transpose-native-5worker-assumption.py",
+        "bytes": 6158,
+        "sha256": "9069c6e8f9a8a9c6ee1e21e54c3214687c07fba92bee58c6ffce9f42c5fcd1ec"
+      },
+      {
+        "path": "qa/transpose-candidate-source-review.json",
+        "bytes": 1358,
+        "sha256": "a352fbff5bb55b23254549df4b0c1011f98fceccdcc3e3e0b60f2969752bf604"
+      },
+      {
+        "path": "qa/review-transpose-candidate.py",
+        "bytes": 3177,
+        "sha256": "b83dae961cd010242c34d0ddb9101ce534ab6dd3446673536e51ebb861037f2c"
+      },
+      {
+        "path": "qa/transpose-native-ui.mjs",
+        "bytes": 10662,
+        "sha256": "c74db69c804bef5fe363772b279c5ad50e88be5e7b1c0a281aff6bc35ace02a4"
+      },
+      {
+        "path": "qa/transpose-native-edge.mjs",
+        "bytes": 10653,
+        "sha256": "8102de2d91a4191298eb00011f6b243c74271f19af5850315f90564726579ead"
+      },
+      {
+        "path": "qa/transpose-ui-fixture.mjs",
+        "bytes": 1671,
+        "sha256": "e1069d07778a23b9e3de2fd8a447c75537c8c78d6b35951947fc2b106f978027"
+      },
+      {
+        "path": "qa/run-transpose-native-green.py",
+        "bytes": 1923,
+        "sha256": "289f540e1d08dfa3e089819ee299257ec51f6d43ea64d2039984186384d8e2dd"
+      },
+      {
+        "path": "qa/run-transpose-native-edge.py",
+        "bytes": 3057,
+        "sha256": "8102cb0d06e7c061b728b10c981ccae5fe44208fe52b7e5e1480918cd6a4950f"
+      },
+      {
+        "path": "qa/transpose-native-green-status.json",
+        "bytes": 750,
+        "sha256": "43a95f4d19e80a00958be13d33d4214c9aaef8a120b553a3c7bcd25b82a8ee55"
+      },
+      {
+        "path": "qa/transpose-native-edge-status.json",
+        "bytes": 1375,
+        "sha256": "eb6c03f0d9bc5cd0c248a35fa689a5ae521dd6b1f5323835dbf3e5d963789503"
+      },
+      {
+        "path": "qa/transpose-native-red-status.json",
+        "bytes": 285,
+        "sha256": "bf7c5f6eb78606be756e7daf7996667bb3d09c31fd58be614927e0be61291fcf"
+      },
+      {
+        "path": "qa/transpose-native-red.log",
+        "bytes": 4301,
+        "sha256": "9ad85b7c44e45257eb007b278e3965268a05bceb4315ffa4254102a52d83e7d9"
+      },
+      {
+        "path": "qa/transpose-native-green.log",
+        "bytes": 3149,
+        "sha256": "ac6d76a73e3f2475ebff99d9e251570fac2f61814dfc5943eff1b80510c0635d"
+      },
+      {
+        "path": "qa/transpose-native-edge.log",
+        "bytes": 2176,
+        "sha256": "524c5eab163997c695a252e1d7b00d314cc9ba4d8cfb4e7f6bc34dadfca92193"
+      },
+      {
+        "path": "qa/transpose-public-red.tap",
+        "bytes": 3937,
+        "sha256": "05dd053fb5e065206c4b9b41a5d491ce4b7534bd73ac7f3dfcc0b556ca943137"
+      },
+      {
+        "path": "qa/transpose-dtype-public-red.tap",
+        "bytes": 6896,
+        "sha256": "4a01bdb066cf2dee3e8818d2e639cb3e27ec246c6d8edd1c2d65c77d06e6b982"
+      },
+      {
+        "path": "qa/transpose-all-targeted-green.tap",
+        "bytes": 14032,
+        "sha256": "876296fd7caf2883bc5b7bac5bd909d965fa9813add04947dc4eff09f3be7db1"
+      },
+      {
+        "path": "qa/transpose-negative-probe.mjs",
+        "bytes": 2725,
+        "sha256": "70988e9fd52f36cf72669ba14b1d0ad86875449005058f4671712ddaa474597c"
+      },
+      {
+        "path": "qa/transpose-negative-probe.json",
+        "bytes": 2399,
+        "sha256": "3a8880ffd11eeeb216341a6eff7662577c0f89015f4ee6a6fef6cd6a1de05bd4"
+      },
+      {
+        "path": "qa/transpose-negative-minimal.mjs",
+        "bytes": 2871,
+        "sha256": "b2a9a04a5b5cf38c37cff171156986eb2aba3d9cc2a315563dcf76898c3080fb"
+      },
+      {
+        "path": "qa/transpose-negative-minimal.json",
+        "bytes": 1595,
+        "sha256": "52e6b6ab7bf292dbe7eac8f2621cd9f3944cbffd84f6d5053a04b97469b424c5"
+      },
+      {
+        "path": "qa/transpose-negative-cpu.mjs",
+        "bytes": 3480,
+        "sha256": "2bcaf57c3d49f5eddf44622a6b6ef4e1847a1accf40b654f8cd20e700921f864"
+      },
+      {
+        "path": "qa/transpose-negative-cpu.json",
+        "bytes": 7606,
+        "sha256": "0e65e1e5f22248c48bf03b21c83fb7a293eec9e86ca413ff47fdbf6ed347e64d"
+      },
+      {
+        "path": "qa/transpose-perm-dtype-probe.mjs",
+        "bytes": 3534,
+        "sha256": "04536d9814516aeef5d6ef7bd1c7b6353070fba9fc92cf691146244ea7f1b891"
+      },
+      {
+        "path": "qa/transpose-perm-dtype-probe.json",
+        "bytes": 3873,
+        "sha256": "8d26fb36c9e056a79bb8e0bbdeae5414f7f542816b8e058f595a96aec9b85726"
+      },
+      {
+        "path": "qa/transpose-perm-aligned-probe.mjs",
+        "bytes": 4204,
+        "sha256": "94e0d36d1f49e9ada3e6f2e3fef74f7ef35472c47b111a63d8d1e870ec1921a2"
+      },
+      {
+        "path": "qa/transpose-perm-aligned-probe.json",
+        "bytes": 1910,
+        "sha256": "f739053a2a8eab201d0896c42fb13cf0cb13496fadf43b6aa4955c164e598802"
+      },
+      {
+        "path": "qa/transpose-perm-aligned-2-probe.mjs",
+        "bytes": 4281,
+        "sha256": "51aadb7f2fbe499d1e18604b3036483328e83b877be1623abe65e2753d29651f"
+      },
+      {
+        "path": "qa/transpose-perm-aligned-2-probe.json",
+        "bytes": 3760,
+        "sha256": "429dfbaf49d29f897ea577d46fc2102be8407f9e1b3106bbb677e28c262151f4"
+      },
+      {
+        "path": "qa/transpose-negative-ui-source.tflite",
+        "bytes": 1512,
+        "sha256": "dd3927ef9dfec756189c5ce7c241f5e65bbe4d45384853346509ea8c0f3c9b83"
+      },
+      {
+        "path": "qa/transpose-negative-ui-input.bin",
+        "bytes": 24,
+        "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+      },
+      {
+        "path": "qa/transpose-native-red/chrome-32px.png",
+        "bytes": 91997,
+        "sha256": "7b03993a9949bebf5046cc57680599b142be5d28d25ac2088c39b34c0fb38f08"
+      },
+      {
+        "path": "qa/transpose-native-red/msedge-32px.png",
+        "bytes": 92035,
+        "sha256": "94e4c0375db21c6b761731850276f85873edf586b3e20d6c8a0d3d3703562104"
+      },
+      {
+        "path": "qa/transpose-native-red/report.json",
+        "bytes": 12178,
+        "sha256": "2094a75255ac624ed0706294d36c67e7a6d3c3caa32d7ab980bcc1092886aff0"
+      },
+      {
+        "path": "qa/transpose-native-green/chrome-32px.png",
+        "bytes": 86172,
+        "sha256": "640f85cf575451d2b8ea7e9b141238554ffccbe9570192134d1a050de34f0868"
+      },
+      {
+        "path": "qa/transpose-native-green/chrome-negative-edited.tflite",
+        "bytes": 1976,
+        "sha256": "ab2a957212ca61f32dccd275e419d6a61c301ad3e87135d4e264f2a8d8b13e8a"
+      },
+      {
+        "path": "qa/transpose-native-green/chrome-negative-io.zip",
+        "bytes": 2934,
+        "sha256": "fc0b4a966e0abf86429e59de8b998668cf341463d7707fce2c08c278be230793"
+      },
+      {
+        "path": "qa/transpose-native-green/report.json",
+        "bytes": 7248,
+        "sha256": "b4d8b9c9b0205526c2603ba183464943a2c45139578ad38f209fd51cabd3b203"
+      },
+      {
+        "path": "qa/transpose-native-edge/msedge-32px.png",
+        "bytes": 86164,
+        "sha256": "31596245b6f90de5aa4f8f914ba00e4c62eb2d93a9fa4ebbc5d01bb9b874da4c"
+      },
+      {
+        "path": "qa/transpose-native-edge/msedge-negative-edited.tflite",
+        "bytes": 1976,
+        "sha256": "ab2a957212ca61f32dccd275e419d6a61c301ad3e87135d4e264f2a8d8b13e8a"
+      },
+      {
+        "path": "qa/transpose-native-edge/msedge-negative-io.zip",
+        "bytes": 2934,
+        "sha256": "a62cf39cd9e5ec818293d79a879ce6b7033f31c816a0a0a32fe6da1affa8d80b"
+      },
+      {
+        "path": "qa/transpose-native-edge/report.json",
+        "bytes": 8377,
+        "sha256": "d66f40ca8ae92833b8aae26c18d6f8143c2b7c05304a641fb6174972fb88d73b"
+      },
+      {
+        "path": "qa/transpose-negative-cpu-minimal-negative.zip",
+        "bytes": 2142,
+        "sha256": "6f986fd88ccf322e7df363aecf17fa24c1ef4c64157d4a568b2ce36455fe4d0d"
+      },
+      {
+        "path": "qa/transpose-negative-cpu-minimal-positive.zip",
+        "bytes": 2555,
+        "sha256": "c9b74de492f97f16edc4a7a64d00f3127768eb4b70b14052e66614856c507d1a"
+      },
+      {
+        "path": "qa/transpose-negative-cpu-negative-identity.zip",
+        "bytes": 2206,
+        "sha256": "de122650c3afa342f871d05d28df45638a0769a87441ae3cd37259b8d1ee564e"
+      },
+      {
+        "path": "qa/transpose-negative-cpu-negative.zip",
+        "bytes": 2206,
+        "sha256": "dbd968b85016f1d6bdb5609b83d198e771b985d1c75fe2f454894c18eb601ec6"
+      },
+      {
+        "path": "qa/transpose-negative-cpu-positive.zip",
+        "bytes": 2206,
+        "sha256": "3441fba2fef563c5fb48916b5ce21c77a50011f40ba454041eb51a82c2dddbac"
+      },
+      {
+        "path": "candidate-source/src/tflite-constant-checks.js",
+        "bytes": 4314,
+        "sha256": "91310758dce7aa4b86417680b9e012a578f9c50dfae7accaca27866dea743953"
+      },
+      {
+        "path": "candidate-source/src/tflite-semantic-checks.js",
+        "bytes": 5106,
+        "sha256": "3f470d67c225bf5b6ff37d916db79a5a90f0ddb06d46a659c88b81bb696d0609"
+      },
+      {
+        "path": "candidate-source/test/tflite-constant-checks.test.mjs",
+        "bytes": 6446,
+        "sha256": "3df26d53d6071482095a7217cd87def77f1cf3888f31cb091bd6c2d4c1f278ef"
+      },
+      {
+        "path": "candidate-source/test/tflite-semantic-checks.test.mjs",
+        "bytes": 3571,
+        "sha256": "b66dc53f3b48841e92c27d79c8b627690c54f937d924a44762a4f76d8a2b9fac"
+      },
+      {
+        "path": "candidate-source/test/tflite-transpose-runtime.test.mjs",
+        "bytes": 3987,
+        "sha256": "042de8ffa2ce05a51e43b35f23c5bd53119032eaa9b12e355503bd86cb121339"
+      },
+      {
+        "path": "candidate-source/test/browser/windows-process-memory.mjs",
+        "bytes": 4408,
+        "sha256": "e3ec118d8449b13039b983552338340d76f03c6ec2a70d484756382c55d3addd"
+      },
+      {
+        "path": "candidate-source/test/browser/windows-process-memory.py",
+        "bytes": 8881,
+        "sha256": "6d03ecdda68cf9304b009595c393f4c74055f1307eb811cea499915772200e55"
+      },
+      {
+        "path": "candidate-source/test/browser/trusted-document.mjs",
+        "bytes": 1922,
+        "sha256": "37e97e44169c76bbe3ba299842f923cb26a63ab47b6af61d28bda7678ebcb0e0"
+      },
+      {
+        "path": "candidate-source/test/browser/desktop-dom-reader.mjs",
+        "bytes": 1192,
+        "sha256": "402e5ca19c984b52e4baedd48d5c42c25d2ba5b99b91855e1803487a88d85266"
+      },
+      {
+        "path": "candidate-source/LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "candidate-source/vendor/netron/LICENSE",
+        "bytes": 1062,
+        "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+      }
+    ]
+  },
+  "dtypeEvidence": "Aligned int64 permutation has correct payload and8bytealignment but fails stockCPU; int32 control passes. Public guard rejects int64 before reads; GATHER int64 remains accepted.",
+  "reviewerCorrection": "Initial reader wrongly required five workers in both browsers. Actual Edge created no optional recovery worker; model/runtime/layout workers and every observed native close are verified. Initial reader retained, no producer/test/timer changes.",
+  "goalComplete": false,
+  "releaseStatus": "Candidate only; v1.2.0 remains published. No claim that Chrome normal-close or historical user model cause is fixed."
+}

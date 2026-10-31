@@ -16,12 +16,17 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
     for(const [node,op]of g.operators.entries()){
         const code=model.operator_codes[op.opcode_index];if(code.custom_code)continue;
         const name=schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code||0)];if(!['TRANSPOSE','RESHAPE','EXPAND_DIMS','GATHER'].includes(name))continue;
-        const id=op.inputs[1],v=values(id),a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
+        const id=op.inputs[1],fail=message=>{throw Error(`Subgraph #${graphId} · OP #${node} ${name} · tensor #${id}：${message}`);};
+        if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
+        const v=values(id),a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
         if(!v||!a||!out){unchecked++;continue;}
-        const fail=message=>{throw Error(`Subgraph #${graphId} · OP #${node} ${name} · tensor #${id}：${message}`);};let expected;
+        let expected;
         if(name==='TRANSPOSE'){
-            if(v.length!==a.length||new Set(v).size!==v.length||v.some(n=>n<0n||n>=BigInt(a.length)))fail('permutation 必須包含每個 axis 一次，且長度等於 input rank。');
-            expected=v.map(n=>a[Number(n)]);
+            const rank=BigInt(a.length);
+            if(v.length!==a.length||v.some(n=>n< -rank||n>=rank))fail('permutation 必須包含每個 axis 一次，且長度等於 input rank。');
+            const axes=v.map(n=>Number(n<0n?n+rank:n));
+            if(new Set(axes).size!==axes.length)fail('permutation 必須包含每個 axis 一次，且長度等於 input rank。');
+            expected=axes.map(n=>a[n]);
         }else if(name==='EXPAND_DIMS'){
             if(v.length!==1||v[0]<BigInt(-a.length-1)||v[0]>BigInt(a.length))fail('axis 必須是 rank 範圍內的單一整數。');
             const axis=Number(v[0]<0n?v[0]+BigInt(a.length+1):v[0]);expected=[...a.slice(0,axis),1,...a.slice(axis)];
