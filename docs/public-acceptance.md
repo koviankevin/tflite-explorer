@@ -2,13 +2,15 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `9338194b51c14371`，來源 `697d9dfb6d128a522ac213c10cf8f072f643cab9`；[本版正式交付](model-safety.md#正式發布)已核對。外網更新不會自動更新公司內網站台。
+固定版本為 [v1.2.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.0)，[正式站](https://koviankevin.github.io/tflite-explorer/)目前 build `d69754e5b6791ecd`，來源 `f592e3d9df7ed48fae2ca19e353c7215638959a3`；[本版正式交付](product-readiness-v1.2.md)已核對。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 
 2026-10-30 依使用者明確指示，必要瀏覽器驗收只保留 Chrome／Edge；Firefox 與 Safari／WebKit 均為選做，不列部署阻擋，後續不自行排這兩個引擎補測。手動入口與歷史成功／失敗原文保留，網站不封鎖這些瀏覽器。必要流程沿用 Chromium 桌面與正式完整性關卡；不修改安全規則、RSS 門檻、計時或 workflow YAML。完整自動流程與 RSS 在 Hosted Linux Chromium；另經使用者明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站選檔、編輯／匯出重開、32px、真實 quota／備份／重試與儲存清除恢復，見 [v1.1.0](model-safety.md#正式發布)。兩種環境的證據分開列示。
 
 ## 已核對的公開流程
+
+v1.2.0 的正式操作與完整性另見[本版收據](results/product-readiness-v1.2-published.json)；Windows Chrome／Edge 的字級修正前後測見[字級回歸](font-reflow.md)。下表所引歷史版本保持原來源與範圍，不倒算為每個新版本都完成 Windows 全項驗收；[Windows 大檔](windows-large-model.md)的 Chrome 正常關閉失敗仍未解決。
 
 | 使用需求 | 證據與範圍 |
 | --- | --- |
@@ -29,7 +31,7 @@
 | 超過 1 GiB TFLite | [preview.22 三引擎歷史八輪](desktop-physical.md#preview22-候選的三引擎八輪與發布關卡)、[preview.26 Chromium 八輪](model-composition.md#候選與主分支驗收)及既有 Chromium 80 輪；各結果保持原來源及流程。另通過 [大型組合 Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)，含 A／B 接線、新增 OP、v2 備份、權重／options、重開與 RSS／Worker；另通過 [大型 v2 手動儲存／取消／還原](large-composition-draft.md#已核對的結果)，不代替數小時組合或其他引擎 |
 | 超大 MLIR 與大量 OP | [2.5 GiB 實體 MLIR](mlir-large-files.md#現行來源的-hosted-node-大檔驗收2026-10-29)核對權重、匯出與重開；[核心效能](performance-gate.md)另涵蓋 20,010 OP／六 blocks 的路徑快取、分段展開、切段與匯出，不把兩個不同負載混成同一次瀏覽器量測 |
 | Firefox／WebKit 歷史功能證據（選做） | [preview.31 同程式來源核對](preview31.md#固定候選驗收)：Hosted Linux Firefox 142.0.1／WebKit 26.0 各 17 項原生操作、63 model／20 runtime Workers close、14 次輸入清理、19 種執行／分佈情境及五組指南。Firefox 指紋 Worker 四個 native close 全部觀察到；原失敗與 final-page layout 觀察界線保留，不代替數小時或其他 OS |
-| 固定部署及下載 | [v1.1.0 最終獨立核對](results/model-safety-published-final.json)：1,432 檔 SHA／MIME、root、權威部署及四份實際固定下載一致；33 項原生操作、五組指南、19 種執行／分佈情境、86 model／44 runtime Workers close、14＋24 次輸入清理及八輪 CPU／IO 通過；四工作 attempt 1 成功 |
+| 固定部署及下載 | [v1.2.0 最終獨立核對](results/product-readiness-v1.2-published.json)：1,445 檔 SHA／MIME、獨立 root、權威部署與四份實際下載一致；34 項正式操作、15 組 32px 文字框、五組指南、19 種執行情境、八輪／24 次 CPU／IO 與原 RSS 規則通過；四工作 attempt 1 成功。Windows 完整大檔關閉仍列未完成 |
 
 ## 第一次使用
 

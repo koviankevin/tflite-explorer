@@ -1,10 +1,10 @@
 # 商品等級工作與完成條件
 
-2026-10-31 使用者接續「商品等級」目標，[後續工作及完成條件](product-readiness-next.md)另行記錄；以下 v1.1.0 是已發布基準，新工作不縮減為既有成功案例，尚未完成的項目保留。
+2026-10-31 使用者接續「商品等級」目標，[後續工作及完成條件](product-readiness-next.md)另行記錄。公開增量已在 [v1.2.0](product-readiness-v1.2.md) 正式交付；Windows 完整正常關閉與其餘未驗證項目仍保留，不把公開發布等同整體目標完成。下方 v1.1.0／preview 紀錄維持歷史來源。
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前固定版本為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，build `9338194b51c14371`。315 核心檔、全站 1,432 檔、四份固定下載與權威 deployment 均獨立核對；必要四項關卡、1.25 GiB TFLite 實體八輪及 2.5 GiB MLIR 串流計數／匯出重開通過。原 RSS、安全與計時規則未放寬。
+目前固定版本為 [v1.2.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.0)，build `d69754e5b6791ecd`。322 核心檔、全站 1,445 檔、34 項正式操作、四份實際固定下載與權威 deployment 均獨立核對；原 RSS、安全與 runtime／URL 計時規則未放寬。Linux 實體八輪、Windows 小型原生 UI 與 Windows 大檔失敗保持各自來源，見[本版完整範圍](product-readiness-v1.2.md)。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 
