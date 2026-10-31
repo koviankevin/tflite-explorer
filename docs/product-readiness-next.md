@@ -20,6 +20,8 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 最新[Windows v1.3.0／SDK 1.64.1](windows-large-model.md#v130-固定產物與-sdk-1641)已各完成原始實體 1.25 GiB／21,005 OP 八輪，兩端功能、權重／options／pattern 與原記憶體子判定通過；Edge 整輪正常退出，Chrome 最後仍超過原 10 秒關閉上限。已修正 OP UI driver 只有 root、未取樣子程序的觀察缺口，並更新 SDK 與受防護的原生 chooser adapter；[PR #195](https://github.com/koviankevin/tflite-explorer/pull/195)必要 CI 與來源相同的 merge tree 已核對。新版工具的[正式站 35 項](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)完成，混合結果與原始證據見[本次收據](results/windows-v1.3-sdk1641.json)。此處修好的是驗收覆蓋，Chrome 原生關閉根因及完整商品等級目標仍未完成。
 
+另補[原生 stack 診斷取樣](windows-large-model.md#原生-stack-診斷取樣)：官方固定 debugger DLL 完整性／簽章及自有合成程序的 stack／detach／繼續執行／exit 0 已核對，Node→Python 中文字路徑的 UTF-8 傳遞缺口已重現並修正。原始 OP 關閉失敗保留；後續正常對照及最多三次重現採樣沒有觸發取樣，因此尚未取得實際失敗的 Chrome stack，不宣稱根因已定位或驗收修復。這批只保存診斷工具與[原始證據](results/windows-close-diagnostics.json)，正式 app／v1.3.0 固定交付不變。
+
 ## 各階段原始計畫與範圍
 
 | 工作 | 要證明的行為 | 狀態 |

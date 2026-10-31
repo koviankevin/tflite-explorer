@@ -120,3 +120,15 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 未修改的新版 canonical driver 完成 Chrome／Edge 四項 OP 流程：SPLIT 實際選檔、匯出重開與 pattern；動態 PAD 明列未檢查；錯誤 SLICE 零下載；21,006 筆 JSON 與畫面 100→200 筆。Edge 觀察到 11 個身分且正常退出；Chrome 觀察到 8 個身分、功能通過，但最後原 10 秒關閉仍失敗。這修好觀察覆蓋，**沒有修好 Chrome 關閉根因**。
 
 新版工具另完成[正式網站唯讀驗證](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)：35 項、15 組 32px 文字框、19 種手動 runtime、八輪 CPU／IO 與原程序／記憶體政策通過。這是 Linux Chromium 正式站結果，不取代 Windows 大檔。未重部署、移動 tag 或改寫固定 Release。[完整收據](results/windows-v1.3-sdk1641.json)及[189 份原始證據與來源](results/windows-v1.3-sdk1641-evidence.zip)保留混合結果、setup-only 失敗、provider ZIP／digest／CRC、原始程序快照及獨立讀取器；大型實體權重檔留在本機。
+
+## 原生 stack 診斷取樣
+
+後續直接以 Node 啟動隔離 Chrome、使用 CDP pipe 關閉空白頁，沿用已記錄 SDK 1.64.1 的啟動參數，只更換本次暫存 profile。25 秒 idle 後約 1,143 ms 正常退出，八個已觀察 PID／creation 身分皆消失。這是一次正常對照，不能證明 Playwright 啟動器造成間歇性失敗。既有日誌中，Chrome 內部 TensorFlow Lite 訊息在成功／失敗案例的組合也不一致，因此不是該失敗的必要或充分條件，更不能當成網站執行過 interpreter 的證據。
+
+另外準備只針對自有合成程序的原生 stack collector：[Microsoft 官方固定 NuGet 套件](https://www.nuget.org/packages/Microsoft.Debugging.Platform.DbgEng/20260319.1511.0)先核對 SHA-512／ZIP CRC，五個 DLL 的 Microsoft Authenticode 均 Valid。依[非侵入式診斷介面](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/noninvasive-debugging--user-mode-)，短暫暫停、解讀 stack 後一定 detach；只保存固定 stack／module 名稱輸出，不製作原始記憶體 dump，停用 symbol 網路、shell／執行指令及 SQM，並使用該程序私有的 debugger 設定目錄。真正的合成 Python 子程序已取得 stack，解除後繼續執行且 exit 0；這個預檢不算 Chrome 逾時 stack。
+
+新 canonical OP driver 仍固定 `70c3260`／tree `8789536`，候選 build `d3500ba9cd43f789` 的應用輸入與公開版相同。第一個案例的四項 OP 功能通過，但最後原 10 秒關閉失敗；保存 checkpoint 後，collector 的 Windows stdin 預設解碼在中文字路徑遇到錯誤，尚未 attach。已用實際 Node→Python 請求重現 red，再改明確 UTF-8 bytes 讀取，核對原始路徑、全部 native row 及真正 helper 的無 attach 驗證。原先 header parser 漏算 vararg COM 方法的預檢失敗也保留，沒有算成應用問題。
+
+修正資料傳遞後的一次 OP、一次原 SDK 1.56.1 空白頁，以及預先限定最多三次的 OP 重現採樣均正常退出；每次的已觀察身分都以原生建立時間核對消失，沒有用 SDK 強制清理冒充成功。三次採樣到上限便停止，沒有反覆執行至取得偏好的結果。**目前仍未取得原 10 秒失敗當下的 Chrome stack，關閉根因沒有修好。** 後續應在實際失敗時蒐集該份缺少的證據；這批成功不能抵銷原始 Windows 大檔或小型失敗。
+
+[本次收據](results/windows-close-diagnostics.json)及[124 份原始紀錄與診斷來源](results/windows-close-diagnostics-evidence.zip)保留所有正負結果、設定／解碼失敗及獨立讀取器。DLL／套件本體與大型實體權重留在本機；沒有更動正式網站、固定 Release、RSS／GC／URL 或關閉政策，也不新增公司／手機／其他引擎或長時間負載驗收。
