@@ -1,0 +1,165 @@
+{
+  "format": "model-lens-runtime-tensor-main-review",
+  "status": "passed-release-gates-not-yet-published",
+  "version": "1.3.1",
+  "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+  "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+  "candidateBuild": "22eff4ee82445816",
+  "checkedAt": "2026-10-31T21:06:13.268177+00:00",
+  "gates": {
+    "core": {
+      "status": "passed-original-gate-review",
+      "kind": "core",
+      "run": 41240620248,
+      "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+      "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+      "artifactId": 13056844021,
+      "providerDigest": "sha256:4dd9ec4f41adda78ecd2d9e35329f1671f653df085bcc4899faffdbd58f7cc2c",
+      "reportSHA256": "ea4a22220015d878dc3091c6afd669ae8bd29a2781a7e09dc051449e3bae9ebe",
+      "scopeFingerprint": "cd939231fe32a395bc8e1b165d112823b52bbaea169ba5652d82c123f4ec8abc",
+      "scopeFiles": 88,
+      "sourceUnchanged": true
+    },
+    "browser": {
+      "status": "passed-original-gate-review",
+      "kind": "browser",
+      "run": 41240629890,
+      "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+      "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+      "artifactId": 13057522473,
+      "providerDigest": "sha256:da4082fe49bbc7a107285850a86f57c19d73da2cce81ec431d1014dd7f0ffd95",
+      "reportSHA256": "1958fc42dde269fd03197f191c9060d598451b9c5492c90f2e9ee71bf5c4cb42",
+      "scopeFingerprint": "dd0961c8ce9ed44dadf92dffa1d8d7f3d005411400a84eefb8fce7105488f24a",
+      "scopeFiles": 343,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    },
+    "contract": {
+      "status": "passed-original-gate-review",
+      "kind": "contract",
+      "run": 41240638397,
+      "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+      "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+      "artifactId": 13056789347,
+      "providerDigest": "sha256:9d0b04879109234f72dd8c94629b035c883b0f8b5658209f7c110351593056eb",
+      "reportSHA256": "5d5a0187db2db6cadce1790a3ecef61d73b80b93bb4842764576bf0ca539c267",
+      "scopeFingerprint": "eae0bb158686e4837a91a9ce1b657e636d322ea6b757458a0684d9277dcc7bac",
+      "scopeFiles": 633,
+      "counts": {
+        "tests": 78,
+        "pass": 78,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    "site": {
+      "status": "passed-original-gate-review",
+      "kind": "site",
+      "run": 41240648865,
+      "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+      "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+      "artifactId": 13057376914,
+      "providerDigest": "sha256:8e9618fcb9009f36db14df51240d50e5359926e6b0c78fa8acf80d6f0b1ac815",
+      "reportSHA256": "c7ebdf4fd26c414a0b0e967181735e109f81f7417edbdbc853f535034e64b479",
+      "scopeFingerprint": "a8ce1d3020e4c3779a515fdb1e5e3c2074fdf491b270c0cf07ccc243cc04046b",
+      "scopeFiles": 387,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  },
+  "deliverySmoke": {
+    "status": "passed-reviewed",
+    "source": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+    "run": 41240648865,
+    "artifactId": 13057192445,
+    "providerDigest": "sha256:dde9cf7afb59b1a67edbdc8584f6947c2bcb9c902738b8b08815bd59b359e03d",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.3.1",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "9885c97c58e30eb81f827df5a3da7520f502caa5",
+        "tree": "32128382bc42a2fa8e766e9f9aa66a556df02d59",
+        "committedAt": "2026-11-01T04:44:50+08:00",
+        "dirty": false
+      },
+      "buildId": "22eff4ee82445816"
+    },
+    "reportSHA256": "8a7fff1d47bf90f9beff1a7415d5e3e2f885f0f48c677f7b62d3494d8c6df7a0",
+    "checks": 35,
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "staticFiles": 818,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": -4886528,
+        "mainHeapDriftBytes": -12436504,
+        "closedRssSlopeBytesPerCycle": 9468079.542857142,
+        "sampledPeakRssBytes": 808460288,
+        "maxSampleGapMs": 570,
+        "sampledPeakGrowthBytes": 61657088
+      }
+    },
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3060,
+          "startTicks": "7097"
+        },
+        {
+          "pid": 3062,
+          "startTicks": "7099"
+        },
+        {
+          "pid": 3063,
+          "startTicks": "7099"
+        },
+        {
+          "pid": 3087,
+          "startTicks": "7101"
+        },
+        {
+          "pid": 3089,
+          "startTicks": "7101"
+        },
+        {
+          "pid": 3113,
+          "startTicks": "7107"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "limitations": [
+      "Normal HTTP isolated versioned candidate; not publicly deployed v1.3.1.",
+      "Historical default Windows Chrome long-load shutdown failure remains separately recorded; this Linux gate does not prove it fixed.",
+      "Finite supported public examples do not verify all kernels/dialects/company models/OS power failure."
+    ]
+  },
+  "originals": {
+    "path": "runtime-tensor-main-evidence.zip",
+    "bytes": 1034993,
+    "sha256": "fc413004176c966a8e72f9ecebe8b842f5488111b59836256755432c3993bcde",
+    "manifestSHA256": "4c292a250d52505f3f4b1b612d63bd3743211b290d54e7bc6ed79ff9a5200d21",
+    "records": 44
+  },
+  "limitations": [
+    "These exact main/workflow_dispatch gates do not constitute public deployment.",
+    "CPU failure of the official quantized model remains a real failure before test inputs; no original numerical equivalence claim.",
+    "Windows Chrome long-load native shutdown failure remains recorded; Linux gates and short Windows controls do not repair it.",
+    "No new mobile, Firefox/WebKit, private/company or two-hour acceptance."
+  ],
+  "goalComplete": false
+}
