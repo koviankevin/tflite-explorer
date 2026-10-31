@@ -19,3 +19,16 @@ Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 皆完成原生選檔、手動
 [候選收據](results/runtime-tensor-diagnostics-candidate.json)與[71 份原始來源／失敗／成功及截圖](results/runtime-tensor-diagnostics-evidence.zip)已完成 SHA-256／ZIP CRC 核對。必要發布關卡與正式交付尚待接續；本頁目前不宣稱 v1.3.1 已發布。
 
 最後另補「同一行先說 Tensor 1 成功、再說 Tensor 2 失敗」的誤對照負例，先 red 再收緊為 tensor 編號後緊接已知失敗語法。來源 `bad7a72`／build `f4a92b2cc2c2f632` 的六個真實 CPU 負例、所有匯出 bytes／資料保留結果及定位物件／原因文字均與前候選逐項相同；31 項相關測試再次通過。src／vendor 僅此辨識條件變動，UI renderer、傳輸、runtime、CSS 與模型資料未變，因此沿用上述 Windows 實際操作證據，沒有宣稱另跑新版 Windows。[後續收據](results/runtime-tensor-parser-followup.json)及[原始 red／green、實際結果與相同性核對](results/runtime-tensor-parser-followup-evidence.zip)保留明確的來源與沿用界線。
+
+## 主分支發布前驗收
+
+PR #200 合併來源 `9885c97c58e30eb81f827df5a3da7520f502caa5`／tree `32128382bc42a2fa8e766e9f9aa66a556df02d59` 的四項 main／workflow_dispatch 關卡全部成功。以下結果完成原始 provider ZIP、digest／CRC、source scope 及原政策重判，[收據](results/runtime-tensor-main.json)與[原始報告及讀取器](results/runtime-tensor-main-evidence.zip)保留；這是發布前驗收，尚不代表 v1.3.1 已部署。
+
+| 關卡 | 結果 |
+| --- | --- |
+| 核心效能 | [41240620248](https://github.com/koviankevin/tflite-explorer/actions/runs/41240620248)，九筆量測依原政策通過 |
+| 實體大模型 | [41240629890](https://github.com/koviankevin/tflite-explorer/actions/runs/41240629890)，1,349,965,216 bytes／21,005 OP 的八輪完整、局部與組合匯出重開；權重、custom options、pattern、草稿來源及 Worker／程序正常退出通過 |
+| 發布契約 | [41240638397](https://github.com/koviankevin/tflite-explorer/actions/runs/41240638397)，78 項通過，零略過 |
+| 網站操作 | [41240648865](https://github.com/koviankevin/tflite-explorer/actions/runs/41240648865)，六種版本切換、35 項正常 HTTP 候選操作、15 組實際 32px 文字框、19 種手動 runtime，以及八輪／24 次 CPU／IO 與原記憶體規則通過 |
+
+大模型原判定為 RSS slope 1,549,341.26 bytes／輪、drift 12,795,904 bytes、main heap drift 175,276 bytes、sampled peak 1,107,017,728 bytes。這些有限 Linux Chromium 結果不替代 Windows 原生關閉失敗、任意模型數值等價或公司 kernel 驗收。所有模型與輸入仍留在執行端本機，公開封存不含原始模型、權重、BMP 或 BIN。
