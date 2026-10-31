@@ -1,0 +1,435 @@
+{
+  "format": "model-lens-font-render-regression",
+  "status": "passed",
+  "artifact": {
+    "schemaVersion": 1,
+    "version": "1.2.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "7068a7ed49ad370bf8f6cd4435aae01ccf629ab1",
+      "tree": "5a763ac46602b54a5a533695948bb3e0c53d60d9",
+      "committedAt": "2026-10-31T13:19:37+08:00",
+      "dirty": false
+    },
+    "buildId": "c2530ff70d952076"
+  },
+  "driverSHA256": "1870f29f31aea39f4bdd03acd8170bf8b45a849f934e64ed0de7a723299af3e6",
+  "fontFlowSHA256": "76a418d6aa73df74d198deb4f9bda6441efccd7d80b21077cdcd274718ed1d1e",
+  "browsers": [
+    {
+      "channel": "chrome",
+      "status": "passed",
+      "errors": [],
+      "documentFixture": {
+        "mode": "manifest-pinned-document-fixture",
+        "documentSHA256": "93f8989313419cb9f7aeb6649221528392852856960d6a47f83346132e82c0b4",
+        "bytes": 89417,
+        "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'",
+        "deliveries": 1,
+        "httpDocumentTransportVerified": false
+      },
+      "fontRender": {
+        "cases": [
+          {
+            "kind": "font-changed-during-layout",
+            "rows": [
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_0",
+                "fontPx": 32,
+                "text": {
+                  "left": 451,
+                  "right": 689.671875,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 444,
+                  "right": 696.671875,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 252.671875,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Mul",
+                "fontPx": 32,
+                "text": {
+                  "left": 800.0625,
+                  "right": 859.140625,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 59.078125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 793.0625,
+                  "right": 866.140625,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 73.078125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "FullyConnected",
+                "fontPx": 32,
+                "text": {
+                  "left": 1243.984375,
+                  "right": 1475.765625,
+                  "top": 423,
+                  "bottom": 466,
+                  "width": 231.78125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1236.984375,
+                  "right": 1482.765625,
+                  "top": 419,
+                  "bottom": 470,
+                  "width": 245.78125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 949.53125,
+                  "right": 1153.59375,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 942.53125,
+                  "right": 1160.59375,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 1257.84375,
+                  "right": 1461.90625,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1250.84375,
+                  "right": 1468.90625,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Add",
+                "fontPx": 32,
+                "text": {
+                  "left": 1565.15625,
+                  "right": 1628.28125,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 63.125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1559.15625,
+                  "right": 1636.28125,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 77.125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_5",
+                "fontPx": 32,
+                "text": {
+                  "left": 1719.671875,
+                  "right": 1958.34375,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1712.671875,
+                  "right": 1965.34375,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 252.671875,
+                  "height": 51
+                }
+              }
+            ]
+          }
+        ],
+        "layoutRequestDelayed": true,
+        "geometryModified": false,
+        "barrier": {
+          "held": true,
+          "busy": "true",
+          "measuredNodes": [
+            {
+              "width": 118.8720703125,
+              "height": 27
+            },
+            {
+              "width": 39.8681640625,
+              "height": 27
+            },
+            {
+              "width": 115.736328125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 42.51171875,
+              "height": 27
+            },
+            {
+              "width": 118.421875,
+              "height": 27
+            }
+          ]
+        }
+      },
+      "geometryPassed": true,
+      "browserClosed": true
+    },
+    {
+      "channel": "msedge",
+      "status": "passed",
+      "errors": [],
+      "documentFixture": {
+        "mode": "manifest-pinned-document-fixture",
+        "documentSHA256": "93f8989313419cb9f7aeb6649221528392852856960d6a47f83346132e82c0b4",
+        "bytes": 89417,
+        "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'",
+        "deliveries": 1,
+        "httpDocumentTransportVerified": false
+      },
+      "fontRender": {
+        "cases": [
+          {
+            "kind": "font-changed-during-layout",
+            "rows": [
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_0",
+                "fontPx": 32,
+                "text": {
+                  "left": 451,
+                  "right": 689.671875,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 444,
+                  "right": 696.671875,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 252.671875,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Mul",
+                "fontPx": 32,
+                "text": {
+                  "left": 800.0625,
+                  "right": 859.140625,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 59.078125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 793.0625,
+                  "right": 866.140625,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 73.078125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "FullyConnected",
+                "fontPx": 32,
+                "text": {
+                  "left": 1243.984375,
+                  "right": 1475.765625,
+                  "top": 423,
+                  "bottom": 466,
+                  "width": 231.78125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1236.984375,
+                  "right": 1482.765625,
+                  "top": 419,
+                  "bottom": 470,
+                  "width": 245.78125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 949.53125,
+                  "right": 1153.59375,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 942.53125,
+                  "right": 1160.59375,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 1257.84375,
+                  "right": 1461.90625,
+                  "top": 350,
+                  "bottom": 393,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1250.84375,
+                  "right": 1468.90625,
+                  "top": 346,
+                  "bottom": 397,
+                  "width": 218.0625,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Add",
+                "fontPx": 32,
+                "text": {
+                  "left": 1565.15625,
+                  "right": 1628.28125,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 63.125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1559.15625,
+                  "right": 1636.28125,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 77.125,
+                  "height": 51
+                }
+              },
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_5",
+                "fontPx": 32,
+                "text": {
+                  "left": 1719.671875,
+                  "right": 1958.34375,
+                  "top": 386.5,
+                  "bottom": 429.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1712.671875,
+                  "right": 1965.34375,
+                  "top": 382.5,
+                  "bottom": 433.5,
+                  "width": 252.671875,
+                  "height": 51
+                }
+              }
+            ]
+          }
+        ],
+        "layoutRequestDelayed": true,
+        "geometryModified": false,
+        "barrier": {
+          "held": true,
+          "busy": "true",
+          "measuredNodes": [
+            {
+              "width": 118.8720703125,
+              "height": 27
+            },
+            {
+              "width": 39.8681640625,
+              "height": 27
+            },
+            {
+              "width": 115.736328125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 42.51171875,
+              "height": 27
+            },
+            {
+              "width": 118.421875,
+              "height": 27
+            }
+          ]
+        }
+      },
+      "geometryPassed": true,
+      "browserClosed": true
+    }
+  ]
+}
