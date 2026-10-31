@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.2.0](product-readiness-v1.2.md)／build `d69754e5b6791ecd`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.2.1](transpose-permutation.md#v121-正式交付)／build `562c77efcc4288a9`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -10,13 +10,13 @@
 
 精確 v1.2.0 固定產物的最新 [Windows 實體八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)在 Chrome／Edge 均通過原判定及正常退出；Edge slope 接近原上限，不宣稱有寬裕餘量。[階段三證據](results/product-readiness-stage3.json)及[後續原始證據](results/product-readiness-stage3-update.json)中的歷史失敗仍保留，根因尚未證實。後續小型 TRANSPOSE 候選又重現 Chrome 正常關閉逾時，不能把功能或稍後 PID 消失寫成整輪通過；新證據見下段。
 
-下一個 v1.2.1 候選已修正 [TRANSPOSE permutation](transpose-permutation.md) 合法負軸被擋與 int64 錯誤放行，56 項相關測試通過。打包來源 `4b0822e` 的兩瀏覽器實際編輯／匯出／重開／搜尋／raw BIN CPU 內容均核對；Edge 整輪通過，Chrome 最後正常關閉逾時仍判失敗。[原始收據](results/transpose-permutation.json)保留此差別。PR #187 已合併，`8bf6c9b` 的新主分支大檔八輪、78 項發布契約及 34 項網站操作均已核對；核心 88 檔範圍未變而沿用既有量測，[四關卡收據](results/transpose-main-verification.json)與原始 ZIP 保留。仍待精確產物準備／正式發布，正式站尚未取得候選修正。
+TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正式交付，56 項相關測試通過。打包來源 `4b0822e` 的兩瀏覽器實際編輯／匯出／重開／搜尋／raw BIN CPU 內容均核對；Edge 整輪通過，Chrome 最後正常關閉逾時仍判失敗。[原始收據](results/transpose-permutation.json)保留此差別。PR #187 已合併，`8bf6c9b` 的新主分支大檔八輪、78 項發布契約及 34 項網站操作均已核對；核心 88 檔範圍未變而沿用既有量測。PR #188 納入[四關卡收據](results/transpose-main-verification.json)後，以精確來源 `2160757` 準備、發布並核對 1,457 個正式檔案及四份實際固定下載，[最終收據](results/product-readiness-v1.2.1-published.json)與原始封存保留。完整商品化目標與 Windows 原生關閉根因仍未完成。
 
 另在實際截圖中發現 32px 字級與框線不同步，原先「沒有頁面溢位」的數值檢查不足。已在未修改候選穩定重現[字級排版回歸](font-reflow.md)，修正非同步 layout 期間 target 暫空的提前返回；來源 `7068a7e` 的 Chrome／Edge 完整七組文字邊界與實際截圖已核對，v1.2.0 正式站另核對 15 組實際文字框。舊來源成功不抵銷曾有的視覺缺口。
 
 字級修正已經 [PR #184](https://github.com/koviankevin/tflite-explorer/pull/184) 合併至 `bb3bd37`，完整 tree 與實際 PR checkout 相同。[新 main 網站關卡](https://github.com/koviankevin/tflite-explorer/actions/runs/41174045604)的六種版本切換、正常 HTTP 候選與 34 項實際操作已完成 digest／CRC／來源／原判定核對；新增字級情境的 13 個 OP、兩個輸入／輸出文字框皆符合 32px。19 種手動 runtime 情境及八輪／24 次 CPU、IO 與原記憶體規則通過；[發布契約](https://github.com/koviankevin/tflite-explorer/actions/runs/41174041946) 78 項亦核對通過。[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)亦已取得原始報告並核對通過；四項關卡的[收據](results/product-readiness-main-verification.json)與[原始證據](results/product-readiness-main-evidence.zip)保留。後續以精確來源 `f592e3d9df7ed48fae2ca19e353c7215638959a3` 完成 v1.2.0 準備、部署及固定下載核對；這些 Linux 結果不取代 Windows 的原始關閉失敗。
 
-目前外部使用者以 v1.2.0 為準，包含一般分支／匯合名稱與文件整理；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41178000511)四個工作 attempt 1 全成功。發布後文件更新不移動 tag、不改寫固定資產，也不重跑成功部署。
+目前外部使用者以 v1.2.1 為準；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41204168493)四個工作 attempt 1 全成功，正式站與固定 Release 已核對。發布後文件更新不移動 tag、不改寫固定資產，也不重跑成功部署；v1.2.0 的交付與失敗證據保持原來源。
 
 ## 各階段原始計畫與範圍
 

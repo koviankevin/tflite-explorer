@@ -1,0 +1,384 @@
+{
+  "format": "model-lens-product-readiness-v1.2.1-delivery",
+  "version": 1,
+  "status": "published-verified",
+  "at": "2026-10-31T13:26:38.396344+00:00",
+  "published": {
+    "format": "model-lens-product-readiness-published-review",
+    "version": 1,
+    "status": "passed",
+    "at": "2026-10-31T13:20:14.548Z",
+    "source": "2160757222460436129e06d27ba57b7adf9c3ac8",
+    "tree": "cb2ece2ee9f64616c892ae788520a01ff2e66ca4",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.2.1",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "2160757222460436129e06d27ba57b7adf9c3ac8",
+        "tree": "cb2ece2ee9f64616c892ae788520a01ff2e66ca4",
+        "committedAt": "2026-10-31T20:53:37+08:00",
+        "dirty": false
+      },
+      "buildId": "562c77efcc4288a9"
+    },
+    "run": {
+      "id": 41204168493,
+      "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41204168493",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 124545760772,
+          "name": "prepare",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 124545922724,
+          "name": "Publish site 5288f32845cddd3553ffee92b45cf8971271346be5fec0e700744443d5c907a0",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 124545975191,
+          "name": "verify_live",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 124547573411,
+          "name": "release",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "releaseId": 429948599,
+    "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1",
+    "publishedAt": "2026-10-31T13:16:27Z",
+    "siteId": "5288f32845cddd3553ffee92b45cf8971271346be5fec0e700744443d5c907a0",
+    "siteManifestSHA256": "acfb0588d93e9b6251409eeba1b43f32eb481c3326d3884e1b5727552b060be1",
+    "rootEntrySHA256": "0d019ca341a5721caf76167332bb98423b08c40a3aabae40eb2fbc52c6dd2cc6",
+    "coreFiles": 322,
+    "siteFiles": 1457,
+    "checks": 34,
+    "fontFrames": 15,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "mainModelWorkers": 86,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 2703360,
+        "mainHeapDriftBytes": 66556,
+        "closedRssSlopeBytesPerCycle": 9087619.657142857,
+        "sampledPeakRssBytes": 767660032,
+        "maxSampleGapMs": 552,
+        "sampledPeakGrowthBytes": 41873408
+      }
+    },
+    "assets": [
+      {
+        "name": "model-lens-public-1.2.1-562c77efcc4288a9.zip",
+        "bytes": 41262457,
+        "sha256": "309891e6f16dae9df52be0484a1488950eade0aea71ceef656549c9155d05101"
+      },
+      {
+        "name": "model-lens-public-1.2.1-562c77efcc4288a9.zip.sha256",
+        "bytes": 111,
+        "sha256": "5b9ef208f67f50c91eebe4b0b0dec362d99d84acc6ff9559483881646efdc290"
+      },
+      {
+        "name": "release-gates.json",
+        "bytes": 196941,
+        "sha256": "fa785207589685ce4c8b0ef762f3762702d158bca188a3d89585d14fa70331a0"
+      },
+      {
+        "name": "release-manifest.json",
+        "bytes": 52123,
+        "sha256": "bad11b412b52dee5c11966b8a3c6248cc7c3654ba6986463d32f4cba05c39e03"
+      }
+    ],
+    "deployment": {
+      "deploymentId": 7459012309,
+      "controllerSource": "2160757222460436129e06d27ba57b7adf9c3ac8",
+      "runId": 41204168493,
+      "attempt": 1,
+      "jobId": 124545922724,
+      "siteId": "5288f32845cddd3553ffee92b45cf8971271346be5fec0e700744443d5c907a0",
+      "legacy": false
+    },
+    "artifacts": [
+      {
+        "id": 13044500761,
+        "name": "live-release-verification",
+        "bytes": 553110,
+        "digest": "sha256:371595666af7a89fc527b229f18b818d80d9d0af663df0e1c849f40f3e81a1d2"
+      },
+      {
+        "id": 13043817912,
+        "name": "published-release-verification",
+        "bytes": 754,
+        "digest": "sha256:a0c77a005c1419ee3e5a5a9e96d2ac26773d665c52a2827cac2812e7193689fa"
+      }
+    ],
+    "limitations": [
+      "Current formal public release verified; full product goal remains active.",
+      "Exact published v1.2.0 native full8cycles passed;later candidate andemptyChromeclose failures remain unresolved. Linux/focused results do not repair that native failure.",
+      "Intentional crash-recovery process termination is not normal Worker close.",
+      "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+    ],
+    "goalComplete": false
+  },
+  "independentCurrentRoot": {
+    "path": "index.html",
+    "url": "https://koviankevin.github.io/tflite-explorer/",
+    "bytes": 89460,
+    "sha256": "0d019ca341a5721caf76167332bb98423b08c40a3aabae40eb2fbc52c6dd2cc6",
+    "contentType": "text/html; charset=utf-8"
+  },
+  "archive": {
+    "path": "product-readiness-v1.2.1-evidence.zip",
+    "bytes": 1309026,
+    "sha256": "48fc4e3535d299d22bc26235c0ea41a425fa53c62c976b686c522a29094e6a67",
+    "members": [
+      {
+        "path": "actual-release-downloads/model-lens-public-1.2.1-562c77efcc4288a9.zip.sha256",
+        "bytes": 111,
+        "sha256": "5b9ef208f67f50c91eebe4b0b0dec362d99d84acc6ff9559483881646efdc290"
+      },
+      {
+        "path": "actual-release-downloads/release-gates.json",
+        "bytes": 196941,
+        "sha256": "fa785207589685ce4c8b0ef762f3762702d158bca188a3d89585d14fa70331a0"
+      },
+      {
+        "path": "actual-release-downloads/release-manifest.json",
+        "bytes": 52123,
+        "sha256": "bad11b412b52dee5c11966b8a3c6248cc7c3654ba6986463d32f4cba05c39e03"
+      },
+      {
+        "path": "metadata/v1.2.1-current-http-review.json",
+        "bytes": 1377,
+        "sha256": "eac46bb8c0758db5b019a46cb40a0b0ebf61bb4d192076a30ce45c7e8c3ca572"
+      },
+      {
+        "path": "metadata/v1.2.1-deployment-map.json",
+        "bytes": 31211,
+        "sha256": "ab9ed2c19ceb5fa567b27a7178d98b74726029ad899f9743c10a556189114d4d"
+      },
+      {
+        "path": "metadata/v1.2.1-formal-checks-review.json",
+        "bytes": 418,
+        "sha256": "aeca55c5ff1bb0d5d533f82abeee7de4fb8ba2518184387b443822e75430c01b"
+      },
+      {
+        "path": "metadata/v1.2.1-latest-release.json",
+        "bytes": 10602,
+        "sha256": "4d1074f47bad4213397fea1c2cec5d90767c3ded3e8fb755546359cd9565dee7"
+      },
+      {
+        "path": "metadata/v1.2.1-live-index.json",
+        "bytes": 268761,
+        "sha256": "acfb0588d93e9b6251409eeba1b43f32eb481c3326d3884e1b5727552b060be1"
+      },
+      {
+        "path": "metadata/v1.2.1-prepare-artifacts.json",
+        "bytes": 1767,
+        "sha256": "268480c76ea14d3fa4cd90bbfe827b0b061b718b38c2b5c8743fe9270fab73e9"
+      },
+      {
+        "path": "metadata/v1.2.1-prepare-jobs.json",
+        "bytes": 7291,
+        "sha256": "9c8fa1c5b33677f2259345e9bcbae8b17aa769bfef1c1d455e575e3a723aab6e"
+      },
+      {
+        "path": "metadata/v1.2.1-prepare-run.json",
+        "bytes": 14428,
+        "sha256": "d1935901314ab7a355236b5ef2639170aaa9cf4ec7ea3089c887ac19b89af19b"
+      },
+      {
+        "path": "metadata/v1.2.1-prepared-output.json",
+        "bytes": 2647,
+        "sha256": "1ebe5576fce31adcdf042d7ed56ec37d35fd6b74b66ff7af3809726709b4ff20"
+      },
+      {
+        "path": "metadata/v1.2.1-prepared-review.json",
+        "bytes": 2918,
+        "sha256": "c150cbaf90afd78234071f1b12b2c654ba055051b87a5e7ebe11e927d67260a4"
+      },
+      {
+        "path": "metadata/v1.2.1-publish-artifacts.json",
+        "bytes": 3511,
+        "sha256": "e0c49c5ee73f84a9aeb0087572dec82790b0709f4081c6cda4711417d62574a5"
+      },
+      {
+        "path": "metadata/v1.2.1-publish-jobs.json",
+        "bytes": 14123,
+        "sha256": "2530ba8536565eda06b7c0bdb293a94df097f479788608123bdab8216ffb9a06"
+      },
+      {
+        "path": "metadata/v1.2.1-publish-run.json",
+        "bytes": 14428,
+        "sha256": "447ed88b9c15b4e8be6366a248c5f38f555d2c70223757aea143691cee823588"
+      },
+      {
+        "path": "metadata/v1.2.1-published-review.json",
+        "bytes": 4222,
+        "sha256": "176de7656c21ed36c205fe925748b326cfb3a163859fd0c6c6327c28ee8032e5"
+      },
+      {
+        "path": "metadata/v1.2.1-release-assets-review.json",
+        "bytes": 1275,
+        "sha256": "e779d880fe342bcb79682b9d1c14ea65b1a3ff0d1f3dd35c7c37c809c53001bc"
+      },
+      {
+        "path": "metadata/v1.2.1-release.json",
+        "bytes": 10602,
+        "sha256": "4d1074f47bad4213397fea1c2cec5d90767c3ded3e8fb755546359cd9565dee7"
+      },
+      {
+        "path": "metadata/v1.2.1-tag.json",
+        "bytes": 394,
+        "sha256": "b38b0898c15a3c499bf8b0e12342653e8f6bcd014397851600d76615e470237a"
+      },
+      {
+        "path": "original-live-reports/live-release-verification.zip",
+        "bytes": 553110,
+        "sha256": "371595666af7a89fc527b229f18b818d80d9d0af663df0e1c849f40f3e81a1d2"
+      },
+      {
+        "path": "original-live-reports/pages-live-report.json",
+        "bytes": 383805,
+        "sha256": "ddf7b01b8d72aa0c4648a9b033662466f74cff09af43145781ad3e7929ae56d9"
+      },
+      {
+        "path": "original-live-reports/pages-release-report.json",
+        "bytes": 1229,
+        "sha256": "830ac26b049754fc9d31840e8a993fbfa30da0d762f09bc43a1e4a299eba5638"
+      },
+      {
+        "path": "original-live-reports/production-smoke.json",
+        "bytes": 858279,
+        "sha256": "a7b381b497699d30c5b4f5f427329d4a894dee0d43f90f374fcb39a288bbf0e6"
+      },
+      {
+        "path": "original-live-reports/production-smoke.png",
+        "bytes": 149434,
+        "sha256": "d5a78cfd8893047b6b811c26a3f7c6c9bfffb10d6c3fd7a5a5fa81e761cc2f6b"
+      },
+      {
+        "path": "original-live-reports/published-release-verification.zip",
+        "bytes": 754,
+        "sha256": "a0c77a005c1419ee3e5a5a9e96d2ac26773d665c52a2827cac2812e7193689fa"
+      },
+      {
+        "path": "published-source/LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "published-source/scripts/lib/deployment-history.mjs",
+        "bytes": 3894,
+        "sha256": "9f99d984c0aeca90ecd6c643346863b1831a4a6b5cb558704ecae2563c54b77d"
+      },
+      {
+        "path": "published-source/scripts/lib/live-site.mjs",
+        "bytes": 7349,
+        "sha256": "08df8b0bbf77b669ff03c94a290e5ef05b3d89d9226ac92cd4a85c4c7348bd15"
+      },
+      {
+        "path": "published-source/scripts/lib/pages-release.mjs",
+        "bytes": 16339,
+        "sha256": "e97e2ef5113ada2140c6ab2bddcac2e4dd7e89dc7efc6020b2d20c46955a54b6"
+      },
+      {
+        "path": "published-source/src/tflite-constant-checks.js",
+        "bytes": 4314,
+        "sha256": "91310758dce7aa4b86417680b9e012a578f9c50dfae7accaca27866dea743953"
+      },
+      {
+        "path": "published-source/src/tflite-semantic-checks.js",
+        "bytes": 5106,
+        "sha256": "3f470d67c225bf5b6ff37d916db79a5a90f0ddb06d46a659c88b81bb696d0609"
+      },
+      {
+        "path": "published-source/test/browser/runtime-lifecycle-policy.mjs",
+        "bytes": 3556,
+        "sha256": "b647016f75e4c4087a26a86ec7b271123867fb44f94df155667afdc1b55dd09e"
+      },
+      {
+        "path": "published-source/test/tflite-transpose-runtime.test.mjs",
+        "bytes": 3987,
+        "sha256": "042de8ffa2ce05a51e43b35f23c5bd53119032eaa9b12e355503bd86cb121339"
+      },
+      {
+        "path": "published-source/vendor/netron/LICENSE",
+        "bytes": 1062,
+        "sha256": "535cb2c7c8990f967c106e3035e4df8d3e070144af1163b86c8bb58b65fe5e88"
+      },
+      {
+        "path": "readers/archive-v1.2.1-published.py",
+        "bytes": 5066,
+        "sha256": "3ff6b274c379a6d0cc66c3dabff47c1fcc23cb70f84c13f57f5a2193aeb0e018"
+      },
+      {
+        "path": "readers/check-v1.2.1-current-http.py",
+        "bytes": 2575,
+        "sha256": "9e0a88c963534b66381ed8e7cb6b36fdece916374b9289be0fd969fb96c7d077"
+      },
+      {
+        "path": "readers/download-v1.2.1-published.py",
+        "bytes": 2588,
+        "sha256": "bd6abfa6432bae445596242e0f58d6da590e8a7f3ac03d8d23c95bb056c2e916"
+      },
+      {
+        "path": "readers/download-v1.2.1-release-assets.py",
+        "bytes": 4095,
+        "sha256": "3a0387a5453b984da727c256cc49e3a76779541c5455e026b6efcf20ddf7b326"
+      },
+      {
+        "path": "readers/extract-v1.2.1-prepared.py",
+        "bytes": 3795,
+        "sha256": "79179aa557d755b801fcbfc611d24ccee7ed175c8454596b923bd09c607fa44b"
+      },
+      {
+        "path": "readers/read-v1.2.1-deployment.py",
+        "bytes": 2482,
+        "sha256": "78d0fe5bcce4dea3342c36f5f69a1a1a0e76e38f2e537dca2e631ea3f4a29d75"
+      },
+      {
+        "path": "readers/review-v1.2.1-prepared.mjs",
+        "bytes": 6814,
+        "sha256": "e67e606bd5354e597cfc8d9b3c893ba3d26521f029f4264d0d800c7adb402bd2"
+      },
+      {
+        "path": "readers/review-v1.2.1-published.mjs",
+        "bytes": 11220,
+        "sha256": "040c06ed7fd77bb63e7ca77536ac2c7ba3894ce84cab0406f9507b4b61fbdbe7"
+      }
+    ]
+  },
+  "fullZIP": {
+    "retainedOnReleaseAndLocally": true,
+    "sourceURL": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.2.1/model-lens-public-1.2.1-562c77efcc4288a9.zip",
+    "bytes": 41262457,
+    "sha256": "309891e6f16dae9df52be0484a1488950eade0aea71ceef656549c9155d05101",
+    "notDuplicatedInEvidenceArchive": true
+  },
+  "previousEvidence": [
+    "transpose-permutation.json",
+    "transpose-main-verification.json",
+    "windows-v1.2-native.json",
+    "product-readiness-v1.2-published.json"
+  ],
+  "remaining": [
+    "The publishedv1.2.0 nativeChrome/Edgefull8cyclespassed;later candidate/emptyChromeoriginal10sclosefailures remain unresolved. No rootcausefixclaimed orreplacementofWindowsbyLinux.",
+    "Unknown custom references stay conservative; arbitrary kernel/dialect/packing semantics and external MLIR resource selection remain outside verified support.",
+    "Historical startup timeout root cause is not proved fixed; full human/OS power-loss/arbitrary migration coverage is not claimed."
+  ],
+  "scope": "Incremental public release; full product goal active. No Sites/GHStudio sync, mobile,Firefox/WebKit,company data or new two-hour soak. No successful deployment rerun, GC/RSS subtraction/timer/security changes."
+}
