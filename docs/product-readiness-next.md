@@ -22,6 +22,8 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 
 另補[原生 stack 診斷取樣](windows-large-model.md#原生-stack-診斷取樣)：官方固定 debugger DLL 完整性／簽章及自有合成程序的 stack／detach／繼續執行／exit 0 已核對，Node→Python 中文字路徑的 UTF-8 傳遞缺口已重現並修正。原始 OP 關閉失敗保留；後續正常對照及最多三次重現採樣沒有觸發取樣，因此尚未取得實際失敗的 Chrome stack，不宣稱根因已定位或驗收修復。這批只保存診斷工具與[原始證據](results/windows-close-diagnostics.json)，正式 app／v1.3.0 固定交付不變。
 
+再接續一次事先限定的[實體八輪失敗取樣](windows-large-model.md#實體八輪的失敗-stack)，已取得真正 Chrome 原 10 秒失敗時的 43 個執行緒 stack 並 detach。匯出／權重／options／pattern 與原記憶體子判定通過，整輪仍因正常關閉逾時失敗；後續 SDK 強制清理不算修復。新[收據](results/windows-physical-stack.json)更新上述當時尚缺 stack 的狀態，保存原始與離線符號核對；目前仍未證實等待物件或關閉根因，不修改正式 app 或固定交付。
+
 ## 各階段原始計畫與範圍
 
 | 工作 | 要證明的行為 | 狀態 |

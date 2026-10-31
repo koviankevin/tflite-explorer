@@ -132,3 +132,13 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 修正資料傳遞後的一次 OP、一次原 SDK 1.56.1 空白頁，以及預先限定最多三次的 OP 重現採樣均正常退出；每次的已觀察身分都以原生建立時間核對消失，沒有用 SDK 強制清理冒充成功。三次採樣到上限便停止，沒有反覆執行至取得偏好的結果。**目前仍未取得原 10 秒失敗當下的 Chrome stack，關閉根因沒有修好。** 後續應在實際失敗時蒐集該份缺少的證據；這批成功不能抵銷原始 Windows 大檔或小型失敗。
 
 [本次收據](results/windows-close-diagnostics.json)及[124 份原始紀錄與診斷來源](results/windows-close-diagnostics-evidence.zip)保留所有正負結果、設定／解碼失敗及獨立讀取器。DLL／套件本體與大型實體權重留在本機；沒有更動正式網站、固定 Release、RSS／GC／URL 或關閉政策，也不新增公司／手機／其他引擎或長時間負載驗收。
+
+## 實體八輪的失敗 stack
+
+上述有限取樣結束後，另預先限定一次 Chrome 實體大檔案例；只在原 10 秒關閉失敗且 checkpoint 保存後加入 stack collector。公開 app 仍為 `7debc69`／build `44782d0412ebc0b8`，driver 仍固定 `3f2115c`／tree `76ee1c3`；八輪、兩輪暖機、500ms 取樣、URL、讀取與記憶體門檻未變。這一輪已真正取得失敗根程序的 43 個執行緒 stack，collector 完成 detach；它更新了上一節當時「尚未取得」的狀態，沒有改寫先前失敗。
+
+實體 1,349,965,216 bytes／21,005 OP 的完整、局部與組合匯出重開、權重／custom options、pattern 正負例與 16 份原檔指紋通過。40 個模型 Worker、16 個指紋 Worker 與 57 筆 native worker close 核對。2,047 筆程序樹樣本按原政策重判，RSS slope 約 -10.11 MiB／輪、drift 16.82 MiB、main heap drift 168,024 bytes，記憶體子判定通過；中途較高樣本仍保留，未強制 GC 或扣除 RSS。
+
+**整輪仍失敗。** 原 10 秒截止時根程序與一個未分類子程序仍存活；稍後 SDK 強制清理與全部 12 個已觀察身分消失不算正常退出。本次未分類子程序不沿用較早空白頁的 crashpad-handler 標籤。主執行緒 stack 停在 Windows 單一物件等待，但一份 stack 不足以確認等待物件或歷史根因；原始 stack 的 Chrome 近鄰 export 名稱及大 offset 也不能當作真正函式名稱。
+
+本機另保存官方 Chrome 公開符號的來源、GUID／age、provider MD5、gzip CRC 與完整 SHA-256，僅嘗試對保存的位址離線解碼，沒有上傳 stack 或模型、沒有修改 DLL／PDB 或強制接受不匹配符號。PDB Info age 與 DBI／執行檔 age 分開記錄；單次離線解析未在另設的六分鐘診斷界線內完成，已以同一原生 handle 核對身分後結束該解析程序。正常 debugger 精確匹配及真正 Chrome 函式名稱仍未取得，不把檔案校驗當成解碼成功。符號資料與大型權重留在本機；[本次收據](results/windows-physical-stack.json)及[原始報告、stack、來源與校驗紀錄](results/windows-physical-stack-evidence.zip)保留失敗與解碼狀態。未宣稱 Chrome 根因修復，未重新部署或改寫固定 Release。
