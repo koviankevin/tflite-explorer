@@ -1,0 +1,406 @@
+{
+  "format": "model-lens-published-v1.2-native-physical-acceptance",
+  "version": 1,
+  "status": "passed-finite-original-policy",
+  "at": "2026-10-31T11:32:09.435437+00:00",
+  "source": {
+    "commit": "f592e3d9df7ed48fae2ca19e353c7215638959a3",
+    "tree": "c0ac061dd6e864b2a2366fca3fb0f880e4012640",
+    "build": "v1.2-prepared-artifacts/core",
+    "buildId": "d69754e5b6791ecd",
+    "status": "original-public-core-reverified-exit0-080a6f",
+    "scope": "Exact immutable published release source,not current docs-only main commit. No new build or deployment."
+  },
+  "cases": [
+    {
+      "status": "passed",
+      "source": "f592e3d9df7ed48fae2ca19e353c7215638959a3",
+      "build": "d69754e5b6791ecd",
+      "channel": "chrome",
+      "reportSHA256": "aea82672ffed3d90b6ea1638ff97a6db699876c619f0e982f4483450c9541765",
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -18822290.285714287,
+        "rssDriftBytes": 20484096,
+        "mainHeapDriftBytes": 166192,
+        "sampledPeakRssBytes": 1077821440,
+        "sampledPeakGrowthBytes": 606253056
+      },
+      "sampling": {
+        "count": 2033,
+        "maximumGapMs": 1023,
+        "p95GapMs": 516
+      },
+      "nativeIdentities": [
+        {
+          "pid": 37000,
+          "startTicks": "134379167746925921"
+        },
+        {
+          "pid": 48464,
+          "startTicks": "134379167747906808"
+        },
+        {
+          "pid": 44228,
+          "startTicks": "134379167749423261"
+        },
+        {
+          "pid": 38380,
+          "startTicks": "134379167749520888"
+        },
+        {
+          "pid": 21868,
+          "startTicks": "134379167749798135"
+        },
+        {
+          "pid": 8072,
+          "startTicks": "134379167752199207"
+        },
+        {
+          "pid": 40392,
+          "startTicks": "134379167752579279"
+        },
+        {
+          "pid": 35844,
+          "startTicks": "134379167752669110"
+        },
+        {
+          "pid": 30792,
+          "startTicks": "134379167872638308"
+        },
+        {
+          "pid": 43992,
+          "startTicks": "134379167873392964"
+        },
+        {
+          "pid": 32620,
+          "startTicks": "134379167877706573"
+        },
+        {
+          "pid": 37680,
+          "startTicks": "134379167878486109"
+        },
+        {
+          "pid": 36256,
+          "startTicks": "134379167882975607"
+        },
+        {
+          "pid": 45600,
+          "startTicks": "134379167888154163"
+        },
+        {
+          "pid": 8944,
+          "startTicks": "134379167892638798"
+        },
+        {
+          "pid": 20468,
+          "startTicks": "134379168049693764"
+        },
+        {
+          "pid": 34472,
+          "startTicks": "134379168949475649"
+        },
+        {
+          "pid": 33800,
+          "startTicks": "134379169549657868"
+        }
+      ],
+      "nativeWorkersClosed": 57,
+      "modelWorkers": 40,
+      "recoveryWorkers": 16,
+      "workerUsedPeakBytes": 93628320,
+      "workerBackingPeakBytes": 15861986,
+      "fullModelSHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+      "compositionSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "cutSHA256": [
+        "433f3f623df078b99cc0e80f92204f5dd2b4f5fab44066755b6c74b9a506e4b6",
+        "daaa025921ba77036d694dd827b5176c8d6c6e169ecd77a1357bf9da68c8c8e9"
+      ],
+      "limitations": [
+        "Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.",
+        "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+        "Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.",
+        "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+        "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.",
+        "Windows bootstrap HTML is delivered verbatim from the authenticated artifact via a local test fixture with its original CSP. Other assets use HTTP. This measures native file/browser/process behavior, not HTTP document transport or antivirus compatibility. Raw HTTP injection/close failures are retained separately."
+      ],
+      "version": "156.0.8078.76",
+      "platform": "10.0.26300",
+      "fixture": {
+        "file": "C:\\Users\\kovia\\AppData\\Local\\Temp\\model-lens-lifecycle-6NxJkz\\physical-1_25GiB.tflite",
+        "bytes": 1349965216,
+        "payloadOffset": 7787936,
+        "weightBytes": 1342177280,
+        "operators": 21005,
+        "tensors": 21011,
+        "repeats": 7000,
+        "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "readbackSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+        "allocatedBytes": 1349965216,
+        "writeMethod": "Sequential dense nonzero 4MiB chunks, fsync, full SHA-256 readback; no sparse/truncate",
+        "editFingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "allocationMethod": "Windows GetCompressedFileSizeW,owned generated fixture only"
+      },
+      "cases": 8,
+      "warmupCases": 2,
+      "normalClose": true,
+      "scope": "Actualunmodifiedoriginalproducer/policy;Workerheapcheckpoints,nativeownedprocesses,manifestpinnedHTMLfixture;notfullHTTPtransportorcontinuouspeaks."
+    },
+    {
+      "status": "passed",
+      "source": "f592e3d9df7ed48fae2ca19e353c7215638959a3",
+      "build": "d69754e5b6791ecd",
+      "channel": "msedge",
+      "reportSHA256": "fc0b4e2492d381dfe5556da790ed279b74cdd388ebaee1a8094cef993c0a0cea",
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 16492368.457142858,
+        "rssDriftBytes": 29835264,
+        "mainHeapDriftBytes": 139320,
+        "sampledPeakRssBytes": 1084530688,
+        "sampledPeakGrowthBytes": 613232640
+      },
+      "sampling": {
+        "count": 2081,
+        "maximumGapMs": 1038,
+        "p95GapMs": 516
+      },
+      "nativeIdentities": [
+        {
+          "pid": 46612,
+          "startTicks": "134379178741650580"
+        },
+        {
+          "pid": 45940,
+          "startTicks": "134379178742032022"
+        },
+        {
+          "pid": 29740,
+          "startTicks": "134379178744173285"
+        },
+        {
+          "pid": 16896,
+          "startTicks": "134379178744285058"
+        },
+        {
+          "pid": 43384,
+          "startTicks": "134379178744631594"
+        },
+        {
+          "pid": 45180,
+          "startTicks": "134379178748138520"
+        },
+        {
+          "pid": 34280,
+          "startTicks": "134379178750338199"
+        },
+        {
+          "pid": 39632,
+          "startTicks": "134379178750433248"
+        },
+        {
+          "pid": 46360,
+          "startTicks": "134379178750900401"
+        },
+        {
+          "pid": 31228,
+          "startTicks": "134379178774243343"
+        },
+        {
+          "pid": 32336,
+          "startTicks": "134379179944277202"
+        },
+        {
+          "pid": 43700,
+          "startTicks": "134379180544324911"
+        }
+      ],
+      "nativeWorkersClosed": 57,
+      "modelWorkers": 40,
+      "recoveryWorkers": 16,
+      "workerUsedPeakBytes": 93288292,
+      "workerBackingPeakBytes": 15899246,
+      "fullModelSHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+      "compositionSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+      "cutSHA256": [
+        "433f3f623df078b99cc0e80f92204f5dd2b4f5fab44066755b6c74b9a506e4b6",
+        "daaa025921ba77036d694dd827b5176c8d6c6e169ecd77a1357bf9da68c8c8e9"
+      ],
+      "limitations": [
+        "Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.",
+        "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+        "Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.",
+        "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+        "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.",
+        "Windows bootstrap HTML is delivered verbatim from the authenticated artifact via a local test fixture with its original CSP. Other assets use HTTP. This measures native file/browser/process behavior, not HTTP document transport or antivirus compatibility. Raw HTTP injection/close failures are retained separately."
+      ],
+      "version": "156.0.4314.50",
+      "platform": "10.0.26300",
+      "fixture": {
+        "file": "C:\\Users\\kovia\\AppData\\Local\\Temp\\model-lens-lifecycle-HQYLFH\\physical-1_25GiB.tflite",
+        "bytes": 1349965216,
+        "payloadOffset": 7787936,
+        "weightBytes": 1342177280,
+        "operators": 21005,
+        "tensors": 21011,
+        "repeats": 7000,
+        "sha256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "readbackSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+        "weightSHA256": "a16ef6b52ac75f75437a7ac7031e68aafe3c4d7475426c7714d5cc77e433a525",
+        "allocatedBytes": 1349965216,
+        "writeMethod": "Sequential dense nonzero 4MiB chunks, fsync, full SHA-256 readback; no sparse/truncate",
+        "editFingerprint": "4914251fbad45fa0811ca29f3898092014aae5d3d6b53638c24d1fbed9639734",
+        "allocationMethod": "Windows GetCompressedFileSizeW,owned generated fixture only"
+      },
+      "cases": 8,
+      "warmupCases": 2,
+      "normalClose": true,
+      "scope": "Actualunmodifiedoriginalproducer/policy;Workerheapcheckpoints,nativeownedprocesses,manifestpinnedHTMLfixture;notfullHTTPtransportorcontinuouspeaks."
+    }
+  ],
+  "archive": {
+    "path": "windows-v1.2-native-evidence.zip",
+    "bytes": 166082,
+    "sha256": "751174f0c19a878b608613529b8ffb39c6d16f9cc217227d16c90531a5bcff43",
+    "members": [
+      {
+        "path": "native/chrome-v1.2-1.json",
+        "bytes": 922946,
+        "sha256": "aea82672ffed3d90b6ea1638ff97a6db699876c619f0e982f4483450c9541765"
+      },
+      {
+        "path": "native/chrome-v1.2-1.log",
+        "bytes": 3661,
+        "sha256": "4308a91adf219c2a43655c5b4ffa6800744572170139f36e48d01cf005c1ec4c"
+      },
+      {
+        "path": "native/chrome-v1.2-1-review.json",
+        "bytes": 3675,
+        "sha256": "cee23e39b0849c23f45e9f8f2cf0e131b4b9fb2c5575ca0a4aacf47866c4ed68"
+      },
+      {
+        "path": "native/chrome-v1.2-1-review.log",
+        "bytes": 3043,
+        "sha256": "4bf32f05ac1dc810b6d5560d7840ec585d6bff0dcf1868027c1ab78ee43c753d"
+      },
+      {
+        "path": "native/edge-v1.2-1.json",
+        "bytes": 943118,
+        "sha256": "fc0b4e2492d381dfe5556da790ed279b74cdd388ebaee1a8094cef993c0a0cea"
+      },
+      {
+        "path": "native/edge-v1.2-1.log",
+        "bytes": 3537,
+        "sha256": "dd13de89d01b99137fd02c8b80131e3a067da5a3acfe82862593195867f3cfdb"
+      },
+      {
+        "path": "native/edge-v1.2-1-review.json",
+        "bytes": 3208,
+        "sha256": "f0d6bd4c710f49ca3a9e5d79a7bbe23b41c79785a49da8aa43ce0b34930594ac"
+      },
+      {
+        "path": "native/edge-v1.2-1-review.log",
+        "bytes": 2732,
+        "sha256": "58a9fa65ac40e47fc95905063e0e039acef55afd3a24cffe56720fb766fde791"
+      },
+      {
+        "path": "audit/windows-v1.2-full-status.json",
+        "bytes": 1230,
+        "sha256": "d08b658f6ee87708d14fa69c2acb4a1f4b0cea41d07334f3c65691d813746f6a"
+      },
+      {
+        "path": "audit/v1.2-windows-source.json",
+        "bytes": 367,
+        "sha256": "d3b80301d94be9afaac7367400ef7c024ca8f589234e91b818be03f897df1891"
+      },
+      {
+        "path": "audit/v1.2-core-reverification.json",
+        "bytes": 467,
+        "sha256": "b1de6453972fb2ec37e2f2ea55a8e7a02eed0c7a9d4f01ff5815c7e3168b343b"
+      },
+      {
+        "path": "audit/windows-v1.2-full-plan.json",
+        "bytes": 2920,
+        "sha256": "6453abc9a4da39cad18c9281b21d6a004ea8dff271d6f49c3e7a3ccefc797fd5"
+      },
+      {
+        "path": "audit/close-io-controls-review.json",
+        "bytes": 1529,
+        "sha256": "d4f88c84be129629e7e16e23886de3800f925789a47349bfa93db6993499acfd"
+      },
+      {
+        "path": "audit/run-windows-v1.2-full.py",
+        "bytes": 4017,
+        "sha256": "359e5d46d11393e460bbf3b23fe4a9225d960aa251b6629bf7c9de2ffc2325eb"
+      },
+      {
+        "path": "audit/review-windows-v1.2-full.py",
+        "bytes": 7585,
+        "sha256": "f6fa7ee23d9470298ac17b5f96981d7471a12dbf320208c062a83d606fcd8fdc"
+      },
+      {
+        "path": "audit/archive-windows-v1.2.py",
+        "bytes": 4312,
+        "sha256": "3f92606f1ab1eea3789478c62bf0d77262ced026871e4c1d57cc30151155ae1c"
+      },
+      {
+        "path": "published-source/test/browser/model-lifecycle.mjs",
+        "bytes": 36779,
+        "sha256": "1751d81782d43fbb83ac478fa10fb8cf2837f8927c7aab02b1a8f9e0b86923fc"
+      },
+      {
+        "path": "published-source/test/browser/windows-process-memory.mjs",
+        "bytes": 4408,
+        "sha256": "e3ec118d8449b13039b983552338340d76f03c6ec2a70d484756382c55d3addd"
+      },
+      {
+        "path": "published-source/test/browser/windows-process-memory.py",
+        "bytes": 8881,
+        "sha256": "6d03ecdda68cf9304b009595c393f4c74055f1307eb811cea499915772200e55"
+      },
+      {
+        "path": "published-source/test/browser/owned-processes.mjs",
+        "bytes": 4641,
+        "sha256": "5a268bc2722123a44352b8862f620d24100f55e7e4d616f607f6495a16b49841"
+      },
+      {
+        "path": "published-source/test/browser/lifecycle-policy.mjs",
+        "bytes": 6496,
+        "sha256": "20ae685e49496950959b42e8c794279d50ef63d062bbd9c221bc168beed337dd"
+      },
+      {
+        "path": "published-source/test/browser/trusted-document.mjs",
+        "bytes": 1922,
+        "sha256": "37e97e44169c76bbe3ba299842f923cb26a63ab47b6af61d28bda7678ebcb0e0"
+      },
+      {
+        "path": "published-source/test/physical-tflite-fixture.mjs",
+        "bytes": 5990,
+        "sha256": "567784ae3e8bf593456b794dd1a50186d9c91dd2d4643e9613edaf1f5439662b"
+      },
+      {
+        "path": "published-source/LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "published-source/vendor/netron/LICENSE",
+        "bytes": 1082,
+        "sha256": "aca642b84119ed57ce6ef700918ce3ff7275b5d6b1759e688c4ad3715105095a"
+      }
+    ]
+  },
+  "limits": {
+    "rssSlopeBytesPerCycle": 16777216,
+    "rssDriftBytes": 134217728,
+    "sampledPeakGrowthBytes": 805306368
+  },
+  "materialLimits": [
+    "EdgeRSSslope16492368.46bytes/cycle isclose tooriginal16777216byte limit;notwideheadroom orproofagainstfuturegrowth.",
+    "Bothcurrentf592/d697nativecasespassed;historicalChrome4RSS/Chrome5closeandIO-onlyintermittentclosefailuresremainretained. No historicalrootcausefixclaimed.",
+    "PhysicalpublicsyntheticFile>1GiB/21005OP;no privatecompanymodel orcustomkernelinference. NativeWorkerV8checkpointsarenotper-workerOSRSSorcontinuouspeaks.",
+    "ThisdoesnotverifyOSpowerloss,arbitrarykernels/dialects/migrations,new2hload orfuturepatchedsource. NoGC/RSSsubtraction/trimming/timer/securitychanges."
+  ],
+  "goalComplete": false
+}

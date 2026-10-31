@@ -8,11 +8,11 @@ import {parseModel} from '../src/model-engine.js';
 import {validateTfliteConstants} from '../src/tflite-constant-checks.js';
 import {roundTripReadStats} from '../src/blob-memory-parts.js';
 const metadata=JSON.parse(await readFile(new URL('../vendor/netron/tflite-metadata.json',import.meta.url),'utf8'));
-async function candidate(name,values,output,options={},input=[2,3]){
+async function candidate(name,values,output,options={},input=[2,3],valueType=2){
     const {model}=await runtimeFixture({inputShapes:[input,[values.length]],outputShape:output}),g=model.subgraphs[0];
     model.operator_codes[0].builtin_code=s.BuiltinOperator[name];model.operator_codes[0].deprecated_builtin_code=s.BuiltinOperator[name];
-    const bytes=new Uint8Array(values.length*4),dv=new DataView(bytes.buffer);values.forEach((v,i)=>dv.setInt32(i*4,v,true));
-    model.buffers.push({data:bytes,offset:0n,size:0n});Object.assign(g.tensors[1],{buffer:1,type:2});g.inputs=Int32Array.of(0);g.operators[0].builtin_options=options;
+    const width=valueType===4?8:4,bytes=new Uint8Array(values.length*width),dv=new DataView(bytes.buffer);values.forEach((v,i)=>valueType===4?dv.setBigInt64(i*8,BigInt(v),true):dv.setInt32(i*4,v,true));
+    model.buffers.push({data:bytes,offset:0n,size:0n});Object.assign(g.tensors[1],{buffer:1,type:valueType});g.inputs=Int32Array.of(0);g.operators[0].builtin_options=options;
     const blob=new FlatbufferWriter().finish(model,new Blob()),raw=new Uint8Array(await blob.arrayBuffer()),index=await parseModel((o,n)=>raw.subarray(o,o+n),raw.length,metadata);
     return {model:index.raw,stats:index.stats,fileBytes:raw.length,read:(o,n)=>raw.subarray(o,o+n)};
 }
@@ -34,4 +34,36 @@ for(const [name,v,output,options]of [['TRANSPOSE',[1,0],[3,2],null],['RESHAPE',[
 });
 for(const [name,v,out,opts]of [['TRANSPOSE',[0,0],[2,3],null],['TRANSPOSE',[1,0],[2,3],null],['RESHAPE',[-1,-1],[2,3],new s.ReshapeOptions()],['GATHER',[3],[2,1],Object.assign(new s.GatherOptions(),{axis:1,batch_dims:0})]])test(`${name} rejects invalid constant ${v}`,async()=>{
     const c=await candidate(name,v,out,opts);assert.throws(()=>validateTfliteConstants(c.model,0,c.read),/Subgraph #0.*OP #0.*tensor #1/);
+});
+
+test('TRANSPOSE accepts negative axes without changing the serialized permutation or read budget',async()=>{
+    for(const [input,axes,output]of [[[2,3],[-1,0],[3,2]],[[2,3],[1,-2],[3,2]],[[2,3],[-2,-1],[2,3]],[[1],[-1],[1]],[[1,2,3,4],[-4,-2,-3,-1],[1,3,2,4]]]){
+        const c=await candidate('TRANSPOSE',axes,output,null,input),before=c.read(0,c.fileBytes).slice();
+        const proof=validateTfliteConstants(c.model,0,c.read);assert.equal(proof.checked,1);assert.equal(proof.unchecked,0);assert.equal(proof.bytesRead,axes.length*4);assert.equal(proof.inspectedBytes,axes.length*4);
+        assert.deepEqual(c.read(0,c.fileBytes),before,'validation must preserve the original signed constant bytes');
+        const skipped=validateTfliteConstants(c.model,0,()=>assert.fail('budget must precede constant reads'),{budget:0});assert.equal(skipped.checked,0);assert.equal(skipped.unchecked,1);
+    }
+});
+
+test('TRANSPOSE rejects axis aliases after negative normalization and both range boundaries',async()=>{
+    for(const [axes,output]of [[[-1,1],[3,3]],[[-2,0],[2,2]],[[-3,0],[3,2]],[[2,0],[3,2]]]){
+        const c=await candidate('TRANSPOSE',axes,output,null);assert.throws(()=>validateTfliteConstants(c.model,0,c.read),/Subgraph #0.*OP #0.*tensor #1.*permutation/);
+    }
+});
+
+test('TRANSPOSE checks the output shape after normalizing negative axes',async()=>{
+    const c=await candidate('TRANSPOSE',[-1,0],[2,3],null);
+    assert.throws(()=>validateTfliteConstants(c.model,0,c.read),/Subgraph #0.*OP #0.*tensor #1.*output tensor #2 shape/);
+});
+
+test('TRANSPOSE rejects int64 permutation metadata before reading constant bytes, including dynamic inputs',async()=>{
+    const c=await candidate('TRANSPOSE',[0,1],[1,2],null,[1,2],4),noRead=()=>assert.fail('invalid permutation dtype must fail before reading values');
+    assert.throws(()=>validateTfliteConstants(c.model,0,noRead),/Subgraph #0.*OP #0.*tensor #1.*int32/);
+    c.model.subgraphs[0].inputs=Int32Array.of(0,1);
+    assert.throws(()=>validateTfliteConstants(c.model,0,noRead),/Subgraph #0.*OP #0.*tensor #1.*int32/);
+});
+
+test('GATHER continues to inspect valid int64 indices',async()=>{
+    const c=await candidate('GATHER',[0,1],[1,2],Object.assign(new s.GatherOptions(),{axis:1,batch_dims:0}),[1,2],4);
+    const proof=validateTfliteConstants(c.model,0,c.read);assert.equal(proof.checked,1);assert.equal(proof.bytesRead,16);
 });

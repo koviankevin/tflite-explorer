@@ -1,6 +1,6 @@
 # Windows 大模型程序記憶體驗收
 
-本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻；Chrome 第四輪 RSS slope 超標，第五輪內容與記憶體通過，但最後正常關閉逾時。兩輪都不能當成完整通過。[v1.2.0 已正式交付](product-readiness-v1.2.md)，但沒有修復或取代這項 Windows 完整驗收缺口。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
+先前 Windows 八輪曾取得混合結果：Chrome 第四輪 RSS slope 超標，第五輪最後正常關閉逾時，原始失敗保留。[v1.2.0 固定產物的最新完整驗收](#v120-固定產物的完整-windows-驗收)已在 Chrome／Edge 各完成八輪並通過原門檻與正常關閉；這補齊該版本的實體驗收，不等於已找到歷史逾時根因。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
 
 ## 原生觀察與所有權
 
@@ -73,4 +73,17 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 
 來源相同的主分支 `3eb0415` 另完成正常 HTTP 的 Linux 實體八輪、六種版本切換及完整網站操作，原 artifact digest／CRC／source／原判定皆獨立核對通過。新的字級修正會改變相關來源範圍，仍須補其受影響的正式關卡。
 
-字級修正合併後的 `bb3bd37` 已補齊[新 Linux 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)。原始實體檔為 1,349,965,216 bytes／21,005 OP；八輪包含兩輪暖機，原 RSS slope 約 0.26 MiB／輪、drift 約 6.7 MiB，40 個模型 Worker、16 個指紋 Worker、完整權重／options／pattern／匯出重開與正常程序退出皆通過。來源、provider digest、CRC 與原判定見[收據](results/product-readiness-main-verification.json)及[原始封存](results/product-readiness-main-evidence.zip)。這補齊新來源的 Linux 關卡，沒有修復或替代 Windows Chrome 的正常關閉失敗。[v1.2.0 正式交付](product-readiness-v1.2.md)已完成，這個 Windows 缺口繼續保留。
+字級修正合併後的 `bb3bd37` 已補齊[新 Linux 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)。原始實體檔為 1,349,965,216 bytes／21,005 OP；八輪包含兩輪暖機，原 RSS slope 約 0.26 MiB／輪、drift 約 6.7 MiB，40 個模型 Worker、16 個指紋 Worker、完整權重／options／pattern／匯出重開與正常程序退出皆通過。來源、provider digest、CRC 與原判定見[收據](results/product-readiness-main-verification.json)及[原始封存](results/product-readiness-main-evidence.zip)。這補齊新來源的 Linux 關卡，沒有修復或替代 Windows Chrome 的正常關閉失敗。[v1.2.0 正式交付](product-readiness-v1.2.md)已完成；當時未完成的 Windows 完整驗收另於下節補齊，歷史失敗的根因仍未證實。
+
+## v1.2.0 固定產物的完整 Windows 驗收
+
+精確來源 `f592e3d9df7ed48fae2ca19e353c7215638959a3`／build `d69754e5b6791ecd` 的 322 個原始核心檔案重新驗證後，Chrome／Edge 各執行一次原始八輪流程，兩輪暖機、原 RSS／heap 門檻與 10 秒 browser close 上限均未改動。兩端 producer 與獨立讀取器都實際 exit 0；[收據](results/windows-v1.2-native.json)及[原始報告、debug log、政策與讀取器](results/windows-v1.2-native-evidence.zip)保留。
+
+| 瀏覽器 | Closed RSS slope | Closed RSS drift | Sampled peak growth | 正常退出 |
+| --- | --- | --- | --- | --- |
+| Chrome | 約 -18.0 MiB／輪 | 19.5 MiB | 578.2 MiB | 18 個原生程序身分皆退出 |
+| Edge | 約 15.7 MiB／輪 | 28.5 MiB | 584.8 MiB | 12 個原生程序身分皆退出 |
+
+兩端均核對 1,349,965,216 bytes／21,005 OP、完整／局部／組合匯出、所有權重／custom options bytes、pattern 正負例、草稿與 32px 版面。每端 40 個模型 Worker、16 個全檔指紋 Worker，以及共 57 筆 native worker close 事件均核對；debug log 另確認 SDK 正常 exit 0，沒有事後強制清理冒充正常退出。Worker 記憶體是檢查點的 V8 heap／backing storage，不是獨立 OS RSS 或連續峰值。
+
+**Edge 的 slope 接近原 16 MiB／輪上限，不能宣稱有寬裕餘量或未來永不成長。** 取樣可漏掉瞬間峰值；這是公開合成模型的有限八輪、manifest 固定 HTML 本機啟動，並非公司模型、數小時負載或 HTTPS 文件傳輸驗收。較早 Chrome4／Chrome5 及單次 IO-only 關閉失敗仍保留，後來相同大檔 IO-only 對照正常退出也不證明歷史根因已修復。未重跑成功部署。
