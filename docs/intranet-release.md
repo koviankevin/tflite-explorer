@@ -4,7 +4,7 @@
 
 已部署的內網版可以持續跟進公開核心的改善，不需要搬回外網。內網不會自動下載或套用正式網站的新程式；每次由公司選定固定版本，完成內部驗收後才切換。
 
-目前已發布的固定公開版為 [v1.2.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1)／build `562c77efcc4288a9`，來源 `2160757222460436129e06d27ba57b7adf9c3ac8`；[正式交付與下載核對](transpose-permutation.md#v121-正式交付)已完成，商品化剩餘工作另見[後續清單](product-readiness-next.md)。公司擴充應固定已發布 tag，再使用公司 profile 建置；公開 ZIP 不直接覆蓋公司修改，內網驗收依使用者指示自行處理。
+目前已發布的固定公開版為 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)／build `44782d0412ebc0b8`，來源 `7debc69df1a1c91e8ed3928a8a4932a493324180`；[正式交付與下載核對](operator-validation.md#v130-正式交付)已完成，商品化剩餘工作另見[後續清單](product-readiness-next.md)。公司擴充應固定已發布 tag，再使用公司 profile 建置；公開 ZIP 不直接覆蓋公司修改，內網驗收依使用者指示自行處理。
 
 - 原樣部署公開版：取新的固定版本 ZIP 與 checksum，照下方升級流程部署。
 - 有獨立 profile／dialect adapter：更新公開核心 checkout，沿用內部 repository 的 profile 重新建置，保留私有擴充版本與指紋紀錄。

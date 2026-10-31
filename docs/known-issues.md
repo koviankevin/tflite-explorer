@@ -1,12 +1,12 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.2.1](transpose-permutation.md#v121-正式交付)／build `562c77efcc4288a9`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.3.0](operator-validation.md#v130-正式交付)／build `44782d0412ebc0b8`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 TRANSPOSE permutation 的負軸誤擋與錯誤 dtype 放行已在 v1.2.1 正式交付，56 項相關 Node 測試、四項來源關卡、1,457 個正式檔案、34 項正式操作與四份實際 Release 下載已核對，[最終收據](results/product-readiness-v1.2.1-published.json)保留完整來源。打包候選兩瀏覽器的功能與 CPU bytes 均通過，但 Chrome 最後正常關閉逾時，整輪仍失敗，Edge 整輪通過。v1.2.0 固定產物的 [Windows 完整八輪](windows-large-model.md#v120-固定產物的完整-windows-驗收)兩端均通過；後續[空白頁診斷](windows-large-model.md#空白頁的原生程序類型與等待鏈)仍重現根程序／crashpad-handler 未退出，根因與 Edge 接近原 RSS slope 上限的界線保留。
 
 ## 優先處理與交付狀態
 
-v1.2.1 已完成正式站與固定 Release 核對；下表保留仍未解的限制與較早 v1.2.0 已交付修正。較早階段收據的「未發布」保留其當時狀態，不覆蓋[本版交付](transpose-permutation.md#v121-正式交付)；整體目標與原始證據見[商品化後續工作](product-readiness-next.md)。
+v1.3.0 已完成正式站與固定 Release 核對，13 種新增 OP 靜態規則、逐 OP 報告及大報告分批顯示見[本版交付](operator-validation.md#v130-正式交付)。未知／動態參數、超出預算及沒有規則的 OP 明列未檢查，不承諾任意 kernel 可執行。下表保留仍未解的限制與較早交付修正；原始收據保持各自來源，整體目標見[商品化後續工作](product-readiness-next.md)。
 
 | 優先 | 問題／界線 | 現況 |
 | --- | --- | --- |
@@ -33,14 +33,14 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 組合模型目前限同一 TFLite／subgraph，暫不搬移控制流程或有狀態 OP；大型組合已通過 [Hosted Chromium 實體八輪](composition-lifecycle.md#修正後的實體八輪)；數小時組合與其他引擎尚待驗收，見 [功能與驗收範圍](model-composition.md)。
 
-- **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。v1.1.0 已補 FC／BATCH_MATMUL／GATHER 的常見 shape、dtype 與量化 metadata，以及有預算的常數 operand 檢查，錯誤包含 OP／tensor 位置；未知或超預算明列未檢查，任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
+- **新增 OP 的完整語意**：已實作結構、接線、資料長度及部分 shape／型別規則；無法自動推導的 OP 沿用明確參考 tensor。v1.1.0 已補 FC／BATCH_MATMUL／GATHER；v1.3.0 另補 PAD／切片／split／reduction 等[靜態規則與逐 OP 清單](operator-validation.md)，保留既有常見 shape、dtype、量化 metadata 與常數讀取預算，錯誤包含 OP／tensor 位置；未知或超預算明列未檢查，任意 kernel 組合仍需 runtime 檢查。亂數保證所選 dtype 的數值範圍，不保證索引、token、權重或整個模型的運算語意正確。見 [模型編輯](model-edit-workspace.md)及[型別亂數](typed-random.md)。
 - **手動 interpreter 的規模與支援範圍**：CPU WASM 限 128 MiB 模型、16 MiB IO、30 秒執行，另有 512 MiB 提前配置估算；此估算不含所有 kernel scratch。公開 runtime 不含任意 custom kernels，動態／未知 shape、部分 dtype 及不明確的 signature 對應會列為未能驗證。大型模型仍可探索、編輯與匯出。見 [完整限制](tflite-runtime.md)。
 - **大型 MLIR 的完整驗證**：dense 大型權重保留原文與 byte ranges；支援型別的元素數與 byte-aligned hex 長度已串流核對，未知 packing／resource 與逐值語意仍未驗證；外部 resource 檔選取尚未支援。網站的結構、SSA／dominance 檢查也不代替各 dialect 自訂 verifier。見 [大型 MLIR](mlir-large-files.md)。
 - **MLIR 編輯與 pattern 範圍**：實際 OP 編輯僅支援 TFLite。MLIR 支援文字 generic 探索、搜尋、圈選及局部匯出；跨 block pattern 需位於同一 function／region，不能任意跨 function 或巢狀 region。見 [公開版指引](public-acceptance.md)。
 
 ## 尚待補齊的公開驗收
 
-目前 [v1.2.1](transpose-permutation.md#v121-正式交付)的必要 Chromium、發布及正式站／固定下載核對均已完成。較早 [v1.1.0](model-safety.md#正式發布)另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復；精確 v1.2.0 固定產物後續亦完成兩瀏覽器的[完整 Windows 大檔八輪與正常關閉](windows-large-model.md#v120-固定產物的完整-windows-驗收)。這些結果保持原受測來源，不換標成 v1.2.1 全項 Windows 驗收；後續候選與空白頁關閉失敗仍保留。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
+目前 [v1.3.0](operator-validation.md#v130-正式交付)的必要 Chromium、發布及正式站／固定下載核對均已完成。較早 [v1.1.0](model-safety.md#正式發布)另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復；精確 v1.2.0 固定產物後續亦完成兩瀏覽器的[完整 Windows 大檔八輪與正常關閉](windows-large-model.md#v120-固定產物的完整-windows-驗收)。這些結果保持原受測來源，不換標成 v1.3.0 全項 Windows 驗收；後續候選與空白頁關閉失敗仍保留。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 <details>
 <summary>歷史驗收與失敗紀錄（包含目前選做的 Firefox／WebKit）</summary>

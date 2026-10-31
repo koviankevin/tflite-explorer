@@ -1,6 +1,6 @@
-# OP 靜態驗證與逐項報告（v1.3.0 候選）
+# OP 靜態驗證與逐項報告（v1.3.0）
 
-目前開發候選，尚未發布；正式站仍為 v1.2.1。此項補強 TFLite 編輯匯出的本機檢查，不增加 MLIR 編輯、不自動執行 interpreter。
+已在 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0) 正式交付，build `44782d0412ebc0b8`；[最終收據](results/product-readiness-v1.3.0-published.json)保留正式站與固定下載核對。此項補強 TFLite 編輯匯出的本機檢查，不增加 MLIR 編輯、不自動執行 interpreter。下方候選與失敗紀錄保持各自來源及當時範圍。
 
 ## 新增規則
 
@@ -32,7 +32,7 @@
 
 Chrome 的功能通過，但最後正常關閉超過 10 秒，整輪仍判失敗；SDK 後續強制清理不能當成正常退出。Edge 整輪與原生程序正常退出通過。第一輪報告入口藏在探索側欄的 UI 失敗、原始關閉失敗與修正後資料都保留在[候選收據](results/operator-validation-candidate.json)及[45 檔原始證據](results/operator-validation-candidate-evidence.zip)。
 
-主分支必要關卡、正式站和固定 Release 尚待完成；不以候選結果宣告正式交付，也不宣稱 Windows 歷史關閉問題已修復。
+以下候選驗收後，主分支必要關卡、正式站和固定 Release 已完成，見[正式交付](#v130-正式交付)。Windows 歷史正常關閉問題仍未修復。
 
 ## 大報告的主執行緒重讀修正
 
@@ -54,7 +54,7 @@ BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知�
 
 ## 最後主分支的四項發布關卡
 
-來源 `c6c36d45f81fd339c8bda97deb9b218da7faef4b`／tree `1db3085be359df76c7d129cfd03938caca895340` 的必要結果已取得 provider 原始 ZIP 並核對 digest、CRC、source scope 及原始政策，見[收據](results/operator-validation-main.json)及[115 份原始證據](results/operator-validation-main-evidence.zip)。目前只是發布前驗收，不表示已部署 v1.3.0。
+來源 `c6c36d45f81fd339c8bda97deb9b218da7faef4b`／tree `1db3085be359df76c7d129cfd03938caca895340` 的必要結果已取得 provider 原始 ZIP 並核對 digest、CRC、source scope 及原始政策，見[收據](results/operator-validation-main.json)及[115 份原始證據](results/operator-validation-main-evidence.zip)。這份原始收據記錄發布前驗收；後續部署及下載核對另見下方正式交付，不改寫早期收據。
 
 | 關卡 | 實際結果 |
 | --- | --- |
@@ -66,3 +66,11 @@ BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知�
 實體大模型的原判定為 RSS slope 1,662,156.8 bytes／輪、drift 10,059,776 bytes、main heap drift 223,340 bytes、sampled peak 1,040,760,832 bytes。這些是有限 Linux Chromium 關卡的結果，不替代 Windows、公司 runtime 或任意模型 SLA；Windows Chrome 的歷史正常關閉失敗仍保留。一般編輯／匯出依舊只做靜態與結構檢查，推論保持手動。
 
 部署包中的 tools/export-reports.md 使用可直接開啟的 GitHub 規則說明連結，避免相對路徑指向未隨工具文件一起複製的檔案；此文件屬建置輸入，依既有 PR 規則驗證 Node／build，其他未變 scope 沿用上述證據。
+
+## v1.3.0 正式交付
+
+固定來源 `7debc69df1a1c91e8ed3928a8a4932a493324180`／tree `68f73b805636224b2023871f0edcab17c68dbf17`／build `44782d0412ebc0b8` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41216245433)四個工作 attempt 1 全成功，權威 Pages deployment、[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)、Latest 與 tag 指向均核對。完整 site ID `2a94efad4e9e905a49344335ca17c3efd9ecdcae2bd010a934e43274e77e2242`；沿用原本三個近期版本與永久基準規則，保留 v1.2.1、v1.2.0 及原始 baseline。
+
+正式 HTTPS 逐檔核對 1,465 個檔案及 MIME／SHA-256，323 核心檔與準備包一致。正式站 35 項操作包含原生選檔、SPLIT 匯出重開與 pattern 搜尋、動態 PAD 的未檢查原因、錯誤 SLICE 阻擋且零下載，以及完整 21,006 筆 JSON／畫面 100→200 筆分批顯示；新增情境零個自動 runtime Worker。15 組 32px 文字框、19 種手動 runtime、八輪／24 次 CPU／IO、原記憶體規則及 Worker／程序退出均依原政策核對。這是 Linux Chromium 正式站驗收；Windows 候選的 Chrome 正常關閉失敗仍保留，不能以此宣稱修好。
+
+四份實際公開下載與準備包逐一核對：ZIP 為 41,280,015 bytes，SHA-256 `422c245dfd6736a37af9e4b30d9ee871a7265ac4a50f93d176fbf18fc9b31a60`；manifest、發布憑證與 checksum 也一致。[最終收據](results/product-readiness-v1.3.0-published.json)及[原始報告／metadata／截圖與讀取器](results/product-readiness-v1.3.0-evidence.zip)保留。資料與模型仍全程本機；靜態通過不保證任意 kernel、量化語意或數值等價，沒有規則、動態或超預算仍明列未檢查。發布後只更新文件與證據，不移動 tag、不改寫固定資產、不重跑成功部署。

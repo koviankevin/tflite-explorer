@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 [v1.2.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.2.1)，包含 [TRANSPOSE 驗證修正](transpose-permutation.md#v121-正式交付)；後續限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復的操作指引；支援四種亂數與 v3 草稿。編輯匯出只做結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄，不代表目前網站版本。
+目前正式交付為 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)，新增[13 種 OP 靜態規則、逐 OP 報告與編輯區查看入口](operator-validation.md#v130-正式交付)；後續限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復指引；支援四種亂數與 v3 草稿。編輯匯出只做靜態、結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 
