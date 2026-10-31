@@ -19,7 +19,9 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         const length=Number(b.size||b.data?.length||0);if(length!==size)return skip('buffer 長度與 dtype／shape 不符，無法檢查常數內容。');
         if(!size){const result=[];cache.set(id,result);return result;}
         const data=b.size?readAt(Number(b.offset),size):b.data;if(!(data instanceof Uint8Array)||data.byteLength!==size)throw Error(`Tensor #${id} 常數資料讀取不完整。`);
-        if(b.size)bytesRead+=size;inspectedBytes+=size;const dv=new DataView(data.buffer,data.byteOffset,data.byteLength),getter={2:'getInt32',4:'getBigInt64',7:'getInt16',9:'getInt8',6:'getUint8'}[t.type],result=Array.from({length:count},(_,i)=>BigInt(dv[getter](i*width,true)));
+        if(b.size)bytesRead+=size;inspectedBytes+=size;
+        if(t.type===6&&data.some(n=>n>1))return skip('bool 常數不是 0／1 編碼，未推測其值。');
+        const dv=new DataView(data.buffer,data.byteOffset,data.byteLength),getter={2:'getInt32',4:'getBigInt64',7:'getInt16',9:'getInt8',6:'getUint8'}[t.type],result=Array.from({length:count},(_,i)=>BigInt(dv[getter](i*width,true)));
         if(cache.size<128)cache.set(id,result);return result;
     };
     for(const [node,op]of g.operators.entries()){

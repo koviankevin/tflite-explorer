@@ -126,4 +126,7 @@ test('dtype admission precedes a shared PAD cache hit; legitimate GATHER int16 r
     const p=validateTfliteConstants(c.model,0,c.read);assert.equal(p.checked,1);assert.equal(p.unchecked,1);assert.equal(p.operators[1].status,'not-run');assert.match(p.operators[1].reason,/dtype/);
     const valid=await operandFixture('GATHER',[tensor([2]),tensor([2],7,[0,1])],[tensor([2])]);
     assert.equal(validateTfliteConstants(valid.model,0,valid.read).checked,1);
+    const unknownBool=await operandFixture('PAD',[tensor([2]),tensor([1,2],6,[0,2])],[tensor([4])]);
+    const unknown=validateTfliteConstants(unknownBool.model,0,unknownBool.read);
+    assert.equal(unknown.checked,0);assert.equal(unknown.unchecked,1);assert.match(unknown.operators[0].reason,/bool.*編碼/);assert.equal(unknown.bytesRead,2);
 });
