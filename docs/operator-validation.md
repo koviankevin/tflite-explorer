@@ -76,3 +76,5 @@ BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知�
 四份實際公開下載與準備包逐一核對：ZIP 為 41,280,015 bytes，SHA-256 `422c245dfd6736a37af9e4b30d9ee871a7265ac4a50f93d176fbf18fc9b31a60`；manifest、發布憑證與 checksum 也一致。[最終收據](results/product-readiness-v1.3.0-published.json)及[原始報告／metadata／截圖與讀取器](results/product-readiness-v1.3.0-evidence.zip)保留。資料與模型仍全程本機；靜態通過不保證任意 kernel、量化語意或數值等價，沒有規則、動態或超預算仍明列未檢查。發布後只更新文件與證據，不移動 tag、不改寫固定資產、不重跑成功部署。
 
 發布後另以更新的 SDK 1.64.1／Chromium 156 世代完成[正式站 35 項唯讀驗證](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)，SPLIT 匯出重開、動態 PAD 原因、錯誤 SLICE 零下載及 21,006 筆 JSON／畫面 100→200 筆均通過。Windows OP driver 已補上真正的子程序取樣與 root-only 拒絕；Chrome／Edge 功能皆通過，Edge 正常退出，Chrome 最後原 10 秒關閉仍失敗。精確公開 v1.3.0 的 Windows 實體大檔八輪亦完成相同的混合結果，原始報告與界線見[本次收據](results/windows-v1.3-sdk1641.json)及[說明](windows-large-model.md#v130-固定產物與-sdk-1641)。這些是驗收工具與證據更新，沒有重部署或改寫固定版本。
+
+後續另一次預先限定的實體八輪亦通過 OP／報告相關匯出重開、權重／options／pattern 與原記憶體子判定；Chrome 原 10 秒正常關閉仍失敗，這次已取得真正失敗當下的原生 stack。見[新收據](results/windows-physical-stack.json)及[實體失敗 stack 說明](windows-large-model.md#實體八輪的失敗-stack)。這更新診斷證據，不把關閉失敗改列通過，也不擴大靜態 OP 規則的保證範圍。
