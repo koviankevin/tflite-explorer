@@ -26,3 +26,20 @@ TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpre
 
 20 項相關 Node 與實際序列化 INT4 報告通過；INT4 三筆都列為未驗證，零筆誤列已檢查。三種既有原生 UI fixture、CPU 控制，以及四份固定公開模型的完整量化檢查物件逐項未變。conv10 的 INT64 bias 則正確由一筆通過改為未驗證，沒有新增失敗或改動資料；原檔的舊 CPU 通過不會被改標失敗。這批只改量化檢查器的未實作分支，UI、parser、serializer、runtime／vendor 未變，沿用已核對的原生／CPU／資料保留證據，不宣稱另跑未執行的瀏覽器案例。[後續收據](results/quantization-dtype-followup.json)與[原始 red／green 及有限範圍沿用核對](results/quantization-dtype-followup-evidence.zip)保留來源與界線。
 
+## 主分支發布前驗收
+
+PR #203 合併來源 `655e5dd384ac3b9e0a05642d77095bb388333e27`／tree `402703eba099a1f12aa4ddcb2e7b0e583d187e9c` 與實際受測 PR tree 相同；895 項中 860 通過、35 項既有選做略過，78 項發布契約及九筆核心量測已核對。下列四項 main／workflow_dispatch 關卡也完成 provider digest、ZIP CRC、來源 scope 與原始政策重判，[收據](results/quantization-main.json)及[50 份原始紀錄與讀取器](results/quantization-main-evidence.zip)保留。這是發布前結果，尚不代表 v1.4.0 已上線。
+
+| 關卡 | 結果 |
+| --- | --- |
+| 核心效能 | [41247699658](https://github.com/koviankevin/tflite-explorer/actions/runs/41247699658)，九筆原政策量測通過；88 檔 scope 與既有核心相同 |
+| 實體大模型 | [41247710612](https://github.com/koviankevin/tflite-explorer/actions/runs/41247710612)，實體 1,349,965,216 bytes／21,005 OP 八輪，完整／局部／組合匯出重開、權重／custom options／pattern、讀取審計與 57 個 Worker 關閉／程序退出依原政策通過 |
+| 發布契約 | [41247718697](https://github.com/koviankevin/tflite-explorer/actions/runs/41247718697)，78 項通過，零略過 |
+| 網站與版本切換 | [41247731894](https://github.com/koviankevin/tflite-explorer/actions/runs/41247731894)，六種版本切換、36 項完整 HTTP 候選操作；量化失敗／未知／204 筆清單、100→200 展開及 202 OP 重開搜尋通過，新增情境零自動 runtime；既有 15 組實際 32px 框、19 種手動 runtime 與八輪／24 次 CPU／IO 及原記憶體規則均通過 |
+
+實體大模型原量測為 RSS slope -19,425,806.63 bytes／輪、drift 25,538,560 bytes、main heap drift 179,968 bytes、sampled peak 1,113,288,704 bytes；依原政策重判通過，不是記憶體歸零或任意模型 SLA 的保證。
+
+另以無權重的 21,005 OP／21,007 個量化 tensor 合成鏈，實際序列化／重開／常數檢查後建立完整報告：本機 Node 報告大小 13,785,165 bytes，低於原 16 MiB；21,007 筆皆檢查、零省略，檢視 42,014 個值，組裝約 98.21 ms。固定 v1.3.1 formatter 對同一組物件為 6,590,093 bytes／46.15 ms；完整生成、解析、匯出與檢查約 3.88 秒。這是 metadata 規模與報告大小的有限對照，不包含 1 GiB 權重、瀏覽器 RSS 或 interpreter；不得拿來替代上面的實體關卡。
+
+量化報告只涵蓋本次修改／組合或切出的 scopes；未列出的其他 subgraphs 沒有重新做這項檢查。模型、權重與測試輸入仍全程本機，安全、讀取、RSS、自然 URL／runtime 計時上限均未放寬；Windows Chrome 長負載／OneDrive 的既有關閉問題仍保留。
+

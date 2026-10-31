@@ -1,0 +1,307 @@
+{
+  "format": "model-lens-quantization-main-review",
+  "status": "passed-main-release-gates-not-published",
+  "version": "1.4.0",
+  "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+  "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+  "candidateBuild": "5584055c9f7af4e5",
+  "checkedAt": "2026-10-31T22:43:20.150506+00:00",
+  "gates": {
+    "core": {
+      "status": "passed-original-gate-review",
+      "kind": "core",
+      "run": 41247699658,
+      "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "artifactId": 13059649291,
+      "providerDigest": "sha256:abfeff23359c0a8073f52071c3aa39b857bb515295c1ac4c8e1f8290e1fda383",
+      "reportSHA256": "011a4f9b5d4f9bb02aa93c6e67a825f23359b09b3cb40d1c8d2e0a6ca9844226",
+      "scopeFingerprint": "cd939231fe32a395bc8e1b165d112823b52bbaea169ba5652d82c123f4ec8abc",
+      "scopeFiles": 88,
+      "sourceUnchanged": true
+    },
+    "browser": {
+      "status": "passed-original-gate-review",
+      "kind": "browser",
+      "run": 41247710612,
+      "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "artifactId": 13059794254,
+      "providerDigest": "sha256:9759e80a697c590d8b5398118e9468ae15d7c6fad089ded17bcbd558552ebd6c",
+      "reportSHA256": "9dcc9f8ba29932f6d80f94bc785fa6ab856fc7446caa26bf5601a61c4c2ef347",
+      "scopeFingerprint": "bb13b5356d9e0694dc73edca1d871af84a316144d6bd793858e6898e2e00c17e",
+      "scopeFiles": 344,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    },
+    "contract": {
+      "status": "passed-original-gate-review",
+      "kind": "contract",
+      "run": 41247718697,
+      "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "artifactId": 13059871778,
+      "providerDigest": "sha256:34e5275c455a98f4ea1f4bdaf1ba0532a0bfda3b6f7267934374f6957e922d85",
+      "reportSHA256": "6bb8892984d89dc12af15e27cc78bdccf8442626c0f230659b08bbb05eacb934",
+      "scopeFingerprint": "7dfde537100a78e04135a1ab018a6249f13c38912f2a19c3d0be6fe0c8a23f3b",
+      "scopeFiles": 638,
+      "counts": {
+        "tests": 78,
+        "pass": 78,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    "site": {
+      "status": "passed-original-gate-review",
+      "kind": "site",
+      "run": 41247731894,
+      "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "artifactId": 13060626212,
+      "providerDigest": "sha256:8c8d88383c6e589b2aa5442da42acf869f6455d9749a36f686680eba27d2bdd8",
+      "reportSHA256": "26e225f3f7dbb080f130b6f5f1bcecadbae6a2b51c2251df1c535e5d762a2e06",
+      "scopeFingerprint": "7ce5738659ac88b601bb9a56c72c3fa3d6e553a884009086e3802f00828e4d67",
+      "scopeFiles": 390,
+      "errors": [],
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  },
+  "deliverySmoke": {
+    "status": "passed-reviewed",
+    "source": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+    "run": 41247731894,
+    "artifactId": 13060631144,
+    "providerDigest": "sha256:3d92d383abda3148625683f5324a30a697448daaabeb43e4a71d3b50f4f59c61",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.4.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+        "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+        "committedAt": "2026-11-01T06:18:10+08:00",
+        "dirty": false
+      },
+      "buildId": "5584055c9f7af4e5"
+    },
+    "reportSHA256": "2cef02d7028374fa1bfad3e163eb992b4998878841fbcd6c06f66b43c7b25100",
+    "checks": 36,
+    "quantizationValidation": {
+      "status": "passed",
+      "cases": [
+        {
+          "name": "bad",
+          "status": "failed",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 1,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "blockedRewire": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "opaque",
+          "status": "not-run",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 0,
+            "unchecked": 1,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "large",
+          "status": "passed",
+          "quantization": {
+            "total": 204,
+            "checked": 204,
+            "failed": 0,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 408,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "visibleRows": 200,
+          "reopenedOperators": 202,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        }
+      ],
+      "modelWorkers": 4,
+      "automaticRuntimeWorkers": 0,
+      "errors": [],
+      "workersClosed": true,
+      "downloads": 6
+    },
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "staticFiles": 819,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": -68558848,
+        "mainHeapDriftBytes": -13721120,
+        "closedRssSlopeBytesPerCycle": 8107622.4,
+        "sampledPeakRssBytes": 800907264,
+        "maxSampleGapMs": 715,
+        "sampledPeakGrowthBytes": 43171840
+      }
+    },
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 3273,
+          "startTicks": "13873"
+        },
+        {
+          "pid": 3275,
+          "startTicks": "13875"
+        },
+        {
+          "pid": 3276,
+          "startTicks": "13875"
+        },
+        {
+          "pid": 3300,
+          "startTicks": "13877"
+        },
+        {
+          "pid": 3302,
+          "startTicks": "13878"
+        },
+        {
+          "pid": 3325,
+          "startTicks": "13887"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "limitations": [
+      "Normal HTTP isolated versioned candidate; not publicly deployed v1.4.0.",
+      "Historical default Windows Chrome long-load shutdown failure remains separately recorded; this Linux gate does not prove it fixed.",
+      "Finite supported public examples do not verify all kernels/dialects/company models/OS power failure."
+    ]
+  },
+  "largeQuantizedReport": {
+    "status": "passed-quantized-report-size",
+    "source": {
+      "commit": "655e5dd384ac3b9e0a05642d77095bb388333e27",
+      "tree": "402703eba099a1f12aa4ddcb2e7b0e583d187e9c",
+      "committedAt": "2026-11-01T06:18:10+08:00",
+      "dirty": false
+    },
+    "operators": 21005,
+    "tensors": 21007,
+    "sourceBytes": 10082528,
+    "outputBytes": 10586688,
+    "cases": [
+      {
+        "name": "baseline-v1.3.1",
+        "status": "passed",
+        "reportBytes": 6590093,
+        "operatorRows": 21005,
+        "elapsedMs": 46.15070000000014
+      },
+      {
+        "name": "candidate-v1.4.0",
+        "status": "passed",
+        "reportBytes": 13785165,
+        "operatorRows": 21005,
+        "quantization": {
+          "total": 21007,
+          "checked": 21007,
+          "failed": 0,
+          "unchecked": 0,
+          "omitted": 0,
+          "inspectedValues": 42014,
+          "valueLimit": 262144,
+          "tensorLimit": 65536,
+          "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+        },
+        "elapsedMs": 98.20679999999993
+      }
+    ],
+    "scope": "Metadata-only synthetic chain;not1GiB weight storage,browserRSS,or interpreter. Same parsed/candidate objects used with actual frozenv1.3.1 formatter for comparison.",
+    "elapsedMs": 3878.4302000000002,
+    "nodeMemory": {
+      "rss": 657080320,
+      "heapTotal": 444063744,
+      "heapUsed": 348669648,
+      "external": 80241948,
+      "arrayBuffers": 118825987
+    }
+  },
+  "originals": {
+    "path": "quantization-main-evidence.zip",
+    "bytes": 1050483,
+    "sha256": "4b2d0ff23dd7f1e64dc907dc6bd023117c785bef00c7d317461f1a3a92e67e1d",
+    "manifestSHA256": "28a7334329569853c9ac4e778b7ed2c8da7b75a23082e4e705ca8b4c5588e0a1",
+    "records": 50
+  },
+  "limitations": [
+    "These main dispatch gates and metadata benchmark are not public deployment.",
+    "Native Windows authenticated HTML fixture retains originalsource709/scoped reuse;notformalHTTPS/RSS or historicalChromeclosefix.",
+    "Metadata scale benchmark uses10MB synthetic source,no1GiBweights/browserRSS/interpreter/GC;physical1.25GiB gate is separatelyverified.",
+    "Arbitrarykernel/customcodec,company/OSpowerloss notpromised."
+  ],
+  "goalComplete": false
+}
