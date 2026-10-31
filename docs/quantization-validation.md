@@ -20,3 +20,9 @@ TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpre
 
 [候選收據](results/quantization-validation-candidate.json)與[59 份原始紀錄／截圖及讀取器](results/quantization-validation-evidence.zip)已核對 SHA-256／ZIP CRC。模型、權重、BIN／BMP 與完整 primary-source 檔案只留在本機；公開封存只含 metadata、公開合成操作與雜湊來源。正式 PR／main 發布關卡與交付仍待完成，本頁不宣稱 v1.4.0 已發布。
 
+## 未實作 dtype 的覆蓋界線
+
+後續檢查另找到「數值及軸合法，但 dtype 的 zero point 範圍規則尚未實作」仍被列為通過的問題；先新增負例確實重現，再改為未驗證。目前範圍規則為 INT8／UINT8／INT16／INT32；INT64、INT4、UINT16、FLOAT32 等其他 dtype 的 affine metadata 不會因部分欄位合法而列為已檢查。這不代表該模型一定不能執行。
+
+20 項相關 Node 與實際序列化 INT4 報告通過；INT4 三筆都列為未驗證，零筆誤列已檢查。三種既有原生 UI fixture、CPU 控制，以及四份固定公開模型的完整量化檢查物件逐項未變。conv10 的 INT64 bias 則正確由一筆通過改為未驗證，沒有新增失敗或改動資料；原檔的舊 CPU 通過不會被改標失敗。這批只改量化檢查器的未實作分支，UI、parser、serializer、runtime／vendor 未變，沿用已核對的原生／CPU／資料保留證據，不宣稱另跑未執行的瀏覽器案例。[後續收據](results/quantization-dtype-followup.json)與[原始 red／green 及有限範圍沿用核對](results/quantization-dtype-followup-evidence.zip)保留來源與界線。
+

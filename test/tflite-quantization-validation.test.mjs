@@ -100,3 +100,21 @@ test('valid quantized rewiring and actual serialized output report pass static c
     assert.equal(r.checks.find(x=>x.id==='runtime-equivalence').status,'not-run');
 });
 
+test('unimplemented affine dtype ranges stay unverified rather than passing partial checks',()=>{
+    for(const type of [s.TensorType.INT64,s.TensorType.INT4,s.TensorType.UINT16,s.TensorType.FLOAT32]){
+        const t={type,shape:[2],has_rank:true,quantization:affine()};
+        const r=inspectTfliteQuantization({subgraphs:[{tensors:[t]}]},[0]);
+        assert.equal(r.checked,0);assert.equal(r.unchecked,1);assert.equal(r.failed,0);
+        assert.match(r.tensors[0].reason,/dtype.*範圍/);
+    }
+});
+
+test('actual serialized INT4 identity report does not claim an unimplemented dtype range was checked',async()=>{
+    const c=await quantizedFixture();for(const t of c.index.raw.subgraphs[0].tensors)t.type=s.TensorType.INT4;
+    const blob=new FlatbufferWriter().finish(c.index.raw,new Blob()),bytes=new Uint8Array(await blob.arrayBuffer()),index=await parse(bytes),file=new File([blob],'unverified-int4.tflite');
+    const result=editTfliteModel(index,file,[{graph:0}]),reopened=await parse(new Uint8Array(await result.blob.arrayBuffer())),built=createModelEditReport(index,file,{...result,roundTrip:true},reopened,{graph:0,node:0,mode:'replace'},{outputName:'int4-copy.tflite'}),r=JSON.parse(await built.blob.text());
+    assert.equal(r.quantizationSummary.checked,0);assert.equal(r.quantizationSummary.unchecked,3);assert.equal(r.quantizationSummary.failed,0);
+    assert.equal(r.checks.find(c=>c.id==='quantization-metadata').status,'not-run');
+    assert.ok(r.quantizationValidation.every(c=>c.dtype==='INT4'&&c.status==='not-run'));
+});
+

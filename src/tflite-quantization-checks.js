@@ -26,6 +26,7 @@ export function inspectTensorQuantization(tensor,budget){
         if(typeof zero!=='bigint'&&!Number.isSafeInteger(zero))return verdict('failed','zero point 必須是可精確表示的整數。');
         if(range&&(BigInt(zero)<range[0]||BigInt(zero)>range[1]))return verdict('failed','zero point 超出 dtype 範圍。');
     }
+    if(!range)return verdict('not-run','此 dtype 的 zero point 範圍尚未實作；其餘 affine 欄位已檢查，kernel 仍未驗證。');
     if(!rank&&(count>1||tensor.has_rank!==true)||count>1&&(!Number.isSafeInteger(channels)||channels<0))return verdict('not-run','已核對 affine 值與數量，但 rank／channel 未知，無法完成 per-axis 維度檢查。');
     return verdict('passed','已核對 affine 值、數量、非空 shape 的量化軸及已支援 dtype 的 zero point 範圍；不含 kernel 或數值等價。');
 }
