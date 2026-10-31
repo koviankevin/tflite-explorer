@@ -49,3 +49,5 @@ PR #190 合併後，來源 `adf7ef7` 的實體 1.25 GiB／21,005 OP 關卡在第
 PAD 新增的 int8／int16／bool 常數讀取能力不會擴大其他 OP 的檢查範圍。EXPAND_DIMS／RESHAPE 保留原先 int32／int64 常數範圍；GATHER 可檢查 int16／int32／int64。未支援 dtype 明列未檢查，不能因共用讀取器或先前 PAD 的快取就誤列通過。型別範圍在讀取及快取命中之前檢查；TRANSPOSE 的 int32 強制規則不變。
 
 序列化的 bool EXPAND_DIMS 曾重現誤列已檢查，新增 int8 RESHAPE、bool GATHER、PAD→GATHER 共用快取與合法 int16 GATHER 正負例後，相關 76 項選測通過。此項維持原本的讀取預算及未知狀態，不新增自動 interpreter。
+
+BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知，不把它猜成 padding 數字或 true。已讀取的 bytes 仍計入原有預算。原始 red／green 與來源見 [dtype 驗收收據](results/operator-dtype-validation.json)。
