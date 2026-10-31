@@ -100,7 +100,9 @@ test('shared constants use one bounded read while dynamic output reasons remain 
     g.operators.push({...g.operators[0]});let readBytes=0;
     const proof=validateTfliteConstants(c.model,0,(o,n)=>{readBytes+=n;return c.read(o,n);});
     assert.equal(proof.checked,2);assert.equal(proof.bytesRead,8);assert.equal(readBytes,8);
-    g.tensors[2].has_rank=false;
+    // A legacy false rank flag with a nonempty concrete shape is still static.
+    // An actual dynamic signature must keep the bounded constant read skipped.
+    g.tensors[2].shape_signature=Int32Array.of(-1);
     const dynamic=validateTfliteConstants(c.model,0,()=>assert.fail('unknown output shape must not read constants'));
     assert.equal(dynamic.unchecked,2);assert.ok(dynamic.operators.every(c=>/動態或未知 shape/.test(c.reason)));
 });

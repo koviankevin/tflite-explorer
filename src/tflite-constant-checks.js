@@ -1,9 +1,10 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {OPERAND_OPERATORS,checkOperandValues,checkOperandMetadata} from './tflite-operand-checks.js';
+import {staticTfliteShape} from './tflite-static-shape.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
-    const shape=t=>t?.has_rank!==false&&!t?.shape_signature?.some(d=>d<0)&&t?.shape&&Array.from(t.shape).every(d=>d>=0)?Array.from(t.shape):null;
+    const shape=staticTfliteShape;
     const values=(id,types=[2,4])=>{
         const skip=reason=>{reasons.set(id,reason);return null;};
         const t=g.tensors[id],b=model.buffers[t?.buffer],dims=shape(t),width={2:4,4:8,7:2,9:1,6:1}[t?.type];
@@ -41,8 +42,10 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             continue;
         }
         if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
-        const v=values(id,name==='GATHER'?[2,4,7]:undefined),a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
-        if(!v||!a||!out){unchecked++;record.reason=reasons.get(id)||'input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
+        const a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
+        if(!a||!out){unchecked++;record.reason='input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
+        const v=values(id,name==='GATHER'?[2,4,7]:undefined);
+        if(!v){unchecked++;record.reason=reasons.get(id);continue;}
         let expected;
         if(name==='TRANSPOSE'){
             const rank=BigInt(a.length);
