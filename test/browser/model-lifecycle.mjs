@@ -49,7 +49,7 @@ const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,processTree,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
-let windowsObserver;
+let windowsObserver,diagnosticPhase=null,diagnosticAt=0;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
 const watchdogMinutes=soak?160:windows?30:22;
@@ -64,7 +64,15 @@ if(!soak)patterns.push(reusablePattern('Lifecycle branch wrong edge',{...pattern
 async function processRss(){
     assert.ok(processTree,'Cannot locate owned Chromium identities.');
     if(!windows)return processTree.sample(await readProcessTable());
-    const native=await windowsObserver.sample();report.windowsObservedIdentities=native.identities;return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
+    const native=await windowsObserver.sample();report.windowsObservedIdentities=native.identities;
+    if(diagnosticPhase!==phase||Date.now()-diagnosticAt>=10000){
+        const [{processInfo},mainHeap,dom]=await Promise.all([browserCDP.send('SystemInfo.getProcessInfo'),cdp.send('Runtime.getHeapUsage'),cdp.send('Memory.getDOMCounters')]);
+        const types=new Map(processInfo.map(p=>[p.id,p.type]));
+        report.nativeProcessBreakdown??=[];
+        report.nativeProcessBreakdown.push({phase,elapsedMs:Date.now()-Date.parse(report.startedAt),rows:native.rows.map(r=>({...r,type:types.get(r.pid)||'unknown'})),mainHeap,dom});
+        diagnosticPhase=phase;diagnosticAt=Date.now();
+    }
+    return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
 }
 async function sample(){
     const memory=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
@@ -170,7 +178,12 @@ try{
     assert.equal(report.build.source.commit,report.environment.sourceCommit);assert.equal(report.build.source.dirty,false);
     server=createStaticServer(suppliedBuild?path.resolve(suppliedBuild):undefined);server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}`;
     if(soak){phase='draft-capacity-preflight';report.recoveryPreflight={};await recoveryCapacityPreflight({base,directory:temporary,report:report.recoveryPreflight});await persistReport();check('real 22-session draft backup/remove/retry preflight, other nineteen unchanged and owned browser reaped');}
-    const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,...(windows?{channel}:{}),args:[`--model-lens-lifecycle=${path.basename(temporary)}`],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
+    // Chromium's own browser tests disable its updater scheduler per launch.
+    // This affects only this isolated Chrome; all observed descendants still count.
+    // https://chromium.googlesource.com/chromium/src.git/+/fc613d7cb460a811be6d8d8a6f5ab147f35e3ad6/chrome/test/base/in_process_browser_test.cc
+    const testArguments=windows&&channel==='chrome'?['--disable-updater-scheduler']:[];
+    report.environment.testArguments=testArguments;
+    const ownershipMarker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,...(windows?{channel}:{}),args:[`--model-lens-lifecycle=${path.basename(temporary)}`,...testArguments],env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:ownershipMarker}});report.environment.chromium=browser.version();report.environment.playwright=JSON.parse(await readFile('node_modules/playwright/package.json','utf8')).version;
     let root;
     if(windows){browserCDP=await browser.newBrowserCDPSession();windowsObserver=await windowsProcessObserver({python,cdp:browserCDP,channel});root=windowsObserver.root;report.environment.channel=channel;report.processOwnership={format:'model-lens-owned-processes',version:1,root,backend:windowsObserver.backend,counter:windowsObserver.counter,supplementary:windowsObserver.supplementary};}
     else{root=await findOwnedBrowserRoot(await readProcessTable(),process.pid,ownershipMarker);report.processOwnership={format:'model-lens-owned-processes',version:1,root};}
