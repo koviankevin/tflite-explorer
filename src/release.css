@@ -6,6 +6,7 @@ dialog :is(summary,textarea,[tabindex]):focus-visible{outline:2px solid var(--ac
 #export-report-dialog .import-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}#export-report-dialog h2{font-size:20px;margin:0}
 #export-report-fields{display:grid;grid-template-columns:100px minmax(0,1fr);gap:10px 16px;line-height:1.6}#export-report-fields dt{color:var(--muted)}#export-report-fields dd{margin:0;overflow-wrap:anywhere}
 #export-report-checks{padding-left:22px;line-height:1.7}#export-report-checks li{margin:10px 0;overflow-wrap:anywhere}
+#export-report-operators{line-height:1.7;overflow-wrap:anywhere}#export-report-operators summary{cursor:pointer;font-weight:600}#export-report-operators li{margin:12px 0}#export-report-operators ol{padding-left:26px}
 @media(max-width:480px){#export-report-fields{grid-template-columns:1fr;gap:4px}#export-report-fields dd{margin-bottom:10px}#export-report-dialog{padding:16px}}
 #release-fields{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 18px;margin:20px 0;line-height:1.6}
 #release-fields dt{color:var(--muted)}#release-fields dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}

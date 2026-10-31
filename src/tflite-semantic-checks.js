@@ -1,11 +1,13 @@
 // Conservative metadata checks. Unsupported/dynamic cases are left to the
 // optional runtime; they must never be reported as fully kernel-verified.
 import {checkSpatialTransform} from './tflite-spatial-checks.js';
+import {checkOperandMetadata} from './tflite-operand-checks.js';
 const known=t=>t&&t.has_rank!==false&&!t.shape_signature?.some(d=>d<0)&&t.shape&&Array.from(t.shape).every(d=>Number.isSafeInteger(d)&&d>=0);
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
     const fail=message=>{throw Error(`${name} ${message}`);},out=outputs[0];
     checkSpatialTransform(name,inputs,outputs,options);
+    checkOperandMetadata(name,inputs,outputs,options);
     for(const [side,ts] of [['input',inputs],['output',outputs]])for(const [slot,t] of ts.entries()){
         const q=t?.quantization;if(!q?.scale?.length)continue;
         if(Array.from(q.scale).some(s=>!Number.isFinite(s)||s<=0)||q.zero_point?.length!==q.scale.length)fail(`${side} ${slot} 量化 scale／zero point 數量或數值無效。`);
