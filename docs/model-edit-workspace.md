@@ -1,6 +1,6 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 [preview.31](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.31)：站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復的操作指引；原有模型編輯、四種亂數、v3 草稿與匯出重開維持通過。編輯匯出只做結構與資料驗證，手動執行仍在獨立工作區，見 [正式交付](preview31.md#發布狀態)。
+目前正式交付為 [v1.1.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.1.0)，見[本版交付](model-safety.md#正式發布)；後續候選與限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復的操作指引；支援四種亂數與 v3 草稿。編輯匯出只做結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄，不代表目前網站版本。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 
