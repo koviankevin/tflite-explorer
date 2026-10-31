@@ -48,7 +48,13 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
     const {name}=builtinInfo(code);
     const ports=TFLITE_PORTS[normalize(name)];
     const legacyReshape=name==='RESHAPE'&&(Array.isArray(options?.new_shape)||ArrayBuffer.isView(options?.new_shape));
-    for(const [side,actual] of [['inputs',inputs],['outputs',outputs]]){const expected=ports?.[side];if(expected?.length){const min=side==='inputs'&&legacyReshape?1:expected.filter(p=>!p.optional&&!p.list).length;if(actual.length<min||!expected.some(p=>p.list)&&actual.length>expected.length)throw Error(`${name} ${side} 數量不符合 OP 定義。`);}if(actual.some((t,i)=>!t&&!expected?.[i]?.optional))throw Error('請補齊所有必要輸入與輸出型別。');}
+    for(const [side,actual] of [['inputs',inputs],['outputs',outputs]]){
+        const expected=ports?.[side],splitOutputs=side==='outputs'&&['SPLIT','SPLIT_V'].includes(name);
+        // Netron describes SPLIT's first output, not its variable arity. The
+        // shared operand rule checks every output against num_splits below.
+        if(expected?.length&&!splitOutputs){const min=side==='inputs'&&legacyReshape?1:expected.filter(p=>!p.optional&&!p.list).length;if(actual.length<min||!expected.some(p=>p.list)&&actual.length>expected.length)throw Error(`${name} ${side} 數量不符合 OP 定義。`);}
+        if(actual.some((t,i)=>!t&&!expected?.[i]?.optional))throw Error('請補齊所有必要輸入與輸出型別。');
+    }
     for(const [k,v] of Object.entries(options||{}))if(/(?:stride|dilation|filter_(?:width|height)|num_splits|block_size)/.test(k)&&(!Number.isInteger(v)||v<=0))throw Error(k+' 必須是正整數。');
     const shapes=t=>Array.from(t.shape||[]),sameType=(a,b)=>a.type===b.type;
     if(['ADD','MUL','SUB','DIV','MAXIMUM','MINIMUM','POW','SQUARED_DIFFERENCE'].includes(name)){

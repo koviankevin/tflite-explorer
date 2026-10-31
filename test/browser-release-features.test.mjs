@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {browserReleaseFeatures,fontReflowRequired} from './browser/release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired} from './browser/release-features.mjs';
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
 
 test('stable and future releases retain all current browser coverage',()=>{
@@ -32,4 +32,10 @@ test('font reflow is required for new sources while exact immutable pre-fix rele
 
 test('font reflow cannot be skipped using missing or malformed release metadata',()=>{
     for(const version of [undefined,null,'','1.2','v1.2.0','1.2.0/../x','0.2.0-preview.0'])assert.throws(()=>fontReflowRequired(version));
+});
+
+test('per-OP validation is required for new releases without breaking exact immutable rollback labels',()=>{
+    for(const v of ['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','0.2.0-preview.34'])assert.equal(operatorValidationRequired(v),false,v);
+    for(const v of ['1.3.0','2.0.0','1.2.1+repacked.1','0.2.0-preview.35','0.2.0-preview.01'])assert.equal(operatorValidationRequired(v),true,v);
+    for(const v of [undefined,null,'','v1.3.0','1.3.0/../x'])assert.throws(()=>operatorValidationRequired(v));
 });
