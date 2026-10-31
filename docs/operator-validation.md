@@ -33,3 +33,13 @@
 Chrome 的功能通過，但最後正常關閉超過 10 秒，整輪仍判失敗；SDK 後續強制清理不能當成正常退出。Edge 整輪與原生程序正常退出通過。第一輪報告入口藏在探索側欄的 UI 失敗、原始關閉失敗與修正後資料都保留在[候選收據](results/operator-validation-candidate.json)及[45 檔原始證據](results/operator-validation-candidate-evidence.zip)。
 
 主分支必要關卡、正式站和固定 Release 尚待完成；不以候選結果宣告正式交付，也不宣稱 Windows 歷史關閉問題已修復。
+
+## 大報告的主執行緒重讀修正
+
+PR #190 合併後，來源 `adf7ef7` 的實體 1.25 GiB／21,005 OP 關卡在第一輪匯出失敗；尚未進入記憶體判定。原始 read audit 捕捉到主執行緒 `Blob.text()` 讀取 6,688,889 bytes：既有 `attachRuntimeReport` 為了附上未執行 interpreter 的狀態，重新讀入新增逐 OP 清單後的大型 JSON。報告本身未超過 16 MiB，問題是主執行緒的整段重讀，不能靠放寬讀取上限解決。
+
+新候選 `e18e27e`／build `2a840cfc63ce30f5` 在模型 Worker 建立不含 verdict 的不可變 JSON prefix Blob；主執行緒直接組合 prefix 與新的 checks／runtime verdict，不重讀報告，也不累積重複欄位。原 16 MiB 報告上限、File 讀取、RSS 與計時政策不變；獨立的小型舊報告保持相容。
+
+21 項相關選測通過，包含完整 21,005 OP metadata 報告連續附加三次狀態且零報告 body reads。Windows Chrome／Edge 皆完成實際 Worker 傳送、編輯匯出、大型報告 JSON 全部 21,006 筆，以及畫面 100→200 筆載入。此獨立報告案例使用 64-byte 合成權重，只證明完整 metadata／報告流程；不能代替實體大檔八輪。Edge 正常程序／Worker 退出，Chrome 功能通過但正常關閉仍逾時，整輪仍失敗。
+
+[收據](results/operator-report-prefix.json)及[39 份原始證據](results/operator-report-prefix-evidence.zip)保留首次實體關卡失敗、原始 ZIP digest／CRC、縮小後的 red／green，以及兩個瀏覽器的報告、下載與截圖。修正版的主分支實體八輪及正式交付仍待完成。
