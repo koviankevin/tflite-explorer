@@ -11,3 +11,11 @@
 真正 LiteRT.js 2.6.0 CPU WASM 對 canonical、legacy、legacy 編輯及切出 FC 的輸出均為 `[10,10,10,10,10,26,26,26,26,26]`。不整除的 legacy FC 負例會執行後才由輸出 shape 契約判失敗，`invoked=true`；不能寫成 compile／allocation 失敗或零 invoke。該負例也回報 `Tensors with strides or padding are not yet supported`，因此沒有 IO ZIP；這個原有 runtime 封存限制尚未修正。
 
 最初測試 harness 曾缺少 FC 第三個輸入，且誤把切圖報告當成編輯常數檢查入口；已保留初版並修到真正 caller red。另保留先前 CPU 測試錯誤假設「負例不得 invoke／必有 IO」的失敗，後續依實際 pinned runtime 判定，不修改 runtime 或放寬規則。瀏覽器、PR／main 關卡及正式交付仍待完成；不覆蓋 v1.4.0 的發布證據。
+
+## Windows 候選與來源範圍
+
+來源 `decacbcafdeac8972c79c48225fe326f3192c870`／tree `ec58b5b9bfedb95a4cdf619bd86861f8df86a1ab`、build `28812015057240a2`，325 個核心檔。Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 各完成隔離原生選檔、1280×640／32px、不合法 FC 的零下載阻擋、兩個合法 legacy RESHAPE 的常數檢查／報告、實際匯出重開與兩個 OP 搜尋。原始 false flag、shape 與 8-byte 參數常數保留，報告／實際檔案 byte ranges 已比對。各三個模型 Worker、零個自動 runtime Worker；八／十一個觀察到的程序身分均在原 10 秒正常關閉規則內退出。
+
+兩端的錯誤訊息及報告截圖已實際檢視；這是經完整性核對的原始 HTML 隔離 fixture 與原生操作，沒有正式 HTTPS 文件傳輸、實體 RSS 或歷史 Chrome／OneDrive 關閉修復的主張。[候選收據](results/legacy-shape-candidate.json)與[原始紀錄、失敗、截圖及讀取器](results/legacy-shape-candidate-evidence.zip)保留 SHA-256／ZIP CRC。模型、權重及 BIN／BMP 留在本機，未放入公開 evidence ZIP。
+
+先計算四關卡的實際 dependency scope：核心 88 檔與既有 run `41247699658` 相同，可沿用；browser 345、contract 644、site 393 檔的 scope 已改變，須完成其必要新證據。新版本瀏覽器流程另核對 legacy 情境；只略過確定舊的不可變版本，其他新／未知版本仍必須驗證。PR／main 與正式交付仍待完成。
