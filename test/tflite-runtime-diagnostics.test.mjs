@@ -35,6 +35,7 @@ test('pre-input compile failures retain tensor references and explain why changi
     const result=await executeRuntime({blob:f.blob,plan,rt,diagnostics:()=>['ERROR: Tensor 1 has invalid quantization parameters.']});
     assert.equal(result.status,'failed');assert.equal(result.stage,'compile');assert.equal(result.compiled,false);assert.equal(result.invoked,false);
     assert.equal(result.failureLocations[0].tensor,1);assert.match(result.reason,/套用測試輸入之前/);assert.equal(deleted,1);
+    assert.ok(result.reason.indexOf('套用測試輸入之前')<result.reason.indexOf('Failed to build TFL interpreter'),'Actionable compile-stage guidance must precede long native error paths.');
 });
 test('native node diagnostics map by both builtin and local index; repeated, delegate and unknown logs remain honest',async()=>{
     const f=await runtimeFixture(),context=runtimeDiagnosticContext(f.model),line='ERROR: Node number 0 (ADD) failed to prepare.';
