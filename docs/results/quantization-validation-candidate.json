@@ -1,0 +1,308 @@
+{
+  "format": "model-lens-quantization-validation-candidate",
+  "status": "candidate-verified-not-published",
+  "at": "2026-10-31T22:03:43.206306+00:00",
+  "version": "1.4.0",
+  "source": "70946a276962915861fa44aa2091a4bb84125f42",
+  "tree": "12f495d83f656e7bf80c672194d17de528101982",
+  "build": "aed1e9427c1b7a48",
+  "files": 324,
+  "node": {
+    "selected": 84,
+    "releaseFeatures": 11,
+    "CPUCase": 1,
+    "CPUPositiveInvocations": 4,
+    "CPUNegativeCompileNoInvoke": 1,
+    "reportPolishRepeatedAffected": 12,
+    "scope": "Selected scopes plus real CPU. Full mandatory PR/main release gates pending;not claimed as fullsuite."
+  },
+  "publicModel": {
+    "sha256": "808cfdfc0cf3a6fa6f6fa26bfa379ea97c16d5db7334637766e39c3408502e9d",
+    "quantizedTensors": 88,
+    "metadataPassed": 74,
+    "metadataFailed": 14,
+    "inspectionValues": 8520,
+    "preservedVariants": [
+      {
+        "mode": "identity",
+        "bytes": 326768,
+        "sha256": "1a18eae32c409eb744c4faa0bcb7cab072619dbbcae1d70c6cdb3f53c5f71682",
+        "weightPayloads": 57
+      },
+      {
+        "mode": "full-cut",
+        "bytes": 326928,
+        "sha256": "8e67440386439b066655e7dba905ba1977461d0d056033f8f5720de97e91e623",
+        "weightPayloads": 57
+      }
+    ],
+    "CPUOriginalStillFailed": true
+  },
+  "knownPublicCorpus": [
+    {
+      "file": "hello_world_float.tflite",
+      "source": "https://github.com/tensorflow/tflite-micro/blob/9c74b4e7f9cb7afabea9859ef85f7df885148485/tensorflow/lite/micro/examples/hello_world/models/hello_world_float.tflite",
+      "bytes": 3164,
+      "sha256": "ee939863195ca37ce063b18e14fb82aa0d98db6596ba41095757f6b560da1070",
+      "total": 0,
+      "checked": 0,
+      "failed": 0,
+      "unchecked": 0,
+      "inspectedValues": 0,
+      "failures": []
+    },
+    {
+      "file": "hello_world_int8.tflite",
+      "source": "https://github.com/tensorflow/tflite-micro/blob/9c74b4e7f9cb7afabea9859ef85f7df885148485/tensorflow/lite/micro/examples/hello_world/models/hello_world_int8.tflite",
+      "bytes": 2704,
+      "sha256": "505ee4fae7fa46ab67bea4c08b4969eb3eb8b9114c50595ec4a29d9a27993202",
+      "total": 10,
+      "checked": 10,
+      "failed": 0,
+      "unchecked": 0,
+      "inspectedValues": 20,
+      "failures": []
+    },
+    {
+      "file": "micro_speech_quantized.tflite",
+      "source": "https://github.com/tensorflow/tflite-micro/blob/9c74b4e7f9cb7afabea9859ef85f7df885148485/tensorflow/lite/micro/examples/micro_speech/models/micro_speech_quantized.tflite",
+      "bytes": 18800,
+      "sha256": "09e5e2a9dfb2d8ed78802bf18ce297bff54281a66ca18e0c23d69ca14f822a83",
+      "total": 9,
+      "checked": 9,
+      "failed": 0,
+      "unchecked": 0,
+      "inspectedValues": 46,
+      "failures": []
+    },
+    {
+      "file": "conv10.tflite",
+      "source": "https://github.com/tensorflow/tflite-micro/blob/9c74b4e7f9cb7afabea9859ef85f7df885148485/tensorflow/lite/micro/integration_tests/seanet/conv/conv10.tflite",
+      "bytes": 53000,
+      "sha256": "dde72adebf7916d43dc7fc0f86e3378f1722c0c464ef5ce60f1db2716c4464be",
+      "total": 4,
+      "checked": 4,
+      "failed": 0,
+      "unchecked": 0,
+      "inspectedValues": 260,
+      "failures": []
+    }
+  ],
+  "native": [
+    {
+      "channel": "chrome",
+      "browserVersion": "156.0.8078.76",
+      "status": "passed",
+      "modelWorkers": 4,
+      "automaticRuntimeWorkers": 0,
+      "nativeIdentities": 8,
+      "normalClose": true,
+      "cases": [
+        {
+          "name": "bad",
+          "status": "failed",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 1,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "blockedRewire": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "opaque",
+          "status": "not-run",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 0,
+            "unchecked": 1,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "large",
+          "status": "passed",
+          "quantization": {
+            "total": 204,
+            "checked": 204,
+            "failed": 0,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 408,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "visibleRows": 200,
+          "reopenedOperators": 202,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        }
+      ],
+      "rawReportSHA256": "4ff94ea03b4e2f69b9fe225c3dd4c8e7f8ea2917c1e167c69e872cb7df325508",
+      "scope": "Public synthetic UI on authenticated original HTML fixture; native exit covers observed owned identities admitted before the flow and before close, not unobserved short-lived processes, HTTP document transport, physical RSS or a fix for historical native-close failures."
+    },
+    {
+      "channel": "msedge",
+      "browserVersion": "156.0.4314.50",
+      "status": "passed",
+      "modelWorkers": 4,
+      "automaticRuntimeWorkers": 0,
+      "nativeIdentities": 11,
+      "normalClose": true,
+      "cases": [
+        {
+          "name": "bad",
+          "status": "failed",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 1,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "blockedRewire": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "opaque",
+          "status": "not-run",
+          "quantization": {
+            "total": 3,
+            "checked": 2,
+            "failed": 0,
+            "unchecked": 1,
+            "omitted": 0,
+            "inspectedValues": 4,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "preserved": true,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        },
+        {
+          "name": "large",
+          "status": "passed",
+          "quantization": {
+            "total": 204,
+            "checked": 204,
+            "failed": 0,
+            "unchecked": 0,
+            "omitted": 0,
+            "inspectedValues": 408,
+            "valueLimit": 262144,
+            "tensorLimit": 65536,
+            "scope": "\u7de8\u865f\u5c6c\u532f\u51fa\u7d50\u679c\uff0c\u53ea\u6aa2\u67e5\u672c\u6b21\u8f38\u51fa\u7684 subgraphs\uff1b\u975e\u7a7a shape \u7684\u91cf\u5316\u8ef8\u3001affine scale\uff0fzero point \u53ca\u5df2\u652f\u63f4 dtype \u7bc4\u570d\u3002\u6bcf\u8f2a\u6700\u591a 262,144 \u500b\u503c\u300165,536 \u7b46 tensor\uff1b\u8d85\u9650\u6216\u5176\u4ed6\u91cf\u5316\u7de8\u78bc\u660e\u5217\u672a\u9a57\u8b49\u3002\u4e0d\u8b80\u6b0a\u91cd\uff0c\u4e0d\u57f7\u884c interpreter\uff0c\u4e0d\u4ee3\u8868 kernel \u76f8\u5bb9\u6216\u6578\u503c\u7b49\u50f9\u3002"
+          },
+          "visibleRows": 200,
+          "reopenedOperators": 202,
+          "layout": {
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280,
+            "left": 260,
+            "right": 1020,
+            "top": 12,
+            "bottom": 628,
+            "scroll": 758,
+            "client": 758
+          }
+        }
+      ],
+      "rawReportSHA256": "f9157d9b69929c5959ef59a0b9107fdc3e766fc787abee2aadad0a60e2f6b35f",
+      "scope": "Public synthetic UI on authenticated original HTML fixture; native exit covers observed owned identities admitted before the flow and before close, not unobserved short-lived processes, HTTP document transport, physical RSS or a fix for historical native-close failures."
+    }
+  ],
+  "reuse": "Only report presentation changed from0968 to709;validator/serializer/parser/runtime unchanged andfour synthetic fixture byte outputs identical. See archived report-polish-reuse-review.json.",
+  "originals": {
+    "path": "quantization-validation-evidence.zip",
+    "bytes": 1459870,
+    "sha256": "57e375758f9f5c309e61fed336d73f6c5d19ea79bb2c3b06109ce6f9690c88ca",
+    "manifestSHA256": "97bbd703fdd35f29f7de5aeed07c0fa240b301add39b1918a24a9b627884b6a8",
+    "records": 59
+  },
+  "constraints": {
+    "automaticInterpreter": false,
+    "modelUploads": false,
+    "runtimeURLRSSSecurityPoliciesChanged": false,
+    "oldReleaseRewritten": false,
+    "SitesOrGHStudioSync": false
+  },
+  "limitations": [
+    "v1.4.0 is not published; formal website/fixedRelease remainsv1.3.1.",
+    "Native authenticated original HTML fixture is not a public HTTPS document transport test or physical RSS benchmark.",
+    "Legacy Windows Chrome long-load OneDrive/native-close failure remains unresolved;shortnormalexitsdo notrepair it.",
+    "Affine metadata is not proof of arbitrarykernel/customcodec/numericalequivalence.",
+    "Only changed/output subgraphs inspected;256Kvalues/65536rows cap explicit;existing4MiBconstant/16MiBreport limits unchanged."
+  ],
+  "goalComplete": false
+}

@@ -14,5 +14,9 @@ TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpre
 
 官方固定 person_detect 原檔的 88 個量化 tensor 中，靜態檢查找到 14 個確定無效的軸，包含舊日誌最後六個；其餘 74 個的本項 metadata 通過。原樣及整圖切出重開後，14 個失敗、量化欄位與 57 份權重 payload 均保留；沒有宣稱原檔 CPU 已可執行。另四份既有官方小型模型的量化 metadata 沒有新增誤擋，原 CPU／dynamic policy 證據保持各自範圍。
 
-模型、輸入與完整診斷留在本機。候選的 32px／Chrome／Edge 操作、正式發布關卡與交付仍待完成；本頁不以未執行的計畫宣告已完成。
+來源 `70946a2`／build `aed1e9427c1b7a48` 的 Windows Chrome／Edge 已完成隔離原生選檔、32px、無效欄位阻擋、未知 codec 保留未驗證、204 筆報告的 100→200 分批顯示，以及實際匯出重開／202 個 OP 搜尋。四個模型 Worker、零個自動 runtime Worker 與八／十一個已觀察原生程序身分均正常關閉。初版數值驗收雖通過，截圖仍發現重複說明將真正錯誤推到下方；縮短 UI 並優先／自動展開失敗及未知項目後，再以 tensor #1 而非原本第一筆 tensor #0 補驗排序。初版與調整後的截圖／來源都保留。
+
+這些是原始 HTML 完整性受核對的隔離文件 fixture 與實際原生 UI 操作，不是正式 HTTPS 文件傳輸或實體 RSS 測試，也不表示已修復歷史 Chrome 長負載／OneDrive 關閉問題。報告文字／介面調整只改兩個 app 模組；validator、serializer、parser、runtime／vendor 未變，四種合成 fixture bytes 亦逐項相同，據此沿用已完成的 CPU／公開模型證據，僅補跑受影響的 12 項報告測試與兩端 UI。
+
+[候選收據](results/quantization-validation-candidate.json)與[59 份原始紀錄／截圖及讀取器](results/quantization-validation-evidence.zip)已核對 SHA-256／ZIP CRC。模型、權重、BIN／BMP 與完整 primary-source 檔案只留在本機；公開封存只含 metadata、公開合成操作與雜湊來源。正式 PR／main 發布關卡與交付仍待完成，本頁不宣稱 v1.4.0 已發布。
 

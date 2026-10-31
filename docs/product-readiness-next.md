@@ -39,6 +39,8 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 | 啟動與診斷 | 公開請求／啟動問題可收集不含模型的白名單診斷；中斷後可恢復；歷史失敗保留，根因須由可重現證據確認 | 歷史 preview.22 的一次啟動逾時仍未重現，不反覆重跑成功部署冒充修好 |
 | 保存、操作及發布 | 草稿／pattern 異常與遷移可恢復；主要新手流程與鍵盤可操作；固定產物、相依 scope、必要關卡、正式站與 Release 一致，回退不破壞使用者資料 | 既有功能與交付證據沿用；新功能仍須補受影響驗收；OS 斷電、完整螢幕閱讀器與任意格式遷移仍未證實 |
 
+接續 OP 驗證的 [v1.4.0 量化候選](quantization-validation.md)已補上非空 shape／legacy has_rank=false 與 per-tensor 的量化軸檢查，並將未知 QuantizationDetails 留為未驗證。每輪值／筆數上限、原樣來源的失敗報告、重接阻擋、100→200 分批與真正 CPU 差異控制均有[候選證據](results/quantization-validation-candidate.json)。Chrome／Edge 的 32px、匯出重開及正常退出通過；正式發布關卡與交付仍待完成，公開版本仍是 v1.3.1。
+
 ## 卷積／pooling 與 allocation 診斷
 
 新增 metadata 規則對照 TensorFlow 固定來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [conv.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/conv.cc)、[depthwise_conv.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/depthwise_conv.cc)、[pooling.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/pooling.cc)及 padding.h。編輯推導與匯出檢查共用同一模組；不讀權重、不跑 runtime。涵蓋 NHWC、SAME／VALID、stride／dilation、grouped channel、depthwise filter layout、bias 與 output shape；動態／未知 shape 保留明確參考，不虛構推導。Hybrid filter 不強制與浮點 input 同 dtype，depthwise multiplier 依 filter／input channels 推導，不誤用舊參數作判定。
