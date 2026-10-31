@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {browserReleaseFeatures} from './browser/release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired} from './browser/release-features.mjs';
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
 
 test('stable and future releases retain all current browser coverage',()=>{
@@ -23,4 +23,13 @@ test('unknown but valid labels cannot silently reduce required coverage',()=>{
 });
 test('missing or malformed release metadata fails selection instead of skipping tests',()=>{
     for(const version of [undefined,null,{},[],0,'','1','1.0','v1.0.0',' 1.0.0','1.0.0/../x','0.2.0-preview.0','0.2.0-preview.9007199254740992'])assert.throws(()=>browserReleaseFeatures(version),undefined,String(version));
+});
+
+test('font reflow is required for new sources while exact immutable pre-fix releases remain usable',()=>{
+    for(const version of ['1.0.0','1.0.1','1.1.0','0.2.0-preview.1','0.2.0-preview.28','0.2.0-preview.34'])assert.equal(fontReflowRequired(version),false,version);
+    for(const version of ['1.2.0','1.2.1','2.0.0','1.1.0+repacked.1','0.2.0-preview.35','0.2.0-preview.01','0.2.0-preview.12+repacked.1','0.2.1','1.2.0-rc.1'])assert.equal(fontReflowRequired(version),true,version);
+});
+
+test('font reflow cannot be skipped using missing or malformed release metadata',()=>{
+    for(const version of [undefined,null,'','1.2','v1.2.0','1.2.0/../x','0.2.0-preview.0'])assert.throws(()=>fontReflowRequired(version));
 });

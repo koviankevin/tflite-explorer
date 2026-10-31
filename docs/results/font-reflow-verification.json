@@ -1,0 +1,133 @@
+{
+  "format": "model-lens-font-reflow-verification",
+  "status": "font-reflow-verified-not-published",
+  "at": "2026-10-31T05:29:38.519572+00:00",
+  "proof": {
+    "status": "passed-independent-seven-frame-review",
+    "at": "2026-10-31T05:27:40.647706+00:00",
+    "source": {
+      "commit": "7068a7ed49ad370bf8f6cd4435aae01ccf629ab1",
+      "tree": "5a763ac46602b54a5a533695948bb3e0c53d60d9",
+      "committedAt": "2026-10-31T13:19:37+08:00",
+      "dirty": false
+    },
+    "buildId": "c2530ff70d952076",
+    "redReportSHA256": "b7bf3ff5c90c64b4cdb8ed7e946f208a53e986d04fc0d4c8cf278312ef965d29",
+    "greenReportSHA256": "799ef42acb8f2b095ec0a246766b2c993e8eba99c745e74609c810f07382b436",
+    "identicalFontFlowSHA256": "76a418d6aa73df74d198deb4f9bda6441efccd7d80b21077cdcd274718ed1d1e",
+    "rows": [
+      {
+        "channel": "chrome",
+        "operatorFrames": 5,
+        "inputOutputFrames": 2,
+        "all32pxFramesFit": true,
+        "browserClosed": true
+      },
+      {
+        "channel": "msedge",
+        "operatorFrames": 5,
+        "inputOutputFrames": 2,
+        "all32pxFramesFit": true,
+        "browserClosed": true
+      }
+    ],
+    "scope": "OnlyfontlayoutduringrealinflightSVGworkerrequest;not fullWindowsphysicalmemory orcloseacceptance. Chrome5 remainsfailed."
+  },
+  "archive": {
+    "path": "font-reflow-native-evidence.zip",
+    "bytes": 308827,
+    "sha256": "a52131148d2f136679e574b53775283290c0a7a2c24663450919392eaf4ee8a5",
+    "members": [
+      {
+        "path": "build/qa/windows-large/font-render-regression-2.mjs",
+        "bytes": 4591,
+        "sha256": "1870f29f31aea39f4bdd03acd8170bf8b45a849f934e64ed0de7a723299af3e6"
+      },
+      {
+        "path": "build/qa/windows-large/run-font-case.py",
+        "bytes": 1855,
+        "sha256": "91f0ae043819f0f403c4c59486d54a5c5ce6a1bd931a44c46da17002953abe4f"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-2/report.json",
+        "bytes": 8668,
+        "sha256": "b7bf3ff5c90c64b4cdb8ed7e946f208a53e986d04fc0d4c8cf278312ef965d29"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-2/chrome/font-reflow-32px.png",
+        "bytes": 81747,
+        "sha256": "dad6665dfcacbbe8580a3c41a35a0d836e152a8fd1a6e881e0b15e3f7e9f6fe4"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-2.log",
+        "bytes": 3172,
+        "sha256": "704df1954e4b5ce50456123acdecafd62dceaebc5e05438568ad05bf050de605"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-green-2/report.json",
+        "bytes": 13130,
+        "sha256": "799ef42acb8f2b095ec0a246766b2c993e8eba99c745e74609c810f07382b436"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-green-2/chrome/font-reflow-32px.png",
+        "bytes": 75621,
+        "sha256": "fbbc92d54072abe0f042ce3250e4ad174e569dfc6325a4f150ab4cac2fcc3c3c"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-green-2/msedge/font-reflow-32px.png",
+        "bytes": 75663,
+        "sha256": "d41b0b2312706f110d1b5e5bb0842b1cab061118ecd8fbfc7792a834b9149bab"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-green-2.log",
+        "bytes": 4436,
+        "sha256": "0405458fac17404d6b27efc20719c4995a48666e4686eb30f4a3f8b9f36aee44"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-green-2-review.json",
+        "bytes": 1106,
+        "sha256": "2248e91f287c4f1d7d02e0812b3bc7e7768be77b9fcc202d9d25d5d38b739711"
+      },
+      {
+        "path": "test/browser/font-render-flow.mjs",
+        "bytes": 4213,
+        "sha256": "76a418d6aa73df74d198deb4f9bda6441efccd7d80b21077cdcd274718ed1d1e"
+      },
+      {
+        "path": "LICENSE",
+        "bytes": 1103,
+        "sha256": "ee5a50c1d11f3ffa50fd1e80ff3813910be895e083aeb4cb51b8a732bd7670e9"
+      },
+      {
+        "path": "vendor/netron/LICENSE",
+        "bytes": 1082,
+        "sha256": "aca642b84119ed57ce6ef700918ce3ff7275b5d6b1759e688c4ad3715105095a"
+      },
+      {
+        "path": "before-c3e7da7/src/app.js",
+        "bytes": 125180,
+        "sha256": "1111c5ac2b7ae630bdde256b203e7db275bde2a0e6af10da8e37280232f6ec79",
+        "gitCommit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f"
+      },
+      {
+        "path": "after-7068a7e/src/app.js",
+        "bytes": 125314,
+        "sha256": "01be5012ebe6dfbfdf41d8e41b083cf6c78427a2559b183a1b15e8a9d38030f5",
+        "gitCommit": "7068a7ed49ad370bf8f6cd4435aae01ccf629ab1"
+      }
+    ]
+  },
+  "scope": [
+    "SamefontFlowSHA256 onauthenticoldartifact andcleannewartifact;oldfailsrealtextbounds,newpasses5OP+2input/outputframesperbrowserat32px.",
+    "Oneunchangedactualdagre.layoutmessage delayeduntilfont20then32;no geometry/model/algorithm changes inprobe.",
+    "BothnewnativePNG inspected;graphcanbepannedwhen32pxcontentextendsviewport.",
+    "NativeChromiumandEdge focusednormalbrowserclose completedwithoutSDKforcedkill. ThisdoesnotfixoroverrideChrome5physicalmodelnormalclose failure.",
+    "19affectedNodechecks passed;newprotectedPR/main/sourceboundreleasegates stillpending."
+  ],
+  "remaining": [
+    "Newsourcebrowser/site/contractgates;coreonlyreuseexactclosurefingerprint",
+    "PublishandverifyformalHTTPS/fixedRelease",
+    "Windowsphysicalnormalbrowserclose rootcauseunresolved",
+    "Fullpublicgoalcompletionaudit remains;goal active"
+  ]
+}

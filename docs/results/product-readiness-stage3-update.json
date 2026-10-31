@@ -1,0 +1,596 @@
+{
+  "format": "model-lens-product-readiness-stage3-update",
+  "status": "mixed-evidence-reviewed-not-complete",
+  "at": "2026-10-31T05:05:44.448820+00:00",
+  "testedSource": {
+    "native": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f",
+    "main": "3eb0415e42015a9ffa825f3a5a9851c9a4bc2873",
+    "sameFullTree": "fabab0a0a690992e4d502fc5a0f12f8b1dc749f8"
+  },
+  "chrome5": {
+    "status": "failed-as-measured",
+    "failure": "native-browser-close",
+    "contentAndMemorySubchecksPassed": true,
+    "source": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f",
+    "build": "ff39550749434e50",
+    "channel": "chrome",
+    "reportSHA256": "2e9fc57291e92072a73d185eacc1269f3162d9d0d0dc574acbc9160d0e2d00d9",
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 265888.9142857143,
+      "rssDriftBytes": -138625024,
+      "mainHeapDriftBytes": 331964,
+      "sampledPeakRssBytes": 1088688128,
+      "sampledPeakGrowthBytes": 591413248
+    },
+    "sampling": {
+      "count": 2253,
+      "maximumGapMs": 1345,
+      "p95GapMs": 525
+    },
+    "nativeIdentities": [
+      {
+        "pid": 119848,
+        "startTicks": "134378932472747537"
+      },
+      {
+        "pid": 131376,
+        "startTicks": "134378932474095493"
+      },
+      {
+        "pid": 110512,
+        "startTicks": "134378932476995557"
+      },
+      {
+        "pid": 130664,
+        "startTicks": "134378932477177698"
+      },
+      {
+        "pid": 130540,
+        "startTicks": "134378932477491817"
+      },
+      {
+        "pid": 125940,
+        "startTicks": "134378932485862047"
+      },
+      {
+        "pid": 117220,
+        "startTicks": "134378932487100086"
+      },
+      {
+        "pid": 128768,
+        "startTicks": "134378932487212798"
+      },
+      {
+        "pid": 133420,
+        "startTicks": "134378932519610632"
+      },
+      {
+        "pid": 133436,
+        "startTicks": "134378932519781695"
+      },
+      {
+        "pid": 132240,
+        "startTicks": "134378932647767384"
+      },
+      {
+        "pid": 4828,
+        "startTicks": "134378932648343068"
+      },
+      {
+        "pid": 22996,
+        "startTicks": "134378932682447079"
+      },
+      {
+        "pid": 133736,
+        "startTicks": "134378932690078618"
+      },
+      {
+        "pid": 32748,
+        "startTicks": "134378932705329803"
+      },
+      {
+        "pid": 123592,
+        "startTicks": "134378932718530362"
+      },
+      {
+        "pid": 133584,
+        "startTicks": "134378932777337940"
+      },
+      {
+        "pid": 137392,
+        "startTicks": "134378933677118180"
+      },
+      {
+        "pid": 141080,
+        "startTicks": "134378934277133207"
+      }
+    ],
+    "nativeWorkersClosed": 57,
+    "modelWorkers": 40,
+    "recoveryWorkers": 16,
+    "workerUsedPeakBytes": 96448816,
+    "workerBackingPeakBytes": 15861986,
+    "fullModelSHA256": "76abf0ba8d8917882d9deb95f27cbc08188aac74216e3589aa7ce37794fdd045",
+    "compositionSHA256": "7652cbcfe610e6c9c2e49b6e53ce26fce5e2505a87c12bb52def9b824ec08086",
+    "cutSHA256": [
+      "433f3f623df078b99cc0e80f92204f5dd2b4f5fab44066755b6c74b9a506e4b6",
+      "daaa025921ba77036d694dd827b5176c8d6c6e169ecd77a1357bf9da68c8c8e9"
+    ],
+    "limitations": [
+      "Eight cycles with two warmups bound observed growth; finite measurements cannot prove an absence of all leaks.",
+      "Physical synthetic nonzero weights with opaque custom options; no company model or custom runtime execution.",
+      "Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.",
+      "Worker Runtime.getHeapUsage measures the V8 isolate at source/reopen checkpoints, not separate OS RSS or a continuous peak.",
+      "Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.",
+      "Windows bootstrap HTML is delivered verbatim from the authenticated artifact via a local test fixture with its original CSP. Other assets use HTTP. This measures native file/browser/process behavior, not HTTP document transport or antivirus compatibility. Raw HTTP injection/close failures are retained separately."
+    ]
+  },
+  "visualScopeCorrection": {
+    "status": "visual-acceptance-incomplete-on-original-candidate",
+    "supersedesScopeClaim": "generic-label-native-3-review.json numeric layout cases;do not interpret them as text/frame validation",
+    "source": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f",
+    "evidence": [
+      "generic-label-native-3-chrome/chrome-1280-32px.png",
+      "font-reflow-red-1/report.json",
+      "font-reflow-red-1/chrome/font-reflow-32px.png"
+    ],
+    "finding": "InitialChrome32px text exceeds old14px frames. Original numericchecks andsourceguard passed but didnot cover actualtextbbox. Authentic oldartifact deterministicfont-during-layout regression exit1;normalbrowserclose succeeded. Fix stillawaitingnewsource build/native/CI."
+  },
+  "closeControls": "Four empty-page tests andbothsmall-appcloseorders passed;no causal reason toadopt CDPdetach orbrowser-first teardown. DefaultSDK may kill its owned process ondriverexit after failure;latePIDabsence cannotpromotenormalclose.",
+  "mainBaselineGates": {
+    "core": 41159138980,
+    "browser": 41167462188,
+    "contract": 41167464592,
+    "site": 41167471990
+  },
+  "scope": [
+    "Physical1.25GiB/21005OP8cycles/twowarmups;allcontent/weights/options/pattern/draft and originalmemorysubchecks pass;final10s normalChromeclose fails.57workerclosures observed;2nativeprocesses remain atoriginalclosecheck.",
+    "Edge1 fullcase remains originalsource2899993. Candidate smallChrome/Edge32pxnumericUI/chooser/normalclose pass, but actualChromeinitialtextoverflow makes completevisualacceptance fail.",
+    "Source-bound main3eb Linuxphysical8cycles,6switching scenarios andactual33operations/19runtimecases/8CPU-IOcycles independentlyreviewed. New fontfix changes these scopes,so affectedgates mustbe refreshed.",
+    "Original currentc3e artifact and testsnapshot preserve reproducible fontred;newworking-treefix isnotrepresented as testedsource.",
+    "No modelweights/privatecompanydialect/profiles/credentials uploaded;publicsyntheticboundedreports only. No RSSsubtraction/GC/trimming/timer/security/rerun workaround."
+  ],
+  "archive": {
+    "path": "product-readiness-stage3-update.zip",
+    "bytes": 1898266,
+    "sha256": "e5ce7c6645ec73c746d61e324b8bf8d5595415c862a84bb8decc052b6bdbe280",
+    "members": [
+      {
+        "path": "build/qa/windows-large/archive-stage3-update.py",
+        "bytes": 6107,
+        "sha256": "0a4c02d27e57eaaca901ebe36d97a023d4e55530cc0dddf0ad4a8100606b7aa9"
+      },
+      {
+        "path": "build/qa/windows-large/candidate-gate-scope-review.json",
+        "bytes": 1445,
+        "sha256": "485bcac29c9affd38483bf5d1593cf593baf4ada06ca7cfb2e31d1a5cecde357"
+      },
+      {
+        "path": "build/qa/windows-large/check-chrome5-post-exit.py",
+        "bytes": 1170,
+        "sha256": "a890ded3465957a41b0ec56d172f4d1f97c313a5c8cb1d5895fabde4466633af"
+      },
+      {
+        "path": "build/qa/windows-large/chrome-5-failure-review.json",
+        "bytes": 3864,
+        "sha256": "26d63241b95560484c569027b768ac1e82fc05c75ceb173fb9dd575553581ef6"
+      },
+      {
+        "path": "build/qa/windows-large/chrome-5-status.json",
+        "bytes": 594,
+        "sha256": "56e670505769ccb24970cd9e1f558611f64346b01329db759bf722b9cf1c4436"
+      },
+      {
+        "path": "build/qa/windows-large/chrome-5.json",
+        "bytes": 1001033,
+        "sha256": "2e9fc57291e92072a73d185eacc1269f3162d9d0d0dc574acbc9160d0e2d00d9"
+      },
+      {
+        "path": "build/qa/windows-large/chrome-5.log",
+        "bytes": 1454,
+        "sha256": "1e84d59a3b964345d95b93ec3461ffe9f794ff182281a3af07357385b6d273d1"
+      },
+      {
+        "path": "build/qa/windows-large/close-order-browser-first-chrome-3/chrome-1280-32px.png",
+        "bytes": 85984,
+        "sha256": "190400bc49bdf39166813da900351a4dd3f28159090d291506e2a8a8268e719f"
+      },
+      {
+        "path": "build/qa/windows-large/close-order-browser-first-chrome-3/chrome-1366-32px.png",
+        "bytes": 81887,
+        "sha256": "3f17c7b27edd100f925ff44a4ec3c4eafd731e2a0417c98c88c00f146b410d85"
+      },
+      {
+        "path": "build/qa/windows-large/close-order-browser-first-chrome-3/report.json",
+        "bytes": 7433,
+        "sha256": "93fad1d3decfcc2f979ff013fa0e863b2636088e1679371e902b54a530a0fd02"
+      },
+      {
+        "path": "build/qa/windows-large/close-order-browser-first-chrome-3.log",
+        "bytes": 6899,
+        "sha256": "5899b066872e37ca837e84104e55905c1c6366cf1453202f3c92101f5965f9c6"
+      },
+      {
+        "path": "build/qa/windows-large/close-order-browser-first-chrome.log",
+        "bytes": 1154,
+        "sha256": "0699ba9d95c944e2245c45064e6dff7b851f7f58183bb28a08fa7f81e3b0c88a"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-attached-1.json",
+        "bytes": 8441,
+        "sha256": "7bc6f7b4f5284f932ebd8f3ee989f615346b847b616c33c6750b11d158c795c1"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-attached-1.log",
+        "bytes": 2913,
+        "sha256": "a11c616a834fff486d43a2d6f810ae1fe195df3415de7190ca897b9e74ae0ec3"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-attached-2.json",
+        "bytes": 8438,
+        "sha256": "ceef6d75ce90f519207e0fa46b9bd970a7b8f9066d7ccd208ea65154f729153f"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-attached-2.log",
+        "bytes": 2913,
+        "sha256": "e47a817613553b67ffc6298e65d5b70cbb63d0b58a3cd7f7aac3dc3ad593b702"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-detached-1.json",
+        "bytes": 8675,
+        "sha256": "3142c479f46c2ce712bf473680f24fe1b6a4436ca39b2df8d2dc5b8c7311cc55"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-detached-1.log",
+        "bytes": 3077,
+        "sha256": "8ab489045846be5b4c5a4391b62097326b496932ccda4d898f6589c8f712cd83"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-detached-2.json",
+        "bytes": 8670,
+        "sha256": "6032e9642600efb48f020f8554e2822d3903d14d162e77bf97e37f41cb493f49"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-detached-2.log",
+        "bytes": 3077,
+        "sha256": "8dfb46c0de8ca77fbf16db10e712ab5cbf6e98a98c79381ddc7a5ba666b6d75e"
+      },
+      {
+        "path": "build/qa/windows-large/close-probe-matrix-status.json",
+        "bytes": 779,
+        "sha256": "34409185dcec679daf96608633b78267fb04e68d106a72528aae06db70dc9bd4"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-browser-artifact.zip",
+        "bytes": 29466,
+        "sha256": "be306fae2d031fdfb188e276022e19abe3cf1f755ce2250638cb706e97053001"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-browser-artifacts.json",
+        "bytes": 974,
+        "sha256": "bd4f35db73ef52b56f2ced5d3078b6568cb55abe1dcfd00028d0a33234186ae5"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-browser-jobs.json",
+        "bytes": 4359,
+        "sha256": "d5936549fc1cb5bfeb4364394eca1e1ee849c9763d2497852dd68108c8e4515b"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-browser-review.json",
+        "bytes": 752,
+        "sha256": "3295fab0d0e3c6236102a8b2d64f76889fd617e24489f8dfc61c426f69cb1f88"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-browser-run.json",
+        "bytes": 14799,
+        "sha256": "3b1e2dedefaef17e44b88743293e078a089bb312cd852221347c3d955c6e31da"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-contract-artifact.zip",
+        "bytes": 734,
+        "sha256": "c44fa97661665639c22c3c93f6e1ca27d1d124ca727db9c867dbed45dbcd4e45"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-contract-artifacts.json",
+        "bytes": 971,
+        "sha256": "32d377468162169c7766f84869d119f0be661f1f3983d7f9f96cbfd20969c347"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-contract-jobs.json",
+        "bytes": 3791,
+        "sha256": "0b9b9ef6edc117836e41770bb07e6aa3f482831a258007e1cbf0a4a1d392b303"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-contract-review.json",
+        "bytes": 498,
+        "sha256": "19b2f22a25cbd199a0cdfc28c16f9e3abcd17da83d759da58ad26e8d9d84a898"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-contract-run.json",
+        "bytes": 14767,
+        "sha256": "ce429dd5247922c4ce9c0569b529d5af862befc522f16f8f9a96a80e499fa70d"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-delivery-smoke-review.json",
+        "bytes": 1720,
+        "sha256": "f3d53bcc0c70d821d090ef720d8a2c5e33e23a33ee62a10bfa17dd2440c8458c"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-delivery-smoke.json",
+        "bytes": 1057188,
+        "sha256": "766a9d2511e9a9e2d6b88637541b3f00fe7248b25c421378e458a190b29734a7"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-delivery-smoke.zip",
+        "bytes": 518845,
+        "sha256": "cc07dcf4a88ec8604de8abc6d81e83b6f0dc3c93f14965dd5d434be8a794a121"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-site-artifact.zip",
+        "bytes": 4839,
+        "sha256": "35fcc01323998e54821cd0a70422c747c7ef455e70f5aff8efed0217cf1cd65a"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-site-artifacts.json",
+        "bytes": 1911,
+        "sha256": "22058824f247936fd966f4450fc61b2e5d4293609f4a67503e1607b6b5c0c93e"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-site-jobs.json",
+        "bytes": 5789,
+        "sha256": "cc57268bc9dd6310baabc500f519f71bde9839dae36e162048840d39f906f103"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-site-review.json",
+        "bytes": 2867,
+        "sha256": "f4882eaee3892c23e767a4dcd4fd19974f484e73d284a10bd7841707ea2e11eb"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-main-site-run.json",
+        "bytes": 14775,
+        "sha256": "1f7c5d7a6573ebea43e8b995ea3ff755c0b13c124515a1bdbc43b24e52b45468"
+      },
+      {
+        "path": "build/qa/windows-large/controlled-source.json",
+        "bytes": 228,
+        "sha256": "bc9efe3175ac87d7febe7d0cb727dcace0ae778de66cb2711659828ebd20f355"
+      },
+      {
+        "path": "build/qa/windows-large/edge-reuse-source-review.json",
+        "bytes": 2133,
+        "sha256": "1bd9bc6cd3927267eda7a70d999362c367db9eb3df56adcada8569a48a513321"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-1/chrome/font-reflow-32px.png",
+        "bytes": 81807,
+        "sha256": "f07a7d40ac68d7897c86d56a796e97a3579c82d68f3b1e05f3f57f8da6c3bc16"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-1/report.json",
+        "bytes": 7174,
+        "sha256": "059b9221c9ef32b3ce8c72726a1df94becfc51bbb57c7219081a16be1d1f952c"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-1-status.json",
+        "bytes": 288,
+        "sha256": "17ac771165d634b8504f3745dbdf27d796c711dd57ecc2fd2517f44efb6b0422"
+      },
+      {
+        "path": "build/qa/windows-large/font-reflow-red-1.log",
+        "bytes": 3146,
+        "sha256": "d620df0c44bbfe20d1fdc49b59f405c3439c8a48a6cdecf8edd6c92a7f6ec735"
+      },
+      {
+        "path": "build/qa/windows-large/font-render-regression.mjs",
+        "bytes": 4447,
+        "sha256": "19a2e0559f8e77f022cdf32a0c8a3c75ae91d79b4f50151e45faea9d877d1a00"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-1/chrome-1280-32px.png",
+        "bytes": 81047,
+        "sha256": "d18274a0d8ab3f8649962181d286f96451454d3fcc27342cdd234aa9826481a5"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-1/chrome-failure.png",
+        "bytes": 80921,
+        "sha256": "1c4605e00679b84b2b916104b13264877a7cc75e22bc803f5332c80e9239c4ac"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-1/report.json",
+        "bytes": 4743,
+        "sha256": "7e1e2525589b0f9a1ae9fe2c8d86dfa032469b373549f18c7159974fa22013cb"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-1.log",
+        "bytes": 6573,
+        "sha256": "057cda55c513e5968b58270f1aabef7b475bd5f3d191098072eccde6d00fbed2"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-2-chrome.log",
+        "bytes": 1154,
+        "sha256": "0699ba9d95c944e2245c45064e6dff7b851f7f58183bb28a08fa7f81e3b0c88a"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-2-msedge.log",
+        "bytes": 1154,
+        "sha256": "0699ba9d95c944e2245c45064e6dff7b851f7f58183bb28a08fa7f81e3b0c88a"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-chrome/chrome-1280-32px.png",
+        "bytes": 85987,
+        "sha256": "b88ff4fedc5523002cacfee81dc4e2fed3e7dd4d67cb61587800dddb58e03282"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-chrome/chrome-1366-32px.png",
+        "bytes": 82084,
+        "sha256": "7bdded0bb9ad376df53c17e5b27df803f97df860ea7b416ff1da7a71a8c5f4e6"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-chrome/report.json",
+        "bytes": 7432,
+        "sha256": "3fbfd96abff2a8122a3a6e5f3f22699081ca57f562653e5ffa556ddfefa7948f"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-chrome.log",
+        "bytes": 6898,
+        "sha256": "77ec9c8acfe7adb1a2266646750c8b9c1c90236153caee1b82afa4650f1dd1f9"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-msedge/msedge-1280-32px.png",
+        "bytes": 85987,
+        "sha256": "b88ff4fedc5523002cacfee81dc4e2fed3e7dd4d67cb61587800dddb58e03282"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-msedge/msedge-1366-32px.png",
+        "bytes": 82084,
+        "sha256": "7bdded0bb9ad376df53c17e5b27df803f97df860ea7b416ff1da7a71a8c5f4e6"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-msedge/report.json",
+        "bytes": 7902,
+        "sha256": "7e847be50330243b4081e5a32e80d5a47f8b394efea6ac0cbf39a8213ad8ebec"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-msedge.log",
+        "bytes": 7023,
+        "sha256": "97c35e532a45854ce7502059a5280b7585f7e693c20167c6ef1cc0a1542248d0"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-3-review.json",
+        "bytes": 1639,
+        "sha256": "1d3b91c0bc4970f6843312811e41a9d697a051d7e9202657f85367775f6a93f0"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-ui-2.mjs",
+        "bytes": 9322,
+        "sha256": "ad8b1a4734f330a3dec5b071ea0e3245cb3f4e88bd692edfbc296bc60e4b1a9b"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-ui-3.mjs",
+        "bytes": 9342,
+        "sha256": "6bb0d830f1d631b110c2a86b9236135f2209744d9f7ffc9095bd7ebbf4af84ff"
+      },
+      {
+        "path": "build/qa/windows-large/generic-label-native-ui.mjs",
+        "bytes": 7500,
+        "sha256": "96da89fb315885d64abbd31b32c386f4e731d1642fd387af4a6c059c198e81df"
+      },
+      {
+        "path": "build/qa/windows-large/main-core-artifact.zip",
+        "bytes": 18337,
+        "sha256": "a2ca9cdddce2a3ca962ac0718b5761ce38aa274804b823eb788c46cc0450598f"
+      },
+      {
+        "path": "build/qa/windows-large/main-core-artifacts.json",
+        "bytes": 772,
+        "sha256": "01e652ebdf57202cbb2f026c3c20f5f43f5bd1c78f5bffc3a225eafeb748ac93"
+      },
+      {
+        "path": "build/qa/windows-large/main-core-jobs.json",
+        "bytes": 2614,
+        "sha256": "d49aecd9bf188270bfdb118c4e33d8b42096ed07cb3d13d56b51607f115b6609"
+      },
+      {
+        "path": "build/qa/windows-large/main-core-review.json",
+        "bytes": 1976,
+        "sha256": "ead1e1eebc61bcd8dcaeb9a7cd390cbbf89f2bcff77a9846f350863903368d54"
+      },
+      {
+        "path": "build/qa/windows-large/main-core-run.json",
+        "bytes": 13098,
+        "sha256": "984db5b37af63c20fbb4e6533f826cda3d75e579a08f64c51645cf59fe68c370"
+      },
+      {
+        "path": "build/qa/windows-large/native-close-probe.mjs",
+        "bytes": 4786,
+        "sha256": "50e6f3528bbc6de5061e648aebe56468fcd22e3a846995d780e1fc268c9d9e1a"
+      },
+      {
+        "path": "build/qa/windows-large/review-chrome5-failure.py",
+        "bytes": 7550,
+        "sha256": "36ebbedaecaeac3c295cd5618179d63a8dc19b9c1db6769905c6d3f52a4d9c5e"
+      },
+      {
+        "path": "build/qa/windows-large/review-windows-controlled.py",
+        "bytes": 7306,
+        "sha256": "108f88aecbaa48ca12d96081e198671e3a345a582ec1cae870f8f3d6e0463a96"
+      },
+      {
+        "path": "build/qa/windows-large/run-chrome-5.py",
+        "bytes": 2451,
+        "sha256": "3a8019140d76ea596a12a9f2278d987c57797e2d0a439f55d388e3953ee662cd"
+      },
+      {
+        "path": "build/qa/windows-large/run-native-close-matrix.py",
+        "bytes": 1956,
+        "sha256": "62028d6f3cbd73c34ee1bbc44aa8660368348941efe1e950d454a5228964d66c"
+      },
+      {
+        "path": "build/qa/windows-large/run-small-app-close-order-3.py",
+        "bytes": 2150,
+        "sha256": "5538e236439fca8be61099c3bbdd4fd99bfeba7999431d5c2fe049bece15a334"
+      },
+      {
+        "path": "build/qa/windows-large/run-small-app-close-order.py",
+        "bytes": 2146,
+        "sha256": "2041b1ab3e7171d62a9fbe1a35eab794ffd70af689f823f8f0d21c1afb3cfffe"
+      },
+      {
+        "path": "build/qa/windows-large/small-app-close-order-3-status.json",
+        "bytes": 814,
+        "sha256": "d2c8091441fac30742e9bbb0218927f50422d2a9b9f513aa560874b4289abd88"
+      },
+      {
+        "path": "build/qa/windows-large/small-app-close-order-status.json",
+        "bytes": 816,
+        "sha256": "4cd5c984dd1960132b85fab28afd9e81f2c2888dfc2965b2bb756833506bc0bf"
+      },
+      {
+        "path": "build/qa/windows-large/updater-confound-review.json",
+        "bytes": 1001,
+        "sha256": "29bbef805fbbc62e8342042b02ca9c0d1f6fea6bb75545dc184a1e08674faee2"
+      },
+      {
+        "path": "build/qa/windows-large/visual-scope-correction.json",
+        "bytes": 722,
+        "sha256": "dab8cb942e3589617e942f631309279d43a0c389762e90c3c705931aa5cb3f26"
+      },
+      {
+        "path": "test/browser/font-render-flow.mjs",
+        "bytes": 3995,
+        "sha256": "8fd4dff7e60eb59e8c22a749f8e7019ce76d3a8073379b639db7968fa97446b2"
+      },
+      {
+        "path": "original-c3e7da7/src/app.js",
+        "bytes": 125180,
+        "sha256": "1111c5ac2b7ae630bdde256b203e7db275bde2a0e6af10da8e37280232f6ec79",
+        "sourceCommit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f"
+      },
+      {
+        "path": "original-c3e7da7/src/shell.html",
+        "bytes": 36819,
+        "sha256": "3d590c3b0ac32b52c2b1108cd9e430c8e85b41a53a5b281638c3f0ae23958d7c",
+        "sourceCommit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f"
+      },
+      {
+        "path": "original-c3e7da7/test/browser/model-lifecycle.mjs",
+        "bytes": 36515,
+        "sha256": "9401fc75203fea62a57020d1eb944178c1eeec849db46ffda6b6da2d1d6f4cd5",
+        "sourceCommit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f"
+      },
+      {
+        "path": "original-c3e7da7/test/browser/lifecycle-policy.mjs",
+        "bytes": 6454,
+        "sha256": "00f77dea819511a1a7f747b9a2a6ac77ab5ad4640ced1ccb0574b171d04fd05a",
+        "sourceCommit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f"
+      }
+    ]
+  },
+  "goal": "active;notachieved;formalrelease remains1.1.0",
+  "remaining": [
+    "Verify newfontfix actualnativegeometry/realrenderedPNG andaffectedCI",
+    "Windowsfullnativeclose rootcause remainsunproven;no20minreruntogreen",
+    "Finalsource releasegates/publication/live/fixedRelease andexplicitcompletionaudit pending"
+  ]
+}

@@ -8,11 +8,12 @@
 
 | 優先 | 問題／界線 | 現況 |
 | --- | --- | --- |
-| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | 完整八輪 Edge 通過；Chrome 原始 RSS slope 超標，內容及正常關閉通過。逐程序診斷與測試環境調整見[Windows 大模型](windows-large-model.md)，尚不能宣稱 Chrome 問題已修復 |
+| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | Edge 原八輪通過；Chrome 第四輪 RSS 超標，第五輪內容／記憶體通過但最後 close 逾時，整輪仍失敗。逐程序及小型對照見[Windows 大模型](windows-large-model.md)，尚不能宣稱已修復 |
 | 2 | 部分原模型的 activation 使用非零、沒有 data 欄位的 buffer；重建成明確空 data vector 會導致配置失敗 | 已重現並修正完整／局部／組合序列化；公開模型與實際 CPU 驗證見[階段一](results/product-readiness-stage1.json)。尚待 v1.2.0 正式交付 |
-| 3 | 未知 custom 格式不能安全辨識隱含引用，因此子模型可能仍很大 | 保守保留仍是預設；可信[引用契約](custom-reference-contracts.md)才能縮減資料，不推測未知 options，也不增加公開 custom kernel |
-| 4 | Resource-only MLIR 曾漏列未驗證權重編碼 | 計數與持續提示已修正並有原生匯出重開證據；packing／dialect 語意仍未驗證，修正尚待正式交付 |
-| 5 | 一次歷史啟動逾時尚無可重現根因 | 已有有界診斷及恢復操作；後續成功不能證明根因已修復 |
+| 3 | 排版途中切到 32px，文字更新但框仍用舊尺寸 | 已用未修改候選穩定重現並保存[真正文字邊界回歸](font-reflow.md)；修正後 Chrome／Edge 五個 OP 加兩個圖輸入／輸出邊界實測通過，新正式來源關卡與交付仍待完成 |
+| 4 | 未知 custom 格式不能安全辨識隱含引用，因此子模型可能仍很大 | 保守保留仍是預設；可信[引用契約](custom-reference-contracts.md)才能縮減資料，不推測未知 options，也不增加公開 custom kernel |
+| 5 | Resource-only MLIR 曾漏列未驗證權重編碼 | 計數與持續提示已修正並有原生匯出重開證據；packing／dialect 語意仍未驗證，修正尚待正式交付 |
+| 6 | 一次歷史啟動逾時尚無可重現根因 | 已有有界診斷及恢復操作；後續成功不能證明根因已修復 |
 
 ## 待查：一次啟動逾時的根因
 

@@ -8,3 +8,12 @@ export function browserReleaseFeatures(version){
     // require every current scenario rather than silently skipping unknowns.
     return {demoRuntime:generation>=28,inputCleanup:generation>=31,workspaceStorage:generation>=34,desktopRuntimeRSS:generation>=31};
 }
+
+// These exact published releases predate the in-flight font reflow fix. Other
+// labels, including repackaged/unknown previews, cannot silently skip the check.
+export function fontReflowRequired(version){
+    browserReleaseFeatures(version);
+    const preview=/^0\.2\.0-preview\.([1-9]\d*)$/.exec(version);
+    const immutablePreview=preview&&Number(preview[1])>=1&&Number(preview[1])<=34;
+    return !immutablePreview&&!['1.0.0','1.0.1','1.1.0'].includes(version);
+}

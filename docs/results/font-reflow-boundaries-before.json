@@ -1,0 +1,228 @@
+{
+  "format": "model-lens-font-render-regression",
+  "status": "failed",
+  "artifact": {
+    "schemaVersion": 1,
+    "version": "1.2.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "c3e7da713d12f0d64ebcf0c558ab73378a566b7f",
+      "tree": "fabab0a0a690992e4d502fc5a0f12f8b1dc749f8",
+      "committedAt": "2026-10-31T12:04:28+08:00",
+      "dirty": false
+    },
+    "buildId": "ff39550749434e50"
+  },
+  "driverSHA256": "1870f29f31aea39f4bdd03acd8170bf8b45a849f934e64ed0de7a723299af3e6",
+  "fontFlowSHA256": "76a418d6aa73df74d198deb4f9bda6441efccd7d80b21077cdcd274718ed1d1e",
+  "browsers": [
+    {
+      "channel": "chrome",
+      "status": "failed",
+      "errors": [],
+      "documentFixture": {
+        "mode": "manifest-pinned-document-fixture",
+        "documentSHA256": "5c89525d0ec6eb49ccb8ffd7fcd809abb76168aed0e45c4a1b1e7222fb1e757b",
+        "bytes": 89417,
+        "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'",
+        "deliveries": 1,
+        "httpDocumentTransportVerified": false
+      },
+      "error": "AssertionError [ERR_ASSERTION]: boundary-or-item block_0/tensor_0 exceeds its measured frame at32px: {\"kind\":\"boundary-or-item\",\"label\":\"block_0/tensor_0\",\"fontPx\":32,\"text\":{\"left\":451,\"right\":689.671875,\"top\":380.5,\"bottom\":423.5,\"width\":238.671875,\"height\":43},\"frame\":{\"left\":444,\"right\":562.8720703125,\"top\":396.5,\"bottom\":423.5,\"width\":118.8720703125,\"height\":27}}\n    at fit (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/browser/font-render-flow.mjs:29:108)\n    at fontRenderFlow (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/browser/font-render-flow.mjs:43:9)\n    at async file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/build/qa/windows-large/font-render-regression-2.mjs:22:78",
+      "fontRender": {
+        "cases": [
+          {
+            "kind": "font-changed-during-layout",
+            "rows": [
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_0",
+                "fontPx": 32,
+                "text": {
+                  "left": 451,
+                  "right": 689.671875,
+                  "top": 380.5,
+                  "bottom": 423.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 444,
+                  "right": 562.8720703125,
+                  "top": 396.5,
+                  "bottom": 423.5,
+                  "width": 118.8720703125,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Mul",
+                "fontPx": 32,
+                "text": {
+                  "left": 634.99609375,
+                  "right": 694.07421875,
+                  "top": 380.5,
+                  "bottom": 423.5,
+                  "width": 59.078125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 627.99609375,
+                  "right": 667.8642578125,
+                  "top": 396.5,
+                  "bottom": 423.5,
+                  "width": 39.8681640625,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "FullyConnected",
+                "fontPx": 32,
+                "text": {
+                  "left": 868.4111328125,
+                  "right": 1100.1923828125,
+                  "top": 405,
+                  "bottom": 448,
+                  "width": 231.78125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 861.4111328125,
+                  "right": 977.1474609375,
+                  "top": 421,
+                  "bottom": 448,
+                  "width": 115.736328125,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 719.98828125,
+                  "right": 924.05078125,
+                  "top": 356,
+                  "bottom": 399,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 712.98828125,
+                  "right": 816.287109375,
+                  "top": 372,
+                  "bottom": 399,
+                  "width": 103.298828125,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "BatchMatMul",
+                "fontPx": 32,
+                "text": {
+                  "left": 874.6298828125,
+                  "right": 1078.6923828125,
+                  "top": 356,
+                  "bottom": 399,
+                  "width": 204.0625,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 867.6298828125,
+                  "right": 970.9287109375,
+                  "top": 372,
+                  "bottom": 399,
+                  "width": 103.298828125,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "operator",
+                "label": "Add",
+                "fontPx": 32,
+                "text": {
+                  "left": 1028.271484375,
+                  "right": 1091.396484375,
+                  "top": 380.5,
+                  "bottom": 423.5,
+                  "width": 63.125,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1022.271484375,
+                  "right": 1064.783203125,
+                  "top": 396.5,
+                  "bottom": 423.5,
+                  "width": 42.51171875,
+                  "height": 27
+                }
+              },
+              {
+                "kind": "boundary-or-item",
+                "label": "block_0/tensor_5",
+                "fontPx": 32,
+                "text": {
+                  "left": 1116.9072265625,
+                  "right": 1355.5791015625,
+                  "top": 380.5,
+                  "bottom": 423.5,
+                  "width": 238.671875,
+                  "height": 43
+                },
+                "frame": {
+                  "left": 1109.9072265625,
+                  "right": 1228.3291015625,
+                  "top": 396.5,
+                  "bottom": 423.5,
+                  "width": 118.421875,
+                  "height": 27
+                }
+              }
+            ]
+          }
+        ],
+        "layoutRequestDelayed": true,
+        "geometryModified": false,
+        "barrier": {
+          "held": true,
+          "busy": "true",
+          "measuredNodes": [
+            {
+              "width": 118.8720703125,
+              "height": 27
+            },
+            {
+              "width": 39.8681640625,
+              "height": 27
+            },
+            {
+              "width": 115.736328125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 103.298828125,
+              "height": 27
+            },
+            {
+              "width": 42.51171875,
+              "height": 27
+            },
+            {
+              "width": 118.421875,
+              "height": 27
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: boundary-or-item block_0/tensor_0 exceeds its measured frame at32px: {\"kind\":\"boundary-or-item\",\"label\":\"block_0/tensor_0\",\"fontPx\":32,\"text\":{\"left\":451,\"right\":689.671875,\"top\":380.5,\"bottom\":423.5,\"width\":238.671875,\"height\":43},\"frame\":{\"left\":444,\"right\":562.8720703125,\"top\":396.5,\"bottom\":423.5,\"width\":118.8720703125,\"height\":27}}\n    at fit (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/browser/font-render-flow.mjs:29:108)\n    at fontRenderFlow (file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/test/browser/font-render-flow.mjs:43:9)\n    at async file:///D:/Users/kovia/OneDrive/%E6%96%87%E4%BB%B6/ChatGPT/Tflite/tflite-explorer/build/qa/windows-large/font-render-regression-2.mjs:22:78"
+}

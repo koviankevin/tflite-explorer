@@ -1328,8 +1328,10 @@ $('graph-font-size').onchange = () => {
     if (!graphFontSizes.includes(value)) return;
     document.documentElement.style.setProperty('--graph-font-size', `${value}px`);
     try { localStorage.setItem(graphFontKey, value); } catch { /* Apply for this session. */ }
-    if (!model || !view.target) return;
-    const zoom = view.target.zoom;
+    if (!model) return;
+    // Netron clears target during async layout. Still invalidate that layout
+    // when its measured text size changes, then draw the latest font.
+    const zoom = view.target?.zoom;
     (overviewMode?drawPatternOverview({zoom}):selection ? selectResult(activeIndex, { forceDraw: true, zoom }) : drawGraph(currentGraph, full, zoom)).catch(report);
 };
 $('direction').onclick = () => {
