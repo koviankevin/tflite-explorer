@@ -40,7 +40,7 @@ export async function operatorValidationFlow({page,read,base,directory,check}){
             const reportFile=await save('#edit-download-report',`operand-${name}.report.json`),record=JSON.parse(await readFile(reportFile,'utf8'));
             assert.equal(record.operatorValidation.length,2);assert.ok(record.operatorValidation.every(c=>c.status===expected));assert.ok(record.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
             const receipt=await verifyExportFiles({report:record,source,output});assert.ok(['passed','not-applicable'].includes(receipt.byteComparison.status));
-            await page.locator('#export-report-button').click();await page.locator('#export-report-operators summary').click();await until(()=>document.querySelectorAll('#export-report-operators li').length===2);
+            await page.locator('#edit-view-report').click();await page.locator('#export-report-operators summary').click();await until(()=>document.querySelectorAll('#export-report-operators li').length===2);
             const text=await page.locator('#export-report-operators').textContent();assert.match(text,expected==='passed'?/已檢查（靜態規則）/:/未檢查.*動態/);assert.match(text,/OP #1/);
             const layout=await read(()=>{const d=document.querySelector('#export-report-dialog'),r=d.getBoundingClientRect();return {width:innerWidth,documentWidth:document.documentElement.scrollWidth,left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:innerHeight,scroll:d.scrollWidth,client:d.clientWidth};});
             assert.ok(layout.documentWidth<=layout.width+1&&layout.left>=0&&layout.right<=layout.width+1&&layout.top>=0&&layout.bottom<=layout.height+1&&layout.scroll<=layout.client+1,JSON.stringify(layout));
