@@ -1,6 +1,8 @@
-# Runtime tensor 錯誤的來源參照（v1.3.1 候選）
+# Runtime tensor 錯誤的來源參照（v1.3.1）
 
-目前尚未發布。正式站與固定 Release 仍為 v1.3.0；本候選補正手動 interpreter 的錯誤對照，不修改模型或自動執行推論。
+已在 [v1.3.1 固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.1) 正式交付，build `960b708cb9389164`；[正式站](https://koviankevin.github.io/tflite-explorer/)與四份實際下載已核對，完整證據見[正式交付](#v131-正式交付)。手動 interpreter 的錯誤對照不修改模型，也不自動執行推論。
+
+## 候選階段紀錄
 
 TensorFlow 官方 tflite-micro 固定來源 `9c74b4e7f9cb7afabea9859ef85f7df885148485` 的 `person_detect.tflite` 是 300,568 bytes、31 個 OP、89 個 tensor 的公開量化網路。以現有 LiteRT.js 2.6.0／CPU WASM 執行原始檔時，在 compile 階段即因部分 tensor 的量化維度超出範圍失敗，未套用輸入、未 invoke。這是這份原檔與目前 runtime 的相容性結果，不證明 tflite-micro runtime 也拒絕它；不修改量化值、權重或 bytes 來冒充原始模型可執行。
 
@@ -32,3 +34,15 @@ PR #200 合併來源 `9885c97c58e30eb81f827df5a3da7520f502caa5`／tree `32128382
 | 網站操作 | [41240648865](https://github.com/koviankevin/tflite-explorer/actions/runs/41240648865)，六種版本切換、35 項正常 HTTP 候選操作、15 組實際 32px 文字框、19 種手動 runtime，以及八輪／24 次 CPU／IO 與原記憶體規則通過 |
 
 大模型原判定為 RSS slope 1,549,341.26 bytes／輪、drift 12,795,904 bytes、main heap drift 175,276 bytes、sampled peak 1,107,017,728 bytes。這些有限 Linux Chromium 結果不替代 Windows 原生關閉失敗、任意模型數值等價或公司 kernel 驗收。所有模型與輸入仍留在執行端本機，公開封存不含原始模型、權重、BMP 或 BIN。
+
+## v1.3.1 正式交付
+
+固定來源 `8946d3473ae6952f12fd54d124f2d5f645b6c4a2`／tree `86227033a2e8fbe0b8d9ffdbe1a29de0e05de185`／build `960b708cb9389164` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41242450193)，四個工作 attempt 1 全成功。權威 Pages deployment `7464451347`、[固定 Release](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.1)、Latest 與 tag 指向均已核對；完整 site ID 為 `aab00d1e7b9c71f7b138fe971e5077cb3af6a22bea95d8c27067f8ce5737f54f`。保留 v1.3.0、v1.2.1 與原永久基準，不修改舊 tag 或附件。
+
+正式 HTTPS 核對整站 1,466 個檔案，含網站索引；323 個核心檔與準備包一致。正式站 35 項操作、15 組實際 32px 文字框、19 種手動 runtime、八輪／24 次 CPU／IO、原記憶體規則與 Worker／程序退出均通過。四份實際公開下載的 bytes／SHA-256 與準備包一致：ZIP 為 41,282,247 bytes，SHA-256 `bb321ec7921ec6233d66e2ebc4449633d0d4d935ac1f88fda9da8023e548548b`。結果見[最終收據](results/runtime-tensor-v1.3.1-published.json)與[57 份公開原始報告／metadata／讀取器](results/runtime-tensor-v1.3.1-evidence.zip)。
+
+另以 Windows Chrome／Edge 直接開啟正式 HTTPS，核對本機官方模型的 tensor 錯誤、32px 鍵盤定位、切換模型移除舊參照，以及 runtime／model Worker 和八／十個原生程序身分正常退出；功能均通過。**兩端整體驗收仍失敗**，因嚴格網路守門各攔下兩筆未知請求，不能將功能通過改寫為全通過。
+
+接續一次預先限定的 Chrome 診斷，在相同封鎖條件下記錄到 Kaspersky 網域的 script／stylesheet GET；準備包 HTML 與 src／vendor 沒有該引用，與[官方說明的網頁注入機制](https://support.kaspersky.com/help/Kaspersky/Win21.7/en-US/201001.htm)一致。這是本機環境的判讀，不宣稱已記錄到首輪 Edge 的同一 URL。沒有停用防毒、放寬網路／原生關閉規則，或重跑以求綠燈；完整請求 query 與原生診斷留在本機，公開收據只保留來源類型、原始報告 SHA-256 與界線。
+
+官方量化模型的原始 compile 失敗仍保留，不宣稱數值等價；歷史 Chrome 長負載／OneDrive 關閉問題也仍未解。本次正式交付不代表任意 kernel、公司 dialect 或整體商品化目標已完成。一般編輯／匯出維持靜態檢查，推論維持手動，模型與輸入全程本機處理。
