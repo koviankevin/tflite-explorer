@@ -1,6 +1,6 @@
 # Windows 大模型程序記憶體驗收
 
-本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻；Chrome 第四輪 RSS slope 超標，第五輪內容與記憶體通過，但最後正常關閉逾時。兩輪都不能當成完整通過。正式站仍為 v1.1.0，不能將主分支修正或診斷對照視為已發布。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
+本階段 Windows 1.25 GiB／21,005 OP 八輪已取得混合結果：Edge 通過原門檻；Chrome 第四輪 RSS slope 超標，第五輪內容與記憶體通過，但最後正常關閉逾時。兩輪都不能當成完整通過。[v1.2.0 已正式交付](product-readiness-v1.2.md)，但沒有修復或取代這項 Windows 完整驗收缺口。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
 
 ## 原生觀察與所有權
 
@@ -73,4 +73,4 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 
 來源相同的主分支 `3eb0415` 另完成正常 HTTP 的 Linux 實體八輪、六種版本切換及完整網站操作，原 artifact digest／CRC／source／原判定皆獨立核對通過。新的字級修正會改變相關來源範圍，仍須補其受影響的正式關卡。
 
-字級修正合併後的 `bb3bd37` 已補齊[新 Linux 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)。原始實體檔為 1,349,965,216 bytes／21,005 OP；八輪包含兩輪暖機，原 RSS slope 約 0.26 MiB／輪、drift 約 6.7 MiB，40 個模型 Worker、16 個指紋 Worker、完整權重／options／pattern／匯出重開與正常程序退出皆通過。來源、provider digest、CRC 與原判定見[收據](results/product-readiness-main-verification.json)及[原始封存](results/product-readiness-main-evidence.zip)。這補齊新來源的 Linux 關卡，沒有修復或替代 Windows Chrome 的正常關閉失敗；v1.2.0 正式交付仍待完成。
+字級修正合併後的 `bb3bd37` 已補齊[新 Linux 實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41174035077)。原始實體檔為 1,349,965,216 bytes／21,005 OP；八輪包含兩輪暖機，原 RSS slope 約 0.26 MiB／輪、drift 約 6.7 MiB，40 個模型 Worker、16 個指紋 Worker、完整權重／options／pattern／匯出重開與正常程序退出皆通過。來源、provider digest、CRC 與原判定見[收據](results/product-readiness-main-verification.json)及[原始封存](results/product-readiness-main-evidence.zip)。這補齊新來源的 Linux 關卡，沒有修復或替代 Windows Chrome 的正常關閉失敗。[v1.2.0 正式交付](product-readiness-v1.2.md)已完成，這個 Windows 缺口繼續保留。
