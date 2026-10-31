@@ -10,7 +10,7 @@ v1.3.0 已完成正式站與固定 Release 核對，13 種新增 OP 靜態規則
 
 | 優先 | 問題／界線 | 現況 |
 | --- | --- | --- |
-| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | 精確 v1.2.0／f592 固定產物的 Chrome／Edge 完整八輪已通過原判定及正常退出；後續小型 [TRANSPOSE 候選](transpose-permutation.md#打包候選與實際下載)的 Chrome 又在最後正常關閉逾時。間歇性關閉根因未證實，Edge 八輪 slope 接近上限，見[Windows 大模型](windows-large-model.md) |
+| 1 | Windows 大檔的整個程序與 Worker 記憶體、原生關閉 | 最新精確 v1.3.0／7de 固定產物與 SDK 1.64.1 各完成八輪：兩端原記憶體子判定及匯出通過，Edge 整輪正常退出，Chrome 最後原 10 秒關閉仍失敗。已補正 OP UI 只觀察主程序的驗收缺口，沒有修好間歇性關閉根因；原始失敗與較早 v1.2.0 通過結果分開保留，見[完整結果](windows-large-model.md#v130-固定產物與-sdk-1641) |
 | 2 | 部分原模型的 activation 使用非零、沒有 data 欄位的 buffer；重建成明確空 data vector 會導致配置失敗 | 完整／局部／組合序列化修正已在 v1.2.0 交付；公開模型與實際 CPU 驗證見[階段一](results/product-readiness-stage1.json)。未提供的使用者原模型不宣稱已確認根因 |
 | 3 | 排版途中切到 32px，文字更新但框仍用舊尺寸 | [真正文字邊界回歸](font-reflow.md)已在 v1.2.0 交付；Chrome／Edge 本機七組邊界及正式站 15 組實際文字框通過。34 項正式操作與固定下載已核對，原失敗保留 |
 | 4 | 未知 custom 格式不能安全辨識隱含引用，因此子模型可能仍很大 | 保守保留仍是預設；可信[引用契約](custom-reference-contracts.md)才能縮減資料，不推測未知 options，也不增加公開 custom kernel |
@@ -40,7 +40,7 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 尚待補齊的公開驗收
 
-目前 [v1.3.0](operator-validation.md#v130-正式交付)的必要 Chromium、發布及正式站／固定下載核對均已完成。較早 [v1.1.0](model-safety.md#正式發布)另在真實 Windows Chrome／Edge 的隔離 context 完成 native UI、32px、實際 quota／備份／重試與儲存清除後恢復；精確 v1.2.0 固定產物後續亦完成兩瀏覽器的[完整 Windows 大檔八輪與正常關閉](windows-large-model.md#v120-固定產物的完整-windows-驗收)。這些結果保持原受測來源，不換標成 v1.3.0 全項 Windows 驗收；後續候選與空白頁關閉失敗仍保留。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
+目前 [v1.3.0](operator-validation.md#v130-正式交付)的必要 Chromium、發布及正式站／固定下載核對均已完成；SDK 1.64.1 更新後的[正式站 35 項](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)亦通過。最新固定 v1.3.0 的 [Windows 實體八輪](windows-large-model.md#v130-固定產物與-sdk-1641)維持混合結果：Edge 整輪通過，Chrome 記憶體／匯出通過但最後正常關閉失敗。較早 v1.1.0 的原生 UI／儲存驗收與 v1.2.0 的兩端大檔正常退出保持各自原來源，不換標成 v1.3.0 全項 Windows 驗收。OS 斷電、實體磁碟耗盡及瀏覽器權限設定切換仍未驗證，原 RSS 規則未放寬。Firefox／Safari／WebKit 為選做，必要範圍只保留 Chrome／Edge。歷史 [preview.33 啟動失敗恢復](startup-recovery.md)已完成五情境、大檔八輪及正式站／固定 Release 核對；它不代表已重現或修復上述歷史逾時根因。
 
 <details>
 <summary>歷史驗收與失敗紀錄（包含目前選做的 Firefox／WebKit）</summary>

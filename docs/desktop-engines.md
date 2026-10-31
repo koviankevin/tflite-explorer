@@ -6,6 +6,8 @@
 
 以下兩引擎的輪次為歷史紀錄，維持各自原始來源及結果；不因範圍調整改寫成通過。
 
+2026-11-01 的 [PR #195](https://github.com/koviankevin/tflite-explorer/pull/195)將測試依賴更新為 Playwright 1.64.1／Chromium 156 世代；chooser adapter 對應新版 coreBundle 的 server.Page 與 utilityContext，保留精確版本、原 callback SHA 及原生 handle 的隔離環境檢查。真正 pinned callback 的 Node 正負例與安裝／還原測試通過，但沒有因此新增 Firefox／WebKit 實機驗收。新工具的正式站 Chromium 35 項與 Windows Chrome／Edge OP UI、原生程序觀察結果見[本次證據](windows-large-model.md#v130-固定產物與-sdk-1641)；Windows Chrome 最後正常關閉仍失敗。下文 1.56.1 的介面與失敗描述保持原歷史來源。
+
 既有正式關卡使用 Hosted Linux Chromium。`Desktop engine compatibility` 另以 lockfile 固定的 Playwright Firefox／WebKit，唯讀驗收已發布的完整 site ID 與 build ID。preview.18 的正式站兩引擎各十三項操作已通過，最新固定交付見 [桌面修正與交付](desktop-fixes.md#正式交付)。下文早期失敗保留當時結果，不代表本版仍失敗。這是桌面引擎驗收，不代表 Windows Firefox、macOS Safari、公司實模、超過 1 GiB 或數小時負載已通過。畫面範圍為 14 吋筆電的 1366×640／1280×640，字級包含 32px，不測手機。
 
 工作流程只有手動入口、`contents: read` 權限，僅允許此 repository 的 main／Hosted Linux runner。先逐檔核對正式站 SHA／MIME 及 root，再啟動獨立瀏覽器；結束時再次核對正式 site／core 身分，並保存 driver Git tree、實際引擎版本、原始操作報告及截圖。模型只有原始公開合成 fixtures，所有非 GET 或站外請求都拒絕。沒有部署、重跑正式發布或操作個人瀏覽器。

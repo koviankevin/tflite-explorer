@@ -74,3 +74,5 @@ BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知�
 正式 HTTPS 逐檔核對 1,465 個檔案及 MIME／SHA-256，323 核心檔與準備包一致。正式站 35 項操作包含原生選檔、SPLIT 匯出重開與 pattern 搜尋、動態 PAD 的未檢查原因、錯誤 SLICE 阻擋且零下載，以及完整 21,006 筆 JSON／畫面 100→200 筆分批顯示；新增情境零個自動 runtime Worker。15 組 32px 文字框、19 種手動 runtime、八輪／24 次 CPU／IO、原記憶體規則及 Worker／程序退出均依原政策核對。這是 Linux Chromium 正式站驗收；Windows 候選的 Chrome 正常關閉失敗仍保留，不能以此宣稱修好。
 
 四份實際公開下載與準備包逐一核對：ZIP 為 41,280,015 bytes，SHA-256 `422c245dfd6736a37af9e4b30d9ee871a7265ac4a50f93d176fbf18fc9b31a60`；manifest、發布憑證與 checksum 也一致。[最終收據](results/product-readiness-v1.3.0-published.json)及[原始報告／metadata／截圖與讀取器](results/product-readiness-v1.3.0-evidence.zip)保留。資料與模型仍全程本機；靜態通過不保證任意 kernel、量化語意或數值等價，沒有規則、動態或超預算仍明列未檢查。發布後只更新文件與證據，不移動 tag、不改寫固定資產、不重跑成功部署。
+
+發布後另以更新的 SDK 1.64.1／Chromium 156 世代完成[正式站 35 項唯讀驗證](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)，SPLIT 匯出重開、動態 PAD 原因、錯誤 SLICE 零下載及 21,006 筆 JSON／畫面 100→200 筆均通過。Windows OP driver 已補上真正的子程序取樣與 root-only 拒絕；Chrome／Edge 功能皆通過，Edge 正常退出，Chrome 最後原 10 秒關閉仍失敗。精確公開 v1.3.0 的 Windows 實體大檔八輪亦完成相同的混合結果，原始報告與界線見[本次收據](results/windows-v1.3-sdk1641.json)及[說明](windows-large-model.md#v130-固定產物與-sdk-1641)。這些是驗收工具與證據更新，沒有重部署或改寫固定版本。

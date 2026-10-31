@@ -1,6 +1,6 @@
 # Windows 大模型程序記憶體驗收
 
-先前 Windows 八輪曾取得混合結果：Chrome 第四輪 RSS slope 超標，第五輪最後正常關閉逾時，原始失敗保留。[v1.2.0 固定產物的最新完整驗收](#v120-固定產物的完整-windows-驗收)已在 Chrome／Edge 各完成八輪並通過原門檻與正常關閉；這補齊該版本的實體驗收，不等於已找到歷史逾時根因。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
+最新 [v1.3.0 固定產物與 SDK 1.64.1 驗收](#v130-固定產物與-sdk-1641)在 Chrome／Edge 各完成八輪：兩端功能與原記憶體子判定通過，Edge 整輪通過，Chrome 最後正常關閉仍逾時。較早 [v1.2.0 完整驗收](#v120-固定產物的完整-windows-驗收)兩端曾通過，不能據此宣稱間歇性關閉根因已修復。小型模型、Linux 大檔及空頁結果各有範圍，不互相替代。
 
 ## 原生觀察與所有權
 
@@ -97,3 +97,26 @@ Windows 可先以 `node scripts/build.mjs --out build/qa/windows-large/site` 建
 第二輪另以 Windows WCT 讀取 52 個自有執行緒；51 個回傳單一節點，一個查詢回報 error 87。沒有改動偵錯權限、列出同步物件名稱或讀取 stack／記憶體。依 [GetThreadWaitChain 官方說明](https://learn.microsoft.com/windows/win32/api/wct/nf-wct-getthreadwaitchain)，單一節點也可能來自不支援的同步等待，因此這次資料沒有找到可確認的等待相依關係，不能排除阻塞或宣稱已定位根因。
 
 這些結果表示網站模型、推論、下載與這些觀察用 CDP session 不是本次逾時的必要條件；Chrome 自身仍可能啟動內建服務，不能把其 stderr 當成網站執行過 LiteRT。兩次 SDK 隨後 force kill 的日誌均保留，不冒充正常退出。沒有改變正式測試的關閉方式或放寬門檻。[本次主分支收據](results/transpose-main-verification.json)及[原始報告、分類／WCT helper、日誌與讀取器](results/transpose-main-evidence.zip)保留此獨立診斷；同批 Linux 關卡成功不修復這個 Windows 原生問題。
+
+## v1.3.0 固定產物與 SDK 1.64.1
+
+精確公開 app 來源 `7debc69df1a1c91e8ed3928a8a4932a493324180`／build `44782d0412ebc0b8` 的 323 個核心檔案核對後，Chrome／Edge 各執行一次完整八輪，沒有自動重試。driver 另固定於乾淨來源 `3f2115cbb71e9f8797ba0a0a617167de5144e463`；明確比對 app／driver 的可執行與測試輸入，SDK 1.64.1 以官方封裝 SHA-512 核對後隔離載入。這與後面的 canonical driver 驗證分開記錄，不把不同來源冒充同一次測試。
+
+| Windows 瀏覽器 | Closed RSS slope | Closed RSS drift | 整輪結果 |
+| --- | --- | --- | --- |
+| Chrome 156.0.8078.76 | 約 8.44 MiB／輪 | 32.28 MiB | 原記憶體子判定通過；最後正常關閉超過 10 秒，exit 1 |
+| Edge 156.0.4314.50 | 約 -10.87 MiB／輪 | 51.22 MiB | 原判定通過，13 個已觀察原生身分正常退出，exit 0 |
+
+每端皆核對實體 1,349,965,216 bytes／21,005 OP、八輪完整／局部／組合匯出重開、權重／custom options bytes、pattern 正負例及 16 份原檔指紋；40 個模型 Worker、16 個指紋 Worker與 57 筆 native worker close 事件皆確認。Chrome／Edge 分別保留 2,530／2,054 筆程序樹樣本。Chrome 原 10 秒失敗時仍有兩個原生身分，SDK 稍後強制清理有原始日誌，不能算正常退出；本次 unknown child 也不能回推為較早空白頁已分類的 crashpad-handler。
+
+原 8 輪、2 輪暖機、500ms 取樣、RSS／heap／讀取量門檻、URL 與關閉上限都未變。不強制 GC、不扣除 RSS、不修剪 working set；本機仍使用 manifest 固定原樣 HTML，因此不宣稱初始 HTTP 文件傳輸或防毒相容性通過。有限取樣及 Worker 檢查點也不等於連續峰值或永久不洩漏。
+
+### OP 驗收的子程序觀察修正
+
+獨立檢查發現舊 Windows OP UI driver 只初始化 observer，未呼叫 sample，實際僅記錄主程序。舊小型 UI 功能與 Worker close 結果仍有效，但不能用來證明子程序全部退出。已加上流程前與關閉前的原生取樣、PID／creation-time 身分清單及 descendant 必須存在的檢查；失敗時保留尚存活身分。原 root-only 報告在新獨立讀取器確實被拒絕。
+
+[PR #195](https://github.com/koviankevin/tflite-explorer/pull/195)同時鎖定 Playwright 1.64.1／Chromium 156 世代，依新版 coreBundle 與 utilityContext 介面更新有版本／callback SHA 防護的原生 chooser adapter。四項 adapter／DOM 選測、PR 的 843 項 Node 通過（35 項既有選用略過）、78 項發布契約與九筆 core 量測皆核對。受測 merge tree 與合併後 `26523731` 的完整 tree 相同。
+
+未修改的新版 canonical driver 完成 Chrome／Edge 四項 OP 流程：SPLIT 實際選檔、匯出重開與 pattern；動態 PAD 明列未檢查；錯誤 SLICE 零下載；21,006 筆 JSON 與畫面 100→200 筆。Edge 觀察到 11 個身分且正常退出；Chrome 觀察到 8 個身分、功能通過，但最後原 10 秒關閉仍失敗。這修好觀察覆蓋，**沒有修好 Chrome 關閉根因**。
+
+新版工具另完成[正式網站唯讀驗證](https://github.com/koviankevin/tflite-explorer/actions/runs/41225507999)：35 項、15 組 32px 文字框、19 種手動 runtime、八輪 CPU／IO 與原程序／記憶體政策通過。這是 Linux Chromium 正式站結果，不取代 Windows 大檔。未重部署、移動 tag 或改寫固定 Release。[完整收據](results/windows-v1.3-sdk1641.json)及[189 份原始證據與來源](results/windows-v1.3-sdk1641-evidence.zip)保留混合結果、setup-only 失敗、provider ZIP／digest／CRC、原始程序快照及獨立讀取器；大型實體權重檔留在本機。
