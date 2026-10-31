@@ -42,7 +42,7 @@ PR #190 合併後，來源 `adf7ef7` 的實體 1.25 GiB／21,005 OP 關卡在第
 
 21 項相關選測通過，包含完整 21,005 OP metadata 報告連續附加三次狀態且零報告 body reads。Windows Chrome／Edge 皆完成實際 Worker 傳送、編輯匯出、大型報告 JSON 全部 21,006 筆，以及畫面 100→200 筆載入。此獨立報告案例使用 64-byte 合成權重，只證明完整 metadata／報告流程；不能代替實體大檔八輪。Edge 正常程序／Worker 退出，Chrome 功能通過但正常關閉仍逾時，整輪仍失敗。
 
-[收據](results/operator-report-prefix.json)及[39 份原始證據](results/operator-report-prefix-evidence.zip)保留首次實體關卡失敗、原始 ZIP digest／CRC、縮小後的 red／green，以及兩個瀏覽器的報告、下載與截圖。修正版的主分支實體八輪及正式交付仍待完成。
+[收據](results/operator-report-prefix.json)及[39 份原始證據](results/operator-report-prefix-evidence.zip)保留首次實體關卡失敗、原始 ZIP digest／CRC、縮小後的 red／green，以及兩個瀏覽器的報告、下載與截圖。以下主分支驗收接續這些候選結果；正式交付狀態另列。
 
 ## 各 OP 的常數 dtype 邊界
 
@@ -51,3 +51,18 @@ PAD 新增的 int8／int16／bool 常數讀取能力不會擴大其他 OP 的檢
 序列化的 bool EXPAND_DIMS 曾重現誤列已檢查，新增 int8 RESHAPE、bool GATHER、PAD→GATHER 共用快取與合法 int16 GATHER 正負例後，相關 76 項選測通過。此項維持原本的讀取預算及未知狀態，不新增自動 interpreter。
 
 BOOL 常數只將 0／1 當作可解讀的編碼；其他 byte 值明列未知，不把它猜成 padding 數字或 true。已讀取的 bytes 仍計入原有預算。原始 red／green 與來源見 [dtype 驗收收據](results/operator-dtype-validation.json)。
+
+## 最後主分支的四項發布關卡
+
+來源 `c6c36d45f81fd339c8bda97deb9b218da7faef4b`／tree `1db3085be359df76c7d129cfd03938caca895340` 的必要結果已取得 provider 原始 ZIP 並核對 digest、CRC、source scope 及原始政策，見[收據](results/operator-validation-main.json)及[115 份原始證據](results/operator-validation-main-evidence.zip)。目前只是發布前驗收，不表示已部署 v1.3.0。
+
+| 關卡 | 實際結果 |
+| --- | --- |
+| Core | 沿用 [41159138980](https://github.com/koviankevin/tflite-explorer/actions/runs/41159138980)；實際執行的 88 檔 module closure／policy fingerprint 未變，九筆量測重判通過 |
+| 實體大模型 | [41212969501](https://github.com/koviankevin/tflite-explorer/actions/runs/41212969501)：實體 1,349,965,216 bytes／21,005 OP，八輪完整、局部及組合匯出重開、權重／custom options／pattern／草稿指紋與全部 Worker／程序正常退出通過；無整段報告重讀、forced GC 或 RSS 扣除 |
+| 發布契約 | [41212981022](https://github.com/koviankevin/tflite-explorer/actions/runs/41212981022)：78 項通過，零略過；另核對三次 PR 的受測 merge tree，最後 PR #192 Node 877 項中 842 通過、35 項既有選用略過、零失敗 |
+| 網站操作 | [41212993072](https://github.com/koviankevin/tflite-explorer/actions/runs/41212993072)：六種版本切換、35 項完整 HTTP 候選操作、15 組 32px 文字框、19 種手動執行情境及八輪／24 次 CPU／IO 原記憶體規則通過；新增 21,006 筆報告與原生 100→200 分頁，零自動 interpreter |
+
+實體大模型的原判定為 RSS slope 1,662,156.8 bytes／輪、drift 10,059,776 bytes、main heap drift 223,340 bytes、sampled peak 1,040,760,832 bytes。這些是有限 Linux Chromium 關卡的結果，不替代 Windows、公司 runtime 或任意模型 SLA；Windows Chrome 的歷史正常關閉失敗仍保留。一般編輯／匯出依舊只做靜態與結構檢查，推論保持手動。
+
+部署包中的 tools/export-reports.md 使用可直接開啟的 GitHub 規則說明連結，避免相對路徑指向未隨工具文件一起複製的檔案；此文件屬建置輸入，依既有 PR 規則驗證 Node／build，其他未變 scope 沿用上述證據。

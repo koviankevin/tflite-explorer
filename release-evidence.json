@@ -3,8 +3,8 @@
   "repository": "koviankevin/tflite-explorer",
   "runs": {
     "core": 41159138980,
-    "browser": 41200613873,
-    "contract": 41200623742,
-    "site": 41200635819
+    "browser": 41212969501,
+    "contract": 41212981022,
+    "site": 41212993072
   }
 }
