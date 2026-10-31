@@ -3,7 +3,8 @@
 import {checkSpatialTransform} from './tflite-spatial-checks.js';
 import {checkOperandMetadata} from './tflite-operand-checks.js';
 import {inspectTensorQuantization} from './tflite-quantization-checks.js';
-const known=t=>t&&t.has_rank!==false&&!t.shape_signature?.some(d=>d<0)&&t.shape&&Array.from(t.shape).every(d=>Number.isSafeInteger(d)&&d>=0);
+import {staticTfliteShape} from './tflite-static-shape.js';
+const known=t=>staticTfliteShape(t)!==null;
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
     const fail=message=>{throw Error(`${name} ${message}`);},out=outputs[0];

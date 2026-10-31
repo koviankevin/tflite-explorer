@@ -1,10 +1,11 @@
 // Bounded, static operand rules. Kernel reference: TensorFlow
 // 7bc5d217d3bd79426527d0055fd3b54812f52e93, lite/kernels/
 // {pad,slice,strided_slice,split,split_v,reduce}.cc. Never executes a model.
+import {staticTfliteShape} from './tflite-static-shape.js';
 export const REDUCTIONS=new Set(['MEAN','SUM','REDUCE_PROD','REDUCE_MIN','REDUCE_MAX','REDUCE_ANY','REDUCE_ALL']);
 export const OPERAND_OPERATORS=new Set(['PAD','PADV2','SLICE','STRIDED_SLICE','SPLIT','SPLIT_V',...REDUCTIONS]);
 const dims=t=>t?.shape!==undefined?Array.from(t.shape):null;
-const known=t=>{const d=dims(t);return t?.has_rank!==false&&d&&d.length<=128&&!t.shape_signature?.some(n=>n<0)&&d.every(n=>Number.isInteger(n)&&n>=0&&n<=2147483647);};
+const known=t=>staticTfliteShape(t)!==null;
 const count=t=>dims(t)?.reduce((n,d)=>n*BigInt(d),1n);
 const same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperandMetadata(name,inputs,outputs,options={}){

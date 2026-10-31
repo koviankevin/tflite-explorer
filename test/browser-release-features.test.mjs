@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired} from './browser/release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
+
+test('legacy shape checks skip exact older immutable releases and remain required for new or unknown labels',()=>{
+    for(const v of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(legacyShapeValidationRequired(v),false,v);
+    for(const v of ['1.4.1','1.5.0','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(legacyShapeValidationRequired(v),true,v);
+    for(const v of [null,'candidate','v1.4.1'])assert.throws(()=>legacyShapeValidationRequired(v));
+});
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
 
 test('quantization browser coverage skips only exact immutable pre-feature releases',()=>{

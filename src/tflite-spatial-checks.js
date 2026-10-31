@@ -1,9 +1,10 @@
 // Metadata only. Shared by editor inference and export validation; never reads
 // weights or invokes a runtime. TensorFlow kernel reference: 7bc5d217d3bd79426527d0055fd3b54812f52e93
 // tensorflow/lite/kernels/{conv.cc,depthwise_conv.cc,pooling.cc,padding.h}.
+import {staticTfliteShape} from './tflite-static-shape.js';
 const names=new Set(['CONV_2D','DEPTHWISE_CONV_2D','AVERAGE_POOL_2D','MAX_POOL_2D','L2_POOL_2D']);
 const dims=t=>t?.shape!==undefined&&(Array.isArray(t.shape)||ArrayBuffer.isView(t.shape))?Array.from(t.shape):null;
-const known=t=>{const d=dims(t);return t?.has_rank!==false&&d&&d.length<=128&&!t.shape_signature?.some(n=>n<0)&&d.every(n=>Number.isInteger(n)&&n>=0&&n<=2147483647);};
+const known=t=>staticTfliteShape(t)!==null;
 export function inferSpatialTransform(name,inputs,options={}){
     if(!names.has(name))return null;
     const invalid=reason=>({status:'invalid',reason:`${name} ${reason}`}),manual=reason=>({status:'manual',reason:`${name} ${reason}`});
