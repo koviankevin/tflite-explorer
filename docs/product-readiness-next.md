@@ -1,8 +1,8 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)／build `e8a83e3eeb4b7bdc`，326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/batch-matmul-v1.4.2-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3)／build `bbb977e791849a92`，328 核心檔、全站 1,477 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/gather-v1.4.3-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
-新接續的 [v1.4.3 GATHER 候選](gather-validation.md)已重現並修正動態 shape 掩蓋已知型別／rank 錯誤，以及空 indices 常數在完整編輯／切圖中的兩個問題。較早來源的 140 項／十二組 CPU 與 Chrome／Edge 證據見[原候選收據](results/gather-candidate.json)。送 PR 前又補上 producer 區分與零元素 activation 邊界，143 項相關檢查及十三組 CPU 已通過；新來源 Chrome／Edge 的十二份下載、producer 與單一 input、32px 報告及正常退出均已核對，見[最終候選收據](results/gather-candidate-final.json)。必要關卡及正式交付尚待接續，目前公開版保持 v1.4.2。
+GATHER 動態 shape 掩蓋已知型別／rank 錯誤，以及零元素常數／activation 的 producer 與切圖邊界修正，已在 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3) [正式交付](gather-validation.md#v143-正式交付)。較早 140 項／十二組 CPU 與 Chrome／Edge 證據維持[原候選收據](results/gather-candidate.json)；最終來源的 143 項相關檢查、十三組 CPU，以及十二份原生下載、32px 與正常退出維持[最終候選收據](results/gather-candidate-final.json)。本版正式 HTTPS 與固定下載另有獨立來源綁定，不以後來成功改寫早期失敗或擴大任意 kernel 語意。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -98,3 +98,7 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 ## v1.4.3 必要主分支證據
 
 GATHER 動態型別／rank 檢查與 producer-aware 空常數修正已合併，[四項來源綁定關卡](results/gather-main.json)完成原始報告核對：未變的 88 檔核心沿用可信 main 證據，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的實際下載、32px、pattern 與正常退出另有獨立來源；兩份新零輸出下載的 CPU 與相同 bytes 控制的沿用分開記錄。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版仍是 v1.4.2；其餘商品等級未完成項目不改列完成。
+
+## v1.4.3 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41284224153)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/gather-v1.4.3-published.json)。v1.4.2 tag／assets、原始失敗與各來源的驗收範圍均保留，沒有重跑成功部署、放寬判定或同步 Sites／GH Studio。其餘表列未完成項目與完整商品等級目標繼續保留。
