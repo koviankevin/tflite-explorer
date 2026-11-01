@@ -47,3 +47,11 @@ LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三�
 現在零元素常數 lookup 以整個 subgraph 的 producer 為準。有 producer 的值保持 activation，切圖保留外部輸入，完整編輯也不把可寫零元素輸出視為權重。Producer 索引僅在實際遇到符合空資料條件的候選時才建立，留在當次驗證／匯出的區域，不新增跨模型快取。Buffer 0、absent data 與字串／opaque／sparse 的保守界線不變。
 
 修正後 143 項相關檢查通過，CPU 擴為十三組，含非預設零元素 output 的完整／局部／組合匯出，以及保留外部 activation 的零 byte input。先前 140 項與來源 `1b811a1` 的原生證據保留其實際範圍；新來源原生案例已改用非預設空 output buffer，仍待驗收，不能把舊結果直接換標成新來源。
+
+## Producer 修正後的新來源驗收
+
+來源 `1e87eb4d8c5be40777d6fc889064917f704ab744`／tree `0b85b05b0e5517dd04ee1a1c6a439c4fa1ec2e0e`、build `c57eaef95204c8e5` 的兩個原生流程完成且已獨立核對。這輪空案例直接使用非預設空 output buffer；實際下載保留三個明確空 vectors、原有 producer、單一 input 與兩個 outputs。每端八個 model Workers／共九個 Worker，八／十一個觀察到的自有程序均依原要求正常退出，零自動 interpreter。兩張本輪 32px 實際 OP 列截圖已檢視。
+
+十二份實際模型／報告逐份核對，單節點 pattern 各兩筆、沒有連線的雙節點負例零筆。兩份新的空輸出下載實際交給 CPU，兩個 outputs 都是正確空 BIN，ZIP CRC 與長度通過；非空控制模型的完整 bytes 與 runtime 程式未變，以相同 SHA 沿用前輪兩份真正 CPU／CRC 結果，沒有把沿用寫成新執行。最早六份錯誤檔案仍被拒絕；原來被誤擋的零 activation 檔已可編輯、匯出、重開及真正 CPU 執行。
+
+[最終候選數值收據](results/gather-candidate-final.json)保留 143 項選測、十三項版本選擇、十三組實際 CPU 案例、新／沿用原生證據與 scope。舊 `c4d0609`／`1b811a1` 的收據、失敗與有限成功不覆寫，也不改標新來源。必要 PR／main、正式 HTTPS 與 v1.4.3 固定交付仍待接續；公開版仍為 v1.4.2。
