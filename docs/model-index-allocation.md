@@ -1,6 +1,6 @@
-# 模型索引配置減量（v1.4.1 候選）
+# 模型索引配置減量（v1.4.1）
 
-目前正式站與固定下載仍為 v1.4.0；本候選尚未發布。接續[已觀察到的 V8 pool 保留](renderer-release-minimization.md#已觀察到同一-renderer-的-pool-歸還)，先減少實際模型結構處理的配置，不更動 browser flags、pool policy、GC、RSS／timer 判定或 interpreter 模式。
+已於 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1) 正式交付，build `c64f4143bf8463a2`。減少模型結構處理的暫時配置；沒有更動 browser flags、pool、GC、RSS／timer 判定或 interpreter 模式。 以下候選與失敗紀錄維持其原受測來源與當時狀態；目前交付見[正式交付](#v141-正式交付)。
 
 `indexModel()` 原本為每組 ports、每個 output 的 consumers 與搜尋文字建立多層短命陣列，並為每個 tensor 建立臨時 Set。現在直接走訪既有 value／consumer 集合，名稱沒有換行時直接沿用字串；仍保留必要的 producer／consumer maps、相鄰集合與完整搜尋 records。沒有刪減模型資訊、權重、custom options、dtype／shape 或 MLIR 控制流程。
 
@@ -28,3 +28,9 @@
 同政策的獨立 browser 觀察也顯示 21,005 OP Worker heap capacity 由 133,767,168 降至 119,353,344 bytes，used heap 由 67,373,412 升至 76,781,188 bytes；不將 capacity 降低解讀為一般 live-object 或 RSS 保證。診斷不作發布證據。Windows Chrome／Edge 在來源相同的 PR tree 完成原生選檔、SPLIT 匯出重開、invalid SLICE 零下載、dynamic PAD 未檢查原因及 21,006 OP 報告 100→200 分批；六份下載獨立核對，兩端 Worker／程序正常退出。這是隔離原始 HTML fixture，不冒充 Windows 正式 HTTPS 或大模型 RSS。
 
 正式 HTTPS 部署、固定 Release 與四份實際公開下載核對仍待接續；目前正式版仍為 v1.4.0，完整商品化目標及歷史 Windows Chrome 問題沒有因本次有限驗收而完成。
+
+## v1.4.1 正式交付
+
+固定來源 `25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704`／tree `b25b113c8c6fcd79b86b76956e0c14a59e992328`、build `c64f4143bf8463a2` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871)，四個工作第一次 attempt 全成功。325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對。正式站包含 15 組 32px 文字框、搜尋／pattern／MLIR 與 TFLite 匯出重開、逐 OP／量化／legacy shape 報告、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO。一般編輯匯出零自動推論；失敗／未知與有意的 crash recovery 不冒充通過或正常關閉。
+
+固定 ZIP 41,294,984 bytes，SHA-256 `5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df`；checksum、manifest、gates 四份實際下載皆與準備工件一致，tag／Latest／權威 Pages deployment 已核對。Site ID `c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1`，保留 v1.4.0／v1.3.1 與永久 baseline。[最終收據](results/model-index-v1.4.1-published.json)只含來源、雜湊、計數與有限結果；原始報告、截圖、環境及程序身分完整留在本機，沒有上傳本機原始紀錄。舊 tag／assets 不改寫，成功部署不重跑，沒有同步 Sites／GH Studio。歷史 Windows Chrome／網路守門與任意 kernel／公司 dialect／長期 SLA 的界線仍保留，完整商品等級目標未完成。

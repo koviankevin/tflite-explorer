@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.0](quantization-validation.md#v140-正式交付)／build `d36b95c7320aa6f2`，正式站與固定 Release 已獨立核對；完整商品化目標仍進行中。目標是公開核心可供工程師可靠日常使用，保留全部尚未完成項目；不以單個合成模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)／build `c64f4143bf8463a2`，325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/model-index-v1.4.1-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -74,3 +74,7 @@ Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 均在新建的隔離 context 
 Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減量](model-index-allocation.md)已合併；[四項來源綁定關卡](results/model-index-allocation-main.json)在 `c0dd77c8` 核對通過。原實體 1.25 GiB／21,005 OP 八輪的完整／局部／組合匯出重開、權重／options／pattern、Worker／程序退出及原 RSS 規則通過；HTTP 候選 38 項含 32px、逐 OP／量化／legacy shape 報告及部分 IO。Windows Chrome／Edge 的隔離 OP UI／下載案例亦完成。正式 HTTPS、不可變 Release 與四份實際下載仍待接續，目前公開版本維持 v1.4.0。
 
 原 RSS 失敗與 Windows Chrome 雲端統計／網路注入的歷史觀察保留；不擴大 kernel／dialect 語意、內網環境、任意格式遷移或完整無障礙的完成主張，商品等級目標仍進行中。
+
+## v1.4.1 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/model-index-v1.4.1-published.json)。原始失敗與後續新來源通過保持不同來源，沒有重寫舊 tag、放寬判定或同步 Sites／GH Studio。Windows Chrome 原生關閉、外部網路注入及其餘表列未驗證範圍仍保留；完整商品等級目標繼續進行。

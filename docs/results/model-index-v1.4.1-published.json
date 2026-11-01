@@ -1,0 +1,295 @@
+{
+  "source": "25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704",
+  "tree": "b25b113c8c6fcd79b86b76956e0c14a59e992328",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.4.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704",
+      "tree": "b25b113c8c6fcd79b86b76956e0c14a59e992328",
+      "committedAt": "2026-11-01T11:46:44+08:00",
+      "dirty": false
+    },
+    "buildId": "c64f4143bf8463a2"
+  },
+  "run": {
+    "id": 41270750871,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 124742845734,
+        "name": "prepare",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124742964783,
+        "name": "Publish site c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124743005134,
+        "name": "verify_live",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124744402097,
+        "name": "release",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "releaseId": 430350519,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1",
+  "publishedAt": "2026-11-01T03:59:39Z",
+  "siteId": "c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1",
+  "siteManifestSHA256": "83a807645487e4d9a0753776d42a3c1f4e34643da3b4825d7593144f34c47319",
+  "rootEntrySHA256": "363847881964348c571e9ce41afd2d08b5055dc0acc40057bc79008198a2406a",
+  "coreFiles": 325,
+  "siteFiles": 1470,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "mainModelWorkers": 100,
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 45924352,
+      "mainHeapDriftBytes": -9729808,
+      "closedRssSlopeBytesPerCycle": 8210607.542857143,
+      "sampledPeakRssBytes": 815898624,
+      "maxSampleGapMs": 782,
+      "sampledPeakGrowthBytes": 29724672
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.4.1-c64f4143bf8463a2.zip",
+      "bytes": 41294984,
+      "sha256": "5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df"
+    },
+    {
+      "name": "model-lens-public-1.4.1-c64f4143bf8463a2.zip.sha256",
+      "bytes": 111,
+      "sha256": "728712843b663905e81f88247cd77e703cbb7031e35da0a782bcbb18a12dd586"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 203685,
+      "sha256": "d885416b731a8b900b7c305f0d88b3eefc6f15628bdf677f207be24fe72551d3"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52615,
+      "sha256": "d7f9d93f129290cbd0c82cbd8c33d87bb93722710ed7736c9840a68f3bd3df57"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7468236901,
+    "controllerSource": "25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704",
+    "runId": 41270750871,
+    "attempt": 1,
+    "jobId": 124742964783,
+    "siteId": "c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1",
+    "legacy": false
+  },
+  "artifacts": [
+    {
+      "id": 13069246918,
+      "name": "live-release-verification",
+      "bytes": 556498,
+      "digest": "sha256:fc282e6ec9bb98d923c5ac55631db2553eea0af616ac3b9a0e56ae30dccc30c1"
+    },
+    {
+      "id": 13068954312,
+      "name": "published-release-verification",
+      "bytes": 755,
+      "digest": "sha256:799a019c6d9df9952dd3952ebdf212da31fe6307108cf27f7109296e112af0a4"
+    }
+  ],
+  "limitations": [
+    "Current formal public release verified; full product goal remains active.",
+    "Historical Windows Chrome long-load shutdown failure remains recorded; Linux/focused results do not repair the native OneDrive statistics wait.",
+    "Intentional crash-recovery process termination is not normal Worker close.",
+    "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+  ],
+  "format": "model-lens-v141-published-review",
+  "version": 1,
+  "status": "passed",
+  "at": "2026-11-01T04:01:27.433719+00:00",
+  "mainEvidence": "model-index-allocation-main.json",
+  "physical": {
+    "bytes": 1349965216,
+    "operators": 21005,
+    "fixtureSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "cycles": 8,
+    "policy": {
+      "version": 3,
+      "cycles": 8,
+      "warmupCycles": 2,
+      "sampleIntervalMs": 500,
+      "urlReleaseTimeoutMs": 80000,
+      "settleSamples": 5,
+      "maxReadBytes": 1048576,
+      "realmReadBytes": 16777216,
+      "browserPeakGrowthBytes": 805306368,
+      "closedRssDriftBytes": 134217728,
+      "closedRssSlopeBytesPerCycle": 16777216,
+      "closedMainHeapDriftBytes": 33554432,
+      "modelWorkerUsedBytes": 536870912,
+      "modelWorkerBackingBytes": 536870912
+    },
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -834413.7142857143,
+        "rssDriftBytes": 1912832,
+        "mainHeapDriftBytes": -157008,
+        "sampledPeakRssBytes": 1102385152,
+        "sampledPeakGrowthBytes": 590876672
+      }
+    },
+    "closedRSSBytes": [
+      619696128,
+      633794560,
+      639401984,
+      637370368,
+      646447104,
+      643551232,
+      635707392,
+      635138048
+    ],
+    "sampleCount": 1727,
+    "workersClosed": 57,
+    "nativeIdentityCount": 6,
+    "allNativeReaped": true,
+    "allWeightsOptionsPatternsVerified": true
+  },
+  "preparedRun": 41270546023,
+  "preparedHashes": {
+    "source": "25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704",
+    "build": "c64f4143bf8463a2",
+    "manifest": "d7f9d93f129290cbd0c82cbd8c33d87bb93722710ed7736c9840a68f3bd3df57",
+    "receipt": "d885416b731a8b900b7c305f0d88b3eefc6f15628bdf677f207be24fe72551d3",
+    "zip": "5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df"
+  },
+  "retainedBuildIds": [
+    "d36b95c7320aa6f2",
+    "960b708cb9389164"
+  ],
+  "legacyBuild": "163f38ab1dc856e4",
+  "actualDownloadChecks": [
+    {
+      "name": "model-lens-public-1.4.1-c64f4143bf8463a2.zip",
+      "bytes": 41294984,
+      "sha256": "5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df"
+    },
+    {
+      "name": "model-lens-public-1.4.1-c64f4143bf8463a2.zip.sha256",
+      "bytes": 111,
+      "sha256": "728712843b663905e81f88247cd77e703cbb7031e35da0a782bcbb18a12dd586"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 203685,
+      "sha256": "d885416b731a8b900b7c305f0d88b3eefc6f15628bdf677f207be24fe72551d3"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52615,
+      "sha256": "d7f9d93f129290cbd0c82cbd8c33d87bb93722710ed7736c9840a68f3bd3df57"
+    }
+  ],
+  "rawEvidenceDigests": [
+    {
+      "artifactFile": "live-release-verification.zip",
+      "bytes": 556498,
+      "sha256": "fc282e6ec9bb98d923c5ac55631db2553eea0af616ac3b9a0e56ae30dccc30c1"
+    },
+    {
+      "artifactFile": "pages-live-report.json",
+      "bytes": 387359,
+      "sha256": "3186cda1a11926b08de72b27f81fe7daed72893f51253346bf8e9a21e08af322"
+    },
+    {
+      "artifactFile": "production-smoke.json",
+      "bytes": 878691,
+      "sha256": "8330d219d3fa5f5715c10e1dcdea19e07a9b7a94c6a9afc8065663abae792cfb"
+    },
+    {
+      "artifactFile": "production-smoke.png",
+      "bytes": 149478,
+      "sha256": "0d1e15fadccdbd090d9c1a19917a6f120c85d588fc907a99a0ec01f315367313"
+    },
+    {
+      "artifactFile": "published-release-verification.zip",
+      "bytes": 755,
+      "sha256": "799a019c6d9df9952dd3952ebdf212da31fe6307108cf27f7109296e112af0a4"
+    },
+    {
+      "artifactFile": "pages-release-report.json",
+      "bytes": 1229,
+      "sha256": "0deee7697d9df560a0fe9d7794ba186e341a81195055246e171b53e7ea3f6b1c"
+    }
+  ],
+  "rawEvidenceLocation": "Original provider artifacts and local QA retained; raw screenshots, logs, environment and process records are not embedded in this public summary.",
+  "partialIO": {
+    "cases": 3,
+    "downloads": 3,
+    "zeroAndRandomInvalidRemainFailed": true,
+    "readableInputsSaved": true,
+    "missingOutputExplicit": true,
+    "completeArchiveVersion": 1,
+    "partialArchiveVersion": 2,
+    "workersClosed": true
+  },
+  "legacyShape": {
+    "invalidFCRejected": true,
+    "validReshapeReopened": true,
+    "weightsAndFlagsPreserved": true
+  },
+  "goalComplete": false,
+  "previousReleaseUnchanged": {
+    "version": "1.4.0",
+    "source": "685804b1a2bed1d99926ee3816b38dfa757391b6",
+    "releaseId": 430237637,
+    "assets": [
+      {
+        "id": 696709620,
+        "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip",
+        "size": 41290170,
+        "digest": "sha256:911623417c53fb884a9a6e812531fdb9d99b3f58d45f050558876acd61e5b951"
+      },
+      {
+        "id": 696709622,
+        "name": "model-lens-public-1.4.0-d36b95c7320aa6f2.zip.sha256",
+        "size": 111,
+        "digest": "sha256:464bb9fdc8bd7357f1ffb077626edfa1b4f4249b812c8475dcb8e8a5fa71c0d0"
+      },
+      {
+        "id": 696709617,
+        "name": "release-gates.json",
+        "size": 199921,
+        "digest": "sha256:917bbe014b8efa03bdad839ce382f5c50becb226acaa9f899ac74514b9e9b5dd"
+      },
+      {
+        "id": 696709619,
+        "name": "release-manifest.json",
+        "size": 52455,
+        "digest": "sha256:10cec71f280d6e4d4cb114fb5811f7e5079da6f6df197574f5912a5a161c3c90"
+      }
+    ],
+    "verifiedAfterPublish": true
+  }
+}

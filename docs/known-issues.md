@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.4.0](quantization-validation.md#v140-正式交付)／build `d36b95c7320aa6f2`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)／build `c64f4143bf8463a2`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 v1.3.1 已交付[手動 runtime 的 tensor 錯誤參照](runtime-tensor-diagnostics.md)：官方公開量化模型的原檔在目前 LiteRT compile 失敗，但日誌的 tensor 編號原先沒有 OP 對照。現在可查看定義／使用者，先顯示套用輸入前失敗的提示，並保留原文與失敗狀態；參照不代表 OP 就是原因。31 項相關選測、四項 main 關卡、正式站 35 項操作與四份實際下載已核對。新增的 Windows 正式站小型流程功能與正常退出通過，但整體網路守門仍失敗；後續一次診斷觀察到 Kaspersky 注入類型的請求，原始失敗及完整本機紀錄保留，沒有關閉防毒或放行外連。見[最終收據](results/runtime-tensor-v1.3.1-published.json)。
 
@@ -33,9 +33,9 @@ Preview.22 曾有一次正式驗證在 30 秒內等不到開檔控制項就緒�
 
 ## 功能限制
 
-**v1.4.1 候選的大模型 RSS slope 未通過**：同一次主分支實體八輪的輸出／權重／options／pattern、Worker 與程序退出通過，但 RSS slope 約 24.39 MiB／輪超過原 16 MiB；原失敗保留，沒有發布。階梯波動的記憶體歸屬仍待診斷；這不證明 v1.4.0 沒有同類波動，也不代表已確認持續洩漏。見[主分支失敗與原始證據](legacy-shape-validation.md#主分支驗收失敗尚未發布)。
+**早期 v1.4.1 候選的 RSS 失敗保留**：原 [41252363060](https://github.com/koviankevin/tflite-explorer/actions/runs/41252363060) slope 約 24.39 MiB／輪，仍判失敗。後續唯讀診斷確認同一 renderer 有 V8 pool 歸還，診斷不作發布證據。實際[索引配置減量](model-index-allocation.md#v141-正式交付)後，新來源的正式八輪沿用原政策通過：slope −834,413.71 bytes／輪、drift 1,912,832 bytes，權重／options／pattern 與 Worker／程序清理通過；不改列舊失敗、不推論任意模型或長期記憶體 SLA。
 
-**手動 runtime 的 padded／strided 輸出封存尚未支援**：新的公開合成 legacy FC 負例在 invoke 後因輸出 shape 不符失敗，接著 IO ZIP 被 runtime 的 `Tensors with strides or padding are not yet supported` 拒絕；目前回報 ioError，不能宣稱輸入／輸出已保存。此問題與[legacy shape 候選修正](legacy-shape-validation.md)分開，仍待修正；沒有修改已發布 v1.4.0 或重跑其成功部署。
+**手動 runtime 的 padded／strided output 仍無法取得**：v1.4.1 已修正單一 tensor 無法讀取就中止整包 IO 的問題，[部分保存](runtime-partial-io.md#v141-正式交付)會下載可讀的 inputs／outputs，缺少資料保留 slot、型別／shape 和原因。部分封存為 version 2，完整封存仍為 version 1。Padded output 本身仍不偽造 bytes，原 shape 或執行失敗也維持失敗；不代表已支援 runtime 的未公開 stride／padding。
 
 **資料庫連線重試已在 v1.0.1 修正**：同步開啟失敗不再永久快取拒絕結果，舊 error／versionchange 不會清除新連線。三種 adapter 的 Node 邊界測試及既有原生保存／恢復通過，不冒充真實瀏覽器權限切換或 OS 斷電驗收，見 [交付與範圍](database-open-retry.md)。
 
