@@ -1,0 +1,429 @@
+{
+  "format": "model-lens-spatial-metadata-candidate-review",
+  "version": 1,
+  "status": "passed-local-and-native-candidate-not-published",
+  "at": "2026-11-01T09:32:50.710962+00:00",
+  "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+  "tree": "ec465d337f03bedc3788387ff7b185c1ff82bcba",
+  "buildId": "0b239da23a4ef7e4",
+  "candidateVersion": "1.4.5",
+  "primary": {
+    "status": "bounded-official-primary-reference-files-retained",
+    "at": "2026-11-01T09:20:40.286316+00:00",
+    "rows": [
+      {
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/conv.cc",
+        "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+        "file": "tensorflow-conv.cc",
+        "bytes": 68280,
+        "sha256": "62d212ca6e470683d9487622e387171c8159c550b84ba69d628f811aa848eecf"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/depthwise_conv.cc",
+        "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+        "file": "tensorflow-depthwise_conv.cc",
+        "bytes": 32489,
+        "sha256": "197d301033e6c2a38a3008e40581b7d95bf011a65ead2926722183ca55c7f35a"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/pooling.cc",
+        "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+        "file": "tensorflow-pooling.cc",
+        "bytes": 24427,
+        "sha256": "636369196683421ccf33f1ac446a125071b059c75add57748d0f3ad9f6d97b2f"
+      }
+    ]
+  },
+  "originalBeforeModels": [
+    {
+      "case": "conv-dynamic-filter-rank",
+      "bytes": 1508,
+      "sha256": "c76fbc2188b5563572a5eea95b7cc3d10ed9c5c77f5cde2ffb8701a2c2847b75",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    },
+    {
+      "case": "conv-dynamic-input-rank",
+      "bytes": 1508,
+      "sha256": "535a74e7634e041005e2fadf33e6cb403bbe59a72c00dbaa3df92f38448020c5",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    },
+    {
+      "case": "depthwise-dynamic-bias-dtype",
+      "bytes": 1508,
+      "sha256": "9c9877b05de930fc182c8edbc952dae83394497ed5ea7d031f3b561aa510b889",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    },
+    {
+      "case": "pool-dynamic-output-rank",
+      "bytes": 1040,
+      "sha256": "afc00f1b9986a3f4fe6cef5b0288b9a8d844ade581941c5c814f9e77ee5c8f03",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    }
+  ],
+  "originalAfterModels": [
+    {
+      "name": "conv-dynamic-filter-rank-edited-before.tflite",
+      "bytes": 1508,
+      "sha256": "c76fbc2188b5563572a5eea95b7cc3d10ed9c5c77f5cde2ffb8701a2c2847b75",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1, 2]／outputs [3]：CONV_2D filter 必須是四維 tensor。",
+      "reportReason": "Subgraph #0 · OP #0 CONV_2D · inputs tensor [0, 1, 2]／outputs tensor [3]：CONV_2D filter 必須是四維 tensor。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "conv-dynamic-input-rank-edited-before.tflite",
+      "bytes": 1508,
+      "sha256": "535a74e7634e041005e2fadf33e6cb403bbe59a72c00dbaa3df92f38448020c5",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1, 2]／outputs [3]：CONV_2D input 必須是 [batch, height, width, channels] 四維 tensor。",
+      "reportReason": "Subgraph #0 · OP #0 CONV_2D · inputs tensor [0, 1, 2]／outputs tensor [3]：CONV_2D input 必須是 [batch, height, width, channels] 四維 tensor。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "depthwise-dynamic-bias-dtype-edited-before.tflite",
+      "bytes": 1508,
+      "sha256": "9c9877b05de930fc182c8edbc952dae83394497ed5ea7d031f3b561aa510b889",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1, 2]／outputs [3]：DEPTHWISE_CONV_2D bias dtype 與 input 量化／浮點型別不符。",
+      "reportReason": "Subgraph #0 · OP #0 DEPTHWISE_CONV_2D · inputs tensor [0, 1, 2]／outputs tensor [3]：DEPTHWISE_CONV_2D bias dtype 與 input 量化／浮點型別不符。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "pool-dynamic-output-rank-edited-before.tflite",
+      "bytes": 1040,
+      "sha256": "afc00f1b9986a3f4fe6cef5b0288b9a8d844ade581941c5c814f9e77ee5c8f03",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：AVERAGE_POOL_2D output rank 必須為 4。",
+      "reportReason": "Subgraph #0 · OP #0 AVERAGE_POOL_2D · inputs tensor [0]／outputs tensor [1]：AVERAGE_POOL_2D output rank 必須為 4。",
+      "originalBytesUnchanged": true
+    }
+  ],
+  "initialRegressionCounts": {
+    "tests": 10,
+    "passed": 0,
+    "failed": 10
+  },
+  "newRegressionTests": 23,
+  "relatedTests": 170,
+  "versionSelectionTests": 13,
+  "actualSpatialCPUCasesInSuite": {
+    "passed": 5,
+    "expectedAllocationFailure": 1
+  },
+  "actualNativeDownloadedModelCPUCases": 4,
+  "native": {
+    "viewport": [
+      1280,
+      640
+    ],
+    "fontPx": 32,
+    "details": [
+      {
+        "channel": "chrome",
+        "version": "156.0.8078.76",
+        "reportSHA256": "90de0dabdff340504c448f885a8c41e4ca23c3a57cd160c1b105a6abad2bf3f1",
+        "workers": 10,
+        "modelWorkers": 9,
+        "allWorkersClosed": true,
+        "nativeIdentities": 8,
+        "allReaped": true,
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "static-conv",
+            "bytes": 1956,
+            "sha256": "bc191a9529d678675d7537a4529e799b407f5d182b5fa257f62c85fcce4dbcc6",
+            "reportBytes": 8161,
+            "reportSHA256": "51255a198cca638d6eff4bb881c4993757905f339324f3e8993a65cd62a4f820",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 20
+          },
+          {
+            "case": "dynamic-depthwise",
+            "bytes": 1972,
+            "sha256": "b00968c9827a49e0b154a16513c0814b6b69be5f94bb3f608d2f85734db74f4f",
+            "reportBytes": 8178,
+            "reportSHA256": "68ea39a4db008d3772f764b7c49100a864c8307c412146f56788c35a61ed484e",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 20
+          },
+          {
+            "case": "static-pool",
+            "bytes": 1456,
+            "sha256": "5494ac933ccc8abf8692f940aacece4822c8c2392618899de6b8a61ad39ab2bb",
+            "reportBytes": 7787,
+            "reportSHA256": "e3cd1fd064a87628d653ef79fbb69dcefac153d64f8b7e4eabd44106c9a6725f",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          }
+        ]
+      },
+      {
+        "channel": "msedge",
+        "version": "156.0.4314.50",
+        "reportSHA256": "c127a666619bc3c1ebe3758bd22d46ee565793069500a20dd1bead5dc392415c",
+        "workers": 10,
+        "modelWorkers": 9,
+        "allWorkersClosed": true,
+        "nativeIdentities": 11,
+        "allReaped": true,
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "static-conv",
+            "bytes": 1956,
+            "sha256": "bc191a9529d678675d7537a4529e799b407f5d182b5fa257f62c85fcce4dbcc6",
+            "reportBytes": 8161,
+            "reportSHA256": "bd6597a88564cbefcd34057bc416aea22f4ad1c82b1299774b0269b4eeb28349",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 20
+          },
+          {
+            "case": "dynamic-depthwise",
+            "bytes": 1972,
+            "sha256": "b00968c9827a49e0b154a16513c0814b6b69be5f94bb3f608d2f85734db74f4f",
+            "reportBytes": 8178,
+            "reportSHA256": "699920937be4ad13c502ee4af717b22d41eb9ec5bf4c9b290f2d78b68161de62",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 20
+          },
+          {
+            "case": "static-pool",
+            "bytes": 1456,
+            "sha256": "5494ac933ccc8abf8692f940aacece4822c8c2392618899de6b8a61ad39ab2bb",
+            "reportBytes": 7787,
+            "reportSHA256": "34c0cd7e3f4b6ed2760eb322c50c171d9adbbee5de0d159d6c1b34738b88ca27",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          }
+        ]
+      }
+    ],
+    "cpu": [
+      {
+        "channel": "chrome",
+        "case": "static-conv",
+        "status": "passed",
+        "modelSHA256": "bc191a9529d678675d7537a4529e799b407f5d182b5fa257f62c85fcce4dbcc6",
+        "ioSHA256": "554230e13c3b533ad85c95d7a6eede9a907bdcb10897d2e4d3d093b1ae5ad136",
+        "outputs": [
+          [
+            12,
+            16,
+            24,
+            28
+          ],
+          [
+            12,
+            16,
+            24,
+            28
+          ]
+        ]
+      },
+      {
+        "channel": "chrome",
+        "case": "static-pool",
+        "status": "passed",
+        "modelSHA256": "5494ac933ccc8abf8692f940aacece4822c8c2392618899de6b8a61ad39ab2bb",
+        "ioSHA256": "9860e93a6f4034d2ce84eb0a0b9980e7ea4517e5025f1ec828cb4c26307915dc",
+        "outputs": [
+          [
+            5,
+            6,
+            8,
+            9
+          ],
+          [
+            5,
+            6,
+            8,
+            9
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "static-conv",
+        "status": "passed",
+        "modelSHA256": "bc191a9529d678675d7537a4529e799b407f5d182b5fa257f62c85fcce4dbcc6",
+        "ioSHA256": "194448ae07cce6a81a9c97c4f0c1afda1804d7ad3411579be2c179b22f7b7d4c",
+        "outputs": [
+          [
+            12,
+            16,
+            24,
+            28
+          ],
+          [
+            12,
+            16,
+            24,
+            28
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "static-pool",
+        "status": "passed",
+        "modelSHA256": "5494ac933ccc8abf8692f940aacece4822c8c2392618899de6b8a61ad39ab2bb",
+        "ioSHA256": "eb7f6fd112fa5703cc35c27b0977f4c7bcf4f9ef78406942d1da4ac10fde7273",
+        "outputs": [
+          [
+            5,
+            6,
+            8,
+            9
+          ],
+          [
+            5,
+            6,
+            8,
+            9
+          ]
+        ]
+      }
+    ],
+    "scope": "Authenticated original HTML fixture/native chooser/wiring/32px; not formal HTTPS transport, physical RSS or historical native shutdown repair."
+  },
+  "nativeIOCRC": {
+    "status": "four-actual-CPU-io-archives-digests-crcs-and-sizes-verified",
+    "rows": [
+      {
+        "file": "chrome-static-conv-actual-download-cpu-io.zip",
+        "bytes": 2984,
+        "sha256": "554230e13c3b533ad85c95d7a6eede9a907bdcb10897d2e4d3d093b1ae5ad136",
+        "crc": "passed",
+        "entries": [
+          "inputs-0.bin",
+          "outputs-0.bin",
+          "outputs-1.bin",
+          "manifest.json"
+        ]
+      },
+      {
+        "file": "chrome-static-pool-actual-download-cpu-io.zip",
+        "bytes": 2571,
+        "sha256": "9860e93a6f4034d2ce84eb0a0b9980e7ea4517e5025f1ec828cb4c26307915dc",
+        "crc": "passed",
+        "entries": [
+          "inputs-0.bin",
+          "outputs-0.bin",
+          "outputs-1.bin",
+          "manifest.json"
+        ]
+      },
+      {
+        "file": "msedge-static-conv-actual-download-cpu-io.zip",
+        "bytes": 2571,
+        "sha256": "194448ae07cce6a81a9c97c4f0c1afda1804d7ad3411579be2c179b22f7b7d4c",
+        "crc": "passed",
+        "entries": [
+          "inputs-0.bin",
+          "outputs-0.bin",
+          "outputs-1.bin",
+          "manifest.json"
+        ]
+      },
+      {
+        "file": "msedge-static-pool-actual-download-cpu-io.zip",
+        "bytes": 2571,
+        "sha256": "eb7f6fd112fa5703cc35c27b0977f4c7bcf4f9ef78406942d1da4ac10fde7273",
+        "crc": "passed",
+        "entries": [
+          "inputs-0.bin",
+          "outputs-0.bin",
+          "outputs-1.bin",
+          "manifest.json"
+        ]
+      }
+    ]
+  },
+  "actualScreenshots": {
+    "status": "actual-two-screenshots-viewed",
+    "at": "2026-11-01T09:31:19.180780+00:00",
+    "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+    "build": "0b239da23a4ef7e4",
+    "images": [
+      {
+        "file": "native-chrome-2/spatial-static-conv-report-32px.png",
+        "bytes": 130652,
+        "sha256": "365ab8aa4c978b5af5a7af396fe82a2310e78aaa4f7fc064a54e651f7921f826"
+      },
+      {
+        "file": "native-msedge-2/spatial-dynamic-depthwise-report-32px.png",
+        "bytes": 129556,
+        "sha256": "ff08f05adb1fc304fc1cf7ad4eecb1f92258f51a56179d9da56e44155265bd16"
+      }
+    ],
+    "observations": "1280x640 report dialogs contained; checked and explicit dynamic not-run rows visible, long operator names wrap without horizontal overflow. Underlying graph/editor font32 retained."
+  },
+  "dependencies": [
+    {
+      "kind": "core",
+      "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+      "files": 88,
+      "fingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "previousFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "changed": false,
+      "previousRun": 41269145087
+    },
+    {
+      "kind": "browser",
+      "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+      "files": 351,
+      "fingerprint": "0a27a65756328b1be20db19fb1be2660f11cad6c600d6ab473a414b83df6daf3",
+      "previousFingerprint": "6595f1ee007104779f91c8ce39b48b478d32049a5655c50c0255f9bc1f668f07",
+      "changed": true,
+      "previousRun": 41287520246
+    },
+    {
+      "kind": "contract",
+      "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+      "files": 675,
+      "fingerprint": "fec12d584e3d729029fd8258fdcff622c3744253e73cac89c13845c822e3cd9d",
+      "previousFingerprint": "450e35edce68dd1f5601ec3f29fe5917848a64677d8141fb0ac042e065983ef3",
+      "changed": true,
+      "previousRun": 41287528024
+    },
+    {
+      "kind": "site",
+      "source": "6e663566e36e753bb442d0ba34952e9981ed6052",
+      "files": 398,
+      "fingerprint": "59a3cc141510b4074a8e3293a2f081dc3f31016468efc7e363beee3aa74ef207",
+      "previousFingerprint": "adb862c2ffa0887cdb20bacd0941c864f4de0265dbbe8f8b8b7a11f720450ddc",
+      "changed": true,
+      "previousRun": 41287541786
+    }
+  ],
+  "firstNativeFailure": "Both first attempts stopped at a fixture comparison: the unparsed source omitted the schema default quantized_bias_type=0. The test now compares actual decoded original bytes; application code was unchanged. Original failures remain local.",
+  "originals": "Original synthetic models, native reports, IO ZIPs, screenshots and process identities remain local. This public summary contains source/hash/counts and bounded model metadata only.",
+  "limitations": [
+    "Candidate only; formal website and immutable Release remain v1.4.4.",
+    "Dynamic/unknown shapes and unsupported dtype/packing are explicitly not-run; static checks do not certify arbitrary kernels or quantized numerical equivalence.",
+    "No automatic interpreter during normal editing/export.",
+    "Native fixture verifies the original document bytes but not public HTTPS transport, physical RSS or the historical Chrome Cloud Files shutdown issue.",
+    "Full product goal remains active; all original requirements and historical failures retained."
+  ],
+  "published": false,
+  "goalComplete": false
+}
