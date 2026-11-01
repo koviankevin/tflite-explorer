@@ -1,6 +1,6 @@
-# GATHER 動態 metadata 與空常數（v1.4.3 候選）
+# GATHER 動態 metadata 與空常數（v1.4.3）
 
-目前正式站與固定下載仍是 [v1.4.2](batch-matmul-validation.md#v142-正式交付)。以下為新候選的實際修正及有限驗證，尚未發布；一般編輯／匯出只做靜態檢查，interpreter 保持手動。
+已於 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3) 正式交付，build `bbb977e791849a92`。一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。以下候選及失敗紀錄維持原受測來源與當時狀態；目前交付見[正式交付](#v143-正式交付)。
 
 ## 已重現的問題
 
@@ -65,3 +65,11 @@ LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三�
 [實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41282013897)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 與正常關閉均通過。關閉後 RSS slope 1,740,565.94 bytes／輪、drift 24,842,240 bytes、main heap drift 206,352 bytes；sampled peak 1,109,446,656 bytes，57 個 Worker 與 6 個觀察到的自有程序正常退出。原政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或門檻變更；有限八輪不代表任意模型／長期記憶體保證。
 
 v1.4.3 正式 HTTPS、固定 Release 及四份實際下載仍待接續；目前正式版為 v1.4.2，歷史失敗與完整商品化目標保留。
+
+## v1.4.3 正式交付
+
+固定來源 `0d1f15198696f88f9dad0f4b0d951cdcebfc78a4`／tree `99106ab87295e9d398ccaadd8a5116c0e8174a3d`、build `bbb977e791849a92` 已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41284224153)完成，四項工作 attempt 1 全成功。328 核心檔、全站 1,477 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對。正式站包含 15 組 32px 文字框、搜尋／pattern／MLIR 與 TFLite 匯出重開、逐 OP／量化／legacy shape 報告、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO。獨立 GATHER 原生 Chrome／Edge 五組案例另有候選來源；不宣稱它們字面新增在原 38 項 smoke 中。
+
+固定 ZIP 41,303,364 bytes，SHA-256 `074374cda8800d5473094c3e135394f6069d3701aa291d6547bcd9ca3fcb7087`；四份實際下載與準備產物一致，tag／Latest／權威 Pages deployment 已核對。Site ID `5168d93f68c689f52c3c410447bc6f8476b902347d203979b84867a81654b99a`，保留 v1.4.2／v1.4.1 與永久 baseline。舊 v1.4.2 tag 和四份 asset 未改寫。[最終收據](results/gather-v1.4.3-published.json)僅含來源、雜湊、計數與有限結果；原始報告、截圖、環境與程序身分完整留在本機。成功部署沒有重跑，沒有同步 Sites／GH Studio。
+
+本版修正已知 metadata 錯誤與零元素的 producer／邊界判定。合法 encoding 不等於 CPU kernel 全部支援；動態資料、量化數值語意、私有 dialect／runtime、歷史 Windows Chrome／網路注入與長期記憶體 SLA 仍保留界線。完整商品等級目標未完成。

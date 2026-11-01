@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)／build `e8a83e3eeb4b7bdc`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3)／build `bbb977e791849a92`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 v1.3.1 已交付[手動 runtime 的 tensor 錯誤參照](runtime-tensor-diagnostics.md)：官方公開量化模型的原檔在目前 LiteRT compile 失敗，但日誌的 tensor 編號原先沒有 OP 對照。現在可查看定義／使用者，先顯示套用輸入前失敗的提示，並保留原文與失敗狀態；參照不代表 OP 就是原因。31 項相關選測、四項 main 關卡、正式站 35 項操作與四份實際下載已核對。新增的 Windows 正式站小型流程功能與正常退出通過，但整體網路守門仍失敗；後續一次診斷觀察到 Kaspersky 注入類型的請求，原始失敗及完整本機紀錄保留，沒有關閉防毒或放行外連。見[最終收據](results/runtime-tensor-v1.3.1-published.json)。
 
