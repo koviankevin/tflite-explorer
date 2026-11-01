@@ -58,3 +58,11 @@ PR #213 的 900 項 Node 測試通過、35 項既有選做略過，79 項必要�
 45 項相關選測通過，包含 source byte units、外部／舊案例排除、私有欄位及大小限制、對時負例與真正 SDK 的私有輸出路由。SDK 測試只啟動一個短暫 Node 合成輸出程序，不開瀏覽器或個人 profile；尚未執行此加日誌的新 hosted 實驗。必要 PR 與受測／合併 tree 核對後只執行一次，保留先前所有失敗與成功診斷，不重跑原正式八輪或成功部署。
 
 送審期間另核對同一修訂的 [Isolate::PrintWithTimestamp](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/execution/isolate.cc#L8092)，實際前綴為 PID／pointer／isolate ID 三欄。初版合成行只用了兩欄；替換為真正 formatter 的結構後，回歸確實以 `pool-log-format` 失敗，再將 decoder 與 SDK 合成輸出一起修正。舊兩欄格式明確拒絕，pointer／isolate ID 也不會進入公開事件。這在 hosted 量測前處理，並保留原 red，不以舊格式測試成功代替實際版本覆蓋。
+
+## 日誌實驗的 command-line 觀察修正
+
+PR #215 的 906 項 Node 測試及 79 項必要契約通過，合併 tree 與實際受測 checkout 相同。但限定的一次 [41264988044](https://github.com/koviankevin/tflite-explorer/actions/runs/41264988044) 在開啟模型前失敗：`Browser.getBrowserCommandLine` 要求 `--enable-automation`，正常的 SDK 啟動沒有該旗標。原文逐字 SHA-256 與報告相同，實際 Chromium／V8 版本也符合來源；沒有模型或 RSS 樣本，不能判定 pool 假說。
+
+修正改讀 launch marker 已確認的自有 root `/proc/PID/cmdline`，在讀取前後以原 parser 核對 PID／startTicks／存活狀態，大小最多 64 KiB；參數只留在 private report。沒有加 automation 或其他旗標，唯一新增的 JS 旗標仍為唯讀日誌。新回歸驗證讀取只限該 root、兩次身分核對、重用時不讀取或拒絕結果、空值／超預算拒絕，無須開瀏覽器。
+
+[失敗摘要](results/renderer-pool-command-failure.json)保留原 run、來源、provider digest 與錯誤雜湊；當時觀察到的一個 root 已退出、零個 Worker。後續 cleanup 的「預期一個 model Worker、實際零個」是前段開模型前中止所造成的第二筆 assertion，不是原生關閉逾時。新來源必要檢查與合併 tree 核對後，才限定一次修正後日誌實驗；原失敗不改標、不重跑原正式八輪或部署。

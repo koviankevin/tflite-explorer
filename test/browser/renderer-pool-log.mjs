@@ -1,9 +1,19 @@
 // Read-only V8 logging for the opt-in experiment, never an application setting.
 import path from 'node:path';
+import {readFile} from 'node:fs/promises';
+import {parseProcProcess} from './owned-processes.mjs';
 export const POOL_LOG_LIMIT=4*1024**2;
 export const POOL_TRACE_FLAG='--js-flags=--trace-gc-nvp';
 const need=(condition,code)=>{if(!condition)throw Error(code);};
 const numeric=value=>Number.isSafeInteger(value)&&value>=0&&value<=2**50;
+
+export async function readOwnedPoolArguments(identity,{read=readFile}={}){
+    need(Number.isSafeInteger(identity?.pid)&&identity.pid>1&&typeof identity.startTicks==='string'&&/^\d+$/.test(identity.startTicks),'pool-command-identity');
+    const same=async()=>{const row=parseProcProcess(identity.pid,'',await read(`/proc/${identity.pid}/stat`,'utf8'));need(row.startTicks===identity.startTicks&&row.state!=='Z','pool-command-identity');};
+    await same();const text=await read(`/proc/${identity.pid}/cmdline`,'utf8');
+    need(typeof text==='string'&&Buffer.byteLength(text)>0&&Buffer.byteLength(text)<=65536,'pool-command-budget');
+    await same();return text.split('\0').filter(Boolean);
+}
 
 export function poolTraceSettings(reportPath,environment){
     need(path.isAbsolute(reportPath)&&environment.DEBUG==='pw:browser'&&environment.DEBUG_FILE===reportPath+'.browser-private.log','pool-log-environment');

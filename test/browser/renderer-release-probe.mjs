@@ -16,7 +16,7 @@ import {createProcessMemoryProbe} from './process-memory-profile.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {installLifecycleAudit} from './lifecycle-audit.mjs';
 import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,rendererProbeLocations,assertProbeLayerCount} from './renderer-release-policy.mjs';
-import {POOL_LOG_LIMIT,POOL_TRACE_FLAG,poolTraceSettings,decodeRendererPoolLog,correlateRendererPoolSteps} from './renderer-pool-log.mjs';
+import {POOL_LOG_LIMIT,POOL_TRACE_FLAG,poolTraceSettings,decodeRendererPoolLog,correlateRendererPoolSteps,readOwnedPoolArguments} from './renderer-pool-log.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));process.chdir(root);
 const reportPath=path.resolve(process.env.RENDERER_PROBE_REPORT||'test-results/renderer-release-probe.json');
@@ -58,7 +58,7 @@ try{
             const browserCDP=await browser.newBrowserCDPSession(),cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');await browserCDP.send('Target.setDiscoverTargets',{discover:true});
             const version=await browserCDP.send('Browser.getVersion');report.v8=version.jsVersion;privateCase.browserVersion=version;
             assert.equal(report.chromium,'156.0.8078.4');assert.ok(['15.6.75','15.6.75.0'].includes(report.v8),'pool-log-source-version');
-            const command=await browserCDP.send('Browser.getBrowserCommandLine');privateCase.browserCommand=command.arguments;assert.deepEqual(command.arguments.filter(a=>a.startsWith('--js-flags=')),[POOL_TRACE_FLAG]);
+            const command=await readOwnedPoolArguments(rootIdentity);privateCase.browserCommand=command;assert.deepEqual(command.filter(a=>a.startsWith('--js-flags=')),[POOL_TRACE_FLAG]);
             const read=async fn=>{const v=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});assert.ok(!v.exceptionDetails);return v.result.value;};
             const until=async fn=>{const end=Date.now()+30000;while(!await read(fn)){assert.ok(Date.now()<end);if(caseError)throw caseError;await sleep(80);}};
             const refreshTypes=async()=>{const info=await browserCDP.send('SystemInfo.getProcessInfo');types=new Map(info.processInfo.map(p=>[p.id,p.type]));};
