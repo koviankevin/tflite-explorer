@@ -1,8 +1,8 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3)／build `bbb977e791849a92`，328 核心檔、全站 1,477 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/gather-v1.4.3-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4)／build `14d6d1628c5136c5`，329 核心檔、全站 1,481 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/fully-connected-v1.4.4-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
-接續的 [FULLY_CONNECTED 候選](fully-connected-validation.md)已實際重現錯誤 dtype／動態 weights rank 放行，以及合法無 bias 的誤擋。三份原始匯出檔在編輯與序列化報告兩個入口都已拒絕；199 項相關檢查及十三組真正 CPU 正例通過。Chrome／Edge 每端六組原生情境、十六份實際下載、四份下載後 CPU、pattern 正負例、32px 與正常退出均有[候選收據](results/fully-connected-candidate.json)。必要 main 關卡與 v1.4.4 正式交付仍待接續，目前公開版保持 v1.4.3。
+FULLY_CONNECTED 的 dtype／已知 rank／尺寸漏檢及合法無 bias 誤擋，已於 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4) [正式交付](fully-connected-validation.md#v144-正式交付)。199 項相關檢查、十三組真正 CPU 正例，以及 Chrome／Edge 每端六組原生情境、十六份實際下載、四份下載後 CPU、pattern 正負例、32px 與正常退出，維持[原候選來源](results/fully-connected-candidate.json)。正式 HTTPS 與固定下載另有獨立來源綁定，不將有限結果擴大為任意 kernel／量化或公司契約已驗證。
 
 GATHER 動態 shape 掩蓋已知型別／rank 錯誤，以及零元素常數／activation 的 producer 與切圖邊界修正，已在 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3) [正式交付](gather-validation.md#v143-正式交付)。較早 140 項／十二組 CPU 與 Chrome／Edge 證據維持[原候選收據](results/gather-candidate.json)；最終來源的 143 項相關檢查、十三組 CPU，以及十二份原生下載、32px 與正常退出維持[最終候選收據](results/gather-candidate-final.json)。本版正式 HTTPS 與固定下載另有獨立來源綁定，不以後來成功改寫早期失敗或擴大任意 kernel 語意。
 
@@ -107,4 +107,8 @@ GATHER 動態型別／rank 檢查與 producer-aware 空常數修正已合併，[
 
 ## v1.4.4 必要主分支證據
 
-FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項來源綁定關卡](results/fully-connected-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十六份實際下載、四份下載後 CPU／IO、pattern 正負例與正常退出保留其候選來源。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版維持 v1.4.3；其餘商品等級未完成項目不改列完成。
+FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項來源綁定關卡](results/fully-connected-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十六份實際下載、四份下載後 CPU／IO、pattern 正負例與正常退出保留其候選來源。上述主分支驗收完成當時，正式 HTTPS 與新不可變 Release 尚待接續、公開版為 v1.4.3；後續 v1.4.4 交付見下節，其餘商品等級未完成項目不改列完成。
+
+## v1.4.4 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41290477405)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/fully-connected-v1.4.4-published.json)。v1.4.3 tag／assets、原始失敗與各來源的驗收範圍均保留，沒有重跑成功部署、放寬判定或同步 Sites／GH Studio。其餘表列未完成項目與完整商品等級目標繼續保留。
