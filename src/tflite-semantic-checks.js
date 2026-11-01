@@ -7,11 +7,13 @@ import {staticTfliteShape} from './tflite-static-shape.js';
 import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
 import {checkGatherMetadata} from './tflite-gather-checks.js';
 import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
+import {checkStaticTransform} from './tflite-static-transform.js';
 const known=t=>staticTfliteShape(t)!==null;
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
     const fail=message=>{throw Error(`${name} ${message}`);},out=outputs[0];
     checkSpatialTransform(name,inputs,outputs,options);
+    checkStaticTransform(name,inputs,outputs,options);
     checkOperandMetadata(name,inputs,outputs,options);
     for(const [side,ts] of [['input',inputs],['output',outputs]])for(const [slot,t] of ts.entries()){
         const result=inspectTensorQuantization(t);
