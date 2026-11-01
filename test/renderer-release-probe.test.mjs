@@ -5,13 +5,16 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import os from 'node:os';
-import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,assertRendererProbeWorkflow,rendererProbeLocations} from './browser/renderer-release-policy.mjs';
+import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,assertRendererProbeWorkflow,rendererProbeLocations,assertProbeLayerCount} from './browser/renderer-release-policy.mjs';
 import {parse as yaml} from 'yaml';
 import {buildDestination,root} from '../scripts/lib/release-artifact.mjs';
 import {createProcessMemoryProbe} from './browser/process-memory-profile.mjs';
 import {physicalFixtureHeader} from './physical-tflite-fixture.mjs';
 import {assertReport} from '../scripts/lib/release-gates.mjs';
 const MiB=1024**2,metrics=[{name:'JSHeapUsedSize',value:6*MiB},{name:'JSHeapTotalSize',value:8*MiB}],types=new Map([[12,'renderer'],[13,'browser']]);
+test('probe compares the grouped count actually displayed by the model UI and rejects a different count',()=>{
+    for(const n of [3005,21005]){assertProbeLayerCount(n.toLocaleString('en-US'),n);assert.throws(()=>assertProbeLayerCount((n+1).toLocaleString('en-US'),n));}
+});
 const owner=(pid,anonymousBytes,startTicks=String(pid))=>({pid,startTicks,observation:'present',rssBytes:anonymousBytes+21*MiB,anonymousBytes,fileBytes:20*MiB,sharedBytes:MiB});
 function input(index,elapsedMs,phase='closed',anon=200*MiB,other=50*MiB){
     const processes=[owner(12,anon),owner(13,other)],totals=Object.fromEntries(['rssBytes','anonymousBytes','fileBytes','sharedBytes'].map(k=>[k,processes.reduce((n,p)=>n+p[k],0)]));
