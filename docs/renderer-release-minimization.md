@@ -83,3 +83,5 @@ PR #216 的 907 項 Node 測試通過、35 項既有選做略過，79 項必要�
 [公開數值摘要](results/renderer-pool-attribution.json)只含固定欄位，原始公開 ZIP／報告／job log 留在本機。含 PID／pointer 的私有 browser 日誌未上傳、未取回本機；公開 job log 另掃描確認沒有原始 V8 prefix，不能宣稱已保存那份 private log 原件。新日誌實驗始終不具發布資格，沒有 forced GC、heap snapshot、RSS 扣除、pool／timer 或門檻改動。正式站與固定 Release 仍是 v1.4.0，v1.4.1 未發布。
 
 後續先量測並降低模型結構索引的實際配置開銷，再驗證功能、匯出與原政策；不靠關閉 V8 pool、強制 GC 或重跑既有失敗碰綠燈。
+
+已開始[模型索引配置減量候選](model-index-allocation.md)，以同一實體小權重結構核對完整索引／pattern 指紋與三次 Node 前後觀察。這是應用程式修改；候選的 browser／RSS 與正式發布仍須各自證明，原失敗不改列成功。
