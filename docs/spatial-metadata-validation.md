@@ -22,4 +22,14 @@
 
 ## 待接續與界線
 
-必要 main 關卡、正式 HTTPS 與 v1.4.5 不可變 Release 尚待接續；核心 scope 未變可重新核對既有可信 main 證據，其他三個 scope 已變更。未知或動態 shape、其他 dtype／packing 明列未檢查；靜態通過只代表列出的 metadata 規則，不是 kernel、量化數值或公司契約保證。Chrome 歷史雲端統計／網路注入、實體 RSS 與完整商品等級目標的界線不變。沒有同步 Sites／GH Studio 或重跑成功的 v1.4.4 部署。
+候選原生驗收完成當時，必要 main 關卡、正式 HTTPS 與 v1.4.5 不可變 Release 尚待接續；核心 scope 未變、其他三個 scope 已變更。四關卡的後續核對結果見下節。未知或動態 shape、其他 dtype／packing 明列未檢查；靜態通過只代表列出的 metadata 規則，不是 kernel、量化數值或公司契約保證。Chrome 歷史雲端統計／網路注入、實體 RSS 與完整商品等級目標的界線不變。沒有同步 Sites／GH Studio 或重跑成功的 v1.4.4 部署。
+
+## 四項主分支關卡已核對（尚未發布）
+
+[PR #230](https://github.com/koviankevin/tflite-explorer/pull/230) 已合併為 `7ec6d03c641f8271c80e11568b956023d5e502ab`，完整 tree 與實際 PR checkout 相同。Node 1,027 項中 992 通過、35 個既有選做略過；79 項契約與九筆 PR core 原始報告也已核對。正式 core 沿用相同 88 檔 scope 的可信 main `41269145087`，重新核對 provider 狀態、digest／CRC、原政策與相依檔；PR core artifact 不冒充主分支 dispatch。
+
+[四關卡數值收據](results/spatial-metadata-main.json)對應來源 `7ec6d03c641f8271c80e11568b956023d5e502ab`／tree `727b8029a50aeecfedd4ac5a43267cc513439b37`、build `f82974783e1a5293`。新來源的 79 項契約零略過、六種版本切換及 824 檔 HTTP 候選／38 項操作通過，含 15 組 32px 文字框、19 種手動 runtime、部分 IO 與八輪 CPU／IO。六組 spatial 原生案例另有各自的候選來源，不宣稱它們字面包含在原 38 項 smoke。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41294018612)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 及正常關閉通過。關閉後 RSS slope 2,333,315.66 bytes／輪、drift 17,641,472 bytes、main heap drift 570,264 bytes，sampled peak 1,108,660,224 bytes；57 個 Worker 與 6 個觀察到的自有程序正常退出。原政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或門檻變更；有限八輪不代表任意模型或長期記憶體保證。
+
+v1.4.5 正式 HTTPS、固定 Release 與四份實際下載仍待接續；目前公開版維持 v1.4.4，完整商品等級目標與歷史失敗保留。
