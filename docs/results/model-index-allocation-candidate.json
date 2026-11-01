@@ -1,0 +1,89 @@
+{
+  "status": "Node-output-and-before-after-comparison-verified",
+  "beforeSource": {
+    "commit": "4ca22a3847843ba563d48b044183b764f362ca61",
+    "tree": "46cbe585c1c618529b40e98ee29f19101fcb9f62",
+    "committedAt": "2026-11-01T10:39:50+08:00",
+    "dirty": false
+  },
+  "afterSource": {
+    "commit": "7ce7998032799a1f212dd62aca79a789c4233d99",
+    "tree": "6f4bbf2f5ecdf0a20ff9568c8546dc4127e68af7",
+    "committedAt": "2026-11-01T10:52:05+08:00",
+    "dirty": false
+  },
+  "node": "v24.22.1",
+  "v8": "13.6.233.17-node.58",
+  "fixtureBytes": 8836512,
+  "weightBytes": 1048576,
+  "fixtureSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+  "indexOutputSHA256": "8172269bb0dd76671da990e5a63830e71d8753b097065503e954b7fcd3525b95",
+  "queries": {
+    "layers": 21005,
+    "tensors": 21011,
+    "layerZero": [
+      "0"
+    ],
+    "reshapeTransposeMatches": 7000
+  },
+  "readBytes": 7919008,
+  "before": {
+    "indexHeapTotalGrowthBytes": [
+      56348672,
+      60944384,
+      53297152
+    ],
+    "afterIndexHeapTotalBytes": [
+      244457472,
+      249315328,
+      244027392
+    ],
+    "afterIndexHeapUsedBytes": [
+      122679752,
+      113441824,
+      115700464
+    ],
+    "parseMs": [
+      1614.2178000000001,
+      1174.9477,
+      1130.3242
+    ]
+  },
+  "after": {
+    "indexHeapTotalGrowthBytes": [
+      31035392,
+      30511104,
+      30773248
+    ],
+    "afterIndexHeapTotalBytes": [
+      228409344,
+      228147200,
+      228147200
+    ],
+    "afterIndexHeapUsedBytes": [
+      141913544,
+      140429336,
+      139605368
+    ],
+    "parseMs": [
+      471.46119999999996,
+      503.8014999999999,
+      475.2292
+    ]
+  },
+  "medianHeapCapacityBefore": 244457472,
+  "medianHeapCapacityAfter": 228147200,
+  "medianIndexCapacityGrowthBefore": 56348672,
+  "medianIndexCapacityGrowthAfter": 30773248,
+  "format": "model-lens-public-index-allocation-candidate",
+  "characterizationBeforeTests": 2,
+  "selectedTestsAfter": 58,
+  "forcedGC": false,
+  "heapSnapshot": false,
+  "afterUsedHeapIncreased": true,
+  "browserVerified": false,
+  "originalRSSFailureFixed": false,
+  "releaseEvidenceEligible": false,
+  "rawOriginalsRetainedLocally": true,
+  "candidatePublished": false
+}
