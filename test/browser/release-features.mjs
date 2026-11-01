@@ -35,3 +35,7 @@ export function legacyShapeValidationRequired(version){
     const preview=/^0\.2\.0-preview\.([1-9]\d*)$/.exec(version);
     return !(preview&&Number(preview[1])<=34)&&!['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'].includes(version);
 }
+
+// The partial runtime archive correction ships in the same unpublished 1.4.1
+// candidate. Only exact immutable older releases may omit its new scenario.
+export function partialRuntimeIORequired(version){return legacyShapeValidationRequired(version);}

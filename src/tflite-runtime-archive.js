@@ -8,10 +8,32 @@ const crc=bytes=>{let n=0xffffffff;for(const b of bytes)n=crcTable[(n^b)&255]^(n
 // compression Worker, object URLs or external library lifetime to retain.
 export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDetails,specs,modelSHA256,transferable=false,ioBuffer=null}){
     if(typeof transferable!=='boolean')throw Error('IO archive 傳送模式無效。');
+    if(!Array.isArray(inputs)||!Array.isArray(outputs)||inputs.length>128||outputs.length>128)throw Error('IO archive 每側最多 128 個 tensors。');
     if(ioBuffer!==null){if(!transferable)throw Error('只有 transferable IO 可重用暫存 buffer。');runtimeIOBufferTransfers(ioBuffer);}
-    const files=[],rows={inputs:[],outputs:[]};let bytes=0;
-    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{const detail=details[i];bytes+=inputSize({dtype:detail.dtype,shape:Array.from(tensor.shape)});if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');const data=littleEndianBytes(tensor.toTypedArray(),detail.dtype),name=`${side}-${i}.bin`;files.push({name,data});const s=specs[i];rows[side].push({file:name,name:String(detail.name||'').slice(0,256),shape:Array.from(tensor.shape),dtype:detail.dtype,bytes:data.length,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})});});
-    const manifest={format:'model-lens-runtime-io',version:1,createdAt:new Date().toISOString(),byteOrder:'little-endian',modelSHA256,...rows,validation:{...validation}};
+    const files=[],rows={inputs:[],outputs:[]},missing=[],pending=[];let bytes=0;
+    // Admit the entire declared capture before reading any payload. A failed
+    // tensor must not bypass the unchanged total or per-tensor IO budget.
+    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{
+        const detail=details[i],shape=Array.from(tensor.shape),expectedBytes=inputSize({dtype:detail.dtype,shape});
+        bytes+=expectedBytes;if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');
+        const s=specs[i],row={name:String(detail.name||'').slice(0,256),shape,dtype:detail.dtype,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})};
+        pending.push({side,index:i,tensor,row,expectedBytes});
+    });
+    for(const {side,index,tensor,row,expectedBytes} of pending){
+        try{
+            const value=tensor.toTypedArray(),elements=row.shape.reduce((n,d)=>n*d,1);
+            if(!ArrayBuffer.isView(value)||value.length!==elements||value.byteLength!==expectedBytes)throw Error('runtime tensor 資料長度與 shape／dtype 不符，未保存此 tensor。');
+            const data=littleEndianBytes(value,row.dtype),name=`${side}-${index}.bin`;
+            files.push({name,data});rows[side].push({file:name,...row,bytes:data.length});
+        }catch(error){
+            const reason=String(error?.message||error).slice(0,512);
+            rows[side].push({file:null,...row,expectedBytes,status:'not-saved',reason});missing.push({side,index,reason});
+        }
+    }
+    // Complete captures preserve the existing v1 format. Only partial captures
+    // use v2, with explicit missing slots and no fabricated or repacked bytes.
+    if(missing.length)for(const side of ['inputs','outputs'])for(const row of rows[side])if(row.file)row.status='saved';
+    const manifest={format:'model-lens-runtime-io',version:missing.length?2:1,createdAt:new Date().toISOString(),byteOrder:'little-endian',modelSHA256,...rows,validation:{...validation},...(missing.length?{capture:{status:'partial',requested:pending.length,saved:files.length,missing,savedBytes:files.reduce((n,f)=>n+f.data.length,0)}}:{})};
     files.push({name:'manifest.json',data:new TextEncoder().encode(JSON.stringify(manifest,null,2)+'\n')});
     const parts=[],central=[];let offset=0;
     for(const f of files){const name=new TextEncoder().encode(f.name),sum=crc(f.data),header=new Uint8Array(30+name.length),h=new DataView(header.buffer);h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x800,true);h.setUint16(12,0x21,true);h.setUint32(14,sum,true);h.setUint32(18,f.data.length,true);h.setUint32(22,f.data.length,true);h.setUint16(26,name.length,true);header.set(name,30);parts.push(header,f.data);

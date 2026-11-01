@@ -28,13 +28,17 @@ test('actual pinned CPU agrees for canonical, legacy, edited and cut FC; invalid
             assert.deepEqual([...new Float32Array(values.buffer)],[10,10,10,10,10,26,26,26,26,26]);
         }
         const bad=await fixture('FULLY_CONNECTED',[[2,3],[5,4]],{output:[2,5]});messages.length=0;
-        const result=await executeRuntime({blob:bad.blob,plan:runtimePlan(bad.index.raw,bad.blob.size),rt,specs:[{mode:'zero'},{mode:'zero'},{mode:'zero'}],diagnostics:()=>messages});
+        const result=await executeRuntime({blob:bad.blob,plan:runtimePlan(bad.index.raw,bad.blob.size),rt,specs:[{mode:'zero'},{mode:'zero'},{mode:'zero'}],diagnostics:()=>messages,transferableIO:true});
         console.log(JSON.stringify({legacyInvalidFC:{status:result.status,stage:result.stage,invoked:result.invoked,reason:result.reason,diagnostics:result.diagnostics,io:!!result.io,ioError:result.ioError}}));
         // The pinned kernel can run this nondivisible input and produce a
         // different output shape. It is not necessarily an allocation failure.
         assert.equal(result.status,'failed');assert.equal(result.invoked,true);assert.match(result.reason,/執行後輸出 shape/);
-        // Keep the existing runtime limitation explicit: this malformed model
-        // returns a padded tensor that the pinned runtime cannot serialize.
-        assert.equal(result.io,undefined);assert.match(result.ioError,/strides or padding/);
+        // Keep readable inputs even when the pinned runtime cannot serialize
+        // this malformed model's padded output. Never invent packed values.
+        assert.ok(result.io?.archive instanceof Uint8Array);assert.match(result.ioError,/部分保存/);
+        const zip=Archive.open(result.io.archive,'zip'),manifest=JSON.parse(new TextDecoder().decode(zip.entries.get('manifest.json').peek()));
+        assert.equal(manifest.version,2);assert.equal(manifest.capture.status,'partial');assert.equal(manifest.validation.status,'failed');assert.equal(manifest.validation.invoked,true);
+        assert.equal(manifest.inputs.length,3);for(let i=0;i<3;i++){const row=manifest.inputs[i];assert.equal(row.status,'saved');assert.ok(zip.entries.get(row.file).peek().every(n=>n===0));}
+        assert.equal(manifest.outputs[0].status,'not-saved');assert.equal(manifest.outputs[0].file,null);assert.match(manifest.outputs[0].reason,/strides or padding/);assert.equal(zip.entries.has('outputs-0.bin'),false);
     }finally{await rt.unloadLiteRt();}
 });
