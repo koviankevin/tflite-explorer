@@ -22,10 +22,10 @@ jobs:
           node-version: '22.23.3'
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: node --test test/renderer-release-probe.test.mjs test/owned-processes.test.mjs test/physical-fixture.test.mjs
+      - run: node --test test/renderer-release-probe.test.mjs test/renderer-pool-log.test.mjs test/owned-processes.test.mjs test/physical-fixture.test.mjs
       - run: node scripts/install-browser.mjs
       - name: Compare small-payload structures without export, inference or forced GC
-        run: RENDERER_PROBE_REPORT="$RUNNER_TEMP/$REPORT_NAME" node test/browser/renderer-release-probe.mjs
+        run: DEBUG=pw:browser DEBUG_FILE="$RUNNER_TEMP/$REPORT_NAME.browser-private.log" RENDERER_PROBE_REPORT="$RUNNER_TEMP/$REPORT_NAME" node test/browser/renderer-release-probe.mjs
       - name: Upload only the schema-checked numeric summary, never private report or fixtures
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

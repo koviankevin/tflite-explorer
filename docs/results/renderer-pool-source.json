@@ -1,0 +1,60 @@
+{
+  "format": "model-lens-public-renderer-pool-primary-source-summary",
+  "measuredChromium": "156.0.8078.4",
+  "mappedV8Revision": "b976f35da8356fcf4e5e176d1d810ba6a6f05718",
+  "v8HeaderVersion": "15.6.75.0",
+  "mapping": "official-version-tag-DEPS",
+  "sourceDefaultsOnly": true,
+  "runtimeFlagObservation": false,
+  "causeProven": false,
+  "files": [
+    {
+      "file": "chromium-DEPS.txt",
+      "url": "https://raw.githubusercontent.com/chromium/chromium/156.0.8078.4/DEPS",
+      "bytes": 192396,
+      "sha256": "9714c150433557b40e0544c35cf951e218e1567679542f5f2ba825c8aabc0b8b"
+    },
+    {
+      "file": "v8-src-heap-memory-pool.cc.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/heap/memory-pool.cc",
+      "bytes": 18285,
+      "sha256": "62508e4ae3e8c1661b02529a2010c080515f1db35d639f6b3e41c01e390daeec"
+    },
+    {
+      "file": "v8-src-heap-memory-pool.h.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/heap/memory-pool.h",
+      "bytes": 8342,
+      "sha256": "19be10f839fa39a2214fe35b596076fc9915600e701741ae792602671486b859"
+    },
+    {
+      "file": "v8-src-heap-memory-allocator.cc.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/heap/memory-allocator.cc",
+      "bytes": 30715,
+      "sha256": "5de43f24a3969ca8966bbfb58ffc541e6a3d634bdf4975aecbd6fc7bd1859aad"
+    },
+    {
+      "file": "v8-src-flags-flag-definitions.h.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/flags/flag-definitions.h",
+      "bytes": 215360,
+      "sha256": "dc3d9a60f424540ec1658ef823dc095456e006dfb64ce56ff41fbb2945cf01c4"
+    },
+    {
+      "file": "v8-src-init-isolate-group.cc.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/init/isolate-group.cc",
+      "bytes": 15575,
+      "sha256": "667ea2cb3c744b4e3453fda8a9da8411db828288bf112c47e47ae6eb2e145d85"
+    },
+    {
+      "file": "v8-include-v8-version.h.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/include/v8-version.h",
+      "bytes": 771,
+      "sha256": "10ec2be35c3efb4404c5df99f7c383b6d8e51db77ed8304c602c1a45069c65f8"
+    },
+    {
+      "file": "v8-isolate-formatter.cc.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/execution/isolate.cc",
+      "bytes": 336479,
+      "sha256": "076eb0ed0891794d8f93d98e608021247974ae4e1b307761b7f889471ebabdf0"
+    }
+  ]
+}

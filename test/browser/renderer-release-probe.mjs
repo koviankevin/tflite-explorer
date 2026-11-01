@@ -1,7 +1,7 @@
 // Separate, opt-in Hosted Linux experiment. Never a release gate or app mode.
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
-import {readFile,writeFile,rename,mkdir,statfs} from 'node:fs/promises';
+import {readFile,writeFile,rename,mkdir,statfs,stat} from 'node:fs/promises';
 import {createHash,randomBytes} from 'node:crypto';
 import {once} from 'node:events';
 import os from 'node:os';
@@ -16,12 +16,13 @@ import {createProcessMemoryProbe} from './process-memory-profile.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {installLifecycleAudit} from './lifecycle-audit.mjs';
 import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,rendererProbeLocations,assertProbeLayerCount} from './renderer-release-policy.mjs';
+import {POOL_LOG_LIMIT,POOL_TRACE_FLAG,poolTraceSettings,decodeRendererPoolLog,correlateRendererPoolSteps} from './renderer-pool-log.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));process.chdir(root);
 const reportPath=path.resolve(process.env.RENDERER_PROBE_REPORT||'test-results/renderer-release-probe.json');
 assert.ok(within(path.join(root,'build'),reportPath)||within(path.join(root,'test-results'),reportPath)||(process.platform==='linux'&&process.env.RUNNER_TEMP&&within(path.resolve(process.env.RUNNER_TEMP),reportPath)));
 await mkdir(path.dirname(reportPath),{recursive:true});
-const report={format:'model-lens-renderer-release-probe',version:1,purpose:'readonly-native-memory-attribution',releaseEvidenceEligible:false,forcedGC:false,status:'running',operation:'open-close',policy,cases:[],failures:[]};
+const report={format:'model-lens-renderer-release-probe',version:1,purpose:'readonly-native-memory-attribution',releaseEvidenceEligible:false,forcedGC:false,poolLogging:true,status:'running',operation:'open-close',policy,cases:[],failures:[]};
 const privateReport={cases:[],failures:[]},hash=text=>createHash('sha256').update(text).digest('hex'),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let stage='host',server,browser,context,tree,timer,pending=Promise.resolve(),caseError,allError;
 async function persist(){
@@ -34,6 +35,7 @@ const failure=error=>{allError??=error;report.status='failed';report.failures.pu
 await persist();
 try{
     assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.env.GITHUB_REPOSITORY,'koviankevin/tflite-explorer');
+    const trace=poolTraceSettings(reportPath,process.env);
     report.source=gitSource();assert.equal(report.source.dirty,false);report.node=process.version;
     const optional=name=>readFile(name,'utf8').then(v=>v.trim()).catch(()=>null),[limit,current,disk]=await Promise.all([optional('/sys/fs/cgroup/memory.max'),optional('/sys/fs/cgroup/memory.current'),statfs(os.tmpdir())]);
     assert.ok((limit&&limit!=='max'?Number(limit)-Number(current):os.freemem())>=4*1024**3);assert.ok(disk.bavail*disk.bsize>=8*1024**3);
@@ -45,8 +47,8 @@ try{
         const result={id:plan.id,status:'running',fixture:{bytes:fixture.bytes,operators:fixture.operators,weightBytes:fixture.weightBytes,sha256:fixture.sha256,readbackSHA256:fixture.readbackSHA256},samples:[]},privateCase={id:plan.id,workers:[],native:[]};report.cases.push(result);privateReport.cases.push(privateCase);
         const started=Date.now(),now=()=>Date.now()-started,projection=createRendererProjection(),probe=createProcessMemoryProbe({now}),workers=[];
         let phase='baseline',sampling=false,types=new Map();caseError=null;tree=null;
-        stage='launch';const marker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:marker}});report.chromium=browser.version();
-        tree=new OwnedProcessTree(await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker));
+        stage='launch';const marker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,args:trace.args,env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:marker}});report.chromium=browser.version();
+        const rootIdentity=await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker);tree=new OwnedProcessTree(rootIdentity);
         try{
             context=await browser.newContext({viewport:{width:1280,height:640},locale:'en-US',acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
             await context.route('**/*',async route=>{if(route.request().method()!=='GET'||!route.request().url().startsWith(base)){caseError??=Error('Unexpected request');return route.abort();}return route.continue();});
@@ -54,10 +56,14 @@ try{
             const page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',e=>{caseError??=e;});page.on('crash',()=>{caseError??=Error('Page crash');});
             page.on('worker',w=>{const url=w.url(),kind=/\/model-worker\.js(?:\?|$)/.test(url)?'model':/\/tflite-runtime-worker\.js(?:\?|$)/.test(url)?'runtime':/\/edit-recovery-worker\.js(?:\?|$)/.test(url)?'identity':/\/vendor\/netron\/worker\.js(?:\?|$)/.test(url)?'layout':'other',row={kind,url,createdAtMs:now(),closedAtMs:null};workers.push(row);privateCase.workers.push(row);w.once('close',()=>{row.closedAtMs=now();});});
             const browserCDP=await browser.newBrowserCDPSession(),cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');await browserCDP.send('Target.setDiscoverTargets',{discover:true});
+            const version=await browserCDP.send('Browser.getVersion');report.v8=version.jsVersion;privateCase.browserVersion=version;
+            assert.equal(report.chromium,'156.0.8078.4');assert.ok(['15.6.75','15.6.75.0'].includes(report.v8),'pool-log-source-version');
+            const command=await browserCDP.send('Browser.getBrowserCommandLine');privateCase.browserCommand=command.arguments;assert.deepEqual(command.arguments.filter(a=>a.startsWith('--js-flags=')),[POOL_TRACE_FLAG]);
             const read=async fn=>{const v=await cdp.send('Runtime.evaluate',{expression:`(${fn.toString()})()`,returnByValue:true});assert.ok(!v.exceptionDetails);return v.result.value;};
             const until=async fn=>{const end=Date.now()+30000;while(!await read(fn)){assert.ok(Date.now()<end);if(caseError)throw caseError;await sleep(80);}};
             const refreshTypes=async()=>{const info=await browserCDP.send('SystemInfo.getProcessInfo');types=new Map(info.processInfo.map(p=>[p.id,p.type]));};
             const sample=async()=>{
+                assert.ok((await stat(trace.privateLogPath)).size<=POOL_LOG_LIMIT,'pool-log-budget');
                 const observedPhase=phase,rows=await readProcessTable(),memory=tree.sample(rows),owned=new Set(tree.identities.map(p=>`${p.pid}:${p.startTicks}`));
                 const identities=rows.filter(p=>owned.has(`${p.pid}:${p.startTicks}`)).map(({pid,startTicks})=>({pid,startTicks})),metrics=(await cdp.send('Performance.getMetrics')).metrics;
                 const anchor={index:result.samples.length,phase:observedPhase,elapsedMs:now(),...memory},native=await probe.capture(identities,anchor),publicSample=projection.project(anchor,native,metrics,types);
@@ -78,7 +84,12 @@ try{
             while(now()<end){if(caseError)throw caseError;await sleep(100);}
             clearInterval(timer);timer=null;await pending;await take();if(caseError)throw caseError;
             const audit=await read(()=>globalThis.__lifecycle);privateCase.audit=audit;assert.equal(audit.urls.length,0);assert.equal(audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,1);assert.ok(audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).every(w=>w.terminated&&w.audit?.bytes>0&&w.audit.maxRead<=1024**2&&w.audit.bytes<=16*1024**2&&w.audit.violations.length===0));assert.ok(audit.audit.maxRead<=1024**2&&audit.audit.bytes<=16*1024**2&&audit.audit.violations.length===0);
-            result.summary=summarizeRendererRelease(result.samples,result.closedAtMs);assert.ok(result.summary.postCloseDurationMs>=policy.observeAfterCloseMs);result.labelCount=projection.labelCount;result.status='complete';
+            result.summary=summarizeRendererRelease(result.samples,result.closedAtMs);assert.ok(result.summary.postCloseDurationMs>=policy.observeAfterCloseMs);
+            const last=result.samples.at(-1),native=privateCase.native.at(-1),rendererPosition=last.owners.findIndex(p=>p.label===result.summary.rendererLabel);
+            assert.ok(rendererPosition>=0&&native.processes[rendererPosition].observation==='present');
+            assert.ok((await stat(trace.privateLogPath)).size<=POOL_LOG_LIMIT,'pool-log-budget');
+            result.poolLog=decodeRendererPoolLog(await readFile(trace.privateLogPath,'utf8'),{rootPid:rootIdentity.pid,rendererPid:native.processes[rendererPosition].pid,rendererLabel:result.summary.rendererLabel,startedAtMs:started,throughAtMs:Date.now()});
+            result.poolCorrelations=correlateRendererPoolSteps(result.samples,result.summary,result.poolLog.events);result.labelCount=projection.labelCount;result.status='complete';
         }catch(error){failure(error);throw error;}finally{
             stage='cleanup';clearInterval(timer);timer=null;await pending.catch(e=>{caseError??=e;});
             if(context){await context.close();context=null;}let deadline;

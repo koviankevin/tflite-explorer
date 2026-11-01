@@ -44,3 +44,17 @@ PR #213 的 900 項 Node 測試通過、35 項既有選做略過，79 項必要�
 這證明在本次環境中，沒有大權重、匯出／下載 Blob URL、編輯與 interpreter，也能出現大幅延後釋放；不是上述操作才會觸發的必要條件。它沒有證明特定 allocator 或所有舊失敗的根因，也不能證明原大模型關卡已修好。先前八輪的步階在 release phase 後約 4～6 秒，本次在模型關閉後約 28 秒，時間不同，不能直接套用固定釋放延遲。
 
 [數值摘要](results/renderer-release-minimized.json)只保留公開來源／雜湊、固定 enum、計數與量測；provider digest、ZIP CRC、原始報告 SHA-256、來源與 fixture readback 均已核對，原始日誌／封存留在本機。這項實驗一直是 `releaseEvidenceEligible=false`，沒有 forced GC、heap snapshot、RSS 扣除或 timer／門檻放寬。v1.4.1 的 OP／IO 候選仍未發布，正式站與固定 Release 維持 v1.4.0；下一步須釐清原生保留機制或降低實際配置開銷，不能用這次 success 換掉原失敗。
+
+## 對應版本的 V8 pool 與唯讀日誌
+
+受測 Chromium 是 156.0.8078.4；官方同版本 [DEPS](https://github.com/chromium/chromium/blob/156.0.8078.4/DEPS) 指向 V8 `b976f35da8356fcf4e5e176d1d810ba6a6f05718`，其 version header 為 15.6.75.0。[來源摘要](results/renderer-pool-source.json)保存固定來源及本機原件校驗值，沒有以當前 main 代替受測版本。
+
+該版 [MemoryAllocator::TearDown](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/heap/memory-allocator.cc#L54) 呼叫 pool 的 teardown；[MemoryPool](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/heap/memory-pool.cc#L351) 可將已結束 isolate 的本地頁移入共用 pool，再由延後任務釋放。該原始碼的 [flag 預設](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/flags/flag-definitions.h#L2783)啟用 pooling／teardown sharing，timeout 為八秒；這是來源預設，不是對實際 binary flags 或原 28 秒步階的完整解釋。
+
+下一個事先限定的單次實驗沿用同樣的兩種實體小權重結構、45 秒觀察、500ms 取樣與程序／Worker 清理；僅加入 `--trace-gc-nvp` 日誌。這個旗標的 pool 路徑列出釋放的 normal／large page bytes；不調整 pool policy、timeout 或原 RSS 判定，不呼叫 GC 或 heap snapshot。`Browser.getVersion` 須符合上述版本，實際 browser command line 也核對只加入這個 JS 旗標。日誌本身可能影響時序，因此不能選作發布證據。
+
+原始 browser stdout／stderr 經 pinned Playwright 的 `DEBUG_FILE` 寫入 `.browser-private.log`，不進入公開 artifact。每次取樣檢查總日誌不超過 4 MiB；讀取後每行最多 32 KiB、每案最多 128 筆 pool event。只保留受防護 browser root、renderer PID 和本案時間範圍一致的數值事件，原始 PID／address／命令／日誌字串不會輸出。公開事件的 renderer label 與 RSS 的相鄰步階對照，未對時或數量不足也照實保留，不能假設 pool 已解釋失敗。
+
+45 項相關選測通過，包含 source byte units、外部／舊案例排除、私有欄位及大小限制、對時負例與真正 SDK 的私有輸出路由。SDK 測試只啟動一個短暫 Node 合成輸出程序，不開瀏覽器或個人 profile；尚未執行此加日誌的新 hosted 實驗。必要 PR 與受測／合併 tree 核對後只執行一次，保留先前所有失敗與成功診斷，不重跑原正式八輪或成功部署。
+
+送審期間另核對同一修訂的 [Isolate::PrintWithTimestamp](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/execution/isolate.cc#L8092)，實際前綴為 PID／pointer／isolate ID 三欄。初版合成行只用了兩欄；替換為真正 formatter 的結構後，回歸確實以 `pool-log-format` 失敗，再將 decoder 與 SDK 合成輸出一起修正。舊兩欄格式明確拒絕，pointer／isolate ID 也不會進入公開事件。這在 hosted 量測前處理，並保留原 red，不以舊格式測試成功代替實際版本覆蓋。
