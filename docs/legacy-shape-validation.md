@@ -1,6 +1,6 @@
-# Legacy shape 驗證修正（v1.4.1 候選）
+# Legacy shape 驗證修正（v1.4.1）
 
-目前正式站與固定下載仍為 [v1.4.0](quantization-validation.md#v140-正式交付)。本候選修正舊 TFLite 的非空 shape 被 `has_rank=false` 略過的問題，不修改原始 shape、rank flag、量化或權重，不自動執行 interpreter。
+已於 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1) 正式交付，build `c64f4143bf8463a2`。修正非空 concrete shape 因 legacy has_rank=false 被略過的檢查；保留 shape、rank flag、量化及權重，未知／動態資料仍明列未檢查。 以下候選與失敗紀錄維持其原受測來源與當時狀態；目前交付見[正式交付](#v141-正式交付)。
 
 固定 TensorFlow 來源 `7bc5d217d3bd79426527d0055fd3b54812f52e93` 的 [interpreter_builder.cc](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/core/interpreter_builder.cc#L786) 直接將 shape 轉為 dims；[schema](https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/schema/schema.fbs#L321) 的 rank flag 另用於區分空 shape 的 scalar 與未知 rank。網站原本把非空舊 shape 也視為未知，造成實際重新接線的 FC 尺寸錯誤漏擋，以及可讀 TRANSPOSE 常數未檢查。
 
@@ -37,3 +37,9 @@ PR #206 已合併，主分支 `02f4288885dc07fc16ede730b361e65891b09fa8`／tree 
 ## 索引修正後的新來源驗收
 
 原 RSS 失敗之後，實際模型索引配置已減量；來源 `c0dd77c8` 的[四項必要主分支關卡](results/model-index-allocation-main.json)全部取得並核對原始報告。實體大模型八輪沿用原 fixture、timer、RSS 與 read audit 規則，完整／局部／組合匯出重開通過，slope −834,413.71 bytes／輪、drift 1,912,832 bytes。HTTP 候選 38 項操作包含 legacy FC 阻擋、合法 RESHAPE 常數／匯出重開，以及部分 IO 的三組真正手動 CPU。舊失敗不改列成功，新的有限通過不宣稱所有 allocation 或 Windows Chrome 歷史問題已修復。v1.4.1 正式部署及固定下載仍待完成。
+
+## v1.4.1 正式交付
+
+固定來源 `25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704`／tree `b25b113c8c6fcd79b86b76956e0c14a59e992328`、build `c64f4143bf8463a2` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871)，四個工作第一次 attempt 全成功。325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對。正式站包含 15 組 32px 文字框、搜尋／pattern／MLIR 與 TFLite 匯出重開、逐 OP／量化／legacy shape 報告、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO。一般編輯匯出零自動推論；失敗／未知與有意的 crash recovery 不冒充通過或正常關閉。
+
+固定 ZIP 41,294,984 bytes，SHA-256 `5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df`；checksum、manifest、gates 四份實際下載皆與準備工件一致，tag／Latest／權威 Pages deployment 已核對。Site ID `c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1`，保留 v1.4.0／v1.3.1 與永久 baseline。[最終收據](results/model-index-v1.4.1-published.json)只含來源、雜湊、計數與有限結果；原始報告、截圖、環境及程序身分完整留在本機，沒有上傳本機原始紀錄。舊 tag／assets 不改寫，成功部署不重跑，沒有同步 Sites／GH Studio。歷史 Windows Chrome／網路守門與任意 kernel／公司 dialect／長期 SLA 的界線仍保留，完整商品等級目標未完成。

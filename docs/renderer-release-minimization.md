@@ -1,6 +1,6 @@
 # Renderer 釋放變化的最小重現
 
-本實驗接續[原八輪的觀察](physical-memory-attribution.md#八輪獨立診斷的觀察)，只用於釐清尚未發布的 v1.4.1 候選所遇到的原生記憶體問題。原正式失敗 `41252363060` 維持失敗，公開站與固定下載維持 v1.4.0；實驗不是發布關卡。
+本實驗接續[原八輪的觀察](physical-memory-attribution.md#八輪獨立診斷的觀察)，保存 v1.4.1 早期候選的原生記憶體診斷。原正式失敗 `41252363060` 維持失敗，實驗不作發布關卡；後續實際索引修正、新來源必要關卡及[正式交付](model-index-allocation.md#v141-正式交付)另列，不用診斷取代驗收。
 
 八輪原始資料中的大幅下降都發生在 release phase 開始後約 4～6 秒，且 renderer anonymous RSS 的下降量接近大型 source Worker 的 committed heap 加 backing；這只是待驗證的線索。原資料沒有 allocator 歸屬，不能因數量接近就確認根因。
 

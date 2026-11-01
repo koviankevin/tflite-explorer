@@ -1,6 +1,6 @@
 # 實體大模型的原生記憶體歸屬診斷
 
-目前公開版仍為 [v1.4.0](quantization-validation.md#v140-正式交付)。v1.4.1 候選的 [41252363060](https://github.com/koviankevin/tflite-explorer/actions/runs/41252363060)在八輪功能／權重／options／pattern、Worker 與程序退出通過後，因 RSS slope 約 24.39 MiB／輪超過原 16 MiB 失敗；[原始證據與重判](legacy-shape-validation.md#主分支驗收失敗尚未發布)保留，沒有發布或改列通過。
+目前公開版為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)，最終[來源與交付](model-index-allocation.md#v141-正式交付)已核對。以下保留早期候選 [41252363060](https://github.com/koviankevin/tflite-explorer/actions/runs/41252363060) 的原 RSS 失敗及唯讀診斷；當時未發布，不改列原結果，診斷仍不作正式發布證據。
 
 本次只增加獨立、唯讀的 Hosted Linux 診斷。使用同一個實體 1.25 GiB／21,005 OP 合成模型、八輪／兩輪 warmup、500ms RSS 取樣、五次 settle、原 URL timer、原 16 MiB slope 與原 10 秒正常關閉規則。它不是記憶體修正，單次診斷通過也不能取代失敗的正式關卡。
 

@@ -1,6 +1,6 @@
-# 手動執行的部分 IO 保存（v1.4.1 候選）
+# 手動執行的部分 IO 保存（v1.4.1）
 
-目前正式站與固定下載仍為 v1.4.0；本修正尚未發布。編輯匯出保持靜態檢查，interpreter 仍須手動執行已開啟的 TFLite。既有大模型 RSS 正式關卡失敗保持原判，不因這項修正或獨立診斷通過便發布。
+已於 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1) 正式交付，build `c64f4143bf8463a2`。單一 tensor 無法取得時，保留其他可讀的 BIN 與缺少原因；一般編輯／匯出保持靜態檢查，interpreter 仍須手動執行。 以下候選與失敗紀錄維持其原受測來源與當時狀態；目前交付見[正式交付](#v141-正式交付)。
 
 真正 LiteRT.js 2.6.0 CPU WASM 的不整除 legacy FC 會在執行後產生不符宣告的 output shape，並回傳無法用公開 `toTypedArray()` 取得的 padded tensor。原封存器讓這個例外中止整包 ZIP，連已可取得的 inputs 都遺失。候選改成逐 tensor 保存：單一資料讀取或長度檢查失敗時，保留其他可讀的 raw BIN、原本 slot 編號及明確原因。沒有嘗試解讀未公開的 strides／padding，也不填假值。
 
@@ -19,3 +19,9 @@
 ## 新來源的必要關卡
 
 接續實際索引配置修正後，[四項主分支收據](results/model-index-allocation-main.json)已核對來源 `c0dd77c8` 的核心、實體大模型八輪、79 項發布契約及 HTTP 候選 38 項操作。部分 IO 在零值／亂數負例仍保留失敗，三個可讀 inputs 成功下載、padded output 明列缺少；合法完整案例仍為 v1。所有相關 Worker 已關閉。這是候選驗收，正式 HTTPS 與固定 Release 尚未發布；原 RSS 失敗和先前候選收據維持原結果。
+
+## v1.4.1 正式交付
+
+固定來源 `25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704`／tree `b25b113c8c6fcd79b86b76956e0c14a59e992328`、build `c64f4143bf8463a2` 已完成[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871)，四個工作第一次 attempt 全成功。325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對。正式站包含 15 組 32px 文字框、搜尋／pattern／MLIR 與 TFLite 匯出重開、逐 OP／量化／legacy shape 報告、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO。一般編輯匯出零自動推論；失敗／未知與有意的 crash recovery 不冒充通過或正常關閉。
+
+固定 ZIP 41,294,984 bytes，SHA-256 `5ac4467b5052dc1ee7b79248571e0f06c8f6cd50b7239bca00b67ff831f7b8df`；checksum、manifest、gates 四份實際下載皆與準備工件一致，tag／Latest／權威 Pages deployment 已核對。Site ID `c4976f5eab2708e87299c97fdd817c0bb3a38150c4bd3a094f3c757c4babdaa1`，保留 v1.4.0／v1.3.1 與永久 baseline。[最終收據](results/model-index-v1.4.1-published.json)只含來源、雜湊、計數與有限結果；原始報告、截圖、環境及程序身分完整留在本機，沒有上傳本機原始紀錄。舊 tag／assets 不改寫，成功部署不重跑，沒有同步 Sites／GH Studio。歷史 Windows Chrome／網路守門與任意 kernel／公司 dialect／長期 SLA 的界線仍保留，完整商品等級目標未完成。
