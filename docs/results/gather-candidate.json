@@ -1,0 +1,325 @@
+{
+  "format": "model-lens-gather-candidate",
+  "version": 1,
+  "status": "local-selected-native-and-actual-download-CPU-verified-not-published",
+  "at": "2026-11-01T06:08:23.130027+00:00",
+  "applicationCodeCommit": "c4d06091ff824a15bf828a3fc5c0da67c23b33a8",
+  "nativeSource": "1b811a127ce205ade95bbeed04bb6d6389069eba",
+  "nativeTree": "cceae92a3949d9b291ab862661cba20f3ea128cb",
+  "nativeBuild": "225b89e77479a107",
+  "candidateVersion": "1.4.3",
+  "publishedVersion": "1.4.2",
+  "selectedTests": 140,
+  "selectedIncludesOneCPUCaseSuite": true,
+  "versionSelectionTests": 13,
+  "actualCPUCasesInSuite": 12,
+  "actualBrowserDownloadedModelCPURuns": 4,
+  "initialRegressions": {
+    "tests": 5,
+    "failed": 3,
+    "passed": 2
+  },
+  "expandedIndependentEditAndSerializedRegressions": {
+    "tests": 17,
+    "failed": 15,
+    "passed": 2
+  },
+  "originalInvalidFiles": [
+    {
+      "name": "dynamic-params-wrong-result",
+      "bytes": 1208,
+      "sha256": "0bfa98937ca72c777365516a1bfbe2c2ee815ca21140ea8e1914796952e6334a",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    },
+    {
+      "name": "dynamic-result-wrong-type",
+      "bytes": 1208,
+      "sha256": "be22a5aa9d71d26af6fcd92757f5472d2d918aa7b32d0b61ac03f0787313d9d5",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    },
+    {
+      "name": "dynamic-params-floating-indices",
+      "bytes": 1208,
+      "sha256": "34e14b43fd17f4a98854e54bec994c8747d175a3cbb032b315c2b15eec4996c5",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    },
+    {
+      "name": "dynamic-params-invalid-axis",
+      "bytes": 1208,
+      "sha256": "3d86850c89d4e78b3b18b7bd5c15a185959bf9ef055e5c14abdc95c7b67772d1",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    },
+    {
+      "name": "dynamic-params-invalid-batch",
+      "bytes": 1208,
+      "sha256": "930e5bc95fe892331587b11674f142bbf29149bd8735b5260fdf68707f62fbb4",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    },
+    {
+      "name": "scalar-params-unknown-result",
+      "bytes": 1192,
+      "sha256": "008cf0c0916a2dd1b8d2d7d658abaa73f5c01afda9f5f7701abaf23cd5b808c6",
+      "editRejectedAfter": true,
+      "serializedRejectedAfter": true
+    }
+  ],
+  "emptyIndices": {
+    "fullCutAndCompositionRoundTripAndCPU": true,
+    "singleModelInputPreserved": true,
+    "explicitEmptyDataVectorPreserved": true,
+    "defaultAbsentNonzeroDynamicOpaqueSparseDoNotGainSource": true
+  },
+  "native": [
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.76",
+      "reportSHA256": "6ae6cac916a639eb3a9960ca6b311cb55efd83878abe917444d5c97ac219d34f",
+      "workers": 9,
+      "modelWorkers": 8,
+      "allWorkersClosed": true,
+      "nativeIdentities": 8,
+      "allReaped": true,
+      "automaticRuntimeWorkers": 0,
+      "downloads": [
+        {
+          "case": "negative-batch",
+          "bytes": 1616,
+          "sha256": "d0fbd7a5cb3266c878e4224aa07769dc4d1386e32495014d07c17a4603c2360c",
+          "reportBytes": 7723,
+          "reportSHA256": "d342dd8685cc0eb844fdba1625ef96a99f07a194004927ba0a8b1c399594e690",
+          "operators": 2,
+          "byteStatus": "passed",
+          "comparedBytes": 16
+        },
+        {
+          "case": "empty-indices",
+          "bytes": 1584,
+          "sha256": "e3e19fd4696c667d58bb4f64aebc21f9fab7d5cb63d1854d5d16deb5ed737fa2",
+          "reportBytes": 7486,
+          "reportSHA256": "0e4d700470ac537587afa9fcf9d61d4cfa08ba5b2b99dbf5a414a4ff5b53b046",
+          "operators": 2,
+          "byteStatus": "not-applicable",
+          "comparedBytes": 0
+        },
+        {
+          "case": "dynamic-valid",
+          "bytes": 1624,
+          "sha256": "eefc85b0182f4e34a7616946c55f8f1f4f116ca15af9cd5520fbf174cf07e337",
+          "reportBytes": 7604,
+          "reportSHA256": "20cbc5a47b5466c45cbf65b8539a0b3a90f57c3767ec696fc4148d6e1294b640",
+          "operators": 2,
+          "byteStatus": "passed",
+          "comparedBytes": 8
+        }
+      ]
+    },
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.50",
+      "reportSHA256": "aa83d638845c85927add50ed845ecb4333f6955c7addca3c623acc088f1049c4",
+      "workers": 9,
+      "modelWorkers": 8,
+      "allWorkersClosed": true,
+      "nativeIdentities": 11,
+      "allReaped": true,
+      "automaticRuntimeWorkers": 0,
+      "downloads": [
+        {
+          "case": "negative-batch",
+          "bytes": 1616,
+          "sha256": "d0fbd7a5cb3266c878e4224aa07769dc4d1386e32495014d07c17a4603c2360c",
+          "reportBytes": 7723,
+          "reportSHA256": "b4cbab1e80fa8e8d8d9344c678baf8b465231aab8de91ca30c91f09841216774",
+          "operators": 2,
+          "byteStatus": "passed",
+          "comparedBytes": 16
+        },
+        {
+          "case": "empty-indices",
+          "bytes": 1584,
+          "sha256": "e3e19fd4696c667d58bb4f64aebc21f9fab7d5cb63d1854d5d16deb5ed737fa2",
+          "reportBytes": 7486,
+          "reportSHA256": "187836124153134cbda1cf07840c509b808dcd4f3052a93df738408deb68b8e0",
+          "operators": 2,
+          "byteStatus": "not-applicable",
+          "comparedBytes": 0
+        },
+        {
+          "case": "dynamic-valid",
+          "bytes": 1624,
+          "sha256": "eefc85b0182f4e34a7616946c55f8f1f4f116ca15af9cd5520fbf174cf07e337",
+          "reportBytes": 7604,
+          "reportSHA256": "4ee93722bb30cded6f15fd5cbfd8f5be850f4b2f120e0aacd11c013a307967fe",
+          "operators": 2,
+          "byteStatus": "passed",
+          "comparedBytes": 8
+        }
+      ]
+    }
+  ],
+  "nativeDownloadedCPU": [
+    {
+      "channel": "chrome",
+      "case": "negative-batch",
+      "status": "passed",
+      "modelSHA256": "d0fbd7a5cb3266c878e4224aa07769dc4d1386e32495014d07c17a4603c2360c",
+      "ioSHA256": "c2d5dea2bce2eb0d90d73e39b4334b2156d70e2cfd1ce097d011ce9b9d6dacba",
+      "outputs": [
+        [
+          1,
+          3,
+          4,
+          6,
+          8,
+          7,
+          11,
+          10
+        ],
+        [
+          1,
+          3,
+          4,
+          6,
+          8,
+          7,
+          11,
+          10
+        ]
+      ]
+    },
+    {
+      "channel": "chrome",
+      "case": "empty-indices",
+      "status": "passed",
+      "modelSHA256": "e3e19fd4696c667d58bb4f64aebc21f9fab7d5cb63d1854d5d16deb5ed737fa2",
+      "ioSHA256": "e930247993236841e75ec14eb5bde0667187fe82598b221f346cf9581038046e",
+      "outputs": [
+        [],
+        []
+      ]
+    },
+    {
+      "channel": "msedge",
+      "case": "negative-batch",
+      "status": "passed",
+      "modelSHA256": "d0fbd7a5cb3266c878e4224aa07769dc4d1386e32495014d07c17a4603c2360c",
+      "ioSHA256": "9fd16050af6df275f36c120b01761aaa6aec36e94803b51d886a7175ad584b2d",
+      "outputs": [
+        [
+          1,
+          3,
+          4,
+          6,
+          8,
+          7,
+          11,
+          10
+        ],
+        [
+          1,
+          3,
+          4,
+          6,
+          8,
+          7,
+          11,
+          10
+        ]
+      ]
+    },
+    {
+      "channel": "msedge",
+      "case": "empty-indices",
+      "status": "passed",
+      "modelSHA256": "e3e19fd4696c667d58bb4f64aebc21f9fab7d5cb63d1854d5d16deb5ed737fa2",
+      "ioSHA256": "14b1051c7acda1597fe65537f4a061b217bf05172cab485f65d7789c4362fe09",
+      "outputs": [
+        [],
+        []
+      ]
+    }
+  ],
+  "actualNativeScreenshotsViewed": true,
+  "ioZipCRCVerified": 4,
+  "scopes": [
+    {
+      "kind": "core",
+      "source": "1b811a127ce205ade95bbeed04bb6d6389069eba",
+      "files": 88,
+      "fingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "previousFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "changed": false,
+      "previousRun": 41269145087
+    },
+    {
+      "kind": "browser",
+      "source": "1b811a127ce205ade95bbeed04bb6d6389069eba",
+      "files": 350,
+      "fingerprint": "0ab403329d398a6743a80ad91f7011ca1106a5a88ffc4e5904ac9a0492b52903",
+      "previousFingerprint": "44aecde90169c26b1f1588c2c597cd634d75f6c27fe4ac3eadf034f6355c737d",
+      "changed": true,
+      "previousRun": 41274789522
+    },
+    {
+      "kind": "contract",
+      "source": "1b811a127ce205ade95bbeed04bb6d6389069eba",
+      "files": 668,
+      "fingerprint": "dba6ef585a39b7a456d8681dc06f9eeb1d5474e0e05c81976e6d7105811083d3",
+      "previousFingerprint": "3561a86ba57f51769e47209ed9aa26ee10c3f4b4d53d0e795d43548e37c492c7",
+      "changed": true,
+      "previousRun": 41274804622
+    },
+    {
+      "kind": "site",
+      "source": "1b811a127ce205ade95bbeed04bb6d6389069eba",
+      "files": 397,
+      "fingerprint": "6a38e9923ef62267fbc87150a8ddec6dce3253e8a875d1a416334f83fec53ffc",
+      "previousFingerprint": "49f4131ac84d628265a608ccc0431ef764463df3aba860bd737d033dc39d067b",
+      "changed": true,
+      "previousRun": 41274810166
+    }
+  ],
+  "primarySources": [
+    {
+      "snapshot": "tensorflow-gather.cc",
+      "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/gather.cc",
+      "bytes": 11700,
+      "sha256": "fd9d2d7a63f70895141c992782a076f3390c3fe1ff354e9b39fd88f8555dc77c"
+    },
+    {
+      "snapshot": "tensorflow-gather_test.cc",
+      "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/gather_test.cc",
+      "bytes": 24069,
+      "sha256": "a47ec3630b6faf1eacb7ded056ff677a40451b63ff4cf8f0d88217d5bc2e4e6b"
+    },
+    {
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/ir/tfl_ops.td#L1263",
+      "sha256": "f7035997e12a558e3f8cdcaa84948a33eb6057850c58ec79b689bde4b1ca7b98"
+    },
+    {
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/tools/versioning/op_version.cc#L278",
+      "sha256": "47a575a36aee7fcbe9b7d3e3fb0e4d0a857853bbabb6df0d829b4311cd5a9bef"
+    }
+  ],
+  "failedNativeAttempt1": {
+    "source": "c4d06091ff824a15bf828a3fc5c0da67c23b33a8",
+    "bothRemainFailed": true,
+    "reason": "QA demanded nonempty-range comparison success for an empty-vector-only artifact; actual zero ranges are not-applicable. Independent raw structure and field presence passed. Only QA and docs changed for attempt 2; no normal-exit acceptance claimed for attempt 1."
+  },
+  "limitations": [
+    "Focused native chooser/wiring/32px verification on authenticated original HTML fixture; not formal HTTPS transport or physical RSS acceptance.",
+    "Dynamic/unknown and unsupported metadata stays unverified; format/type checks are not arbitrary kernel or numerical equivalence proof.",
+    "Historical Windows Chrome Cloud Files shutdown and HTTPS security-product injection observations remain recorded.",
+    "Normal edit/export remains static and interpreter manual.",
+    "Necessary PR/main gates and immutable v1.4.3 delivery are pending."
+  ],
+  "rawEvidence": "Original models, reports, logs, screenshots, IO archives and independent readers retained locally; public receipt contains numeric/source summaries only.",
+  "releaseEvidenceEligible": false,
+  "published": false,
+  "goalComplete": false
+}

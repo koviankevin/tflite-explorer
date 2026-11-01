@@ -31,3 +31,11 @@ LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三�
 原生操作、必要 PR／main 關卡、正式 HTTPS 及新不可變 Release 尚待接續。歷史 Windows Chrome 雲端統計／網路注入及其他商品化未完成項目保留，完整目標仍進行中。
 
 原生第一輪兩端均正確拒絕動態型別負例，負 batch_dims 的接線、下載及重開通過；空 indices 下載也已獨立核對其兩個 OP、單一模型輸入、明確空 data vectors 及零常數讀取。腳本卻把沒有非空 payload 時的 byte comparison「不適用」要求為「通過」，整輪因此維持失敗。修正僅將該零 byte 案例改為精確要求不適用、零 ranges／bytes，並核對實際空 buffer；其他案例仍要求非空 bytes 比對通過。沒有修改產品、上限或 timer，後續完整原生驗收仍待完成。
+
+## 候選原生驗收已核對
+
+來源 `1b811a127ce205ade95bbeed04bb6d6389069eba`／tree `cceae92a3949d9b291ab862661cba20f3ea128cb`、build `225b89e77479a107` 的 Chrome 156.0.8078.76／Edge 156.0.4314.50 各完成五組原生情境。動態型別負例零下載；負 batch_dims、空 indices 與合法動態模型可接線、匯出、重開搜尋。合法動態模型的兩個 OP 仍列未檢查，沒有啟動 interpreter。1280×640／32px 的實際 OP 列截圖已檢視，兩端各九個 Worker／八個 model Workers 與八／十一個觀察到的自有程序均正常退出，原 10 秒關閉要求不變。
+
+十二份實際模型／JSON 下載逐一核對，兩端同案例模型 SHA 相同；非空 indices 的原 bytes 相同，空案例精確要求零 ranges／bytes 與明確空 vectors，沒有多餘模型輸入。單節點 GATHER pattern 各找兩筆，沒有連線的連續雙節點負例維持零筆。四份實際下載的合法模型另經既有 CPU 執行，兩個 outputs 都與預期精確一致，四份 IO ZIP 的 CRC 及 BIN 長度另行核對。
+
+[候選數值收據](results/gather-candidate.json)只含固定來源、雜湊與計數；原始本機資料未公開。140 項選測、十三項版本選擇及十二組 CPU 在應用來源 `c4d0609` 通過，之後僅修改原生腳本與說明，沒有為此重跑無關測試。正式站仍為 v1.4.2；必要 PR／main 與 v1.4.3 固定交付尚未完成，完整商品化目標及歷史限制保留。
