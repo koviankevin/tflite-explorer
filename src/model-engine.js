@@ -5,7 +5,9 @@ import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
-const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter((value) => value && typeof value === 'object' && value.identifier !== undefined) : [];
+const indexableValue = (value) => value && typeof value === 'object' && value.identifier !== undefined;
+const argumentValues = (argument) => Array.isArray(argument.value) ? argument.value.filter(indexableValue) : [];
+const firstLine = (name) => { const end = name.indexOf('\n'); return end < 0 ? name : name.slice(0, end); };
 export const CUSTOM_OPTIONS_PREVIEW_LIMIT = 64 * 1024;
 
 // Keep the generated schema unchanged for builders and other readers. Only
@@ -128,31 +130,61 @@ export function indexModel(model, additionalTensors = () => {}) {
         const tensors = new Map();
         const producers = new Map();
         const consumers = new Map();
-        const visit = (argument) => {
-            for (const value of argumentValues(argument)) tensors.set(value.identifier, value);
-        };
-        for (const arg of [...graph.inputs, ...graph.outputs]) visit(arg);
-        graph.nodes.forEach((node, index) => {
-            for (const argument of [...node.inputs, ...node.outputs]) visit(argument);
-            for (const arg of node.outputs) for (const value of argumentValues(arg)) producers.set(value.identifier, index);
-            for (const arg of node.inputs) for (const value of argumentValues(arg)) {
-                if (!consumers.has(value.identifier)) consumers.set(value.identifier, new Set());
-                consumers.get(value.identifier).add(index);
+        const visit = (argumentsList, nodeIndex, output) => {
+            for (const argument of argumentsList) {
+                const values = argument.value;
+                if (!Array.isArray(values)) continue;
+                for (const value of values) {
+                    if (!indexableValue(value)) continue;
+                    tensors.set(value.identifier, value);
+                    if (nodeIndex === undefined) continue;
+                    if (output) producers.set(value.identifier, nodeIndex);
+                    else {
+                        if (!consumers.has(value.identifier)) consumers.set(value.identifier, new Set());
+                        consumers.get(value.identifier).add(nodeIndex);
+                    }
+                }
             }
+        };
+        visit(graph.inputs); visit(graph.outputs);
+        graph.nodes.forEach((node, index) => {
+            visit(node.inputs, index, false); visit(node.outputs, index, true);
         });
         additionalTensors(tensors, graphIndex);
-        const next = graph.nodes.map((node) => new Set(node.outputs.flatMap((arg) => argumentValues(arg).flatMap((v) => [...(consumers.get(v.identifier) || [])]))));
+        const next = graph.nodes.map(() => new Set());
         const previous = graph.nodes.map(() => new Set());
-        next.forEach((targets, from) => targets.forEach((to) => previous[to].add(from)));
+        // Walk every output, including duplicate definitions in inspectable
+        // source graphs; the last-producer map is not an adjacency substitute.
+        graph.nodes.forEach((node, from) => {
+            for (const argument of node.outputs) {
+                const values = argument.value;
+                if (!Array.isArray(values)) continue;
+                for (const value of values) {
+                    if (!indexableValue(value)) continue;
+                    const targets = consumers.get(value.identifier);
+                    if (targets) for (const to of targets) next[from].add(to);
+                }
+            }
+        });
+        next.forEach((targets, from) => { for (const to of targets) previous[to].add(from); });
         const records = [];
         graph.nodes.forEach((node, index) => {
-            const names = [...node.inputs, ...node.outputs].flatMap((arg) => argumentValues(arg).map((value) => value.name.split('\n')[0])).join(' ');
+            const parts = [];
+            for (let side = 0; side < 2; side++) {
+                for (const argument of side === 0 ? node.inputs : node.outputs) {
+                    const values = argument.value;
+                    if (Array.isArray(values)) for (const value of values) if (indexableValue(value)) parts.push(firstLine(value.name));
+                }
+            }
+            const names = parts.join(' ');
             records.push({ kind: 'layers', graph: graphIndex, index, id: node.identifier, label: node.name || node.type.name, operator: node.type.name, text: `${node.name} ${names} ${node.type.name} ${operatorKey(node.type.name)} ${node.identifier}`.toLowerCase() });
         });
         for (const value of tensors.values()) {
-            const linked = new Set([...(consumers.get(value.identifier) || []), producers.get(value.identifier)].filter((x) => x !== undefined));
-            const operators = [...linked].map((i) => graph.nodes[i].type.name).join(' ');
-            records.push({ kind: 'tensors', graph: graphIndex, id: value.identifier, label: value.name.split('\n')[0] || `Tensor #${value.identifier}`, dtype: value.type?.dataType, shape: value.type?.shape?.dimensions || [], operator: operators, text: `${value.name} ${operators} ${operatorKey(operators)}`.toLowerCase() });
+            const uses = consumers.get(value.identifier), producer = producers.get(value.identifier), names = [];
+            if (uses) for (const i of uses) names.push(graph.nodes[i].type.name);
+            if (producer !== undefined && !uses?.has(producer)) names.push(graph.nodes[producer].type.name);
+            const operators = names.join(' ');
+            records.push({ kind: 'tensors', graph: graphIndex, id: value.identifier, label: firstLine(value.name) || `Tensor #${value.identifier}`, dtype: value.type?.dataType, shape: value.type?.shape?.dimensions || [], operator: operators, text: `${value.name} ${operators} ${operatorKey(operators)}`.toLowerCase() });
         }
         const entry = { graph, tensors, producers, consumers, next, previous, records };
         operatorIndex(entry);
