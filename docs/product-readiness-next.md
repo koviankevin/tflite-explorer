@@ -94,3 +94,7 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 ## v1.4.2 正式交付
 
 上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41276594514)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/batch-matmul-v1.4.2-published.json)。已保留 v1.4.1 tag／assets、原始失敗及各來源的驗收範圍，沒有放寬判定或同步 Sites／GH Studio。BATCH_MATMUL 新格式規則不能代替任意 kernel／量化語意驗證；其餘表列未完成項目與完整商品等級目標繼續保留。
+
+## v1.4.3 必要主分支證據
+
+GATHER 動態型別／rank 檢查與 producer-aware 空常數修正已合併，[四項來源綁定關卡](results/gather-main.json)完成原始報告核對：未變的 88 檔核心沿用可信 main 證據，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的實際下載、32px、pattern 與正常退出另有獨立來源；兩份新零輸出下載的 CPU 與相同 bytes 控制的沿用分開記錄。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版仍是 v1.4.2；其餘商品等級未完成項目不改列完成。
