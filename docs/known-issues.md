@@ -1,6 +1,8 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4)／build `14d6d1628c5136c5`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)／build `bb21d924c10706b3`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+
+v1.4.5 的卷積／pooling [動態 metadata 修正](spatial-metadata-validation.md#v145-正式交付)已交付。已知 rank／bias 矛盾先拒絕，合法動態與其他 dtype／packing 仍列未檢查；靜態通過不代表 kernel 相容或量化數值等價。四份原始錯誤檔、實際下載與 CPU 證據保留；歷史 Windows Chrome 關閉與網路注入問題不因本版有限成功而改列修復。
 
 v1.4.4 的 FULLY_CONNECTED [型別／rank 與 optional bias 修正](fully-connected-validation.md#v144-正式交付)已交付。未知 quant_spec、shuffled workspace／packing、零 input_size 特殊路徑與未實作的 mixed encoding 仍明列未檢查；靜態通過不代表 kernel 相容或量化數值等價。歷史 Windows Chrome 正常關閉與網路注入問題不因本版小型原生案例通過而改列修復。
 
