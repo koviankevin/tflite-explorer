@@ -21,3 +21,11 @@ PR #211 的 898 項 Node 測試通過、35 項既有選做略過，79 項必要�
 原因是實驗將 core 輸出放在 runner 暫存目錄，違反既有 `buildDestination()` 僅接受專案輸出目錄的守門。從原報告的錯誤雜湊，與直接執行真正 builder guard 的錯誤逐字雜湊核對一致；[公開摘要](results/renderer-probe-build-failure.json)只列固定原因、來源、計數與 provider 校驗值，原始日誌與證據留在本機。
 
 修正將 core 改放在專案 `build/` 下的獨立新目錄，報告／fixture 位置分開，沒有放寬 builder guard。實際 builder 契約回歸先重現相同拒絕，再驗證新位置可接受、原位置仍拒絕，相關選測增為 38 項且全通過。必要 PR／來源核對後，以修正來源事先限定一次 probe；原失敗和正式大模型失敗都不改列成功，也不重新執行原關卡。
+
+## 第二次執行與顯示數量修正
+
+PR #212 的 899 項 Node 測試、79 項發布契約通過，實際受測 tree 與主分支相同。修正建置位置後的 [41262415628](https://github.com/koviankevin/tflite-explorer/actions/runs/41262415628) 已開啟 3,005 OP 的小型模型，但 UI assertion 將畫面的分組數字 `3,005` 與原始字串 `3005` 比較，立即失敗。原錯誤訊息逐字重現的 SHA-256 與 artifact 相同；不是模型解析失敗或記憶體超標。保留一筆 baseline 樣本，尚無 loaded／closed 量測，不能用於判斷釋放。
+
+六個觀察到的程序身分全部退出，model 與 layout Workers 皆關閉。原報告將失敗階段標為 cleanup，是 finally 覆寫了 ui 階段；現在於清理前記錄原錯誤，清理若另外失敗仍各自保留。數量比較改為與 UI 同樣的 en-US 分組格式，隔離 context 固定該 locale，不修改 app、parser、原測試門檻或正式部署。
+
+回歸先重現相同的 `3,005 !== 3005`，再對兩個實驗規模核對正例並拒絕錯誤數量；原始 ZIP、日誌與失敗留在本機，公開僅有[固定欄位摘要](results/renderer-probe-count-failure.json)。修正來源的必要檢查與精確 tree 核對後，最多再執行一次本最小實驗；不重跑原大模型關卡或成功部署。

@@ -15,7 +15,7 @@ import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessE
 import {createProcessMemoryProbe} from './process-memory-profile.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {installLifecycleAudit} from './lifecycle-audit.mjs';
-import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,rendererProbeLocations} from './renderer-release-policy.mjs';
+import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,rendererProbeLocations,assertProbeLayerCount} from './renderer-release-policy.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));process.chdir(root);
 const reportPath=path.resolve(process.env.RENDERER_PROBE_REPORT||'test-results/renderer-release-probe.json');
@@ -48,7 +48,7 @@ try{
         stage='launch';const marker=randomBytes(16).toString('hex');browser=await chromium.launch({headless:true,env:{...process.env,MODEL_LENS_PHYSICAL_OWNER:marker}});report.chromium=browser.version();
         tree=new OwnedProcessTree(await findOwnedBrowserRoot(await readProcessTable(),process.pid,marker));
         try{
-            context=await browser.newContext({viewport:{width:1280,height:640},acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
+            context=await browser.newContext({viewport:{width:1280,height:640},locale:'en-US',acceptDownloads:true});await context.addInitScript(installLifecycleAudit);
             await context.route('**/*',async route=>{if(route.request().method()!=='GET'||!route.request().url().startsWith(base)){caseError??=Error('Unexpected request');return route.abort();}return route.continue();});
             await context.route('**/src/model-worker.js*',async route=>{const response=await route.fetch();await route.fulfill({response,body:`(${installLifecycleAudit.toString()})(true);\n${await response.text()}`});});
             const page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',e=>{caseError??=e;});page.on('crash',()=>{caseError??=Error('Page crash');});
@@ -67,7 +67,7 @@ try{
             stage='ui';await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#welcome-open').waitFor();await refreshTypes();await take();
             timer=setInterval(()=>{if(!sampling)take().catch(e=>{caseError??=e;});},policy.sampleIntervalMs);
             phase='source';const chooser=page.waitForEvent('filechooser');await page.locator('#open-model').click();await(await chooser).setFiles(fixture.file);
-            await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assert.equal(await page.locator('#layer-count').textContent(),String(plan.operators));
+            await until(()=>document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');assertProbeLayerCount(await page.locator('#layer-count').textContent(),plan.operators);
             await page.locator('#graph-font-size').selectOption('32');await page.locator('[data-kind="layers"]').click();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#results').dataset.searchQuery==='#0'&&document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').first().click();await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
             phase='loaded';await refreshTypes();const heap=await modelWorkerHeap(browserCDP);result.workerHeap=Object.fromEntries(['usedSize','totalSize','embedderHeapUsedSize','backingStorageSize'].map(k=>[k,heap[k]??null]));await take();await persist();
             phase='closing';await take();const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let deadline;
@@ -79,7 +79,7 @@ try{
             clearInterval(timer);timer=null;await pending;await take();if(caseError)throw caseError;
             const audit=await read(()=>globalThis.__lifecycle);privateCase.audit=audit;assert.equal(audit.urls.length,0);assert.equal(audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,1);assert.ok(audit.workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).every(w=>w.terminated&&w.audit?.bytes>0&&w.audit.maxRead<=1024**2&&w.audit.bytes<=16*1024**2&&w.audit.violations.length===0));assert.ok(audit.audit.maxRead<=1024**2&&audit.audit.bytes<=16*1024**2&&audit.audit.violations.length===0);
             result.summary=summarizeRendererRelease(result.samples,result.closedAtMs);assert.ok(result.summary.postCloseDurationMs>=policy.observeAfterCloseMs);result.labelCount=projection.labelCount;result.status='complete';
-        }finally{
+        }catch(error){failure(error);throw error;}finally{
             stage='cleanup';clearInterval(timer);timer=null;await pending.catch(e=>{caseError??=e;});
             if(context){await context.close();context=null;}let deadline;
             try{await Promise.race([browser.close(),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Browser close timeout')),10000);})]);}finally{clearTimeout(deadline);}
@@ -89,7 +89,7 @@ try{
         }
     }
     stage='finish';assert.equal(report.cases.length,policy.cases.length);assert.deepEqual(gitSource(),report.source);report.sourceUnchanged=true;report.status='complete';
-}catch(error){failure(error);}
+}catch(error){if(allError!==error)failure(error);}
 finally{
     clearInterval(timer);await pending.catch(()=>{});
     if(browser)try{let deadline;try{await Promise.race([browser.close(),new Promise((_,reject)=>{deadline=setTimeout(()=>reject(Error('Browser close timeout')),10000);})]);}finally{clearTimeout(deadline);}}catch(error){stage='cleanup';failure(error);}

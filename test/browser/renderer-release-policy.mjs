@@ -1,4 +1,9 @@
 import path from 'node:path';
+import assert from 'node:assert/strict';
+
+export function assertProbeLayerCount(actual,expected){
+    assert.equal(actual,expected.toLocaleString('en-US'));
+}
 
 export function rendererProbeLocations({root,reportPath,nonce}){
     need(path.isAbsolute(root)&&path.isAbsolute(reportPath)&&/^[a-f0-9]{16}$/.test(nonce),'probe-locations');
