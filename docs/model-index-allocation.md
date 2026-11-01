@@ -18,3 +18,13 @@
 這是同機 Node 24.22.1／V8 13.6 的有界觀察，兩組依序執行，host cache／排程與自然 GC 會影響數值。修改後 used heap 上升而 capacity 下降，因此不能把 capacity 減量解讀為 live-object 留存已減少，也不從三次時間直接宣稱一般速度保證。它不是 browser V8 15.6、原生 RSS 或原實體八輪修復的證據；實際 browser／完整原政策仍待驗證。
 
 [候選數值摘要](results/model-index-allocation-candidate.json)只含固定來源、雜湊、計數與觀察。原始基準、初版 collector 的 `.items` API 失誤與修正結果留在本機；模型與權重不放入公開摘要。一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。
+
+## 四項主分支關卡已核對（尚未發布）
+
+來源 `c0dd77c89cde95b215b0d6b7990bfdda07c814d0`／tree `3f42b92f1d85b2ede0f36f1f9e65834c60f43e0f`、候選 build `3eae83697720ddfa` 的[四項原始關卡收據](results/model-index-allocation-main.json)已完成 digest、CRC、來源、scope 與原政策核對。Core 九筆量測、發布契約 79 項零略過，以及六種版本切換和完整 HTTP 候選 38 項操作通過。網站驗收另包含 15 組 32px 文字框、19 種手動 runtime、部分 IO 保存及八輪 CPU／IO；編輯匯出本身零自動推論。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41269145608)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern、草稿指紋與讀取規則通過。關閉後 RSS slope 為 −834,413.71 bytes／輪、drift 1,912,832 bytes、main heap drift −157,008 bytes；sampled peak 1,102,385,152 bytes，57 個 Worker 及六個觀察到的程序正常退出。沒有 forced GC、RSS 扣除、改動 pool、timer 或驗收上限。舊 [41252363060](https://github.com/koviankevin/tflite-explorer/actions/runs/41252363060) 的 slope 失敗保留；新結果是實際索引程式修改後的新來源驗收，不改列舊結果。
+
+同政策的獨立 browser 觀察也顯示 21,005 OP Worker heap capacity 由 133,767,168 降至 119,353,344 bytes，used heap 由 67,373,412 升至 76,781,188 bytes；不將 capacity 降低解讀為一般 live-object 或 RSS 保證。診斷不作發布證據。Windows Chrome／Edge 在來源相同的 PR tree 完成原生選檔、SPLIT 匯出重開、invalid SLICE 零下載、dynamic PAD 未檢查原因及 21,006 OP 報告 100→200 分批；六份下載獨立核對，兩端 Worker／程序正常退出。這是隔離原始 HTML fixture，不冒充 Windows 正式 HTTPS 或大模型 RSS。
+
+正式 HTTPS 部署、固定 Release 與四份實際公開下載核對仍待接續；目前正式版仍為 v1.4.0，完整商品化目標及歷史 Windows Chrome 問題沒有因本次有限驗收而完成。
