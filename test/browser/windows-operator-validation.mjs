@@ -12,16 +12,18 @@ import {windowsProcessObserver} from './windows-process-memory.mjs';
 import {operatorValidationFlow} from './operator-validation-flow.mjs';
 import {batchMatmulValidationFlow} from './batch-matmul-validation-flow.mjs';
 import {gatherValidationFlow} from './gather-validation-flow.mjs';
+import {fullyConnectedValidationFlow} from './fully-connected-validation-flow.mjs';
 assert.equal(process.platform,'win32');assert.ok(process.argv.includes('--allow-local-browser'));
 const [channel,build,output]=process.argv.slice(2).filter(a=>!a.startsWith('--'));assert.ok(['chrome','msedge'].includes(channel)&&build&&output);
 const matmulOnly=process.argv.includes('--matmul-only');
-const gatherOnly=process.argv.includes('--gather-only');assert.ok(!(matmulOnly&&gatherOnly));
+const gatherOnly=process.argv.includes('--gather-only'),fcOnly=process.argv.includes('--fc-only');assert.ok([matmulOnly,gatherOnly,fcOnly].filter(Boolean).length<=1);
 const source=gitSource();assert.equal(source.dirty,false);
 const manifest=await verifyArtifact(build,{publicOnly:true,requireClean:true,expectedCommit:source.commit}),directory=path.resolve(output);await mkdir(directory);
 const server=createStaticServer(path.resolve(build));server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}/`;
 const report={format:'model-lens-windows-operator-validation',status:'failed',channel,source,release:manifest.release,startedAt:new Date().toISOString(),checks:[],errors:[],workers:[],nativeProcessSnapshots:[],scope:'Public synthetic UI on authenticated original HTML fixture; native exit covers observed owned identities admitted before the flow and before close, not unobserved short-lived processes, HTTP document transport, physical RSS or a fix for historical native-close failures.'};
 if(matmulOnly)report.format='model-lens-windows-matmul-validation';
 if(gatherOnly)report.format='model-lens-windows-gather-validation';
+if(fcOnly)report.format='model-lens-windows-fc-validation';
 let browser,context,page,observer,closing=false;
 const observeNative=async phase=>{
     const sample=await observer.sample();report.nativeProcessSnapshots.push({phase,...sample});
@@ -35,13 +37,13 @@ try{
     await context.route('**/*',async route=>{const r=route.request();if(new URL(r.url()).origin!==new URL(base).origin||r.method()!=='GET'){report.errors.push('Unexpected application network request');return route.abort();}if(!await doc.handle(route,base))return route.continue();});
     page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('worker',w=>{const row={url:w.url(),closed:false};report.workers.push(row);w.once('close',()=>{row.closed=true;});});
     await observeNative('before-flow');
-    report.flow=await (gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name)});report.functionalStatus='passed';
+    report.flow=await (fcOnly?fullyConnectedValidationFlow:gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name)});report.functionalStatus='passed';
     await observeNative('before-close');
     await context.close();context=null;closing=true;let timer;
     try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('normal browser.close exceeded10s')),10000);})]);}finally{clearTimeout(timer);}
     report.browserClosed=true;const remaining=await observer.remaining();report.processCleanup={allReaped:remaining.rows.length===0,remaining:remaining.rows,identities:remaining.identities};
     assert.ok(report.processCleanup.allReaped);assert.ok(report.workers.length&&report.workers.every(w=>w.closed));assert.deepEqual(report.errors,[]);assert.deepEqual(gitSource(),source);report.status='passed';
-}catch(error){report.error=error.stack||String(error);if(error.operatorValidation||error.matmulValidation||error.gatherValidation)report.flow=error.operatorValidation||error.matmulValidation||error.gatherValidation;if(observer)report.failureNativeObservation=await observer.remaining().catch(e=>({error:e.message}));if(page&&!page.isClosed()){report.failureDOM=await desktopDOMReader(page)(()=>({mode:document.body.className,notice:document.querySelector('#notice')?.textContent,edit:document.querySelector('#edit-message')?.textContent,dialogs:Array.from(document.querySelectorAll('dialog[open]'),e=>e.id)})).catch(e=>({error:e.message}));await page.screenshot({path:path.join(directory,'failure.png')}).catch(()=>{});}process.exitCode=1;await writeFile(path.join(directory,'failure-checkpoint.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});}
+}catch(error){report.error=error.stack||String(error);if(error.operatorValidation||error.matmulValidation||error.gatherValidation||error.fcValidation)report.flow=error.operatorValidation||error.matmulValidation||error.gatherValidation||error.fcValidation;if(observer)report.failureNativeObservation=await observer.remaining().catch(e=>({error:e.message}));if(page&&!page.isClosed()){report.failureDOM=await desktopDOMReader(page)(()=>({mode:document.body.className,notice:document.querySelector('#notice')?.textContent,edit:document.querySelector('#edit-message')?.textContent,dialogs:Array.from(document.querySelectorAll('dialog[open]'),e=>e.id)})).catch(e=>({error:e.message}));await page.screenshot({path:path.join(directory,'failure.png')}).catch(()=>{});}process.exitCode=1;await writeFile(path.join(directory,'failure-checkpoint.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});}
 finally{
     if(!closing&&browser){await context?.close();await browser.close();}
     if(observer)report.observerClose=await observer.close();server.closeAllConnections();await new Promise(r=>server.close(r));report.finishedAt=new Date().toISOString();await writeFile(path.join(directory,'report.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});

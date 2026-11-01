@@ -2,6 +2,8 @@
 
 使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3)／build `bbb977e791849a92`，328 核心檔、全站 1,477 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/gather-v1.4.3-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
+接續的 [FULLY_CONNECTED 候選](fully-connected-validation.md)已實際重現錯誤 dtype／動態 weights rank 放行，以及合法無 bias 的誤擋。三份原始匯出檔在編輯與序列化報告兩個入口都已拒絕；199 項相關檢查及十三組真正 CPU 正例通過，未讀 weights 做 metadata 驗證。Windows Chrome／Edge、必要 main 關卡與 v1.4.4 正式交付仍待接續；目前正式站與固定下載保持 v1.4.3。
+
 GATHER 動態 shape 掩蓋已知型別／rank 錯誤，以及零元素常數／activation 的 producer 與切圖邊界修正，已在 [v1.4.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.3) [正式交付](gather-validation.md#v143-正式交付)。較早 140 項／十二組 CPU 與 Chrome／Edge 證據維持[原候選收據](results/gather-candidate.json)；最終來源的 143 項相關檢查、十三組 CPU，以及十二份原生下載、32px 與正常退出維持[最終候選收據](results/gather-candidate-final.json)。本版正式 HTTPS 與固定下載另有獨立來源綁定，不以後來成功改寫早期失敗或擴大任意 kernel 語意。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
