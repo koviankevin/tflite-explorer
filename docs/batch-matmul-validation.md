@@ -22,3 +22,5 @@
 另用既有 LiteRT.js 2.6.0 compat CPU，對十種真正編輯／匯出／重開的模型核對每個 output 值與原始權重 bytes：四種 adjoint、不同 batch rank 的 broadcast、對稱／非對稱 hybrid、int8→int32、量化 int8 及 int16／int8。合法整數案例精確相符，hybrid 使用事先指定的絕對誤差上限 0.025。沒有因為非法 output 的 CPU 回報成功就放行匯出。
 
 Chrome／Edge 的獨立選測入口為 `node test/browser/windows-operator-validation.mjs <channel> <build> <output> --allow-local-browser --matmul-only`，使用公開合成模型、原生選檔與接線、1280×640／32px、六份實際下載及重開搜尋，要求八個 model Workers 與所有觀察到的自有程序正常退出。它與原正式 38 項 smoke 分開保存來源，沒有延長既有 runtime／URL timer、工作流程期限或 RSS 上限。此入口、PR／main 必要關卡與正式交付仍待完成；本頁不宣稱 v1.4.2 已發布。
+
+第一輪兩瀏覽器都正確拒絕非法 dtype／rank，hybrid 匯出與下載 bytes 也已核對；新 flow 以同一容器尋找 summary 時，同時命中量化與逐 OP 兩個正常標題，整輪仍判失敗。修正只將選擇器與列數限制到逐 OP 區段，保留原始失敗，不修改網站或移除量化顯示；後續完整結果仍待核對。
