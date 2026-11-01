@@ -1,0 +1,188 @@
+{
+  "source": "dd896a29820b367e01f8e4ed0c34cc66a7b49646",
+  "tree": "1c703c67bd6edec9e9a54ab4d335efc09ffd5053",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.4.6",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "dd896a29820b367e01f8e4ed0c34cc66a7b49646",
+      "tree": "1c703c67bd6edec9e9a54ab4d335efc09ffd5053",
+      "committedAt": "2026-11-01T19:18:01+08:00",
+      "dirty": false
+    },
+    "buildId": "6d032862ea5b71d5"
+  },
+  "run": {
+    "id": 41301573028,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41301573028",
+    "attempt": 2,
+    "jobs": [
+      {
+        "id": 124836515849,
+        "name": "verify_live",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124836516519,
+        "name": "prepare",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124836517116,
+        "name": "Publish site 9acc791162b8be2cbf93b24d49054e21505fa23fdbf29b574e607dba8dd20d67",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124838079980,
+        "name": "release",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "releaseId": 430545196,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6",
+  "publishedAt": "2026-11-01T11:43:49Z",
+  "siteId": "9acc791162b8be2cbf93b24d49054e21505fa23fdbf29b574e607dba8dd20d67",
+  "siteManifestSHA256": "662e6efc1b3f702b4219246e26f253d152ebc2dac807310b280cf3b140625b1b",
+  "rootEntrySHA256": "9c6046df764767d58d725569596d1893ef7ad67d28f3b5b23bcda6dc29c57a54",
+  "coreFiles": 329,
+  "siteFiles": 1485,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "mainModelWorkers": 100,
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -5681152,
+      "mainHeapDriftBytes": -13782832,
+      "closedRssSlopeBytesPerCycle": 6754421.028571429,
+      "sampledPeakRssBytes": 827969536,
+      "maxSampleGapMs": 535,
+      "sampledPeakGrowthBytes": 42168320
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.4.6-6d032862ea5b71d5.zip",
+      "bytes": 41315520,
+      "sha256": "5c4fa5d545c75245c03b589af5b7c468e55ed8d0d2d97ec5194b9f07ea4df882"
+    },
+    {
+      "name": "model-lens-public-1.4.6-6d032862ea5b71d5.zip.sha256",
+      "bytes": 111,
+      "sha256": "5fdb08d5bf8718df9b2bbf1741a435fa005c506ae6f521b4d8ac0bc3183d5bce"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 207942,
+      "sha256": "2b8211a3f7b0ffab784d05d151134468ff25baf13cd51c6be24202c3f80dbc33"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 53274,
+      "sha256": "62251ae3e10c53401ee0c59340811d678170a4477a815af2430fd3d1d2f25c06"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7472303140,
+    "controllerSource": "dd896a29820b367e01f8e4ed0c34cc66a7b49646",
+    "runId": 41301573028,
+    "attempt": 1,
+    "jobId": 124833587096,
+    "siteId": "9acc791162b8be2cbf93b24d49054e21505fa23fdbf29b574e607dba8dd20d67",
+    "legacy": false
+  },
+  "artifacts": [
+    {
+      "id": 13082078403,
+      "name": "live-release-verification",
+      "bytes": 557542,
+      "digest": "sha256:ec1fce6fb05d6f15671cd47d107c10f855b9abbc4287a6b02c4fb4bf8e8dea98"
+    },
+    {
+      "id": 13081809428,
+      "name": "published-release-verification",
+      "bytes": 757,
+      "digest": "sha256:132ffbdfa7063e92ff8dab99d7559af7055a3759ad56f59502c946cdd2364be1"
+    }
+  ],
+  "limitations": [
+    "Current formal public release verified; full product goal remains active.",
+    "Historical Windows Chrome long-load shutdown failure remains recorded; Linux/focused results do not repair the native OneDrive statistics wait.",
+    "Intentional crash-recovery process termination is not normal Worker close.",
+    "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+  ],
+  "priorAttempt": {
+    "attempt": 1,
+    "status": "cancelled-official8m-job-timeout",
+    "failedJob": 124833675878,
+    "artifact": 13081967188,
+    "digest": "sha256:c55e415ab59ef79fe5978f7ecf6381c4b0522e60e948b120a3edfe5b1396fe5d",
+    "preserved": true
+  },
+  "successfulPrepareAndDeploymentReused": true,
+  "failedVerifyReruns": 1,
+  "format": "model-lens-v146-published-review",
+  "version": 1,
+  "status": "passed",
+  "at": "2026-11-01T11:48:21.059695+00:00",
+  "reportProvenance": {
+    "status": "passed-same-job-log-provenance",
+    "method": "same-job-original-log-step-containment-and-upload-binding",
+    "jobId": 124836515849,
+    "runId": 41301573028,
+    "source": "dd896a29820b367e01f8e4ed0c34cc66a7b49646",
+    "artifactId": 13082078403,
+    "artifactDigest": "sha256:ec1fce6fb05d6f15671cd47d107c10f855b9abbc4287a6b02c4fb4bf8e8dea98",
+    "artifactBytes": 557542,
+    "reportStartedAt": "2026-11-01T11:37:11.446Z",
+    "reportFinishedAt": "2026-11-01T11:43:28.158Z",
+    "stepStartedAt": "2026-11-01T11:37:11.052Z",
+    "stepSummaryAt": "2026-11-01T11:43:28.165Z",
+    "artifactFinalizedAt": "2026-11-01T11:43:29.996Z",
+    "apiTimeContainment": "passed",
+    "clockNormalization": false,
+    "identities": {
+      "v1.4.6-publish-job-124836515849-log.txt": "36a96fc95db13f5a692ed803f757268778a7b86d105ba97e5fe2e508471b351b",
+      "v1.4.6-published-artifacts/production-smoke.json": "7ea36faa8459e0ce1b80c0ba304650ee7f2f4de47bb68806c54e592b931046d8",
+      "v1.4.6-published-artifacts/live-release-verification.zip": "ec1fce6fb05d6f15671cd47d107c10f855b9abbc4287a6b02c4fb4bf8e8dea98",
+      "direct-time-job.json": "759b7c8dd8de0d19681252163ed4c1325e814f37dc2ddc0b2fe4ac5394415cda",
+      "direct-time-run.json": "7f9f8cff74d452c679e8470d22d57cbeb9be852e7090dd9497b7670505bdd8c0",
+      "direct-time-artifacts.json": "2bd9865b2866f231d804b83fff5dae36352229b6b7149808ede9602be60ce966",
+      "direct-time-metadata-review.json": "3e614067def51ec43554730f6b93b412d1e3c645659a6329bc9f6c46d97accf3"
+    },
+    "negativeChecks": 6,
+    "limitation": "API and original job-log containment verified; no timestamp normalization."
+  },
+  "visual": {
+    "status": "actual-screenshot-viewed",
+    "at": "2026-11-01T11:46:41.460503+00:00",
+    "source": "dd896a29820b367e01f8e4ed0c34cc66a7b49646",
+    "build": "6d032862ea5b71d5",
+    "run": 41301573028,
+    "attempt": 2,
+    "file": "v1.4.6-published-artifacts/production-smoke.png",
+    "bytes": 149560,
+    "sha256": "490a1db8f51787b1d90581fe4208fab0b778e90a1c867db223a74f7265e73433",
+    "observations": "Actual1280x640 formal watchdog demonstration screenshot contained header/tabs/panels with legible expected30s message. All15font32frames separately asserted from same-job report; screenshot is not a substitute for those measurements."
+  },
+  "priorFailureArtifactStillPreserved": true,
+  "oldV145TagAndAssetsUnchanged": true,
+  "nativeCandidate": "transform-metadata-candidate.json",
+  "mainEvidence": "transform-metadata-main.json",
+  "nativeChromeOverall": "failed original10s normal-close; functional pass; later exit does not replace failure",
+  "nativeEdgeOverall": "passed",
+  "rawEvidenceLocalOnly": true,
+  "published": true,
+  "goalComplete": false
+}

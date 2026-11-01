@@ -1,6 +1,6 @@
-# SQUEEZE／CONCATENATION 的 metadata 驗證（v1.4.6 候選）
+# SQUEEZE／CONCATENATION 的 metadata 驗證（v1.4.6）
 
-目前正式版仍為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)。以下是未發布候選的有限驗證；一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。數值與來源見[候選收據](results/transform-metadata-candidate.json)。
+已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) 正式交付，build `6d032862ea5b71d5`。一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。下方候選與失敗維持原受測來源及當時狀態；目前交付見[正式交付](#v146-正式交付)。
 
 ## 已重現與修正
 
@@ -40,4 +40,14 @@ Edge 依原十秒上限正常關閉，觀察到的十一個自有程序皆退出
 
 [實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41299693978)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 與正常程序退出通過。1,957 次取樣、57 個 Worker 及六個觀察到的自有程序均依原政策核對；關閉後 RSS slope −26,018,026.06 bytes／輪、drift −122,814,464 bytes、main heap drift 176,112 bytes，sampled peak 1,102,196,736 bytes。負 slope 是此有限輪次的觀察，不是長期不洩漏保證。沒有 forced GC、RSS 扣除或 timer／門檻修改。
 
-正式 HTTPS、v1.4.6 不可變 Release 及四份實際公開下載尚待接續，目前正式版仍為 v1.4.5。Windows Chrome 原生關閉失敗及完整商品等級目標繼續保留。
+上述主分支驗收完成當時，正式 HTTPS、v1.4.6 不可變 Release 與四份公開下載尚待接續、正式版為 v1.4.5；後續交付見下節。Windows Chrome 原生關閉失敗及完整商品等級目標繼續保留。
+
+## v1.4.6 正式交付
+
+固定來源 `dd896a29820b367e01f8e4ed0c34cc66a7b49646`／tree `1c703c67bd6edec9e9a54ab4d335efc09ffd5053`、build `6d032862ea5b71d5` 已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41301573028)完成。329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，含搜尋／pattern、TFLite／MLIR 匯出重開、逐 OP／量化／legacy shape、15 組 32px 文字框、19 種手動 runtime、部分 IO 及八輪／24 次 CPU／IO 原記憶體規則。六組 transform 原生案例另保留其候選來源，不宣稱字面包含在原 38 項 smoke。
+
+第一次 verify_live 工作因原八分鐘上限被 GitHub 取消，官方 annotation、原始報告與 artifact `13081967188` 完整保留；報告功能通過不把取消改列成功。只補跑失敗驗證一次：attempt 2 的 verify_live／release 成功，prepare／deploy 沿用 attempt 1 的結果。GitHub 對沿用工作建立新 metadata ID，但原步驟與執行時間均相同；已與原始紀錄核對，沒有重新部署、刪 artifact 或修改時限／安全規則。新驗證 report 另由同一 job 的 checkout、build／site、完整 checks、測試步驟時間與 upload ID／digest／bytes 綁定；官方 REST 與原始日誌的時間範圍均通過，未正規化時間。
+
+固定 ZIP 41,315,520 bytes，SHA-256 `5c4fa5d545c75245c03b589af5b7c468e55ed8d0d2d97ec5194b9f07ea4df882`；四份實際公開下載均與準備包一致。Site ID `9acc791162b8be2cbf93b24d49054e21505fa23fdbf29b574e607dba8dd20d67`，tag／Latest／權威 deployment 核對完成，保留 v1.4.5／v1.4.4 與永久 baseline；舊 v1.4.5 tag、四份附件及首次失敗 artifact 都未改寫。[最終數值收據](results/transform-metadata-v1.4.6-published.json)保留來源、範圍與有限結果；原始報告、日誌、截圖及檔案另保留。
+
+未知完整 shape／packing、量化數值、公司 kernel／dialect、Windows Chrome 歷史正常關閉與 CI 時間餘裕仍有界線。有限驗收不代表完整商品等級目標已完成。沒有同步 Sites／GH Studio，成功部署沒有重跑。

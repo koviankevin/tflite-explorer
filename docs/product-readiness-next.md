@@ -1,8 +1,8 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)／build `bb21d924c10706b3`，329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/spatial-metadata-v1.4.5-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6)／build `6d032862ea5b71d5`，329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/transform-metadata-v1.4.6-published.json)保留來源與範圍。完整商品化目標仍進行中，尚未完成項目保留，不以有限案例或綠燈宣告整體完成。
 
-SQUEEZE／CONCATENATION 的動態 axis／rank／已知非單位維度漏檢，已完成 [v1.4.6 未發布候選](transform-metadata-validation.md)。五份原始錯誤匯出檔現於編輯及序列化報告拒絕；239 項相關測試、十三組 CPU suite 情境與兩瀏覽器十二份實際下載／四份下載後 CPU、pattern 正負例及 32px 已核對。Edge 原生正常退出；Chrome 功能通過但原十秒正常關閉失敗，較晚退出不替代原判定。[候選收據](results/transform-metadata-candidate.json)保留混合結果；必要主分支關卡、正式站及固定 Release 尚待接續，正式版仍為 v1.4.5。
+SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度漏檢及逐 OP 報告已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) [正式交付](transform-metadata-validation.md#v146-正式交付)。五份原始錯誤檔、239 項相關測試、十三組 CPU suite 情境及兩端十二份實際下載／四份下載後 CPU、pattern 正負例與 32px 保留[候選來源](results/transform-metadata-candidate.json)。Edge 原生通過，Chrome 功能通過但十秒正常關閉失敗；正式站另有獨立來源證據。本次 CI 首次八分鐘逾時與只補跑失敗驗證一次的結果分開保留。
 
 卷積／pooling 的動態 rank／bias metadata 漏檢與逐 OP 報告已於 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5) [正式交付](spatial-metadata-validation.md#v145-正式交付)。四份原始錯誤匯出檔、23 項新回歸／170 項相關測試，以及 Chrome／Edge 每端六組原生情境、十二份實際下載、四份下載後 CPU／IO、pattern 正負例、32px 與正常退出，保留[原候選來源](results/spatial-metadata-candidate.json)。正式 HTTPS／固定下載另有獨立來源綁定；不擴大任意 kernel／量化或公司契約的完成主張。
 
@@ -127,4 +127,8 @@ FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項�
 
 ## v1.4.6 必要主分支證據
 
-SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度與逐 OP 報告修正已合併，[四項來源綁定關卡](results/transform-metadata-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十二份下載、四份下載後 CPU／IO、pattern 正負例與 32px 另保留候選來源；Edge 整輪正常退出，Chrome 功能通過但原十秒正常關閉失敗，不以本次 Linux 成功取代。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版仍是 v1.4.5；其餘商品等級未完成項目不改列完成。
+SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度與逐 OP 報告修正已合併，[四項來源綁定關卡](results/transform-metadata-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十二份下載、四份下載後 CPU／IO、pattern 正負例與 32px 另保留候選來源；Edge 整輪正常退出，Chrome 功能通過但原十秒正常關閉失敗，不以本次 Linux 成功取代。上述主分支驗收完成當時，正式 HTTPS 與新不可變 Release 尚待接續、公開版為 v1.4.5；後續交付見下節，其餘商品等級未完成項目不改列完成。
+
+## v1.4.6 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41301573028)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/transform-metadata-v1.4.6-published.json)。首次八分鐘逾時及失敗 artifact 保留；只補跑失敗驗證一次後通過，準備／部署沿用原成功結果，未修改時限或規則。舊 v1.4.5 tag／assets、Windows Chrome 失敗與所有來源界線均保留；沒有同步 Sites／GH Studio。完整商品等級目標及其餘未完成項目繼續保留。
