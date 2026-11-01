@@ -20,7 +20,7 @@ export async function activeComputeFlow({page,read,directory,check,preserveModel
     const close=async()=>{
         if(!preserveModelTabs){await page.locator('#close-model').click();await until(()=>document.querySelector('#model-tabs').hidden);return;}
         restoringOriginalTabs=true;
-        try{await page.locator('.model-tab:has([data-model-tab][aria-selected="true"]) .close-model-tab').click();await ready();assert.deepEqual(await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'))),originalTabs);}finally{restoringOriginalTabs=false;}
+        try{await page.locator('.model-tab:has([data-model-tab][aria-selected="true"]) .close-model-tab').click();await until(ids=>{const tabs=Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'));return tabs.length===ids.length&&tabs.every((id,i)=>id===ids[i]);},originalTabs);await ready();assert.deepEqual(await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'))),originalTabs);}finally{restoringOriginalTabs=false;}
     };
     async function start(input){
         const n=report.runtimeWorkers.length;await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);
