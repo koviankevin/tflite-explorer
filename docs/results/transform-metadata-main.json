@@ -1,0 +1,216 @@
+{
+  "format": "model-lens-transform-metadata-main-review",
+  "version": 1,
+  "status": "four-main-gates-originals-source-and-policy-verified-not-published",
+  "at": "2026-11-01T11:15:39.418747+00:00",
+  "source": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+  "tree": "b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48",
+  "candidateVersion": "1.4.6",
+  "candidateBuild": "c80ac02ed3c24a33",
+  "gates": [
+    {
+      "status": "unchanged-core-scope-original-main-evidence-reused",
+      "kind": "core",
+      "run": 41269145087,
+      "job": 124738115132,
+      "source": "c0dd77c89cde95b215b0d6b7990bfdda07c814d0",
+      "tree": "3f42b92f1d85b2ede0f36f1f9e65834c60f43e0f",
+      "artifactId": 13068536960,
+      "providerDigest": "sha256:4a90bc8bcd4d1a98cd487b0e731df2a5d5a2ab9c38f4c0ed5b0a6892b015b6a8",
+      "reportSHA256": "cd2aa3370229d540bfbeef723ef6080801371b37eb5134a4d48722bb96593a1d",
+      "scopeFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "scopeFiles": 88,
+      "samples": 9,
+      "sourceUnchanged": true,
+      "targetSource": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+      "targetTree": "b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48",
+      "reused": true,
+      "originals": "../model-index-allocation/main-core-{artifact.zip,report,review}",
+      "freshProviderStatusVerified": true,
+      "providerFreshRevalidationRequiredByPreparation": true
+    },
+    {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "browser",
+      "run": 41299693978,
+      "job": 124827891371,
+      "source": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+      "tree": "b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48",
+      "artifactId": 13081117745,
+      "providerDigest": "sha256:239b47c287b75f0c10017f91b2c083b9d6ba01376c8d22644796d1f8cd358d22",
+      "reportSHA256": "c132c7ad62655a30683b197a9acea13acb9c4abd705835846cc4eb95721dbb39",
+      "scopeFingerprint": "a5f955f49cb576e290c52e45c39219071a88af17fb0b70b0a4f4e7e23b2c4fea",
+      "scopeFiles": 351,
+      "samples": 1957,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": -26018026.057142857,
+          "rssDriftBytes": -122814464,
+          "mainHeapDriftBytes": 176112,
+          "sampledPeakRssBytes": 1102196736,
+          "sampledPeakGrowthBytes": 591372288
+        }
+      },
+      "browserClosed": true,
+      "sourceUnchanged": true
+    },
+    {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "contract",
+      "run": 41299712062,
+      "job": 124827944899,
+      "source": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+      "tree": "b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48",
+      "artifactId": 13080648056,
+      "providerDigest": "sha256:1660a1818f94c8c103d445f14c4218615a81cea3d8c0ad96458b1c94d5c3c020",
+      "reportSHA256": "e8c6b2f1afec10e6911e298bc3d6bd6c254c76f3662ce9285f7bdae2fc936708",
+      "scopeFingerprint": "de45e7ed5502d7c9a282cdeef4f38ee2c8ca1111f7de8fb52e296d60d5b69084",
+      "scopeFiles": 679,
+      "counts": {
+        "tests": 79,
+        "pass": 79,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "site",
+      "run": 41299719700,
+      "job": 124827966989,
+      "source": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+      "tree": "b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48",
+      "artifactId": 13080424629,
+      "providerDigest": "sha256:578ecca298b78fbb693fafb760fcfdef9223c94494aa687dbfdd02cc3769d625",
+      "reportSHA256": "d8ff4d97918b7e1a41bbea2263301abde6ddb129bce2504b4e7d987bce068f85",
+      "scopeFingerprint": "f03bb5844dfef182720711f7e7d1cb022b42fd758f6d7eafff1a597c04df7b61",
+      "scopeFiles": 398,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "modelWorkers": 7,
+          "requests": 562,
+          "scenarios": 6,
+          "snapshots": 3
+        }
+      },
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "physical": {
+    "fixtureBytes": 1349965216,
+    "fixtureAllocatedBytes": 1349971968,
+    "operators": 21005,
+    "fixtureSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "cycles": 8,
+    "samples": 1957,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -26018026.057142857,
+        "rssDriftBytes": -122814464,
+        "mainHeapDriftBytes": 176112,
+        "sampledPeakRssBytes": 1102196736,
+        "sampledPeakGrowthBytes": 591372288
+      }
+    },
+    "workerClosures": 57,
+    "nativeIdentities": 6,
+    "allReaped": true,
+    "weights": "original byte comparison passed",
+    "customOptions": "identical",
+    "pattern": "all source/reopen/negative and composition checks passed",
+    "fontPx": 32,
+    "platform": "Hosted Linux Chromium156.0.8078.4/Playwright1.64.1/Node22.23.3",
+    "forcedGC": false,
+    "policyChanges": false
+  },
+  "site": {
+    "versionedSummary": {
+      "modelWorkers": 7,
+      "requests": 562,
+      "scenarios": 6,
+      "snapshots": 3
+    },
+    "pairedArtifactId": 13080609054,
+    "pairedDigest": "sha256:97da94ae4e86368127133eb8b6672882e6d66554a8e6215a17c7e620c8559ee4",
+    "pairedReportSHA256": "2851af64c3df75b031bc2c26a56c30d4a4b4b9ae592fce553246d0e6d235c2f4",
+    "staticFiles": 824,
+    "checks": 38,
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "guideTopics": 5,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": 48402432,
+        "mainHeapDriftBytes": -12250748,
+        "closedRssSlopeBytesPerCycle": 8962048,
+        "sampledPeakRssBytes": 792969216,
+        "maxSampleGapMs": 539,
+        "sampledPeakGrowthBytes": 70352896
+      }
+    },
+    "allReaped": true,
+    "visual": {
+      "status": "actual-provider-screenshot-viewed",
+      "source": "2bf6ad9e5b042661c4abe56a439ce6fda9f3489b",
+      "run": 41299719700,
+      "build": "c80ac02ed3c24a33",
+      "file": "main-delivery-screenshot.png",
+      "bytes": 149670,
+      "sha256": "9571e6ff2628483090dcdd608f532108519c2b68aa5283b359434caf5ea0f1b1",
+      "observations": "1280x640 final runtime loop watchdog screen, original expected30s not-run reason legible; header/tabs/panels remain contained. Font15 numericframes independentlychecked in source-bound report; this single final screenshot is not all15frames."
+    }
+  },
+  "nativeCandidateEvidence": {
+    "receipt": "transform-metadata-candidate.json",
+    "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+    "build": "99f9aea67d344b0e",
+    "sixCasesPerBrowser": true,
+    "actualDownloads": 12,
+    "downloadedCPU": 4,
+    "ChromeOverall": "failed original normal-close10s; functional passed",
+    "EdgeOverall": "passed normal-close and functional",
+    "laterEmptyIdentitiesDoNotReplaceFailure": true
+  },
+  "sourceCodeChangePR": 233,
+  "selectedTests": 239,
+  "versionSelectionTests": 13,
+  "actualCPUCasesInSuite": {
+    "positive": 10,
+    "expectedAllocationFailure": 3
+  },
+  "newActualBrowserDownloadedModelCPU": 4,
+  "sameBytesAndRuntimeCPUControlsReused": 0,
+  "PRNodeCounts": {
+    "tests": 1055,
+    "pass": 1020,
+    "fail": 0,
+    "skipped": 35
+  },
+  "PRContractTests": 79,
+  "originals": "Provider artifact ZIPs, SHA-256/CRC, reports, job logs, original model files and local independent readers retained locally. No company models or raw payloads published.",
+  "limitations": [
+    "Not deployed v1.4.6 yet; prepare and exact-source promotion pending",
+    "Six transform native cases remain separate from existing38 formal smoke; do not claim literal addition inside38",
+    "Finite Hosted Linux8cycles and metadata rules do not verify arbitrary kernels, custom runtime, quantization numerics or long-term hardware SLA",
+    "Original native Windows Chrome10s close failure remains failed and unresolved",
+    "No Sites/GHStudio sync, company environment, mobile/Firefox/WebKit/new2h/GC/security/timer/RSS threshold changes"
+  ],
+  "published": false,
+  "goalComplete": false
+}

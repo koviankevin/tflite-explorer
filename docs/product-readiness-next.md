@@ -124,3 +124,7 @@ FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項�
 ## v1.4.5 正式交付
 
 上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41295660383)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/spatial-metadata-v1.4.5-published.json)。v1.4.4 tag／assets、原始失敗與各來源的驗收範圍均保留，沒有重跑成功部署、修改判定或同步 Sites／GH Studio。其餘表列未完成項目與完整商品等級目標繼續保留。
+
+## v1.4.6 必要主分支證據
+
+SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度與逐 OP 報告修正已合併，[四項來源綁定關卡](results/transform-metadata-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十二份下載、四份下載後 CPU／IO、pattern 正負例與 32px 另保留候選來源；Edge 整輪正常退出，Chrome 功能通過但原十秒正常關閉失敗，不以本次 Linux 成功取代。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版仍是 v1.4.5；其餘商品等級未完成項目不改列完成。

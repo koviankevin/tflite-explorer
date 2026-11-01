@@ -31,3 +31,13 @@ Edge 依原十秒上限正常關閉，觀察到的十一個自有程序皆退出
 靜態通過只代表列出的 metadata 規則。未知或動態完整 shape、非支援 packing／dtype、超出目前 kernel rank 的 squeeze、非 NONE activation、scalar concat 的常數所有權條件與真正 custom kernel 保持明確未檢查。全常數 scalar concat 有手動 CPU 正例，也不因此將未知 scalar 一概標為靜態通過。量化數值、任意 runtime／公司契約仍需另外驗證。
 
 本輪單次 metadata 量測涵蓋 CONCAT rank 64、64／512／4,096 個輸入，最多 262,144 個維度欄位；沒有讀權重或執行 kernel。數值受 JIT／環境影響，不當成延遲 SLA 或洩漏證據。完整商品等級目標與歷史 Windows 關閉／網路注入界線保留，沒有同步 Sites／GH Studio。
+
+## 四項主分支關卡已核對（尚未發布）
+
+[PR #233](https://github.com/koviankevin/tflite-explorer/pull/233) 已合併為 `2bf6ad9e5b042661c4abe56a439ce6fda9f3489b`，完整 tree 與實際 PR checkout 相同。Node 1,055 項中 1,020 通過、35 個既有選做略過；79 項契約及九筆 PR core 量測的原始來源／報告亦已核對。正式 core 沿用相同 88 檔 scope 的可信 main `41269145087`，重新核對 provider 狀態、原始 ZIP digest／CRC 與政策；PR core 不當成 main dispatch 證據。
+
+[四關卡收據](results/transform-metadata-main.json)對應來源 `2bf6ad9e5b042661c4abe56a439ce6fda9f3489b`／tree `b192b99eb99ab6cbd7b7dc5b15921c7c9b80bc48`、build `c80ac02ed3c24a33`。新來源的 79 項契約零略過、六種版本切換及 824 檔 HTTP 候選／38 項操作通過，含 15 組 32px 文字框、19 種手動 runtime、部分 IO、八輪／24 次 CPU／IO 與原記憶體規則；實際 provider 截圖已查看。六組 transform 原生案例另保留其候選來源，不宣稱字面新增在原 38 項 smoke 中。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41299693978)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 與正常程序退出通過。1,957 次取樣、57 個 Worker 及六個觀察到的自有程序均依原政策核對；關閉後 RSS slope −26,018,026.06 bytes／輪、drift −122,814,464 bytes、main heap drift 176,112 bytes，sampled peak 1,102,196,736 bytes。負 slope 是此有限輪次的觀察，不是長期不洩漏保證。沒有 forced GC、RSS 扣除或 timer／門檻修改。
+
+正式 HTTPS、v1.4.6 不可變 Release 及四份實際公開下載尚待接續，目前正式版仍為 v1.4.5。Windows Chrome 原生關閉失敗及完整商品等級目標繼續保留。
