@@ -49,3 +49,5 @@ PR #208 的實際受測 tree `d07991f97ec878eff5ee03de015597018755cb30` 與合�
 [Chromium PartitionAlloc 說明](https://github.com/chromium/chromium/blob/main/base/allocator/partition_allocator/PartitionAlloc.md)記載空 span 的週期回收機制；目前資料尚不足以將此機制認定為本模型的根因。後續應用已保存的八輪變化設計有界的最小 allocator 歸屬測試。若使用 [Tracing.requestMemoryDump](https://chromedevtools.github.io/devtools-protocol/tot/Tracing/#method-requestMemoryDump)，必須避開會強制 GC 的 deterministic 模式，不把診斷觀察改成正式驗收。
 
 [公開數值摘要](results/physical-memory-attribution.json)保留來源、計數、原政策重判及移除 PID／環境欄位的變化。19 筆原始 metadata／報告／日誌及讀取器的封存完整留在本機，摘要提供其 SHA-256；本次不公開上傳本機原始日誌、截圖、路徑或程序身分。應用未作 RSS 修正，原正式關卡 `41252363060` 不重跑、不改列通過；v1.4.1 未發布，公開站與固定 Release 維持 v1.4.0。
+
+接續的[結構縮小／只開關模型實驗](renderer-release-minimization.md)先排除大量權重、編輯、匯出與下載生命週期；只有必要來源檢查後的一次手動執行，數值報告仍不可作為發布證據。

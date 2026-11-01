@@ -1,0 +1,36 @@
+name: Renderer release minimization probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: renderer-release-probe-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  minimize:
+    if: github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      REPORT_NAME: renderer-release-probe-${{ github.run_id }}-${{ github.run_attempt }}.json
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.3'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test test/renderer-release-probe.test.mjs test/owned-processes.test.mjs test/physical-fixture.test.mjs
+      - run: node scripts/install-browser.mjs
+      - name: Compare small-payload structures without export, inference or forced GC
+        run: RENDERER_PROBE_REPORT="$RUNNER_TEMP/$REPORT_NAME" node test/browser/renderer-release-probe.mjs
+      - name: Upload only the schema-checked numeric summary, never private report or fixtures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: renderer-release-probe-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ env.REPORT_NAME }}
+          if-no-files-found: error
+          retention-days: 30
