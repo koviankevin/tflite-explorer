@@ -2,6 +2,8 @@
 
 使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)／build `bb21d924c10706b3`，329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/spatial-metadata-v1.4.5-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
+SQUEEZE／CONCATENATION 的動態 axis／rank／已知非單位維度漏檢，已完成 [v1.4.6 未發布候選](transform-metadata-validation.md)。五份原始錯誤匯出檔現於編輯及序列化報告拒絕；239 項相關測試、十三組 CPU suite 情境與兩瀏覽器十二份實際下載／四份下載後 CPU、pattern 正負例及 32px 已核對。Edge 原生正常退出；Chrome 功能通過但原十秒正常關閉失敗，較晚退出不替代原判定。[候選收據](results/transform-metadata-candidate.json)保留混合結果；必要主分支關卡、正式站及固定 Release 尚待接續，正式版仍為 v1.4.5。
+
 卷積／pooling 的動態 rank／bias metadata 漏檢與逐 OP 報告已於 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5) [正式交付](spatial-metadata-validation.md#v145-正式交付)。四份原始錯誤匯出檔、23 項新回歸／170 項相關測試，以及 Chrome／Edge 每端六組原生情境、十二份實際下載、四份下載後 CPU／IO、pattern 正負例、32px 與正常退出，保留[原候選來源](results/spatial-metadata-candidate.json)。正式 HTTPS／固定下載另有獨立來源綁定；不擴大任意 kernel／量化或公司契約的完成主張。
 
 FULLY_CONNECTED 的 dtype／已知 rank／尺寸漏檢及合法無 bias 誤擋，已於 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4) [正式交付](fully-connected-validation.md#v144-正式交付)。199 項相關檢查、十三組真正 CPU 正例，以及 Chrome／Edge 每端六組原生情境、十六份實際下載、四份下載後 CPU、pattern 正負例、32px 與正常退出，維持[原候選來源](results/fully-connected-candidate.json)。正式 HTTPS 與固定下載另有獨立來源綁定，不將有限結果擴大為任意 kernel／量化或公司契約已驗證。

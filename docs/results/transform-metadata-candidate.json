@@ -1,0 +1,491 @@
+{
+  "format": "model-lens-transform-metadata-candidate-review",
+  "version": 1,
+  "status": "functional-candidate-verified-Edge-native-pass-Chrome-normal-close-failed-not-published",
+  "at": "2026-11-01T10:51:44.035102+00:00",
+  "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+  "tree": "92644c663979c73c17b4e828e24119623593e312",
+  "buildId": "99f9aea67d344b0e",
+  "candidateVersion": "1.4.6",
+  "formalVersion": "1.4.5",
+  "primary": {
+    "status": "bounded-official-primary-references-retained",
+    "at": "2026-11-01T10:21:17.424332+00:00",
+    "rows": [
+      {
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/squeeze.cc",
+        "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+        "file": "tensorflow-squeeze.cc",
+        "bytes": 4604,
+        "sha256": "53f546dbcb6ceb52b286d88cd537e08b6233a83081ceefe1766b151519b261a1"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/concatenation.cc",
+        "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+        "file": "tensorflow-concatenation.cc",
+        "bytes": 12052,
+        "sha256": "1b5240deab23b7ed97990bbeae37b06ed3bf12e2dfbb7fa2ddab931c62e6cba5"
+      }
+    ]
+  },
+  "originalBeforeModels": [
+    {
+      "name": "concat-dynamic-axis",
+      "type": "CONCATENATION",
+      "prepareAccepted": true,
+      "editSerialized": true,
+      "reopenedGraphAccepted": true,
+      "serializedStatus": "not-run",
+      "serializedReason": "此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。",
+      "bytes": 1144,
+      "sha256": "11e2ca6034abfe31983315a7b995a9773a34edf00f5577d1b44ccddf0d722ada"
+    },
+    {
+      "name": "concat-dynamic-input-rank",
+      "type": "CONCATENATION",
+      "prepareAccepted": true,
+      "editSerialized": true,
+      "reopenedGraphAccepted": true,
+      "serializedStatus": "not-run",
+      "serializedReason": "此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。",
+      "bytes": 1144,
+      "sha256": "00ba87b6ec373dfcdf9525533019ed7741c17443d68960ee434b5fc6adb2506a"
+    },
+    {
+      "name": "concat-dynamic-output-rank",
+      "type": "CONCATENATION",
+      "prepareAccepted": true,
+      "editSerialized": true,
+      "reopenedGraphAccepted": true,
+      "serializedStatus": "not-run",
+      "serializedReason": "此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。",
+      "bytes": 1136,
+      "sha256": "b4b67b5111291f0a855b5d9bcf8d297ff6d4b2b460c78798c7b7fd31f4b9701e"
+    },
+    {
+      "name": "squeeze-dynamic-axis",
+      "type": "SQUEEZE",
+      "prepareAccepted": true,
+      "editSerialized": true,
+      "reopenedGraphAccepted": true,
+      "serializedStatus": "not-run",
+      "serializedReason": "此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。",
+      "bytes": 1136,
+      "sha256": "b3f59f542f791872947861d8c72ef8b27857544ac9c0e46ca7834ae6fa6bcebd"
+    },
+    {
+      "name": "squeeze-dynamic-known-nonunit",
+      "type": "SQUEEZE",
+      "prepareAccepted": true,
+      "editSerialized": true,
+      "reopenedGraphAccepted": true,
+      "serializedStatus": "not-run",
+      "serializedReason": "此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。",
+      "bytes": 1144,
+      "sha256": "aa483071bb8ba0835c7777c344a20a6c72f8d1aa6076bfca12ca6f6e3ab4d5b1"
+    }
+  ],
+  "originalAfterModels": [
+    {
+      "name": "concat-dynamic-axis-edited-before.tflite",
+      "bytes": 1144,
+      "sha256": "11e2ca6034abfe31983315a7b995a9773a34edf00f5577d1b44ccddf0d722ada",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：CONCATENATION axis 超出輸入 rank。",
+      "reportReason": "Subgraph #0 · OP #0 CONCATENATION · inputs tensor [0, 1]／outputs tensor [2]：CONCATENATION axis 超出輸入 rank。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "concat-dynamic-input-rank-edited-before.tflite",
+      "bytes": 1144,
+      "sha256": "00ba87b6ec373dfcdf9525533019ed7741c17443d68960ee434b5fc6adb2506a",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：CONCATENATION 所有輸入 rank 必須相同。",
+      "reportReason": "Subgraph #0 · OP #0 CONCATENATION · inputs tensor [0, 1]／outputs tensor [2]：CONCATENATION 所有輸入 rank 必須相同。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "concat-dynamic-output-rank-edited-before.tflite",
+      "bytes": 1136,
+      "sha256": "b4b67b5111291f0a855b5d9bcf8d297ff6d4b2b460c78798c7b7fd31f4b9701e",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：CONCATENATION output rank 應為 2。",
+      "reportReason": "Subgraph #0 · OP #0 CONCATENATION · inputs tensor [0, 1]／outputs tensor [2]：CONCATENATION output rank 應為 2。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "squeeze-dynamic-axis-edited-before.tflite",
+      "bytes": 1136,
+      "sha256": "b3f59f542f791872947861d8c72ef8b27857544ac9c0e46ca7834ae6fa6bcebd",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [2]：SQUEEZE squeeze_dims axis 超出 input rank。",
+      "reportReason": "Subgraph #0 · OP #0 SQUEEZE · inputs tensor [0]／outputs tensor [2]：SQUEEZE squeeze_dims axis 超出 input rank。",
+      "originalBytesUnchanged": true
+    },
+    {
+      "name": "squeeze-dynamic-known-nonunit-edited-before.tflite",
+      "bytes": 1144,
+      "sha256": "aa483071bb8ba0835c7777c344a20a6c72f8d1aa6076bfca12ca6f6e3ab4d5b1",
+      "prepareReason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [2]：SQUEEZE squeeze_dims 只能指定已知大小為 1 的維度。",
+      "reportReason": "Subgraph #0 · OP #0 SQUEEZE · inputs tensor [0]／outputs tensor [2]：SQUEEZE squeeze_dims 只能指定已知大小為 1 的維度。",
+      "originalBytesUnchanged": true
+    }
+  ],
+  "newMetadataRegressionTests": 27,
+  "relatedTests": 239,
+  "versionSelectionTests": 13,
+  "cpuSuite": {
+    "positive": 10,
+    "expectedAllocationFailures": 3
+  },
+  "native": {
+    "viewport": [
+      1280,
+      640
+    ],
+    "graphEditorFontPx": 32,
+    "details": [
+      {
+        "channel": "chrome",
+        "version": "156.0.8078.76",
+        "reportSHA256": "339e9f269dc3b0b486d0bb0dc48034898654f1aaf9c3f11d6dbb71cdb7359571",
+        "workers": 11,
+        "modelWorkers": 9,
+        "editRecoveryWorkers": 1,
+        "allWorkersClosed": true,
+        "nativeStatus": "failed",
+        "nativeIdentities": 8,
+        "allReaped": false,
+        "normalClose": false,
+        "closeFailure": "normal browser.close exceeded10s",
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "static-concat",
+            "bytes": 1608,
+            "sha256": "b563fabd8a32b7ae9bc04c1c653975d724267031765adb287adfbc6eb0d62a91",
+            "reportBytes": 7842,
+            "reportSHA256": "122c5568f0da98699c85dc57df4ecade7a05384b335f1961f22c2aba5078b4e0",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 8
+          },
+          {
+            "case": "static-squeeze-duplicates",
+            "bytes": 1384,
+            "sha256": "c25769ff3820574fd16d9a910ad4b8573908c74f3ca5bcb9a8e7a7bc946b2b6c",
+            "reportBytes": 7651,
+            "reportSHA256": "19c4c4291d6f8f02e572861fce55caca98cb7bf07ced41419efb5624be64d2ce",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          },
+          {
+            "case": "dynamic-squeeze",
+            "bytes": 1400,
+            "sha256": "93ed2f8e4f8cf8c7f66d2e07c0ecbf9004cbd955cf2125ade336c57f1fa28576",
+            "reportBytes": 7618,
+            "reportSHA256": "597eea64edbcf511961c4ea60f92462ac8710df660d708b312924a2ba7c304b0",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          }
+        ]
+      },
+      {
+        "channel": "msedge",
+        "version": "156.0.4314.50",
+        "reportSHA256": "f9cd3bb18a87f8b4ff5fddc88588ba44a7f067cdafee29ecb39abea34976b706",
+        "workers": 11,
+        "modelWorkers": 9,
+        "editRecoveryWorkers": 1,
+        "allWorkersClosed": true,
+        "nativeStatus": "passed",
+        "nativeIdentities": 11,
+        "allReaped": true,
+        "normalClose": true,
+        "closeFailure": null,
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "static-concat",
+            "bytes": 1608,
+            "sha256": "b563fabd8a32b7ae9bc04c1c653975d724267031765adb287adfbc6eb0d62a91",
+            "reportBytes": 7842,
+            "reportSHA256": "bcfd299348f2d9d72a352677171f248fd9bd4f8e505f4b1b4f10aeecf68ceb09",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 8
+          },
+          {
+            "case": "static-squeeze-duplicates",
+            "bytes": 1384,
+            "sha256": "c25769ff3820574fd16d9a910ad4b8573908c74f3ca5bcb9a8e7a7bc946b2b6c",
+            "reportBytes": 7651,
+            "reportSHA256": "40ce1036d7ba11be6ff3a78aae3f6d7a05801b07eefb5fdb37bc008806caffbb",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          },
+          {
+            "case": "dynamic-squeeze",
+            "bytes": 1400,
+            "sha256": "93ed2f8e4f8cf8c7f66d2e07c0ecbf9004cbd955cf2125ade336c57f1fa28576",
+            "reportBytes": 7618,
+            "reportSHA256": "23038ed57f89c719aa43e55623ac1b13ccca34078882ab239978363640ce5edf",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "not-applicable",
+            "comparedBytes": 0
+          }
+        ]
+      }
+    ],
+    "actualDownloads": 12,
+    "actualDownloadedModelCPU": [
+      {
+        "channel": "chrome",
+        "case": "static-concat",
+        "status": "passed",
+        "modelSHA256": "b563fabd8a32b7ae9bc04c1c653975d724267031765adb287adfbc6eb0d62a91",
+        "ioSHA256": "132a3a552fc5581a702e372242f288f0baa1dc8a02c789ebe14f0d298b4d15c9",
+        "outputs": [
+          [
+            1,
+            2,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "channel": "chrome",
+        "case": "static-squeeze-duplicates",
+        "status": "passed",
+        "modelSHA256": "c25769ff3820574fd16d9a910ad4b8573908c74f3ca5bcb9a8e7a7bc946b2b6c",
+        "ioSHA256": "653405ba65b93e1b1f7036ccf6d9c423d1fa8b215e0f96872a7d7d6614c8638c",
+        "outputs": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "static-concat",
+        "status": "passed",
+        "modelSHA256": "b563fabd8a32b7ae9bc04c1c653975d724267031765adb287adfbc6eb0d62a91",
+        "ioSHA256": "0848d7f6ab05268ba64a72db85497454989ac600993625cb824dbd7f9fc7df17",
+        "outputs": [
+          [
+            1,
+            2,
+            3,
+            4
+          ],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "static-squeeze-duplicates",
+        "status": "passed",
+        "modelSHA256": "c25769ff3820574fd16d9a910ad4b8573908c74f3ca5bcb9a8e7a7bc946b2b6c",
+        "ioSHA256": "83ef15a625571f04c184598320632253ddd2b630ba6de8aa6133f934d3e67d70",
+        "outputs": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "ioArchives": {
+      "status": "four-actual-CPU-io-archives-digests-crcs-and-sizes-verified",
+      "rows": [
+        {
+          "file": "chrome-static-concat-actual-download-cpu-io.zip",
+          "bytes": 2891,
+          "sha256": "132a3a552fc5581a702e372242f288f0baa1dc8a02c789ebe14f0d298b4d15c9",
+          "crc": "passed",
+          "entries": [
+            "inputs-0.bin",
+            "outputs-0.bin",
+            "outputs-1.bin",
+            "manifest.json"
+          ]
+        },
+        {
+          "file": "chrome-static-squeeze-duplicates-actual-download-cpu-io.zip",
+          "bytes": 2471,
+          "sha256": "653405ba65b93e1b1f7036ccf6d9c423d1fa8b215e0f96872a7d7d6614c8638c",
+          "crc": "passed",
+          "entries": [
+            "inputs-0.bin",
+            "outputs-0.bin",
+            "outputs-1.bin",
+            "manifest.json"
+          ]
+        },
+        {
+          "file": "msedge-static-concat-actual-download-cpu-io.zip",
+          "bytes": 2478,
+          "sha256": "0848d7f6ab05268ba64a72db85497454989ac600993625cb824dbd7f9fc7df17",
+          "crc": "passed",
+          "entries": [
+            "inputs-0.bin",
+            "outputs-0.bin",
+            "outputs-1.bin",
+            "manifest.json"
+          ]
+        },
+        {
+          "file": "msedge-static-squeeze-duplicates-actual-download-cpu-io.zip",
+          "bytes": 2471,
+          "sha256": "83ef15a625571f04c184598320632253ddd2b630ba6de8aa6133f934d3e67d70",
+          "crc": "passed",
+          "entries": [
+            "inputs-0.bin",
+            "outputs-0.bin",
+            "outputs-1.bin",
+            "manifest.json"
+          ]
+        }
+      ]
+    },
+    "visual": {
+      "status": "actual-two-screenshots-viewed",
+      "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+      "build": "99f9aea67d344b0e",
+      "images": [
+        {
+          "file": "native-chrome-1/transform-static-concat-report-32px.png",
+          "bytes": 124673,
+          "sha256": "3b0d25de5e6d1ad380a90c3dc0cd1fe628c6684691814a709e13ef2502ba972f"
+        },
+        {
+          "file": "native-msedge-1/transform-dynamic-squeeze-report-32px.png",
+          "bytes": 126836,
+          "sha256": "e4fd082ef4a0f9b3f5aa1b085f94c6892fd5aa40f9b6e6afdc69460b1307e084"
+        }
+      ],
+      "observations": "1280x640 report dialogs contained, actual checked and explicit dynamic not-run OP rows legible and wrapped without horizontal overflow; background graph/editor size32 retained."
+    },
+    "normalCloseScope": "Edge passed original10s; Chrome failed original10s, later own session exit1 and read-only identity check empty does not replace original failure.",
+    "automaticRuntimeWorkers": 0,
+    "documentTransport": "manifest-pinned authenticated original HTML fixture, not formal HTTPS"
+  },
+  "gateScopes": [
+    {
+      "kind": "core",
+      "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+      "files": 88,
+      "fingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "previousFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "changed": false
+    },
+    {
+      "kind": "browser",
+      "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+      "files": 351,
+      "fingerprint": "a5f955f49cb576e290c52e45c39219071a88af17fb0b70b0a4f4e7e23b2c4fea",
+      "previousFingerprint": "0a27a65756328b1be20db19fb1be2660f11cad6c600d6ab473a414b83df6daf3",
+      "changed": true
+    },
+    {
+      "kind": "contract",
+      "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+      "files": 679,
+      "fingerprint": "de45e7ed5502d7c9a282cdeef4f38ee2c8ca1111f7de8fb52e296d60d5b69084",
+      "previousFingerprint": "fec12d584e3d729029fd8258fdcff622c3744253e73cac89c13845c822e3cd9d",
+      "changed": true
+    },
+    {
+      "kind": "site",
+      "source": "dc97e616ca0213f9b66199f94d55ad5fb216d014",
+      "files": 398,
+      "fingerprint": "f03bb5844dfef182720711f7e7d1cb022b42fd758f6d7eafff1a597c04df7b61",
+      "previousFingerprint": "59a3cc141510b4074a8e3293a2f081dc3f31016468efc7e363beee3aa74ef207",
+      "changed": true
+    }
+  ],
+  "metadataMeasurements": {
+    "status": "bounded-pure-metadata-workloads-observed",
+    "rows": [
+      {
+        "inputs": 64,
+        "rank": 64,
+        "inputDimensionValues": 4096,
+        "elapsedMs": 1.273299999999999,
+        "rssBeforeBytes": 48132096,
+        "rssAfterBytes": 48959488,
+        "heapBeforeBytes": 5744792,
+        "heapAfterBytes": 5349496,
+        "status": "not-run"
+      },
+      {
+        "inputs": 512,
+        "rank": 64,
+        "inputDimensionValues": 32768,
+        "elapsedMs": 4.537000000000006,
+        "rssBeforeBytes": 50597888,
+        "rssAfterBytes": 51355648,
+        "heapBeforeBytes": 6930072,
+        "heapAfterBytes": 7138328,
+        "status": "not-run"
+      },
+      {
+        "inputs": 4096,
+        "rank": 64,
+        "inputDimensionValues": 262144,
+        "elapsedMs": 3.785499999999999,
+        "rssBeforeBytes": 61816832,
+        "rssAfterBytes": 61685760,
+        "heapBeforeBytes": 12462712,
+        "heapAfterBytes": 13181488,
+        "status": "not-run"
+      }
+    ],
+    "scope": "Three single validations, no file or payload reads, no interpreter or forced GC. Informational measurements, not a browser/physical-file/RSS leak acceptance or hardware SLA."
+  },
+  "notVerified": [
+    "arbitrary kernel or quantization numeric semantics",
+    "dynamic full output shapes",
+    "scalar concat constant ownership, unknown packing/dtypes, custom kernels",
+    "formal HTTPS and immutable v1.4.6 Release",
+    "historical Windows Chrome shutdown root cause or repair",
+    "physical RSS and long-term hardware SLA",
+    "company dialect/compiler/runtime"
+  ],
+  "rawEvidenceLocalOnly": true,
+  "releaseEvidenceEligible": false,
+  "published": false,
+  "goalComplete": false
+}
