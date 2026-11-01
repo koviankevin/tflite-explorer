@@ -33,3 +33,7 @@ PR #206 已合併，主分支 `02f4288885dc07fc16ede730b361e65891b09fa8`／tree 
 [失敗收據](results/legacy-shape-memory-failure.json)及[原始報告、日誌與獨立原政策重判](results/legacy-shape-memory-failure-evidence.zip)已核對 provider digest、ZIP CRC 和逐筆雜湊。沒有換用舊 browser 證據、扣除 RSS、強制 GC、縮短 URL／runtime timer、放寬門檻或重跑碰綠燈。正式網站與固定 Release 仍為 v1.4.0。後續先補唯讀的原生記憶體歸屬診斷；診斷產物須與正式發布證據分開，不能因單次診斷通過便宣稱根因修好。
 
 後續收集器與單次執行界線見[原生記憶體歸屬診斷](physical-memory-attribution.md)；其資料不能選作發布證據，v1.4.1 仍未發布。
+
+## 索引修正後的新來源驗收
+
+原 RSS 失敗之後，實際模型索引配置已減量；來源 `c0dd77c8` 的[四項必要主分支關卡](results/model-index-allocation-main.json)全部取得並核對原始報告。實體大模型八輪沿用原 fixture、timer、RSS 與 read audit 規則，完整／局部／組合匯出重開通過，slope −834,413.71 bytes／輪、drift 1,912,832 bytes。HTTP 候選 38 項操作包含 legacy FC 阻擋、合法 RESHAPE 常數／匯出重開，以及部分 IO 的三組真正手動 CPU。舊失敗不改列成功，新的有限通過不宣稱所有 allocation 或 Windows Chrome 歷史問題已修復。v1.4.1 正式部署及固定下載仍待完成。

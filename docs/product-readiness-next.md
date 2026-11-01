@@ -68,3 +68,9 @@ TRANSPOSE permutation 合法負軸被擋與 int64 錯誤放行已在 v1.2.1 正�
 Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 均在新建的隔離 context 完成原生選檔、真正 CPU allocation 負例、日誌／IO 候選對照、點選後實際 OP 畫出且焦點回到結果、32px，以及非零 absent-data buffer 的切圖和 clone／編輯匯出重開／CPU。每個瀏覽器觀察到的 12 個 Workers 全部原生 close、無 pageerror；沒有讀取個人 profile。早期定位圖在 render 完成前擷取，保留為較弱觀察，不作最終完成證據。
 
 這些原始收據記錄當時的本機階段，不改寫成後來版本的證據。後續 custom 引用契約與新版本正式關卡已依上表完成增量交付；Windows Chrome 正常關閉與其餘未驗證範圍仍繼續處理。沒有重跑成功部署、修改安全規則或放寬記憶體／timer 門檻。
+
+## v1.4.1 的索引與驗證候選
+
+Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減量](model-index-allocation.md)已合併；[四項來源綁定關卡](results/model-index-allocation-main.json)在 `c0dd77c8` 核對通過。原實體 1.25 GiB／21,005 OP 八輪的完整／局部／組合匯出重開、權重／options／pattern、Worker／程序退出及原 RSS 規則通過；HTTP 候選 38 項含 32px、逐 OP／量化／legacy shape 報告及部分 IO。Windows Chrome／Edge 的隔離 OP UI／下載案例亦完成。正式 HTTPS、不可變 Release 與四份實際下載仍待接續，目前公開版本維持 v1.4.0。
+
+原 RSS 失敗與 Windows Chrome 雲端統計／網路注入的歷史觀察保留；不擴大 kernel／dialect 語意、內網環境、任意格式遷移或完整無障礙的完成主張，商品等級目標仍進行中。

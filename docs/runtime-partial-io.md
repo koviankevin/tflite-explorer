@@ -15,3 +15,7 @@
 第一輪 Chrome 的三個功能案例通過，但新 flow 誤把頁面常駐的 Netron 排版 Worker 算入「模型關閉即退出」，使原整輪失敗。修正 flow 僅觀察 model／runtime Worker；外層 driver 仍要求關閉 context 後六個 Worker 全部退出，沒有刪除程序退出檢查。另一次粗略的 PID 身分觀察曾誤列 Chrome root 仍存活，Win32 exit code 0、非零 exit time 與 signalled handle 確認其已退出；對已退出程序的終止嘗試回傳 false，沒有成功強制終止。原始錯誤、失敗和更正均保留，不把第一輪改列成功或補作原 10 秒退出證明。
 
 [公開候選摘要](results/runtime-partial-io-candidate.json)保留來源、版本、驗收計數與結果；30 筆原始 metadata／失敗／畫面及讀取器的封存完整留在本機，摘要提供其 SHA-256。公開檔案不含本機原始日誌、截圖、路徑、程序身分或環境欄位。新情境接入後續正式 smoke 與桌面 driver；只有確定已發布的舊版本略過，未知／新版本不得省略。模型、原始 IO ZIP／BIN 和完整診斷留在本機。PR／main 必要關卡與正式交付仍待完成，原 RSS 失敗不由這項功能或診斷取代。
+
+## 新來源的必要關卡
+
+接續實際索引配置修正後，[四項主分支收據](results/model-index-allocation-main.json)已核對來源 `c0dd77c8` 的核心、實體大模型八輪、79 項發布契約及 HTTP 候選 38 項操作。部分 IO 在零值／亂數負例仍保留失敗，三個可讀 inputs 成功下載、padded output 明列缺少；合法完整案例仍為 v1。所有相關 Worker 已關閉。這是候選驗收，正式 HTTPS 與固定 Release 尚未發布；原 RSS 失敗和先前候選收據維持原結果。
