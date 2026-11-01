@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)，[正式站](https://koviankevin.github.io/tflite-explorer/) build `c64f4143bf8463a2`，來源 `25e7debc8ccb793ddc3fefe8fd3e2dff8fb70704`；325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[本版正式交付](model-index-allocation.md#v141-正式交付)。外網更新不會自動更新公司內網站台。
+固定版本為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)，[正式站](https://koviankevin.github.io/tflite-explorer/) build `e8a83e3eeb4b7bdc`，來源 `ca57c8068533ecb83b64a64f4eb61e4d223ab8d4`；326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[本版正式交付](batch-matmul-validation.md#v142-正式交付)。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 

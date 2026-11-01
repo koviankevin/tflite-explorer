@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)，build `c64f4143bf8463a2`；修正 legacy concrete shape 檢查、手動執行失敗時的部分 IO 保存，並減少模型索引的暫時配置。325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/model-index-allocation.md#v141-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。Windows 候選 Chrome／Edge 的 32px、匯出重開與正常退出已核對；既有 Windows 正式 HTTPS 網路守門及 Chrome 長負載／OneDrive 關閉失敗仍保留。以下舊版紀錄保持原來源與範圍。
+目前對外版本為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)，build `e8a83e3eeb4b7bdc`；補上 BATCH_MATMUL 的 dtype、已知 rank 與靜態 shape 驗證，保留合法 hybrid／int8 accumulator，其他混合精度明列未檢查。326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/batch-matmul-validation.md#v142-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。Windows Chrome／Edge 的獨立 32px 原生接線與實際下載測試已核對；歷史 Windows 正式 HTTPS 網路守門及 Chrome 長負載／OneDrive 關閉失敗仍保留。以下舊版紀錄保持原來源與範圍。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

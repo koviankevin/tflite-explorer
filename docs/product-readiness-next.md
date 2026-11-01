@@ -1,6 +1,6 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)／build `c64f4143bf8463a2`，325 核心檔、全站 1,470 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/model-index-v1.4.1-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)／build `e8a83e3eeb4b7bdc`，326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/batch-matmul-v1.4.2-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 
@@ -88,3 +88,7 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 [BATCH_MATMUL dtype／已知 rank 修正](batch-matmul-validation.md)已合併，解決錯誤 float32→int32 模型連真正 CPU 都可能回報成功的格式缺口；合法 hybrid 與 int8 accumulator 保留，其他混合精度明列未檢查。125 項相關測試、13 項版本選測及十組真正編輯後 CPU 正例通過；兩個 Windows 瀏覽器完成 32px 原生選檔、接線、十二份下載與四份實際下載模型的 CPU 核對。
 
 [四項必要 main 關卡](results/batch-matmul-main.json)原始報告均已核對：不變的 88 檔 core 沿用可信 main 證據，新來源的實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。這批不重跑成功部署，也不放寬原政策。v1.4.2 正式站與固定下載仍待發布；目前公開版維持 v1.4.1，完整商品等級目標及原有未解項目保留。
+
+## v1.4.2 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41276594514)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/batch-matmul-v1.4.2-published.json)。已保留 v1.4.1 tag／assets、原始失敗及各來源的驗收範圍，沒有放寬判定或同步 Sites／GH Studio。BATCH_MATMUL 新格式規則不能代替任意 kernel／量化語意驗證；其餘表列未完成項目與完整商品等級目標繼續保留。

@@ -1,0 +1,250 @@
+{
+  "source": "ca57c8068533ecb83b64a64f4eb61e4d223ab8d4",
+  "tree": "599a133f82460fed164589b0a244ce8633d3e82d",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.4.2",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "ca57c8068533ecb83b64a64f4eb61e4d223ab8d4",
+      "tree": "599a133f82460fed164589b0a244ce8633d3e82d",
+      "committedAt": "2026-11-01T13:16:46+08:00",
+      "dirty": false
+    },
+    "buildId": "e8a83e3eeb4b7bdc"
+  },
+  "run": {
+    "id": 41276594514,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41276594514",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 124759903214,
+        "name": "prepare",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124760112928,
+        "name": "Publish site 41ee919888a6cdf3e88e9186f3e9a46fa16b7acc73a36d831f125a270424d4aa",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124760155895,
+        "name": "verify_live",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 124761533437,
+        "name": "release",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "releaseId": 430382872,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2",
+  "publishedAt": "2026-11-01T05:30:01Z",
+  "siteId": "41ee919888a6cdf3e88e9186f3e9a46fa16b7acc73a36d831f125a270424d4aa",
+  "siteManifestSHA256": "1cf0cdf4e500c5055b0ed97d0013392f670f7d41c6b71e868604398ecf3c4fdb",
+  "rootEntrySHA256": "c5500b979a74a390da60b9d818d160c0ac85e6a83287ce5a0ba4445a92351b47",
+  "coreFiles": 326,
+  "siteFiles": 1473,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "mainModelWorkers": 100,
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -10006528,
+      "mainHeapDriftBytes": -13307264,
+      "closedRssSlopeBytesPerCycle": 6683267.657142857,
+      "sampledPeakRssBytes": 821354496,
+      "maxSampleGapMs": 684,
+      "sampledPeakGrowthBytes": 37265408
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.4.2-e8a83e3eeb4b7bdc.zip",
+      "bytes": 41297924,
+      "sha256": "5613f96d94955d857ca9fc509d7c10dc805c0fdcb0fe93c0af140616d950d34c"
+    },
+    {
+      "name": "model-lens-public-1.4.2-e8a83e3eeb4b7bdc.zip.sha256",
+      "bytes": 111,
+      "sha256": "1d582c2e3be05b7d0910ac289bbf61f549e3b878652f9c1ada70af520c5453e4"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 204662,
+      "sha256": "5f9793864ee767480f55001eb42364ed4878ac1fd02cdcd24fae2cb5cea589dd"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52777,
+      "sha256": "e405fa7dcb1e6cc653cffd1c393adcf909cbd50d42bfc9ef29ad8bd849f63658"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7468985277,
+    "controllerSource": "ca57c8068533ecb83b64a64f4eb61e4d223ab8d4",
+    "runId": 41276594514,
+    "attempt": 1,
+    "jobId": 124760112928,
+    "siteId": "41ee919888a6cdf3e88e9186f3e9a46fa16b7acc73a36d831f125a270424d4aa",
+    "legacy": false
+  },
+  "artifacts": [
+    {
+      "id": 13071821173,
+      "name": "live-release-verification",
+      "bytes": 556617,
+      "digest": "sha256:53d2b606d53e20c058492010fe29654a7b4dc0adad09733ff6331b68a2707e92"
+    },
+    {
+      "id": 13071464402,
+      "name": "published-release-verification",
+      "bytes": 755,
+      "digest": "sha256:6e775dea9058b20dfa3ffcddffacab52165140c5cc7c4ef5c49d55b8af89ef0d"
+    }
+  ],
+  "limitations": [
+    "Current formal public release verified; full product goal remains active.",
+    "Historical Windows Chrome long-load shutdown failure remains recorded; Linux/focused results do not repair the native OneDrive statistics wait.",
+    "Intentional crash-recovery process termination is not normal Worker close.",
+    "Finite public cases do not verify arbitrary kernels,dialects,packing,OS power loss or company environments."
+  ],
+  "format": "model-lens-v142-published-review",
+  "version": 1,
+  "status": "passed",
+  "at": "2026-11-01T05:31:29.170075+00:00",
+  "mainEvidence": "batch-matmul-main.json",
+  "nativeCandidateEvidence": "batch-matmul-candidate.json",
+  "physical": {
+    "bytes": 1349965216,
+    "operators": 21005,
+    "fixtureSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "cycles": 8,
+    "policy": {
+      "version": 3,
+      "cycles": 8,
+      "warmupCycles": 2,
+      "sampleIntervalMs": 500,
+      "urlReleaseTimeoutMs": 80000,
+      "settleSamples": 5,
+      "maxReadBytes": 1048576,
+      "realmReadBytes": 16777216,
+      "browserPeakGrowthBytes": 805306368,
+      "closedRssDriftBytes": 134217728,
+      "closedRssSlopeBytesPerCycle": 16777216,
+      "closedMainHeapDriftBytes": 33554432,
+      "modelWorkerUsedBytes": 536870912,
+      "modelWorkerBackingBytes": 536870912
+    },
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -2318921.1428571427,
+        "rssDriftBytes": 12341248,
+        "mainHeapDriftBytes": 179944,
+        "sampledPeakRssBytes": 1112723456,
+        "sampledPeakGrowthBytes": 597905408
+      }
+    },
+    "closedRSSBytes": [
+      619925504,
+      767053824,
+      770449408,
+      642236416,
+      646266880,
+      787771392,
+      779395072,
+      643620864
+    ],
+    "sampleCount": 1996,
+    "workersClosed": 57,
+    "nativeIdentityCount": 6,
+    "allNativeReaped": true,
+    "allWeightsOptionsPatternsVerified": true
+  },
+  "preparedRun": 41276388315,
+  "preparedHashes": {
+    "source": "ca57c8068533ecb83b64a64f4eb61e4d223ab8d4",
+    "build": "e8a83e3eeb4b7bdc",
+    "manifest": "e405fa7dcb1e6cc653cffd1c393adcf909cbd50d42bfc9ef29ad8bd849f63658",
+    "receipt": "5f9793864ee767480f55001eb42364ed4878ac1fd02cdcd24fae2cb5cea589dd",
+    "zip": "5613f96d94955d857ca9fc509d7c10dc805c0fdcb0fe93c0af140616d950d34c"
+  },
+  "retainedBuildIds": [
+    "c64f4143bf8463a2",
+    "d36b95c7320aa6f2"
+  ],
+  "legacyBuild": "163f38ab1dc856e4",
+  "actualDownloadChecks": [
+    {
+      "name": "model-lens-public-1.4.2-e8a83e3eeb4b7bdc.zip",
+      "bytes": 41297924,
+      "sha256": "5613f96d94955d857ca9fc509d7c10dc805c0fdcb0fe93c0af140616d950d34c"
+    },
+    {
+      "name": "model-lens-public-1.4.2-e8a83e3eeb4b7bdc.zip.sha256",
+      "bytes": 111,
+      "sha256": "1d582c2e3be05b7d0910ac289bbf61f549e3b878652f9c1ada70af520c5453e4"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 204662,
+      "sha256": "5f9793864ee767480f55001eb42364ed4878ac1fd02cdcd24fae2cb5cea589dd"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 52777,
+      "sha256": "e405fa7dcb1e6cc653cffd1c393adcf909cbd50d42bfc9ef29ad8bd849f63658"
+    }
+  ],
+  "rawEvidenceDigests": [
+    {
+      "artifactFile": "live-release-verification.zip",
+      "bytes": 556617,
+      "sha256": "53d2b606d53e20c058492010fe29654a7b4dc0adad09733ff6331b68a2707e92"
+    },
+    {
+      "artifactFile": "pages-live-report.json",
+      "bytes": 388177,
+      "sha256": "0ec402a131cea528e46307a564d3d5dcd52c93d923362450838209850f215a64"
+    },
+    {
+      "artifactFile": "production-smoke.json",
+      "bytes": 880772,
+      "sha256": "185c95980f027aabc9c08af86071293de8c13b250c4cbc38da8ca10cb0dccfe1"
+    },
+    {
+      "artifactFile": "production-smoke.png",
+      "bytes": 149410,
+      "sha256": "642182168a010b6f27f86e726336e7f25a289db7ed6d20f0543f4fe8d7ae4a5e"
+    },
+    {
+      "artifactFile": "published-release-verification.zip",
+      "bytes": 755,
+      "sha256": "6e775dea9058b20dfa3ffcddffacab52165140c5cc7c4ef5c49d55b8af89ef0d"
+    },
+    {
+      "artifactFile": "pages-release-report.json",
+      "bytes": 1229,
+      "sha256": "a13cce833acb25c3e00fcfdc7322f14fc0dee212dcccc69cd82e85eb6954a609"
+    }
+  ],
+  "rawEvidenceLocation": "Original provider artifacts and local QA retained; raw screenshots, logs, environment and process records are not embedded in this public summary.",
+  "oldV141TagAndAssetsUnchanged": true,
+  "goalComplete": false
+}
