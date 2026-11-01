@@ -1,0 +1,204 @@
+{
+  "format": "model-lens-batch-matmul-candidate",
+  "version": 1,
+  "status": "local-selected-node-and-native-validation-passed-not-published",
+  "at": "2026-11-01T04:41:51.716965+00:00",
+  "applicationCodeSource": "02e9d7a56ce5ba46dbc0ad70f217935a7f989d09",
+  "nativeTestedSource": "db6819a4f290ff360c5ab689bf694d800899f28b",
+  "nativeTree": "082a761a495d39dcb0e959beeb101cea1ce74c20",
+  "nativeBuild": "860d0078899ba0fc",
+  "versionCandidate": "1.4.2",
+  "publishedVersion": "1.4.1",
+  "selectedTests": 125,
+  "versionSelectionTests": 13,
+  "newRegressionTests": 8,
+  "initialRegressionFailures": 7,
+  "actualEditedCPUExamples": 10,
+  "actualBrowserDownloadedModelCPURuns": 4,
+  "invalidBefore": {
+    "source": "ad7908a5470618d2d5e78f8d5a4f9c0261ab57c2",
+    "editAccepted": true,
+    "runtimeStatus": "passed",
+    "invoked": true,
+    "outputInt32Values": [
+      1065353216,
+      1073741824,
+      1077936128,
+      1082130432
+    ],
+    "legitimateInt8AccumulatorValues": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "primarySources": [
+    {
+      "snapshot": "tensorflow-batch-matmul.cc",
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/batch_matmul.cc",
+      "bytes": 37623,
+      "sha256": "b8fa3797b999c2ac3eb42bdd1260e7445b4112d3c8b5cc7400a1921acd3f412b"
+    },
+    {
+      "snapshot": "tensorflow-tfl-ops.td",
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/ir/tfl_ops.td",
+      "bytes": 204885,
+      "sha256": "f7035997e12a558e3f8cdcaa84948a33eb6057850c58ec79b689bde4b1ca7b98"
+    },
+    {
+      "snapshot": "tensorflow-batch-matmul-test.cc",
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/batch_matmul_test.cc",
+      "bytes": 50634,
+      "sha256": "4249d8c84fec54566761fc49766dabd6a3582df8defd7f7ef24ebf42b5c825d4"
+    },
+    {
+      "snapshot": "tensorflow-op-version.cc",
+      "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/tools/versioning/op_version.cc",
+      "bytes": 42067,
+      "sha256": "47a575a36aee7fcbe9b7d3e3fb0e4d0a857853bbabb6df0d829b4311cd5a9bef"
+    }
+  ],
+  "native": [
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.76",
+      "reportSHA256": "958d27567b4ca70bbaff61d6ed37911acb852c8c8c7aabb311b5534319bf23b9",
+      "workers": 9,
+      "modelWorkers": 8,
+      "allWorkersClosed": true,
+      "nativeIdentities": 8,
+      "allReaped": true,
+      "automaticRuntimeWorkers": 0,
+      "downloads": [
+        {
+          "case": "hybrid",
+          "bytes": 1732,
+          "sha256": "5bc3c5ddb88309db4729958238aff5ee17be230596e60d6fdc15c4933e462175",
+          "reportBytes": 8162,
+          "reportSHA256": "e85a81e2d3a290eda3c4935ce4af5834dd30bfd6c229e68f1438569d6f854aba",
+          "operators": 2,
+          "byteStatus": "passed"
+        },
+        {
+          "case": "int8-to-int32",
+          "bytes": 1604,
+          "sha256": "0e56cb1505071a48daec22015e0fe4b2f29dcc00650dec4f51844597e10de107",
+          "reportBytes": 7625,
+          "reportSHA256": "a07392e9797a78132ebe4eb4af74824489bfdb63d9b28a23e0454274f56671e5",
+          "operators": 2,
+          "byteStatus": "passed"
+        },
+        {
+          "case": "mixed-precision-unknown",
+          "bytes": 1608,
+          "sha256": "69853ed8defe82569e9ca55b9c03b72609b932b44b2db85e546c74bddfb4a2e5",
+          "reportBytes": 7649,
+          "reportSHA256": "325a8c36041ca6e5cade0f38988b405015f397c60d3fdfc1fc29299fd1f26e7e",
+          "operators": 2,
+          "byteStatus": "passed"
+        }
+      ]
+    },
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.50",
+      "reportSHA256": "c5653322a66fccc0b88da5db36926c3dbf03ea03820f5edb07b97ad6a8cf750a",
+      "workers": 9,
+      "modelWorkers": 8,
+      "allWorkersClosed": true,
+      "nativeIdentities": 10,
+      "allReaped": true,
+      "automaticRuntimeWorkers": 0,
+      "downloads": [
+        {
+          "case": "hybrid",
+          "bytes": 1732,
+          "sha256": "5bc3c5ddb88309db4729958238aff5ee17be230596e60d6fdc15c4933e462175",
+          "reportBytes": 8162,
+          "reportSHA256": "723fd1ebaf931e8c927af3071ffd1617a49b818988aed5f0b8063293ccd27504",
+          "operators": 2,
+          "byteStatus": "passed"
+        },
+        {
+          "case": "int8-to-int32",
+          "bytes": 1604,
+          "sha256": "0e56cb1505071a48daec22015e0fe4b2f29dcc00650dec4f51844597e10de107",
+          "reportBytes": 7625,
+          "reportSHA256": "4acb55d79dcccf757624b7705a9cddf1a2d7f1d0b13667534f4cfae4b0dd12f6",
+          "operators": 2,
+          "byteStatus": "passed"
+        },
+        {
+          "case": "mixed-precision-unknown",
+          "bytes": 1608,
+          "sha256": "69853ed8defe82569e9ca55b9c03b72609b932b44b2db85e546c74bddfb4a2e5",
+          "reportBytes": 7649,
+          "reportSHA256": "ca68ce8f43b0f18c759f153a35a16abf0cfcab9eb2ac50092495fcec4f5bc0f0",
+          "operators": 2,
+          "byteStatus": "passed"
+        }
+      ]
+    }
+  ],
+  "downloadedCPU": [
+    {
+      "channel": "chrome",
+      "case": "hybrid",
+      "status": "passed",
+      "modelSHA256": "5bc3c5ddb88309db4729958238aff5ee17be230596e60d6fdc15c4933e462175",
+      "ioSHA256": "413b1ae8289de72eb8912816fefd22b433e1e7b69fd5e22a6f326321bee45256",
+      "outputs": 2,
+      "maxAbsoluteError": 0.003921627998352051
+    },
+    {
+      "channel": "chrome",
+      "case": "int8-to-int32",
+      "status": "passed",
+      "modelSHA256": "0e56cb1505071a48daec22015e0fe4b2f29dcc00650dec4f51844597e10de107",
+      "ioSHA256": "fbeee237436cee9cfe2903939ca144e527f4cbac7528106138b0122f526e4474",
+      "outputs": 2,
+      "maxAbsoluteError": 0
+    },
+    {
+      "channel": "msedge",
+      "case": "hybrid",
+      "status": "passed",
+      "modelSHA256": "5bc3c5ddb88309db4729958238aff5ee17be230596e60d6fdc15c4933e462175",
+      "ioSHA256": "6194c348b6ddfc455ca81e87914e03290df2b92c055930132f214c7c7e3e3165",
+      "outputs": 2,
+      "maxAbsoluteError": 0.003921627998352051
+    },
+    {
+      "channel": "msedge",
+      "case": "int8-to-int32",
+      "status": "passed",
+      "modelSHA256": "0e56cb1505071a48daec22015e0fe4b2f29dcc00650dec4f51844597e10de107",
+      "ioSHA256": "cec8542aeb0f920d1837ce66fe43e12512d5d3740ea9f71cc404dd8b3ebd9974",
+      "outputs": 2,
+      "maxAbsoluteError": 0
+    }
+  ],
+  "initialNativeFailuresPreserved": 2,
+  "initialFailureReason": "New QA selector matched both quantization and operator headings; original failed reports retained; no application change was made for the selector repair.",
+  "screenshotsReviewed": [
+    "chrome-hybrid-operator-rows",
+    "edge-unknown-mixed-precision-operator-rows"
+  ],
+  "viewport": [
+    1280,
+    640
+  ],
+  "editFontPx": 32,
+  "automaticRuntimeWorkers": 0,
+  "rawEvidenceLocalOnly": true,
+  "releaseEvidenceEligible": false,
+  "limitations": [
+    "Native UI uses authenticated original HTML fixture; not formal HTTPS document transport or physical RSS acceptance.",
+    "Float16 is a static format case, not a CPU compatibility claim; unresolved mixed precision remains not-run.",
+    "Historical Windows Chrome Cloud Files shutdown and HTTPS security-product injection observations remain recorded.",
+    "Formal changed-source main gates and immutable v1.4.2 delivery remain pending."
+  ],
+  "published": false,
+  "goalComplete": false
+}

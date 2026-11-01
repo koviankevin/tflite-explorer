@@ -78,3 +78,7 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 ## v1.4.1 正式交付
 
 上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41270750871)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/model-index-v1.4.1-published.json)。原始失敗與後續新來源通過保持不同來源，沒有重寫舊 tag、放寬判定或同步 Sites／GH Studio。Windows Chrome 原生關閉、外部網路注入及其餘表列未驗證範圍仍保留；完整商品等級目標繼續進行。
+
+## BATCH_MATMUL 的後續修正（未發布）
+
+接續 OP 驗證發現 [output dtype 與已知 rank 漏擋](batch-matmul-validation.md)：非法的 float→int32 output 甚至可能 CPU 回報成功但輸出浮點位元的整數解讀。已加入格式型別、int8 accumulator 例外及 2～5 維 rank 共享規則，序列化報告不讀權重；125 項相關測試與十種合法實際 CPU 對照通過。Chrome／Edge 的五個原生情境、十二份實際下載及其中四份下載的真正 CPU 已[獨立核對](results/batch-matmul-candidate.json)，32px 與全部 Worker／自有程序正常退出。必要發布關卡仍待完成，正式版本維持 v1.4.1，沒有將舊成功部署重跑。
