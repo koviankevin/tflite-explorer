@@ -172,7 +172,7 @@ async function editWholeModel(cycle,entry,hashes){
     return [full,reportFile];
 }
 try{
-    assert.ok(['gate','soak'].includes(mode),'Unknown lifecycle profile.');if(soak)assertSoakExecution(process.env,os.platform());
+    assert.ok(['gate','soak','memory-diagnostic'].includes(mode),'Unknown lifecycle profile.');if(soak)assertSoakExecution(process.env,os.platform());
     if(windows){assert.ok(process.argv.includes('--allow-local-browser'),'Local Windows browser requires explicit authorization.');assert.ok(['chrome','msedge'].includes(channel)&&python,'Choose installed Chrome/Edge and Python.');assert.equal(soak,false,'No Windows two-hour soak is authorized.');report.limitations[2]='Summed Windows WorkingSetSize includes observed owned browser identities and can double-count shared pages;500ms sampling can miss spikes or processes never observed. PrivateUsage is supplementary private commit,not RSS.';}
     else assert.equal(os.platform(),'linux','OS RSS gate requires isolated Linux CI or authorized Windows.');
     if(trustedBootstrap)assert.ok(process.env.LIFECYCLE_BUILD,'Trusted Windows bootstrap requires an authenticated explicit artifact.');

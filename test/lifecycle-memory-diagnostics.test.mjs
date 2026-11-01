@@ -1,3 +1,7 @@
+import {mkdir,mkdtemp,readFile,rm} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createProcessMemoryProbe} from './browser/process-memory-profile.mjs';
@@ -49,4 +53,23 @@ test('missing, repeated, mismatched and out-of-budget sample anchors fail rather
 test('an unexpected stream of phase changes is bounded before more readonly CDP requests are issued',async()=>{
     const {diagnostic,clock,commands}=setup();for(let i=0;i<512;i++){const s=anchor(i+10,`cycle-1-phase-${i}`);clock(i+11);await diagnostic.capture(i,[identity],s,metrics);}
     const before=commands.length;clock(1000);await assert.rejects(diagnostic.capture(512,[identity],anchor(999,'cycle-1-excess'),metrics),/detail budget/);assert.equal(commands.length,before);
+});
+
+// Execute the actual entry point and stop at its first resource preflight.
+// No physical fixture, application build or browser is created. The synthetic
+// platform and fs boundary are confined to this disposable child process.
+test('actual lifecycle entry admits readonly diagnostic mode before resource checks and rejects unknown modes',async()=>{
+    const build=fileURLToPath(new URL('../build/',import.meta.url));await mkdir(build,{recursive:true});
+    const directory=await mkdtemp(path.join(build,'lifecycle-entry-'));
+    try{
+        for(const mode of ['memory-diagnostic','gate','unknown-profile']){
+            const report=path.join(directory,mode+'.json');
+            const code=`import fs from 'node:fs';import {syncBuiltinESMExports} from 'node:module';Object.defineProperty(process,'platform',{value:'linux'});fs.promises.statfs=async()=>{throw Error('ENTRY_TEST_RESOURCE_BOUNDARY');};syncBuiltinESMExports();await import(${JSON.stringify(new URL('./browser/model-lifecycle.mjs',import.meta.url).href)});`;
+            const result=spawnSync(process.execPath,['--input-type=module','-e',code],{env:{...process.env,LIFECYCLE_MODE:mode,LIFECYCLE_REPORT:report},encoding:'utf8',timeout:20000,windowsHide:true});
+            assert.equal(result.error,undefined);assert.equal(result.status,1);
+            const r=JSON.parse(await readFile(report,'utf8').catch(error=>assert.fail(`${error.message}\n${result.stderr}\n${result.stdout}`)));assert.equal(r.status,'failed');assert.deepEqual(r.cycles,[]);assert.deepEqual(r.samples,[]);assert.equal(r.fixture,undefined);assert.equal(r.environment,undefined);
+            assert.match(r.error,mode==='unknown-profile'?/Unknown lifecycle profile/:/ENTRY_TEST_RESOURCE_BOUNDARY/);
+            if(mode==='memory-diagnostic'){assert.equal(r.purpose,'readonly-native-memory-attribution');assert.equal(r.releaseEvidenceEligible,false);assert.equal(r.forcedGC,false);}
+        }
+    }finally{await rm(directory,{recursive:true,force:true});}
 });

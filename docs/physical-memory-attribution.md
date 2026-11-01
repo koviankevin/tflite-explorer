@@ -18,3 +18,11 @@
 49 項相關選測涵蓋原政策、PID／startTicks、真實 probe 組合、重疊觀察、缺漏／重用、白名單、預算、逐樣本 capacity／settle 詳細資料及診斷報告不得發布。應用程式、parser、runtime、權重／custom options、套件版本與原 RSS／讀取／安全門檻不變。PR／main 來源核對後，只執行事先限定的一次診斷，保存成功或失敗的原始結果；實際歸屬與根因仍待觀察。
 
 前置來源 `1148a2532ed89201c3aa503d23707c2fd8748e8d`／tree `288e3ac8ab2d160036432e5d4ca9e88649eef243` 的[收據](results/physical-memory-preflight.json)與[原始選測、拒絕 red／green、預算與 primary schema 雜湊](results/physical-memory-preflight-evidence.zip)保留 SHA-256／CRC。這些是收集器與接受邊界的前置檢查，尚未量到真正瀏覽器的記憶體歸屬，也沒有修復原 RSS 失敗。
+
+## 診斷入口修正
+
+PR #208 的實際受測 tree `d07991f97ec878eff5ee03de015597018755cb30` 與合併主分支相同，877 項 Node 測試通過、35 項既有選做略過，79 項發布契約全通過。但第一次獨立診斷 [41256209262](https://github.com/koviankevin/tflite-explorer/actions/runs/41256209262) 在入口即因 `Unknown lifecycle profile` 失敗：既有 allowlist 只接受 `gate／soak`，漏加 `memory-diagnostic`。這次沒有到 resource preflight，沒有建立實體模型或開瀏覽器，沒有記憶體樣本，不能用來推論 RSS 根因。
+
+修正僅在原 allowlist 加入已設計的診斷模式；未知模式仍拒絕。新增測試以獨立 child 執行真正入口，在第一個 resource preflight 用 stub 停止，因此不用模型或瀏覽器即可重現舊錯誤，並驗證修正後能走到正確邊界、診斷不可發布標記仍在。相關選測增為 50 項且全部通過。最初測試在 Windows sandbox 的 temp rename 問題也保留，測試暫存改在 repository 的 ignored build 內後，才取得對應原錯誤的 red／green。
+
+[失敗收據](results/physical-memory-entry-failure.json)與[原始 ZIP、日誌、來源核對及 red／green](results/physical-memory-entry-failure-evidence.zip)保留 provider digest、CRC 和逐檔雜湊。入口修正通過必要 PR 檢查後，以新來源事先限定一次診斷；不重跑原正式失敗關卡、不改門檻、不發布 v1.4.1。
