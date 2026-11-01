@@ -3,6 +3,7 @@ import {OPERAND_OPERATORS,checkOperandValues,checkOperandMetadata} from './tflit
 import {staticTfliteShape} from './tflite-static-shape.js';
 import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
 import {checkGatherMetadata} from './tflite-gather-checks.js';
+import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
@@ -31,9 +32,10 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         const code=model.operator_codes[op.opcode_index],name=code.custom_code||schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code||0)];
         const record={graph:graphId,node,type:name,inputs:Array.from(op.inputs),outputs:Array.from(op.outputs),status:'not-run',reason:''};operators.push(record);
         if(code.custom_code){record.reason='custom kernel 的靜態語意尚未驗證；原始 options 與引用保留另列。';continue;}
-        if(name==='BATCH_MATMUL'){
+        if(name==='BATCH_MATMUL'||name==='FULLY_CONNECTED'){
             try{
-                const proof=checkBatchMatmulMetadata(Array.from(op.inputs,id=>g.tensors[id]),Array.from(op.outputs,id=>g.tensors[id]),op.builtin_options||{});
+                const check=name==='FULLY_CONNECTED'?checkFullyConnectedMetadata:checkBatchMatmulMetadata;
+                const proof=check(Array.from(op.inputs,id=>id<0?null:g.tensors[id]),Array.from(op.outputs,id=>g.tensors[id]),op.builtin_options||{});
                 record.status=proof.status;record.reason=proof.reason;
                 if(proof.status==='passed')checked++;else unchecked++;
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
@@ -93,5 +95,5 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         checked++;
         record.status='passed';record.reason='已核對可讀常數及適用的靜態 shape／indices 範圍；不含 kernel 執行或數值語意。';
     }
-    return {graph:graphId,checked,unchecked,bytesRead,inspectedBytes,operators,scope:'檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER、PAD／SLICE／SPLIT 家族及 MEAN／SUM／REDUCE；最多檢視 4 MiB。BATCH_MATMUL 核對 dtype／rank／靜態 output shape，不讀權重。逐 OP 列出適用規則，未知值、未支援規則、custom kernel 與數值等價仍未驗證。'};
+    return {graph:graphId,checked,unchecked,bytesRead,inspectedBytes,operators,scope:'檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER、PAD／SLICE／SPLIT 家族及 MEAN／SUM／REDUCE；最多檢視 4 MiB。BATCH_MATMUL／FULLY_CONNECTED 核對已實作的 dtype／rank／靜態 output shape，不讀權重；FULLY_CONNECTED 的未知 quant_spec／packing 明列未檢查。逐 OP 列出適用規則，未知值、未支援規則、custom kernel 與數值等價仍未驗證。'};
 }

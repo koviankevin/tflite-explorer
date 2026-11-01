@@ -46,7 +46,10 @@ export function builtinCatalog(metadata=[]){
 }
 export function checkBuiltinPorts(code,inputs,outputs,options){
     const {name}=builtinInfo(code);
-    const ports=TFLITE_PORTS[normalize(name)];
+    // CPU Prepare admits either two inputs or an optional third bias slot.
+    // The pinned metadata marks all three FC ports required and omits the
+    // shuffled workspace output, so use the actual format cardinalities.
+    const ports=name==='FULLY_CONNECTED'?{inputs:[{}, {},{optional:true}],outputs:(options?.weights_format??0)===1?[{},{}]:[{}]}:TFLITE_PORTS[normalize(name)];
     const legacyReshape=name==='RESHAPE'&&(Array.isArray(options?.new_shape)||ArrayBuffer.isView(options?.new_shape));
     for(const [side,actual] of [['inputs',inputs],['outputs',outputs]]){
         const expected=ports?.[side],splitOutputs=side==='outputs'&&['SPLIT','SPLIT_V'].includes(name);
