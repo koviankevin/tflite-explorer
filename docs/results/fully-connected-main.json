@@ -1,0 +1,208 @@
+{
+  "format": "model-lens-fc-main-review",
+  "version": 1,
+  "status": "passed-four-main-gates-candidate-not-published",
+  "at": "2026-11-01T08:29:11.183469+00:00",
+  "source": "11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358",
+  "tree": "0d50cb707b8a712e0d29b168d7c05e8f76e5a09d",
+  "candidateVersion": "1.4.4",
+  "candidateBuild": "581db5eeeffac7b2",
+  "gates": {
+    "core": {
+      "status": "unchanged-core-scope-original-main-evidence-reused",
+      "kind": "core",
+      "run": 41269145087,
+      "job": 124738115132,
+      "source": "c0dd77c89cde95b215b0d6b7990bfdda07c814d0",
+      "tree": "3f42b92f1d85b2ede0f36f1f9e65834c60f43e0f",
+      "artifactId": 13068536960,
+      "providerDigest": "sha256:4a90bc8bcd4d1a98cd487b0e731df2a5d5a2ab9c38f4c0ed5b0a6892b015b6a8",
+      "reportSHA256": "cd2aa3370229d540bfbeef723ef6080801371b37eb5134a4d48722bb96593a1d",
+      "scopeFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "scopeFiles": 88,
+      "samples": 9,
+      "sourceUnchanged": true,
+      "targetSource": "11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358",
+      "targetTree": "0d50cb707b8a712e0d29b168d7c05e8f76e5a09d",
+      "reused": true,
+      "originals": "../model-index-allocation/main-core-{artifact.zip,report,review}",
+      "freshProviderStatusVerified": true,
+      "providerFreshRevalidationRequiredByPreparation": true
+    },
+    "browser": {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "browser",
+      "run": 41287520246,
+      "job": 124791737443,
+      "source": "11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358",
+      "tree": "0d50cb707b8a712e0d29b168d7c05e8f76e5a09d",
+      "artifactId": 13076505945,
+      "providerDigest": "sha256:f8a4a3d295043a033d879978bd6d21ab5051d44e70be5a0af4a94514badfcc56",
+      "reportSHA256": "f69339fcdac6f34a2eaf5365ad1afa6c3b58ec3cff5afde046690171eac4a674",
+      "scopeFingerprint": "6595f1ee007104779f91c8ce39b48b478d32049a5655c50c0255f9bc1f668f07",
+      "scopeFiles": 351,
+      "samples": 1730,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": -1269760,
+          "rssDriftBytes": -135168,
+          "mainHeapDriftBytes": 176276,
+          "sampledPeakRssBytes": 1099788288,
+          "sampledPeakGrowthBytes": 585232384
+        }
+      },
+      "browserClosed": true,
+      "sourceUnchanged": true
+    },
+    "contract": {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "contract",
+      "run": 41287528024,
+      "job": 124791759315,
+      "source": "11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358",
+      "tree": "0d50cb707b8a712e0d29b168d7c05e8f76e5a09d",
+      "artifactId": 13075763895,
+      "providerDigest": "sha256:65c19f01cf0f696298bf72ccfa76704d75bb2bd4afa40033c913b4df183fcaac",
+      "reportSHA256": "ed61500bce0d67eed8becdb99258664995fa54b6508980d497ac2242acf95c10",
+      "scopeFingerprint": "450e35edce68dd1f5601ec3f29fe5917848a64677d8141fb0ac042e065983ef3",
+      "scopeFiles": 673,
+      "counts": {
+        "tests": 79,
+        "pass": 79,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "sourceUnchanged": true
+    },
+    "site": {
+      "status": "passed-original-policy-source-and-digest-review",
+      "kind": "site",
+      "run": 41287541786,
+      "job": 124791797703,
+      "source": "11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358",
+      "tree": "0d50cb707b8a712e0d29b168d7c05e8f76e5a09d",
+      "artifactId": 13075353857,
+      "providerDigest": "sha256:aca0cf6b3e16bfea8d846ca943ef7a599a57ce459e8a92a4921966065fcd9fbd",
+      "reportSHA256": "b5f9dd99629d500c5c373d6522615b72009066e4f5d4bd3639a6a71dcca9e744",
+      "scopeFingerprint": "adb862c2ffa0887cdb20bacd0941c864f4de0265dbbe8f8b8b7a11f720450ddc",
+      "scopeFiles": 398,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "modelWorkers": 7,
+          "requests": 562,
+          "scenarios": 6,
+          "snapshots": 3
+        }
+      },
+      "browserClosed": true,
+      "sourceUnchanged": true
+    }
+  },
+  "physical": {
+    "bytes": 1349965216,
+    "operators": 21005,
+    "fixtureSHA256": "7ea3c8b317c42a3464b74ef8d9a80b27b42f912c1592b5c60daab670ffc66586",
+    "cycles": 8,
+    "policy": {
+      "version": 3,
+      "cycles": 8,
+      "warmupCycles": 2,
+      "sampleIntervalMs": 500,
+      "urlReleaseTimeoutMs": 80000,
+      "settleSamples": 5,
+      "maxReadBytes": 1048576,
+      "realmReadBytes": 16777216,
+      "browserPeakGrowthBytes": 805306368,
+      "closedRssDriftBytes": 134217728,
+      "closedRssSlopeBytesPerCycle": 16777216,
+      "closedMainHeapDriftBytes": 33554432,
+      "modelWorkerUsedBytes": 536870912,
+      "modelWorkerBackingBytes": 536870912
+    },
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": -1269760,
+        "rssDriftBytes": -135168,
+        "mainHeapDriftBytes": 176276,
+        "sampledPeakRssBytes": 1099788288,
+        "sampledPeakGrowthBytes": 585232384
+      }
+    },
+    "closedRSSBytes": [
+      620937216,
+      635863040,
+      640573440,
+      639238144,
+      647049216,
+      635727872,
+      636977152,
+      635305984
+    ],
+    "sampleCount": 1730,
+    "workersClosed": 57,
+    "nativeIdentityCount": 6,
+    "allNativeReaped": true,
+    "allWeightsOptionsPatternsVerified": true
+  },
+  "site": {
+    "run": 41287541786,
+    "artifactId": 13075643360,
+    "providerDigest": "sha256:771b208b566cd29d8fee5183be0fd848ac1b8b27a041ff7c616fad4b17c89491",
+    "reportSHA256": "2d9ea4464daca015781153ed7581997c5a3e36956d1aaaf36835fb363139e959",
+    "checks": 38,
+    "staticFiles": 824,
+    "fontFrames": 15,
+    "fontOperatorFrames": 13,
+    "fontInputOutputFrames": 2,
+    "runtimeCases": 19,
+    "runtimeLifecycleEvaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssDriftBytes": -2547712,
+        "mainHeapDriftBytes": -13758736,
+        "closedRssSlopeBytesPerCycle": 7203108.571428572,
+        "sampledPeakRssBytes": 811143168,
+        "maxSampleGapMs": 541,
+        "sampledPeakGrowthBytes": 34729984
+      }
+    },
+    "target": "isolated-versioned-snapshot",
+    "actualScreenshotReviewed": true,
+    "screenshotSHA256": "b0fe35c47e048f52b57dde277ac98309a9a24142de97d96429f1927d1853f987"
+  },
+  "nativeCandidateEvidence": "fully-connected-candidate.json",
+  "sourceCodeChangePR": 227,
+  "selectedTests": 199,
+  "versionSelectionTests": 13,
+  "actualCPUCasesInSuite": 13,
+  "newActualBrowserDownloadedModelCPU": 4,
+  "sameBytesAndRuntimeCPUControlsReused": 0,
+  "PRNodeCounts": {
+    "tests": 1004,
+    "pass": 969,
+    "fail": 0,
+    "skipped": 35
+  },
+  "PRContractTests": 79,
+  "originals": "Original provider ZIPs, reports, logs, native screenshots and local readers retained locally. Public receipt contains numeric/source summaries only.",
+  "limitations": [
+    "Finite physical-model acceptance is not a general memory SLA or proof for company models.",
+    "Historical Windows Chrome Cloud Files shutdown and HTTPS security-product injection observations remain recorded.",
+    "Unknown quant_spec, shuffled/packing, special zero-width paths, unsupported encodings and private kernel/dialect semantics remain explicitly unverified.",
+    "Normal edit/export stays static; interpreter is manual.",
+    "Official HTTPS deployment, immutable v1.4.4 Release and four actual public downloads remain pending."
+  ],
+  "published": false,
+  "goalComplete": false
+}
