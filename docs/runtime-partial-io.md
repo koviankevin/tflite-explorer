@@ -10,4 +10,8 @@
 
 實際 CPU 回歸先重現「執行已失敗但三個輸入無法下載」，再確認同一負例仍失敗、三個 inputs bytes 保留、padded output 不偽造。canonical／legacy／編輯／切出四個合法 FC 的十個輸出值保持一致。73 項相關選測通過，另涵蓋多輸出中間 slot 缺失、失效長度、全部缺漏、錯誤字數界線、預算不被例外繞過、ZIP CRC，以及 transfer／下載／buffer 重用／釋放和完整 v1 相容性。最初新增測試曾誤以為同尺寸的可重用 buffer 也必須 detach；依既有 ownership 契約修正測試，原失敗紀錄保留，未修改該契約。
 
-Chrome／Edge 原生選檔、零值／亂數錯誤模型的部分 ZIP、正常完整 ZIP、1280×640／32px 畫面及 Worker／程序退出仍待本候選驗收。新情境接入後續正式 smoke 與桌面 driver；只有確定已發布的舊版本略過，未知／新版本不得省略。模型、BIN 和完整診斷仍留在本機，公開 evidence 只收白名單 metadata、日誌與畫面。
+候選來源 `4a764049b62dfb1afc6d48462699759efea61cb3`／tree `b767fb247805e96d9c30b5220bb1bc3a49e4a457`、build `bc25d5ce7d3b5dc5`，325 個核心檔。Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 各完成原生選檔、零值／亂數錯誤模型的部分 ZIP、正常完整 ZIP、1280×640／圖字 32px、六個 Worker 與八／十一個觀察到的程序正常退出。六份實際下載的 ZIP CRC、模型 SHA、輸入 BIN bytes 及可重播的亂數、正常十個零值輸出和缺少的 output 均已獨立核對；畫面錯誤原因可讀、下載按鈕可操作，無水平溢位。這是經完整性核對的原始 HTML 隔離 fixture，沒有正式 HTTPS 文件傳輸或實體 RSS 改善的主張。
+
+第一輪 Chrome 的三個功能案例通過，但新 flow 誤把頁面常駐的 Netron 排版 Worker 算入「模型關閉即退出」，使原整輪失敗。修正 flow 僅觀察 model／runtime Worker；外層 driver 仍要求關閉 context 後六個 Worker 全部退出，沒有刪除程序退出檢查。另一次粗略的 PID 身分觀察曾誤列 Chrome root 仍存活，Win32 exit code 0、非零 exit time 與 signalled handle 確認其已退出；對已退出程序的終止嘗試回傳 false，沒有成功強制終止。原始錯誤、失敗和更正均保留，不把第一輪改列成功或補作原 10 秒退出證明。
+
+[公開候選摘要](results/runtime-partial-io-candidate.json)保留來源、版本、驗收計數與結果；30 筆原始 metadata／失敗／畫面及讀取器的封存完整留在本機，摘要提供其 SHA-256。公開檔案不含本機原始日誌、截圖、路徑、程序身分或環境欄位。新情境接入後續正式 smoke 與桌面 driver；只有確定已發布的舊版本略過，未知／新版本不得省略。模型、原始 IO ZIP／BIN 和完整診斷留在本機。PR／main 必要關卡與正式交付仍待完成，原 RSS 失敗不由這項功能或診斷取代。

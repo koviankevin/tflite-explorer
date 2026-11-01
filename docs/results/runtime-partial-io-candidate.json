@@ -1,0 +1,97 @@
+{
+  "format": "model-lens-public-native-IO-summary",
+  "status": "verified-candidate-not-published",
+  "source": "4a764049b62dfb1afc6d48462699759efea61cb3",
+  "tree": "b767fb247805e96d9c30b5220bb1bc3a49e4a457",
+  "build": "bc25d5ce7d3b5dc5",
+  "coreFiles": 325,
+  "selectedTests": 73,
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "156.0.8078.76",
+      "normalBrowserClosed": true,
+      "observedNativeIdentityCount": 8,
+      "closedWorkerCount": 6,
+      "cases": [
+        {
+          "invalidShapeFixture": true,
+          "inputMode": "zero",
+          "runtimeStatus": "failed",
+          "archiveVersion": 2,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": false
+        },
+        {
+          "invalidShapeFixture": true,
+          "inputMode": "random",
+          "runtimeStatus": "failed",
+          "archiveVersion": 2,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": false
+        },
+        {
+          "invalidShapeFixture": false,
+          "inputMode": "zero",
+          "runtimeStatus": "passed",
+          "archiveVersion": 1,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": true
+        }
+      ]
+    },
+    {
+      "channel": "msedge",
+      "version": "156.0.4314.50",
+      "normalBrowserClosed": true,
+      "observedNativeIdentityCount": 11,
+      "closedWorkerCount": 6,
+      "cases": [
+        {
+          "invalidShapeFixture": true,
+          "inputMode": "zero",
+          "runtimeStatus": "failed",
+          "archiveVersion": 2,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": false
+        },
+        {
+          "invalidShapeFixture": true,
+          "inputMode": "random",
+          "runtimeStatus": "failed",
+          "archiveVersion": 2,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": false
+        },
+        {
+          "invalidShapeFixture": false,
+          "inputMode": "zero",
+          "runtimeStatus": "passed",
+          "archiveVersion": 1,
+          "CRC": "passed",
+          "threeInputBINsReplayedExactly": true,
+          "outputSaved": true
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "width": 1280,
+    "height": 640,
+    "graphFont": 32,
+    "horizontalOverflow": false
+  },
+  "originalChromeHarnessFailurePreserved": true,
+  "firstFailureCorrection": "Model-close checks cover model/runtime workers. The outer browser driver still requires all page workers to close with the context. Identity-query availability was corrected using Win32 exit/signal evidence.",
+  "rawEvidenceRetainedLocally": true,
+  "localEvidenceArchiveSHA256": "f091417edeaa42352028686723a78c6ee899ee6d41c8e030f870bcececc98028",
+  "privacy": "Public summary only: no raw model, BIN, runtime ZIP, logs, screenshots, filesystem paths, process IDs, creation IDs or environment metadata.",
+  "limitations": "Isolated original-HTML fixture;no formal HTTPS transport or physical-RSS improvement claim. Original failed RSS gate remains failed.",
+  "published": false,
+  "goalComplete": false
+}
