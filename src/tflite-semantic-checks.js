@@ -4,6 +4,7 @@ import {checkSpatialTransform} from './tflite-spatial-checks.js';
 import {checkOperandMetadata} from './tflite-operand-checks.js';
 import {inspectTensorQuantization} from './tflite-quantization-checks.js';
 import {staticTfliteShape} from './tflite-static-shape.js';
+import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
 const known=t=>staticTfliteShape(t)!==null;
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
@@ -26,14 +27,7 @@ export function checkOperatorMetadata(name,inputs,outputs,options={}){
         if(!same(shape(out),expected))fail(`output shape 應為 [${expected.join(', ')}]。`);
         if(bias&&known(bias)&&shape(bias).reduce((n,d)=>n*BigInt(d),1n)!==BigInt(w[0]))fail('bias 元素數須等於 units。');
     }
-    if(name==='BATCH_MATMUL'&&inputs.slice(0,2).every(known)&&known(out)){
-        const [a,b]=inputs.map(shape);if(a.length<2||b.length<2)fail('inputs rank 必須至少為 2。');
-        const m=a.at(options.adj_x?-1:-2),ka=a.at(options.adj_x?-2:-1),kb=b.at(options.adj_y?-1:-2),n=b.at(options.adj_y?-2:-1);
-        if(ka!==kb)fail('兩個 input 的 contracting dimension 不符。');
-        const x=a.slice(0,-2),y=b.slice(0,-2),batch=[];
-        for(let i=0;i<Math.max(x.length,y.length);i++){const p=x.at(-i-1)??1,q=y.at(-i-1)??1;if(p!==q&&p!==1&&q!==1)fail('batch 維度無法 broadcast。');batch.unshift(p===1?q:p);}
-        if(!same(shape(out),[...batch,m,n]))fail(`output shape 應為 [${[...batch,m,n].join(', ')}]。`);
-    }
+    if(name==='BATCH_MATMUL')checkBatchMatmulMetadata(inputs,outputs,options);
     if(['TRANSPOSE','RESHAPE','EXPAND_DIMS'].includes(name)&&inputs[0]&&out&&inputs[0].type!==out.type)fail('input／output dtype 必須相同。');
     if(name==='RESHAPE'&&inputs.length===1&&known(inputs[0])&&known(out)&&options.new_shape){
         const dims=Array.from(options.new_shape);if(dims.some(d=>!Number.isInteger(d)||d< -1)||dims.filter(d=>d===-1).length>1)fail('options new_shape 無效。');
