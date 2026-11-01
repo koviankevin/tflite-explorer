@@ -6,6 +6,7 @@ const build='6d032862ea5b71d5',infinite='e24ec3ce32ef0f49ddc49ac1ac630d68185dcb0
 function observed(){
     const url=`https://example.test/versions/${build}/src/tflite-runtime-worker.js?v=${build}`,id='run-123:runtime:3';
     const active={deadlineMs:30000,networkHeld:false,fakeTimers:false,preservedOriginalTabs:true,fixture:{bytes:2300,infiniteSHA256:infinite},runtimeWorkers:[{id,url,startedAt:100000,closed:true,closedAt:132000,lifetimeMs:32000}],timeoutObservation:{eventId:id,fixtureSHA256:infinite,invokeObservedAt:100100,status:'not-verified',reason:'超過 30 秒，已終止 Worker',downloadDisabled:true,checkEnabled:true}};
+    active.restoredModelWorkers=[1,2,3].map(i=>({id:'restored-'+i,url:url.replace('tflite-runtime-worker.js','model-worker.js'),closed:true}));
     const guide={runtimeWorkers:[{id,url,createdObservedAt:100000,closed:true,closeObservedAt:132000}],busyExecution:{sharedWithActiveCompute:true,fixture:{bytes:2300,sha256:infinite},workerId:id,nativeHandleMatched:true,networkHeld:false,fakeTimers:false,deadlineMs:30000,invokeObservedAt:100100,disabledObservedAt:100200},busyCompletion:{wasDisabled:true,status:'not-verified',reason:'actual30s-timeout',guideOpen:true,reEnabled:true,completedObservedAt:132100,editNavigated:true,runControlsRecovered:true,draftPreserved:true}};
     return {guide,active};
 }
@@ -29,6 +30,9 @@ for(const [name,mutate] of [
     ['run controls not restored',r=>r.guide.busyCompletion.runControlsRecovered=false],
     ['original draft lost',r=>r.guide.busyCompletion.draftPreserved=false],
     ['original model tabs lost',r=>r.active.preservedOriginalTabs=false],
+    ['missing restored model worker',r=>r.active.restoredModelWorkers.pop()],
+    ['retained restored model worker',r=>r.active.restoredModelWorkers[2].closed=false],
+    ['duplicate restored worker identity',r=>r.active.restoredModelWorkers[2].id=r.active.restoredModelWorkers[0].id],
     ['network-held simulation',r=>r.active.networkHeld=true],
     ['fake timer',r=>r.guide.busyExecution.fakeTimers=true],
     ['shortened deadline',r=>r.active.deadlineMs=1000],

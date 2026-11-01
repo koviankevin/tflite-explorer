@@ -9,6 +9,10 @@ export function assertSharedTimeoutProof(guide,active,{expectedBuild,expectedInf
     assert.ok(execution&&completion&&event);assert.equal(execution.sharedWithActiveCompute,true);assert.equal(execution.nativeHandleMatched,true);
     for(const record of [execution,active]){assert.equal(record.deadlineMs,30000);assert.equal(record.networkHeld,false);assert.equal(record.fakeTimers,false);}
     assert.equal(active.preservedOriginalTabs,true);assert.equal(active.fixture.infiniteSHA256,expectedInfiniteSHA256);assert.equal(execution.fixture.sha256,expectedInfiniteSHA256);assert.equal(event.fixtureSHA256,expectedInfiniteSHA256);assert.equal(execution.fixture.bytes,active.fixture.bytes);
+    // Restoring the original tab opens a new model Worker after each temporary
+    // model closes. The parent guide must finish and close these too.
+    assert.equal(active.restoredModelWorkers?.length,3);assert.equal(new Set(active.restoredModelWorkers.map(w=>w.id)).size,3);
+    for(const restored of active.restoredModelWorkers){assert.equal(restored.closed,true);const source=new URL(restored.url);assert.ok(source.pathname.endsWith('/src/model-worker.js'));assert.equal(source.searchParams.get('v'),expectedBuild);}
     assert.ok(typeof event.eventId==='string'&&event.eventId.length>0);assert.equal(execution.workerId,event.eventId);
     const one=(rows,id)=>{const found=rows.filter(w=>w.id===id);assert.equal(found.length,1);return found[0];};
     const native=one(active.runtimeWorkers,event.eventId),peer=one(guide.runtimeWorkers,event.eventId);
