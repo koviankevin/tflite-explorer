@@ -1,0 +1,420 @@
+{
+  "format": "model-lens-fc-candidate-review",
+  "version": 1,
+  "status": "passed-local-and-native-candidate-not-published",
+  "at": "2026-11-01T07:58:30.392260+00:00",
+  "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+  "tree": "2c76108be3e3f3cff8421b592c0e2fdb7dd1ced1",
+  "buildId": "80e3229c02d36e06",
+  "candidateVersion": "1.4.4",
+  "primary": {
+    "at": "2026-11-01T07:32:37.146531+00:00",
+    "pin": "7bc5d217d3bd79426527d0055fd3b54812f52e93",
+    "files": [
+      {
+        "file": "tensorflow-fully_connected.cc",
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/fully_connected.cc",
+        "bytes": 109802,
+        "sha256": "a222862ecaf0ea259604e8fac7015d59c55ef5f3818e0908461f86e7f672d3f2"
+      },
+      {
+        "file": "tensorflow-fully_connected_test.cc",
+        "url": "https://raw.githubusercontent.com/tensorflow/tensorflow/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/lite/kernels/fully_connected_test.cc",
+        "bytes": 137317,
+        "sha256": "8ead1b22f2d5a445bb0fb7627af4e3f5b5836fc4a6b33af6c261031a8ad2d3dd"
+      },
+      {
+        "file": "../batch-matmul-validation/tensorflow-tfl-ops.td",
+        "url": "https://github.com/tensorflow/tensorflow/blob/7bc5d217d3bd79426527d0055fd3b54812f52e93/tensorflow/compiler/mlir/lite/ir/tfl_ops.td",
+        "bytes": 204885,
+        "sha256": "f7035997e12a558e3f8cdcaa84948a33eb6057850c58ec79b689bde4b1ca7b98",
+        "reusedExactPinnedOriginal": true
+      }
+    ]
+  },
+  "originalBeforeModels": [
+    {
+      "case": "int32-output",
+      "bytes": 1516,
+      "sha256": "c279543f25b1edd1078d65e4feb798b78a6c3b85d2046ca04ae18ab17742ae0f",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    },
+    {
+      "case": "dynamic-output-dtype",
+      "bytes": 1532,
+      "sha256": "45a564bf9002790592ea81ada52b16a57a945c2f366b754e26de71321dce0da3",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    },
+    {
+      "case": "dynamic-weights-rank",
+      "bytes": 1532,
+      "sha256": "537ff860a84049f32e562b3afdec5de27d21aa8df616b611fc13ab6184dcf7fe",
+      "editAndReopen": "accepted-invalid-model",
+      "serializedStatus": "not-run"
+    }
+  ],
+  "originalAfterModels": [
+    {
+      "case": "int32-output",
+      "sha256": "c279543f25b1edd1078d65e4feb798b78a6c3b85d2046ca04ae18ab17742ae0f",
+      "status": "rejected-original-exact-bytes"
+    },
+    {
+      "case": "dynamic-output-dtype",
+      "sha256": "45a564bf9002790592ea81ada52b16a57a945c2f366b754e26de71321dce0da3",
+      "status": "rejected-original-exact-bytes"
+    },
+    {
+      "case": "dynamic-weights-rank",
+      "sha256": "537ff860a84049f32e562b3afdec5de27d21aa8df616b611fc13ab6184dcf7fe",
+      "status": "rejected-original-exact-bytes"
+    }
+  ],
+  "originalCPU": [
+    {
+      "case": "int32-output",
+      "modelSHA256": "c279543f25b1edd1078d65e4feb798b78a6c3b85d2046ca04ae18ab17742ae0f",
+      "status": "failed",
+      "invoked": false,
+      "ioSHA256": "acec6fa466e7efc3865fc81169f7d46be78de36aa3324ecc13433fe0b6520aa2"
+    },
+    {
+      "case": "valid-float",
+      "modelSHA256": "30a120e8b4cbf43f35338ec72fb2f76351a32f658224abd048df8fff718222e0",
+      "status": "passed",
+      "invoked": true,
+      "ioSHA256": "14f36dcb2d3860025b61321cf511f3785304768de3adce6b7c151109f45f9242"
+    },
+    {
+      "case": "optional-bias",
+      "modelSHA256": "38528e09a63bd4222768fc0e491d20e2585703a895437176ce6f31b418cc2e26",
+      "status": "passed",
+      "invoked": true,
+      "ioSHA256": "960c90cffa43313ff00caab3159b4380fcdb46765614281e7b451f8f99aecd9a"
+    }
+  ],
+  "initialRegressionCounts": {
+    "tests": 3,
+    "passed": 1,
+    "failed": 2
+  },
+  "expandedRegressionCounts": {
+    "tests": 22,
+    "passed": 2,
+    "failed": 20
+  },
+  "relatedTests": 199,
+  "versionSelectionTests": 13,
+  "actualCPUCasesInSuite": 13,
+  "actualNativeDownloadedModelCPUCases": 4,
+  "native": {
+    "viewport": [
+      1280,
+      640
+    ],
+    "fontPx": 32,
+    "details": [
+      {
+        "channel": "chrome",
+        "version": "156.0.8078.76",
+        "reportSHA256": "df5d239278538b140d22852b29ffca88364cf991578be3e19d79ea0ac3ae2e9e",
+        "workers": 11,
+        "modelWorkers": 10,
+        "allWorkersClosed": true,
+        "nativeIdentities": 8,
+        "allReaped": true,
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "optional-bias",
+            "bytes": 1720,
+            "sha256": "c0528b9d88951dd0724686ad86f034409dc0c9d0d44c407793295ba5012f4ee9",
+            "reportBytes": 7811,
+            "reportSHA256": "c5d7f572bab0306dbe0de71a810f34a0e20fdf2f1b549f973ce810c3ba76138b",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 24
+          },
+          {
+            "case": "int16-int64-bias",
+            "bytes": 2536,
+            "sha256": "5121b4bb60691e8bc8b92f10b6b0df87c564b4fd6309e8fa40cfff58ba045001",
+            "reportBytes": 11085,
+            "reportSHA256": "5fd521c7964caf3e7138f44b394c336e52f92a039f4ea08710ed2ed7bdd3507d",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 30
+          },
+          {
+            "case": "unknown-quant-spec",
+            "bytes": 1964,
+            "sha256": "08212aede57d9bb53e44a7bcdb4a41a48a51202419e0945f0f27361211c6af3d",
+            "reportBytes": 7949,
+            "reportSHA256": "7549bbafd26599335ce4219142ccdf54f163ee80bbc39dfc0f426625fe85ccba",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 36
+          },
+          {
+            "case": "dynamic-valid",
+            "bytes": 1980,
+            "sha256": "cc6703e421c2ef7ff8b2584f45467f0d2ce45dc8c0a4b1a5a2b3206917eb3d24",
+            "reportBytes": 7954,
+            "reportSHA256": "8dcf33108583f33130d798217058cc14df2fa44f4cfbe4a222fa54083b50ccbe",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 36
+          }
+        ]
+      },
+      {
+        "channel": "msedge",
+        "version": "156.0.4314.50",
+        "reportSHA256": "c02b65686c3c54a5b5588d6f9b5b6c55f47a645404d54b0358cb1e4102e6f879",
+        "workers": 11,
+        "modelWorkers": 10,
+        "allWorkersClosed": true,
+        "nativeIdentities": 11,
+        "allReaped": true,
+        "automaticRuntimeWorkers": 0,
+        "downloads": [
+          {
+            "case": "optional-bias",
+            "bytes": 1720,
+            "sha256": "c0528b9d88951dd0724686ad86f034409dc0c9d0d44c407793295ba5012f4ee9",
+            "reportBytes": 7811,
+            "reportSHA256": "c590d1c6cc76c87bdb28375177a1523ea79d6af2326ac6fb25157cc2b8c28058",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 24
+          },
+          {
+            "case": "int16-int64-bias",
+            "bytes": 2536,
+            "sha256": "5121b4bb60691e8bc8b92f10b6b0df87c564b4fd6309e8fa40cfff58ba045001",
+            "reportBytes": 11085,
+            "reportSHA256": "ec4a6b6b2194b0a7d8f9ecaf56d8c8111af674716bcb63a14eefafe32abd7950",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 30
+          },
+          {
+            "case": "unknown-quant-spec",
+            "bytes": 1964,
+            "sha256": "08212aede57d9bb53e44a7bcdb4a41a48a51202419e0945f0f27361211c6af3d",
+            "reportBytes": 7949,
+            "reportSHA256": "525964ca4964cccb45a184280cf8eb05314fb7c316843c624097f12b705c115e",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 36
+          },
+          {
+            "case": "dynamic-valid",
+            "bytes": 1980,
+            "sha256": "cc6703e421c2ef7ff8b2584f45467f0d2ce45dc8c0a4b1a5a2b3206917eb3d24",
+            "reportBytes": 7954,
+            "reportSHA256": "9dbf4374002d8c82e152fa2d23de7cee9d3fee2d504d0028c9443a258a25a5b7",
+            "operators": 2,
+            "patternMatches": 2,
+            "negativeConnectedPatternMatches": 0,
+            "byteStatus": "passed",
+            "comparedBytes": 36
+          }
+        ]
+      }
+    ],
+    "cpu": [
+      {
+        "channel": "chrome",
+        "case": "optional-bias",
+        "status": "passed",
+        "modelSHA256": "c0528b9d88951dd0724686ad86f034409dc0c9d0d44c407793295ba5012f4ee9",
+        "ioSHA256": "4e24c2d423ff8b9e666b4814f77ea7f427f6877d2c6bf250a0bf36dcbf67c3f7",
+        "outputs": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      {
+        "channel": "chrome",
+        "case": "int16-int64-bias",
+        "status": "passed",
+        "modelSHA256": "5121b4bb60691e8bc8b92f10b6b0df87c564b4fd6309e8fa40cfff58ba045001",
+        "ioSHA256": "7cd3a8e85d089a667a7e45775563bb82183e622aaf457405a8f15e1046bc96d8",
+        "outputs": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "optional-bias",
+        "status": "passed",
+        "modelSHA256": "c0528b9d88951dd0724686ad86f034409dc0c9d0d44c407793295ba5012f4ee9",
+        "ioSHA256": "18a0716615799350bdd842948ae9c2f7d17ea97811327976133d4c471a515c91",
+        "outputs": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      {
+        "channel": "msedge",
+        "case": "int16-int64-bias",
+        "status": "passed",
+        "modelSHA256": "5121b4bb60691e8bc8b92f10b6b0df87c564b4fd6309e8fa40cfff58ba045001",
+        "ioSHA256": "c41d5b7ae0b9ffeb9fd48bc184fd31dd6744fa63301546db88ca6d94a5b423a7",
+        "outputs": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      }
+    ],
+    "scope": "Authenticated original HTML fixture/native chooser/wiring/32px; not formal HTTPS transport, physical RSS or historical native shutdown repair."
+  },
+  "nativeIOCRC": {
+    "status": "four-actual-native-downloaded-model-CPU-IO-archives-digest-and-CRC-passed",
+    "at": "2026-11-01T07:56:14.987737+00:00",
+    "checks": [
+      {
+        "file": "chrome-optional-bias-actual-download-cpu-io.zip",
+        "bytes": 2881,
+        "sha256": "4e24c2d423ff8b9e666b4814f77ea7f427f6877d2c6bf250a0bf36dcbf67c3f7",
+        "entries": 4,
+        "CRC": "passed"
+      },
+      {
+        "file": "chrome-int16-int64-bias-actual-download-cpu-io.zip",
+        "bytes": 2444,
+        "sha256": "7cd3a8e85d089a667a7e45775563bb82183e622aaf457405a8f15e1046bc96d8",
+        "entries": 4,
+        "CRC": "passed"
+      },
+      {
+        "file": "msedge-optional-bias-actual-download-cpu-io.zip",
+        "bytes": 2468,
+        "sha256": "18a0716615799350bdd842948ae9c2f7d17ea97811327976133d4c471a515c91",
+        "entries": 4,
+        "CRC": "passed"
+      },
+      {
+        "file": "msedge-int16-int64-bias-actual-download-cpu-io.zip",
+        "bytes": 2444,
+        "sha256": "c41d5b7ae0b9ffeb9fd48bc184fd31dd6744fa63301546db88ca6d94a5b423a7",
+        "entries": 4,
+        "CRC": "passed"
+      }
+    ]
+  },
+  "actualScreenshots": {
+    "status": "two-actual-native-screenshots-viewed",
+    "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+    "build": "80e3229c02d36e06",
+    "viewport": [
+      1280,
+      640
+    ],
+    "graphAndEditorFontPx": 32,
+    "screenshots": [
+      "native-chrome-1/fc-optional-bias-report-32px.png",
+      "native-msedge-1/fc-int16-int64-bias-report-32px.png"
+    ],
+    "observed": "Actual Chrome optional-bias and Edge quantized int64-bias report dialogs and controls fit the viewport. Operator rows and verification scope remain legible and contained; report content scrolls inside the modal.",
+    "scope": "Two screenshots only; source-bound native numeric layouts and actual download content are reviewed separately. Graph/editor font selection is 32px; this does not assert every UI text element uses 32px."
+  },
+  "dependencies": [
+    {
+      "kind": "core",
+      "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+      "files": 88,
+      "fingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "previousFingerprint": "18b06de59a0b004b5e326c4bd1f187f32f3b3735b5ccea5aa1cefd9c93080d49",
+      "changed": false,
+      "previousRun": 41269145087
+    },
+    {
+      "kind": "browser",
+      "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+      "files": 351,
+      "fingerprint": "6595f1ee007104779f91c8ce39b48b478d32049a5655c50c0255f9bc1f668f07",
+      "previousFingerprint": "940f917a85790874945a86c9f2668f729897df3f346091043371e3cc789e1b66",
+      "changed": true,
+      "previousRun": 41282013897
+    },
+    {
+      "kind": "contract",
+      "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+      "files": 673,
+      "fingerprint": "450e35edce68dd1f5601ec3f29fe5917848a64677d8141fb0ac042e065983ef3",
+      "previousFingerprint": "6fd71f7517f1a0defc66b0622347c0d5e44278a025853de994ff939e4dc55a40",
+      "changed": true,
+      "previousRun": 41282020756
+    },
+    {
+      "kind": "site",
+      "source": "a52c88934227f15ade630ac71b4ea1a812eb1fb3",
+      "files": 398,
+      "fingerprint": "adb862c2ffa0887cdb20bacd0941c864f4de0265dbbe8f8b8b7a11f720450ddc",
+      "previousFingerprint": "b9de85cacdea57538372267bb41b465cd495df452cdc2916a5a620738fa5f3f0",
+      "changed": true,
+      "previousRun": 41282027801
+    }
+  ],
+  "originals": "Original public synthetic files, reports, IO ZIPs, screenshots, native environment records and debug readers remain local. This public receipt contains source/hash/count summaries.",
+  "limitations": [
+    "No formal HTTPS v1.4.4 deployment or immutable Release yet; current formal version remains v1.4.3.",
+    "Unknown quant_spec, shuffled/packing, special zero-width paths and unsupported mixed encodings remain explicitly unverified.",
+    "Finite CPU and native cases do not verify arbitrary kernels, company models or the historical Windows Chrome Cloud Files wait.",
+    "No automatic interpreter during normal edit/export.",
+    "Whole product goal remains active; all original requirements and historical failures retained."
+  ],
+  "published": false,
+  "goalComplete": false
+}

@@ -24,4 +24,8 @@
 
 其中十三種實際匯出後 CPU 正例涵蓋 float、row bias、兩種無 bias slots、flatten、keep_num_dims、兩種 hybrid、int8／uint8、int16＋int8／int64 bias，以及無 bias 的切圖與組合輸出；數值、原始常數 bytes、量化欄位與 OP version 均核對。這些是小型公開合成模型，沒有拿有限 CPU 結果代替任意模型保證。
 
-Chrome／Edge 的原生開檔、接線、32px、實際下載、pattern 與正常退出，以及必要 main 關卡、正式 HTTPS／固定 Release 尚待完成。沒有同步 Sites／GH Studio，也未重跑 v1.4.3 的成功部署。完整商品等級目標與歷史 Windows Chrome／網路注入等已知界線保留。
+Chrome／Edge 的獨立原生驗收已完成：[候選數值收據](results/fully-connected-candidate.json)對應乾淨來源 `a52c88934227f15ade630ac71b4ea1a812eb1fb3`／tree `2c76108be3e3f3cff8421b592c0e2fdb7dd1ced1`、build `80e3229c02d36e06`，329 核心檔。每端六種情境，合計十六份實際模型／報告下載；兩種已知錯誤零下載，無 bias／int64 bias 的原生接線、未知 quant_spec／動態未檢查狀態、32px 報告與重新開啟搜尋通過。每端十一個 Worker（十個 model Worker）與觀察到的自有程序均依原十秒政策正常退出，沒有自動 runtime。兩張實際截圖另已查看。
+
+八份模型下載均獨立串流比對原始權重／bias、型別／shape／signature／量化欄位、options 與 OP version；每份 singleton FC pattern 為兩筆，未連接的 FC→FC pattern 為零筆。四份已知合法下載另外真正 CPU invoke，兩個 outputs 都是 `[1, 2, 3]`，四份 IO ZIP 的 digest 與 CRC 通過。未知 quant_spec／動態案例未拿來冒充 CPU 通過。這些原生資料不是正式 HTTPS 或實體大檔 RSS 證據。
+
+相依範圍核心 88 檔未變，可接續重新核對可信 main 證據；browser 351、contract 673、site 398 檔已改變，仍須完成來源綁定的新 main 關卡。正式 HTTPS／固定 v1.4.4 Release 尚待接續，目前公開版仍是 v1.4.3；沒有同步 Sites／GH Studio、重跑成功部署、調整 timer／GC／RSS 門檻或改寫歷史失敗。完整商品等級目標保留。
