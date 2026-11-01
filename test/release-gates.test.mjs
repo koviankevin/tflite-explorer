@@ -17,6 +17,14 @@ test('release gate rejects unsuccessful, foreign, PR and stale-attempt workflows
     }
     for(const change of [e=>e.jobs=[],e=>e.jobs[0].conclusion='skipped',e=>e.jobs.push({...e.jobs[0]}),e=>e.artifact.expired=true,e=>e.artifact.digest=null,e=>e.artifact.size_in_bytes=undefined,e=>e.artifact.size_in_bytes=5*1024**2]){const e=evidence();change(e);assert.throws(()=>assertRun(e,'browser',repository));}
 });
+
+test('a readonly memory diagnostic cannot be promoted as lifecycle release evidence even if it passes',async()=>{
+    const diagnostic=evidence();diagnostic.run.path='.github/workflows/physical-memory-diagnostic.yml';diagnostic.jobs[0].name='diagnose';diagnostic.artifact.name=`browser-memory-diagnostic-${commit}-1`;
+    assert.throws(()=>assertRun(diagnostic,'browser',repository));
+    const report=JSON.parse(await readFile(new URL('../docs/results/browser-lifecycle-2026-10-27.json',import.meta.url))),run={head_sha:report.environment.sourceCommit};
+    assert.doesNotThrow(()=>assertReport(report,'browser',run,report.environment.sourceTree));
+    for(const diagnostic of [{purpose:'readonly-native-memory-attribution'},{releaseEvidenceEligible:false}])assert.throws(()=>assertReport({...report,...diagnostic},'browser',run,report.environment.sourceTree),/diagnostic/i);
+});
 test('a passed label cannot replace actual browser/worker/read/release evidence',async()=>{
     const report=JSON.parse(await readFile(new URL('../docs/results/browser-lifecycle-2026-10-27.json',import.meta.url))),run={head_sha:report.environment.sourceCommit};
     assert.doesNotThrow(()=>assertReport(report,'browser',run,report.environment.sourceTree));

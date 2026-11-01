@@ -27,11 +27,12 @@ import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessE
 import {windowsProcessObserver,windowsAllocatedBytes} from './windows-process-memory.mjs';
 import {verifyArtifact} from '../../scripts/lib/release-artifact.mjs';
 import {trustedDocument} from './trusted-document.mjs';
+import {createLifecycleMemoryDiagnostics} from './lifecycle-memory-diagnostics.mjs';
 
 process.chdir(fileURLToPath(new URL('../../',import.meta.url)));
 const reportPath=path.resolve(process.env.LIFECYCLE_REPORT || 'test-results/model-lifecycle.json');
 await mkdir(path.dirname(reportPath),{recursive:true});
-const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak';
+const mode=process.env.LIFECYCLE_MODE||'gate',soak=mode==='soak',memoryDiagnosticMode=mode==='memory-diagnostic';
 const windows=process.platform==='win32',channel=windows?process.env.MODEL_LENS_BROWSER_CHANNEL:undefined,python=windows?process.env.MODEL_LENS_QA_PYTHON:undefined;
 const trustedBootstrap=windows&&process.env.MODEL_LENS_TRUSTED_BOOTSTRAP==='1';
 const policy=soak?MODEL_EDIT_LIFECYCLE_POLICY:MODEL_COMPOSITION_LIFECYCLE_POLICY;
@@ -43,13 +44,18 @@ const report={status:'failed',startedAt:new Date().toISOString(),policy,cycles:[
     'Parser/main read guards reject >1MiB calls or >16MiB per realm before allocation; dedicated recovery identity workers read exactly one original file in <=1MiB calls. No forced garbage collection or shortened URL timer.'
 ]};
 report.workerClosures=[];
+if(memoryDiagnosticMode){
+    assert.equal(process.platform,'linux','Native attribution is restricted to isolated Linux CI.');
+    Object.assign(report,{purpose:'readonly-native-memory-attribution',releaseEvidenceEligible:false,forcedGC:false});
+    report.limitations.push('Supplementary native memory/CDP readings are temporally anchored observations, not replacements for the original RSS, proof of ownership or release evidence.');
+}
 if(soak)Object.assign(report,{format:'model-lens-lifecycle-soak',version:2,soakPolicy:LIFECYCLE_SOAK_POLICY,recoveryPolicy:SOAK_RECOVERY_POLICY,soak:{activeDurationMs:0,viewport:{width:1280,height:640}},workerClosures:[]});
 const errors=[],wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 // Resource preflight also uses this helper when cgroup files are unavailable.
 const optionalRead=file=>readFile(file,'utf8').then(s=>s.trim()).catch(()=>null);
 const check=name=>{report.checks.push(name);console.log(`PASS ${name}`);};
 let temporary,server,browser,context,page,cdp,browserCDP,readPage,timer,pending=Promise.resolve(),sampling=false,processTree,phase='startup',shuttingDown=false,activeStarted,draftRecovery;
-let windowsObserver,diagnosticPhase=null,diagnosticAt=0;
+let windowsObserver,diagnosticPhase=null,diagnosticAt=0,memoryDiagnostics;
 const activeElapsed=()=>activeStarted===undefined?null:performance.now()-activeStarted;
 async function persistReport(){await writeFile(reportPath+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(reportPath+'.tmp',reportPath);}
 const watchdogMinutes=soak?160:windows?30:22;
@@ -63,7 +69,12 @@ const patterns=[
 if(!soak)patterns.push(reusablePattern('Lifecycle branch wrong edge',{...patterns[1],edges:[...patterns[1].edges,{from:'N2',to:'N3'}]}));
 async function processRss(){
     assert.ok(processTree,'Cannot locate owned Chromium identities.');
-    if(!windows)return processTree.sample(await readProcessTable());
+    if(!windows){
+        const rows=await readProcessTable(),memory=processTree.sample(rows);
+        if(!memoryDiagnostics)return memory;
+        const owned=new Set(processTree.identities.map(p=>`${p.pid}:${p.startTicks}`));
+        return {...memory,diagnosticIdentities:rows.filter(p=>owned.has(`${p.pid}:${p.startTicks}`)).map(({pid,startTicks})=>({pid,startTicks}))};
+    }
     const native=await windowsObserver.sample();report.windowsObservedIdentities=native.identities;
     if(diagnosticPhase!==phase||Date.now()-diagnosticAt>=10000){
         const [{processInfo},mainHeap,dom]=await Promise.all([browserCDP.send('SystemInfo.getProcessInfo'),cdp.send('Runtime.getHeapUsage'),cdp.send('Memory.getDOMCounters')]);
@@ -75,9 +86,11 @@ async function processRss(){
     return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
 }
 async function sample(){
-    const memory=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
+    const {diagnosticIdentities,...memory}=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
     assert.ok(Number.isFinite(mainHeapBytes)&&mainHeapBytes>0,'Main heap unavailable.');
-    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),...memory,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();report.samples.push(sample);return sample;
+    const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),...memory,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();const index=report.samples.length;report.samples.push(sample);
+    if(memoryDiagnostics)await memoryDiagnostics.capture(index,diagnosticIdentities,sample,metrics);
+    return sample;
 }
 async function waitFor(fn,timeout=30000){const until=Date.now()+timeout;while(!await readPage(fn)){if(Date.now()>until)throw Error(`Timed out: ${fn}`);await wait(100);}}
 async function choose(file,button='#open-model'){
@@ -198,6 +211,7 @@ try{
     browserCDP??=await browser.newBrowserCDPSession();await browserCDP.send('Target.setDiscoverTargets',{discover:true});cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
     readPage=async fn=>{const result=await cdp.send('Runtime.evaluate',{expression:`(${typeof fn==='string'?fn:fn.toString()})()`,returnByValue:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;};
     if(soak)draftRecovery=createSoakRecovery({page,read:readPage,directory:temporary,fixture:report.fixture});
+    if(memoryDiagnosticMode){memoryDiagnostics=createLifecycleMemoryDiagnostics({now:()=>Date.now()-Date.parse(report.startedAt),cdp,browserCDP});report.memoryProfile=memoryDiagnostics.profile;}
     await page.goto(base);await page.locator('#welcome-open').waitFor();phase='baseline';await sample();
     timer=setInterval(()=>{if(sampling)return;sampling=true;pending=sample().catch(error=>errors.push(`Sampler: ${error.message}`)).finally(()=>{sampling=false;});},policy.sampleIntervalMs);
     const patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns(patterns));
@@ -246,6 +260,7 @@ try{
 }catch(error){report.status='failed';report.error=error.stack||String(error);console.error(report.error);if(readPage)report.audit=await readPage(()=>globalThis.__lifecycle).catch(()=>null);}
 finally{
     clearInterval(timer);await pending;shuttingDown=true;
+    if(memoryDiagnostics)try{memoryDiagnostics.finish(report.samples);}catch(error){report.status='failed';errors.push(`Memory diagnostic: ${error.message}`);}
     try{
         if(context)await context.close();
         if(browser){let timeout;try{await Promise.race([browser.close(),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Browser close/reap timed out.')),10000);})]);}finally{clearTimeout(timeout);}}
