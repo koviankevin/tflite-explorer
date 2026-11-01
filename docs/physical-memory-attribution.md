@@ -16,3 +16,5 @@
 每輪診斷最多 4,000 個樣本、24,000 筆程序紀錄、512 筆 CDP 詳細資料；超限會失敗，不悄悄省略而聲稱完整。用原失敗報告 envelope，加上最大數目的六程序合成觀察、512 筆詳細資料，實際 JSON 大小 11,186,025 bytes，低於 16 MiB 診斷 metadata 預算。這只是序列化大小的合成檢查，沒有執行瀏覽器、讀取實體模型、量測 OS 記憶體或證明效能改善。
 
 48 項相關選測涵蓋原政策、PID／startTicks、真實 probe 組合、重疊觀察、缺漏／重用、白名單、預算及診斷報告不得發布。應用程式、parser、runtime、權重／custom options、套件版本與原 RSS／讀取／安全門檻不變。PR／main 來源核對後，只執行事先限定的一次診斷，保存成功或失敗的原始結果；實際歸屬與根因仍待觀察。
+
+前置來源 `1148a2532ed89201c3aa503d23707c2fd8748e8d`／tree `288e3ac8ab2d160036432e5d4ca9e88649eef243` 的[收據](results/physical-memory-preflight.json)與[原始選測、拒絕 red／green、預算與 primary schema 雜湊](results/physical-memory-preflight-evidence.zip)保留 SHA-256／CRC。這些是收集器與接受邊界的前置檢查，尚未量到真正瀏覽器的記憶體歸屬，也沒有修復原 RSS 失敗。
