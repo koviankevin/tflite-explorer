@@ -1,0 +1,109 @@
+{
+  "format": "model-lens-public-memory-diagnostic-summary",
+  "status": "observed-renderer-native-category-not-root-fix-or-release",
+  "run": 41256679398,
+  "source": "697ac53a820baeb51798d0f01c55c1c91d7a50e2",
+  "tree": "911ffbab691ddf68d0a73cfad25cbab3f342783c",
+  "samples": 1720,
+  "details": 185,
+  "completeObservations": 1720,
+  "exitedObservations": 0,
+  "reusedIdentities": 0,
+  "closedWorkerCount": 57,
+  "reapedNativeIdentityCount": 6,
+  "allEightOutputHashesSameAsOriginalFailure": true,
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 4336025.6,
+      "rssDriftBytes": 20369408,
+      "mainHeapDriftBytes": 151100,
+      "sampledPeakRssBytes": 1111535616,
+      "sampledPeakGrowthBytes": 599556096
+    }
+  },
+  "releaseSteps": [
+    {
+      "cycle": 1,
+      "rendererAnonymousDeltaBytes": -150626304,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -150626304,
+      "mainHeapUsedDeltaBytes": 1180,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 2,
+      "rendererAnonymousDeltaBytes": -151040000,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -151040000,
+      "mainHeapUsedDeltaBytes": 1180,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 3,
+      "rendererAnonymousDeltaBytes": -149057536,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -149057536,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 4,
+      "rendererAnonymousDeltaBytes": -151298048,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -151298048,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 5,
+      "rendererAnonymousDeltaBytes": -150970368,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -150970368,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 6,
+      "rendererAnonymousDeltaBytes": -151568384,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -151568384,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 7,
+      "rendererAnonymousDeltaBytes": -150843392,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -150843392,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 8,
+      "rendererAnonymousDeltaBytes": -150638592,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRSSDeltaBytes": -150638592,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    }
+  ],
+  "originalFailedGate": 41252363060,
+  "releaseEvidenceEligible": false,
+  "rawEvidenceRetainedLocally": true,
+  "localEvidenceArchiveSHA256": "c35b13f68260e8cccc91d5e0d57b8aa97a5ba97ae3672c5dc9e9e6675291a382",
+  "privacy": "Public numeric summary only;original provider artifact remains in its existing GitHub Actions run. No local raw logs, screenshots, paths, PID/creation IDs or environment are published.",
+  "limitations": "Supplementary observations are sequential. Observed native release steps do not prove the allocator or cause of the original failed closed-cycle samples. Diagnostic is explicitly ineligible for release.",
+  "published": "v1.4.0unchanged;1.4.1unpublished",
+  "goalComplete": false
+}

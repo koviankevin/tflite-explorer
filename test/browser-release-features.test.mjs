@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
+import {partialRuntimeIORequired} from './browser/release-features.mjs';
+
+test('partial runtime IO is required for current and unknown candidates, while exact published history remains compatible',()=>{
+    for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(partialRuntimeIORequired(version),false,version);
+    for(const version of ['1.4.1','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(partialRuntimeIORequired(version),true,version);
+    for(const version of [null,'candidate','v1.4.1'])assert.throws(()=>partialRuntimeIORequired(version));
+});
 
 test('legacy shape checks skip exact older immutable releases and remain required for new or unknown labels',()=>{
     for(const v of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(legacyShapeValidationRequired(v),false,v);

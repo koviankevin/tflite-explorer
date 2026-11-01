@@ -12,6 +12,8 @@
 
 最初測試 harness 曾缺少 FC 第三個輸入，且誤把切圖報告當成編輯常數檢查入口；已保留初版並修到真正 caller red。另保留先前 CPU 測試錯誤假設「負例不得 invoke／必有 IO」的失敗，後續依實際 pinned runtime 判定，不修改 runtime 或放寬規則。瀏覽器、PR／main 關卡及正式交付仍待完成；不覆蓋 v1.4.0 的發布證據。
 
+上述 CPU 與無 IO 的結果保留原受測來源；後續候選的[部分 IO 保存修正](runtime-partial-io.md)讓同一 padded-output 負例可保留可讀 inputs，仍維持 runtime 失敗與 output 缺漏，不將舊結果改列成功。
+
 ## Windows 候選與來源範圍
 
 來源 `decacbcafdeac8972c79c48225fe326f3192c870`／tree `ec58b5b9bfedb95a4cdf619bd86861f8df86a1ab`、build `28812015057240a2`，325 個核心檔。Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 各完成隔離原生選檔、1280×640／32px、不合法 FC 的零下載阻擋、兩個合法 legacy RESHAPE 的常數檢查／報告、實際匯出重開與兩個 OP 搜尋。原始 false flag、shape 與 8-byte 參數常數保留，報告／實際檔案 byte ranges 已比對。各三個模型 Worker、零個自動 runtime Worker；八／十一個觀察到的程序身分均在原 10 秒正常關閉規則內退出。

@@ -8,6 +8,8 @@ TRANSPOSE permutation 的負軸誤擋與錯誤 dtype 放行已在 v1.2.1 正式�
 
 ## 優先處理與交付狀態
 
+進行中的 v1.4.1 候選另修正 [legacy 非空 shape 的漏檢](legacy-shape-validation.md)，但實體大檔正式關卡因 RSS slope 超限失敗，尚未發布；原始失敗保留。[獨立原生記憶體診斷](physical-memory-attribution.md#八輪獨立診斷的觀察)完成八輪，將觀察到的大幅下降定位於 renderer anonymous RSS，尚未確認原失敗根因，不能取代正式關卡。手動 runtime 的單一 padded output 曾讓可讀 inputs 一併無法封存，[部分 IO 保存](runtime-partial-io.md)已完成實際 CPU、73 項選測及 Chrome／Edge 原生小型合成流程，正式交付仍待必要關卡。正式站保持 v1.4.0，不能把候選或診斷當成已交付。
+
 v1.4.0 的[量化欄位檢查與報告](quantization-validation.md#v140-正式交付)已修正 legacy has_rank／單一 scale 的軸檢查，以及其他 QuantizationDetails 被錯用 affine 規則的問題。公開原檔找到 14 個量化軸失敗，原樣與切圖保留資料並明列報告；重接無效欄位則阻擋。未知 codec、INT64／INT4 等尚未實作範圍與超出預算項目明列未驗證。四項 main、正式站 36 項／1,468 檔、實際固定下載與 deployment 已核對；僅涵蓋修改／切出 scopes，不代表其他 subgraphs 或任意 kernel 語意已驗證。
 
 v1.3.0 已完成正式站與固定 Release 核對，13 種新增 OP 靜態規則、逐 OP 報告及大報告分批顯示見[本版交付](operator-validation.md#v130-正式交付)。未知／動態參數、超出預算及沒有規則的 OP 明列未檢查，不承諾任意 kernel 可執行。下表保留仍未解的限制與較早交付修正；原始收據保持各自來源，整體目標見[商品化後續工作](product-readiness-next.md)。
