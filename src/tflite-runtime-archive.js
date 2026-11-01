@@ -13,14 +13,18 @@ export function runtimeArchive({validation,inputs,outputs,inputDetails,outputDet
     const files=[],rows={inputs:[],outputs:[]},missing=[],pending=[];let bytes=0;
     // Admit the entire declared capture before reading any payload. A failed
     // tensor must not bypass the unchanged total or per-tensor IO budget.
-    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]])values.forEach((tensor,i)=>{
-        const detail=details[i],shape=Array.from(tensor.shape),expectedBytes=inputSize({dtype:detail.dtype,shape});
-        bytes+=expectedBytes;if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');
-        const s=specs[i],row={name:String(detail.name||'').slice(0,256),shape,dtype:detail.dtype,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})};
-        pending.push({side,index:i,tensor,row,expectedBytes});
-    });
+    for(const [side,values,details] of [['inputs',inputs,inputDetails],['outputs',outputs,outputDetails]]){
+        if(!Array.isArray(details)||details.length>128)throw Error('IO archive 介面 metadata 無效。');
+        for(let i=0;i<Math.max(values.length,details.length);i++){
+            const tensor=values[i],detail=details[i]??tensor,shape=Array.from(tensor?.shape??detail.shape),expectedBytes=inputSize({dtype:detail.dtype,shape});
+            bytes+=expectedBytes;if(bytes>RUNTIME_LIMITS.ioBytes)throw Error('輸入／輸出保存合計超過 16 MiB。');
+            const s=specs[i],row={name:String(detail.name||'').slice(0,256),shape,dtype:detail.dtype,...(side==='inputs'?{source:s.mode,...(s.mode==='bin'?{sourceFile:s.file.name?String(s.file.name).slice(0,1024):null}:s.mode==='random'?{...randomOptions(s),distribution:s.distribution??'uniform',algorithm:randomAlgorithm(s)}:{})}:{})};
+            pending.push({side,index:i,tensor,row,expectedBytes});
+        }
+    }
     for(const {side,index,tensor,row,expectedBytes} of pending){
         try{
+            if(!tensor)throw Error('runtime 未提供此 tensor 的資料；保留介面 metadata。');
             const value=tensor.toTypedArray(),elements=row.shape.reduce((n,d)=>n*d,1);
             if(!ArrayBuffer.isView(value)||value.length!==elements||value.byteLength!==expectedBytes)throw Error('runtime tensor 資料長度與 shape／dtype 不符，未保存此 tensor。');
             const data=littleEndianBytes(value,row.dtype),name=`${side}-${index}.bin`;

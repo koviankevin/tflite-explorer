@@ -4,6 +4,9 @@ import {execFileSync} from 'node:child_process';
 import {runtimeArchive} from '../src/tflite-runtime-archive.js';
 import {runtimeIOTransfers,prepareRuntimeIOBlob,takeRuntimeIOBuffer,releaseRuntimeIO} from '../src/runtime-io.js';
 import {Archive} from '../vendor/netron/zip.js';
+import {executeRuntime} from '../src/tflite-runtime-execute.js';
+import {runtimePlan} from '../src/tflite-runtime-policy.js';
+import {runtimeFixture} from './runtime-fixture.mjs';
 const good=(values=[1.25,-2.5])=>({dtype:'float32',shape:[values.length],toTypedArray:()=>Float32Array.from(values)});
 const bad=()=>({...good(),toTypedArray:()=>{throw Error('Tensors with strides or padding are not yet supported.');}});
 const detail={name:'public tensor',dtype:'float32'},spec=(outputs=[bad(),good([3,4])])=>({validation:{status:'failed',invoked:true,reason:'output contract mismatch'},inputs:[good()],outputs,inputDetails:[detail],outputDetails:outputs.map(()=>detail),specs:[{mode:'zero'}],modelSHA256:'a'.repeat(64),transferable:true});
@@ -48,4 +51,14 @@ test('partial archives preserve transfer, one-download conversion, retry-buffer 
 test('complete captures retain v1, normal BIN layout and scalar or empty tensors',()=>{
     const f=spec([good([3,4])]);f.validation={status:'passed'};let {z,m}=open(runtimeArchive(f).archive);assert.equal(m.version,1);assert.equal(m.capture,undefined);assert.equal(m.outputs[0].status,undefined);assert.ok(z.entries.has('outputs-0.bin'));
     f.inputs=[{...good([2]),shape:[]}];f.outputs=[good([])];({z,m}=open(runtimeArchive(f).archive));assert.equal(m.version,1);assert.equal(z.entries.get('outputs-0.bin').peek().length,0);assert.deepEqual(m.inputs[0].shape,[]);
+});
+
+test('the real execute caller records unproduced interface slots after run or input construction fails',async()=>{
+    for(const failure of ['run','input']){
+        const f=await runtimeFixture(),plan=runtimePlan(f.model,f.blob.size);let constructed=0,deleted=0,ran=false;
+        const rt={Environment:{create:async()=>({delete(){deleted++;}})},Tensor:class{constructor(data,shape,dtype){if(failure==='input'&&constructed===1)throw Error('input conversion unavailable');constructed++;Object.assign(this,{data,shape,dtype});}toTypedArray(){return this.data;}delete(){deleted++;}},loadAndCompile:async()=>({getInputDetails:()=>plan.inputs,getOutputDetails:()=>plan.outputs,run:async()=>{ran=true;throw Error('Node number 0 (ADD) failed to prepare');},delete(){deleted++;}})};
+        const result=await executeRuntime({blob:f.blob,plan,rt,transferableIO:true}),{m,z}=open(result.io.archive);
+        assert.equal(result.status,'failed');assert.equal(result.invoked,false);assert.equal(ran,failure==='run');assert.equal(m.version,2);assert.equal(m.inputs.length,2);assert.equal(m.outputs.length,1);assert.equal(m.outputs[0].file,null);assert.equal(m.outputs[0].status,'not-saved');assert.match(m.outputs[0].reason,/未提供/);assert.equal(z.entries.has('outputs-0.bin'),false);assert.equal(deleted,constructed+2);
+        if(failure==='input'){assert.equal(m.inputs[1].file,null);assert.equal(m.capture.saved,1);assert.match(result.reason,/input conversion unavailable/);}else{assert.equal(m.capture.saved,2);assert.match(result.reason,/failed to prepare/);}
+    }
 });

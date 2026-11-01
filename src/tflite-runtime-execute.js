@@ -8,7 +8,21 @@ export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>(
     let stage='inputs',model=null,environment=null,ins=[],outs=[],compiled=false,invoked=false,modelSHA256=null,inputDetails=[],outputDetails=[];
     const started=performance.now();
     const record=(status,reason)=>{const lines=diagnostics().slice(-12).map(s=>String(s).slice(0,512));return {schemaVersion:1,engine:RUNTIME_ENGINE,status,stage,reason,compiled,invoked,modelSHA256,elapsedMs:Math.round(performance.now()-started),scope,diagnostics:lines,...(status==='failed'?{failureKind:/allocate|allocation/i.test(reason)?'tensor-allocation':'runtime',failureLocations:runtimeFailureLocations(lines,plan.diagnosticContext)}:{})};};
-    const capture=(status,reason)=>{const result=record(status,reason);if(ins.length||invoked)try{result.io=runtimeArchive({validation:result,inputs:ins,outputs:outs,inputDetails,outputDetails:outs.map((t,i)=>({name:outputDetails[i]?.name,dtype:t.dtype})),specs,modelSHA256,transferable:transferableIO,ioBuffer});if(result.io.manifest.capture?.status==='partial'){const missing=result.io.manifest.capture.missing;result.ioError=`執行記錄部分保存：${missing.length} 個 tensor 未能保存；可取得的資料已保留。${missing[0].side} #${missing[0].index}：${missing[0].reason}；詳見 IO ZIP 的 manifest.json。`;}}catch(error){result.ioError=`執行記錄未能保存：${String(error.message).slice(0,512)}`;}return result;};
+    const capture=(status,reason)=>{
+        const result=record(status,reason);
+        if(ins.length||invoked)try{
+            // Keep the declared interface when an exception prevents run() or
+            // input construction from returning every tensor. Produced values
+            // retain their actual dtype/shape rather than hiding a mismatch.
+            const details=Array.from({length:Math.max(outs.length,outputDetails.length)},(_,i)=>({...outputDetails[i],dtype:outs[i]?.dtype??outputDetails[i]?.dtype}));
+            result.io=runtimeArchive({validation:result,inputs:ins,outputs:outs,inputDetails,outputDetails:details,specs,modelSHA256,transferable:transferableIO,ioBuffer});
+            if(result.io.manifest.capture?.status==='partial'){
+                const missing=result.io.manifest.capture.missing;
+                result.ioError=`執行記錄部分保存：${missing.length} 個 tensor 未能保存；可取得的資料已保留。${missing[0].side} #${missing[0].index}：${missing[0].reason}；詳見 IO ZIP 的 manifest.json。`;
+            }
+        }catch(error){result.ioError=`執行記錄未能保存：${String(error.message).slice(0,512)}`;}
+        return result;
+    };
     try{
         validateRuntimeInputs(plan.inputs,specs);
         stage='compile';progress('LiteRT：載入模型及配置 CPU tensors…');
