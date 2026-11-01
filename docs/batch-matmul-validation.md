@@ -1,6 +1,6 @@
-# BATCH_MATMUL 型別與 rank 驗證（v1.4.2 候選）
+# BATCH_MATMUL 型別與 rank 驗證（v1.4.2）
 
-目前正式站與固定下載為 [v1.4.1](model-index-allocation.md#v141-正式交付)；本修正尚未發布。編輯／匯出維持本機靜態檢查，interpreter 仍須手動執行。
+已於 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2) 正式交付，build `e8a83e3eeb4b7bdc`。一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。以下候選及失敗紀錄維持其受測來源與當時狀態；目前交付見[正式交付](#v142-正式交付)。
 
 原本的 BATCH_MATMUL 只核對已知的矩陣維度與 batch broadcast，沒有檢查 output dtype，且略過動態 shape 時連已知 rank 也一起略過。float32 lhs／rhs 配上 int32 output 的實際編輯仍可匯出；LiteRT.js 2.6.0 CPU 對這個錯誤模型還會回報執行完成，把 `[1,2,3,4]` 的浮點 bytes 當成 `[1065353216,1073741824,1077936128,1082130432]` 整數輸出。這是公開合成案例，不代表使用者先前未提供的公司模型也是同一原因，也顯示執行成功本身不等於模型型別正確。
 
@@ -42,3 +42,11 @@ Chrome／Edge 的獨立選測入口為 `node test/browser/windows-operator-valid
 [實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41274789522)沿用原 1,349,965,216-byte／21,005 OP fixture、完整／局部／組合匯出重開與 read audit。權重、custom options、pattern 正負例及正常關閉均通過。關閉後 RSS slope 為 −2,318,921.14 bytes／輪、drift 12,341,248 bytes、main heap drift 179,944 bytes；sampled peak 1,112,723,456 bytes。原始報告依同一政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或驗收上限變更；有限八輪不代表任意模型或長期記憶體保證。
 
 目前公開版仍為 v1.4.1；v1.4.2 正式 HTTPS、固定 Release 與四份實際下載核對尚待接續。歷史 Windows Chrome 雲端統計與安全軟體注入問題保留，完整商品化目標仍進行中。
+
+## v1.4.2 正式交付
+
+固定來源 `ca57c8068533ecb83b64a64f4eb61e4d223ab8d4`／tree `599a133f82460fed164589b0a244ce8633d3e82d`、build `e8a83e3eeb4b7bdc` 已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41276594514)完成，四項工作 attempt 1 全成功。326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對。正式站包含 15 組 32px 文字框、搜尋／pattern／MLIR 與 TFLite 匯出重開、逐 OP／量化／legacy shape 報告、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO；獨立的五組 BATCH_MATMUL 原生 Chrome／Edge 情境保留其候選來源，不宣稱它們字面新增在原 38 項 smoke 裡。
+
+固定 ZIP 41,297,924 bytes，SHA-256 `5613f96d94955d857ca9fc509d7c10dc805c0fdcb0fe93c0af140616d950d34c`；四份實際下載與準備產物一致，tag／Latest／權威 Pages deployment 已核對。Site ID `41ee919888a6cdf3e88e9186f3e9a46fa16b7acc73a36d831f125a270424d4aa`，保留 v1.4.1／v1.4.0 與永久 baseline。舊 v1.4.1 tag 與四份 asset 的身分、大小、digest 均未改寫。[最終收據](results/batch-matmul-v1.4.2-published.json)只含來源、雜湊、計數與有限結果；原始報告、截圖、環境及程序身分完整留在本機。成功部署不重跑，沒有同步 Sites／GH Studio。
+
+本版增加的是格式與靜態維度檢查；合法 float16 格式不等於 CPU kernel 已支援，動態／混合精度、量化數值語意、公司 dialect／runtime、歷史 Windows Chrome／網路注入及長期 SLA 仍保留原界線。完整商品等級目標未完成。

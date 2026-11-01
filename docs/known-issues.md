@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.4.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.1)／build `c64f4143bf8463a2`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)／build `e8a83e3eeb4b7bdc`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
 
 v1.3.1 已交付[手動 runtime 的 tensor 錯誤參照](runtime-tensor-diagnostics.md)：官方公開量化模型的原檔在目前 LiteRT compile 失敗，但日誌的 tensor 編號原先沒有 OP 對照。現在可查看定義／使用者，先顯示套用輸入前失敗的提示，並保留原文與失敗狀態；參照不代表 OP 就是原因。31 項相關選測、四項 main 關卡、正式站 35 項操作與四份實際下載已核對。新增的 Windows 正式站小型流程功能與正常退出通過，但整體網路守門仍失敗；後續一次診斷觀察到 Kaspersky 注入類型的請求，原始失敗及完整本機紀錄保留，沒有關閉防毒或放行外連。見[最終收據](results/runtime-tensor-v1.3.1-published.json)。
 
@@ -8,7 +8,7 @@ TRANSPOSE permutation 的負軸誤擋與錯誤 dtype 放行已在 v1.2.1 正式�
 
 ## 優先處理與交付狀態
 
-進行中的 v1.4.1 候選另修正 [legacy 非空 shape 的漏檢](legacy-shape-validation.md)，但實體大檔正式關卡因 RSS slope 超限失敗，尚未發布；原始失敗保留。[獨立原生記憶體診斷](physical-memory-attribution.md#八輪獨立診斷的觀察)完成八輪，將觀察到的大幅下降定位於 renderer anonymous RSS，尚未確認原失敗根因，不能取代正式關卡。手動 runtime 的單一 padded output 曾讓可讀 inputs 一併無法封存，[部分 IO 保存](runtime-partial-io.md)已完成實際 CPU、73 項選測及 Chrome／Edge 原生小型合成流程，正式交付仍待必要關卡。正式站保持 v1.4.0，不能把候選或診斷當成已交付。
+Legacy shape、手動 runtime 的部分 IO 保存與實際索引配置減量已在 [v1.4.1 正式交付](model-index-allocation.md#v141-正式交付)，早期 RSS 失敗及獨立診斷保留原結果；不再列為尚未發布。接續的 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2) 另交付 [BATCH_MATMUL 型別與 rank 靜態驗證](batch-matmul-validation.md#v142-正式交付)，含合法 hybrid／int8 accumulator 與明確未檢查狀態。兩版均有各自的新來源關卡、正式 HTTPS 與四份實際下載核對；歷史 Windows Chrome 等待、網路注入、padded output 及任意 kernel／dialect 語意的界線仍保留。
 
 v1.4.0 的[量化欄位檢查與報告](quantization-validation.md#v140-正式交付)已修正 legacy has_rank／單一 scale 的軸檢查，以及其他 QuantizationDetails 被錯用 affine 規則的問題。公開原檔找到 14 個量化軸失敗，原樣與切圖保留資料並明列報告；重接無效欄位則阻擋。未知 codec、INT64／INT4 等尚未實作範圍與超出預算項目明列未驗證。四項 main、正式站 36 項／1,468 檔、實際固定下載與 deployment 已核對；僅涵蓋修改／切出 scopes，不代表其他 subgraphs 或任意 kernel 語意已驗證。
 
