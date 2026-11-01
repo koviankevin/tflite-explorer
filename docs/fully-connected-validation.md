@@ -29,3 +29,13 @@ Chrome／Edge 的獨立原生驗收已完成：[候選數值收據](results/full
 八份模型下載均獨立串流比對原始權重／bias、型別／shape／signature／量化欄位、options 與 OP version；每份 singleton FC pattern 為兩筆，未連接的 FC→FC pattern 為零筆。四份已知合法下載另外真正 CPU invoke，兩個 outputs 都是 `[1, 2, 3]`，四份 IO ZIP 的 digest 與 CRC 通過。未知 quant_spec／動態案例未拿來冒充 CPU 通過。這些原生資料不是正式 HTTPS 或實體大檔 RSS 證據。
 
 相依範圍核心 88 檔未變，可接續重新核對可信 main 證據；browser 351、contract 673、site 398 檔已改變，仍須完成來源綁定的新 main 關卡。正式 HTTPS／固定 v1.4.4 Release 尚待接續，目前公開版仍是 v1.4.3；沒有同步 Sites／GH Studio、重跑成功部署、調整 timer／GC／RSS 門檻或改寫歷史失敗。完整商品等級目標保留。
+
+## 四項主分支關卡已核對（尚未發布）
+
+[PR #227](https://github.com/koviankevin/tflite-explorer/pull/227) 已合併為 `11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358`，完整 tree 與實際 PR checkout 相同。Node 1,004 項中 969 通過、35 個既有選做略過；79 項契約與九筆 PR core 原始報告也已核對。正式 core 沿用相同 88 檔 scope 的可信 main `41269145087`，重新核對 provider 狀態、digest／CRC、原政策與相依檔；PR core artifact 不冒充主分支 dispatch。
+
+[四關卡數值收據](results/fully-connected-main.json)對應來源 `11dbe657ae63d3c05cd3e7f6f5a9cdcf1206a358`／tree `0d50cb707b8a712e0d29b168d7c05e8f76e5a09d`、build `581db5eeeffac7b2`。新來源的 79 項契約零略過、六種版本切換及 824 檔 HTTP 候選／38 項操作通過，含 15 組 32px 文字框、19 種手動 runtime、部分 IO 與八輪 CPU／IO。六組 FC 原生案例另有各自的候選來源，不宣稱它們字面包含在原 38 項 smoke。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41287520246)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 及正常關閉通過。關閉後 RSS slope -1,269,760.00 bytes／輪、drift -135,168 bytes、main heap drift 176,276 bytes，sampled peak 1,099,788,288 bytes；57 個 Worker 與 6 個觀察到的自有程序正常退出。原政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或門檻變更；有限八輪不代表任意模型或長期記憶體保證。
+
+v1.4.4 正式 HTTPS、固定 Release 與四份實際下載仍待接續；目前公開版維持 v1.4.3，完整商品等級目標與歷史失敗保留。

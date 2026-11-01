@@ -104,3 +104,7 @@ GATHER 動態型別／rank 檢查與 producer-aware 空常數修正已合併，[
 ## v1.4.3 正式交付
 
 上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41284224153)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/gather-v1.4.3-published.json)。v1.4.2 tag／assets、原始失敗與各來源的驗收範圍均保留，沒有重跑成功部署、放寬判定或同步 Sites／GH Studio。其餘表列未完成項目與完整商品等級目標繼續保留。
+
+## v1.4.4 必要主分支證據
+
+FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項來源綁定關卡](results/fully-connected-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十六份實際下載、四份下載後 CPU／IO、pattern 正負例與正常退出保留其候選來源。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版維持 v1.4.3；其餘商品等級未完成項目不改列完成。
