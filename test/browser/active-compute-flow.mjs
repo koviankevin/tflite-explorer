@@ -2,20 +2,21 @@
 // The website owns the Worker and enforces its normal thirty-second limit.
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
-import {createHash} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 import path from 'node:path';
 import {runtimeLoopFixture} from '../runtime-loop-fixture.mjs';
 import {runtimePlan,RUNTIME_LIMITS} from '../../src/tflite-runtime-policy.js';
 import {Archive} from '../../vendor/netron/zip.js';
-export async function activeComputeFlow({page,read,directory,check}){
+export async function activeComputeFlow({page,read,directory,check,preserveModelTabs=false,beforeTimeout,afterTimeout}){
     assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');assert.equal(RUNTIME_LIMITS.timeoutMs,30000);
-    const report={cases:[],runtimeWorkers:[],modelWorkers:[],deadlineMs:RUNTIME_LIMITS.timeoutMs,networkHeld:false,fakeTimers:false},hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-    const worker=w=>{const list=/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())?report.runtimeWorkers:/\/model-worker\.js(?:\?|$)/.test(w.url())?report.modelWorkers:null;if(list){const row={url:w.url(),startedAt:Date.now(),closed:false};list.push(row);w.on('close',()=>{row.closed=true;row.closedAt=Date.now();row.lifetimeMs=row.closedAt-row.startedAt;});}};
+    const report={cases:[],runtimeWorkers:[],modelWorkers:[],deadlineMs:RUNTIME_LIMITS.timeoutMs,networkHeld:false,fakeTimers:false},hash=bytes=>createHash('sha256').update(bytes).digest('hex'),executionId=randomUUID(),handles=new WeakMap();
+    const originalTabs=preserveModelTabs?await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'))):[];
+    const worker=w=>{const list=/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url())?report.runtimeWorkers:/\/model-worker\.js(?:\?|$)/.test(w.url())?report.modelWorkers:null;if(list){const row={id:executionId+':'+(list===report.runtimeWorkers?'runtime':'model')+':'+(list.length+1),url:w.url(),startedAt:Date.now(),closed:false};list.push(row);handles.set(row,w);w.on('close',()=>{row.closed=true;row.closedAt=Date.now();row.lifetimeMs=row.closedAt-row.startedAt;});}};
     const until=async(fn,...args)=>{const end=Date.now()+45000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Active CPU DOM timeout: '+fn);await new Promise(r=>setTimeout(r,60));}};
     const choose=async(file,button='#open-model')=>{const next=page.waitForEvent('filechooser');await page.locator(button).click();await(await next).setFiles(file);};
     const ready=()=>until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');
     const opened=async(file)=>{await choose(file);await ready();const n=report.runtimeWorkers.length;await page.locator('#run-mode').click();await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#run-interface p').length===2);assert.equal(report.runtimeWorkers.length,n);};
-    const close=async()=>{await page.locator('#close-model').click();await until(()=>document.querySelector('#model-tabs').hidden);};
+    const close=async()=>{await page.locator('#close-model').click();if(preserveModelTabs){await ready();assert.deepEqual(await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'))),originalTabs);}else await until(()=>document.querySelector('#model-tabs').hidden);};
     async function start(input){
         const n=report.runtimeWorkers.length;await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);
         if(input){await page.locator('#runtime-input-mode-0').selectOption('bin');await choose(input,'#runtime-input-file-0');}
@@ -40,8 +41,14 @@ export async function activeComputeFlow({page,read,directory,check}){
         await opened(loop);let n=await start();await invoked();assert.equal(report.runtimeWorkers.length,n+1);const cancelWorker=report.runtimeWorkers.at(-1);report.cancelInvokeObservedAt=Date.now();
         await page.keyboard.press('F1');await until(()=>document.querySelector('#usage-guide').open);assert.equal(await page.locator('#guide-tab-run').getAttribute('aria-selected'),'true');assert.equal(cancelWorker.closed,false);assert.equal(await page.locator('#run-workspace').getAttribute('aria-busy'),'true');report.uiResponseMs=Date.now()-report.cancelInvokeObservedAt;assert.ok(report.uiResponseMs<5000);report.mainThreadResponsive=true;await page.keyboard.press('Escape');await until(()=>!document.querySelector('#usage-guide').open);
         const cancelledAt=Date.now();await page.locator('#edit-runtime-cancel').click();const cancelled=await finished('not-verified');assert.match(cancelled.detail,/取消/);assert.equal(cancelled.downloadDisabled,true);assert.equal(cancelled.checkEnabled,true);assert.ok(cancelWorker.closedAt-cancelledAt<5000);report.cases.push({kind:'in-kernel-cancel',invokeObserved:true,mainThreadResponsive:true,status:cancelled.status,cancelToCloseMs:cancelWorker.closedAt-cancelledAt,downloadDisabled:true});
-        n=await start();await invoked();assert.equal(report.runtimeWorkers.length,n+1);const timedWorker=report.runtimeWorkers.at(-1);report.timeoutInvokeObservedAt=Date.now();const timed=await finished('not-verified');assert.match(timed.detail,/超過 30 秒.*終止 Worker/);assert.equal(timed.downloadDisabled,true);assert.equal(timed.checkEnabled,true);assert.ok(timedWorker.lifetimeMs>=25000&&timedWorker.lifetimeMs<=40000,JSON.stringify(timedWorker));report.cases.push({kind:'in-kernel-timeout',invokeObserved:true,status:timed.status,workerLifetimeMs:timedWorker.lifetimeMs,reason:timed.detail,downloadDisabled:true});await page.screenshot({path:path.join(directory,'active-cpu-timeout.png')});report.screenshot=true;await close();
+        n=await start();await invoked();assert.equal(report.runtimeWorkers.length,n+1);const timedWorker=report.runtimeWorkers.at(-1);report.timeoutInvokeObservedAt=Date.now();
+        if(beforeTimeout)await beforeTimeout({fixture:report.fixture,worker:timedWorker,nativeWorker:handles.get(timedWorker),invokeObservedAt:report.timeoutInvokeObservedAt});
+        const timed=await finished('not-verified');assert.match(timed.detail,/超過 30 秒.*終止 Worker/);assert.equal(timed.downloadDisabled,true);assert.equal(timed.checkEnabled,true);assert.ok(timedWorker.lifetimeMs>=25000&&timedWorker.lifetimeMs<=40000,JSON.stringify(timedWorker));report.cases.push({kind:'in-kernel-timeout',invokeObserved:true,status:timed.status,workerLifetimeMs:timedWorker.lifetimeMs,reason:timed.detail,downloadDisabled:true});
+        report.timeoutObservation={eventId:timedWorker.id,fixtureSHA256:report.fixture.infiniteSHA256,invokeObservedAt:report.timeoutInvokeObservedAt,status:timed.status,reason:timed.detail,downloadDisabled:timed.downloadDisabled,checkEnabled:timed.checkEnabled};
+        await page.screenshot({path:path.join(directory,'active-cpu-timeout.png')});report.screenshot=true;report.screenshotContext=afterTimeout?'guide-open-after-timeout':'runtime-after-timeout';
+        if(afterTimeout)await afterTimeout({fixture:report.fixture,worker:timedWorker,state:timed});
+        await close();
         await opened(control);await start(input);const recovered=await finished('passed');report.cases.push({kind:'finite-recovery',status:recovered.status,io:await saveIO('active-cpu-recovery-io.zip',report.fixture.finiteSHA256)});await close();
-        assert.equal(report.modelWorkers.length,3);assert.equal(report.runtimeWorkers.length,4);assert.ok([...report.modelWorkers,...report.runtimeWorkers].every(w=>w.closed));check('real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery');return report;
+        assert.equal(report.modelWorkers.length,3);assert.equal(report.runtimeWorkers.length,4);assert.ok([...report.modelWorkers,...report.runtimeWorkers].every(w=>w.closed));if(preserveModelTabs){assert.deepEqual(await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab'))),originalTabs);report.preservedOriginalTabs=true;}check('real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery');return report;
     }catch(error){report.error=error.stack||String(error);error.activeCompute=report;throw error;}finally{page.off('worker',worker);}
 }
