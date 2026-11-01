@@ -4,11 +4,21 @@ import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {POOL_LOG_LIMIT,POOL_TRACE_FLAG,poolTraceSettings,decodeRendererPoolLog,correlateRendererPoolSteps} from './browser/renderer-pool-log.mjs';
+import {POOL_LOG_LIMIT,POOL_TRACE_FLAG,poolTraceSettings,decodeRendererPoolLog,correlateRendererPoolSteps,readOwnedPoolArguments} from './browser/renderer-pool-log.mjs';
 import {assertPublicRendererReport,RENDERER_RELEASE_PLAN} from './browser/renderer-release-policy.mjs';
 const start=Date.parse('2026-11-01T00:00:00.000Z'),MiB=1024**2;
 const scope={rootPid:100,rendererPid:103,rendererLabel:5,startedAtMs:start,throughAtMs:start+45000};
 const line=({root=100,pid=103,at=30000,normal=150*MiB,large=0}={})=>`${new Date(start+at).toISOString()} pw:browser [pid=${root}][out] [${pid}:0xabc:7]  1234 ms: Memory pool: Removed pages: ${normal}, removed large pages: ${large}\n`;
+
+test('command observation reads only the guarded root, checks creation identity twice and requires no automation flag',async()=>{
+    const stat=ticks=>`100 (chrome headless) S 1 ${Array(17).fill('0').join(' ')} ${ticks}`,calls=[];
+    const read=async file=>{calls.push(file);return file.endsWith('/stat')?stat('12'):`/public/chrome\0${POOL_TRACE_FLAG}\0`;};
+    assert.deepEqual(await readOwnedPoolArguments({pid:100,startTicks:'12'},{read}),['/public/chrome',POOL_TRACE_FLAG]);assert.deepEqual(calls,['/proc/100/stat','/proc/100/cmdline','/proc/100/stat']);
+    for(const mutate of ['before','after','oversized','empty']){
+        let stats=0,commands=0;const read=async file=>{if(file.endsWith('/stat')){stats++;return stat(mutate==='before'||mutate==='after'&&stats===2?'13':'12');}commands++;return mutate==='oversized'?'x'.repeat(65537):mutate==='empty'?'':`/public/chrome\0${POOL_TRACE_FLAG}\0`;};
+        await assert.rejects(readOwnedPoolArguments({pid:100,startTicks:'12'},{read}),new RegExp(mutate==='oversized'||mutate==='empty'?'pool-command-budget':'pool-command-identity'));if(mutate==='before')assert.equal(commands,0);
+    }
+});
 
 test('pool log decodes only fixed numeric fields and preserves the V8 byte units',()=>{
     const raw=line()+`${new Date(start+30000).toISOString()} pw:browser [pid=100][out] , removed zone reservations: 0\n`,r=decodeRendererPoolLog(raw,scope);
