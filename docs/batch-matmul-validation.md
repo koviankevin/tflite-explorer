@@ -32,3 +32,13 @@ Chrome／Edge 的獨立選測入口為 `node test/browser/windows-operator-valid
 十二份實際模型／JSON 下載逐一核對 source/output byte ranges、型別／量化／adjoint、兩個輸出與 shared input 連線；兩端同案例模型 bytes 相同。獨立 reader 再將其中四份實際下載交給既有 CPU，兩個 outputs 均符合預期，hybrid 最大絕對誤差約 0.003922、整數精確相符；IO ZIP 與原始報告留在本機。兩個 BatchMatMul 的單節點 pattern 各找出兩筆，沒有連線的連續雙節點負例維持零筆。
 
 [候選數值收據](results/batch-matmul-candidate.json)只含固定來源、雜湊與計數；本機日誌、截圖、環境與程序身分未公開。前述兩次腳本失敗保持失敗，新來源僅修正測試選擇器；應用與 Node／CPU 規則來源未變，已通過的案例沒有為此重跑。正式站仍為 v1.4.1，PR／main 與 v1.4.2 交付尚未完成；不以此有限小型原生驗收取代原實體 1.25 GiB／八輪或 38 項正式 smoke。
+
+## 四項主分支關卡已核對（尚未發布）
+
+[PR #221](https://github.com/koviankevin/tflite-explorer/pull/221) 已合併為 `43f96570e0b01d42e87ea01af2d401534c6d3600`，完整 tree 與實際 PR checkout 相同。PR 的 953 項 Node 檢查中 918 通過、35 個既有選做略過，79 項發布契約及九筆核心量測的原始報告已核對。前述「仍待完成」保留為當時候選狀態；[四項 main 收據](results/batch-matmul-main.json)更新目前結果。
+
+核心 88 檔 scope 完全相同，沿用主分支 `41269145087` 的原始九筆量測；其他三項使用新來源，沒有把 PR artifact 冒充正式發布憑證。發布契約 79 項零略過、六種版本切換及 HTTP 候選 38 項操作通過，包含 15 組 32px 文字框、19 種手動 runtime、部分 IO 及八輪 CPU／IO。五組 BATCH_MATMUL 原生情境另有獨立 Windows Chrome／Edge 證據，不宣稱它們字面包含在原 38 項 smoke 中。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41274789522)沿用原 1,349,965,216-byte／21,005 OP fixture、完整／局部／組合匯出重開與 read audit。權重、custom options、pattern 正負例及正常關閉均通過。關閉後 RSS slope 為 −2,318,921.14 bytes／輪、drift 12,341,248 bytes、main heap drift 179,944 bytes；sampled peak 1,112,723,456 bytes。原始報告依同一政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或驗收上限變更；有限八輪不代表任意模型或長期記憶體保證。
+
+目前公開版仍為 v1.4.1；v1.4.2 正式 HTTPS、固定 Release 與四份實際下載核對尚待接續。歷史 Windows Chrome 雲端統計與安全軟體注入問題保留，完整商品化目標仍進行中。

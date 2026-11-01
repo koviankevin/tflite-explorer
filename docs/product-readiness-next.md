@@ -82,3 +82,9 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 ## BATCH_MATMUL 的後續修正（未發布）
 
 接續 OP 驗證發現 [output dtype 與已知 rank 漏擋](batch-matmul-validation.md)：非法的 float→int32 output 甚至可能 CPU 回報成功但輸出浮點位元的整數解讀。已加入格式型別、int8 accumulator 例外及 2～5 維 rank 共享規則，序列化報告不讀權重；125 項相關測試與十種合法實際 CPU 對照通過。Chrome／Edge 的五個原生情境、十二份實際下載及其中四份下載的真正 CPU 已[獨立核對](results/batch-matmul-candidate.json)，32px 與全部 Worker／自有程序正常退出。必要發布關卡仍待完成，正式版本維持 v1.4.1，沒有將舊成功部署重跑。
+
+## v1.4.2 的 BATCH_MATMUL 候選
+
+[BATCH_MATMUL dtype／已知 rank 修正](batch-matmul-validation.md)已合併，解決錯誤 float32→int32 模型連真正 CPU 都可能回報成功的格式缺口；合法 hybrid 與 int8 accumulator 保留，其他混合精度明列未檢查。125 項相關測試、13 項版本選測及十組真正編輯後 CPU 正例通過；兩個 Windows 瀏覽器完成 32px 原生選檔、接線、十二份下載與四份實際下載模型的 CPU 核對。
+
+[四項必要 main 關卡](results/batch-matmul-main.json)原始報告均已核對：不變的 88 檔 core 沿用可信 main 證據，新來源的實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。這批不重跑成功部署，也不放寬原政策。v1.4.2 正式站與固定下載仍待發布；目前公開版維持 v1.4.1，完整商品等級目標及原有未解項目保留。
