@@ -115,6 +115,10 @@ test('PAD integer encodings must not make unrelated operand dtypes look verified
         ['GATHER',[tensor([2]),tensor([2],6,[0,1])],[tensor([2])]]
     ]){
         const c=await operandFixture(name,inputs,outputs);
+        if(name==='GATHER'){
+            assert.throws(()=>validateTfliteConstants(c.model,0,()=>assert.fail('Invalid GATHER dtype must precede reads.')),/GATHER.*indices dtype/);
+            continue;
+        }
         const proof=validateTfliteConstants(c.model,0,c.read);
         assert.equal(proof.checked,0,`${name}: unsupported dtype must not pass because PAD can read it`);
         assert.equal(proof.operators[0].status,'not-run');
@@ -125,7 +129,9 @@ test('dtype admission precedes a shared PAD cache hit; legitimate GATHER int16 r
     const c=await operandFixture('PAD',[tensor([2]),tensor([1,2],6,[0,1])],[tensor([3])]),g=c.model.subgraphs[0],code=s.BuiltinOperator.GATHER;
     c.model.operator_codes.push({builtin_code:code,deprecated_builtin_code:code,version:1});
     g.tensors.push({...g.tensors[2],shape:Int32Array.of(1,2)});g.operators.push({...g.operators[0],opcode_index:1,inputs:[0,1],outputs:[3]});
-    const p=validateTfliteConstants(c.model,0,c.read);assert.equal(p.checked,1);assert.equal(p.unchecked,1);assert.equal(p.operators[1].status,'not-run');assert.match(p.operators[1].reason,/dtype/);
+    let reads=0,bytesRead=0;
+    assert.throws(()=>validateTfliteConstants(c.model,0,(o,n)=>{reads++;bytesRead+=n;return c.read(o,n);}),/OP #1 GATHER.*indices dtype/);
+    assert.equal(reads,1,'PAD may warm the cache, but GATHER must reject the dtype before consulting it');assert.equal(bytesRead,2);
     const valid=await operandFixture('GATHER',[tensor([2]),tensor([2],7,[0,1])],[tensor([2])]);
     assert.equal(validateTfliteConstants(valid.model,0,valid.read).checked,1);
     const unknownBool=await operandFixture('PAD',[tensor([2]),tensor([1,2],6,[0,2])],[tensor([4])]);
