@@ -29,3 +29,18 @@ PR #212 的 899 項 Node 測試、79 項發布契約通過，實際受測 tree �
 六個觀察到的程序身分全部退出，model 與 layout Workers 皆關閉。原報告將失敗階段標為 cleanup，是 finally 覆寫了 ui 階段；現在於清理前記錄原錯誤，清理若另外失敗仍各自保留。數量比較改為與 UI 同樣的 en-US 分組格式，隔離 context 固定該 locale，不修改 app、parser、原測試門檻或正式部署。
 
 回歸先重現相同的 `3,005 !== 3005`，再對兩個實驗規模核對正例並拒絕錯誤數量；原始 ZIP、日誌與失敗留在本機，公開僅有[固定欄位摘要](results/renderer-probe-count-failure.json)。修正來源的必要檢查與精確 tree 核對後，最多再執行一次本最小實驗；不重跑原大模型關卡或成功部署。
+
+## 已取得最小案例的延後釋放訊號
+
+PR #213 的 900 項 Node 測試通過、35 項既有選做略過，79 項必要契約全通過；合併來源 `d5f28c75f6fb7fa7c4b58a66fac61c8651cbe89c` 與實際受測 checkout 的完整 tree 相同。隨後限定的一次 [41263107748](https://github.com/koviankevin/tflite-explorer/actions/runs/41263107748) 已完成，沒有再執行原正式八輪或部署。
+
+| 案例 | 實際檔案 bytes | 模型 Worker heap total | 關閉後觀察 | 預先固定訊號 |
+| --- | ---: | ---: | --- | --- |
+| 3,005 OP／1 MiB 權重 | 2,164,512 | 27,414,528 bytes | 92 筆／45.091 秒 | 未觀察到單次至少 100 MiB 的延後 anonymous 下降 |
+| 21,005 OP／1 MiB 權重 | 8,836,512 | 132,456,448 bytes | 92 筆／45.183 秒 | 關閉後 28.307 秒，renderer anonymous 下降 152,268,800 bytes（約 145.2 MiB） |
+
+共 195 筆樣本的順序、原生總和、同一 renderer label、訊號間隔與固定判定另以獨立讀取器重算。兩案關閉後最大相鄰間隔為 509／503 ms，沒有缺少 owner；各六個觀察到的程序身分退出，model／layout 各一個 Worker 皆關閉，零個 runtime／identity／其他 Worker。公開 schema 驗證及原實作 summary 重算也一致。大案例該步的 main heap total 僅下降 1,835,008 bytes，不能用主頁 heap 解釋全部 renderer anonymous 下降。
+
+這證明在本次環境中，沒有大權重、匯出／下載 Blob URL、編輯與 interpreter，也能出現大幅延後釋放；不是上述操作才會觸發的必要條件。它沒有證明特定 allocator 或所有舊失敗的根因，也不能證明原大模型關卡已修好。先前八輪的步階在 release phase 後約 4～6 秒，本次在模型關閉後約 28 秒，時間不同，不能直接套用固定釋放延遲。
+
+[數值摘要](results/renderer-release-minimized.json)只保留公開來源／雜湊、固定 enum、計數與量測；provider digest、ZIP CRC、原始報告 SHA-256、來源與 fixture readback 均已核對，原始日誌／封存留在本機。這項實驗一直是 `releaseEvidenceEligible=false`，沒有 forced GC、heap snapshot、RSS 扣除或 timer／門檻放寬。v1.4.1 的 OP／IO 候選仍未發布，正式站與固定 Release 維持 v1.4.0；下一步須釐清原生保留機制或降低實際配置開銷，不能用這次 success 換掉原失敗。
