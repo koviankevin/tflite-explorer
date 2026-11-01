@@ -1,6 +1,6 @@
-# 卷積／pooling 動態 shape 的 metadata 驗證（v1.4.5 候選）
+# 卷積／pooling 動態 shape 的 metadata 驗證（v1.4.5）
 
-目前正式網站與固定下載是 [v1.4.4](fully-connected-validation.md#v144-正式交付)。本候選補上可確定的 rank／bias／參數檢查與逐 OP 報告，尚未發布；一般編輯／匯出仍不自動執行 interpreter。
+已於 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5) 正式交付，build `bb21d924c10706b3`。一般編輯／匯出仍只做靜態檢查，interpreter 保持手動。以下候選及失敗紀錄維持原受測來源與當時狀態；目前交付見[正式交付](#v145-正式交付)。
 
 ## 已重現與修正
 
@@ -32,4 +32,12 @@
 
 [實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41294018612)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 及正常關閉通過。關閉後 RSS slope 2,333,315.66 bytes／輪、drift 17,641,472 bytes、main heap drift 570,264 bytes，sampled peak 1,108,660,224 bytes；57 個 Worker 與 6 個觀察到的自有程序正常退出。原政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或門檻變更；有限八輪不代表任意模型或長期記憶體保證。
 
-v1.4.5 正式 HTTPS、固定 Release 與四份實際下載仍待接續；目前公開版維持 v1.4.4，完整商品等級目標與歷史失敗保留。
+上述主分支驗收完成當時，正式 HTTPS、固定 Release 與四份實際下載尚待接續、公開版為 v1.4.4；後續 v1.4.5 交付見下節，完整商品等級目標與歷史失敗保留。
+
+## v1.4.5 正式交付
+
+固定來源 `099e2c023badaabe98d8252be061b9d875a9f737`／tree `dfbeb9690f33dacee778343f11850a49e33a60a7`、build `bb21d924c10706b3` 已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41295660383)完成，四項工作 attempt 1 全成功。329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，含 15 組 32px 文字框、搜尋／pattern、TFLite／MLIR 匯出重開、逐 OP／量化／legacy shape、部分 IO、19 種手動 runtime 及八輪／24 次 CPU／IO。六組 spatial 原生案例另保留其候選來源，不宣稱它們字面新增在原 38 項 smoke 中。
+
+固定 ZIP 41,311,212 bytes，SHA-256 `ed7ae63f839f3443679450c2b7a13a2c8516de03f69774f7ef386d555c9c1bc2`；四份實際公開下載與準備產物一致，tag／Latest／權威 Pages deployment 已核對。Site ID `d930a2126e8b62d7557f716ac65c5d1a21f21e022f3b53a666ba66665dd0faa7`，保留 v1.4.4／v1.4.3 與永久 baseline；舊 v1.4.4 tag 與四份 asset 未改寫。[最終收據](results/spatial-metadata-v1.4.5-published.json)只含來源、雜湊、計數與有限結果，原始 provider artifact／日誌與本機封存另保留。官方 REST 與原始 job 日誌的時間範圍均已核對；報告來源另以同一 job 的 checkout、build／site ID、完整 checks 摘要、測試步驟時間與 artifact ID／雜湊／大小綁定，未正規化原始時間。成功部署沒有重跑，沒有同步 Sites／GH Studio。
+
+已知 rank／bias／參數錯誤會先拒絕；未知或動態 shape、其他 dtype／packing、量化數值、公司契約、歷史 Windows Chrome／網路注入及長期記憶體 SLA 保留原界線。完整商品等級目標未完成。

@@ -1,8 +1,8 @@
 # 商品等級後續工作（進行中）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4)／build `14d6d1628c5136c5`，329 核心檔、全站 1,481 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/fully-connected-v1.4.4-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
+使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)／build `bb21d924c10706b3`，329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/spatial-metadata-v1.4.5-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
-接續的 [卷積／pooling 動態 metadata 候選](spatial-metadata-validation.md)已修正四份原始匯出檔的 rank／bias 漏檢，23 項新回歸、170 項相關檢查及 Chrome／Edge 每端六組原生情境通過；十二份實際下載、四份下載後 CPU／IO、pattern 正負例、32px 與正常退出已有[候選收據](results/spatial-metadata-candidate.json)。必要 main 關卡及 v1.4.5 正式交付仍待接續，公開版維持 v1.4.4。
+卷積／pooling 的動態 rank／bias metadata 漏檢與逐 OP 報告已於 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5) [正式交付](spatial-metadata-validation.md#v145-正式交付)。四份原始錯誤匯出檔、23 項新回歸／170 項相關測試，以及 Chrome／Edge 每端六組原生情境、十二份實際下載、四份下載後 CPU／IO、pattern 正負例、32px 與正常退出，保留[原候選來源](results/spatial-metadata-candidate.json)。正式 HTTPS／固定下載另有獨立來源綁定；不擴大任意 kernel／量化或公司契約的完成主張。
 
 FULLY_CONNECTED 的 dtype／已知 rank／尺寸漏檢及合法無 bias 誤擋，已於 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4) [正式交付](fully-connected-validation.md#v144-正式交付)。199 項相關檢查、十三組真正 CPU 正例，以及 Chrome／Edge 每端六組原生情境、十六份實際下載、四份下載後 CPU、pattern 正負例、32px 與正常退出，維持[原候選來源](results/fully-connected-candidate.json)。正式 HTTPS 與固定下載另有獨立來源綁定，不將有限結果擴大為任意 kernel／量化或公司契約已驗證。
 
@@ -117,4 +117,8 @@ FULLY_CONNECTED dtype／已知 rank 與 optional bias 修正已合併，[四項�
 
 ## v1.4.5 必要主分支證據
 
-卷積／pooling 的動態 rank／bias metadata 與逐 OP 報告修正已合併，[四項來源綁定關卡](results/spatial-metadata-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十二份實際下載、四份下載後 CPU／IO、pattern 正負例與正常退出保留其候選來源。正式 HTTPS 與新不可變 Release 尚待接續，目前公開版維持 v1.4.4；其餘商品等級未完成項目不改列完成。
+卷積／pooling 的動態 rank／bias metadata 與逐 OP 報告修正已合併，[四項來源綁定關卡](results/spatial-metadata-main.json)原始報告已核對：未變核心 88 檔沿用可信 main，新來源實體 1.25 GiB／21,005 OP 八輪、79 項契約及 HTTP 候選 38 項操作通過。Windows Chrome／Edge 的六組原生案例、十二份實際下載、四份下載後 CPU／IO、pattern 正負例與正常退出保留其候選來源。上述主分支驗收完成當時，正式 HTTPS 與新不可變 Release 尚待接續、公開版為 v1.4.4；後續交付見下節，其餘商品等級未完成項目不改列完成。
+
+## v1.4.5 正式交付
+
+上述候選已由[同一次發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41295660383)完成正式 HTTPS、不可變 Release 與四份實際下載核對，見[最終收據](results/spatial-metadata-v1.4.5-published.json)。v1.4.4 tag／assets、原始失敗與各來源的驗收範圍均保留，沒有重跑成功部署、修改判定或同步 Sites／GH Studio。其餘表列未完成項目與完整商品等級目標繼續保留。

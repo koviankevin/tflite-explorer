@@ -4,7 +4,7 @@
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前固定版本為 [v1.4.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.4)，build `14d6d1628c5136c5`。329 核心檔、全站 1,481 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[本版正式交付](fully-connected-validation.md#v144-正式交付)。原實體 1.25 GiB／21,005 OP 八輪符合原記憶體、讀取與清理規則；獨立 Windows FC 六組情境另有原生選檔、接線、32px、pattern、實際下載及正常退出證據。有限結果不修復歷史 Windows Chrome／網路注入，也不擴大任意 kernel、dialect、內網或斷電／遷移的完成主張；完整商品等級目標仍進行中。
+目前固定版本為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)，build `bb21d924c10706b3`。329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[本版正式交付](spatial-metadata-validation.md#v145-正式交付)。原實體 1.25 GiB／21,005 OP 八輪符合原記憶體、讀取與清理規則；Windows Chrome／Edge 的六組 spatial 原生案例另有實際選檔、接線、32px、pattern、十二份下載、四份下載後 CPU／IO 與正常退出證據。有限結果不修復歷史 Windows Chrome／網路注入，也不擴大任意 kernel、dialect、內網或斷電／遷移的完成主張；完整商品等級目標仍進行中。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 
