@@ -55,3 +55,13 @@ LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三�
 十二份實際模型／報告逐份核對，單節點 pattern 各兩筆、沒有連線的雙節點負例零筆。兩份新的空輸出下載實際交給 CPU，兩個 outputs 都是正確空 BIN，ZIP CRC 與長度通過；非空控制模型的完整 bytes 與 runtime 程式未變，以相同 SHA 沿用前輪兩份真正 CPU／CRC 結果，沒有把沿用寫成新執行。最早六份錯誤檔案仍被拒絕；原來被誤擋的零 activation 檔已可編輯、匯出、重開及真正 CPU 執行。
 
 [最終候選數值收據](results/gather-candidate-final.json)保留 143 項選測、十三項版本選擇、十三組實際 CPU 案例、新／沿用原生證據與 scope。舊 `c4d0609`／`1b811a1` 的收據、失敗與有限成功不覆寫，也不改標新來源。必要 PR／main、正式 HTTPS 與 v1.4.3 固定交付仍待接續；公開版仍為 v1.4.2。
+
+## 四項主分支關卡已核對（尚未發布）
+
+[PR #224](https://github.com/koviankevin/tflite-explorer/pull/224) 已合併為 `6ca895e64a9f00fa12a7c418ebef9a5821e75b8e`，完整 tree 與實際 PR checkout 相同。979 項 Node 檢查中 944 通過、35 個既有選做略過，79 項契約及九筆 PR 核心量測的原始報告均已核對。核心 88 檔範圍不變，正式發布沿用可信 main `41269145087` 的原始九筆量測，已重新讀取 provider 狀態、digest／CRC 與 scope；PR artifact 不冒充主分支 dispatch。
+
+[四項 main 數值收據](results/gather-main.json)對應來源 `6ca895e64a9f00fa12a7c418ebef9a5821e75b8e`／tree `cd6a9036df45a3ab6d49d43a70278beb60234c3d`、build `6f136a242d842c75`。新來源的 79 項契約零略過、六種版本切換、823 檔 HTTP 候選及 38 項操作通過，包含 15 組 32px 文字框、19 種手動 runtime、部分 IO 及八輪 CPU／IO。五組 GATHER 原生案例仍獨立保存其受測來源，不宣稱它們字面包含在原 38 項 smoke。
+
+[實體大模型八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/41282013897)使用原 1,349,965,216-byte／21,005 OP fixture，完整／局部／組合匯出重開、權重／custom options／pattern 與正常關閉均通過。關閉後 RSS slope 1,740,565.94 bytes／輪、drift 24,842,240 bytes、main heap drift 206,352 bytes；sampled peak 1,109,446,656 bytes，57 個 Worker 與 6 個觀察到的自有程序正常退出。原政策重算通過，沒有 forced GC、RSS 扣除、timer、pool 或門檻變更；有限八輪不代表任意模型／長期記憶體保證。
+
+v1.4.3 正式 HTTPS、固定 Release 及四份實際下載仍待接續；目前正式版為 v1.4.2，歷史失敗與完整商品化目標保留。
