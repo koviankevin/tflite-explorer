@@ -1,3 +1,11 @@
+import path from 'node:path';
+
+export function rendererProbeLocations({root,reportPath,nonce}){
+    need(path.isAbsolute(root)&&path.isAbsolute(reportPath)&&/^[a-f0-9]{16}$/.test(nonce),'probe-locations');
+    const fixtures=path.join(path.dirname(reportPath),'renderer-release-fixtures');
+    return {fixtures,core:path.join(root,'build',`renderer-release-probe-${nonce}`)};
+}
+
 export const RENDERER_RELEASE_PLAN=Object.freeze({
     sampleIntervalMs:500,observeAfterCloseMs:45000,stepBytes:100*1024**2,maxSampleGapMs:1500,
     maxSamplesPerCase:512,maxOwnersPerSample:32,maxOwnerLabels:128,maxReportBytes:8*1024**2,

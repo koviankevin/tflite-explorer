@@ -4,8 +4,10 @@ import {mkdir,mkdtemp,readFile,rm} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
-import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,assertRendererProbeWorkflow} from './browser/renderer-release-policy.mjs';
+import os from 'node:os';
+import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,assertRendererProbeWorkflow,rendererProbeLocations} from './browser/renderer-release-policy.mjs';
 import {parse as yaml} from 'yaml';
+import {buildDestination,root} from '../scripts/lib/release-artifact.mjs';
 import {createProcessMemoryProbe} from './browser/process-memory-profile.mjs';
 import {physicalFixtureHeader} from './physical-tflite-fixture.mjs';
 import {assertReport} from '../scripts/lib/release-gates.mjs';
@@ -88,4 +90,12 @@ test('the actual workflow uploads one safe numeric summary and cannot include pr
     const w=yaml(await readFile(new URL('../.github/workflows/renderer-release-probe.yml',import.meta.url),'utf8'));assertRendererProbeWorkflow(w);
     const mutations=[v=>v.on.push={},v=>v.permissions.contents='write',v=>v.jobs.minimize.if='true',v=>v.jobs.minimize.environment='production',v=>v.jobs.minimize.env.REPORT_NAME='private.json',v=>v.jobs.minimize.steps.at(-1).with.path='${{ runner.temp }}/**',v=>v.jobs.minimize.steps.at(-1).with.path+='*',v=>v.jobs.minimize.steps[5].run+=' --force-gc',v=>v.jobs.minimize.steps[5].env={PRIVATE:'value'}];
     for(const change of mutations){const copy=structuredClone(w);change(copy);assert.throws(()=>assertRendererProbeWorkflow(copy));}
+});
+
+test('probe core satisfies the real builder output contract while reports may live outside the repository',async()=>{
+    const reportPath=path.join(os.tmpdir(),'renderer-probe-output-contract','report.json'),locations=rendererProbeLocations({root,reportPath,nonce:'0123456789abcdef'});
+    assert.equal(await buildDestination(locations.core),locations.core);
+    assert.equal(locations.fixtures,path.join(path.dirname(reportPath),'renderer-release-fixtures'));
+    await assert.rejects(buildDestination(path.join(locations.fixtures,'core')),/建置輸出限於/);
+    for(const nonce of ['../escape','','g'.repeat(16)])assert.throws(()=>rendererProbeLocations({root,reportPath,nonce}),/probe-locations/);
 });
