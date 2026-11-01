@@ -1,0 +1,73 @@
+{
+  "status": "passed-selected-readonly-diagnostic-preflight-not-executed-in-browser",
+  "source": "1148a2532ed89201c3aa503d23707c2fd8748e8d",
+  "tree": "288e3ac8ab2d160036432e5d4ca9e88649eef243",
+  "baseline": "cc57b3011892317b497a717fc6a16b68b874bd62",
+  "at": "2026-11-01T00:05:39.215346+00:00",
+  "files": [
+    {
+      "path": ".github/workflows/physical-memory-diagnostic.yml",
+      "bytes": 1696,
+      "sha256": "af852ce6d9b90530847bfe37b804cd60916c57bf9740f257c3d7c01e140d9c68"
+    },
+    {
+      "path": "docs/legacy-shape-validation.md",
+      "bytes": 6888,
+      "sha256": "81b361b28c393da02b7a06220e951704a840246bdd18c1a862c596679504128f"
+    },
+    {
+      "path": "docs/physical-memory-attribution.md",
+      "bytes": 3279,
+      "sha256": "4995f8f4cc1a5ee4a56594c4508cbb30e41bc744e08c08d619005e38260ae227"
+    },
+    {
+      "path": "scripts/lib/release-gates.mjs",
+      "bytes": 17251,
+      "sha256": "8a16fd0c1310d7d9117119d2ccb23e50470d900af6b643bdc25a3b9798f9f2ff"
+    },
+    {
+      "path": "test/browser/lifecycle-memory-diagnostics.mjs",
+      "bytes": 3509,
+      "sha256": "7f274dc41d64b3faeefd6f2cca60127a12f230861d3f7952617ac978f64c8c03"
+    },
+    {
+      "path": "test/browser/model-lifecycle.mjs",
+      "bytes": 37937,
+      "sha256": "3b839d90d2cf9b3d64b7a6e685496826b23f67a7926c15d4d09b6219dec65995"
+    },
+    {
+      "path": "test/lifecycle-memory-diagnostics.test.mjs",
+      "bytes": 5642,
+      "sha256": "10aa602c86fc358fe5b747264faf53877722ba0a18b7bd5feb0bf536ad99e8ce"
+    },
+    {
+      "path": "test/release-gates.test.mjs",
+      "bytes": 11230,
+      "sha256": "949d48d946a62161cedff21804da37641c76186715d2da27b4d397708501de51"
+    }
+  ],
+  "publicAppParserRuntimeWeightsPackageUnchanged": true,
+  "selectedTests": 48,
+  "newGuardRed": "release-rejection-red.tap missingexpectedexception thenfixed;priorvalidhistoricreportstillaccepted",
+  "metadataBudget": {
+    "status": "passed-synthetic-diagnostic-metadata-budget",
+    "samples": 4000,
+    "processRecords": 24000,
+    "details": 512,
+    "bytes": 11186025,
+    "limitBytes": 16777216,
+    "scope": "Synthetic metadata upper bound with prior real report envelope only. No browser/model/interpreter/OS measurements or forcedGC;not release evidence."
+  },
+  "privacy": "OnlypublicsyntheticQA;notactualbrowser/procmemoryyet",
+  "published": "v1.4.0unchanged;1.4.1notpublished",
+  "originalRSSGate": "41252363060 failed;notrerun",
+  "format": "model-lens-physical-memory-preflight-review",
+  "originals": {
+    "path": "physical-memory-preflight-evidence.zip",
+    "bytes": 17936,
+    "records": 12,
+    "sha256": "a2a1cf2c050bb9e494655aa5e2b0c77376b2de3c78e99024c908f2bead949f33",
+    "manifestSHA256": "f196360122c44e5fa2d876965a05f6b3c6b598f0ff642a7afa17fabe20273121"
+  },
+  "goalComplete": false
+}

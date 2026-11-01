@@ -67,6 +67,7 @@ export function assertRun({run,jobs,artifact},kind,repository){
     if(artifact?.name!==`${spec.artifact}-${run.head_sha}-${run.run_attempt}`||artifact.expired!==false||!Number.isSafeInteger(artifact.id)||!Number.isSafeInteger(artifact.size_in_bytes)||artifact.size_in_bytes<=0||artifact.size_in_bytes>4*1024**2||!/^sha256:[a-f0-9]{64}$/.test(artifact.digest||''))throw Error(`${kind}: missing, stale or invalid artifact.`);
 }
 export function assertReport(report,kind,run,tree,policy){
+    if(report?.releaseEvidenceEligible===false||report?.purpose==='readonly-native-memory-attribution')throw Error(`${kind}: diagnostic reports are not release evidence.`);
     if(report?.status!=='passed')throw Error(`${kind}: failed report.`);
     if(kind==='core'){
         if(report.format!=='model-lens-performance-run'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||report.referenceEnvironment!==true||stable(report.policy)!==stable(policy)||evaluatePerformanceRun(policy,report.samples).status!=='passed')throw Error('core: invalid source, policy or measurements.');

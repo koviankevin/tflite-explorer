@@ -29,3 +29,5 @@ PR #206 已合併，主分支 `02f4288885dc07fc16ede730b361e65891b09fa8`／tree 
 第 3 輪關閉後 RSS 約 626 MB，第 4～8 輪約 782～798 MB；較早通過的來源也有約 640／790 MB 的階梯波動。兩份報告的八輪完整、局部與組合檔案 SHA-256、權重及讀取 bytes 逐項相同；這只證明資料保留，不是同一環境的因果 A/B 或記憶體修復。每輪 release phase 觀察到的程序數都是六個，未發現數量缺口；仍缺 per-PID anonymous／file／shared RSS、JS heap total 與 backing／embedder 分類，不能判定是活物件持有、原生配置／GC 時機或其他原因。
 
 [失敗收據](results/legacy-shape-memory-failure.json)及[原始報告、日誌與獨立原政策重判](results/legacy-shape-memory-failure-evidence.zip)已核對 provider digest、ZIP CRC 和逐筆雜湊。沒有換用舊 browser 證據、扣除 RSS、強制 GC、縮短 URL／runtime timer、放寬門檻或重跑碰綠燈。正式網站與固定 Release 仍為 v1.4.0。後續先補唯讀的原生記憶體歸屬診斷；診斷產物須與正式發布證據分開，不能因單次診斷通過便宣稱根因修好。
+
+後續收集器與單次執行界線見[原生記憶體歸屬診斷](physical-memory-attribution.md)；其資料不能選作發布證據，v1.4.1 仍未發布。
