@@ -29,3 +29,5 @@ GATHER 原先把 indices 型別、params／output 型別、axis／batch_dims 與
 LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三種 indices encoding、負 axis、scalar indices、負 batch_dims、batch 等於 indices rank、int16／int8 量化資料，以及空 indices 的完整／局部／組合三條路徑。每份 output BIN 都與預期精確相同，可讀原始常數 bytes 保留。這些是本機 CPU 案例，沒有加入網站自動推論，也不代替 Windows Chrome／Edge、實體大模型及正式站驗收。
 
 原生操作、必要 PR／main 關卡、正式 HTTPS 及新不可變 Release 尚待接續。歷史 Windows Chrome 雲端統計／網路注入及其他商品化未完成項目保留，完整目標仍進行中。
+
+原生第一輪兩端均正確拒絕動態型別負例，負 batch_dims 的接線、下載及重開通過；空 indices 下載也已獨立核對其兩個 OP、單一模型輸入、明確空 data vectors 及零常數讀取。腳本卻把沒有非空 payload 時的 byte comparison「不適用」要求為「通過」，整輪因此維持失敗。修正僅將該零 byte 案例改為精確要求不適用、零 ranges／bytes，並核對實際空 buffer；其他案例仍要求非空 bytes 比對通過。沒有修改產品、上限或 timer，後續完整原生驗收仍待完成。
