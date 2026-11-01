@@ -23,7 +23,7 @@ export function decodeRendererPoolLog(text,{rootPid,rendererPid,rendererLabel,st
         need(prefix,'pool-log-format');
         const wallTime=Date.parse(prefix[1]);need(numeric(wallTime),'pool-log-clock');
         if(Number(prefix[2])!==rootPid||wallTime<startedAtMs||wallTime>throughAtMs){foreignPoolLines++;continue;}
-        const row=prefix[3].match(/^\[(\d+):0x[a-fA-F0-9]+\]\s+(\d+(?:\.\d+)?)\s*ms:\s+Memory pool: Removed pages: (\d+), removed large pages: (\d+)\s*$/);
+        const row=prefix[3].match(/^\[(\d+):0x[a-fA-F0-9]+:\d+\]\s+(\d+(?:\.\d+)?)\s*ms:\s+Memory pool: Removed pages: (\d+), removed large pages: (\d+)\s*$/);
         need(row,'pool-log-format');
         if(Number(row[1])!==rendererPid){foreignPoolLines++;continue;}
         const normalPageBytes=Number(row[3]),largePageBytes=Number(row[4]),v8ElapsedUs=Math.round(Number(row[2])*1000);

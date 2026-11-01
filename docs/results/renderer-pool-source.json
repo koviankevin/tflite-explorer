@@ -49,6 +49,12 @@
       "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/include/v8-version.h",
       "bytes": 771,
       "sha256": "10ec2be35c3efb4404c5df99f7c383b6d8e51db77ed8304c602c1a45069c65f8"
+    },
+    {
+      "file": "v8-isolate-formatter.cc.txt",
+      "url": "https://raw.githubusercontent.com/v8/v8/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/execution/isolate.cc",
+      "bytes": 336479,
+      "sha256": "076eb0ed0891794d8f93d98e608021247974ae4e1b307761b7f889471ebabdf0"
     }
   ]
 }

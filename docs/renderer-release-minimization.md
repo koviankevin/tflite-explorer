@@ -56,3 +56,5 @@ PR #213 的 900 項 Node 測試通過、35 項既有選做略過，79 項必要�
 原始 browser stdout／stderr 經 pinned Playwright 的 `DEBUG_FILE` 寫入 `.browser-private.log`，不進入公開 artifact。每次取樣檢查總日誌不超過 4 MiB；讀取後每行最多 32 KiB、每案最多 128 筆 pool event。只保留受防護 browser root、renderer PID 和本案時間範圍一致的數值事件，原始 PID／address／命令／日誌字串不會輸出。公開事件的 renderer label 與 RSS 的相鄰步階對照，未對時或數量不足也照實保留，不能假設 pool 已解釋失敗。
 
 45 項相關選測通過，包含 source byte units、外部／舊案例排除、私有欄位及大小限制、對時負例與真正 SDK 的私有輸出路由。SDK 測試只啟動一個短暫 Node 合成輸出程序，不開瀏覽器或個人 profile；尚未執行此加日誌的新 hosted 實驗。必要 PR 與受測／合併 tree 核對後只執行一次，保留先前所有失敗與成功診斷，不重跑原正式八輪或成功部署。
+
+送審期間另核對同一修訂的 [Isolate::PrintWithTimestamp](https://github.com/v8/v8/blob/b976f35da8356fcf4e5e176d1d810ba6a6f05718/src/execution/isolate.cc#L8092)，實際前綴為 PID／pointer／isolate ID 三欄。初版合成行只用了兩欄；替換為真正 formatter 的結構後，回歸確實以 `pool-log-format` 失敗，再將 decoder 與 SDK 合成輸出一起修正。舊兩欄格式明確拒絕，pointer／isolate ID 也不會進入公開事件。這在 hosted 量測前處理，並保留原 red，不以舊格式測試成功代替實際版本覆蓋。
