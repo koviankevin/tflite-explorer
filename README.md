@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.4.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.5)，build `bb21d924c10706b3`；修正卷積／pooling 的動態 shape 掩蓋已知 rank／bias 錯誤，並在逐 OP 報告共用 metadata 規則。329 核心檔、全站 1,484 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/spatial-metadata-validation.md#v145-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。未知或動態 shape、其他 dtype／packing 仍明列未檢查；歷史 Windows Chrome／OneDrive 關閉與網路注入觀察保留。
+目前對外版本為 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6)，build `6d032862ea5b71d5`；修正 SQUEEZE／CONCATENATION 在動態 shape 下漏檢已知 axis／rank／維度錯誤，並共用逐 OP metadata 報告。329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/transform-metadata-validation.md#v146-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。未知 shape／packing、量化數值與任意 kernel 仍未驗證；Windows Chrome 原生關閉與本輪首次 CI 逾時紀錄保留。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
