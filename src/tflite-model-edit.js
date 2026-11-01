@@ -1,6 +1,7 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {FlatbufferWriter,tableFields} from './flatbuffer-writer.js';
 import {builtinSettings,checkBuiltinPorts,randomTensorInfo} from './tflite-new-ops.js';
+import {isEmptyTfliteConstant} from './tflite-empty-constant.js';
 
 function optionsPatch(source,changes) {
     if(!source||!changes||typeof changes!=='object'||Array.isArray(changes))throw Error('此 OP 沒有可修改的 builtin options。');
@@ -19,15 +20,18 @@ export function validateTfliteModelGraph(model,graphIndex) {
     const graph=model.subgraphs[graphIndex];if(!graph)throw Error('找不到 TFLite subgraph。');
     const tensor=id=>{if(!Number.isInteger(id)||id<0||!graph.tensors[id])throw Error(`Tensor #${id} 不存在。`);return graph.tensors[id];};
     const payload=buffer=>Number(buffer.size||0n)||buffer.data?.length||buffer.sourceRange?.size;
+    // A present, empty data vector can define a constant with zero elements.
+    // Buffer 0, absent data, nonzero or dynamic shapes never gain a source.
+    const emptyConstant=isEmptyTfliteConstant;
     const available=new Set(),produced=new Set();
-    graph.tensors.forEach((t,id)=>{if(!Number.isInteger(t.buffer)||!model.buffers[t.buffer])throw Error(`Tensor #${id} 的 buffer 不存在。`);if(t.is_variable||t.external_buffer||payload(model.buffers[t.buffer]))available.add(id);});
+    graph.tensors.forEach((t,id)=>{if(!Number.isInteger(t.buffer)||!model.buffers[t.buffer])throw Error(`Tensor #${id} 的 buffer 不存在。`);const buffer=model.buffers[t.buffer];if(t.is_variable||t.external_buffer||payload(buffer)||emptyConstant(t,buffer))available.add(id);});
     for(const id of graph.inputs){tensor(id);available.add(id);}
     for(const [position,op] of graph.operators.entries()){
         if(!Number.isInteger(op.opcode_index)||!model.operator_codes[op.opcode_index])throw Error(`OP #${position} 的 operator code 不存在。`);
         if(op.mutating_variable_inputs?.length&&op.mutating_variable_inputs.length!==op.inputs.length)throw Error(`OP #${position} 的 mutating inputs 數量不符。`);
         for(const id of op.inputs){if(id===-1)continue;tensor(id);if(!available.has(id))throw Error(`OP #${position} 的輸入 tensor #${id} 缺少先前的 producer、模型輸入或權重。`);}
         for(const id of op.intermediates||[])tensor(id);
-        for(const id of op.outputs){const t=tensor(id);if(!t.is_variable&&payload(model.buffers[t.buffer]))throw Error(`輸出 tensor #${id} 仍指向唯讀權重；請建立新的 result tensor。`);if(produced.has(id)&&!t.is_variable)throw Error(`Tensor #${id} 有多個 producer。`);produced.add(id);available.add(id);}
+        for(const id of op.outputs){const t=tensor(id),buffer=model.buffers[t.buffer];if(!t.is_variable&&(payload(buffer)||emptyConstant(t,buffer)))throw Error(`輸出 tensor #${id} 仍指向唯讀權重；請建立新的 result tensor。`);if(produced.has(id)&&!t.is_variable)throw Error(`Tensor #${id} 有多個 producer。`);produced.add(id);available.add(id);}
         for(const options of [op.builtin_options,op.builtin_options_2])if(options)for(const [key,value] of Object.entries(options))if(/subgraph/.test(key))for(const id of typeof value==='number'?[value]:Array.from(value||[]))if(!Number.isInteger(id)||!model.subgraphs[id])throw Error(`OP #${position} 的控制流程 subgraph #${id} 不存在。`);
     }
     for(const id of graph.outputs){tensor(id);if(!available.has(id))throw Error(`模型輸出 tensor #${id} 缺少 producer。`);}

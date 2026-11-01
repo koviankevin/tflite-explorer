@@ -2,6 +2,7 @@ import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {OPERAND_OPERATORS,checkOperandValues,checkOperandMetadata} from './tflite-operand-checks.js';
 import {staticTfliteShape} from './tflite-static-shape.js';
 import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
+import {checkGatherMetadata} from './tflite-gather-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
@@ -38,7 +39,24 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
-        if(!['TRANSPOSE','RESHAPE','EXPAND_DIMS','GATHER'].includes(name)&&!OPERAND_OPERATORS.has(name)){record.reason='此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。';continue;}
+        if(name==='GATHER'){
+            try{
+                const proof=checkGatherMetadata(Array.from(op.inputs,id=>g.tensors[id]),Array.from(op.outputs,id=>g.tensors[id]),op.builtin_options||{});
+                record.status=proof.status;record.reason=proof.reason;
+                if(proof.status==='passed'){
+                    const id=op.inputs[1],v=values(id,[2,4,7]);
+                    if(!v){record.status='not-run';record.reason=`tensor #${id}：${reasons.get(id)}`;}
+                    else{
+                        const bound=proof.paramsShape[proof.axis];
+                        if(v.some(n=>n<0n||n>=BigInt(bound)))throw Error(`tensor #${id}：GATHER indices 必須位於 0～${bound-1}。`);
+                        record.reason='已核對 GATHER dtype 關係、rank／axis／batch_dims、output shape 與可讀 indices 範圍；未執行 kernel 或驗證數值等價。';
+                    }
+                }
+                if(record.status==='passed')checked++;else unchecked++;
+            }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} GATHER · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
+            continue;
+        }
+        if(!['TRANSPOSE','RESHAPE','EXPAND_DIMS'].includes(name)&&!OPERAND_OPERATORS.has(name)){record.reason='此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。';continue;}
         const id=op.inputs[1],fail=message=>{throw Error(`Subgraph #${graphId} · OP #${node} ${name} · tensor #${id}：${message}`);};
         if(OPERAND_OPERATORS.has(name)){
             const inTensors=Array.from(op.inputs,id=>g.tensors[id]),outTensors=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
@@ -53,7 +71,7 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
         const a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
         if(!a||!out){unchecked++;record.reason='input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
-        const v=values(id,name==='GATHER'?[2,4,7]:undefined);
+        const v=values(id);
         if(!v){unchecked++;record.reason=reasons.get(id);continue;}
         let expected;
         if(name==='TRANSPOSE'){
@@ -70,10 +88,6 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             if(v.includes(0n)){unchecked++;record.reason='含零維度的 RESHAPE 常數組合尚未驗證。';continue;}
             const total=a.reduce((p,n)=>p*BigInt(n),1n),known=v.reduce((p,n)=>n<0n?p:p*n,1n);
             if(v.includes(-1n)&&known&&total%known===0n)expected=v.map(n=>Number(n===-1n?total/known:n));else if(!v.includes(-1n)&&known===total)expected=v.map(Number);else fail('shape tensor 與 input 元素數不符。');
-        }else{
-            let axis=op.builtin_options?.axis??0;if(axis<0)axis+=a.length;
-            if(!Number.isInteger(axis)||axis<0||axis>=a.length)fail('axis 超出 input rank。');
-            if(v.some(n=>n<0n||n>=BigInt(a[axis])))fail(`indices 必須位於 0～${a[axis]-1}。`);
         }
         if(expected&&(expected.length!==out.length||expected.some((d,i)=>d!==out[i])))fail(`output tensor #${op.outputs[0]} shape 應為 [${expected.join(', ')}]。`);
         checked++;

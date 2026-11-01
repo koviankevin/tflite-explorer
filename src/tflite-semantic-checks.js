@@ -5,6 +5,7 @@ import {checkOperandMetadata} from './tflite-operand-checks.js';
 import {inspectTensorQuantization} from './tflite-quantization-checks.js';
 import {staticTfliteShape} from './tflite-static-shape.js';
 import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
+import {checkGatherMetadata} from './tflite-gather-checks.js';
 const known=t=>staticTfliteShape(t)!==null;
 const shape=t=>Array.from(t.shape),same=(a,b)=>a.length===b.length&&a.every((n,i)=>n===b[i]);
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
@@ -34,13 +35,5 @@ export function checkOperatorMetadata(name,inputs,outputs,options={}){
         if(!dims.includes(0)){const total=shape(inputs[0]).reduce((a,b)=>a*BigInt(b),1n),product=dims.reduce((a,b)=>b<0?a:a*BigInt(b),1n);if(!product||total%product||!dims.includes(-1)&&total!==product)fail('options new_shape 元素數不符。');const expected=dims.map(d=>d===-1?Number(total/product):d);if(!same(shape(out),expected))fail(`options new_shape 的 output 應為 [${expected.join(', ')}]。`);}
     }
     if(name==='TRANSPOSE'&&inputs[1]&&inputs[1].type!==2)fail('permutation tensor 必須是 int32。');
-    if(name==='GATHER'&&known(inputs[0])&&known(inputs[1])&&known(out)){
-        if(![2,4,7].includes(inputs[1].type))fail('indices 必須是 int16／int32／int64。');
-        const p=shape(inputs[0]),i=shape(inputs[1]),axis=(options.axis??0)<0?(options.axis??0)+p.length:(options.axis??0),batch=(options.batch_dims??0)<0?(options.batch_dims??0)+i.length:(options.batch_dims??0);
-        if(!Number.isInteger(axis)||axis<0||axis>=p.length||!Number.isInteger(batch)||batch<0||batch>Math.min(axis,i.length))fail('axis／batch_dims 超出 rank 範圍。');
-        if(p.slice(0,batch).some((d,j)=>d!==i[j]))fail('batch_dims 指定的 batch 維度不符。');
-        const expected=[...p.slice(0,axis),...i.slice(batch),...p.slice(axis+1)];
-        if(!same(shape(out),expected))fail(`output shape 應為 [${expected.join(', ')}]。`);
-        if(inputs[0].type!==out.type)fail('params／output dtype 必須相同。');
-    }
+    if(name==='GATHER')checkGatherMetadata(inputs,outputs,options);
 }

@@ -2,6 +2,7 @@ import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { FlatbufferWriter } from './flatbuffer-writer.js';
 import {planTfliteReferences,referencePlanSummary} from './tflite-reference-plan.js';
 import {inspectTfliteQuantization} from './tflite-quantization-checks.js';
+import {isEmptyTfliteConstant} from './tflite-empty-constant.js';
 
 export function exportTflite(index, graphIndex, selected, file, options={}) {
     if (!index.raw) throw new Error('缺少 TFLite 原始模型資料，請重新開啟模型後匯出。');
@@ -63,7 +64,7 @@ export function exportTflite(index, graphIndex, selected, file, options={}) {
         if (details && 'scales' in details) tensor.quantization = { ...source.quantization, details: Object.assign(new details.constructor(), details, { scales: mapId(details.scales), zero_points: mapId(details.zero_points) }) };
         return tensor;
     });
-    const inputs = tensorIds.filter((id) => consumed.has(id) && !produced.has(id) && !Number(index.raw.buffers[graph.tensors[id].buffer]?.size || 0n));
+    const inputs = tensorIds.filter((id) => consumed.has(id) && !produced.has(id) && !Number(index.raw.buffers[graph.tensors[id].buffer]?.size || 0n) && (graph.inputs.includes(id) || !isEmptyTfliteConstant(graph.tensors[id],index.raw.buffers[graph.tensors[id].buffer])));
     const outputs = tensorIds.filter((id) => produced.has(id) && (outsideConsumers.has(id) || graph.outputs.includes(id) || !consumed.has(id)));
     if (!outputs.length) throw new Error('選取區域沒有可匯出的輸出。');
     const exported = {
