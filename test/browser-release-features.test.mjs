@@ -5,25 +5,25 @@ import {partialRuntimeIORequired} from './browser/release-features.mjs';
 
 test('partial runtime IO is required for current and unknown candidates, while exact published history remains compatible',()=>{
     for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(partialRuntimeIORequired(version),false,version);
-    for(const version of ['1.4.1','1.4.2','1.4.3','1.4.4','1.4.5','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(partialRuntimeIORequired(version),true,version);
+    for(const version of ['1.4.1','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(partialRuntimeIORequired(version),true,version);
     for(const version of [null,'candidate','v1.4.1'])assert.throws(()=>partialRuntimeIORequired(version));
 });
 
 test('legacy shape checks skip exact older immutable releases and remain required for new or unknown labels',()=>{
     for(const v of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(legacyShapeValidationRequired(v),false,v);
-    for(const v of ['1.4.1','1.4.2','1.4.3','1.4.4','1.4.5','1.5.0','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(legacyShapeValidationRequired(v),true,v);
+    for(const v of ['1.4.1','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','1.5.0','2.0.0','1.4.0+company.1','0.2.0-preview.35'])assert.equal(legacyShapeValidationRequired(v),true,v);
     for(const v of [null,'candidate','v1.4.1'])assert.throws(()=>legacyShapeValidationRequired(v));
 });
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
 
 test('quantization browser coverage skips only exact immutable pre-feature releases',()=>{
     for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1'])assert.equal(quantizationValidationRequired(version),false,version);
-    for(const version of ['1.4.0','1.4.2','1.4.3','1.4.4','1.4.5','2.0.0','1.3.2','1.3.1+company.1','0.2.0-preview.35'])assert.equal(quantizationValidationRequired(version),true,version);
+    for(const version of ['1.4.0','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.3.2','1.3.1+company.1','0.2.0-preview.35'])assert.equal(quantizationValidationRequired(version),true,version);
     assert.throws(()=>quantizationValidationRequired('candidate'),/version/);
 });
 
 test('stable and future releases retain all current browser coverage',()=>{
-    for(const version of ['1.0.0','1.0.1','1.1.0','1.4.2','1.4.3','1.4.4','1.4.5','2.0.0','1.0.1-rc.1','1.0.0+company.2','0.2.1'])assert.deepEqual(browserReleaseFeatures(version),all,version);
+    for(const version of ['1.0.0','1.0.1','1.1.0','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.0.1-rc.1','1.0.0+company.2','0.2.1'])assert.deepEqual(browserReleaseFeatures(version),all,version);
 });
 test('the preview28 published-demo boundary remains explicit',()=>{
     assert.equal(browserReleaseFeatures('0.2.0-preview.27').demoRuntime,false);assert.equal(browserReleaseFeatures('0.2.0-preview.28').demoRuntime,true);
@@ -46,7 +46,7 @@ test('missing or malformed release metadata fails selection instead of skipping 
 
 test('font reflow is required for new sources while exact immutable pre-fix releases remain usable',()=>{
     for(const version of ['1.0.0','1.0.1','1.1.0','0.2.0-preview.1','0.2.0-preview.28','0.2.0-preview.34'])assert.equal(fontReflowRequired(version),false,version);
-    for(const version of ['1.2.0','1.2.1','1.4.2','1.4.3','1.4.4','1.4.5','2.0.0','1.1.0+repacked.1','0.2.0-preview.35','0.2.0-preview.01','0.2.0-preview.12+repacked.1','0.2.1','1.2.0-rc.1'])assert.equal(fontReflowRequired(version),true,version);
+    for(const version of ['1.2.0','1.2.1','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.1.0+repacked.1','0.2.0-preview.35','0.2.0-preview.01','0.2.0-preview.12+repacked.1','0.2.1','1.2.0-rc.1'])assert.equal(fontReflowRequired(version),true,version);
 });
 
 test('font reflow cannot be skipped using missing or malformed release metadata',()=>{
@@ -55,6 +55,6 @@ test('font reflow cannot be skipped using missing or malformed release metadata'
 
 test('per-OP validation is required for new releases without breaking exact immutable rollback labels',()=>{
     for(const v of ['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','0.2.0-preview.34'])assert.equal(operatorValidationRequired(v),false,v);
-    for(const v of ['1.3.0','1.4.2','1.4.3','1.4.4','1.4.5','2.0.0','1.2.1+repacked.1','0.2.0-preview.35','0.2.0-preview.01'])assert.equal(operatorValidationRequired(v),true,v);
+    for(const v of ['1.3.0','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.2.1+repacked.1','0.2.0-preview.35','0.2.0-preview.01'])assert.equal(operatorValidationRequired(v),true,v);
     for(const v of [undefined,null,'','v1.3.0','1.3.0/../x'])assert.throws(()=>operatorValidationRequired(v));
 });

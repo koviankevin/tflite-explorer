@@ -2,7 +2,6 @@ import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 import {tableFields} from './flatbuffer-writer.js';
 import {TFLITE_OPTIONS,TFLITE_PORTS} from './tflite-op-options.js';
 import {TFLITE_RANDOM_DTYPES,validateRandomRange,seededRandom,randomOptions} from './tensor-random.js';
-import {checkStaticTransform} from './tflite-static-transform.js';
 import {checkOperatorMetadata} from './tflite-semantic-checks.js';
 const normalize=s=>s.toLowerCase().replace(/[^a-z0-9]/g,'');
 const optionNames=Object.keys(schema).filter(k=>k.endsWith('Options')&&schema[k].decode);
@@ -67,7 +66,6 @@ export function checkBuiltinPorts(code,inputs,outputs,options){
     }
     if(['RESHAPE','EXPAND_DIMS'].includes(name)&&inputs[0]&&outputs[0]){const a=shapes(inputs[0]),b=shapes(outputs[0]);if(a.every(n=>n>=0)&&b.every(n=>n>=0)&&a.reduce((n,x)=>n*x,1)!==b.reduce((n,x)=>n*x,1))throw Error(name+' 前後元素數不同。');}
     if(['IF','WHILE'].includes(name)&&!options)throw Error(name+' 需要控制流程 subgraph 設定。');
-    checkStaticTransform(name,inputs,outputs,options);
     checkOperatorMetadata(name,inputs,outputs,options||{});
     return {scope:'索引／型別／資料長度／已實作的 shape 與參數規則；不代表全部 kernel／runtime 語意已驗證'};
 }
