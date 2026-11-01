@@ -66,3 +66,20 @@ PR #215 的 906 項 Node 測試及 79 項必要契約通過，合併 tree 與實
 修正改讀 launch marker 已確認的自有 root `/proc/PID/cmdline`，在讀取前後以原 parser 核對 PID／startTicks／存活狀態，大小最多 64 KiB；參數只留在 private report。沒有加 automation 或其他旗標，唯一新增的 JS 旗標仍為唯讀日誌。新回歸驗證讀取只限該 root、兩次身分核對、重用時不讀取或拒絕結果、空值／超預算拒絕，無須開瀏覽器。
 
 [失敗摘要](results/renderer-pool-command-failure.json)保留原 run、來源、provider digest 與錯誤雜湊；當時觀察到的一個 root 已退出、零個 Worker。後續 cleanup 的「預期一個 model Worker、實際零個」是前段開模型前中止所造成的第二筆 assertion，不是原生關閉逾時。新來源必要檢查與合併 tree 核對後，才限定一次修正後日誌實驗；原失敗不改標、不重跑原正式八輪或部署。
+
+## 已觀察到同一 renderer 的 pool 歸還
+
+PR #216 的 907 項 Node 測試通過、35 項既有選做略過，79 項必要契約全通過；實際受測 tree 與合併來源 `e46ab3c8f224326ef05e6cfc6e5274caee6f2b77` 相同。限定的 [41265628094](https://github.com/koviankevin/tflite-explorer/actions/runs/41265628094) 已完成，原始數值 artifact 的 provider digest／ZIP CRC、來源、fixture readback、公開 schema 與 summary 均已核對。
+
+| 案例 | 總樣本／關閉後樣本 | normal-page pool 歸還 | 固定 RSS 訊號 |
+| --- | --- | --- | --- |
+| 3,005 OP／1 MiB 權重 | 96／92，關閉後 45.140 秒 | 24,903,680 bytes，接收日誌時距關閉 29.717 秒 | 沒有單次至少 100 MiB 的延後下降 |
+| 21,005 OP／1 MiB 權重 | 97／92，關閉後 45.067 秒 | 128,974,848 bytes（123 MiB），接收日誌時距關閉 29.153 秒 | 距關閉 28.634 秒的 renderer anonymous 下降 152,735,744 bytes；落在事先固定的日誌對時範圍 |
+
+兩案各六個觀察到的程序身分、model／layout 各一個 Worker 均正常退出，零個 runtime Worker。共 193 筆原生總和／身分／固定訊號及 pool 對時已用另一份 Python 讀取器獨立重算；關閉後最大取樣間隔 506／518 ms，沒有缺少 owner。大案例該步 main heap total 只下降 1,835,008 bytes；pool 記錄因此提供了主頁 heap 之外的具體線索。小案例與大案例各另有一筆零釋放的 pool 事件，均保留；大案例排除兩筆前一案的日誌，不冒充本案事件。
+
+`normalPageBytes` 在固定來源中是 reservation bytes 的歸還計數，不能直接等同 resident bytes，也不能宣稱解釋了整筆 RSS 或全部歷史失敗。對時使用 SDK 接收日誌的時間，會有輸出／排程延遲；V8 印出的時間屬各 isolate，不拿它當全域時鐘。這次觀察支持 V8 pool 參與延後保留，但不是已修復原 slope 失敗，也不是對未知 allocator／GC 的完整因果證明。
+
+[公開數值摘要](results/renderer-pool-attribution.json)只含固定欄位，原始公開 ZIP／報告／job log 留在本機。含 PID／pointer 的私有 browser 日誌未上傳、未取回本機；公開 job log 另掃描確認沒有原始 V8 prefix，不能宣稱已保存那份 private log 原件。新日誌實驗始終不具發布資格，沒有 forced GC、heap snapshot、RSS 扣除、pool／timer 或門檻改動。正式站與固定 Release 仍是 v1.4.0，v1.4.1 未發布。
+
+後續先量測並降低模型結構索引的實際配置開銷，再驗證功能、匯出與原政策；不靠關閉 V8 pool、強制 GC 或重跑既有失敗碰綠燈。

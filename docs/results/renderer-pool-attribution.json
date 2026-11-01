@@ -1,0 +1,125 @@
+{
+  "format": "model-lens-public-renderer-pool-attribution-summary",
+  "status": "complete-pool-release-coincides-with-step",
+  "run": 41265628094,
+  "attempt": 1,
+  "source": "e46ab3c8f224326ef05e6cfc6e5274caee6f2b77",
+  "tree": "37dd31f2b2bb2e81e13d3a42a4adf9a57eea8728",
+  "artifact": 13066694925,
+  "providerDigest": "sha256:f87af4d53ae84a2fe8de917844b222e1a32d2b643fbf7a46e2a38859294ea264",
+  "reportSHA256": "38c401cedd117ac0980067293628db7c60ea49d46590f400f9efc14c4efa7bb7",
+  "chromium": "156.0.8078.4",
+  "v8": "15.6.75",
+  "operation": "open-locate-close-with-readonly-pool-logging",
+  "forcedGC": false,
+  "heapSnapshot": false,
+  "poolPolicyChanged": false,
+  "thresholdsRelaxed": false,
+  "releaseEvidenceEligible": false,
+  "sourceUnchanged": true,
+  "cases": [
+    {
+      "id": "small",
+      "operators": 3005,
+      "fileBytes": 2164512,
+      "weightBytes": 1048576,
+      "fileSHA256": "ba4bb40d43b96370337fa156f6d97fde99bf5337c49b671f54bb570ec9ab8a61",
+      "readbackMatched": true,
+      "samples": 96,
+      "postCloseSamples": 92,
+      "postCloseMs": 45140,
+      "maxPostCloseGapMs": 506,
+      "workerHeapTotalBytes": 27152384,
+      "workerBackingBytes": 2696865,
+      "poolEvents": [
+        {
+          "afterClosedMs": -626,
+          "normalPageBytes": 0,
+          "largePageBytes": 0
+        },
+        {
+          "afterClosedMs": 29717,
+          "normalPageBytes": 24903680,
+          "largePageBytes": 0
+        }
+      ],
+      "foreignPoolLinesExcluded": 0,
+      "privateLogBytesAtObservation": 26637,
+      "delayedStepObserved": false,
+      "steps": [],
+      "poolCorrelations": [],
+      "allSixObservedIdentitiesReaped": true,
+      "allWorkersClosed": true,
+      "runtimeWorkers": 0
+    },
+    {
+      "id": "large",
+      "operators": 21005,
+      "fileBytes": 8836512,
+      "weightBytes": 1048576,
+      "fileSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+      "readbackMatched": true,
+      "samples": 97,
+      "postCloseSamples": 92,
+      "postCloseMs": 45067,
+      "maxPostCloseGapMs": 518,
+      "workerHeapTotalBytes": 133767168,
+      "workerBackingBytes": 15448561,
+      "poolEvents": [
+        {
+          "afterClosedMs": -1087,
+          "normalPageBytes": 0,
+          "largePageBytes": 0
+        },
+        {
+          "afterClosedMs": 29153,
+          "normalPageBytes": 128974848,
+          "largePageBytes": 0
+        }
+      ],
+      "foreignPoolLinesExcluded": 2,
+      "privateLogBytesAtObservation": 71732,
+      "delayedStepObserved": true,
+      "steps": [
+        {
+          "from": 62,
+          "to": 63,
+          "afterCloseMs": 28634,
+          "anonymousDeltaBytes": -152735744,
+          "fileDeltaBytes": 786432,
+          "sharedDeltaBytes": 0,
+          "gateRssDeltaBytes": -151965696,
+          "mainHeapUsedDeltaBytes": -1809304,
+          "mainHeapTotalDeltaBytes": -1835008
+        }
+      ],
+      "poolCorrelations": [
+        {
+          "from": 62,
+          "to": 63,
+          "poolEventIndexes": [
+            1
+          ],
+          "normalPageBytes": 128974848,
+          "largePageBytes": 0,
+          "poolReleaseCoincidesWithStep": true
+        }
+      ],
+      "allSixObservedIdentitiesReaped": true,
+      "allWorkersClosed": true,
+      "runtimeWorkers": 0
+    }
+  ],
+  "independentNumericReviewPassed": true,
+  "schemaAndOriginalSummaryRecomputePassed": true,
+  "rawV8LinesInPublicJobLog": 0,
+  "rawPrivateBrowserLogsUploaded": false,
+  "rawPrivateBrowserLogsAvailableLocally": false,
+  "originalPublicArtifactAndJobLogRetainedLocally": true,
+  "originalFailedGate": 41252363060,
+  "originalGateRerun": false,
+  "originalFailureFixed": false,
+  "allAllocatorCausesProven": false,
+  "candidatePublished": false,
+  "goalComplete": false
+}
