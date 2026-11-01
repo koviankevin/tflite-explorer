@@ -1,0 +1,23 @@
+{
+  "status": "failed-before-resource-fixture-or-browser",
+  "run": 41256209262,
+  "job": 124699802745,
+  "source": "16166884841780f9f28071fcb46999ad65f56027",
+  "artifact": 13063695536,
+  "providerDigest": "sha256:104de560bfcc51f7f3ec41077b77640470b2d5ddd37f3086555f63b81095d675",
+  "reportSHA256": "7ffdc8136ce9ec0a90631bcaafaa4164ea8fa9f1a60a404a3b4ed784a8939069",
+  "rootCause": "Entry allowlist still accepted only gate/soak; memory-diagnostic was rejected before resource preflight. Instrumentation unit tests missed the actual entry.",
+  "measurementObtained": false,
+  "originalRSSGateUnchanged": 41252363060,
+  "correction": "Actual-entry subprocess regression reproduced Unknown lifecycle profile, then reached a stubbed resource boundary after the one-line allowlist correction; no physical model/browser in that test.",
+  "selectedTests": 50,
+  "releaseEvidenceEligible": false,
+  "goalComplete": false,
+  "at": "2026-11-01T00:21:56.704210+00:00",
+  "originals": {
+    "path": "physical-memory-entry-failure-evidence.zip",
+    "records": 20,
+    "bytes": 36526,
+    "sha256": "856b035ea27253540adaea67c81f0fff031ce1f55dd564714de515b7c01259b3"
+  }
+}
