@@ -19,7 +19,7 @@ export async function gatherValidationFlow({page,read,base,directory,check}){
         {name:'invalid-dynamic-result-dtype',spec:{params:{shape:[2,3],type:0,shape_signature:[-1,3]},output:{shape:[2,2],type:2}},reject:/GATHER.*dtype/},
         {name:'invalid-dynamic-indices',spec:{params:{shape:[2,3],type:0,shape_signature:[-1,3]},indices:{shape:[2],type:0,values:[0,1]}},reject:/GATHER.*indices/},
         {name:'negative-batch',spec:{params:{shape:[2,2,3],type:0},indices:{shape:[2,2],type:2,values:[0,2,1,0]},output:{shape:[2,2,2],type:0},options:{axis:-1,batch_dims:-1}},status:'passed'},
-        {name:'empty-indices',spec:{indices:{shape:[0],type:2,values:[]},output:{shape:[2,0],type:0}},status:'passed'},
+        {name:'empty-indices',spec:{indices:{shape:[0],type:2,values:[]},output:{shape:[2,0],type:0,data:new Uint8Array()}},status:'passed'},
         {name:'dynamic-valid',spec:{params:{shape:[2,3],type:0,shape_signature:[-1,3]},output:{shape:[2,2],type:0,shape_signature:[-1,2]}},status:'not-run'}
     ];
     try{

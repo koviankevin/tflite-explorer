@@ -128,3 +128,20 @@ test('zero-byte string, opaque and sparse tensors never gain a producer from the
         assert.throws(()=>validateTfliteModelGraph(f.model,0),/OP #0.*tensor #1.*producer/);
     }
 });
+
+test('a produced zero-element activation may keep an explicitly empty non-default buffer',async()=>{
+    const f=await fixture({indices:{shape:[0],type:2,values:[]},output:t([2,0],0,{data:new Uint8Array()})});
+    assert.doesNotThrow(()=>prepareTfliteModelEdit(f.index,f.file,plan));
+});
+
+test('zero-element activation from outside a cut remains a boundary input',async()=>{
+    const metadata=JSON.parse(await readFile(new URL('../vendor/netron/tflite-metadata.json',import.meta.url),'utf8'));
+    const f=await fixture({indices:{shape:[0],type:2,values:[]},output:t([2,0],0,{data:new Uint8Array()}),second:true});
+    const cut=exportTflite(f.index,0,[1],f.file),bytes=new Uint8Array(await cut.blob.arrayBuffer()),r=await parseModel((o,n)=>bytes.subarray(o,o+n),bytes.length,metadata),g=r.raw.subgraphs[0];
+    assert.equal(g.inputs.length,1);assert.equal(g.tensors[g.inputs[0]].name,'result');
+});
+
+test('zero-byte output buffers never bypass an earlier missing producer',async()=>{
+    const f=await fixture({indices:{shape:[0],type:2,values:[]},output:t([2,0],0,{data:new Uint8Array()}),second:true,reverse:true});
+    assert.throws(()=>validateTfliteModelGraph(f.model,0),/OP #0.*tensor #2.*缺少先前的 producer/);
+});

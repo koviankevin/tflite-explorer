@@ -39,3 +39,11 @@ LiteRT.js 2.6.0 compat CPU 另執行十二組真正匯出重開的案例：三�
 十二份實際模型／JSON 下載逐一核對，兩端同案例模型 SHA 相同；非空 indices 的原 bytes 相同，空案例精確要求零 ranges／bytes 與明確空 vectors，沒有多餘模型輸入。單節點 GATHER pattern 各找兩筆，沒有連線的連續雙節點負例維持零筆。四份實際下載的合法模型另經既有 CPU 執行，兩個 outputs 都與預期精確一致，四份 IO ZIP 的 CRC 及 BIN 長度另行核對。
 
 [候選數值收據](results/gather-candidate.json)只含固定來源、雜湊與計數；原始本機資料未公開。140 項選測、十三項版本選擇及十二組 CPU 在應用來源 `c4d0609` 通過，之後僅修改原生腳本與說明，沒有為此重跑無關測試。正式站仍為 v1.4.2；必要 PR／main 與 v1.4.3 固定交付尚未完成，完整商品化目標及歷史限制保留。
+
+## 送 PR 前追加的零元素 activation 回歸
+
+較早候選的空 data 判定還未區分 producer。三個新增回歸揭露：合法零元素 activation 的非預設空 buffer 被當作唯讀常數；切圖漏掉其外部 producer 邊界；相同空值也可能掩蓋先用後定義。對同一份真實檔案執行既有 CPU 已通過、輸出 BIN 為零 bytes，排除「CPU 本來不接受格式」的解釋。原始三項失敗、檔案與 CPU IO 保留。
+
+現在零元素常數 lookup 以整個 subgraph 的 producer 為準。有 producer 的值保持 activation，切圖保留外部輸入，完整編輯也不把可寫零元素輸出視為權重。Producer 索引僅在實際遇到符合空資料條件的候選時才建立，留在當次驗證／匯出的區域，不新增跨模型快取。Buffer 0、absent data 與字串／opaque／sparse 的保守界線不變。
+
+修正後 143 項相關檢查通過，CPU 擴為十三組，含非預設零元素 output 的完整／局部／組合匯出，以及保留外部 activation 的零 byte input。先前 140 項與來源 `1b811a1` 的原生證據保留其實際範圍；新來源原生案例已改用非預設空 output buffer，仍待驗收，不能把舊結果直接換標成新來源。

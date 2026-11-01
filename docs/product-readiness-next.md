@@ -2,7 +2,7 @@
 
 使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.2)／build `e8a83e3eeb4b7bdc`，326 核心檔、全站 1,473 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/batch-matmul-v1.4.2-published.json)保留來源與範圍。完整商品化目標仍進行中，保留尚未完成項目；不以單個模型或綠燈宣告完成。
 
-新接續的 [v1.4.3 GATHER 候選](gather-validation.md)已重現並修正動態 shape 掩蓋已知型別／rank 錯誤，以及空 indices 常數在完整編輯／切圖中的兩個問題。140 項相關檢查及十二組真正 CPU 匯出重開通過；Chrome／Edge 的原生選檔、32px 接線、十二份下載與四份實際下載模型的 CPU 已核對，見[候選收據](results/gather-candidate.json)。必要來源綁定關卡與正式交付尚待接續，目前公開版保持 v1.4.2。
+新接續的 [v1.4.3 GATHER 候選](gather-validation.md)已重現並修正動態 shape 掩蓋已知型別／rank 錯誤，以及空 indices 常數在完整編輯／切圖中的兩個問題。較早來源的 140 項／十二組 CPU 與 Chrome／Edge 證據見[原候選收據](results/gather-candidate.json)。送 PR 前又補上 producer 區分與零元素 activation 邊界，143 項相關檢查及十三組 CPU 已通過；新來源原生操作、必要關卡及正式交付尚待接續，目前公開版保持 v1.4.2。
 
 沿用使用者範圍：模型、權重、測試輸入及診斷全程本機；Chrome／Edge、14 吋桌面與 32px；不測手機、Firefox／WebKit，不自行啟動兩小時負載；內網模型、私有 dialect／compiler／custom runtime 由使用者處理。一般編輯／匯出不自動執行 interpreter。既有安全、RSS 與 runtime／URL timer 不放寬。
 

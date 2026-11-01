@@ -32,19 +32,20 @@ test('pinned CPU executes edited GATHER indices encodings, negative options, bat
         {name:'negative-batch',spec:{params:t([2,2,3]),indices:{shape:[2,2],type:2,values:[0,2,1,0]},output:t([2,2,2]),options:{axis:-1,batch_dims:-1}},input:[1,2,3,4,5,6,7,8,9,10,11,12],expected:[1,3,4,6,8,7,11,10]},
         {name:'batch-equals-indices-rank',spec:{params:t([2,2,3]),indices:{shape:[2,2],type:2,values:[1,2,0,1]},output:t([2,2]),options:{axis:2,batch_dims:2}},input:[1,2,3,4,5,6,7,8,9,10,11,12],expected:[2,6,7,11]},
         ...[7,9].map(type=>({name:`quantized-params-${type}`,spec:{params:t([2,3],type,{quantization:q}),output:t([2,2],type,{quantization:q})},input:[1,2,3,4,5,6],expected:[1,3,4,6]})),
-        ...['full','cut','composition'].map(mode=>({name:`empty-indices-${mode}`,mode,spec:{indices:{shape:[0],type:2,values:[]},output:t([2,0])},input:[1,2,3,4,5,6],expected:[]}))
+        ...['full','cut','composition'].map(mode=>({name:`empty-indices-${mode}`,mode,spec:{indices:{shape:[0],type:2,values:[]},output:t([2,0],0,{data:new Uint8Array()})},input:[1,2,3,4,5,6],expected:[]})),
+        {name:'empty-boundary-input',mode:'cut-second',spec:{indices:{shape:[0],type:2,values:[]},output:t([2,0],0,{data:new Uint8Array()}),second:true},input:[],expected:[]}
     ];
     try{
         for(const c of cases){
             const f=await fixture(c.spec);let edited;
-            if(c.mode==='cut')edited=exportTflite(f.index,0,[0],f.file);
+            if(c.mode==='cut'||c.mode==='cut-second')edited=exportTflite(f.index,0,[c.mode==='cut-second'?1:0],f.file);
             else if(c.mode==='composition'){
                 const snapshot=editWorkspaceSnapshot(f.index,{targets:[{graph:0,node:0}],composition:true}),draft=modelEditDraft(snapshot);
                 draft.apply({kind:'import',node:'op:0:0',nodes:['op:0:0'],label:'public empty Gather'});edited=await exportEditWorkspace(f.index,f.file,snapshot,draft.commands);
             }else edited=editTfliteModel(f.index,f.file,[{graph:0,operators:[{template:0,inputs:[0,1],outputs:[2]}]}]);
             const bytes=new Uint8Array(await edited.blob.arrayBuffer()),read=(o,n)=>bytes.subarray(o,o+n),candidate=await parseModel(read,bytes.length,metadata);
             const proof=validateTfliteConstants(candidate.raw,0,read);assert.equal(proof.checked,1);assert.equal(proof.unchecked,0);
-            const type=candidate.raw.subgraphs[0].tensors[0].type,Data={0:Float32Array,7:Int16Array,9:Int8Array}[type];messages.length=0;
+            const g=candidate.raw.subgraphs[0];assert.equal(g.inputs.length,1);const type=g.tensors[g.inputs[0]].type,Data={0:Float32Array,7:Int16Array,9:Int8Array}[type];messages.length=0;
             const result=await executeRuntime({blob:edited.blob,plan:runtimePlan(candidate.raw,bytes.length),rt,specs:[{mode:'bin',file:new File([Data.from(c.input)],'input.bin')}],diagnostics:()=>messages});
             assert.equal(result.status,'passed',`${c.name}: ${JSON.stringify(result)}`);assert.equal(result.invoked,true);
             const archive=result.io.archive instanceof Uint8Array?result.io.archive:new Uint8Array(await result.io.archive.arrayBuffer()),z=Archive.open(archive,'zip'),body=z.entries.get('outputs-0.bin').peek().slice();
