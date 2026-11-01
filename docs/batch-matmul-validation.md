@@ -24,3 +24,11 @@
 Chrome／Edge 的獨立選測入口為 `node test/browser/windows-operator-validation.mjs <channel> <build> <output> --allow-local-browser --matmul-only`，使用公開合成模型、原生選檔與接線、1280×640／32px、六份實際下載及重開搜尋，要求八個 model Workers 與所有觀察到的自有程序正常退出。它與原正式 38 項 smoke 分開保存來源，沒有延長既有 runtime／URL timer、工作流程期限或 RSS 上限。此入口、PR／main 必要關卡與正式交付仍待完成；本頁不宣稱 v1.4.2 已發布。
 
 第一輪兩瀏覽器都正確拒絕非法 dtype／rank，hybrid 匯出與下載 bytes 也已核對；新 flow 以同一容器尋找 summary 時，同時命中量化與逐 OP 兩個正常標題，整輪仍判失敗。修正只將選擇器與列數限制到逐 OP 區段，保留原始失敗，不修改網站或移除量化顯示；後續完整結果仍待核對。
+
+## 候選原生驗收已核對
+
+來源 `db6819a4f290ff360c5ab689bf694d800899f28b`／tree `082a761a495d39dcb0e959beeb101cea1ce74c20`、build `860d0078899ba0fc` 的 Windows Chrome 156.0.8078.76／Edge 156.0.4314.50 五個原生情境完成：非法 dtype／rank 零下載；hybrid 與 int8 accumulator 可接線、匯出、重開搜尋；混合精度明列未檢查。實際 1280×640／32px 的逐 OP 列與範圍已檢視；兩端各九個 Worker、八個 model Workers，八／十個觀察到的自有程序均正常退出，零自動 interpreter。
+
+十二份實際模型／JSON 下載逐一核對 source/output byte ranges、型別／量化／adjoint、兩個輸出與 shared input 連線；兩端同案例模型 bytes 相同。獨立 reader 再將其中四份實際下載交給既有 CPU，兩個 outputs 均符合預期，hybrid 最大絕對誤差約 0.003922、整數精確相符；IO ZIP 與原始報告留在本機。兩個 BatchMatMul 的單節點 pattern 各找出兩筆，沒有連線的連續雙節點負例維持零筆。
+
+[候選數值收據](results/batch-matmul-candidate.json)只含固定來源、雜湊與計數；本機日誌、截圖、環境與程序身分未公開。前述兩次腳本失敗保持失敗，新來源僅修正測試選擇器；應用與 Node／CPU 規則來源未變，已通過的案例沒有為此重跑。正式站仍為 v1.4.1，PR／main 與 v1.4.2 交付尚未完成；不以此有限小型原生驗收取代原實體 1.25 GiB／八輪或 38 項正式 smoke。

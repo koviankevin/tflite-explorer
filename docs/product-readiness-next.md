@@ -81,4 +81,4 @@ Legacy concrete shape、手動 runtime 部分 IO 保存及[模型索引配置減
 
 ## BATCH_MATMUL 的後續修正（未發布）
 
-接續 OP 驗證發現 [output dtype 與已知 rank 漏擋](batch-matmul-validation.md)：非法的 float→int32 output 甚至可能 CPU 回報成功但輸出浮點位元的整數解讀。已加入格式型別、int8 accumulator 例外及 2～5 維 rank 共享規則，序列化報告不讀權重；125 項相關測試與十種合法實際 CPU 對照通過。Chrome／Edge 選測與必要發布關卡仍待完成，正式版本維持 v1.4.1，沒有將舊成功部署重跑。
+接續 OP 驗證發現 [output dtype 與已知 rank 漏擋](batch-matmul-validation.md)：非法的 float→int32 output 甚至可能 CPU 回報成功但輸出浮點位元的整數解讀。已加入格式型別、int8 accumulator 例外及 2～5 維 rank 共享規則，序列化報告不讀權重；125 項相關測試與十種合法實際 CPU 對照通過。Chrome／Edge 的五個原生情境、十二份實際下載及其中四份下載的真正 CPU 已[獨立核對](results/batch-matmul-candidate.json)，32px 與全部 Worker／自有程序正常退出。必要發布關卡仍待完成，正式版本維持 v1.4.1，沒有將舊成功部署重跑。
