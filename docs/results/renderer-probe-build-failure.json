@@ -1,0 +1,21 @@
+{
+  "format": "model-lens-public-probe-build-failure-summary",
+  "status": "failed-before-browser-or-model",
+  "run": 41261551022,
+  "source": "7985a1805d0f5fe420c6eb2e8f1f20dd7257c56d",
+  "tree": "c23fc887bce3df5cd0175c88fe27ea3f544875ac",
+  "artifact": 13065482068,
+  "providerDigest": "sha256:5775c3321b1244c78946b3526d03ad50a58523671a9414c0cea48c01ce8bbe7d",
+  "reportSHA256": "f5053b42804a42bce6f3694f67eabf67f64efb8e15771f30cd89d2d3f2ba80dc",
+  "causeCode": "builder-output-contract",
+  "causeVerifiedByExactMessageHash": true,
+  "modelsOpened": 0,
+  "memorySamples": 0,
+  "correction": "Probe core now uses a unique repository build child;report and fixture locations stay separate. Builder guard unchanged.",
+  "regression": "Real buildDestination rejects the old output and accepts the corrected location;before red,after38selectedpass",
+  "rawEvidenceRetainedLocally": true,
+  "releaseEvidenceEligible": false,
+  "originalFailedGate": 41252363060,
+  "published": false,
+  "goalComplete": false
+}

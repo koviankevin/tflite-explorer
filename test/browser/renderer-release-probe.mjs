@@ -15,7 +15,7 @@ import {OwnedProcessTree,readProcessTable,findOwnedBrowserRoot,waitOwnedProcessE
 import {createProcessMemoryProbe} from './process-memory-profile.mjs';
 import {modelWorkerHeap} from './worker-heap.mjs';
 import {installLifecycleAudit} from './lifecycle-audit.mjs';
-import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport} from './renderer-release-policy.mjs';
+import {RENDERER_RELEASE_PLAN as policy,createRendererProjection,summarizeRendererRelease,assertPublicRendererReport,rendererProbeLocations} from './renderer-release-policy.mjs';
 
 const root=fileURLToPath(new URL('../../',import.meta.url));process.chdir(root);
 const reportPath=path.resolve(process.env.RENDERER_PROBE_REPORT||'test-results/renderer-release-probe.json');
@@ -37,9 +37,9 @@ try{
     report.source=gitSource();assert.equal(report.source.dirty,false);report.node=process.version;
     const optional=name=>readFile(name,'utf8').then(v=>v.trim()).catch(()=>null),[limit,current,disk]=await Promise.all([optional('/sys/fs/cgroup/memory.max'),optional('/sys/fs/cgroup/memory.current'),statfs(os.tmpdir())]);
     assert.ok((limit&&limit!=='max'?Number(limit)-Number(current):os.freemem())>=4*1024**3);assert.ok(disk.bavail*disk.bsize>=8*1024**3);
-    const directory=path.join(path.dirname(reportPath),'renderer-release-fixtures');await mkdir(directory);
-    stage='build';const built=await buildSite({output:path.join(directory,'core')});assert.equal(built.release.source.commit,report.source.commit);
-    server=createStaticServer(path.join(directory,'core'));server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}/`;
+    const {fixtures:directory,core}=rendererProbeLocations({root,reportPath,nonce:randomBytes(8).toString('hex')});await mkdir(directory);
+    stage='build';const built=await buildSite({output:core});assert.equal(built.release.source.commit,report.source.commit);
+    server=createStaticServer(core);server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}/`;
     for(const plan of policy.cases){
         stage='fixture';const fixture=await writePhysicalFixture(path.join(directory,`${plan.id}.tflite`),{repeats:plan.repeats,weightBytes:plan.weightBytes});assert.equal(fixture.operators,plan.operators);assert.ok(fixture.bytes<16*1024**2);assert.equal(fixture.sha256,fixture.readbackSHA256);
         const result={id:plan.id,status:'running',fixture:{bytes:fixture.bytes,operators:fixture.operators,weightBytes:fixture.weightBytes,sha256:fixture.sha256,readbackSHA256:fixture.readbackSHA256},samples:[]},privateCase={id:plan.id,workers:[],native:[]};report.cases.push(result);privateReport.cases.push(privateCase);

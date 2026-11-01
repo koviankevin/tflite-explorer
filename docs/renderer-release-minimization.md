@@ -13,3 +13,11 @@
 由既有 PID／startTicks guard 讀取原生資料，再投影為本次案例內的 ordinal labels；公開 JSON 只接受固定欄位、enum、數字和公開 Git／版本／雜湊字串。拒絕 PID、建立時間、路徑、環境、日誌與任意模型字串；上傳路徑只包含經驗證的單一 numeric report，private report／fixtures 不在 artifact 路徑。每個案例最多 512 個樣本、每個樣本 32 個程序，整份公開報告最多 8 MiB，超限明確失敗。
 
 37 項相關選測通過，涵蓋既有 identity／memory probe、真正入口拒絕非 hosted 環境、結構縮小、延後釋放訊號與負例、缺漏／重用、公開欄位／報告預算、禁止發布，以及真實 workflow 的原件／fixture 上傳拒絕。實際 hosted probe 仍待必要 PR／來源核對後的一次限定執行；尚未取得這個最小案例的量測結果。
+
+## 第一次執行與建置位置修正
+
+PR #211 的 898 項 Node 測試通過、35 項既有選做略過，79 項必要契約全通過，實際受測 tree 與主分支相同。其後限定的一次 [41261551022](https://github.com/koviankevin/tflite-explorer/actions/runs/41261551022) 在 build 階段失敗，模型與瀏覽器尚未開啟，記憶體樣本為零。
+
+原因是實驗將 core 輸出放在 runner 暫存目錄，違反既有 `buildDestination()` 僅接受專案輸出目錄的守門。從原報告的錯誤雜湊，與直接執行真正 builder guard 的錯誤逐字雜湊核對一致；[公開摘要](results/renderer-probe-build-failure.json)只列固定原因、來源、計數與 provider 校驗值，原始日誌與證據留在本機。
+
+修正將 core 改放在專案 `build/` 下的獨立新目錄，報告／fixture 位置分開，沒有放寬 builder guard。實際 builder 契約回歸先重現相同拒絕，再驗證新位置可接受、原位置仍拒絕，相關選測增為 38 項且全通過。必要 PR／來源核對後，以修正來源事先限定一次 probe；原失敗和正式大模型失敗都不改列成功，也不重新執行原關卡。
