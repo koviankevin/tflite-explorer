@@ -8,7 +8,7 @@ const hash=b=>createHash('sha256').update(b).digest('hex');
 
 export async function runtimePartialIOFlow({page,read,base,directory,check}){
     const workers=[],report={status:'failed',cases:[],modelWorkers:0,manualRuntimeWorkers:0,downloads:0};
-    const onWorker=w=>{const row={url:w.url(),closed:false};workers.push(row);w.once('close',()=>{row.closed=true;});};
+    const onWorker=w=>{if(!/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(w.url()))return;const row={url:w.url(),closed:false};workers.push(row);w.once('close',()=>{row.closed=true;});};
     const onDownload=()=>report.downloads++;page.on('worker',onWorker);page.on('download',onDownload);
     const until=async(fn,...args)=>{const end=Date.now()+35000;while(!await read(fn,...args)){assert.ok(Date.now()<end,'Partial IO UI timeout: '+fn);await new Promise(r=>setTimeout(r,60));}};
     const ready=()=>until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')==='false'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false');
