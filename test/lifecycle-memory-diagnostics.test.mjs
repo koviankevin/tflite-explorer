@@ -24,6 +24,12 @@ test('phase/ten-second detail cadence does not suppress the original per-sample 
     for(const [i,s]of samples.entries()){clock(s.elapsedMs+1);await diagnostic.capture(i,[identity],s,metrics);}
     const p=diagnostic.finish(samples);assert.equal(p.samples.length,4);assert.equal(p.details.length,3);assert.equal(commands.length,9);assert.equal(p.summary.observations,4);
 });
+
+test('every RSS anchor retains heap capacity and explicit settle points retain backing details',async()=>{
+    const {diagnostic,commands,clock}=setup(),samples=[anchor(),anchor(11),anchor(12)];
+    for(const [i,s]of samples.entries()){clock(s.elapsedMs+1);await diagnostic.capture(i,[identity],s,[{name:'JSHeapUsedSize',value:32},{name:'JSHeapTotalSize',value:128+i}],{settle:i===2});}
+    const p=diagnostic.finish(samples);assert.deepEqual(p.samples.map(s=>s.performanceHeap.totalBytes),[128,129,130]);assert.equal(p.details.length,2);assert.equal(p.details[1].trigger,'settle');assert.equal(commands.length,6);
+});
 test('overlapping captures retain their original sample indices rather than completion order',async()=>{
     let release;const barrier=new Promise(resolve=>release=resolve);let reads=0;
     const {diagnostic,clock}=setup({readText:async p=>{if(++reads===1)await barrier;return p.endsWith('/stat')?procStat():status;}}),samples=[anchor(),anchor(11)];clock(30);

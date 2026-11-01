@@ -85,11 +85,11 @@ async function processRss(){
     }
     return {...processTree.sample(native.rows),privateCommitBytes:native.rows.reduce((n,r)=>n+r.privateCommitBytes,0)};
 }
-async function sample(){
+async function sample({settle=false}={}){
     const {diagnosticIdentities,...memory}=await processRss(),{metrics}=await cdp.send('Performance.getMetrics'),mainHeapBytes=metrics.find(m=>m.name==='JSHeapUsedSize')?.value;
     assert.ok(Number.isFinite(mainHeapBytes)&&mainHeapBytes>0,'Main heap unavailable.');
     const sample={phase,elapsedMs:Date.now()-Date.parse(report.startedAt),...memory,mainHeapBytes};if(soak)sample.activeElapsedMs=activeElapsed();const index=report.samples.length;report.samples.push(sample);
-    if(memoryDiagnostics)await memoryDiagnostics.capture(index,diagnosticIdentities,sample,metrics);
+    if(memoryDiagnostics)await memoryDiagnostics.capture(index,diagnosticIdentities,sample,metrics,{settle});
     return sample;
 }
 async function waitFor(fn,timeout=30000){const until=Date.now()+timeout;while(!await readPage(fn)){if(Date.now()>until)throw Error(`Timed out: ${fn}`);await wait(100);}}
@@ -241,7 +241,7 @@ try{
         const compositionFiles=soak?[]:await physicalComposition({page,read:readPage,waitFor,choose,ready,match,closeModel,browserCDP,fixture:report.fixture,policy,cycle,entry,directory:temporary,hashes,setPhase:value=>{phase=value;}});
         if(soak){phase=`cycle-${cycle}-draft-backup`;await draftRecovery.finishCycle(entry);}
         phase=`cycle-${cycle}-release`;await waitFor(()=>globalThis.__lifecycle.urls.every(item=>item.revoked),policy.urlReleaseTimeoutMs);
-        const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample());}
+        const settled=[];for(let i=0;i<policy.settleSamples;i++){await wait(1000);settled.push(await sample({settle:true}));}
         entry.closedRssBytes=median(settled.map(s=>s.rssBytes));entry.closedMainHeapBytes=median(settled.map(s=>s.mainHeapBytes));entry.fileInputEmpty=await readPage(()=>document.querySelector('#model-file').files.length===0);entry.liveModelWorkers=page.workers().filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url())).length;entry.activeBlobUrls=await readPage(()=>globalThis.__lifecycle.urls.filter(item=>!item.revoked).length);
         await rm(child);for(const filename of [...editedFiles,...compositionFiles])await rm(filename);
         if(soak){entry.activeEndMs=activeElapsed();report.soak.activeDurationMs=entry.activeEndMs;if(cycle%policy.cycles===0)await persistReport();}
