@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {navigateGraph,isGraphPanKey} from '../src/graph-navigation.js';
 import {overviewLabel,fitOverviewText} from '../src/overview-label.js';
-import {graphNavigationRequired,graphFocusNavigationRequired} from './browser/release-features.mjs';
+import {graphNavigationRequired,graphFocusNavigationRequired,graphPointerNavigationRequired} from './browser/release-features.mjs';
 
 test('navigation acceptance starts at v1.5.0 and remains required in later versions',()=>{
     for(const version of ['0.2.0-preview.34','1.0.0','1.4.8'])assert.equal(graphNavigationRequired(version),false);
@@ -37,4 +37,10 @@ test('fitted pan and Q/E acceptance starts at v1.6.0 without changing immutable 
     for(const version of ['0.2.0-preview.34','1.0.0','1.4.8','1.5.0','1.5.1'])assert.equal(graphFocusNavigationRequired(version),false);
     for(const version of ['1.6.0','1.6.1','2.0.0'])assert.equal(graphFocusNavigationRequired(version),true);
     assert.throws(()=>graphFocusNavigationRequired('invalid'));
+});
+
+test('mixed mouse/keyboard acceptance is required from v1.6.1 and preserves immutable v1.6.0',()=>{
+    for(const v of ['0.2.0-preview.34','1.0.0','1.5.9','1.6.0'])assert.equal(graphPointerNavigationRequired(v),false);
+    for(const v of ['1.6.1','1.6.2','1.7.0','2.0.0'])assert.equal(graphPointerNavigationRequired(v),true);
+    assert.throws(()=>graphPointerNavigationRequired('invalid'));
 });
