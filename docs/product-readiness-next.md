@@ -1,6 +1,6 @@
-# 商品等級後續工作（進行中）
+# 商品等級後續工作（暫停，保留未完成項目）
 
-使用者於 2026-10-31 將目標接續為「商品等級」。目前正式版為 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6)／build `6d032862ea5b71d5`，329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對；[本版收據](results/transform-metadata-v1.4.6-published.json)保留來源與範圍。完整商品化目標仍進行中，尚未完成項目保留，不以有限案例或綠燈宣告整體完成。
+使用者於 2026-10-31 接續「商品等級」，之後要求暫停其他商品化工作；2026-11-02 另授權檢查目前問題、修正並部署。本次已完成 [v1.4.8](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.8)／build `391ebd7faebe5ad6` 的 Canvas 排版與側欄修正；329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載及權威 deployment 已核對，見[正式交付](overview-layout.md#v148-正式交付)。完整商品化工作仍暫停，以下歷史證據與尚未完成項目保留，不以本次有限驗收宣告整體完成。
 
 SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度漏檢及逐 OP 報告已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) [正式交付](transform-metadata-validation.md#v146-正式交付)。五份原始錯誤檔、239 項相關測試、十三組 CPU suite 情境及兩端十二份實際下載／四份下載後 CPU、pattern 正負例與 32px 保留[候選來源](results/transform-metadata-candidate.json)。Edge 原生通過，Chrome 功能通過但十秒正常關閉失敗；正式站另有獨立來源證據。本次 CI 首次八分鐘逾時與只補跑失敗驗證一次的結果分開保留。
 
