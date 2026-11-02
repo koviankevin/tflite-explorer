@@ -1,0 +1,411 @@
+{
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-02T13:25:54.876Z",
+  "source": "2648437c63a449174d9cd08767942e6dbe856221",
+  "tree": "f3e80539410c5f2778be33ef6d18811dbd65807d",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.5.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "2648437c63a449174d9cd08767942e6dbe856221",
+      "tree": "f3e80539410c5f2778be33ef6d18811dbd65807d",
+      "committedAt": "2026-11-02T21:09:02+08:00",
+      "dirty": false
+    },
+    "buildId": "f019cdbbb96af0dc"
+  },
+  "run": {
+    "id": 41451270113,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41451270113",
+    "attempt": 1
+  },
+  "releaseId": 431490967,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.5.0",
+  "publishedAt": "2026-11-02T13:24:03Z",
+  "siteId": "2b47867c5fbea0e990a9085b4f4a9b5127bb2411f342339c56a4ad6253fa1e31",
+  "siteManifestSHA256": "719678ac8e84eec9c04909abadd8f3c9f47f5333a36ab60391608105296e6817",
+  "coreFiles": 331,
+  "siteFiles": 1487,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "sharedTimeoutProof": {
+    "status": "passed",
+    "workerId": "cdbe51ee-5d2e-4139-842d-31c85b451f0e:runtime:3",
+    "fixtureSHA256": "e24ec3ce32ef0f49ddc49ac1ac630d68185dcb0d5ffb7ca8de9c840198cafe77",
+    "build": "f019cdbbb96af0dc",
+    "workerLifetimeMs": 31985,
+    "guideAndExecutionObservedSameNativeHandle": true
+  },
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": 46301184,
+      "mainHeapDriftBytes": -12636572,
+      "closedRssSlopeBytesPerCycle": 8940865.82857143,
+      "sampledPeakRssBytes": 830459904,
+      "maxSampleGapMs": 684,
+      "sampledPeakGrowthBytes": 53833728
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.5.0-f019cdbbb96af0dc.zip",
+      "bytes": 41325269,
+      "sha256": "c57f73681505eeab47fc6fa80dfedf589a28fe77ca6f04558435f9d3722914d7"
+    },
+    {
+      "name": "model-lens-public-1.5.0-f019cdbbb96af0dc.zip.sha256",
+      "bytes": 111,
+      "sha256": "bf033a27d0e4380aa86f95ff4ae57a94f186905ba76977b30edd8524133919ca"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 210123,
+      "sha256": "d9c44f4ea4572b204a74e8c39cb2952c537683443cdf2403e9779888fedc8513"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 53588,
+      "sha256": "a06c41bdd1ba5d020c42baae0cf471c8e455e4230f5da3912754eb51bc1a6b86"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7493084521,
+    "controllerSource": "2648437c63a449174d9cd08767942e6dbe856221",
+    "runId": 41451270113,
+    "attempt": 1,
+    "jobId": 125297226179,
+    "siteId": "2b47867c5fbea0e990a9085b4f4a9b5127bb2411f342339c56a4ad6253fa1e31",
+    "legacy": false
+  },
+  "reportProvenance": {
+    "status": "passed-same-job-log-provenance",
+    "method": "same-job-original-log-step-containment-and-upload-binding",
+    "jobId": 125297668947,
+    "runId": 41451270113,
+    "source": "2648437c63a449174d9cd08767942e6dbe856221",
+    "artifactId": 13145990206,
+    "artifactDigest": "sha256:3a19ef22ae44baaff2b6adafcc0130c3a9896597332447628b006cbfb7bf18d1",
+    "artifactBytes": 571856,
+    "reportStartedAt": "2026-11-02T13:17:09.943Z",
+    "reportFinishedAt": "2026-11-02T13:23:33.859Z",
+    "stepStartedAt": "2026-11-02T13:17:09.285Z",
+    "stepSummaryAt": "2026-11-02T13:23:33.869Z",
+    "artifactFinalizedAt": "2026-11-02T13:23:34.963Z",
+    "apiTimeContainment": "passed",
+    "clockNormalization": false
+  },
+  "broadGoal": "paused",
+  "limits": [
+    "Public synthetic cases; company models/dialects are not part of acceptance.",
+    "Canvas compact layout and graph navigation changed; model data are unchanged."
+  ],
+  "mainGatesSource": "dad228e4256d1adc810f5b6a0ff7e25a50e49afd",
+  "mainGateRuns": {
+    "core": 41447737899,
+    "browser": 41447746225,
+    "contract": 41447754476,
+    "site": 41447762648
+  },
+  "node": {
+    "tests": 1094,
+    "pass": 1059,
+    "existingOptionalSkipped": 35,
+    "fail": 0
+  },
+  "navigation": [
+    {
+      "mode": "svg",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": 112,
+          "after": 112,
+          "expected": 112
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 112,
+          "after": 32,
+          "expected": 32
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": 920,
+          "after": 1000,
+          "expected": 1000
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": 1000,
+          "after": 920,
+          "expected": 920
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": 32,
+          "after": 112,
+          "expected": 112
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 112,
+          "after": 0,
+          "expected": 0
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": 920,
+          "after": 1160,
+          "expected": 1160
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 1160,
+          "after": 920,
+          "expected": 920
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": true
+    },
+    {
+      "mode": "edit",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": 1989,
+          "after": 2069,
+          "expected": 2069
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 2069,
+          "after": 1989,
+          "expected": 1989
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": 613,
+          "after": 693,
+          "expected": 693
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": 693,
+          "after": 613,
+          "expected": 613
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": 1989,
+          "after": 2229,
+          "expected": 2229
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 2229,
+          "after": 1989,
+          "expected": 1989
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": 613,
+          "after": 853,
+          "expected": 853
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 853,
+          "after": 613,
+          "expected": 613
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": false
+    },
+    {
+      "mode": "canvas",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -89.99410623064392,
+          "after": -9.994106230643922,
+          "expected": -9.994106230643922
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -9.994106230643922,
+          "after": -89.99410623064392,
+          "expected": -89.99410623064392
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -16,
+          "after": 224,
+          "expected": 224
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 224,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -89.99410623064392,
+          "after": 150.00589376935608,
+          "expected": 150.00589376935608
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 150.00589376935608,
+          "after": -89.99410623064392,
+          "expected": -89.99410623064392
+        }
+      ],
+      "selected": "已選取 7 個 layers · 4 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "formKeysPreserved": false
+    },
+    {
+      "mode": "canvas",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -90.30357012981824,
+          "after": -10.30357012981824,
+          "expected": -10.30357012981824
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -10.30357012981824,
+          "after": -90.30357012981824,
+          "expected": -90.30357012981824
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -16,
+          "after": 224,
+          "expected": 224
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 224,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -90.30357012981824,
+          "after": 149.69642987018176,
+          "expected": 149.69642987018176
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 149.69642987018176,
+          "after": -90.30357012981824,
+          "expected": -90.30357012981824
+        }
+      ],
+      "selected": "已選取 4 個 layers · 3 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "formKeysPreserved": false
+    }
+  ],
+  "nativeVisual": {
+    "status": "passed-with-local-injection-blocked",
+    "source": "2648437c63a449174d9cd08767942e6dbe856221",
+    "browser": "isolated headless installed Edge",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "actualReleaseText": "版本1.5.0發行類型公開版建置編號f019cdbbb96af0dc來源 commit2648437c63a449174d9cd08767942e6dbe856221來源狀態固定 commit 建置",
+    "font": "32",
+    "geometry": {
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "canvas": {
+        "x": 344,
+        "y": 212,
+        "width": 1022,
+        "height": 526,
+        "top": 212,
+        "right": 1366,
+        "bottom": 738,
+        "left": 344
+      }
+    },
+    "pan": {
+      "before": -2233.0416666666665,
+      "normal": -2313.0416666666665,
+      "after": -2073.0416666666665
+    },
+    "browserClosed": true,
+    "limit": "Local antivirus injected a foreign script and malformed CSP. The foreign request was blocked, all original console text is retained, and no browser/security setting was changed. This does not replace the clean isolated CI gate."
+  },
+  "productization": "paused",
+  "sitesSync": "not requested; explicit GitHub-only scope"
+}

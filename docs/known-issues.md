@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6)／build `6d032862ea5b71d5`。本頁保留公開版仍待處理的功能界線與驗收缺口；內網及私有 dialect 依使用者指示自行修改。
+目前固定版本為 [v1.5.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.5.0)／build `f019cdbbb96af0dc`。[緊湊 Canvas 與鍵盤移圖](overview-layout.md#v150-正式交付)已交付；本頁保留公開版仍待處理的功能界線與驗收缺口，內網及私有 dialect 依使用者指示自行修改。歷史 Windows Chrome 正常關閉與防毒注入限制不因本次有限案例改列已修復。
 
 v1.4.6 的 SQUEEZE／CONCATENATION [metadata 修正](transform-metadata-validation.md#v146-正式交付)已交付；已知 axis／rank／非單位維度錯誤先拒絕，完整動態 shape／其他 packing 或 kernel 條件仍明列未檢查。本次原生 Chrome 正常關閉仍失敗。正式驗收第一次被原八分鐘工作上限取消，保留官方 annotation 及 artifact；只補跑失敗驗證一次後成功，未重跑部署或放寬規則。這仍是 CI 時間餘裕的風險，不宣稱逾時根因已永久修復。
 

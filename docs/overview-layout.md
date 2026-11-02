@@ -25,3 +25,13 @@ Canvas 節點依標題與位置摘要估算寬度，不再讓短名稱使用固�
 Edge 正式站另外以 1366×768、32px 實際開啟本機合成 MLIR（2,125 OP、分支／匯合／迴圈與 custom OP），載入既存 pattern 並得到預期 529 筆匹配，建立 1,608 節點 Canvas 總覽；定位第 251 筆並展開後為 1,609 節點，實際拖曳框選一個 OP，滾輪縮放與鍵盤平移後選取保留，關閉模型也沒有 console error。原本 v1.4.7 的手動檢查找到側欄在清空 graph target 後才發出 select／blur；v1.4.8 先關閉側欄，再釋放舊 target，並以三個實際 Netron 事件回歸案例鎖定。v1.4.7 的成功自動化結果、固定下載與該手動錯誤紀錄均保留。
 
 上述為公開合成資料驗收；不代表公司模型、私有 dialect、任意 kernel 或編譯器語意已驗收。密集圖的通道重用仍可能產生交疊，長鏈縮到全圖仍需放大或搜尋定位。
+
+## v1.5.0 正式交付
+
+2026-11-02 完成 [v1.5.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.5.0)，來源 `2648437c63a449174d9cd08767942e6dbe856221`，build `f019cdbbb96af0dc`；[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41451270113)的 prepare、deploy、verify_live、release 全部成功。331 核心檔、完整站台 1,487 檔、四份真正公開下載的大小／SHA-256／manifest、Latest／tag 與 GitHub Pages deployment 均已核對。[交付收據](results/compact-navigation-v1.5.0-published.json)保留來源、關卡與鍵盤原始量測摘要。
+
+原有 38 項正式 HTTPS 操作完整保留，另外在 SVG、編輯圖及跨 block 的分支／迴圈 Canvas 案例驗證 WASD／Shift 的八種實際按鍵、80／240px 距離、選取保留與搜尋框保護；匯出重開與原 pattern 檢查仍通過。1,094 項 Node 檢查有 1,059 通過與 35 項原有選做略過；79 項發布契約、九個 fresh-process 效能量測及 1,349,965,216-byte／21,005 OP 實體 TFLite 八輪關卡均以原有規則通過。發布仍保留 15 個字框、19 個手動 runtime 情境與八輪／24 次 CPU 驗收，不放寬時間、RSS 或 URL 政策。
+
+Windows Edge 正式站另以獨立無介面環境開啟公開合成 MLIR（2,125 OP、529 筆匹配），收合為 1,608 個節點、展開定位第 251 筆後為 1,609 個節點；1366×768／32px 無頁面橫向溢位，實際移圖距離符合 80／240px，關閉模型與瀏覽器成功。[32px 畫面](results/compact-navigation-32px-edge.png)顯示節點與分支／匯合。額外測試的暫存 profile／DOM 讀取與非同步等待失敗皆保留本機原始紀錄；本機防毒注入的外部請求已封鎖，原始 CSP／載入警告另列環境限制，沒有關閉防毒或修改瀏覽器安全設定。此額外結果不取代乾淨 CI 的來源關卡，也不宣稱所有 Windows 環境問題均已解決。
+
+本機合成 20,001 OP 排版五個量測樣本的中位數由約 105ms 增至 153ms，32px 短名稱寬度由 928 降到約 216～273；這是有界文字估算的成本，不是瀏覽器或 1GB 開檔 SLA。正式效能關卡保持原上限。公開合成驗收不代表公司模型、私有 dialect 或任意 kernel 語意已驗收；密集連線仍可能交疊。
