@@ -45,3 +45,9 @@ export function graphNavigationRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=5;
 }
+
+export function graphFocusNavigationRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=6;
+}

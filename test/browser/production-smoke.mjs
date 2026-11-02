@@ -1,5 +1,5 @@
 import {assertSharedTimeoutProof} from './shared-timeout-proof.mjs';
-import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired} from './release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired,graphFocusNavigationRequired} from './release-features.mjs';
 import {runtimePartialIOFlow} from './runtime-partial-io-flow.mjs';
 import {operatorValidationFlow} from './operator-validation-flow.mjs';
 import {quantizationValidationFlow} from './quantization-validation-flow.mjs';
@@ -81,7 +81,7 @@ try{
         report.staticVerification={status:'passed',siteId:site.siteId,siteManifestSHA256:sha256(raw),files:verified.checks.length,rootEntrySHA256:verified.rootEntrySHA256,checks:verified.checks};
     }
     const temporary=await mkdtemp(path.join(process.env.RUNNER_TEMP,'production-models-'));
-    const resolved=await resolveLiveCore({base,expectedBuild:expected,expectedSiteId:process.env.EXPECTED_SITE_ID||''}),{manifest,coreBasePath}=resolved;const features=browserReleaseFeatures(manifest.release.version);const navigation=graphNavigationRequired(manifest.release.version);report.graphNavigationRequired=navigation;report.releaseFeatures=features;report.fontReflowRequired=fontReflowRequired(manifest.release.version);report.siteRelease=manifest.release;report.siteId=resolved.site?.siteId??null;report.coreBasePath=coreBasePath;
+    const resolved=await resolveLiveCore({base,expectedBuild:expected,expectedSiteId:process.env.EXPECTED_SITE_ID||''}),{manifest,coreBasePath}=resolved;const features=browserReleaseFeatures(manifest.release.version);const navigation=graphFocusNavigationRequired(manifest.release.version)?'focus':graphNavigationRequired(manifest.release.version);report.graphNavigationRequired=Boolean(navigation);report.graphFocusNavigationRequired=navigation==='focus';report.releaseFeatures=features;report.fontReflowRequired=fontReflowRequired(manifest.release.version);report.siteRelease=manifest.release;report.siteId=resolved.site?.siteId??null;report.coreBasePath=coreBasePath;
     const demoEntry=manifest.files.find(f=>f.path==='demo.tflite');assert.ok(demoEntry&&demoEntry.bytes<1024**2);
     const demoResponse=await readStaticFile(base,coreBasePath+'demo.tflite',{maxBytes:demoEntry.bytes}),demoBytes=demoResponse.bytes;assert.equal(demoBytes.length,demoEntry.bytes);assert.equal(sha256(demoBytes),demoEntry.sha256);const demo=path.join(temporary,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Deployment smoke RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});

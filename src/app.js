@@ -2,7 +2,8 @@ import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
-import {navigateGraph,GRAPH_NAVIGATION_HELP} from './graph-navigation.js';
+import {navigateGraph,isGraphNavigationKey,GRAPH_NAVIGATION_HELP} from './graph-navigation.js';
+import {attachSVGNavigation,panSVG,resetSVGPan} from './svg-navigation.js';
 import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
@@ -457,6 +458,7 @@ function renderMatchBlocks(item) {
 }
 function focusMatchBlock(graph) {
     if(!renderedGraph?.combined || !view.target)return;
+    resetSVGPan(view.target,$('canvas'));
     if(graph!==undefined){setCurrentGraph(graph);if(pickingPattern)syncCaptureGraph();}
     for(const {node,element:el} of renderedNodes)el?.classList.toggle('cfg-focused',graph!==undefined && node.sourceGraph===graph);
     if(selection?.blocks)renderMatchBlocks(selection);
@@ -702,6 +704,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
             renderedGraph = null;
             await view._updateTarget(currentModel, [{ target: graph, signature: null }]);
             if (generation !== renderGeneration) { renderedGraph = null; return; }
+            attachSVGNavigation(view.target,$('canvas'));
             if (Number.isFinite(zoom) && view.target) view.target.zoom = zoom;
             else if(!viewport && (dto.combined || dto.overview))fitCombinedGraph();
             renderedGraph = {
@@ -1091,6 +1094,10 @@ function captureNodeEvent(event) {
     if(!location){status('這是控制流程顯示標記；請選取原始 operator layer。');return;}
     togglePickedNode(location);
 }
+$('target').addEventListener('pointerdown',event=>{
+    if(event.button!==0||event.target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"])'))return;
+    (event.target.closest('[data-model-node][tabindex]') || $('target')).focus({preventScroll:true});
+},true);
 const layerMarquee=rectangleSelection($('target'),{
     enabled:()=>pickingPattern && !virtualOverview && $('target').getAttribute('aria-busy')!=='true',
     candidates:()=>renderedNodes.map(entry=>{const location=layerLocation(entry,currentGraph);return {element:entry.element,location,selected:!!location&&!!($('capture-cfg').checked?cfgSelections.get(location.graph):pickedNodes)?.has(location.node)};}).filter(c=>c.element && c.location),
@@ -1327,10 +1334,12 @@ $('zoom-in').onclick = () => { if(virtualOverview)virtualOverview.zoom(1.5);else
 $('zoom-out').onclick = () => { if(virtualOverview)virtualOverview.zoom(1/1.5);else if (view.target) view.zoomOut(); };
 $('zoom-reset').onclick = () => { if(virtualOverview)virtualOverview.fit();else if (view.target) view.resetZoom(); };
 $('keyboard-graph').onclick=()=>{(virtualOverview?$('target').querySelector('canvas.overview-canvas'):$('target'))?.focus({preventScroll:true});status(GRAPH_NAVIGATION_HELP);};
-$('target').addEventListener('keydown',event=>{
-    if(virtualOverview||!view.target||tabs.busy||document.querySelector('dialog[open]'))return;
-    navigateGraph(event,{pan(x,y){layerMarquee.cancel();delete view.target._scrollLeft;delete view.target._scrollTop;$('target').scrollLeft+=x;$('target').scrollTop+=y;},zoom(factor){layerMarquee.cancel();view.target.zoom*=factor;},fit(){layerMarquee.cancel();fitCombinedGraph();const target=$('target');target.scrollTo({left:Math.max(0,(target.scrollWidth-target.clientWidth)/2),top:Math.max(0,(target.scrollHeight-target.clientHeight)/2),behavior:'instant'});delete view.target._scrollLeft;delete view.target._scrollTop;}});
-});
+let graphNavigationRevision=0;
+function navigateModelGraph(event){
+    if((!view.target&&!virtualOverview)||tabs.busy||$('target').getAttribute('aria-busy')==='true'||document.querySelector('dialog[open]'))return false;
+    return navigateGraph(event,{pan(x,y){graphNavigationRevision++;layerMarquee.cancel();if(virtualOverview)virtualOverview.pan(x,y);else panSVG($('target'),view.target,$('canvas'),x,y);},zoom(factor){graphNavigationRevision++;layerMarquee.cancel();if(virtualOverview)virtualOverview.zoom(factor);else view.target.zoom*=factor;},fit(){graphNavigationRevision++;layerMarquee.cancel();if(virtualOverview){virtualOverview.fit();return;}resetSVGPan(view.target,$('canvas'));fitCombinedGraph();const target=$('target');target.scrollTo({left:Math.max(0,(target.scrollWidth-target.clientWidth)/2),top:Math.max(0,(target.scrollHeight-target.clientHeight)/2),behavior:'instant'});delete view.target._scrollLeft;delete view.target._scrollTop;}});
+}
+$('target').addEventListener('keydown',event=>{if(!virtualOverview)navigateModelGraph(event);});
 $('graph-font-size').onchange = () => {
     const value = $('graph-font-size').value;
     if (!graphFontSizes.includes(value)) return;
@@ -1351,10 +1360,12 @@ $('dismiss-notice').onclick = () => $('notice').hidden = true;
 document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer?.files[0]) openFile(e.dataTransfer.files[0]); });
 document.addEventListener('keydown', (e) => {
-    if(e.defaultPrevented||e.isComposing||e.altKey||document.querySelector('dialog[open]'))return;
+    if(e.defaultPrevented||e.altKey||document.querySelector('dialog[open]'))return;
     if(tabs.busy)return;
     if(runWorkspace.active){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
     if(editWorkspace.active){if(editWorkspace.handleKey(e))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();$('open-model').click();}return;}
+    if(isGraphNavigationKey(e)&&!$('target').contains(e.target)&&navigateModelGraph(e))return;
+    if(e.isComposing)return;
     if (e.key === 'Escape' && pickingPattern) setPickingPattern(false);
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); if (kind === 'patterns') setKind('layers'); $('query').focus(); }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); $('open-model').click(); }
@@ -1501,8 +1512,8 @@ new MutationObserver(() => {
     const open=$('sidebar').style.opacity==='1',opening=open&&!document.body.classList.contains('details-open');
     document.body.classList.toggle('details-open',open);
     if(opening && innerWidth>900 && innerWidth<=1600 && detailNode && !virtualOverview) {
-        const node=detailNode,generation=renderGeneration;
-        requestAnimationFrame(()=>{if(generation!==renderGeneration || !document.body.classList.contains('details-open'))return;const entry=renderedNodes.find(e=>e.node===node || e.node.identifier===node.identifier);if(entry?.element)view.target?.scrollTo([entry.element]);});
+        const node=detailNode,generation=renderGeneration,navigation=graphNavigationRevision;
+        requestAnimationFrame(()=>{if(generation!==renderGeneration || navigation!==graphNavigationRevision || !document.body.classList.contains('details-open'))return;const entry=renderedNodes.find(e=>e.node===node || e.node.identifier===node.identifier);if(entry?.element)view.target?.scrollTo([entry.element]);});
     }
 }).observe($('sidebar'), { attributes: true, attributeFilter: ['style'] });
 resizeInFrame($('capture-toolbar'),()=>document.documentElement.style.setProperty('--capture-space',`${Math.ceil($('capture-toolbar').getBoundingClientRect().height)+24}px`));
