@@ -1,0 +1,923 @@
+{
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-02T14:53:44.213Z",
+  "source": "88bdb2eed8d436dd1620c3399994d8a609148def",
+  "tree": "66adece145a47ecd74611c6f19cda19ce313a55f",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.6.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "88bdb2eed8d436dd1620c3399994d8a609148def",
+      "tree": "66adece145a47ecd74611c6f19cda19ce313a55f",
+      "committedAt": "2026-11-02T22:30:32+08:00",
+      "dirty": false
+    },
+    "buildId": "bd4c7fe66904b362"
+  },
+  "run": {
+    "id": 41463108511,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41463108511",
+    "attempt": 2
+  },
+  "releaseId": 431586518,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.0",
+  "publishedAt": "2026-11-02T14:51:22Z",
+  "siteId": "35a55ca92d6d3a0dcb685c429949bd9a84d859094177d1549fb8a582a35a4e6b",
+  "siteManifestSHA256": "992cdefd87a054824acb9937a1098ddea417c77c91aa4e557fa161e1cf1384b1",
+  "coreFiles": 332,
+  "siteFiles": 1490,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "sharedTimeoutProof": {
+    "status": "passed",
+    "workerId": "2c857b6c-755d-4703-883c-4ba5bc65609e:runtime:3",
+    "fixtureSHA256": "e24ec3ce32ef0f49ddc49ac1ac630d68185dcb0d5ffb7ca8de9c840198cafe77",
+    "build": "bd4c7fe66904b362",
+    "workerLifetimeMs": 31982,
+    "guideAndExecutionObservedSameNativeHandle": true
+  },
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -13754368,
+      "mainHeapDriftBytes": -12893124,
+      "closedRssSlopeBytesPerCycle": 7003691.885714286,
+      "sampledPeakRssBytes": 830935040,
+      "maxSampleGapMs": 535,
+      "sampledPeakGrowthBytes": 52641792
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.6.0-bd4c7fe66904b362.zip",
+      "bytes": 41329882,
+      "sha256": "dba2ad9ea192b4635fbca80d4d38789ffbd67a2f7b1ba080556ca61fff62d4be"
+    },
+    {
+      "name": "model-lens-public-1.6.0-bd4c7fe66904b362.zip.sha256",
+      "bytes": 111,
+      "sha256": "65b2fd101e4c7566b31a4899b8af419bb3999cad646d0313a33ef476b23e6f31"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 210642,
+      "sha256": "12b3671c59458f2f7a0fef6cf07553d0ab471b9fd0cc6b628b2d9be32b3f4170"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 53745,
+      "sha256": "30600580818f15170c7aeecae38ae480183aa04b21896b727ea1a1ab6130117a"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7494845073,
+    "controllerSource": "88bdb2eed8d436dd1620c3399994d8a609148def",
+    "runId": 41463108511,
+    "attempt": 1,
+    "jobId": 125337655170,
+    "siteId": "35a55ca92d6d3a0dcb685c429949bd9a84d859094177d1549fb8a582a35a4e6b",
+    "legacy": false
+  },
+  "reportProvenance": {
+    "status": "passed-same-job-log-provenance",
+    "method": "same-job-original-log-step-containment-and-upload-binding",
+    "jobId": 125342166961,
+    "runId": 41463108511,
+    "source": "88bdb2eed8d436dd1620c3399994d8a609148def",
+    "artifactId": 13152030418,
+    "artifactDigest": "sha256:4a12f6b427433361e4446107fcf902f251a503490e60952192120e6d88ae5eb5",
+    "artifactBytes": 572932,
+    "reportStartedAt": "2026-11-02T14:44:34.733Z",
+    "reportFinishedAt": "2026-11-02T14:50:55.860Z",
+    "stepStartedAt": "2026-11-02T14:44:34.293Z",
+    "stepSummaryAt": "2026-11-02T14:50:55.867Z",
+    "artifactFinalizedAt": "2026-11-02T14:50:57.259Z",
+    "apiTimeContainment": "passed",
+    "clockNormalization": false
+  },
+  "broadGoal": "paused",
+  "limits": [
+    "Public synthetic cases; company models/dialects are not part of acceptance.",
+    "Exploration keyboard routing and SVG camera changed; model data are unchanged."
+  ],
+  "mainGatesSource": "324ea8865a7c23805d5bd75ce856eb57413b591c",
+  "mainGateRuns": {
+    "core": 41447737899,
+    "browser": 41459733788,
+    "contract": 41459752882,
+    "site": 41459769995
+  },
+  "node": {
+    "tests": 1099,
+    "pass": 1064,
+    "existingOptionalSkipped": 35,
+    "fail": 0
+  },
+  "afterOpen": {
+    "mode": "svg",
+    "afterOpen": {
+      "key": "d",
+      "axis": "x",
+      "before": -732.828125,
+      "after": -652.828125,
+      "expected": -652.828125
+    }
+  },
+  "navigation": [
+    {
+      "mode": "svg",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -629.0438232421875,
+          "after": -548.8544921875,
+          "expected": -549.0438232421875
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -548.8544921875,
+          "after": -628.8538208007812,
+          "expected": -628.8544921875
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -235.4879150390625,
+          "after": -155.48858642578125,
+          "expected": -155.4879150390625
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -155.48858642578125,
+          "after": -235.4879150390625,
+          "expected": -235.48858642578125
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -628.8538208007812,
+          "after": -388.8558654785156,
+          "expected": -388.85382080078125
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": -388.8558654785156,
+          "after": -628.8538208007812,
+          "expected": -628.8558654785156
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -235.4879150390625,
+          "after": 4.510040283203125,
+          "expected": 4.5120849609375
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 4.510040283203125,
+          "after": -235.4879150390625,
+          "expected": -235.48995971679688
+        },
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -628.8538208007812,
+          "after": -548.8544921875,
+          "expected": -548.8538208007812
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -548.8544921875,
+          "after": -628.8538208007812,
+          "expected": -628.8544921875
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -235.5033416748047,
+          "after": -155.48858642578125,
+          "expected": -155.5033416748047
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -628.8538208007812,
+          "after": -708.8531494140625,
+          "expected": -708.8538208007812
+        }
+      ],
+      "zooms": [
+        {
+          "key": "q",
+          "before": 81.14422607421875,
+          "after": 57.96014404296875
+        },
+        {
+          "key": "e",
+          "before": 57.96014404296875,
+          "after": 81.14422607421875
+        },
+        {
+          "key": "-",
+          "before": 81.14422607421875,
+          "after": 57.96014404296875
+        },
+        {
+          "key": "=",
+          "before": 57.96014404296875,
+          "after": 81.14422607421875
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": true,
+      "fittedPan": true,
+      "toolbarFocus": true
+    },
+    {
+      "mode": "edit",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": 1989,
+          "after": 2069,
+          "expected": 2069
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 2069,
+          "after": 1989,
+          "expected": 1989
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": 613,
+          "after": 693,
+          "expected": 693
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": 693,
+          "after": 613,
+          "expected": 613
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": 1989,
+          "after": 2229,
+          "expected": 2229
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 2229,
+          "after": 1989,
+          "expected": 1989
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": 613,
+          "after": 853,
+          "expected": 853
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 853,
+          "after": 613,
+          "expected": 613
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": false
+    },
+    {
+      "mode": "canvas",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -89.99410623064392,
+          "after": -9.994106230643922,
+          "expected": -9.994106230643922
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -9.994106230643922,
+          "after": -89.99410623064392,
+          "expected": -89.99410623064392
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -16,
+          "after": 224,
+          "expected": 224
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 224,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -89.99410623064392,
+          "after": 150.00589376935608,
+          "expected": 150.00589376935608
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 150.00589376935608,
+          "after": -89.99410623064392,
+          "expected": -89.99410623064392
+        },
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        }
+      ],
+      "zooms": [
+        {
+          "key": "q",
+          "before": 0.002026774925109131,
+          "after": 0.0014476963750779507
+        },
+        {
+          "key": "e",
+          "before": 0.0014476963750779507,
+          "after": 0.002026774925109131
+        },
+        {
+          "key": "-",
+          "before": 0.002026774925109131,
+          "after": 0.0014476963750779507
+        },
+        {
+          "key": "=",
+          "before": 0.0014476963750779507,
+          "after": 0.002026774925109131
+        }
+      ],
+      "selected": "已選取 7 個 layers · 4 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "formKeysPreserved": false,
+      "fittedPan": true,
+      "toolbarFocus": true
+    },
+    {
+      "mode": "canvas",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -90.30357012981824,
+          "after": -10.30357012981824,
+          "expected": -10.30357012981824
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -10.30357012981824,
+          "after": -90.30357012981824,
+          "expected": -90.30357012981824
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -16,
+          "after": 224,
+          "expected": 224
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": 224,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -90.30357012981824,
+          "after": 149.69642987018176,
+          "expected": 149.69642987018176
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 149.69642987018176,
+          "after": -90.30357012981824,
+          "expected": -90.30357012981824
+        },
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        }
+      ],
+      "zooms": [
+        {
+          "key": "q",
+          "before": 0.0018520586225723743,
+          "after": 0.0013228990161231245
+        },
+        {
+          "key": "e",
+          "before": 0.0013228990161231245,
+          "after": 0.0018520586225723743
+        },
+        {
+          "key": "-",
+          "before": 0.0018520586225723743,
+          "after": 0.0013228990161231245
+        },
+        {
+          "key": "=",
+          "before": 0.0013228990161231245,
+          "after": 0.0018520586225723743
+        }
+      ],
+      "selected": "已選取 4 個 layers · 3 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "formKeysPreserved": false,
+      "fittedPan": true,
+      "toolbarFocus": true
+    }
+  ],
+  "nativeFormal": {
+    "status": "no-reproduction",
+    "target": "https://koviankevin.github.io/tflite-explorer/",
+    "release": "版本1.6.0發行類型公開版建置編號bd4c7fe66904b362來源 commit88bdb2eed8d436dd1620c3399994d8a609148def來源狀態固定 commit 建置",
+    "cases": [
+      {
+        "name": "after-open",
+        "key": "d",
+        "before": {
+          "active": "BODY",
+          "left": 796.08837890625,
+          "top": 312,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 0,
+          "scrollTop": 0,
+          "clientWidth": 1022,
+          "clientHeight": 526,
+          "scrollWidth": 1022,
+          "scrollHeight": 1237,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "after": {
+          "active": "BODY",
+          "left": 716.08837890625,
+          "top": 312,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 704,
+          "scrollTop": 526,
+          "clientWidth": 1022,
+          "clientHeight": 526,
+          "scrollWidth": 2430,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "moved": true
+      },
+      {
+        "name": "keyboard-button-small-svg",
+        "key": "d",
+        "before": {
+          "active": "target",
+          "left": 716.08837890625,
+          "top": 312,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 704,
+          "scrollTop": 526,
+          "clientWidth": 1022,
+          "clientHeight": 526,
+          "scrollWidth": 2430,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "after": {
+          "active": "target",
+          "left": 636.08837890625,
+          "top": 312,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 704,
+          "scrollTop": 526,
+          "clientWidth": 1022,
+          "clientHeight": 526,
+          "scrollWidth": 2430,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "moved": true
+      },
+      {
+        "name": "after-result-click",
+        "key": "s",
+        "before": {
+          "active": "BUTTON",
+          "left": 608.58837890625,
+          "top": -212,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 0,
+          "scrollTop": 524,
+          "clientWidth": 647,
+          "clientHeight": 526,
+          "scrollWidth": 647,
+          "scrollHeight": 1237,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "after": {
+          "active": "BUTTON",
+          "left": 608.08837890625,
+          "top": -292,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 517,
+          "scrollTop": 1050,
+          "clientWidth": 647,
+          "clientHeight": 526,
+          "scrollWidth": 1680,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "moved": true
+      },
+      {
+        "name": "after-blank-graph-click",
+        "key": "a",
+        "before": {
+          "active": "target",
+          "left": 608.08837890625,
+          "top": -292,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 517,
+          "scrollTop": 1050,
+          "clientWidth": 647,
+          "clientHeight": 526,
+          "scrollWidth": 1680,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "after": {
+          "active": "target",
+          "left": 688.08837890625,
+          "top": -292,
+          "width": 118.8720703125,
+          "height": 27,
+          "scrollLeft": 517,
+          "scrollTop": 1050,
+          "clientWidth": 647,
+          "clientHeight": 526,
+          "scrollWidth": 1680,
+          "scrollHeight": 2289,
+          "caption": "完整圖 · 13 / 13 layers"
+        },
+        "moved": true
+      }
+    ],
+    "navigation": {
+      "mode": "svg",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -633.1106567382812,
+          "after": -553.5320434570312,
+          "expected": -553.1106567382812
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -553.5320434570312,
+          "after": -633.5317993164062,
+          "expected": -633.5320434570312
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -239.90509033203125,
+          "after": -159.90524291992188,
+          "expected": -159.90509033203125
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": -159.90524291992188,
+          "after": -239.90509033203125,
+          "expected": -239.90524291992188
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -633.5317993164062,
+          "after": -393.5324401855469,
+          "expected": -393.53179931640625
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": -393.5324401855469,
+          "after": -633.5317993164062,
+          "expected": -633.5324401855469
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -239.90509033203125,
+          "after": 0.0943603515625,
+          "expected": 0.09490966796875
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 0.0943603515625,
+          "after": -239.90509033203125,
+          "expected": -239.9056396484375
+        },
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -633.5317993164062,
+          "after": -553.5320434570312,
+          "expected": -553.5317993164062
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -553.5320434570312,
+          "after": -633.5317993164062,
+          "expected": -633.5320434570312
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -239.90994262695312,
+          "after": -159.90524291992188,
+          "expected": -159.90994262695312
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -633.5317993164062,
+          "after": -713.5316772460938,
+          "expected": -713.5317993164062
+        }
+      ],
+      "zooms": [
+        {
+          "key": "q",
+          "before": 70.5067138671875,
+          "after": 50.3616943359375
+        },
+        {
+          "key": "e",
+          "before": 50.3616943359375,
+          "after": 70.5067138671875
+        },
+        {
+          "key": "-",
+          "before": 70.5067138671875,
+          "after": 50.3616943359375
+        },
+        {
+          "key": "=",
+          "before": 50.3616943359375,
+          "after": 70.5067138671875
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": true,
+      "fittedPan": true,
+      "toolbarFocus": true
+    },
+    "browserClosed": true
+  },
+  "nativeFormalCanvas": {
+    "status": "passed-with-local-injection-blocked",
+    "source": "88bdb2eed8d436dd1620c3399994d8a609148def",
+    "browser": "isolated headless installed Edge",
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "font": "32",
+    "geometry": {
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "canvas": {
+        "x": 344,
+        "y": 212,
+        "width": 1022,
+        "height": 526,
+        "top": 212,
+        "right": 1366,
+        "bottom": 738,
+        "left": 344
+      }
+    },
+    "navigation": {
+      "mode": "canvas",
+      "keys": [
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -505.6338663370975,
+          "after": -425.6338663370975,
+          "expected": -425.6338663370975
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -425.6338663370975,
+          "after": -505.6338663370975,
+          "expected": -505.6338663370975
+        },
+        {
+          "key": "s",
+          "axis": "y",
+          "before": -16,
+          "after": 64,
+          "expected": 64
+        },
+        {
+          "key": "w",
+          "axis": "y",
+          "before": 64,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "Shift+d",
+          "axis": "x",
+          "before": -505.6338663370975,
+          "after": -265.6338663370975,
+          "expected": -265.6338663370975
+        },
+        {
+          "key": "Shift+a",
+          "axis": "x",
+          "before": -265.6338663370975,
+          "after": -505.6338663370975,
+          "expected": -505.6338663370975
+        },
+        {
+          "key": "Shift+s",
+          "axis": "y",
+          "before": -16,
+          "after": 224,
+          "expected": 224
+        },
+        {
+          "key": "Shift+w",
+          "axis": "y",
+          "before": 224,
+          "after": -16,
+          "expected": -16
+        },
+        {
+          "key": "d",
+          "axis": "x",
+          "before": -505.6338663370975,
+          "after": -425.6338663370975,
+          "expected": -425.6338663370975
+        },
+        {
+          "key": "a",
+          "axis": "x",
+          "before": -425.6338663370975,
+          "after": -505.6338663370975,
+          "expected": -505.6338663370975
+        }
+      ],
+      "zooms": [
+        {
+          "key": "q",
+          "before": 0.003018674227610481,
+          "after": 0.0021561958768646296
+        },
+        {
+          "key": "e",
+          "before": 0.0021561958768646296,
+          "after": 0.003018674227610481
+        },
+        {
+          "key": "-",
+          "before": 0.003018674227610481,
+          "after": 0.0021561958768646296
+        },
+        {
+          "key": "=",
+          "before": 0.0021561958768646296,
+          "after": 0.003018674227610481
+        }
+      ],
+      "selected": "已選取 0 個 layers",
+      "formKeysPreserved": false,
+      "fittedPan": true,
+      "toolbarFocus": true
+    },
+    "browserClosed": true,
+    "limit": "Local antivirus injected a foreign script and malformed CSP. The foreign request was blocked, all original console text is retained, and no browser/security setting was changed. This does not replace the clean isolated CI gate."
+  },
+  "firstLiveFailure": {
+    "attempt": 1,
+    "job": 125337870376,
+    "checks": 35,
+    "stage": "finite recovery test stayed on original demo model; supplied 4-byte file rejected against demo 8-byte shape",
+    "realTimeoutWorkerMs": 31996,
+    "rawArtifactSHA256": "4785009ac4ac9b6e495b1d4e524fcd42348024f986a606cf53d4c11448bb0caa",
+    "backedArtifactId": 13149648571,
+    "rawArchive": "navigation-focus-live-attempt1.zip",
+    "rawBytes": 262297,
+    "originalLog": "https://github.com/koviankevin/tflite-explorer/actions/runs/41463108511/job/125337870376",
+    "retry": "only failed verification once; original prepare/deploy timestamps and steps reused",
+    "rootCause": "model-open sequencing suspected; not declared permanently fixed"
+  },
+  "originalReproduction": {
+    "version": "1.5.0",
+    "status": "reproduced-no-motion",
+    "cases": [
+      "after-open",
+      "keyboard-button-small-svg",
+      "after-result-click",
+      "after-blank-graph-click"
+    ]
+  },
+  "productization": "paused",
+  "sitesSync": false
+}

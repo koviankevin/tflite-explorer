@@ -14,7 +14,7 @@ Canvas pattern 總覽依實際連線安排各層的位置。較窄的主幹會�
 
 Canvas 節點依標題與位置摘要估算寬度，不再讓短名稱使用固定 28em 寬框；長名稱有 18em 加留白的寬度上限。可見文字以實際 Canvas 字型量測並加省略號，完整名稱保留在 tooltip 與可存取控制項。摘要只列 OP 編號／block 或 pattern 的 OP 數，減少重複名稱；模型、搜尋與匯出資料不變。循環群組依各欄的實際最大寬度排版，仍保留可選取且不交疊的節點。
 
-按圖上方「鍵盤移圖」後，W／A／S／D 或方向鍵分別向上／左／下／右移動視窗，每次 80px；搭配 Shift 每次 240px。＋／－縮放、Home 顯示全圖。Canvas、一般 SVG 與編輯圖共用按鍵規則；編輯圖先點空白處或 Tab 到圖面。按鍵只在圖面內處理，輸入框、下拉選單、可編輯文字與組字期間保留原行為；Ctrl／Alt／Meta 組合鍵也不攔截。平移不改變 zoom 或已選取的 OP。
+探索模型完成載入後可直接用 W／A／S／D 移圖，每次 80px，搭配 Shift 每次 240px；Q 縮小／E 放大，＋／－仍可使用。點圖面或「鍵盤移圖」後也可用方向鍵移圖、Home 顯示全圖。編輯圖先點空白處或 Tab 到圖面。輸入框、下拉選單、slider 與可編輯文字保留原按鍵；Ctrl／Alt／Meta 組合鍵不攔截。移圖保留 zoom 與已選取的 OP。
 
 ## v1.4.8 正式交付
 
@@ -43,3 +43,13 @@ Windows Edge 正式站另以獨立無介面環境開啟公開合成 MLIR（2,125
 一般 SVG 以固定大小的視窗緩衝區與 viewBox 原點平移，讓沒有原生橫向捲軸的完整圖也能移動。重複按鍵不持續擴大緩衝區；搜尋定位與 Home 先還原原始 viewBox。每個渲染圖的 WeakMap 隨舊圖釋放，不保留模型、權重或 Worker。Canvas 沿用既有 camera 與選取；新增工具列焦點下的路由。這項修正不改模型、pattern、SSA 或匯出。
 
 v1.5.0 的舊測試先強制聚焦並放大圖形，漏掉一般開檔／搜尋結果焦點與無捲動空間的情況。本次先在正式 v1.5.0 重現無移動，再以實際 UI／DOM 幾何測試鎖定。v1.6.0 起額外要求未先放大的移圖、開檔與工具列焦點、Q／E／＋／－、搜尋框 wasdqe 輸入及搜尋後定位；保留既有 38 項發布操作與舊版回復驗收。
+
+## v1.6.0 正式交付
+
+2026-11-02 完成 [v1.6.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.0)，來源 `88bdb2eed8d436dd1620c3399994d8a609148def`，build `bd4c7fe66904b362`；[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41463108511)的 prepare、deploy、verify_live、release 全部成功。332 核心檔、完整站台 1,490 檔、四份實際公開下載的大小／SHA-256／manifest、Latest／tag 與 GitHub Pages deployment 已核對。[交付收據](results/navigation-focus-v1.6.0-published.json)保留來源與鍵盤幾何量測。
+
+第一輪正式驗收完成 35 項後，在有限 CPU 恢復案例因模型未切換、4-byte 輸入不符合原示範模型的 8-byte 需求而等待失敗；真正 30 秒終止已成功（Worker 31,996ms）。原始 job log、[完整報告／畫面附件](results/navigation-focus-live-attempt1.zip)與 SHA-256 均保留；只補跑失敗驗收一次，成功的準備與部署沿用原時間／步驟，未修改規則。切換時序仍是驗收可靠性的已知風險，不因補驗成功宣稱根因永久修復。
+
+原有 38 項正式 HTTPS 操作完整保留，額外驗證開檔後、點結果／工具列後與未先放大的 SVG 移圖，Q／E／＋／－、80／240px 與搜尋框 wasdqe 輸入。跨 block 分支／迴圈 Canvas 在已有選取時仍可移圖縮放，存成 pattern、MLIR 匯出重開及既有 pattern 匹配均通過。1,099 項 Node 檢查為 1,064 通過、35 項原有選做略過、零失敗；79 項發布契約、1,349,965,216-byte／21,005 OP 八輪關卡通過。核心相依來源未改，九個效能樣本沿用原成功報告並核對 fingerprint；未放寬 RSS、URL 或 timeout 政策。
+
+Windows Edge 正式站另重驗原本四個無移動案例與 32px Q／E 操作，實際圖面已移動，瀏覽器正常關閉。[1366×768／32px 畫面](results/navigation-focus-32px-edge.png)保留分支／匯合與快捷鍵提示。本機 Chrome 小型操作與 Canvas 幾何完成，但 Canvas 整體網路檢查因封鎖本機防毒注入而失敗；原始失敗保留，不改列整輪通過、不放行外連。正式發布由乾淨 CI 驗收。公開合成資料不代表公司模型、私有 dialect、任意 kernel 語意或所有 Windows 環境已驗收。

@@ -1,6 +1,8 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.5.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.5.0)／build `f019cdbbb96af0dc`。[緊湊 Canvas 與鍵盤移圖](overview-layout.md#v150-正式交付)已交付；本頁保留公開版仍待處理的功能界線與驗收缺口，內網及私有 dialect 依使用者指示自行修改。歷史 Windows Chrome 正常關閉與防毒注入限制不因本次有限案例改列已修復。
+目前固定版本為 [v1.6.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.0)／build `bd4c7fe66904b362`。[探索移圖與 Q／E 縮放](overview-layout.md#v160-正式交付)已交付，修正 v1.5.0 的探索焦點與 SVG 捲動邊界問題；本頁保留公開版的其他功能界線與驗收缺口。歷史 Windows Chrome 正常關閉與防毒注入限制不因本次有限案例改列已修復。內網及私有 dialect 依使用者指示自行處理。
+
+v1.6.0 的首輪正式驗收在有限 CPU 恢復案例未切換到測試檔，4-byte 輸入被原示範模型的 8-byte 規格拒絕；30 秒終止 Worker 本身已成功。只補跑失敗驗收一次，未重跑成功部署，原始失敗、完整附件備份及雜湊保留於[交付收據](results/navigation-focus-v1.6.0-published.json)。模型切換時序仍是驗收可靠性的已知風險，尚未宣稱根因永久修復。
 
 v1.4.6 的 SQUEEZE／CONCATENATION [metadata 修正](transform-metadata-validation.md#v146-正式交付)已交付；已知 axis／rank／非單位維度錯誤先拒絕，完整動態 shape／其他 packing 或 kernel 條件仍明列未檢查。本次原生 Chrome 正常關閉仍失敗。正式驗收第一次被原八分鐘工作上限取消，保留官方 annotation 及 artifact；只補跑失敗驗證一次後成功，未重跑部署或放寬規則。這仍是 CI 時間餘裕的風險，不宣稱逾時根因已永久修復。
 
