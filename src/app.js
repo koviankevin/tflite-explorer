@@ -2,6 +2,7 @@ import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
 import {overviewCanvas} from './overview-canvas.js';
+import {navigateGraph,GRAPH_NAVIGATION_HELP} from './graph-navigation.js';
 import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
@@ -268,7 +269,7 @@ function reset() {
     $('graph-caption').textContent = '選取結果以查看連接'; $('metrics').textContent = 'LOCAL FILE · NO UPLOAD';
     $('zoom-reset').textContent='100%';
     $('full-graph').textContent = '完整圖'; $('notice').hidden = true;
-    for (const id of ['pick-pattern', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction', 'previous-result', 'next-result']) $(id).disabled = true;
+    for (const id of ['pick-pattern', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'keyboard-graph', 'direction', 'previous-result', 'next-result']) $(id).disabled = true;
     showPage({ items: [], total: 0, offset: 0 });
     status('準備就緒');
 }
@@ -310,7 +311,7 @@ async function loadModelTab(nextFile,saved) {
         if(model.stats.deferredPayloads) $('metrics').textContent+=` · 結構 ${model.stats.structureBytes.toLocaleString()} bytes · ${model.stats.deferredPayloads} 段權重 ${size(model.stats.deferredBytes)} 留在原始檔案`;
         $('scope').replaceChildren(new Option('目前 subgraph（子圖 0）', 'current'), new Option('所有 subgraphs', 'all'), ...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name} · ${g.layers} layers`, String(g.index))));
         $('graph-select').replaceChildren(...model.graphs.map((g) => new Option(`子圖 ${g.index} · ${g.name}`, String(g.index))));
-        for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'direction']) $(id).disabled = false;
+        for (const id of ['pick-pattern', 'query', 'scope', 'graph-select', 'run-pattern', 'run-pattern-laptop', 'local-graph', 'full-graph', 'zoom-in', 'zoom-out', 'zoom-reset', 'keyboard-graph', 'direction']) $(id).disabled = false;
         $('cancel-load').hidden = true; $('close-model').hidden = false;
         $('save-workspace').disabled=false;
         renderPattern();
@@ -1325,6 +1326,11 @@ $('full-graph').onclick = () => {
 $('zoom-in').onclick = () => { if(virtualOverview)virtualOverview.zoom(1.5);else if (view.target) view.zoomIn(); };
 $('zoom-out').onclick = () => { if(virtualOverview)virtualOverview.zoom(1/1.5);else if (view.target) view.zoomOut(); };
 $('zoom-reset').onclick = () => { if(virtualOverview)virtualOverview.fit();else if (view.target) view.resetZoom(); };
+$('keyboard-graph').onclick=()=>{(virtualOverview?$('target').querySelector('canvas.overview-canvas'):$('target'))?.focus({preventScroll:true});status(GRAPH_NAVIGATION_HELP);};
+$('target').addEventListener('keydown',event=>{
+    if(virtualOverview||!view.target||tabs.busy||document.querySelector('dialog[open]'))return;
+    navigateGraph(event,{pan(x,y){layerMarquee.cancel();delete view.target._scrollLeft;delete view.target._scrollTop;$('target').scrollLeft+=x;$('target').scrollTop+=y;},zoom(factor){layerMarquee.cancel();view.target.zoom*=factor;},fit(){layerMarquee.cancel();fitCombinedGraph();const target=$('target');target.scrollTo({left:Math.max(0,(target.scrollWidth-target.clientWidth)/2),top:Math.max(0,(target.scrollHeight-target.clientHeight)/2),behavior:'instant'});delete view.target._scrollLeft;delete view.target._scrollTop;}});
+});
 $('graph-font-size').onchange = () => {
     const value = $('graph-font-size').value;
     if (!graphFontSizes.includes(value)) return;

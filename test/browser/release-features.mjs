@@ -39,3 +39,9 @@ export function legacyShapeValidationRequired(version){
 // The partial runtime archive correction ships in the same unpublished 1.4.1
 // candidate. Only exact immutable older releases may omit its new scenario.
 export function partialRuntimeIORequired(version){return legacyShapeValidationRequired(version);}
+
+export function graphNavigationRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=5;
+}

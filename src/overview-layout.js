@@ -1,6 +1,8 @@
 // Iterative SCC/rank construction and three bounded pairs of connection-order
 // sweeps run in the model Worker. No dummy node is allocated per skipped rank:
 // long edges and cycles use a fixed number of side lanes instead.
+import {overviewNodeSize} from './overview-label.js';
+
 export function overviewLayout(nodes,links,{font=18,direction='vertical'}={}) {
     const byId=new Map(nodes.map((n,i)=>[n.identifier,i])),next=nodes.map(()=>[]),previous=nodes.map(()=>[]);
     for(const e of links){const a=byId.get(e.from),b=byId.get(e.to);if(a===undefined || b===undefined)throw new Error('總覽連線的端點不存在。');next[a].push(b);previous[b].push(a);}
@@ -20,8 +22,11 @@ export function overviewLayout(nodes,links,{font=18,direction='vertical'}={}) {
     // An independent source may be a weight/constant used much later. Place it
     // just before its earliest consumer instead of widening the first rank.
     for(let c=0;c<parts.length;c++)if(!parents[c].size&&successors[c].size){let first=Infinity;for(const s of successors[c])first=Math.min(first,rank[s]);rank[c]=Math.max(rank[c],first-1);}
-    const vertical=direction!=='horizontal',w=Math.max(220,font*28+32),h=font*2+36,gap=72,laneGap=24,laneCount=8,scopes=new Map();
-    const sizes=parts.map(part=>{part.sort((a,b)=>a-b);const cols=Math.ceil(Math.sqrt(part.length)),rows=Math.ceil(part.length/cols),cw=cols*w+(cols-1)*32,ch=rows*h+(rows-1)*32;return {cols,cross:vertical?cw:ch,main:vertical?ch:cw,key:part[0]};});
+    const vertical=direction!=='horizontal',dimensions=nodes.map(n=>overviewNodeSize(n,font)),gap=72,laneGap=24,laneCount=8,scopes=new Map();
+    const sizes=parts.map(part=>{part.sort((a,b)=>a-b);const cols=Math.ceil(Math.sqrt(part.length)),rows=Math.ceil(part.length/cols),widths=new Array(cols).fill(0),heights=new Array(rows).fill(0);
+        part.forEach((n,i)=>{widths[i%cols]=Math.max(widths[i%cols],dimensions[n].width);heights[Math.floor(i/cols)]=Math.max(heights[Math.floor(i/cols)],dimensions[n].height);});
+        const offsets=values=>{let total=0;return values.map(v=>{const at=total;total+=v+32;return at;});},xs=offsets(widths),ys=offsets(heights),cw=xs.at(-1)+widths.at(-1),ch=ys.at(-1)+heights.at(-1);
+        return {cols,xs,ys,cross:vertical?cw:ch,main:vertical?ch:cw,key:part[0]};});
     const scopeOf=parts.map(part=>nodes[part[0]].group?.split('/')[0] || '模型'),sideScopes=new Set();
     for(let i=0;i<parts.length;i++){const scope=scopeOf[i];if(!scopes.has(scope))scopes.set(scope,[]);scopes.get(scope).push(i);}
     const sideRoute=e=>{const a=component[byId.get(e.from)],b=component[byId.get(e.to)];return scopeOf[a]===scopeOf[b]&&(a===b||rank[b]-rank[a]!==1);};
@@ -41,7 +46,7 @@ export function overviewLayout(nodes,links,{font=18,direction='vertical'}={}) {
         const margin=sideScopes.has(name)?laneGap*(laneCount+1):0,origin=crossOffset+margin-minCross;let mainOffset=60;
         scopeBounds.set(name,{min:crossOffset+margin,max:crossOffset+margin+maxCross-minCross});
         for(const level of ordered){let mainSize=0;for(const c of level){const size=sizes[c],cross=origin+centers[c]-size.cross/2;mainSize=Math.max(mainSize,size.main);
-                parts[c].forEach((n,i)=>{const x=(vertical?cross:mainOffset)+(i%size.cols)*(w+32),y=(vertical?mainOffset:cross)+Math.floor(i/size.cols)*(h+32);placed[n]={...nodes[n],x,y,width:w,height:h,minX:x,minY:y,maxX:x+w,maxY:y+h};});}
+                parts[c].forEach((n,i)=>{const {width,height}=dimensions[n],x=(vertical?cross:mainOffset)+size.xs[i%size.cols],y=(vertical?mainOffset:cross)+size.ys[Math.floor(i/size.cols)];placed[n]={...nodes[n],x,y,width,height,minX:x,minY:y,maxX:x+width,maxY:y+height};});}
             mainOffset+=mainSize+gap;
         }
         const span=maxCross-minCross+2*margin,box=vertical?{x:crossOffset-20,y:20,width:span+40,height:mainOffset}:{x:20,y:crossOffset-20,width:mainOffset,height:span+40};groups.push({name,...box});crossOffset+=span+80;maxMain=Math.max(maxMain,mainOffset+40);

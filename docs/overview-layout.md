@@ -10,6 +10,12 @@ Canvas pattern 總覽依實際連線安排各層的位置。較窄的主幹會�
 
 相關驗證包含寬輸入／窄主幹、分支與匯合、晚用來源、側邊長線與迴圈、32px 字級、兩種圖方向、Canvas 縮放／平移後命中與框選，以及既有 pattern 和模型匯出測試。公司內部模型未納入公開測試資料。
 
+## 緊湊節點與鍵盤移圖
+
+Canvas 節點依標題與位置摘要估算寬度，不再讓短名稱使用固定 28em 寬框；長名稱有 18em 加留白的寬度上限。可見文字以實際 Canvas 字型量測並加省略號，完整名稱保留在 tooltip 與可存取控制項。摘要只列 OP 編號／block 或 pattern 的 OP 數，減少重複名稱；模型、搜尋與匯出資料不變。循環群組依各欄的實際最大寬度排版，仍保留可選取且不交疊的節點。
+
+按圖上方「鍵盤移圖」後，W／A／S／D 或方向鍵分別向上／左／下／右移動視窗，每次 80px；搭配 Shift 每次 240px。＋／－縮放、Home 顯示全圖。Canvas、一般 SVG 與編輯圖共用按鍵規則；編輯圖先點空白處或 Tab 到圖面。按鍵只在圖面內處理，輸入框、下拉選單、可編輯文字與組字期間保留原行為；Ctrl／Alt／Meta 組合鍵也不攔截。平移不改變 zoom 或已選取的 OP。
+
 ## v1.4.8 正式交付
 
 2026-11-02 完成 [v1.4.8](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.8) 正式交付，來源 `c399043d55eaa5e1ce5edd5cc2d2bc6d0817c8ae`，build `391ebd7faebe5ad6`。正式網站與固定 ZIP 使用同一份已審閱產物；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41428517612) 的 prepare、deploy、verify_live 與 release 均成功。329 核心檔與完整站台 1,485 檔、四份真正公開下載的大小／SHA-256／manifest、Latest／tag 與 GitHub Pages deployment 已核對。
