@@ -153,7 +153,9 @@ let sliceDetails=false;
 let sliceExpanded=new Set();
 let slicePages=new Map();
 let virtualOverview=null;
-function disposeVirtualOverview(){if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
+// Netron emits select(null)/blur while closing details. Keep the outgoing
+// SVG/Canvas target alive until those callbacks finish, including model close.
+function disposeVirtualOverview(){view._sidebar.close();if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
 function loraPreset() {
     conditionsByAlias.clear();
