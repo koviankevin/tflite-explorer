@@ -26,3 +26,23 @@ test('search location resets an unbounded pan before the original graph scrollTo
     const s=scene(),calls=[];s.graph.scrollTo=function(...args){calls.push({args,width:this._width,viewBox:s.canvas.getAttribute('viewBox')});return 'located';};attachSVGNavigation(s.graph,s.canvas);panSVG(s.container,s.graph,s.canvas,80000,-80000);
     assert.equal(s.graph.scrollTo(['node'],'instant'),'located');assert.deepEqual(calls,[{args:[['node'],'instant'],width:300,viewBox:null}]);
 });
+
+for(const zoom of [.5,1,1.4])test(`visible OP focus keeps the WASD camera at zoom ${zoom}`,()=>{
+    const s=scene({zoom});s.container.getBoundingClientRect=()=>({left:200,top:100,right:1100,bottom:600});
+    s.canvas.ownerDocument={getElementById:id=>id==='target'?s.container:null};
+    const calls=[];s.graph.scrollTo=selection=>{calls.push(selection);};attachSVGNavigation(s.graph,s.canvas);
+    panSVG(s.container,s.graph,s.canvas,80,0);const before=s.point(),box=s.canvas.getAttribute('viewBox');
+    const op={getBoundingClientRect:()=>({left:before.x,top:before.y,right:before.x+10,bottom:before.y+10})};
+    s.graph.scrollTo([op]);assert.deepEqual(s.point(),before);assert.equal(s.canvas.getAttribute('viewBox'),box);assert.deepEqual(calls,[[op]]);
+});
+
+test('an empty or partially visible selection does not reset the keyboard camera',()=>{
+    const s=scene();s.container.getBoundingClientRect=()=>({left:200,top:100,right:1100,bottom:600});s.canvas.ownerDocument={getElementById:()=>s.container};s.graph.scrollTo=()=>{};attachSVGNavigation(s.graph,s.canvas);panSVG(s.container,s.graph,s.canvas,80,0);
+    const before=s.canvas.getAttribute('viewBox');for(const selection of [[],null,[{getBoundingClientRect:()=>({left:190,top:110,right:210,bottom:140})}]]){s.graph.scrollTo(selection);assert.equal(s.canvas.getAttribute('viewBox'),before);}
+});
+
+test('a focus group containing an offscreen OP still resets and locates beyond the native bounds',()=>{
+    for(const elements of [[{left:-500,top:120,right:-400,bottom:140}],[{left:300,top:120,right:330,bottom:140},{left:2000,top:120,right:2030,bottom:140}]]){
+        const s=scene(),calls=[];s.container.getBoundingClientRect=()=>({left:200,top:100});s.canvas.ownerDocument={getElementById:()=>s.container};s.graph.scrollTo=()=>calls.push(s.canvas.getAttribute('viewBox'));attachSVGNavigation(s.graph,s.canvas);panSVG(s.container,s.graph,s.canvas,80000,0);s.graph.scrollTo(elements.map(rect=>({getBoundingClientRect:()=>rect})));assert.deepEqual(calls,[null]);
+    }
+});

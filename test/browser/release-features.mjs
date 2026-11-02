@@ -51,3 +51,8 @@ export function graphFocusNavigationRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=6;
 }
+
+export function graphPointerNavigationRequired(version){
+    browserReleaseFeatures(version);const [major,minor,patch]=version.split('.').map(Number);
+    return major>1||major===1&&(minor>6||minor===6&&patch>=1);
+}

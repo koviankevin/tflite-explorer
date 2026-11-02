@@ -7,8 +7,21 @@ export function attachSVGNavigation(graph,canvas){
     if(!graph||!canvas||typeof graph.scrollTo!=='function')return;
     const previous=attachments.get(graph);if(previous?.canvas===canvas)return;
     const scroll=previous?.scroll || graph.scrollTo;
-    graph.scrollTo=function(...args){resetSVGPan(this,canvas);return scroll.apply(this,args);};
+    graph.scrollTo=function(selection,...args){
+        // Netron also calls scrollTo when a visible OP is clicked. Resetting
+        // that camera discards keyboard pan before it checks visibility.
+        if(selection?.length&&states.has(canvas)&&!visibleSelection(canvas,selection))resetSVGPan(this,canvas);
+        return scroll.call(this,selection,...args);
+    };
     attachments.set(graph,{canvas,scroll});
+}
+function visibleSelection(canvas,selection){
+    const container=canvas.ownerDocument?.getElementById('target');if(!container)return false;
+    const bounds=container.getBoundingClientRect(),right=bounds.left+container.clientWidth,bottom=bounds.top+container.clientHeight;
+    return selection.every(element=>{
+        const rect=element?.getBoundingClientRect?.();
+        return rect&&rect.right>bounds.left&&rect.left<right&&rect.bottom>bounds.top&&rect.top<bottom;
+    });
 }
 const box=(canvas,graph)=>{
     const values=(canvas.getAttribute('viewBox') || '').trim().split(/[ ,]+/).map(Number);
