@@ -6,10 +6,10 @@ import {updateLayerSelection} from '../src/pattern-selection.js';
 
 // A DOM/animation adapter for the real renderer interface. It models focus
 // loss on removal, so viewport redraw cannot accidentally swallow Enter.
-function harness(){
+function harness({trace=false}={}){
     let next=0;const frames=new Map(),saved=new Map(['requestAnimationFrame','cancelAnimationFrame','ResizeObserver','devicePixelRatio'].map(k=>[k,globalThis[k]]));
     globalThis.requestAnimationFrame=callback=>{frames.set(++next,callback);return next;};globalThis.cancelAnimationFrame=id=>frames.delete(id);globalThis.ResizeObserver=class{observe(){}disconnect(){}};globalThis.devicePixelRatio=1;
-    const doc={activeElement:null},ctx=new Proxy({},{get:(_,key)=>key==='measureText'?()=>({width:50}):()=>{}});
+    const commands=[],doc={activeElement:null},ctx=new Proxy({},{get:(_,key)=>key==='measureText'?()=>({width:50}):(...args)=>{if(trace)commands.push([key,...args]);}});
     class Element{
         constructor(tag){this.tagName=tag;this.children=[];this.parentElement=null;this.ownerDocument=doc;this.dataset={};this.style={};this.classList={add(){},remove(){}};this.listeners=new Map();this.width=0;this.height=0;this.clientWidth=1100;this.clientHeight=720;this.capture=new Set();}
         setAttribute(name,value){this[name]=value;}removeAttribute(name){delete this[name];}getContext(){return ctx;}getBoundingClientRect(){return this.rect || {left:0,top:0};}
@@ -21,8 +21,19 @@ function harness(){
     }
     doc.createElement=tag=>new Element(tag);doc.body=new Element('body');doc.activeElement=doc.body;
     const events=new Element('document');doc.addEventListener=events.addEventListener.bind(events);doc.removeEventListener=events.removeEventListener.bind(events);doc.emit=events.emit.bind(events);doc.defaultView=new Element('window');
-    return{target:new Element('div'),doc,flush(){const pending=[...frames.values()];frames.clear();for(const f of pending)f();},restore(){for(const [k,v]of saved)if(v===undefined)delete globalThis[k];else globalThis[k]=v;}};
+    return{target:new Element('div'),doc,commands,flush(){const pending=[...frames.values()];frames.clear();for(const f of pending)f();},restore(){for(const [k,v]of saved)if(v===undefined)delete globalThis[k];else globalThis[k]=v;}};
 }
+
+test('side-route paths reach their real endpoints at both overview and detailed zoom',()=>{
+    const env=harness({trace:true});try{
+        const nodes=['a','b','c','d'].map(identifier=>({identifier,group:'model'})),links=[['a','b'],['b','c'],['c','d'],['a','d'],['d','d']].map(([from,to])=>({from,to})),layout=overviewLayout(nodes,links,{font:32});
+        const controller=overviewCanvas(env.target,layout,{activate(){}});
+        for(const zoom of [.15,.8]){env.commands.length=0;controller.focus(['a','d'],zoom);env.flush();
+            for(const e of layout.edges.filter(e=>e.route==='side')){const path=[['moveTo',e.points[0].x,e.points[0].y],...e.points.slice(1).map(p=>['lineTo',p.x,p.y])];assert.ok(env.commands.some((_,i)=>JSON.stringify(env.commands.slice(i,i+path.length))===JSON.stringify(path)),'all route segments must survive zoom, including the final target');}
+        }
+        controller.dispose();
+    }finally{env.restore();}
+});
 test('Canvas culls far nodes, updates after real pan/zoom handlers, and hit-tests transformed positions',()=>{
     const env=harness();try{
         const nodes=Array.from({length:3000},(_,i)=>({identifier:String(i),name:`company.op_${i}`,type:{name:'company.custom'},diagramKind:'operator',group:'region'})),edges=nodes.slice(1).map((n,i)=>({from:String(i),to:n.identifier,kind:'ssa'})),activated=[];
