@@ -16,6 +16,7 @@ function harness(canvas){
     // Use Netron's actual deactivate/emit path: closing a node sidebar emits
     // select(null), then blur. Those handlers need the outgoing graph alive.
     const sidebar=Object.create(NodeSidebar.prototype);sidebar._view=view;sidebar._focused=new Set(['tensor']);
+    sidebar.error=error=>errors.push(error.message); // Observe reporting without constructing Netron's error DOM.
     sidebar.on('select',(_,value)=>view.target.scrollTo(view.target.select([value],'sidebar')));sidebar.on('blur',(_,value)=>view.target.blur([value]));
     let open=true;view._sidebar={close(){if(open){open=false;events.push('close-sidebar');sidebar.deactivate();}}};
     const context=vm.createContext({view,virtualOverview:canvas?{zoomValue:.5,dispose(){events.push('dispose-canvas');}}:null,layerMarquee:{cancel(){events.push('cancel-marquee');}}});
@@ -28,5 +29,5 @@ for(const canvas of [false,true])test(`open node details can transition from ${c
 });
 
 test('leaving Canvas for SVG or closing a model also deactivates details before disposing its target',()=>{
-    const h=harness(true);vm.runInContext(dispose+'\ndisposeVirtualOverview();',h.context);assert.deepEqual(h.errors,[]);assert.ok(h.events.indexOf('blur')<h.events.indexOf('dispose-canvas'));assert.equal(h.view.target,null);
+    const h=harness(true);vm.runInContext(dispose+'\ndisposeVirtualOverview();',h.context);assert.deepEqual(h.errors,[]);assert.ok(h.events.includes('blur'));assert.ok(h.events.indexOf('blur')<h.events.indexOf('dispose-canvas'));assert.equal(h.view.target,null);
 });
