@@ -9,3 +9,13 @@ Canvas pattern 總覽依實際連線安排各層的位置。較窄的主幹會�
 這項修正適用 `src/overview-layout.js` 與 `src/overview-canvas.js` 的 Canvas 總覽。一般 Netron SVG 圖的排版維持原流程。移植到內網時，兩個檔案須一起更新，因為 renderer 必須支援側邊折線及真正的最後一段箭頭；內部 dialect adapter 不需因此改寫。
 
 相關驗證包含寬輸入／窄主幹、分支與匯合、晚用來源、側邊長線與迴圈、32px 字級、兩種圖方向、Canvas 縮放／平移後命中與框選，以及既有 pattern 和模型匯出測試。公司內部模型未納入公開測試資料。
+
+## v1.4.8 正式交付
+
+2026-11-02 完成 [v1.4.8](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.8) 正式交付，來源 `c399043d55eaa5e1ce5edd5cc2d2bc6d0817c8ae`，build `391ebd7faebe5ad6`。正式網站與固定 ZIP 使用同一份已審閱產物；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41428517612) 的 prepare、deploy、verify_live 與 release 均成功。329 核心檔與完整站台 1,485 檔、四份真正公開下載的大小／SHA-256／manifest、Latest／tag 與 GitHub Pages deployment 已核對。
+
+保留原本 38 項正式網站操作、15 個 32px 字框、19 個手動執行案例、八輪 runtime IO 與 24 次 CPU 執行。新的正式來源實體模型關卡完成 1,349,965,216-byte TFLite 的八輪開啟、完整編輯、匯出、重開、custom options／權重與資源釋放檢查，固定記憶體／URL 政策未變更。
+
+Edge 正式站另外以 1366×768、32px 實際開啟本機合成 MLIR（2,125 OP、分支／匯合／迴圈與 custom OP），載入既存 pattern 並得到預期 529 筆匹配，建立 1,608 節點 Canvas 總覽；定位第 251 筆並展開後為 1,609 節點，實際拖曳框選一個 OP，滾輪縮放與鍵盤平移後選取保留，關閉模型也沒有 console error。原本 v1.4.7 的手動檢查找到側欄在清空 graph target 後才發出 select／blur；v1.4.8 先關閉側欄，再釋放舊 target，並以三個實際 Netron 事件回歸案例鎖定。v1.4.7 的成功自動化結果、固定下載與該手動錯誤紀錄均保留。
+
+上述為公開合成資料驗收；不代表公司模型、私有 dialect、任意 kernel 或編譯器語意已驗收。密集圖的通道重用仍可能產生交疊，長鏈縮到全圖仍需放大或搜尋定位。
