@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.4.8](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.8)，build `391ebd7faebe5ad6`；改善 Canvas 大圖的主幹／分支／匯合對齊、晚用來源與長連線通道，並修正開著節點細節切換 Canvas 時的側欄例外。329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/overview-layout.md#v148-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。一般 Netron SVG 排版維持原流程；公司模型與私有 dialect 依使用者指示在內網自行驗收。
+目前對外版本為 [v1.5.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.5.0)，build `f019cdbbb96af0dc`；Canvas 節點依文字長度緊湊排版，提供 WASD／方向鍵移圖與 Shift 加速，SVG 與編輯圖也可使用。331 核心檔、全站 1,487 檔、原有 38 項正式 HTTPS 操作與新增鍵盤驗收、四份實際固定下載及權威 deployment 已核對，見[正式交付](docs/overview-layout.md#v150-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。公司模型與私有 dialect 依使用者指示在內網自行驗收。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
