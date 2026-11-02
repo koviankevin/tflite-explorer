@@ -1,3 +1,4 @@
+import {graphNavigationFlow} from './graph-navigation-flow.mjs';
 // UI actions use real keys and native file choosers; CDP only observes the DOM.
 // Called by the hosted, public-fixture-only production smoke driver.
 import assert from 'node:assert/strict';
@@ -6,8 +7,8 @@ import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {reusablePattern,exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
 
-export async function keyboardFlow({page,read,base,demo,directory,check,selectionTools=false}){
-    let tabPresses=0;
+export async function keyboardFlow({page,read,base,demo,directory,check,selectionTools=false,navigation=false}){
+    let tabPresses=0,navigationReport;
     const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Keyboard DOM wait: '+fn);await pause(100);}}
     async function tabTo(selector){
@@ -54,6 +55,7 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     await page.keyboard.press('Control+f');assert.equal(await read(()=>document.activeElement.id),'query');await page.keyboard.press('Control+a');await page.keyboard.type('#0');
     await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);
     for(const size of ['16','32']){await option('#graph-font-size',size);await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false');assert.equal(await read(()=>document.activeElement.id),'graph-font-size','Graph redraw must retain keyboard control focus.');}
+    if(navigation)navigationReport=await graphNavigationFlow({page,read,mode:'svg'});
     await tabTo('[data-kind="layers"]');await switchTab('ArrowRight','tensors');await switchTab('ArrowRight','patterns','Space');await switchTab('Home','layers');await switchTab('End','patterns','Space');await switchTab('ArrowLeft','tensors');await switchTab('ArrowRight','patterns');
     assert.equal(await read(()=>[...document.querySelectorAll('#explorer-panel [role="tab"]')].filter(t=>t.tabIndex===0).length),1);
     assert.equal(await read(()=>{const t=document.activeElement,p=document.getElementById(t.getAttribute('aria-controls'));return p?.getAttribute('role')==='tabpanel'&&p.getAttribute('aria-labelledby')===t.id;}),true);
@@ -106,6 +108,6 @@ export async function keyboardFlow({page,read,base,demo,directory,check,selectio
     if(selectionTools)assert.equal(await read(()=>document.querySelector('#open-export-model').hidden&&document.querySelector('#open-export-model').disabled),true);
     event=page.waitForEvent('filechooser');await page.keyboard.press('Control+o');await(await event).setFiles(child);await ready(3);await until(()=>document.querySelector('#result-count').textContent==='1 筆匹配路徑');await enter('.result-item');await until(()=>document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#target .node').length>0);await close();
     check('keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure');
-    return {tabPresses,modelWorkers:selectionTools?3:2};
+    return {tabPresses,modelWorkers:selectionTools?3:2,navigation:navigationReport};
     }finally{page.off('filechooser',intercept);}
 }

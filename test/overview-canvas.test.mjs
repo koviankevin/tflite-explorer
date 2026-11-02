@@ -77,6 +77,20 @@ test('Canvas and focused-node keys pan/zoom without changing captured OPs; nativ
     }finally{env.restore();}
 });
 
+test('WASD and arrow keys pan three times farther with Shift without changing zoom or selected OPs',()=>{
+    const env=harness();try{
+        const node={identifier:'op',diagramKind:'operator',x:0,y:0,width:120,height:60,minX:0,minY:0,maxX:120,maxY:60};
+        const controller=overviewCanvas(env.target,{nodes:[node],edges:[],groups:[],font:32,width:200,height:100},{activate(){},capture(){assert.fail('navigation must not change selection');}}),canvas=env.target.children[0];
+        controller.focus(['op'],1);controller.setPicking(true,['op']);env.flush();const start=controller.snapshot();
+        for(const [key,fastKey,axis] of [['ArrowRight','ArrowRight','x'],['w','W','y'],['a','A','x'],['s','S','y'],['d','D','x']]){
+            controller.restore(start);canvas.emit('keydown',{key});const normal=controller.snapshot();controller.restore(start);
+            canvas.emit('keydown',{key:fastKey,shiftKey:true});env.flush();const fast=controller.snapshot();
+            assert.notEqual(normal[axis],start[axis]);assert.equal(fast[axis]-start[axis],3*(normal[axis]-start[axis]));assert.equal(fast.zoom,start.zoom);assert.equal(canvas.dataset.selectionCount,'1');
+        }
+        controller.dispose();
+    }finally{env.restore();}
+});
+
 test('async capsule expansion returns focus from the graph fallback but never steals a later toolbar focus',async()=>{
     for(const moved of [false,true]){
         const env=harness();try{

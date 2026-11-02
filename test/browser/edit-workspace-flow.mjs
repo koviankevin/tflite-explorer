@@ -1,3 +1,4 @@
+import {graphNavigationFlow} from './graph-navigation-flow.mjs';
 // Hosted-only native gestures; browser evaluation is read-only DOM inspection.
 import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
@@ -14,7 +15,7 @@ import {reusablePattern,exportPatterns} from '../../src/pattern-library.js';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 const tm=JSON.parse(await readFile(new URL('../../vendor/netron/tflite-metadata.json',import.meta.url))),mm=await readFile(new URL('../../vendor/netron/mlir-metadata.json',import.meta.url),'utf8');
 const tf=b=>parseModel((o,n)=>b.subarray(o,o+n),b.length,tm),ml=t=>parseMLIR(new TextEncoder().encode(t),{metadata:mm});
-export async function editWorkspaceFlow({page,read,base,directory,check,allowMlir=true}){
+export async function editWorkspaceFlow({page,read,base,directory,check,allowMlir=true,navigation=false}){
     const report={cases:[],layouts:[],receipts:[],modelWorkers:0};let serial=0;
     const wait=ms=>new Promise(r=>setTimeout(r,ms));
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Workspace timeout: '+fn);await wait(75);}}
@@ -35,7 +36,7 @@ export async function editWorkspaceFlow({page,read,base,directory,check,allowMli
         const f=await customFixture({external:true}),source=path.join(directory,'workspace-source.tflite');await writeFile(source,f.bytes,{flag:'wx'});await choose(source);await locate('#0');
         await open();await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();await page.locator('#edit-add-after').click();await until(()=>document.querySelectorAll('.edit-node.added').length===1);await until(()=>{const cards=[...document.querySelectorAll('[data-edit-node]')].map(e=>e.getBoundingClientRect());return cards.length===3&&cards.every((a,i)=>cards.slice(i+1).every(b=>a.right<=b.left+.5||b.right<=a.left+.5||a.bottom<=b.top+.5||b.bottom<=a.top+.5));});assert.ok((await input('new:1',0).textContent()).length);await connect('t:0:4','new:1',0);await connect('new:1:out:0','op:0:1',0,true);await until(()=>document.querySelector('#edit-change-count').textContent.startsWith('2 筆'));assert.ok((await input('op:0:1',0).textContent()).includes('_edit_1_0'));
         await page.locator('#edit-undo').click();assert.ok(!(await input('op:0:1',0).textContent()).includes('_edit_1_0'));await page.locator('#edit-viewport').focus();await page.keyboard.press('Control+Shift+Z');assert.ok((await input('op:0:1',0).textContent()).includes('_edit_1_0'));
-        await page.locator('#explore-mode').click();await ready(3);await open();assert.ok((await input('op:0:1',0).textContent()).includes('_edit_1_0'));await layout();
+        await page.locator('#explore-mode').click();await ready(3);await open();assert.ok((await input('op:0:1',0).textContent()).includes('_edit_1_0'));await layout();if(navigation)report.navigation=await graphNavigationFlow({page,read,mode:'edit'});
         const candidate=await exportFile('tflite',source),bytes=new Uint8Array(await readFile(candidate)),index=await tf(bytes),custom=index.raw.subgraphs[0].operators[2],weight=index.raw.buffers[3];assert.deepEqual([...index.raw.subgraphs[0].operators[1].outputs],[10]);assert.deepEqual([...custom.inputs],[10,5,-1]);assert.deepEqual(bytes.subarray(Number(custom.large_custom_options_offset),Number(custom.large_custom_options_offset+custom.large_custom_options_size)),f.options);assert.deepEqual(bytes.subarray(Number(weight.offset),Number(weight.offset+weight.size)),f.weight);
         await reopen(4);const structure=captureGraphPattern(index.graphs[0],[1,2,3]);assert.equal((await findSubgraphPatterns(index,{...prepareGraphPattern(structure.nodes,structure.edges),induced:structure.induced})).items.length,1);await pattern(structure,'Workspace TFLite custom',1);await closed(()=>page.locator('#close-model').click());report.cases.push({format:'tflite',nativeClick:true,nativeDrag:true,autoOutput:10,undoRedo:true,draftSurvivesModeSwitch:true,weights:'identical',customOptions:'identical',pattern:1});check('independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern');
         if(!allowMlir)return report;

@@ -4,7 +4,7 @@ export const GUIDE_TOPICS=Object.freeze([
     {id:'explore',label:'開檔與搜尋',heading:'從一個模型開始',steps:[
         ['開啟模型','選本機 .tflite／.lite 或文字 .mlir，也可以先試示範模型。模型與權重留在本機。'],
         ['搜尋並定位','左側 Layers／Tensors（MLIR 為 SSA Values）可找名稱、operator 類型或 #編號，點結果定位；tensor 詳情包含 shape、dtype 與量化資訊。'],
-        ['移動與查看','一般檢視可拖曳平移、滾輪縮放。左側欄右邊界可拖曳調寬；圖字可調到 32px。大型模型先顯示局部圖，完整圖可使用 Canvas 總覽。']
+        ['移動與查看','一般檢視可拖曳平移、滾輪縮放。按圖上方「鍵盤移圖」後，用 W／A／S／D 或方向鍵移圖，搭配 Shift 加速、＋／－縮放，Home 顯示全圖；編輯圖先點空白處或 Tab 到圖面也可使用。搜尋框與表單保留原本按鍵。左側欄右邊界可拖曳調寬；圖字可調到 32px。大型模型先顯示局部圖，完整圖可使用 Canvas 總覽。']
     ],actions:['open','demo','mlir-demo','explore']},
     {id:'pattern',label:'Pattern 與切圖',heading:'圈選原本的結構，再找其他匹配',steps:[
         ['先選 OP','在探索圖按「選取 pattern」，拖曳框選多個 OP。再次框到已選 OP 會取消選取；Alt＋拖曳平移、滾輪縮放，選取會保留。'],

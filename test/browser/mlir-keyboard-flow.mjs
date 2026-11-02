@@ -1,3 +1,4 @@
+import {graphNavigationFlow} from './graph-navigation-flow.mjs';
 // Native keys/file choosers/downloads only. CDP reads DOM and display state;
 // it never calls the model, selection, renderer or export APIs.
 import assert from 'node:assert/strict';
@@ -10,7 +11,7 @@ import {exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
 import {validateMLIR} from '../../src/mlir-validate.js';
 import {findMLIRPatterns} from '../../src/mlir-pattern.js';
 
-export async function mlirKeyboardFlow({page,read,base,directory,check}){
+export async function mlirKeyboardFlow({page,read,base,directory,check,navigation=false}){
     assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_ACTIONS,'true');
     const report={cases:[],modelWorkers:0,tabPresses:0},wait=ms=>new Promise(r=>setTimeout(r,ms)),hash=b=>createHash('sha256').update(b).digest('hex');
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('MLIR keyboard wait: '+fn);await wait(75);}}
@@ -73,6 +74,7 @@ export async function mlirKeyboardFlow({page,read,base,directory,check}){
             const selected=await read(()=>document.querySelector('#capture-count').textContent);assert.ok(selected.includes(`${f.blocks} 個 blocks`));
             for(const size of ['16','32']){await option('#graph-font-size',size);await ready();assert.equal(await read(()=>document.querySelector('#capture-count').textContent),selected);}
             const last=ids.at(-1);await tabTo(control(last));await focusVisible();await page.keyboard.press('Space');await until(n=>document.querySelector('#capture-count').textContent.startsWith(`已選取 ${n} 個 layers`),ids.length-1);await page.keyboard.press('Space');await until(text=>document.querySelector('#capture-count').textContent===text,selected);
+            if(navigation){(report.navigation??=[]).push(await graphNavigationFlow({page,read,mode:'canvas'}));await tabTo(control(f.ids[0]));await until(()=>!!document.querySelector('.overview-canvas')?.dataset.focusedNode);}
             await wait(100);const beforePan=hash(await page.locator('.overview-canvas').screenshot());await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowDown');await wait(100);const afterPan=hash(await page.locator('.overview-canvas').screenshot());assert.notEqual(afterPan,beforePan);const z=await read(()=>Number(document.querySelector('.overview-canvas').dataset.zoom));await page.keyboard.press('=');await until(z=>Number(document.querySelector('.overview-canvas').dataset.zoom)>z,z);await page.keyboard.press('-');assert.equal(await read(()=>document.querySelector('#capture-count').textContent),selected);const focused=await focusVisible();await page.screenshot({path:path.join(process.env.RUNNER_TEMP,'production-smoke.png')});
             check(`${kind}: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom`);
             const capturedName=`Keyboard captured ${kind}`;await type('#capture-name',capturedName);await enter('#save-capture');await until(()=>document.querySelector('#pick-pattern').getAttribute('aria-pressed')==='false'&&document.querySelector('#result-count').textContent==='1 筆匹配路徑'&&document.querySelector('#target').getAttribute('aria-busy')==='false');

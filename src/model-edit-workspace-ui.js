@@ -7,6 +7,7 @@ import {supportsModelEditing,TFLITE_EDIT_MESSAGE} from './model-edit-policy.js';
 import {runtimeSkipped} from './tflite-runtime-policy.js';
 import {attachRuntimeReport} from './tflite-runtime-report.js';
 import {modelEditLayout} from './model-edit-layout.js';
+import {navigateGraph,GRAPH_NAVIGATION_HELP} from './graph-navigation.js';
 import {compositionInterface} from './model-composition-draft.js';
 import {randomDescription} from './tensor-random.js';
 const NS='http://www.w3.org/2000/svg';
@@ -133,6 +134,8 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
         next=Math.max(.15,Math.min(2,next));const worldX=(viewport.scrollLeft+x)/zoom,worldY=(viewport.scrollTop+y)/zoom;zoom=next;scale();viewport.scrollLeft=worldX*zoom-x;viewport.scrollTop=worldY*zoom-y;
     }
     viewport.addEventListener('wheel',e=>{if(busy||!draft||e.ctrlKey||e.metaKey||!e.deltaY)return;e.preventDefault();const r=viewport.getBoundingClientRect(),unit=e.deltaMode===1?16:e.deltaMode===2?viewport.clientHeight:1;zoomAt(zoom*Math.exp(-Math.max(-240,Math.min(240,e.deltaY*unit))*.002),e.clientX-r.left,e.clientY-r.top);},{passive:false});
+    viewport.setAttribute('aria-label',`編輯圖，可拖曳空白處平移；${GRAPH_NAVIGATION_HELP}`);
+    viewport.addEventListener('keydown',e=>{if(!busy&&draft&&!gesture)navigateGraph(e,{pan(x,y){viewport.scrollLeft+=x;viewport.scrollTop+=y;},zoom:factor=>zoomAt(zoom*factor),fit:()=>$('edit-fit').click()});});
     function draw(){
         if(!draft)return;svg.replaceChildren();const state=draft.state,r=world.getBoundingClientRect(),point=(e,side)=>{const b=e.getBoundingClientRect();return {x:((side==='right'?b.right+8:side==='left'?b.left-8:b.left+b.width/2)-r.left)/zoom,y:(b.top+b.height/2-r.top)/zoom};};
         const outputs=new Map([...world.querySelectorAll('[data-edit-output]')].map(e=>[e.dataset.editOutput,e]));
@@ -145,7 +148,7 @@ export function modelEditWorkspaceUI({rpc,getSource,getFormat,getTargets,getComp
     function endGesture(){if(!gesture)return;document.removeEventListener('pointermove',moveGesture,true);document.removeEventListener('pointerup',upGesture,true);document.removeEventListener('pointercancel',endGesture,true);gesture=null;}
     function moveGesture(e){if(!gesture||e.pointerId!==gesture.id)return;const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;if(Math.hypot(dx,dy)>5)gesture.moved=true;if(gesture.pan){viewport.scrollLeft=gesture.left-dx;viewport.scrollTop=gesture.top-dy;}if(gesture.moved)e.preventDefault();}
     function upGesture(e){if(!gesture||e.pointerId!==gesture.id)return;const g=gesture;endGesture();if(g.moved){const suppress=event=>{event.preventDefault();event.stopImmediatePropagation();document.removeEventListener('click',suppress,true);};document.addEventListener('click',suppress,true);setTimeout(()=>document.removeEventListener('click',suppress,true),0);e.preventDefault();}if(g.value&&g.moved){const input=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-edit-input]');if(input)apply({kind:'wire',node:input.dataset.editInput,slot:Number(input.dataset.editSlot),value:g.value});else message('未接到輸入端，草稿未改變。');e.preventDefault();e.stopImmediatePropagation();}}
-    viewport.addEventListener('pointerdown',e=>{if(busy||e.button!==0&&e.button!==1)return;const output=!e.altKey&&e.button===0?e.target.closest('[data-edit-output]'):null,pan=e.altKey||e.button===1||!e.target.closest('button,.edit-node,.edit-boundary');if(!output&&!pan)return;gesture={id:e.pointerId,x:e.clientX,y:e.clientY,left:viewport.scrollLeft,top:viewport.scrollTop,pan:!output,value:output?.dataset.editOutput,moved:false};document.addEventListener('pointermove',moveGesture,true);document.addEventListener('pointerup',upGesture,true);document.addEventListener('pointercancel',endGesture,true);if(pan)e.preventDefault();});
+    viewport.addEventListener('pointerdown',e=>{if(busy||e.button!==0&&e.button!==1)return;const output=!e.altKey&&e.button===0?e.target.closest('[data-edit-output]'):null,pan=e.altKey||e.button===1||!e.target.closest('button,.edit-node,.edit-boundary');if(!output&&!pan)return;if(pan)viewport.focus({preventScroll:true});gesture={id:e.pointerId,x:e.clientX,y:e.clientY,left:viewport.scrollLeft,top:viewport.scrollTop,pan:!output,value:output?.dataset.editOutput,moved:false};document.addEventListener('pointermove',moveGesture,true);document.addEventListener('pointerup',upGesture,true);document.addEventListener('pointercancel',endGesture,true);if(pan)e.preventDefault();});
     $('edit-add-before').onclick=()=>apply({kind:'clone',node:selected,side:'before'});$('edit-add-after').onclick=()=>apply({kind:'clone',node:selected,side:'after'});
     $('edit-delete').onclick=()=>apply({kind:'remove',node:selected,boundary:$('edit-boundary').checked});$('edit-restore').onclick=()=>apply({kind:'restore',node:selected});
     $('edit-expose').onchange=()=>apply({kind:'expose',node:selected,enabled:$('edit-expose').checked});$('edit-boundary').onchange=()=>{const n=draft?.state.nodes.find(n=>n.id===selected);if(n?.removed)apply({kind:'remove',node:selected,boundary:$('edit-boundary').checked});};
