@@ -53,7 +53,7 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
         if(box){ctx.setTransform(ratio,0,0,ratio,0,0);ctx.fillStyle='#18745d22';ctx.fillRect(box.left,box.top,box.right-box.left,box.bottom-box.top);ctx.strokeStyle='#18745d';ctx.lineWidth=2;ctx.strokeRect(box.left,box.top,box.right-box.left,box.bottom-box.top);ctx.font='14px sans-serif';ctx.fillStyle='#103d30';ctx.fillText(`框選 ${preview.size} 個 layers`,box.left+6,box.top+18);}
         canvas.dataset.selectionCount=String(captured.size);canvas.dataset.marqueeCount=String(preview.size);
         canvas.dataset.renderedNodes=String(visible.length);canvas.dataset.totalNodes=String(layout.nodes.length);canvas.dataset.renderedEdges=String(edges.length);canvas.dataset.zoom=String(camera.zoom);canvas.dataset.panX=String(camera.x);canvas.dataset.panY=String(camera.y);canvas.dataset.focusedNode=focused || '';
-        const percent=camera.zoom*100;counter.textContent=`視窗繪製 ${visible.length.toLocaleString()} / ${layout.nodes.length.toLocaleString()} 節點 · ${edges.length.toLocaleString()} 連線 · ${percent<.1?percent.toPrecision(2):percent.toFixed(1)}%${detail?'':' · 縮放可看 OP 名稱'} · WASD／方向鍵移圖，Shift 加速${doc.activeElement===canvas?' · Tab 到節點，Enter／Space 操作':''}`;changed({visible:visible.length,total:layout.nodes.length,zoom:camera.zoom});
+        const percent=camera.zoom*100;counter.textContent=`視窗繪製 ${visible.length.toLocaleString()} / ${layout.nodes.length.toLocaleString()} 節點 · ${edges.length.toLocaleString()} 連線 · ${percent<.1?percent.toPrecision(2):percent.toFixed(1)}%${detail?'':' · 縮放可看 OP 名稱'} · WASD／方向鍵移圖，Shift 加速，Q／E 縮放${doc.activeElement===canvas?' · Tab 到節點，Enter／Space 操作':''}`;changed({visible:visible.length,total:layout.nodes.length,zoom:camera.zoom});
     };
     const point=e=>{const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
     const hit=p=>{const v=camera.world(p.x,p.y);return nodeIndex.query({minX:v.x,maxX:v.x,minY:v.y,maxY:v.y}).at(-1);};
@@ -76,6 +76,7 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
     accessible.addEventListener('focusout',schedule);
     const controller={
         get zoomValue(){return camera.zoom;},
+        pan(x,y){cancel();camera.pan(-x,-y);schedule();},
         snapshot(){const center=camera.world(camera.width/2,camera.height/2);return {kind:'canvas',zoom:camera.zoom,x:center.x,y:center.y};},
         restore(state){cancel();camera.zoom=state.zoom;camera.x=camera.width/2-state.x*camera.zoom;camera.y=camera.height/2-state.y*camera.zoom;schedule();},
         select(ids){picked=new Set(ids || []);schedule();},
