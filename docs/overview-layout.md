@@ -40,7 +40,7 @@ Windows Edge 正式站另以獨立無介面環境開啟公開合成 MLIR（2,125
 
 探索模型載入完成後，WASD、Q 縮小／E 放大（＋／－亦可）可直接操作目前圖形；點搜尋結果或工具列後仍可使用。點圖面空白會取得圖面焦點，方向鍵與 Home 保持圖面內的操作，避免攔截搜尋分頁與清單的方向鍵。輸入框、下拉選單、slider、contenteditable 與對話框保留原按鍵，Ctrl／Alt／Meta 組合鍵不攔截。非文字圖面依實體 KeyW／A／S／D／Q／E 辨識，支援 IME 回報 key=Process 的情況。
 
-一般 SVG 以固定大小的視窗緩衝區與 viewBox 原點平移，讓沒有原生橫向捲軸的完整圖也能移動。重複按鍵不持續擴大緩衝區；搜尋定位與 Home 先還原原始 viewBox。每個渲染圖的 WeakMap 隨舊圖釋放，不保留模型、權重或 Worker。Canvas 沿用既有 camera 與選取；新增工具列焦點下的路由。這項修正不改模型、pattern、SSA 或匯出。
+一般 SVG 以固定大小的視窗緩衝區與 viewBox 原點平移，讓沒有原生橫向捲軸的完整圖也能移動。重複按鍵不持續擴大緩衝區；Home 或定位畫面外結果時還原原始 viewBox；點可見 OP 保留目前 camera。每個渲染圖的 WeakMap 隨舊圖釋放，不保留模型、權重或 Worker。Canvas 沿用既有 camera 與選取；新增工具列焦點下的路由。這項修正不改模型、pattern、SSA 或匯出。
 
 v1.5.0 的舊測試先強制聚焦並放大圖形，漏掉一般開檔／搜尋結果焦點與無捲動空間的情況。本次先在正式 v1.5.0 重現無移動，再以實際 UI／DOM 幾何測試鎖定。v1.6.0 起額外要求未先放大的移圖、開檔與工具列焦點、Q／E／＋／－、搜尋框 wasdqe 輸入及搜尋後定位；保留既有 38 項發布操作與舊版回復驗收。
 
@@ -59,3 +59,11 @@ Windows Edge 正式站另重驗原本四個無移動案例與 32px Q／E 操作�
 Netron 點可見 OP 也會使用 `scrollTo`。v1.6.0 的相容包裝在判斷可見範圍前無條件還原 viewBox，因此 WASD 之後再點 OP 會跳回原本座標；已開啟詳情側欄、寬度不變時也能重現 80.5px 位移。空白點選與 pointerdown 本身沒有跳動，變化發生在點擊後的定位。
 
 修正後，沒有定位內容或每個目標都仍在視窗中時，保留現有鍵盤 camera，再交給 Netron 原本的可見範圍判斷；部分可見節點也不先還原。若搜尋／定位群組含畫面外的目標，仍先還原，再完成定位。此修改不更動模型、pattern、SSA 或匯出；Canvas 的 camera 未修改。v1.6.1 起增加真實 OP 點選、Q／E 混用、空白拖曳、拖曳後 WASD 與畫面外搜尋驗收，原有 38 項操作與舊版回復檢查保留。
+
+## v1.6.1 正式交付
+
+2026-11-03 完成 [v1.6.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.1)，來源 `0fb1f7144e340f4bcb1f26cc99f108b6a5c07959`，build `20714da852db2604`；[發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41550899150)的 prepare、deploy、verify_live、release 成功。332 核心檔、完整站台 1,493 檔、四份實際公開下載的大小／SHA-256／manifest、Latest／tag 與 GitHub Pages deployment 均已核對。[交付收據](results/pointer-camera-v1.6.1-published.json)保留來源及逐次幾何量測。
+
+[原始 v1.6.0 重現報告](results/pointer-camera-v1.6.0-repro.json)顯示按一次 D 再點可見 OP 位移 80.5px；修正後在正式站為 0px。32px 下的 Q／E、OP 點選、空白點選、20／15px 滑鼠拖曳、拖曳後 80px WASD 與畫面外搜尋定位均通過；[正式站畫面](results/pointer-camera-32px-edge.png)保留當時 UI。Chrome 正式站也通過同一組操作並正常關閉；Canvas 額外驗證點 OP 不改 camera、拖曳後鍵盤平移正常，Canvas 產品程式碼未修改。
+
+原有 38 項正式 HTTPS 操作、跨 block 分支／迴圈選取、pattern 儲存搜尋及 TFLite／MLIR 匯出重開全部保留。1,105 項 Node 檢查為 1,070 通過、35 項原有選做略過、零失敗；79 項發布契約及 1,349,965,216-byte／21,005 OP 八輪關卡通過。核心相依來源未改，九個效能樣本沿用已核對的成功 fingerprint；RSS、URL 與 timeout 規則未放寬。公開合成驗收不代表公司模型、私有 dialect 或任意 kernel 語意已驗收；歷史 Windows／防毒注入及 v1.6.0 選檔時序風險仍保留。
