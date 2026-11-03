@@ -4,6 +4,8 @@ export const GUIDE_TOPICS=Object.freeze([
     {id:'explore',label:'開檔與搜尋',heading:'從一個模型開始',steps:[
         ['開啟模型','選本機 .tflite／.lite 或文字 .mlir，也可以先試示範模型。模型與權重留在本機。'],
         ['搜尋並定位','左側 Layers／Tensors（MLIR 為 SSA Values）可找名稱、operator 類型或 #編號，點結果定位；tensor 詳情包含 shape、dtype 與量化資訊。'],
+        ['調整 Pattern 空間','Pattern 上下分隔線可拖曳，分配搜尋設定與結果高度；兩區各自捲動並記住比例。分隔線也可用 ↑／↓ 微調、Shift 加速，Enter 或雙擊恢復預設。'],
+        ['辨認重疊連線','選 OP 後，連線聚焦以藍色標輸入、橘色標輸出、紫色標內部或迴圈；背景線淡化，虛線仍代表控制流程。按「連線聚焦」可恢復全部連線。縮小後可用滑鼠提示查看完整名稱。'],
         ['移動與查看','一般檢視可拖曳平移、滾輪縮放。探索圖可直接用 W／A／S／D 移圖，Q 縮小／E 放大（＋／－也可），搭配 Shift 加速。點圖面或「鍵盤移圖」後也可用方向鍵移圖、Home 顯示全圖；編輯圖先點空白處或 Tab 到圖面。搜尋框與表單保留原本按鍵。左側欄右邊界可拖曳調寬；圖字可調到 32px。大型模型先顯示局部圖，完整圖可使用 Canvas 總覽。']
     ],actions:['open','demo','mlir-demo','explore']},
     {id:'pattern',label:'Pattern 與切圖',heading:'圈選原本的結構，再找其他匹配',steps:[
