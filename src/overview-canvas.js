@@ -24,8 +24,10 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
         return nodeIndex.query({minX:a.x,minY:a.y,maxX:b.x,maxY:b.y}).filter(n=>n.diagramKind==='operator' && n.maxX>a.x && n.minX<b.x && n.maxY>a.y && n.minY<b.y);};
     const cancel=()=>{const previous=drag;drag=null;if(previous && canvas.hasPointerCapture(previous.id))canvas.releasePointerCapture(previous.id);if(previous)schedule();};
     const choose=(n,keyboard=false)=>{
+        // Capture focus must not replace the matched group used by bounded
+        // keyboard controls at low zoom. Only the incident-edge focus changes.
+        if(picking && n.diagramKind==='operator'){focusedEdges=connections.focus([n.identifier]);schedule();capture([n],{toggle:true});return;}
         selectConnections([n.identifier]);schedule();
-        if(picking && n.diagramKind==='operator'){capture([n],{toggle:true});return;}
         const focused=doc.activeElement,pending=activate(n);
         // Expanding a capsule replaces this Canvas. Restore keyboard focus only
         // when the old control was removed and the user has not moved elsewhere.
@@ -70,7 +72,7 @@ export function overviewCanvas(target,layout,{selected=[],activate,capture=()=>{
     canvas.addEventListener('wheel',e=>{e.preventDefault();cancel();const p=point(e);camera.zoomAt(Math.exp(-Math.max(-200,Math.min(200,e.deltaY))*.006),p.x,p.y);schedule();},{passive:false});
     canvas.addEventListener('pointerdown',e=>{if(e.button!==0 || drag)return;e.preventDefault();canvas.focus();const p=point(e);drag={id:e.pointerId,start:p,last:p,moved:false,mode:picking && e.pointerType!=='touch' && !e.altKey?'box':'pan'};canvas.setPointerCapture(e.pointerId);});
     canvas.addEventListener('pointermove',e=>{const p=point(e);if(drag && e.pointerId===drag.id){if(Math.hypot(p.x-drag.start.x,p.y-drag.start.y)>5)drag.moved=true;if(drag.moved && drag.mode==='pan')camera.pan(p.x-drag.last.x,p.y-drag.last.y);drag.last=p;if(drag.moved)schedule();}else{const n=hit(p);if(n?.identifier!==hover){hover=n?.identifier;canvas.title=n?`${n.name}\n${n.type?.name || ''}\n${n.identifier}`:picking?'拖曳框選，Alt＋拖曳平移；僅選取原始 OP':'拖曳平移，滾輪縮放，雙擊空白顯示全圖';canvas.style.cursor=picking?'crosshair':n?'pointer':'grab';}}});
-    canvas.addEventListener('pointerup',e=>{if(!drag || drag.id!==e.pointerId)return;drag.last=point(e);const moved=drag.moved,mode=drag.mode,hits=moved&&mode==='box'?inside(rectangle()):null;cancel();if(hits){capture(hits,{toggle:true});return;}if(!moved){const n=hit(point(e));if(n){selectConnections([n.identifier]);schedule();choose(n);}}});
+    canvas.addEventListener('pointerup',e=>{if(!drag || drag.id!==e.pointerId)return;drag.last=point(e);const moved=drag.moved,mode=drag.mode,hits=moved&&mode==='box'?inside(rectangle()):null;cancel();if(hits){capture(hits,{toggle:true});return;}if(!moved){const n=hit(point(e));if(n)choose(n);}});
     canvas.addEventListener('pointercancel',cancel);canvas.addEventListener('lostpointercapture',cancel);
     canvas.addEventListener('dblclick',e=>{if(!hit(point(e)))controller.fit();});
     const navigate=(e,activatePicked)=>{

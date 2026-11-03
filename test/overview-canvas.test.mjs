@@ -24,6 +24,18 @@ function harness({trace=false}={}){
     return{target:new Element('div'),doc,commands,flush(){const pending=[...frames.values()];frames.clear();for(const f of pending)f();},restore(){for(const [k,v]of saved)if(v===undefined)delete globalThis[k];else globalThis[k]=v;}};
 }
 
+test('capturing one OP focuses its connections without losing the matched group keyboard controls after fitting a large graph',()=>{
+    const env=harness();try{
+        const nodes=Array.from({length:1601},(_,i)=>({identifier:String(i),diagramKind:'operator',type:{name:'custom.op'}})),links=nodes.slice(1).map((n,i)=>({from:String(i),to:n.identifier})),layout=overviewLayout(nodes,links,{font:32});let captured=[];
+        const controller=overviewCanvas(env.target,layout,{selected:['0','1'],activate(){throw Error('Capture must not activate details.');},capture(values){captured.push(values[0].identifier);controller.setPicking(true,captured);}});
+        controller.focus(['0','1'],1);controller.setPicking(true);env.flush();
+        const controls=env.target.children[2],button=controls.children.find(b=>b.dataset.overviewNode==='1');assert.ok(button);button.onclick({detail:0});env.flush();assert.deepEqual(captured,['1']);
+        controller.fit();env.flush();assert.ok(Number(env.target.children[0].dataset.zoom)*32<7);
+        assert.deepEqual(controls.children.map(b=>b.dataset.overviewNode).sort(),['0','1'],'At low zoom, the original matched group must remain keyboard reachable.');
+        assert.equal(controls.children.find(b=>b.dataset.overviewNode==='1')['aria-pressed'],'true');assert.ok(Number(env.target.children[0].dataset.focusedEdges)>0);controller.dispose();
+    }finally{env.restore();}
+});
+
 test('side-route paths reach their real endpoints at both overview and detailed zoom',()=>{
     const env=harness({trace:true});try{
         const nodes=['a','b','c','d'].map(identifier=>({identifier,group:'model'})),links=[['a','b'],['b','c'],['c','d'],['a','d'],['d','d']].map(([from,to])=>({from,to})),layout=overviewLayout(nodes,links,{font:32});
