@@ -19,15 +19,18 @@ function harness(canvas){
     sidebar.error=error=>errors.push(error.message); // Observe reporting without constructing Netron's error DOM.
     sidebar.on('select',(_,value)=>view.target.scrollTo(view.target.select([value],'sidebar')));sidebar.on('blur',(_,value)=>view.target.blur([value]));
     let open=true;view._sidebar={close(){if(open){open=false;events.push('close-sidebar');sidebar.deactivate();}}};
-    const context=vm.createContext({view,virtualOverview:canvas?{zoomValue:.5,dispose(){events.push('dispose-canvas');}}:null,layerMarquee:{cancel(){events.push('cancel-marquee');}}});
-    return {context,errors,events,view};
+    const focusButton={disabled:false};
+    const context=vm.createContext({view,svgConnections:{dispose(){events.push('dispose-connections');}},$(id){assert.equal(id,'connection-focus');return focusButton;},virtualOverview:canvas?{zoomValue:.5,dispose(){events.push('dispose-canvas');}}:null,layerMarquee:{cancel(){events.push('cancel-marquee');}}});
+    return {context,errors,events,view,focusButton};
 }
 
 for(const canvas of [false,true])test(`open node details can transition from ${canvas?'Canvas':'SVG'} to Canvas without a null target`,()=>{
     const h=harness(canvas);vm.runInContext(dispose+'\n'+enter,h.context);assert.deepEqual(h.errors,[]);assert.ok(h.events.includes('select')&&h.events.includes('scroll')&&h.events.includes('blur'));
+    assert.equal(h.context.svgConnections,null);assert.equal(h.focusButton.disabled,true);assert.ok(h.events.indexOf('blur')<h.events.indexOf('dispose-connections'));
     if(canvas)assert.ok(h.events.indexOf('blur')<h.events.indexOf('dispose-canvas'));assert.equal(h.view.target,null);assert.ok(h.events.includes('cancel-marquee'));
 });
 
 test('leaving Canvas for SVG or closing a model also deactivates details before disposing its target',()=>{
     const h=harness(true);vm.runInContext(dispose+'\ndisposeVirtualOverview();',h.context);assert.deepEqual(h.errors,[]);assert.ok(h.events.includes('blur'));assert.ok(h.events.indexOf('blur')<h.events.indexOf('dispose-canvas'));assert.equal(h.view.target,null);
+    assert.equal(h.context.svgConnections,null);assert.equal(h.focusButton.disabled,true);assert.equal(h.events.filter(e=>e==='dispose-connections').length,1);
 });
