@@ -1,6 +1,6 @@
 # 商品等級後續工作（暫停，保留未完成項目）
 
-使用者於 2026-10-31 接續「商品等級」，之後要求暫停其他商品化工作；本次接續修正 WASD 後點 OP 跳圖。已完成 [v1.6.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.1)／build `20714da852db2604`；332 核心檔、全站 1,493 檔、原有 38 項正式 HTTPS 操作與新增混用驗收、四份實際固定下載與權威 deployment 已核對，見[正式交付](overview-layout.md#v161-正式交付)。完整商品化工作仍暫停，以下歷史證據與尚未完成項目保留。
+使用者要求暫停其他商品化工作。本次僅完成 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識改善：[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0)／build `1353dd74a9b8b6b7`，336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。完整商品化工作仍暫停，以下歷史證據與尚未完成項目保留。
 
 SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度漏檢及逐 OP 報告已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) [正式交付](transform-metadata-validation.md#v146-正式交付)。五份原始錯誤檔、239 項相關測試、十三組 CPU suite 情境及兩端十二份實際下載／四份下載後 CPU、pattern 正負例與 32px 保留[候選來源](results/transform-metadata-candidate.json)。Edge 原生通過，Chrome 功能通過但十秒正常關閉失敗；正式站另有獨立來源證據。本次 CI 首次八分鐘逾時與只補跑失敗驗證一次的結果分開保留。
 
