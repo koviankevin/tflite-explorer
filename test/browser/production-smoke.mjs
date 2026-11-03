@@ -1,5 +1,5 @@
 import {assertSharedTimeoutProof} from './shared-timeout-proof.mjs';
-import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired,graphFocusNavigationRequired,graphPointerNavigationRequired} from './release-features.mjs';
+import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired,graphFocusNavigationRequired,graphPointerNavigationRequired,graphReadabilityRequired} from './release-features.mjs';
 import {runtimePartialIOFlow} from './runtime-partial-io-flow.mjs';
 import {operatorValidationFlow} from './operator-validation-flow.mjs';
 import {quantizationValidationFlow} from './quantization-validation-flow.mjs';
@@ -81,7 +81,7 @@ try{
         report.staticVerification={status:'passed',siteId:site.siteId,siteManifestSHA256:sha256(raw),files:verified.checks.length,rootEntrySHA256:verified.rootEntrySHA256,checks:verified.checks};
     }
     const temporary=await mkdtemp(path.join(process.env.RUNNER_TEMP,'production-models-'));
-    const resolved=await resolveLiveCore({base,expectedBuild:expected,expectedSiteId:process.env.EXPECTED_SITE_ID||''}),{manifest,coreBasePath}=resolved;const features=browserReleaseFeatures(manifest.release.version);const navigation=graphFocusNavigationRequired(manifest.release.version)?'focus':graphNavigationRequired(manifest.release.version);report.graphNavigationRequired=Boolean(navigation);report.graphFocusNavigationRequired=navigation==='focus';report.graphPointerNavigationRequired=graphPointerNavigationRequired(manifest.release.version);report.releaseFeatures=features;report.fontReflowRequired=fontReflowRequired(manifest.release.version);report.siteRelease=manifest.release;report.siteId=resolved.site?.siteId??null;report.coreBasePath=coreBasePath;
+    const resolved=await resolveLiveCore({base,expectedBuild:expected,expectedSiteId:process.env.EXPECTED_SITE_ID||''}),{manifest,coreBasePath}=resolved;const features=browserReleaseFeatures(manifest.release.version);const navigation=graphFocusNavigationRequired(manifest.release.version)?'focus':graphNavigationRequired(manifest.release.version);report.graphNavigationRequired=Boolean(navigation);report.graphFocusNavigationRequired=navigation==='focus';report.graphPointerNavigationRequired=graphPointerNavigationRequired(manifest.release.version);report.graphReadabilityRequired=graphReadabilityRequired(manifest.release.version);report.releaseFeatures=features;report.fontReflowRequired=fontReflowRequired(manifest.release.version);report.siteRelease=manifest.release;report.siteId=resolved.site?.siteId??null;report.coreBasePath=coreBasePath;
     const demoEntry=manifest.files.find(f=>f.path==='demo.tflite');assert.ok(demoEntry&&demoEntry.bytes<1024**2);
     const demoResponse=await readStaticFile(base,coreBasePath+'demo.tflite',{maxBytes:demoEntry.bytes}),demoBytes=demoResponse.bytes;assert.equal(demoBytes.length,demoEntry.bytes);assert.equal(sha256(demoBytes),demoEntry.sha256);const demo=path.join(temporary,'demo.tflite');await writeFile(demo,demoBytes,{flag:'wx'});
     const pattern=reusablePattern('Deployment smoke RTR',{nodes:[{alias:'N1',type:'Reshape'},{alias:'N2',type:'Transpose'},{alias:'N3',type:'Reshape'}],edges:[{from:'N1',to:'N2'},{from:'N2',to:'N3'}],induced:true}),patternFile=path.join(temporary,'patterns.json');await writeFile(patternFile,exportPatterns([pattern]),{flag:'wx'});
@@ -114,14 +114,14 @@ try{
     report.keyboardRequired=keyboardRequired;report.keyboardAudit=keyboardAudit;
     report.selectionToolsRequired=selectionToolsRequired;
     if(features.demoRuntime)report.demoRuntime=await demoRuntimeFlow({page,read:readPage,directory:temporary});
-    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired,navigation,pointerNavigation:report.graphPointerNavigationRequired});
+    if(keyboardRequired)report.keyboard=await keyboardFlow({page,read:readPage,base,demo,directory:temporary,check,selectionTools:selectionToolsRequired,navigation,pointerNavigation:report.graphPointerNavigationRequired,readability:report.graphReadabilityRequired});
     if(selectionToolsRequired)report.mlirSelection=await mlirSelectionFlow({page,read:readPage,base,directory:temporary,check});
     if(selectionToolsRequired)report.modelEditing=await modelEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired,workspaceEntry:consolidatedEditorRequired});
     if(editWorkspaceRequired)report.editWorkspace=await editWorkspaceFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired,navigation});
     if(portableEditRequired)report.portableEdit=await portableEditFlow({page,read:readPage,base,directory:temporary,check,allowMlir:!tfliteEditingOnlyRequired});
     report.tfliteEditingOnlyRequired=tfliteEditingOnlyRequired;if(tfliteEditingOnlyRequired)report.tfliteControlEdit=await tfliteControlEditFlow({page,read:readPage,base,directory:temporary,check});
     report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}report.editRecoveryRequired=editRecoveryRequired;if(editRecoveryRequired)report.editRecovery=await editRecoveryFlow({page,read:readPage,base,directory:temporary,check});
-    report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check,navigation});
+    report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check,navigation,readability:report.graphReadabilityRequired});
     report.operatorValidationRequired=operatorValidationRequired(manifest.release.version);
     if(report.operatorValidationRequired)report.operatorValidation=await operatorValidationFlow({page,read:readPage,base,directory:temporary,check});
     report.quantizationValidationRequired=quantizationValidationRequired(manifest.release.version);

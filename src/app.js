@@ -7,6 +7,8 @@ import {attachSVGNavigation,panSVG,resetSVGPan} from './svg-navigation.js';
 import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
+import {searchSplit} from './search-split.js';
+import {svgConnectionFocus} from './connection-focus.js';
 import {initReleaseInfo} from './release-info.js';
 import {initUsageGuide} from './usage-guide-ui.js';
 import {dialogKeyboard} from './dialog-keyboard.js';
@@ -45,6 +47,9 @@ let runWorkspace;
 const editWorkspace=modelEditWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,getGraph:()=>currentGraph,getTargets:editTargets,getCompositionTargets:compositionTargets,getCompositionLabel:()=>kind==='patterns'?$('saved-pattern').value||$('condition-pattern-name').value:'',chooseModel:()=>{$('model-file').value='';$('model-file').click();},saveFile:(name,blob)=>host.export(name,blob),onBusy:value=>{exportBusy=value;refreshPickedNodes();$('export-match').disabled=value||!canExportSubmodel();},onExport:async(result,name,source)=>{if(file!==source)return;await host.export(name,result.blob);if(file!==source)return;const token=exportedModels.remember(result.blob,name);exportReports.set(result.report,name,result.reportError);return token;},isCurrentResult:token=>exportedModels.isCurrent(token),openResult:()=>$('open-export-model').click(),downloadReport:()=>exportReports.download(),onMode:()=>runWorkspace?.leave(),isRunning:()=>!!runWorkspace?.active});
 runWorkspace=modelRuntimeWorkspaceUI({rpc,getSource:()=>file,getFormat:()=>model?.sourceFormat,leaveEditor:()=>editWorkspace.explore(),saveFile:(name,blob)=>host.export(name,blob),onLocate:(location,source)=>locateRuntimeOperator(location,source).catch(report)});
 const explorer=explorerResize($('explorer-resize'));
+const patternSplit=searchSplit($('search-split'));
+let svgConnections=null,connectionsEnabled=true;
+$('connection-focus').onclick=()=>{connectionsEnabled=!connectionsEnabled;$('connection-focus').setAttribute('aria-pressed',String(connectionsEnabled));svgConnections?.setEnabled(connectionsEnabled);virtualOverview?.setConnectionFocus(connectionsEnabled);};
 let exportBusy = false;
 let sessions,queuedDraft=null,lastValidWorkspacePattern=null;
 const tabs=modelTabs({capture:captureModelTab,load:loadModelTab,reset,changed:renderModelTabs,error:report,dirty:()=>editWorkspace.hasUnexported,confirmClose:()=>window.confirm('模型分頁有尚未匯出的編輯變更。要放棄並關閉嗎？')});
@@ -101,6 +106,7 @@ let detailNode=null,detailLocation=null;
 view.showNodeProperties = (node, source) => {
     if(node.diagramKind==='pattern'){activatePatternNode(node).catch(report);return;}
     detailNode=node;
+    svgConnections?.select([node]);
     // Sidebar display/chain nodes may have identifier=null. Never coerce that
     // into source OP #0; only the rendered source-location table is authoritative.
     const entry=renderedNodes.find(entry=>entry.node===node);
@@ -117,6 +123,7 @@ view.showNodeProperties = (node, source) => {
 const originalTensorProperties = view.showTensorProperties.bind(view);
 const originalConnectionProperties = view.showConnectionProperties.bind(view);
 view.showTensorProperties = (argument, source) => {
+    svgConnections?.select([]);
     const value = argument.value?.[0] || argument;
     tensorSummary(value);
     if (value.initializer && (value.initializer._data?.length || 0) <= 16 * 1024 * 1024) {
@@ -126,7 +133,7 @@ view.showTensorProperties = (argument, source) => {
         $('sidebar-title').textContent = 'Tensor 詳細資料';
     }
 };
-view.showConnectionProperties = (value, from, to, source) => { tensorSummary(value); originalConnectionProperties(value, from, to, source); };
+view.showConnectionProperties = (value, from, to, source) => { svgConnections?.select([]);tensorSummary(value); originalConnectionProperties(value, from, to, source); };
 
 let worker;
 let requestId = 0;
@@ -157,7 +164,7 @@ let slicePages=new Map();
 let virtualOverview=null;
 // Netron emits select(null)/blur while closing details. Keep the outgoing
 // SVG/Canvas target alive until those callbacks finish, including model close.
-function disposeVirtualOverview(){view._sidebar.close();if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
+function disposeVirtualOverview(){view._sidebar.close();svgConnections?.dispose();svgConnections=null;$('connection-focus').disabled=true;if(virtualOverview){view.target=null;virtualOverview.dispose();virtualOverview=null;}}
 try { patternLibrary = loadPatterns(localStorage); } catch { /* Storage may be unavailable; saving will report the error. */ }
 function loraPreset() {
     conditionsByAlias.clear();
@@ -350,6 +357,7 @@ async function loadModelTab(nextFile,saved) {
 }
 function setKind(nextKind, searchNow = true) {
     kind = nextKind;
+    patternSplit.setActive(kind==='patterns');
     $('run-pattern-laptop').hidden=kind!=='patterns';
     document.querySelectorAll('[data-kind]').forEach((button) => {const active=button.dataset.kind===kind;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;if(active)$('search-controls').setAttribute('aria-labelledby',button.id);});
     $('text-search').hidden = kind === 'patterns'; $('pattern-editor').hidden = kind !== 'patterns';
@@ -574,7 +582,7 @@ function renderOverviewControls(dto) {
     if(!choices.some(m=>m.index===activeIndex))choices.push(dto.overviewMatches[activeIndex]);
     $('overview-match').replaceChildren(...choices.map(overviewOption));
     $('toggle-overview-match').textContent=dto.overviewMatches[activeIndex]?.collapsed?'展開此匹配':'收合此匹配';
-    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個總覽節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.virtual?'Canvas 虛擬總覽只繪製視窗範圍；拖曳平移、滾輪縮放，「全圖」還原總覽。選取 pattern 可跨 block 框選已展開的原始 OP，Alt＋拖曳平移；收合節點點開後再選。藍色虛線為控制流程。':''}${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}${dto.overviewMatches.length>1500?'下拉選單列前 1,000 組獨立匹配及目前選取；所有結果可從分頁清單定位。':''}未匹配的 OP 保留。${dto.virtual?'':'需圈選時請返回匹配圖。'}`;
+    $('overview-summary').textContent=`原始 ${dto.total.toLocaleString()} OP → ${dto.nodes.length.toLocaleString()} 個總覽節點 · ${dto.overviewMatches.length.toLocaleString()} 筆匹配 · ${dto.collapsedCount} 個收合節點。${dto.virtual?'Canvas 虛擬總覽只繪製視窗範圍；拖曳平移、滾輪縮放，「全圖」還原總覽。選取 pattern 可跨 block 框選已展開的原始 OP，Alt＋拖曳平移；收合節點點開後再選。虛線為控制流程。':''}${dto.overlapCount?`${dto.overlapCount} 組與其他匹配共用 OP，未另建節點，仍可從分頁清單定位。`:''}${dto.overviewMatches.length>1500?'下拉選單列前 1,000 組獨立匹配及目前選取；所有結果可從分頁清單定位。':''}未匹配的 OP 保留。${dto.virtual?'':'需圈選時請返回匹配圖。'}`;
 }
 async function drawPatternOverview({expanded=overviewExpanded,active=activeIndex>=0?activeIndex:0,zoom}={}) {
     if(!model || !patternSearchReady || (pickingPattern && !virtualOverview))return;
@@ -599,6 +607,7 @@ function focusOverviewMatch(item,index) {
     document.querySelectorAll('[data-result-index]').forEach(b=>b.classList.toggle('active',Number(b.dataset.resultIndex)===index));
     if(virtualOverview){virtualOverview.focus(match.nodes);if(pickingPattern){if($('capture-cfg').checked)syncCaptureGraph();refreshPickedNodes();}refreshPatternFold();status(`已在全模型虛擬總覽定位匹配 #${index+1}，其餘節點依視窗載入。`);return;}
     const nodes=match.nodes.map(id=>renderedGraph.nodes.get(id)).filter(Boolean);
+    svgConnections?.select(nodes);
     const marked=new Set(match.nodes);for(const {node,element:el} of renderedNodes)if(renderedGraph.combined)el?.classList.toggle('cfg-match',marked.has(node.identifier));
     if(view.target)view.target.scrollTo(view.target.select(nodes,'explorer'));
     refreshPatternFold();status(`已在全模型圖定位匹配 #${index+1}，保留其他匹配的收合狀態。`);
@@ -682,6 +691,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
             renderedNodes=graph.nodes.map(n=>({node:n,index:n.identifier}));
             renderedGraph.captureScopes=new Map();for(const n of graph.nodes)for(const g of n.sourceGraphs || [n.sourceGraph])if(Number.isInteger(g))renderedGraph.captureScopes.set(g,n.group?.split('/')[0]);
             virtualOverview=overviewCanvas($('target'),dto.layout,{selected:dto.selected,activate:node=>activateOverviewNode(node).catch(report),capture:commitCanvasLayers});
+            virtualOverview.setConnectionFocus(connectionsEnabled);$('connection-focus').disabled=false;
             if(previousZoom!==undefined || Number.isFinite(zoom))virtualOverview.focus(dto.selected,zoom ?? previousZoom);
             // Netron's detail sidebar emits focus/select/activate events. Keep
             // those events on the Canvas camera instead of a stale SVG target.
@@ -725,6 +735,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
             renderedNodes = graph.nodes.map((node, i) => ({ node, index: dto.nodes[i], element: view.target?._table.get(node)?.element }));
             for (const entry of renderedNodes) if (entry.element) entry.element.dataset.modelNode = String(entry.index);
             decorateCombinedGraph(dto);
+            svgConnections=svgConnectionFocus($('canvas'),view.target);svgConnections.setEnabled(connectionsEnabled);$('connection-focus').disabled=false;
         }
         if (!renderedGraph || renderedGraph.index !== dto.graphIndex) return;
         const graph = renderedGraph.graph;
@@ -735,6 +746,7 @@ async function queueDraw(dto, generation, zoom,viewport) {
         $('empty-state').hidden = true;
         $('graph-caption').textContent = dto.compactSlice?`精簡圖 · ${dto.item.blocks.length} blocks · ${dto.total} 個原始 OP · ${dto.sliceHelperCount?`局部展開 ${dto.sliceHelperCount} 個輔助節點`:"輔助節點已收起 · 點連線展開"}`:dto.overview?`全模型 · ${dto.overviewMatches.length} 筆匹配 · ${dto.collapsedCount} 個收合節點${dto.overlapCount?` · ${dto.overlapCount} 組重疊`:''}`:dto.folded?`已收合 ${dto.matchedOperatorCount} 個匹配 OP · 點節點展開 · 對外連線保留`:dto.combined?`同圖總覽 · ${dto.item.blocks.length} blocks · ${dto.selected.length} 個匹配 layers${dto.full?' · 含相關 blocks 全部 operators':' · 匹配與控制節點'}`:`${dto.full ? '完整圖' : '局部圖'} · ${graph.nodes.length} / ${dto.total} layers`;
         const selected = dto.selected.map((index) => renderedGraph.nodes.get(String(index))).filter(Boolean);
+        svgConnections?.select(selected);
         if (dto.detail) {
             dto.detail = renderedGraph.values.get(dto.detail.identifier) || hydrate(dto.detail, file);
             tensorSummary(dto.detail); view.showTensorProperties(dto.detail, 'sidebar');

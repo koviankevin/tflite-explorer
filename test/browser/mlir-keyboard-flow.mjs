@@ -1,4 +1,5 @@
 import {graphNavigationFlow} from './graph-navigation-flow.mjs';
+import {connectionFocusFlow} from './connection-focus-flow.mjs';
 // Native keys/file choosers/downloads only. CDP reads DOM and display state;
 // it never calls the model, selection, renderer or export APIs.
 import assert from 'node:assert/strict';
@@ -11,7 +12,7 @@ import {exportPatterns,parsePatternFile} from '../../src/pattern-library.js';
 import {validateMLIR} from '../../src/mlir-validate.js';
 import {findMLIRPatterns} from '../../src/mlir-pattern.js';
 
-export async function mlirKeyboardFlow({page,read,base,directory,check,navigation=false}){
+export async function mlirKeyboardFlow({page,read,base,directory,check,navigation=false,readability=false}){
     assert.equal(process.platform,'linux');assert.equal(process.env.GITHUB_ACTIONS,'true');
     const report={cases:[],modelWorkers:0,tabPresses:0},wait=ms=>new Promise(r=>setTimeout(r,ms)),hash=b=>createHash('sha256').update(b).digest('hex');
     async function until(fn,...args){const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('MLIR keyboard wait: '+fn);await wait(75);}}
@@ -68,6 +69,7 @@ export async function mlirKeyboardFlow({page,read,base,directory,check,navigatio
         for(const [kind,width] of [['diamond',1366],['loop',1280]]){
             const f=await mlirKeyboardFixture(kind),source=path.join(directory,`keyboard-${kind}.mlir`),patternFile=path.join(directory,`keyboard-${kind}.json`);await writeFile(source,f.text,{flag:'wx'});await writeFile(patternFile,exportPatterns([f.pattern]),{flag:'wx'});await start(source,width);await ready(f.layers);await importPattern(patternFile,f.pattern.name);await enter('.result-item');await ready();await option('#graph-font-size','32');await ready();assert.equal(await read(()=>document.activeElement.id),'graph-font-size');await enter('#fold-all-patterns');await until(()=>Number(document.querySelector('.overview-canvas')?.dataset.totalNodes)>1500);
             await tabTo('button[data-overview-kind="pattern"]');const capsule=await focusVisible();await page.keyboard.press('Enter');await until(()=>document.activeElement?.matches('canvas.overview-canvas')&&document.querySelector('#toggle-overview-match').textContent==='收合此匹配');
+            if(readability)(report.connections??=[]).push(await connectionFocusFlow({page,read,mode:'canvas'}));
             await tabTo('#pick-pattern',true);await page.keyboard.press('Space');if(!await read(()=>document.querySelector('#capture-cfg').checked)){await tabTo('#capture-cfg');await page.keyboard.press('Space');}
             const ids=await read(wanted=>[...document.querySelectorAll('.overview-node-controls button')].map(b=>b.dataset.overviewNode).filter(id=>wanted.includes(id)),f.ids);assert.equal(ids.length,f.ids.length);
             for(const [i,id] of ids.entries()){await tabTo(control(id));await focusVisible();await page.keyboard.press(i%2?'Enter':'Space');await until(n=>document.querySelector('#capture-count').textContent.startsWith(`已選取 ${n} 個 layers`)&&document.activeElement.getAttribute('aria-pressed')==='true',i+1);}

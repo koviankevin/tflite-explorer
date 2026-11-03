@@ -2,6 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
 import {partialRuntimeIORequired} from './browser/release-features.mjs';
+import {graphReadabilityRequired} from './browser/release-features.mjs';
+
+test('panel and connection checks apply to v1.7 and future formal releases without breaking immutable older builds',()=>{
+    for(const v of ['1.0.0','1.6.1','0.2.0-preview.34'])assert.equal(graphReadabilityRequired(v),false);
+    for(const v of ['1.7.0','1.7.1','1.8.0','2.0.0'])assert.equal(graphReadabilityRequired(v),true);
+    for(const v of [null,'','v1.7.0'])assert.throws(()=>graphReadabilityRequired(v));
+});
 
 test('partial runtime IO is required for current and unknown candidates, while exact published history remains compatible',()=>{
     for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1','1.4.0'])assert.equal(partialRuntimeIORequired(version),false,version);
