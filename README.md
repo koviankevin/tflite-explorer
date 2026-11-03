@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.6.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.0)，build `bd4c7fe66904b362`；探索圖直接支援 WASD 移圖、Shift 加速與 Q 縮小／E 放大（＋／－亦可），修正搜尋結果焦點及 SVG 無捲動空間時不能移圖。332 核心檔、全站 1,490 檔、原有 38 項正式 HTTPS 操作與新鍵盤驗收、四份實際固定下載及權威 deployment 已核對，見[正式交付](docs/overview-layout.md#v160-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。公司模型與私有 dialect 依使用者指示在內網自行驗收。
+目前對外版本為 [v1.6.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.1)，build `20714da852db2604`；修正 WASD 移圖後點可見 OP 會重置視角，Q／E、滑鼠拖曳與搜尋定位可交替使用。332 核心檔、全站 1,493 檔、原有 38 項正式 HTTPS 操作與新增滑鼠／鍵盤驗收、四份實際固定下載與權威 deployment 已核對，見[正式交付](docs/overview-layout.md#v161-正式交付)。模型全程本機；編輯匯出只做靜態與結構檢查，interpreter 保持手動。公司模型與私有 dialect 依使用者指示在內網自行驗收。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

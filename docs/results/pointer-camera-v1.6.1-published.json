@@ -1,0 +1,783 @@
+{
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-03T00:33:14.965Z",
+  "source": "0fb1f7144e340f4bcb1f26cc99f108b6a5c07959",
+  "tree": "ef4fe2a63a669b5838dea40cbf687cf92a213dae",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.6.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "0fb1f7144e340f4bcb1f26cc99f108b6a5c07959",
+      "tree": "ef4fe2a63a669b5838dea40cbf687cf92a213dae",
+      "committedAt": "2026-11-03T08:05:31+08:00",
+      "dirty": false
+    },
+    "buildId": "20714da852db2604"
+  },
+  "run": {
+    "id": 41550899150,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41550899150",
+    "attempt": 1
+  },
+  "releaseId": 432110998,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.1",
+  "publishedAt": "2026-11-03T00:19:26Z",
+  "siteId": "6914b8c1492960c342f92a0efe08f55894fb7085e86c431d0e2948786437cec1",
+  "siteManifestSHA256": "da8d5b91efe00969ca584e8cee25734ef9680de998b744b38249543dd046fb7a",
+  "coreFiles": 332,
+  "siteFiles": 1493,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "sharedTimeoutProof": {
+    "status": "passed",
+    "workerId": "fff456c3-1a4c-4449-a776-02448244dd5c:runtime:3",
+    "fixtureSHA256": "e24ec3ce32ef0f49ddc49ac1ac630d68185dcb0d5ffb7ca8de9c840198cafe77",
+    "build": "20714da852db2604",
+    "workerLifetimeMs": 31994,
+    "guideAndExecutionObservedSameNativeHandle": true
+  },
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -8019968,
+      "mainHeapDriftBytes": -12935360,
+      "closedRssSlopeBytesPerCycle": 7416802.742857143,
+      "sampledPeakRssBytes": 836534272,
+      "maxSampleGapMs": 701,
+      "sampledPeakGrowthBytes": 51326976
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.6.1-20714da852db2604.zip",
+      "bytes": 41330636,
+      "sha256": "b791c6ff64f7c7974c47b41aea1dfb50a9a499130bae6620b7b2a7c1b053bf23"
+    },
+    {
+      "name": "model-lens-public-1.6.1-20714da852db2604.zip.sha256",
+      "bytes": 111,
+      "sha256": "62250026116b1b30c82cc3478f7cf0e812a9ebab35be5649117ac90e9da274f0"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 210926,
+      "sha256": "5d7c69c5dbb8160076bad88563e5989473846977365d3b5c9bb0643741fa55fd"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 53745,
+      "sha256": "2f12b45f023d117ea226322e7c1455bca5338c40d24fb29c28bf8ed22da346b3"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7506757344,
+    "controllerSource": "0fb1f7144e340f4bcb1f26cc99f108b6a5c07959",
+    "runId": 41550899150,
+    "attempt": 1,
+    "jobId": 125638291697,
+    "siteId": "6914b8c1492960c342f92a0efe08f55894fb7085e86c431d0e2948786437cec1",
+    "legacy": false
+  },
+  "reportProvenance": {
+    "status": "passed-same-job-log-provenance",
+    "method": "same-job-original-log-step-containment-and-upload-binding",
+    "jobId": 125638423463,
+    "runId": 41550899150,
+    "source": "0fb1f7144e340f4bcb1f26cc99f108b6a5c07959",
+    "artifactId": 13193590799,
+    "artifactDigest": "sha256:74d581042aaa6d955d0e85a84a95ccc6dc89a51dd1485959c9ee48bc2a41930a",
+    "artifactBytes": 573133,
+    "reportStartedAt": "2026-11-03T00:12:31.907Z",
+    "reportFinishedAt": "2026-11-03T00:19:04.030Z",
+    "stepStartedAt": "2026-11-03T00:12:31.225Z",
+    "stepSummaryAt": "2026-11-03T00:19:04.042Z",
+    "artifactFinalizedAt": "2026-11-03T00:19:05.980Z",
+    "apiTimeContainment": "passed",
+    "clockNormalization": false
+  },
+  "broadGoal": "paused",
+  "limits": [
+    "Public synthetic cases; company models/dialects are not part of acceptance.",
+    "Only SVG visibility/focus changed; keyboard routing, Canvas and model/export data are unchanged."
+  ],
+  "mainGatesSource": "744cf4054c1c083fa27a62964b8461f7297a0cda",
+  "mainGateRuns": {
+    "core": 41447737899,
+    "browser": 41548045595,
+    "contract": 41548068111,
+    "site": 41548088365
+  },
+  "node": {
+    "tests": 1105,
+    "pass": 1070,
+    "existingOptionalSkipped": 35,
+    "fail": 0
+  },
+  "hostedPointer": {
+    "status": "passed",
+    "font": "32",
+    "cases": [
+      {
+        "kind": "visible-op-click",
+        "keys": [
+          "d"
+        ],
+        "point": {
+          "x": 540.171875,
+          "y": 457,
+          "node": "node-id-0"
+        },
+        "before": {
+          "x": 464.828125,
+          "y": 304,
+          "width": 257.71875,
+          "viewBox": "-567 -534 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 464.828125,
+          "y": 304,
+          "width": 257.71875,
+          "viewBox": "-567 -534 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        }
+      },
+      {
+        "kind": "visible-op-click",
+        "keys": [
+          "q",
+          "s"
+        ],
+        "point": {
+          "x": 575.97900390625,
+          "y": 380.71240234375,
+          "node": "node-id-0"
+        },
+        "before": {
+          "x": 522.1622314453125,
+          "y": 271.427001953125,
+          "width": 184.08428955078125,
+          "viewBox": "-825.8 -635.5999999999999 2353.6 3191.2",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 522.1622314453125,
+          "y": 271.427001953125,
+          "width": 184.08428955078125,
+          "viewBox": "-825.8 -635.5999999999999 2353.6 3191.2",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        }
+      },
+      {
+        "kind": "visible-op-click",
+        "keys": [
+          "e",
+          "a"
+        ],
+        "point": {
+          "x": 619.171875,
+          "y": 345,
+          "node": "node-id-0"
+        },
+        "before": {
+          "x": 543.828125,
+          "y": 192,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 543.828125,
+          "y": 192,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        }
+      },
+      {
+        "kind": "blank-click",
+        "before": {
+          "x": 543.828125,
+          "y": 192,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 543.828125,
+          "y": 192,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        }
+      },
+      {
+        "kind": "mouse-drag",
+        "before": {
+          "x": 543.828125,
+          "y": 192,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 563.828125,
+          "y": 207,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "expectedDelta": [
+          20,
+          15
+        ]
+      },
+      {
+        "kind": "keyboard-after-mouse-drag",
+        "before": {
+          "x": 563.828125,
+          "y": 207,
+          "width": 257.71875,
+          "viewBox": "-647 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        },
+        "after": {
+          "x": 483.828125,
+          "y": 207,
+          "width": 257.71875,
+          "viewBox": "-567 -422 1836 2764",
+          "paneWidth": 647,
+          "selected": "已選取 0 個 layers"
+        }
+      }
+    ],
+    "offscreenSearch": true
+  },
+  "originalRepro": {
+    "file": "pointer-camera-v1.6.0-repro.json",
+    "jump": 80.5
+  },
+  "nativeFormal": {
+    "status": "passed",
+    "release": "版本1.6.1發行類型公開版建置編號20714da852db2604來源 commit0fb1f7144e340f4bcb1f26cc99f108b6a5c07959來源狀態固定 commit 建置",
+    "cases": [
+      {
+        "kind": "blank",
+        "point": {
+          "x": 350,
+          "y": 218
+        },
+        "before": {
+          "left": 528.08837890625,
+          "top": 312,
+          "viewBox": "-567 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterMove": {
+          "left": 528.08837890625,
+          "top": 312,
+          "viewBox": "-567 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterDown": {
+          "left": 528.08837890625,
+          "top": 312,
+          "viewBox": "-567 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "after": {
+          "left": 528.08837890625,
+          "top": 312,
+          "viewBox": "-567 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "jump": 0
+      },
+      {
+        "kind": "operator",
+        "point": {
+          "x": 477.20361328125,
+          "y": 422.5,
+          "id": "node-id-0"
+        },
+        "before": {
+          "left": 448.08837890625,
+          "top": 312,
+          "viewBox": "-487 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterMove": {
+          "left": 448.08837890625,
+          "top": 312,
+          "viewBox": "-487 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterDown": {
+          "left": 448.08837890625,
+          "top": 312,
+          "viewBox": "-487 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "after": {
+          "left": 448.08837890625,
+          "top": 312,
+          "viewBox": "-487 -526 1680 2289",
+          "scrollLeft": 517,
+          "scrollTop": 526,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "jump": 0
+      },
+      {
+        "kind": "blank-after-zoom",
+        "point": {
+          "x": 350,
+          "y": 218
+        },
+        "before": {
+          "left": 453.3447265625,
+          "top": 278.42730712890625,
+          "viewBox": "-665.8 -624.4000000000001 2197.6 2709.8",
+          "scrollLeft": 462,
+          "scrollTop": 451,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterMove": {
+          "left": 453.3447265625,
+          "top": 278.42730712890625,
+          "viewBox": "-665.8 -624.4000000000001 2197.6 2709.8",
+          "scrollLeft": 462,
+          "scrollTop": 451,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "afterDown": {
+          "left": 453.3447265625,
+          "top": 278.42730712890625,
+          "viewBox": "-665.8 -624.4000000000001 2197.6 2709.8",
+          "scrollLeft": 462,
+          "scrollTop": 451,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "after": {
+          "left": 453.3447265625,
+          "top": 278.42730712890625,
+          "viewBox": "-665.8 -624.4000000000001 2197.6 2709.8",
+          "scrollLeft": 462,
+          "scrollTop": 451,
+          "width": 647,
+          "height": 526,
+          "details": true
+        },
+        "jump": 0
+      }
+    ],
+    "pointer": {
+      "status": "passed",
+      "font": "32",
+      "cases": [
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "d"
+          ],
+          "point": {
+            "x": 553.4682006835938,
+            "y": 405.2135009765625,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 499.751953125,
+            "y": 283.428466796875,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -736.4000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 499.751953125,
+            "y": 283.428466796875,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -736.4000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "q",
+            "s"
+          ],
+          "point": {
+            "x": 586.3323669433594,
+            "y": 345.0129699707031,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 547.9636840820312,
+            "y": 258.0237731933594,
+            "width": 128.913330078125,
+            "viewBox": "-1156.12 -874.1600000000001 3073.24 3946.92",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 547.9636840820312,
+            "y": 258.0237731933594,
+            "width": 128.913330078125,
+            "viewBox": "-1156.12 -874.1600000000001 3073.24 3946.92",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "e",
+            "a"
+          ],
+          "point": {
+            "x": 634.4677734375,
+            "y": 292.2140808105469,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "blank-click",
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "mouse-drag",
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 600.7515258789062,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "expectedDelta": [
+            20,
+            15
+          ]
+        },
+        {
+          "kind": "keyboard-after-mouse-drag",
+          "before": {
+            "x": 600.7515258789062,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 520.751953125,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        }
+      ],
+      "offscreenSearch": true
+    },
+    "browserClosed": true
+  },
+  "nativeFormalChrome": {
+    "status": "passed",
+    "release": "版本1.6.1發行類型公開版建置編號20714da852db2604來源 commit0fb1f7144e340f4bcb1f26cc99f108b6a5c07959來源狀態固定 commit 建置",
+    "pointer": {
+      "status": "passed",
+      "font": "32",
+      "cases": [
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "d"
+          ],
+          "point": {
+            "x": 553.4682006835938,
+            "y": 405.2135009765625,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 499.751953125,
+            "y": 283.428466796875,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -736.4000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 499.751953125,
+            "y": 283.428466796875,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -736.4000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "q",
+            "s"
+          ],
+          "point": {
+            "x": 586.3323669433594,
+            "y": 345.0129699707031,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 547.9636840820312,
+            "y": 258.0237731933594,
+            "width": 128.913330078125,
+            "viewBox": "-1156.12 -874.1600000000001 3073.24 3946.92",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 547.9636840820312,
+            "y": 258.0237731933594,
+            "width": 128.913330078125,
+            "viewBox": "-1156.12 -874.1600000000001 3073.24 3946.92",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "visible-op-click",
+          "keys": [
+            "e",
+            "a"
+          ],
+          "point": {
+            "x": 634.4677734375,
+            "y": 292.2140808105469,
+            "node": "node-id-0"
+          },
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "blank-click",
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        },
+        {
+          "kind": "mouse-drag",
+          "before": {
+            "x": 580.7515258789062,
+            "y": 170.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 600.7515258789062,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "expectedDelta": [
+            20,
+            15
+          ]
+        },
+        {
+          "kind": "keyboard-after-mouse-drag",
+          "before": {
+            "x": 600.7515258789062,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-905.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          },
+          "after": {
+            "x": 520.751953125,
+            "y": 185.42901611328125,
+            "width": 180.47894287109375,
+            "viewBox": "-793.8 -579.6000000000001 2348.6 3357.8",
+            "paneWidth": 647,
+            "selected": "已選取 0 個 layers"
+          }
+        }
+      ],
+      "offscreenSearch": true
+    },
+    "browserClosed": true
+  },
+  "candidateCanvas": {
+    "status": "passed-with-local-injection-blocked",
+    "source": "744cf4054c1c083fa27a62964b8461f7297a0cda",
+    "pointer": {
+      "beforeClick": {
+        "x": -2419.7916666666665,
+        "y": -77300,
+        "zoom": 1
+      },
+      "afterClick": {
+        "x": -2419.7916666666665,
+        "y": -77300,
+        "zoom": 1
+      },
+      "afterDrag": {
+        "x": -2399.7916666666665,
+        "y": -77285,
+        "zoom": 1
+      },
+      "afterKey": {
+        "x": -2399.7916666666665,
+        "y": -77205,
+        "zoom": 1
+      }
+    },
+    "font": "32",
+    "geometry": {
+      "width": 1366,
+      "height": 768,
+      "scrollWidth": 1366,
+      "canvas": {
+        "x": 344,
+        "y": 212,
+        "width": 647,
+        "height": 526,
+        "top": 212,
+        "right": 991,
+        "bottom": 738,
+        "left": 344
+      }
+    },
+    "browserClosed": true,
+    "limit": "Local antivirus injected a foreign script and malformed CSP. The foreign request was blocked, all original console text is retained, and no browser/security setting was changed. This does not replace the clean isolated CI gate."
+  },
+  "diagnosticNote": "Initial Canvas gesture probe counted a subthreshold 4.17px step as pan. Existing 5px threshold intentionally ignored it. Final gesture crosses the threshold in its first move; original probes retained locally. No Canvas source changed.",
+  "broadProductization": "paused",
+  "sitesSync": false
+}

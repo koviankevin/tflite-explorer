@@ -1,6 +1,6 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.6.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.0)／build `bd4c7fe66904b362`。[探索移圖與 Q／E 縮放](overview-layout.md#v160-正式交付)已交付，修正 v1.5.0 的探索焦點與 SVG 捲動邊界問題；本頁保留公開版的其他功能界線與驗收缺口。歷史 Windows Chrome 正常關閉與防毒注入限制不因本次有限案例改列已修復。內網及私有 dialect 依使用者指示自行處理。
+目前固定版本為 [v1.6.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.6.1)／build `20714da852db2604`。[鍵盤／滑鼠視角修正](overview-layout.md#v161-正式交付)已交付，修正 v1.6.0 的 WASD 後點可見 OP 跳圖；本頁保留公開版的其他功能界線與驗收缺口。歷史 Windows Chrome 正常關閉、防毒注入及驗收選檔時序限制不因本次有限案例改列已修復。內網及私有 dialect 依使用者指示自行處理。
 
 v1.6.0 的首輪正式驗收在有限 CPU 恢復案例未切換到測試檔，4-byte 輸入被原示範模型的 8-byte 規格拒絕；30 秒終止 Worker 本身已成功。只補跑失敗驗收一次，未重跑成功部署，原始失敗、完整附件備份及雜湊保留於[交付收據](results/navigation-focus-v1.6.0-published.json)。模型切換時序仍是驗收可靠性的已知風險，尚未宣稱根因永久修復。
 

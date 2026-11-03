@@ -1,0 +1,58 @@
+{
+  "status": "reproduced-jump",
+  "cases": [
+    {
+      "kind": "operator",
+      "point": {
+        "x": 557.20361328125,
+        "y": 422.5,
+        "id": "node-id-0"
+      },
+      "before": {
+        "left": 528.08837890625,
+        "top": 312,
+        "viewBox": "-567 -526 1680 2289",
+        "scrollLeft": 517,
+        "scrollTop": 526,
+        "width": 647,
+        "height": 526,
+        "details": true
+      },
+      "afterMove": {
+        "left": 528.08837890625,
+        "top": 312,
+        "viewBox": "-567 -526 1680 2289",
+        "scrollLeft": 517,
+        "scrollTop": 526,
+        "width": 647,
+        "height": 526,
+        "details": true
+      },
+      "afterDown": {
+        "left": 528.08837890625,
+        "top": 312,
+        "viewBox": "-567 -526 1680 2289",
+        "scrollLeft": 517,
+        "scrollTop": 526,
+        "width": 647,
+        "height": 526,
+        "details": true
+      },
+      "after": {
+        "left": 608.58837890625,
+        "top": 312,
+        "viewBox": "0 0 386 1237",
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "width": 647,
+        "height": 526,
+        "details": true
+      },
+      "jump": 80.5
+    }
+  ],
+  "errors": [],
+  "startedAt": "2026-11-02T23:35:57.892Z",
+  "release": "版本1.6.0發行類型公開版建置編號bd4c7fe66904b362來源 commit88bdb2eed8d436dd1620c3399994d8a609148def來源狀態固定 commit 建置",
+  "finishedAt": "2026-11-02T23:36:04.638Z"
+}
