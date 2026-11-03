@@ -1,0 +1,3290 @@
+{
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-03T03:56:34.470Z",
+  "source": "7009b1f7faebf7f50360106c3e25e5632230af48",
+  "tree": "27d69ffeab90c133977be15ab506a155fe2a11fe",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.7.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "7009b1f7faebf7f50360106c3e25e5632230af48",
+      "tree": "27d69ffeab90c133977be15ab506a155fe2a11fe",
+      "committedAt": "2026-11-03T11:39:15+08:00",
+      "dirty": false
+    },
+    "buildId": "1353dd74a9b8b6b7"
+  },
+  "run": {
+    "id": 41573974437,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41573974437",
+    "attempt": 1
+  },
+  "releaseId": 432259256,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0",
+  "publishedAt": "2026-11-03T03:53:32Z",
+  "siteId": "07d53c2367d6ece2b9a7bc7afcb1944b5041258a3e13370c616e12abb70e5ce2",
+  "siteManifestSHA256": "5d00a4e982edb86d07a0eb70b5cf0f96415608b46150d12256b19a5a932634a5",
+  "coreFiles": 336,
+  "siteFiles": 1498,
+  "checks": 38,
+  "fontFrames": 15,
+  "runtimeCases": 19,
+  "guideTopics": 5,
+  "readability": {
+    "splitRecords": 6,
+    "connections": [
+      {
+        "mode": "svg",
+        "edges": 2,
+        "cameraPreserved": true
+      },
+      {
+        "mode": "canvas",
+        "edges": 16,
+        "cameraPreserved": true
+      },
+      {
+        "mode": "canvas",
+        "edges": 13,
+        "cameraPreserved": true
+      }
+    ]
+  },
+  "sharedTimeoutProof": {
+    "status": "passed",
+    "workerId": "315d46d8-e3ff-48ec-8f91-4ca594be3858:runtime:3",
+    "fixtureSHA256": "e24ec3ce32ef0f49ddc49ac1ac630d68185dcb0d5ffb7ca8de9c840198cafe77",
+    "build": "1353dd74a9b8b6b7",
+    "workerLifetimeMs": 31987,
+    "guideAndExecutionObservedSameNativeHandle": true
+  },
+  "runtimeLifecycleEvaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssDriftBytes": -5152768,
+      "mainHeapDriftBytes": -13160448,
+      "closedRssSlopeBytesPerCycle": 6328905.142857143,
+      "sampledPeakRssBytes": 817008640,
+      "maxSampleGapMs": 543,
+      "sampledPeakGrowthBytes": 39071744
+    }
+  },
+  "assets": [
+    {
+      "name": "model-lens-public-1.7.0-1353dd74a9b8b6b7.zip",
+      "bytes": 41345763,
+      "sha256": "80fcf178097b0c85515888d25cc921910e2b8a1bb36f18ad4354d5da9bd03bfb"
+    },
+    {
+      "name": "model-lens-public-1.7.0-1353dd74a9b8b6b7.zip.sha256",
+      "bytes": 111,
+      "sha256": "b1af53b333209e0ea47e42caf0ab5b84f841a95af1d1b6c2e5da1af24ed2f65a"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 213179,
+      "sha256": "f47a2b236c84cab58c82c175d3aad4fe4fbbb30e824fdee45edfb17cd1908ad3"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54371,
+      "sha256": "1962e30f2a4fa0db5b0115c4e6f442975a30a8ea376a656199e9c057d01c4e78"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7509844790,
+    "controllerSource": "7009b1f7faebf7f50360106c3e25e5632230af48",
+    "runId": 41573974437,
+    "attempt": 1,
+    "jobId": 125713369637,
+    "siteId": "07d53c2367d6ece2b9a7bc7afcb1944b5041258a3e13370c616e12abb70e5ce2",
+    "legacy": false
+  },
+  "reportProvenance": {
+    "status": "passed-same-job-log-provenance",
+    "method": "same-job-original-log-step-containment-and-upload-binding",
+    "jobId": 125713482356,
+    "runId": 41573974437,
+    "source": "7009b1f7faebf7f50360106c3e25e5632230af48",
+    "artifactId": 13203007041,
+    "artifactDigest": "sha256:6c50ca01c2f8ac457f3c1d9f31195271553cad1d2703632e82bd51afb7e0d81b",
+    "artifactBytes": 552454,
+    "reportStartedAt": "2026-11-03T03:46:37.471Z",
+    "reportFinishedAt": "2026-11-03T03:53:08.896Z",
+    "stepStartedAt": "2026-11-03T03:46:36.956Z",
+    "stepSummaryAt": "2026-11-03T03:53:08.905Z",
+    "artifactFinalizedAt": "2026-11-03T03:53:10.533Z",
+    "apiTimeContainment": "passed",
+    "clockNormalization": false
+  },
+  "broadGoal": "paused",
+  "limits": [
+    "Public synthetic cases; company models/dialects are not part of acceptance.",
+    "Focus covers direct input/output/internal edges; full names remain available in hover tooltips."
+  ],
+  "format": "model-lens-graph-readability-delivery",
+  "publishedAtTaipei": "2026-11-03 11:53:32",
+  "featurePR": 251,
+  "correctionPR": 252,
+  "evidencePR": 253,
+  "original38Retained": true,
+  "readabilityRequired": true,
+  "split": {
+    "records": [
+      {
+        "size": {
+          "width": 1366,
+          "height": 768
+        },
+        "press": "Home",
+        "settings": {
+          "x": 0,
+          "y": 222,
+          "width": 343,
+          "height": 64,
+          "bottom": 286
+        },
+        "split": {
+          "x": 0,
+          "y": 286,
+          "width": 343,
+          "height": 12,
+          "bottom": 298
+        },
+        "results": {
+          "x": 0,
+          "y": 348,
+          "width": 343,
+          "height": 354,
+          "bottom": 702
+        },
+        "pane": {
+          "x": 0,
+          "y": 298,
+          "width": 343,
+          "height": 404,
+          "bottom": 702
+        },
+        "workspace": {
+          "x": 0,
+          "y": 222,
+          "width": 343,
+          "height": 480,
+          "bottom": 702
+        },
+        "footer": 702,
+        "hidden": false,
+        "stored": "0.13675213675213677",
+        "scroll": 10,
+        "viewBox": "0 0 542 1696"
+      },
+      {
+        "size": {
+          "width": 1366,
+          "height": 768
+        },
+        "press": "End",
+        "settings": {
+          "x": 0,
+          "y": 222,
+          "width": 343,
+          "height": 268,
+          "bottom": 490
+        },
+        "split": {
+          "x": 0,
+          "y": 490,
+          "width": 343,
+          "height": 12,
+          "bottom": 502
+        },
+        "results": {
+          "x": 0,
+          "y": 552,
+          "width": 343,
+          "height": 150,
+          "bottom": 702
+        },
+        "pane": {
+          "x": 0,
+          "y": 502,
+          "width": 343,
+          "height": 200,
+          "bottom": 702
+        },
+        "workspace": {
+          "x": 0,
+          "y": 222,
+          "width": 343,
+          "height": 480,
+          "bottom": 702
+        },
+        "footer": 702,
+        "hidden": false,
+        "stored": "0.5726495726495726",
+        "scroll": 10,
+        "viewBox": "0 0 542 1696"
+      },
+      {
+        "size": {
+          "width": 1366,
+          "height": 768
+        },
+        "initial": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 234,
+            "bottom": 456
+          },
+          "split": {
+            "x": 0,
+            "y": 456,
+            "width": 343,
+            "height": 12,
+            "bottom": 468
+          },
+          "results": {
+            "x": 0,
+            "y": 518,
+            "width": 343,
+            "height": 184,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 468,
+            "width": 343,
+            "height": 234,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.5",
+          "scroll": 10,
+          "viewBox": "0 0 542 1696"
+        },
+        "dragged": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 153,
+            "bottom": 375
+          },
+          "split": {
+            "x": 0,
+            "y": 375,
+            "width": 343,
+            "height": 12,
+            "bottom": 387
+          },
+          "results": {
+            "x": 0,
+            "y": 437,
+            "width": 343,
+            "height": 265,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 387,
+            "width": 343,
+            "height": 315,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.3269230769230769",
+          "scroll": 10,
+          "viewBox": "0 0 542 1696"
+        },
+        "key": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 163,
+            "bottom": 385
+          },
+          "split": {
+            "x": 0,
+            "y": 385,
+            "width": 343,
+            "height": 12,
+            "bottom": 397
+          },
+          "results": {
+            "x": 0,
+            "y": 447,
+            "width": 343,
+            "height": 255,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 397,
+            "width": 343,
+            "height": 305,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.3482905982905983",
+          "scroll": 10,
+          "viewBox": "0 0 542 1696"
+        },
+        "scrolled": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 234,
+            "bottom": 456
+          },
+          "split": {
+            "x": 0,
+            "y": 456,
+            "width": 343,
+            "height": 12,
+            "bottom": 468
+          },
+          "results": {
+            "x": 0,
+            "y": 518,
+            "width": 343,
+            "height": 184,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 468,
+            "width": 343,
+            "height": 234,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.5",
+          "scroll": 805,
+          "viewBox": "0 0 542 1696"
+        },
+        "saved": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 104,
+            "bottom": 326
+          },
+          "split": {
+            "x": 0,
+            "y": 326,
+            "width": 343,
+            "height": 12,
+            "bottom": 338
+          },
+          "results": {
+            "x": 0,
+            "y": 388,
+            "width": 343,
+            "height": 314,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 338,
+            "width": 343,
+            "height": 364,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.2222222222222222",
+          "scroll": 805,
+          "viewBox": "0 0 542 1696"
+        },
+        "restored": {
+          "settings": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 104,
+            "bottom": 326
+          },
+          "split": {
+            "x": 0,
+            "y": 326,
+            "width": 343,
+            "height": 12,
+            "bottom": 338
+          },
+          "results": {
+            "x": 0,
+            "y": 388,
+            "width": 343,
+            "height": 314,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 338,
+            "width": 343,
+            "height": 364,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 222,
+            "width": 343,
+            "height": 480,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.2222222222222222",
+          "scroll": 30,
+          "viewBox": "0 0 542 1696"
+        }
+      },
+      {
+        "size": {
+          "width": 1280,
+          "height": 640
+        },
+        "press": "Home",
+        "settings": {
+          "x": 0,
+          "y": 233,
+          "width": 304,
+          "height": 61,
+          "bottom": 294
+        },
+        "split": {
+          "x": 0,
+          "y": 294,
+          "width": 304,
+          "height": 12,
+          "bottom": 306
+        },
+        "results": {
+          "x": 0,
+          "y": 356,
+          "width": 304,
+          "height": 196,
+          "bottom": 552
+        },
+        "pane": {
+          "x": 0,
+          "y": 306,
+          "width": 304,
+          "height": 246,
+          "bottom": 552
+        },
+        "workspace": {
+          "x": 0,
+          "y": 233,
+          "width": 304,
+          "height": 319,
+          "bottom": 552
+        },
+        "footer": 552,
+        "hidden": false,
+        "stored": "0.2",
+        "scroll": 503,
+        "viewBox": "0 0 542 1696"
+      },
+      {
+        "size": {
+          "width": 1280,
+          "height": 640
+        },
+        "press": "End",
+        "settings": {
+          "x": 0,
+          "y": 233,
+          "width": 304,
+          "height": 107,
+          "bottom": 340
+        },
+        "split": {
+          "x": 0,
+          "y": 340,
+          "width": 304,
+          "height": 12,
+          "bottom": 352
+        },
+        "results": {
+          "x": 0,
+          "y": 402,
+          "width": 304,
+          "height": 150,
+          "bottom": 552
+        },
+        "pane": {
+          "x": 0,
+          "y": 352,
+          "width": 304,
+          "height": 200,
+          "bottom": 552
+        },
+        "workspace": {
+          "x": 0,
+          "y": 233,
+          "width": 304,
+          "height": 319,
+          "bottom": 552
+        },
+        "footer": 552,
+        "hidden": false,
+        "stored": "0.3485342019543974",
+        "scroll": 503,
+        "viewBox": "0 0 542 1696"
+      },
+      {
+        "size": {
+          "width": 1280,
+          "height": 640
+        },
+        "initial": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 107,
+            "bottom": 340
+          },
+          "split": {
+            "x": 0,
+            "y": 340,
+            "width": 304,
+            "height": 12,
+            "bottom": 352
+          },
+          "results": {
+            "x": 0,
+            "y": 402,
+            "width": 304,
+            "height": 150,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 352,
+            "width": 304,
+            "height": 200,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.5",
+          "scroll": 503,
+          "viewBox": "0 0 542 1696"
+        },
+        "dragged": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 61,
+            "bottom": 294
+          },
+          "split": {
+            "x": 0,
+            "y": 294,
+            "width": 304,
+            "height": 12,
+            "bottom": 306
+          },
+          "results": {
+            "x": 0,
+            "y": 356,
+            "width": 304,
+            "height": 196,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 306,
+            "width": 304,
+            "height": 246,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.2",
+          "scroll": 503,
+          "viewBox": "0 0 542 1696"
+        },
+        "key": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 71,
+            "bottom": 304
+          },
+          "split": {
+            "x": 0,
+            "y": 304,
+            "width": 304,
+            "height": 12,
+            "bottom": 316
+          },
+          "results": {
+            "x": 0,
+            "y": 366,
+            "width": 304,
+            "height": 186,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 316,
+            "width": 304,
+            "height": 236,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.23257328990228016",
+          "scroll": 503,
+          "viewBox": "0 0 542 1696"
+        },
+        "scrolled": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 107,
+            "bottom": 340
+          },
+          "split": {
+            "x": 0,
+            "y": 340,
+            "width": 304,
+            "height": 12,
+            "bottom": 352
+          },
+          "results": {
+            "x": 0,
+            "y": 402,
+            "width": 304,
+            "height": 150,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 352,
+            "width": 304,
+            "height": 200,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.5",
+          "scroll": 1019,
+          "viewBox": "0 0 542 1696"
+        },
+        "saved": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 101,
+            "bottom": 334
+          },
+          "split": {
+            "x": 0,
+            "y": 334,
+            "width": 304,
+            "height": 12,
+            "bottom": 346
+          },
+          "results": {
+            "x": 0,
+            "y": 396,
+            "width": 304,
+            "height": 156,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 346,
+            "width": 304,
+            "height": 206,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.33029315960912053",
+          "scroll": 1019,
+          "viewBox": "0 0 542 1696"
+        },
+        "restored": {
+          "settings": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 101,
+            "bottom": 334
+          },
+          "split": {
+            "x": 0,
+            "y": 334,
+            "width": 304,
+            "height": 12,
+            "bottom": 346
+          },
+          "results": {
+            "x": 0,
+            "y": 396,
+            "width": 304,
+            "height": 156,
+            "bottom": 552
+          },
+          "pane": {
+            "x": 0,
+            "y": 346,
+            "width": 304,
+            "height": 206,
+            "bottom": 552
+          },
+          "workspace": {
+            "x": 0,
+            "y": 233,
+            "width": 304,
+            "height": 319,
+            "bottom": 552
+          },
+          "footer": 552,
+          "hidden": false,
+          "stored": "0.33029315960912053",
+          "scroll": 1025,
+          "viewBox": "0 0 542 1696"
+        }
+      }
+    ],
+    "saved": {
+      "settings": {
+        "x": 0,
+        "y": 222,
+        "width": 343,
+        "height": 104,
+        "bottom": 326
+      },
+      "split": {
+        "x": 0,
+        "y": 326,
+        "width": 343,
+        "height": 12,
+        "bottom": 338
+      },
+      "results": {
+        "x": 0,
+        "y": 388,
+        "width": 343,
+        "height": 314,
+        "bottom": 702
+      },
+      "pane": {
+        "x": 0,
+        "y": 338,
+        "width": 343,
+        "height": 364,
+        "bottom": 702
+      },
+      "workspace": {
+        "x": 0,
+        "y": 222,
+        "width": 343,
+        "height": 480,
+        "bottom": 702
+      },
+      "footer": 702,
+      "hidden": false,
+      "stored": "0.2222222222222222",
+      "scroll": 465,
+      "viewBox": "0 0 542 1696"
+    }
+  },
+  "connections": [
+    {
+      "mode": "svg",
+      "before": {
+        "edges": 2,
+        "enabled": "true",
+        "camera": [
+          "0 0 542 1696",
+          0,
+          0
+        ],
+        "selection": "已選取 0 個 layers",
+        "halos": 2,
+        "inputs": 2,
+        "outputs": 2
+      },
+      "disabled": {
+        "edges": 0,
+        "enabled": "false",
+        "camera": [
+          "0 0 542 1696",
+          0,
+          0
+        ],
+        "selection": "已選取 0 個 layers",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "restored": {
+        "edges": 2,
+        "enabled": "true",
+        "camera": [
+          "0 0 542 1696",
+          0,
+          0
+        ],
+        "selection": "已選取 0 個 layers",
+        "halos": 2,
+        "inputs": 2,
+        "outputs": 2
+      },
+      "highlighted": "b47225e611626519e14c43457e045d39695ea845e7587cb22c409eed3e953c00",
+      "all": "7ec17590ee29528db86011720beb685d43749b186d1b04a3500eabef2b704c38"
+    },
+    {
+      "mode": "canvas",
+      "before": {
+        "edges": 16,
+        "enabled": "true",
+        "camera": [
+          "0.2982758620689655",
+          "-144914.73879310343",
+          "-33.83103448275861"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "disabled": {
+        "edges": 0,
+        "enabled": "false",
+        "camera": [
+          "0.2982758620689655",
+          "-144914.73879310343",
+          "-33.83103448275861"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "restored": {
+        "edges": 16,
+        "enabled": "true",
+        "camera": [
+          "0.2982758620689655",
+          "-144914.73879310343",
+          "-33.83103448275861"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "highlighted": "c47b510c34093c1456fe441c1f382ffc8d92e7ce5233129241f434de2126b5d9",
+      "all": "6506e53a24a380a0dc05c4c3449d53cedfa4bb9a146aa6ba5608f650e6d12fe5"
+    },
+    {
+      "mode": "canvas",
+      "before": {
+        "edges": 13,
+        "enabled": "true",
+        "camera": [
+          "0.3581780538302277",
+          "110.71739130434787",
+          "-46.650103519668704"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "disabled": {
+        "edges": 0,
+        "enabled": "false",
+        "camera": [
+          "0.3581780538302277",
+          "110.71739130434787",
+          "-46.650103519668704"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "restored": {
+        "edges": 13,
+        "enabled": "true",
+        "camera": [
+          "0.3581780538302277",
+          "110.71739130434787",
+          "-46.650103519668704"
+        ],
+        "selection": "已選取 0 個 layers · 局部匯出將補足必要的控制節點與迴圈運算",
+        "halos": 0,
+        "inputs": 0,
+        "outputs": 0
+      },
+      "highlighted": "b9d0102103439d6a9d30d3275951f67dd4b1d0c6a41ea4a2a7cc799381ae1ba1",
+      "all": "f765761b3b49077e166b2d6aa20c9e62283e16efb78c6234cfff8bf63decc748"
+    }
+  ],
+  "mlir": [
+    {
+      "kind": "diamond",
+      "width": 1366,
+      "height": 640,
+      "sourceOperators": 1608,
+      "selectedOperators": 7,
+      "blocks": 4,
+      "font": 32,
+      "capsule": {
+        "id": "pattern:match:0",
+        "kind": "pattern",
+        "text": "展開 pattern：Keyboard CFG diamond #1 · 7 OP · 點開 · pattern:match:0",
+        "width": 482.15625,
+        "height": 41,
+        "left": 354,
+        "top": 517,
+        "right": 836.15625,
+        "bottom": 558,
+        "target": {
+          "left": 344,
+          "top": 204,
+          "right": 1366,
+          "bottom": 610
+        },
+        "clip": "auto",
+        "outline": "solid",
+        "controls": 1,
+        "documentWidth": 1366,
+        "viewport": 1366
+      },
+      "focused": {
+        "id": "scope:0:b0:n1601",
+        "kind": "operator",
+        "text": "選取 layer：block/subgraph 0 · #1601 · cf.cond_br · scope:0:b0:n1601",
+        "width": 463.8125,
+        "height": 41,
+        "left": 354,
+        "top": 517,
+        "right": 817.8125,
+        "bottom": 558,
+        "target": {
+          "left": 344,
+          "top": 427,
+          "right": 1366,
+          "bottom": 610
+        },
+        "clip": "auto",
+        "outline": "solid",
+        "controls": 7,
+        "documentWidth": 1366,
+        "viewport": 1366
+      },
+      "beforePan": "e3427a640906654208bd63748dd039c4bd52ed4b0a68b317f88f74d6e385d14a",
+      "afterPan": "e15e9e1a22453a6f0017e1564579d735c44a1162e9e5bc675dc142a44e99050c",
+      "selected": "已選取 7 個 layers · 4 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "exportedBytes": 4019,
+      "exportedSSA": "passed",
+      "oldPatternMatches": 1,
+      "capturedPatternMatches": 1,
+      "reopenedMatches": 1
+    },
+    {
+      "kind": "loop",
+      "width": 1280,
+      "height": 640,
+      "sourceOperators": 1605,
+      "selectedOperators": 4,
+      "blocks": 3,
+      "font": 32,
+      "capsule": {
+        "id": "pattern:match:0",
+        "kind": "pattern",
+        "text": "展開 pattern：Keyboard CFG loop #1 · 4 OP · 點開 · pattern:match:0",
+        "width": 454.921875,
+        "height": 41,
+        "left": 354,
+        "top": 517,
+        "right": 808.921875,
+        "bottom": 558,
+        "target": {
+          "left": 344,
+          "top": 204,
+          "right": 1280,
+          "bottom": 610
+        },
+        "clip": "auto",
+        "outline": "solid",
+        "controls": 1,
+        "documentWidth": 1280,
+        "viewport": 1280
+      },
+      "focused": {
+        "id": "scope:0:b0:n1601",
+        "kind": "operator",
+        "text": "選取 layer：block/subgraph 0 · #1601 · cf.br · scope:0:b0:n1601",
+        "width": 425.671875,
+        "height": 41,
+        "left": 354,
+        "top": 517,
+        "right": 779.671875,
+        "bottom": 558,
+        "target": {
+          "left": 344,
+          "top": 427,
+          "right": 1280,
+          "bottom": 610
+        },
+        "clip": "auto",
+        "outline": "solid",
+        "controls": 4,
+        "documentWidth": 1280,
+        "viewport": 1280
+      },
+      "beforePan": "5788f652fde5e56aa88e15b753c0abed4fa959fd645575612e4106b52a34c0ea",
+      "afterPan": "b81b427aff500c1c2412541507b2de15bef5556022948ae070f7c24cc71e4301",
+      "selected": "已選取 4 個 layers · 3 個 blocks · 局部匯出將補足必要的控制節點與迴圈運算",
+      "exportedBytes": 3210,
+      "exportedSSA": "passed",
+      "oldPatternMatches": 1,
+      "capturedPatternMatches": 1,
+      "reopenedMatches": 1
+    }
+  ],
+  "native": [
+    {
+      "name": "formal-170-edge2",
+      "channel": "msedge",
+      "browserVersion": "156.0.4314.58",
+      "tools": {
+        "node": "v24.22.1",
+        "platform": "win32",
+        "arch": "x64",
+        "playwright": "1.64.1"
+      },
+      "environment": "Native antivirus injection requests blocked; functional result is separate from clean CI acceptance.",
+      "blockedRequests": [
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET"
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET"
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET"
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET"
+        }
+      ],
+      "httpFailures": [],
+      "requestFailures": [
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET",
+          "failure": {
+            "errorText": "net::ERR_FAILED"
+          }
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET",
+          "failure": {
+            "errorText": "net::ERR_FAILED"
+          }
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET",
+          "failure": {
+            "errorText": "net::ERR_FAILED"
+          }
+        },
+        {
+          "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET",
+          "failure": {
+            "errorText": "net::ERR_FAILED"
+          }
+        }
+      ],
+      "source": {
+        "commit": "7009b1f7faebf7f50360106c3e25e5632230af48",
+        "tree": "27d69ffeab90c133977be15ab506a155fe2a11fe",
+        "committedAt": "2026-11-03T11:39:15+08:00",
+        "dirty": false
+      },
+      "build": "1353dd74a9b8b6b7",
+      "originalReportSHA256": "dba9581b64285926236a23bd112a1b16d2d037947c0432b7e6190af772c17a4a",
+      "split": {
+        "records": [
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "press": "Home",
+            "settings": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 64,
+              "bottom": 294
+            },
+            "split": {
+              "x": 0,
+              "y": 294,
+              "width": 343,
+              "height": 12,
+              "bottom": 306
+            },
+            "results": {
+              "x": 0,
+              "y": 355,
+              "width": 343,
+              "height": 347,
+              "bottom": 702
+            },
+            "pane": {
+              "x": 0,
+              "y": 306,
+              "width": 343,
+              "height": 396,
+              "bottom": 702
+            },
+            "workspace": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 472,
+              "bottom": 702
+            },
+            "footer": 702,
+            "hidden": false,
+            "stored": "0.1391304347826087",
+            "scroll": 0,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "press": "End",
+            "settings": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 260,
+              "bottom": 490
+            },
+            "split": {
+              "x": 0,
+              "y": 490,
+              "width": 343,
+              "height": 12,
+              "bottom": 502
+            },
+            "results": {
+              "x": 0,
+              "y": 551,
+              "width": 343,
+              "height": 151,
+              "bottom": 702
+            },
+            "pane": {
+              "x": 0,
+              "y": 502,
+              "width": 343,
+              "height": 200,
+              "bottom": 702
+            },
+            "workspace": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 472,
+              "bottom": 702
+            },
+            "footer": 702,
+            "hidden": false,
+            "stored": "0.5652173913043478",
+            "scroll": 0,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "initial": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 230,
+                "bottom": 460
+              },
+              "split": {
+                "x": 0,
+                "y": 460,
+                "width": 343,
+                "height": 12,
+                "bottom": 472
+              },
+              "results": {
+                "x": 0,
+                "y": 521,
+                "width": 343,
+                "height": 181,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 472,
+                "width": 343,
+                "height": 230,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "dragged": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 149,
+                "bottom": 379
+              },
+              "split": {
+                "x": 0,
+                "y": 379,
+                "width": 343,
+                "height": 12,
+                "bottom": 391
+              },
+              "results": {
+                "x": 0,
+                "y": 440,
+                "width": 343,
+                "height": 262,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 391,
+                "width": 343,
+                "height": 311,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.3239130434782609",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "key": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 159,
+                "bottom": 389
+              },
+              "split": {
+                "x": 0,
+                "y": 389,
+                "width": 343,
+                "height": 12,
+                "bottom": 401
+              },
+              "results": {
+                "x": 0,
+                "y": 450,
+                "width": 343,
+                "height": 252,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 401,
+                "width": 343,
+                "height": 301,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.3456521739130435",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "scrolled": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 230,
+                "bottom": 460
+              },
+              "split": {
+                "x": 0,
+                "y": 460,
+                "width": 343,
+                "height": 12,
+                "bottom": 472
+              },
+              "results": {
+                "x": 0,
+                "y": 521,
+                "width": 343,
+                "height": 181,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 472,
+                "width": 343,
+                "height": 230,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 789,
+              "viewBox": "0 0 537 1885"
+            },
+            "saved": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 104,
+                "bottom": 334
+              },
+              "split": {
+                "x": 0,
+                "y": 334,
+                "width": 343,
+                "height": 12,
+                "bottom": 346
+              },
+              "results": {
+                "x": 0,
+                "y": 395,
+                "width": 343,
+                "height": 307,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 346,
+                "width": 343,
+                "height": 356,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.22608695652173913",
+              "scroll": 789,
+              "viewBox": "0 0 537 1885"
+            },
+            "restored": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 104,
+                "bottom": 334
+              },
+              "split": {
+                "x": 0,
+                "y": 334,
+                "width": 343,
+                "height": 12,
+                "bottom": 346
+              },
+              "results": {
+                "x": 0,
+                "y": 395,
+                "width": 343,
+                "height": 307,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 346,
+                "width": 343,
+                "height": 356,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.22608695652173913",
+              "scroll": 13,
+              "viewBox": "0 0 537 1885"
+            }
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "press": "Home",
+            "settings": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 58,
+              "bottom": 307
+            },
+            "split": {
+              "x": 0,
+              "y": 307,
+              "width": 304,
+              "height": 12,
+              "bottom": 319
+            },
+            "results": {
+              "x": 0,
+              "y": 368,
+              "width": 304,
+              "height": 182,
+              "bottom": 550
+            },
+            "pane": {
+              "x": 0,
+              "y": 319,
+              "width": 304,
+              "height": 231,
+              "bottom": 550
+            },
+            "workspace": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 301,
+              "bottom": 550
+            },
+            "footer": 550,
+            "hidden": false,
+            "stored": "0.2",
+            "scroll": 451,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "press": "End",
+            "settings": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 89,
+              "bottom": 338
+            },
+            "split": {
+              "x": 0,
+              "y": 338,
+              "width": 304,
+              "height": 12,
+              "bottom": 350
+            },
+            "results": {
+              "x": 0,
+              "y": 399,
+              "width": 304,
+              "height": 151,
+              "bottom": 550
+            },
+            "pane": {
+              "x": 0,
+              "y": 350,
+              "width": 304,
+              "height": 200,
+              "bottom": 550
+            },
+            "workspace": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 301,
+              "bottom": 550
+            },
+            "footer": 550,
+            "hidden": false,
+            "stored": "0.3079584775086505",
+            "scroll": 451,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "initial": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "dragged": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 58,
+                "bottom": 307
+              },
+              "split": {
+                "x": 0,
+                "y": 307,
+                "width": 304,
+                "height": 12,
+                "bottom": 319
+              },
+              "results": {
+                "x": 0,
+                "y": 368,
+                "width": 304,
+                "height": 182,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 319,
+                "width": 304,
+                "height": 231,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.2",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "key": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 68,
+                "bottom": 317
+              },
+              "split": {
+                "x": 0,
+                "y": 317,
+                "width": 304,
+                "height": 12,
+                "bottom": 329
+              },
+              "results": {
+                "x": 0,
+                "y": 378,
+                "width": 304,
+                "height": 172,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 329,
+                "width": 304,
+                "height": 221,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.23460207612456752",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "scrolled": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            },
+            "saved": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.3079584775086505",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            },
+            "restored": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.3079584775086505",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            }
+          }
+        ],
+        "saved": {
+          "settings": {
+            "x": 0,
+            "y": 230,
+            "width": 343,
+            "height": 104,
+            "bottom": 334
+          },
+          "split": {
+            "x": 0,
+            "y": 334,
+            "width": 343,
+            "height": 12,
+            "bottom": 346
+          },
+          "results": {
+            "x": 0,
+            "y": 395,
+            "width": 343,
+            "height": 307,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 346,
+            "width": 343,
+            "height": 356,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 230,
+            "width": 343,
+            "height": 472,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.22608695652173913",
+          "scroll": 449,
+          "viewBox": "0 0 537 1885"
+        }
+      },
+      "svg": {
+        "mode": "svg",
+        "before": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 2,
+          "inputs": 2,
+          "outputs": 2
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 2,
+          "inputs": 2,
+          "outputs": 2
+        },
+        "highlighted": "d73320398bad3d77dfaaa23faab2898a132a39d625f028e80ee38e2e94d6c08e",
+        "all": "b5f9b3fb839ad0dd598e0a8565e859e7c95c64ebe1f9501a335c30dc4c8c3594"
+      },
+      "canvas": {
+        "mode": "canvas",
+        "before": {
+          "edges": 5,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 5,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "highlighted": "6b31613dad84b702cbb667c5eca71b0f5e90ccc1aa068156a947855ac22e87b0",
+        "all": "c625aa9bf7768aa3d2ce048749609a49e53ef1aebfdca58c8144e38b1ca5a797"
+      },
+      "canvasOperator": {
+        "mode": "canvas",
+        "before": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "highlighted": "f7cbb59ff95cfec46785a07271fe0bad9e58f27384489e10305b5892d6d5b530",
+        "all": "bc216733f846580ad27b97b6b2c3c8e186927cd5cea6abeb21dee7ee9ceddade"
+      },
+      "capture": {
+        "ids": [
+          "scope:0:b0:n1283",
+          "scope:0:b0:n1285"
+        ],
+        "selected": "已選取 2 個 layers · 1 個 blocks"
+      },
+      "navigation": {
+        "mode": "canvas",
+        "keys": [
+          {
+            "key": "d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -428.08881817478164,
+            "expected": -428.08881817478164
+          },
+          {
+            "key": "a",
+            "axis": "x",
+            "before": -428.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          },
+          {
+            "key": "s",
+            "axis": "y",
+            "before": -16,
+            "after": 64,
+            "expected": 64
+          },
+          {
+            "key": "w",
+            "axis": "y",
+            "before": 64,
+            "after": -16,
+            "expected": -16
+          },
+          {
+            "key": "Shift+d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -268.08881817478164,
+            "expected": -268.08881817478164
+          },
+          {
+            "key": "Shift+a",
+            "axis": "x",
+            "before": -268.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          },
+          {
+            "key": "Shift+s",
+            "axis": "y",
+            "before": -16,
+            "after": 224,
+            "expected": 224
+          },
+          {
+            "key": "Shift+w",
+            "axis": "y",
+            "before": 224,
+            "after": -16,
+            "expected": -16
+          },
+          {
+            "key": "d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -428.08881817478164,
+            "expected": -428.08881817478164
+          },
+          {
+            "key": "a",
+            "axis": "x",
+            "before": -428.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          }
+        ],
+        "zooms": [
+          {
+            "key": "q",
+            "before": 0.0016376613218615566,
+            "after": 0.001169758087043969
+          },
+          {
+            "key": "e",
+            "before": 0.001169758087043969,
+            "after": 0.0016376613218615564
+          },
+          {
+            "key": "-",
+            "before": 0.0016376613218615564,
+            "after": 0.001169758087043969
+          },
+          {
+            "key": "=",
+            "before": 0.001169758087043969,
+            "after": 0.0016376613218615564
+          }
+        ],
+        "selected": "已選取 2 個 layers · 1 個 blocks",
+        "formKeysPreserved": false,
+        "fittedPan": true,
+        "toolbarFocus": true
+      },
+      "reload": {
+        "height": 104,
+        "stored": "0.22608695652173913"
+      },
+      "browserClosed": true
+    },
+    {
+      "name": "formal-170-chrome",
+      "channel": "chrome",
+      "browserVersion": "156.0.8078.76",
+      "tools": {
+        "node": "v24.22.1",
+        "platform": "win32",
+        "arch": "x64",
+        "playwright": "1.64.1"
+      },
+      "environment": "Native antivirus injection requests blocked; functional result is separate from clean CI acceptance.",
+      "blockedRequests": [
+        {
+          "url": "https://gc.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET"
+        },
+        {
+          "url": "https://gc.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET"
+        },
+        {
+          "url": "https://gc.kis.v2.scr.kaspersky-labs.com/main.js",
+          "method": "GET"
+        },
+        {
+          "url": "https://gc.kis.v2.scr.kaspersky-labs.com/main.css",
+          "method": "GET"
+        }
+      ],
+      "source": {
+        "commit": "7009b1f7faebf7f50360106c3e25e5632230af48",
+        "tree": "27d69ffeab90c133977be15ab506a155fe2a11fe",
+        "committedAt": "2026-11-03T11:39:15+08:00",
+        "dirty": false
+      },
+      "build": "1353dd74a9b8b6b7",
+      "originalReportSHA256": "9e20ea43122f427befd5607be3fbef69786a0bdb3e29794ddb4dc181729d541f",
+      "split": {
+        "records": [
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "press": "Home",
+            "settings": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 64,
+              "bottom": 294
+            },
+            "split": {
+              "x": 0,
+              "y": 294,
+              "width": 343,
+              "height": 12,
+              "bottom": 306
+            },
+            "results": {
+              "x": 0,
+              "y": 355,
+              "width": 343,
+              "height": 347,
+              "bottom": 702
+            },
+            "pane": {
+              "x": 0,
+              "y": 306,
+              "width": 343,
+              "height": 396,
+              "bottom": 702
+            },
+            "workspace": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 472,
+              "bottom": 702
+            },
+            "footer": 702,
+            "hidden": false,
+            "stored": "0.1391304347826087",
+            "scroll": 0,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "press": "End",
+            "settings": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 260,
+              "bottom": 490
+            },
+            "split": {
+              "x": 0,
+              "y": 490,
+              "width": 343,
+              "height": 12,
+              "bottom": 502
+            },
+            "results": {
+              "x": 0,
+              "y": 551,
+              "width": 343,
+              "height": 151,
+              "bottom": 702
+            },
+            "pane": {
+              "x": 0,
+              "y": 502,
+              "width": 343,
+              "height": 200,
+              "bottom": 702
+            },
+            "workspace": {
+              "x": 0,
+              "y": 230,
+              "width": 343,
+              "height": 472,
+              "bottom": 702
+            },
+            "footer": 702,
+            "hidden": false,
+            "stored": "0.5652173913043478",
+            "scroll": 0,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1366,
+              "height": 768
+            },
+            "initial": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 230,
+                "bottom": 460
+              },
+              "split": {
+                "x": 0,
+                "y": 460,
+                "width": 343,
+                "height": 12,
+                "bottom": 472
+              },
+              "results": {
+                "x": 0,
+                "y": 521,
+                "width": 343,
+                "height": 181,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 472,
+                "width": 343,
+                "height": 230,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "dragged": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 149,
+                "bottom": 379
+              },
+              "split": {
+                "x": 0,
+                "y": 379,
+                "width": 343,
+                "height": 12,
+                "bottom": 391
+              },
+              "results": {
+                "x": 0,
+                "y": 440,
+                "width": 343,
+                "height": 262,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 391,
+                "width": 343,
+                "height": 311,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.3239130434782609",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "key": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 159,
+                "bottom": 389
+              },
+              "split": {
+                "x": 0,
+                "y": 389,
+                "width": 343,
+                "height": 12,
+                "bottom": 401
+              },
+              "results": {
+                "x": 0,
+                "y": 450,
+                "width": 343,
+                "height": 252,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 401,
+                "width": 343,
+                "height": 301,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.3456521739130435",
+              "scroll": 0,
+              "viewBox": "0 0 537 1885"
+            },
+            "scrolled": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 230,
+                "bottom": 460
+              },
+              "split": {
+                "x": 0,
+                "y": 460,
+                "width": 343,
+                "height": 12,
+                "bottom": 472
+              },
+              "results": {
+                "x": 0,
+                "y": 521,
+                "width": 343,
+                "height": 181,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 472,
+                "width": 343,
+                "height": 230,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 789,
+              "viewBox": "0 0 537 1885"
+            },
+            "saved": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 104,
+                "bottom": 334
+              },
+              "split": {
+                "x": 0,
+                "y": 334,
+                "width": 343,
+                "height": 12,
+                "bottom": 346
+              },
+              "results": {
+                "x": 0,
+                "y": 395,
+                "width": 343,
+                "height": 307,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 346,
+                "width": 343,
+                "height": 356,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.22608695652173913",
+              "scroll": 789,
+              "viewBox": "0 0 537 1885"
+            },
+            "restored": {
+              "settings": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 104,
+                "bottom": 334
+              },
+              "split": {
+                "x": 0,
+                "y": 334,
+                "width": 343,
+                "height": 12,
+                "bottom": 346
+              },
+              "results": {
+                "x": 0,
+                "y": 395,
+                "width": 343,
+                "height": 307,
+                "bottom": 702
+              },
+              "pane": {
+                "x": 0,
+                "y": 346,
+                "width": 343,
+                "height": 356,
+                "bottom": 702
+              },
+              "workspace": {
+                "x": 0,
+                "y": 230,
+                "width": 343,
+                "height": 472,
+                "bottom": 702
+              },
+              "footer": 702,
+              "hidden": false,
+              "stored": "0.22608695652173913",
+              "scroll": 13,
+              "viewBox": "0 0 537 1885"
+            }
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "press": "Home",
+            "settings": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 58,
+              "bottom": 307
+            },
+            "split": {
+              "x": 0,
+              "y": 307,
+              "width": 304,
+              "height": 12,
+              "bottom": 319
+            },
+            "results": {
+              "x": 0,
+              "y": 368,
+              "width": 304,
+              "height": 182,
+              "bottom": 550
+            },
+            "pane": {
+              "x": 0,
+              "y": 319,
+              "width": 304,
+              "height": 231,
+              "bottom": 550
+            },
+            "workspace": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 301,
+              "bottom": 550
+            },
+            "footer": 550,
+            "hidden": false,
+            "stored": "0.2",
+            "scroll": 451,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "press": "End",
+            "settings": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 89,
+              "bottom": 338
+            },
+            "split": {
+              "x": 0,
+              "y": 338,
+              "width": 304,
+              "height": 12,
+              "bottom": 350
+            },
+            "results": {
+              "x": 0,
+              "y": 399,
+              "width": 304,
+              "height": 151,
+              "bottom": 550
+            },
+            "pane": {
+              "x": 0,
+              "y": 350,
+              "width": 304,
+              "height": 200,
+              "bottom": 550
+            },
+            "workspace": {
+              "x": 0,
+              "y": 249,
+              "width": 304,
+              "height": 301,
+              "bottom": 550
+            },
+            "footer": 550,
+            "hidden": false,
+            "stored": "0.3079584775086505",
+            "scroll": 451,
+            "viewBox": "0 0 537 1885"
+          },
+          {
+            "size": {
+              "width": 1280,
+              "height": 640
+            },
+            "initial": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "dragged": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 58,
+                "bottom": 307
+              },
+              "split": {
+                "x": 0,
+                "y": 307,
+                "width": 304,
+                "height": 12,
+                "bottom": 319
+              },
+              "results": {
+                "x": 0,
+                "y": 368,
+                "width": 304,
+                "height": 182,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 319,
+                "width": 304,
+                "height": 231,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.2",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "key": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 68,
+                "bottom": 317
+              },
+              "split": {
+                "x": 0,
+                "y": 317,
+                "width": 304,
+                "height": 12,
+                "bottom": 329
+              },
+              "results": {
+                "x": 0,
+                "y": 378,
+                "width": 304,
+                "height": 172,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 329,
+                "width": 304,
+                "height": 221,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.23460207612456752",
+              "scroll": 451,
+              "viewBox": "0 0 537 1885"
+            },
+            "scrolled": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.5",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            },
+            "saved": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.3079584775086505",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            },
+            "restored": {
+              "settings": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 89,
+                "bottom": 338
+              },
+              "split": {
+                "x": 0,
+                "y": 338,
+                "width": 304,
+                "height": 12,
+                "bottom": 350
+              },
+              "results": {
+                "x": 0,
+                "y": 399,
+                "width": 304,
+                "height": 151,
+                "bottom": 550
+              },
+              "pane": {
+                "x": 0,
+                "y": 350,
+                "width": 304,
+                "height": 200,
+                "bottom": 550
+              },
+              "workspace": {
+                "x": 0,
+                "y": 249,
+                "width": 304,
+                "height": 301,
+                "bottom": 550
+              },
+              "footer": 550,
+              "hidden": false,
+              "stored": "0.3079584775086505",
+              "scroll": 986,
+              "viewBox": "0 0 537 1885"
+            }
+          }
+        ],
+        "saved": {
+          "settings": {
+            "x": 0,
+            "y": 230,
+            "width": 343,
+            "height": 104,
+            "bottom": 334
+          },
+          "split": {
+            "x": 0,
+            "y": 334,
+            "width": 343,
+            "height": 12,
+            "bottom": 346
+          },
+          "results": {
+            "x": 0,
+            "y": 395,
+            "width": 343,
+            "height": 307,
+            "bottom": 702
+          },
+          "pane": {
+            "x": 0,
+            "y": 346,
+            "width": 343,
+            "height": 356,
+            "bottom": 702
+          },
+          "workspace": {
+            "x": 0,
+            "y": 230,
+            "width": 343,
+            "height": 472,
+            "bottom": 702
+          },
+          "footer": 702,
+          "hidden": false,
+          "stored": "0.22608695652173913",
+          "scroll": 449,
+          "viewBox": "0 0 537 1885"
+        }
+      },
+      "svg": {
+        "mode": "svg",
+        "before": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 2,
+          "inputs": 2,
+          "outputs": 2
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "0 0 537 1885",
+            0,
+            0
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 2,
+          "inputs": 2,
+          "outputs": 2
+        },
+        "highlighted": "d73320398bad3d77dfaaa23faab2898a132a39d625f028e80ee38e2e94d6c08e",
+        "all": "b5f9b3fb839ad0dd598e0a8565e859e7c95c64ebe1f9501a335c30dc4c8c3594"
+      },
+      "canvas": {
+        "mode": "canvas",
+        "before": {
+          "edges": 5,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 5,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2233.0416666666665",
+            "-77377"
+          ],
+          "selection": "已選取 0 個 layers",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "highlighted": "6b31613dad84b702cbb667c5eca71b0f5e90ccc1aa068156a947855ac22e87b0",
+        "all": "c625aa9bf7768aa3d2ce048749609a49e53ef1aebfdca58c8144e38b1ca5a797"
+      },
+      "canvasOperator": {
+        "mode": "canvas",
+        "before": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "disabled": {
+          "edges": 0,
+          "enabled": "false",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "restored": {
+          "edges": 2,
+          "enabled": "true",
+          "camera": [
+            "1",
+            "-2339.7916666666665",
+            "-77300"
+          ],
+          "selection": "已選取 2 個 layers · 1 個 blocks",
+          "halos": 0,
+          "inputs": 0,
+          "outputs": 0
+        },
+        "highlighted": "f7cbb59ff95cfec46785a07271fe0bad9e58f27384489e10305b5892d6d5b530",
+        "all": "bc216733f846580ad27b97b6b2c3c8e186927cd5cea6abeb21dee7ee9ceddade"
+      },
+      "capture": {
+        "ids": [
+          "scope:0:b0:n1283",
+          "scope:0:b0:n1285"
+        ],
+        "selected": "已選取 2 個 layers · 1 個 blocks"
+      },
+      "navigation": {
+        "mode": "canvas",
+        "keys": [
+          {
+            "key": "d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -428.08881817478164,
+            "expected": -428.08881817478164
+          },
+          {
+            "key": "a",
+            "axis": "x",
+            "before": -428.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          },
+          {
+            "key": "s",
+            "axis": "y",
+            "before": -16,
+            "after": 64,
+            "expected": 64
+          },
+          {
+            "key": "w",
+            "axis": "y",
+            "before": 64,
+            "after": -16,
+            "expected": -16
+          },
+          {
+            "key": "Shift+d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -268.08881817478164,
+            "expected": -268.08881817478164
+          },
+          {
+            "key": "Shift+a",
+            "axis": "x",
+            "before": -268.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          },
+          {
+            "key": "Shift+s",
+            "axis": "y",
+            "before": -16,
+            "after": 224,
+            "expected": 224
+          },
+          {
+            "key": "Shift+w",
+            "axis": "y",
+            "before": 224,
+            "after": -16,
+            "expected": -16
+          },
+          {
+            "key": "d",
+            "axis": "x",
+            "before": -508.08881817478164,
+            "after": -428.08881817478164,
+            "expected": -428.08881817478164
+          },
+          {
+            "key": "a",
+            "axis": "x",
+            "before": -428.08881817478164,
+            "after": -508.08881817478164,
+            "expected": -508.08881817478164
+          }
+        ],
+        "zooms": [
+          {
+            "key": "q",
+            "before": 0.0016376613218615566,
+            "after": 0.001169758087043969
+          },
+          {
+            "key": "e",
+            "before": 0.001169758087043969,
+            "after": 0.0016376613218615564
+          },
+          {
+            "key": "-",
+            "before": 0.0016376613218615564,
+            "after": 0.001169758087043969
+          },
+          {
+            "key": "=",
+            "before": 0.001169758087043969,
+            "after": 0.0016376613218615564
+          }
+        ],
+        "selected": "已選取 2 個 layers · 1 個 blocks",
+        "formKeysPreserved": false,
+        "fittedPan": true,
+        "toolbarFocus": true
+      },
+      "reload": {
+        "height": 104,
+        "stored": "0.22608695652173913"
+      },
+      "browserClosed": true
+    }
+  ],
+  "initialFailure": {
+    "status": "preserved-original-failure",
+    "source": "f3756bddc875e665254bb9d21b76bb62879d965e",
+    "run": 41570277109,
+    "job": 125701289179,
+    "artifactId": 13200458836,
+    "providerDigest": "sha256:037ea0474ac6efb62de549fe81fc1f7b1317c7fc8a526b0ae100d51d82d183dd",
+    "zipBytes": 236176,
+    "reportSHA256": "34a14635aa76013dc11e1974b4b8f5f28808c7992d2f16de1e653332e67144b2",
+    "error": "Error: MLIR keyboard cannot reach button[data-overview-node=\"scope:0:b0:n1601\"]\n    at tabTo (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:28:63)\n    at async mlirKeyboardFlow (file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/mlir-keyboard-flow.mjs:79:142)\n    at async file:///home/runner/work/tflite-explorer/tflite-explorer/test/browser/production-smoke.mjs:124:98",
+    "checksBeforeFailure": 26,
+    "fixedByPR": 252,
+    "published": false
+  },
+  "nativeFirstEdgeFailure": {
+    "status": "failed",
+    "startedAt": "2026-11-03T03:47:20.926Z",
+    "finishedAt": "2026-11-03T03:47:53.447Z",
+    "error": "Error: DOM wait expired: ()=>typeof document.querySelector('#open-model').onclick==='function'",
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "The Content-Security-Policy directive 'frame-src' contains the keyword 'none' alongside with other source expressions. The keyword 'none' must be the only source expression in the directive value, otherwise it is ignored.",
+      "The Content-Security-Policy directive 'form-action' contains 'child-src' as a source expression. Did you want to add it as a directive and forget a semicolon?",
+      "The Content-Security-Policy directive 'form-action' contains the keyword 'none' alongside with other source expressions. The keyword 'none' must be the only source expression in the directive value, otherwise it is ignored.",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 503 ()"
+    ],
+    "blockedRequests": [
+      {
+        "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.js",
+        "method": "GET"
+      },
+      {
+        "url": "https://me.kis.v2.scr.kaspersky-labs.com/main.css",
+        "method": "GET"
+      }
+    ],
+    "originalReportSHA256": "a345e53a90852ab115e1ff976d6b254f6cdb12d1ad0b44262f8dfae4beda2441",
+    "followup": "One independent Edge verification repeated with response/URL observations; no workflow rerun or redeploy. Local originals retain full diagnostics; public antivirus URLs omit session IDs and query strings."
+  },
+  "retainedBuildIds": [
+    "20714da852db2604",
+    "bd4c7fe66904b362"
+  ],
+  "legacyBuild": "163f38ab1dc856e4",
+  "broadProductization": "paused",
+  "sitesSync": false
+}
