@@ -13,6 +13,11 @@ async function fixture(kind) {
     });
     const graph=model.subgraphs[0];
     if(kind==='dynamic')graph.tensors[0].shape_signature=Int32Array.of(2,-1);
+    const bias=new Uint8Array(12),view=new DataView(bias.buffer);
+    [10,20,30].forEach((value,axis)=>view.setFloat32(4*axis,value,true));
+    graph.tensors[1].buffer=model.buffers.length;
+    graph.inputs=Int32Array.of(0);
+    model.buffers.push({data:bias,offset:0n,size:0n});
     const output=graph.tensors[2];
     graph.tensors.push(Object.assign(Object.create(Object.getPrototypeOf(output)),output,{name:'d'}));
     const add=graph.operators[0];
