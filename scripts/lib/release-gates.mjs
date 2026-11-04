@@ -100,13 +100,33 @@ export function assertReport(report,kind,run,tree,policy){
 }
 const MODEL_CHOOSER_CHECK='native model chooser and native pattern JSON import/export';
 const TFLITE_REOPEN_CHECK='actual TFLite submodel download, native reopen, original pattern and worker cleanup';
+const BROADCAST_SOURCE='src/tflite-broadcast-checks.js';
 const DESKTOP_OPERATION_CHECKS=[
     'per-OP static validation, multi-output SPLIT export/reopen, dynamic reasons, invalid SLICE rejection and 32px/21k-OP paged report without automatic interpreter',
     'real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery',
     'eight manual runtime IO lifecycle cycles, 24 CPU runs, native download/reopen/close, natural URL release and bounded observed process RSS'
 ];
 
-export function assertSiteOperations(report,site,sourceFiles){
+function completeBroadcastFlow(detail,operator,workerSuffix){
+    if(detail?.status!=='passed'||detail.downloads!==4||detail.modelWorkers!==7||!Array.isArray(detail.workers)||
+        detail.workers.length!==detail.modelWorkers||!detail.workers.every(worker=>
+            worker?.closed===true&&typeof worker.url==='string'&&worker.url.endsWith(workerSuffix)))return false;
+    if(!Array.isArray(detail.cases)||detail.cases.length!==3)return false;
+    const [invalid,valid,dynamic]=detail.cases;
+    if(invalid?.kind!=='invalid'||invalid.status!=='rejected'||invalid.downloads!==0||
+        typeof invalid.reason!=='string'||!invalid.reason.includes(operator+' 的輸入 shape 無法 broadcast'))return false;
+    return [[valid,'valid','passed'],[dynamic,'dynamic','not-run']].every(([row,kind,first])=>{
+        if(row?.kind!==kind||row.status!=='passed'||row.reopenedOperators!==3||
+            !/^[a-f0-9]{64}$/.test(row.outputSHA256||'')||stable(row.statuses)!==stable([first,'passed','passed']))return false;
+        const layout=row.layout;
+        return layout?.width===1280&&layout.height===640&&
+            [layout.left,layout.right,layout.top,layout.bottom,layout.client,layout.scroll].every(Number.isFinite)&&
+            layout.left>=0&&layout.right>layout.left&&layout.right<=1281&&layout.top>=0&&layout.bottom>layout.top&&
+            layout.bottom<=641&&layout.client>0&&layout.scroll>=layout.client&&layout.scroll<=layout.client+1;
+    });
+}
+
+export function assertSiteOperations(report,site,sourceFiles,readSource){
     const require=(value,message)=>{if(!value)throw Error('Site operation evidence: '+message);};
     const release=site.candidate,build=release.buildId,namespace=`versions/${build}/`;
     const snapshot=site.snapshots.find(row=>row.currentBuild===build);
@@ -114,10 +134,14 @@ export function assertSiteOperations(report,site,sourceFiles){
         report.target==='isolated-versioned-snapshot'&&Array.isArray(report.errors)&&report.errors.length===0,'incomplete or failed smoke report.');
     require(report.driverSourceCommit===release.source.commit&&stable(report.siteRelease)===stable(release)&&
         report.expectedBuild===build&&report.siteId===snapshot?.siteId&&report.coreBasePath===namespace,'wrong source, build or snapshot.');
-    const paths=new Set(sourceFiles.map(file=>file.path)),mul=paths.has('src/tflite-broadcast-checks.js');
+    const paths=new Set(sourceFiles.map(file=>file.path)),mul=paths.has(BROADCAST_SOURCE);
     const add=mul||paths.has('src/tflite-add-checks.js'),desktop=graphReadabilityRequired(release.version);
+    // Use the same source capability as the browser driver, independently of the report's flags.
+    if(mul)require(typeof readSource==='function','missing broadcast checker source.');
+    const subDiv=mul&&/\bexport const BROADCAST_OPERATORS\b/.test(readSource(BROADCAST_SOURCE).toString('utf8'));
+    const workerSuffix=`/${namespace}src/model-worker.js?v=${build}`;
     const checks=report.checks,required=[MODEL_CHOOSER_CHECK,TFLITE_REOPEN_CHECK,...(desktop?DESKTOP_OPERATION_CHECKS:[])];
-    require(Array.isArray(checks)&&checks.length>=(desktop?38:required.length)+Number(add)+Number(mul)&&checks.length<=256&&
+    require(Array.isArray(checks)&&checks.length>=(desktop?38:required.length)+Number(add)+Number(mul)+2*Number(subDiv)&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
     for(const [operator,enabled,prefix]of [
@@ -127,13 +151,20 @@ export function assertSiteOperations(report,site,sourceFiles){
         if(enabled)require(report[operator+'ValidationRequired']===true&&report[operator+'Validation']?.status==='passed'&&
             checks.some(value=>value.startsWith(prefix)),`missing ${operator.toUpperCase()} validation.`);
     }
+    if(subDiv){
+        for(const operator of ['SUB','DIV']){
+            const key=operator.toLowerCase()+'Validation';
+            const scenario=`${operator} invalid input broadcast rejected before download; float32 and dynamic ${operator} report and reopen at 32px`;
+            require(report[key+'Required']===true&&checks.includes(scenario)&&completeBroadcastFlow(report[key],operator,workerSuffix),
+                `incomplete ${operator} validation.`);
+        }
+    }
     const workers=report.workers,cleanup=report.processCleanup;
     require(Array.isArray(workers)&&workers.length>0&&workers.length<=1024&&workers.every(worker=>worker?.closed===true&&typeof worker.url==='string')&&
         cleanup?.allReaped===true&&Array.isArray(cleanup.remaining)&&cleanup.remaining.length===0&&
         Array.isArray(cleanup.identities)&&cleanup.identities.length>0,'retained browser process or Worker.');
     const modelWorkers=workers.filter(worker=>/\/model-worker\.js(?:\?|$)/.test(worker.url));
-    require(modelWorkers.length>0&&modelWorkers.every(worker=>
-        worker.url.endsWith(`/${namespace}src/model-worker.js?v=${build}`)),'wrong model Worker namespace.');
+    require(modelWorkers.length>0&&modelWorkers.every(worker=>worker.url.endsWith(workerSuffix)),'wrong model Worker namespace.');
     return {checks:checks.length,buildId:build,siteId:snapshot.siteId};
 }
 
@@ -195,7 +226,7 @@ export async function verifyReleaseGates({directory='dist',evidence,api=githubCl
             assertArtifact(operationArtifact,name,'Site operation evidence');
             const raw=await api.bytes(`repos/${repository}/actions/artifacts/${operationArtifact.id}/zip`);
             const operations=readArtifact(raw,operationArtifact.digest,{operations:true});
-            const summary=assertSiteOperations(operations.report,downloaded.report,testedScope.files);
+            const summary=assertSiteOperations(operations.report,downloaded.report,testedScope.files,file=>reader.bytes(run.head_sha,file));
             receipt.operationEvidence={artifactId:operationArtifact.id,artifactDigest:operationArtifact.digest,
                 reportSHA256:operations.sha256,...summary};
         }

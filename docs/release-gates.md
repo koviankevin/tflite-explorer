@@ -16,7 +16,7 @@ node scripts/publish-github-pages.mjs --site-id <成功準備並審閱的64位si
 1. `performance.yml`：重新判定九筆核心效能、固定 policy 與 clean source。
 2. `browser-lifecycle.yml`：重新判定八輪生命週期、真實 Worker 終止、Blob URL、read audit 與 clean source。
 3. `release-contract.yml`：建置／public/internal 封裝、來源與完整性，以及關卡拒絕案例。測試必須實際執行、零失敗／略過／取消，來源期間不變。
-4. `production-smoke.yml` 的 `site-upgrade`：重新判定隔離站台升級與回退報告，再核對同一次 workflow attempt 的瀏覽器操作報告。兩份報告的受測來源、build 與站台快照必須一致。操作報告須涵蓋必要案例，且記錄 Worker 和瀏覽器程序已關閉。發布收據另記操作報告的 artifact ID、ZIP 與報告雜湊、案例數、受測 build 和站台快照 ID。
+4. `production-smoke.yml` 的 `site-upgrade`：重新判定隔離站台升級與回退報告，再核對同一次 workflow attempt 的瀏覽器操作報告。兩份報告的受測來源、build 與站台快照必須一致。操作報告須涵蓋必要案例，且記錄 Worker 和瀏覽器程序已關閉。受測來源含 SUB／DIV 共用檢查時，也核對各自拒絕下載的負例、合法與動態模型的匯出報告及重開結果、1280×640 版面，以及同版本的 Worker 關閉紀錄。發布收據另記操作報告的 artifact ID、ZIP 與報告雜湊、案例數、受測 build 和站台快照 ID。
 
 每個關卡比較候選 commit 與受測 commit 的相關 Git blobs。核心效能使用 runner/測試入口及相對 module imports、metadata、policy、workflow、package/lock；瀏覽器另外涵蓋完整 src/vendor 與建置入口；封裝契約保守涵蓋 scripts/test/src/vendor。Package 與 lock 的版本標籤不影響未變動的執行程式，其餘欄位（含 scripts 與依賴）仍需一致。改動相依檔案就需要對應關卡的新 run，不能用較早綠燈替代。這是針對既有 ESM 與版本控管依賴的明確範圍；日後新增 computed imports、外部測試資料或新的載入方式，須一起擴充 scope 和拒絕案例，不能假設能自動推導所有 JavaScript 行為。
 

@@ -115,12 +115,39 @@ test('site operations bind the report to the upgrade snapshot, source and requir
         assert.throws(()=>assertSiteOperations(broken,site,[]),/Site operation evidence/);
     }
     const broadcast=[{path:'src/tflite-broadcast-checks.js'}];
-    assert.throws(()=>assertSiteOperations(report,site,broadcast),/Site operation evidence/);
+    const oldChecker=()=>Buffer.from('export function checkBroadcastMetadata() {}');
+    const newChecker=()=>Buffer.from("export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV']);");
+    assert.throws(()=>assertSiteOperations(report,site,broadcast,oldChecker),/Site operation evidence/);
     const extended={...report,addValidationRequired:true,addValidation:{status:'passed'},mulValidationRequired:true,mulValidation:{status:'passed'},
         checks:[...checks,'ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px',
             'MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px']};
-    assert.equal(assertSiteOperations(extended,site,broadcast).checks,40);
-    assert.throws(()=>assertSiteOperations({...extended,mulValidation:{status:'failed'}},site,broadcast),/Site operation evidence/);
+    assert.equal(assertSiteOperations(extended,site,broadcast,oldChecker).checks,40);
+    assert.throws(()=>assertSiteOperations({...extended,mulValidation:{status:'failed'}},site,broadcast,oldChecker),/Site operation evidence/);
+    assert.throws(()=>assertSiteOperations(extended,site,broadcast,newChecker),/Site operation evidence/);
+    const current=structuredClone(extended);
+    for(const op of ['SUB','DIV']){
+        const key=op.toLowerCase()+'Validation';
+        const layout={width:1280,height:640,left:260,right:1020,top:12,bottom:628,client:758,scroll:758};
+        current[key+'Required']=true;
+        current[key]={status:'passed',downloads:4,modelWorkers:7,workers:Array(7).fill(current.workers[0]),cases:[
+            {kind:'invalid',status:'rejected',reason:op+' 的輸入 shape 無法 broadcast。',downloads:0},
+            {kind:'valid',status:'passed',layout,reopenedOperators:3,outputSHA256:'1'.repeat(64),statuses:['passed','passed','passed']},
+            {kind:'dynamic',status:'passed',layout,reopenedOperators:3,outputSHA256:'2'.repeat(64),statuses:['not-run','passed','passed']}
+        ]};
+        current.checks.push(op+' invalid input broadcast rejected before download; float32 and dynamic '+op+' report and reopen at 32px');
+    }
+    assert.equal(assertSiteOperations(current,site,broadcast,newChecker).checks,42);
+    for(const mutate of [
+        r=>delete r.subValidation, r=>r.divValidationRequired=false, r=>r.divValidation.cases.pop(),
+        r=>r.subValidation.cases[0].downloads=1, r=>r.divValidation.cases[1].reopenedOperators=2,
+        r=>r.subValidation.cases[1].outputSHA256='fake', r=>r.divValidation.cases[2].statuses[0]='passed',
+        r=>r.divValidation.cases[1].layout.right=1282, r=>r.subValidation.workers.pop(),
+        r=>r.divValidation.workers[0]={...r.divValidation.workers[0],closed:false}
+    ]){
+        const broken=structuredClone(current);
+        mutate(broken);
+        assert.throws(()=>assertSiteOperations(broken,site,broadcast,newChecker),/Site operation evidence/);
+    }
 });
 
 test('site operation archive has exactly the report and screenshot with bounded safe entries',()=>{
