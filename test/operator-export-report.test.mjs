@@ -74,10 +74,11 @@ test('21,005-OP report survives repeated status attachment without body reads or
         assert.equal(report.runtimePrefix,prefix);
     }
     const document=JSON.parse(await report.blob.text());assert.equal(document.operatorValidation.length,21005);
-    assert.equal(document.operatorSummary.checked,21000);assert.equal(document.operatorSummary.unchecked,5);
+    assert.equal(document.operatorSummary.checked,21002);assert.equal(document.operatorSummary.unchecked,3);
+    assert.deepEqual(document.operatorValidation.filter(op=>op.type==='ADD').map(op=>op.status),['passed','passed']);
     const aggregate=document.checks.find(c=>c.id==='constant-operands');
     assert.equal(aggregate.status,'not-run');
-    assert.match(aggregate.detail,/21000 個已檢查、5 個未能檢查/);
+    assert.match(aggregate.detail,/21002 個已檢查、3 個未能檢查/);
     assert.equal(document.checks.filter(c=>c.id==='runtime-load').length,1);assert.equal(document.checks.filter(c=>c.id==='runtime-smoke').length,1);
     assert.equal(document.runtimeValidation.invoked,false);
     console.log(JSON.stringify({reportOperators:document.operatorValidation.length,reportBytes:report.blob.size,statusAttachments:3,reportBodyReads:0}));
