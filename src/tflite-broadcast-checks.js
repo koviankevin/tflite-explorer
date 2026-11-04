@@ -1,6 +1,8 @@
-// ADD and MUL Prepare require equal input dtypes and right-aligned
+// These binary kernels require equal input dtypes and right-aligned
 // broadcasting. The exported model must declare the resulting interface.
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
+
+export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV']);
 
 function knownRank(tensor) {
     const {shape, shape_signature: signature, has_rank: hasRank} = tensor;

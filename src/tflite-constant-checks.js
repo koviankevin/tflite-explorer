@@ -7,7 +7,7 @@ import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {SPATIAL_OPERATORS,checkSpatialTransform} from './tflite-spatial-checks.js';
 import {STATIC_TRANSFORM_OPERATORS,checkStaticTransform} from './tflite-static-transform.js';
 import {checkReshapeMetadata} from './tflite-reshape-checks.js';
-import {checkBroadcastMetadata} from './tflite-broadcast-checks.js';
+import {BROADCAST_OPERATORS,checkBroadcastMetadata} from './tflite-broadcast-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0;
@@ -36,7 +36,7 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         const code=model.operator_codes[op.opcode_index],name=code.custom_code||schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code||0)];
         const record={graph:graphId,node,type:name,inputs:Array.from(op.inputs),outputs:Array.from(op.outputs),status:'not-run',reason:''};operators.push(record);
         if(code.custom_code){record.reason='custom kernel 的靜態語意尚未驗證；原始 options 與引用保留另列。';continue;}
-        const broadcast=name==='ADD'||name==='MUL';
+        const broadcast=BROADCAST_OPERATORS.has(name);
         if(broadcast||name==='BATCH_MATMUL'||name==='FULLY_CONNECTED'||SPATIAL_OPERATORS.has(name)||STATIC_TRANSFORM_OPERATORS.has(name)){
             try{
                 const ins=Array.from(op.inputs,id=>id<0?null:g.tensors[id]),outs=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
