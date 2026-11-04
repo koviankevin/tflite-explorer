@@ -2,7 +2,7 @@
 // broadcasting. The exported model must declare the resulting interface.
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
 
-export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV']);
+export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV', 'MAXIMUM', 'MINIMUM']);
 
 function knownRank(tensor) {
     const {shape, shape_signature: signature, has_rank: hasRank} = tensor;

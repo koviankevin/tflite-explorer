@@ -22,12 +22,14 @@ const metadata=JSON.parse(await readFile(new URL('../vendor/netron/tflite-metada
 const parse=bytes=>parseModel((o,n)=>bytes.subarray(o,o+n),bytes.length,metadata);
 const noRead=()=>assert.fail('Broadcast metadata validation must not read tensor data.');
 const optionsByOperator={MUL:schema.MulOptions,SUB:schema.SubOptions,DIV:schema.DivOptions};
+const comparisonOperators=['MAXIMUM','MINIMUM'];
 
 async function candidate(inputShapes,outputShape,{signature,outputType,operator='MUL',type}={}){
     const {model}=await runtimeFixture({inputShapes,outputShape});
     const graph=model.subgraphs[0],code=model.operator_codes[0];
     code.builtin_code=code.deprecated_builtin_code=schema.BuiltinOperator[operator];
-    graph.operators[0].builtin_options=Object.assign(new optionsByOperator[operator](),{fused_activation_function:0});
+    graph.operators[0].builtin_options=comparisonOperators.includes(operator)?new schema.MaximumMinimumOptions():
+        Object.assign(new optionsByOperator[operator](),{fused_activation_function:0});
     if(signature)graph.tensors[0].shape_signature=Int32Array.from(signature);
     if(type!==undefined)for(const tensor of graph.tensors)tensor.type=type;
     if(outputType!==undefined){
@@ -82,7 +84,7 @@ test('MUL handles scalars and zero extents and keeps unknown dimensions unverifi
     assert.throws(()=>validateTfliteConstants(bad,0,noRead),/MUL.*無法 broadcast/);
 });
 
-for(const operator of ['SUB','DIV']){
+for(const operator of ['SUB','DIV',...comparisonOperators]){
     test(operator+' rejects incompatible input and output metadata before export',async()=>{
         for(const [inputs,output,options,reason]of [
             [[[2,2],[3]],[2,3],{},/無法 broadcast/],
@@ -138,7 +140,7 @@ test('pinned LiteRT CPU confirms float broadcast and mixed quantized MUL interfa
     const rt=await import('../vendor/litert/2.6.0/core.js');
     await rt.loadLiteRt(new URL('litert_wasm_compat_internal.js',base).href);
     try{
-        for(const operator of ['MUL','SUB','DIV']){
+        for(const operator of ['MUL','SUB','DIV',...comparisonOperators]){
             messages.length=0;
             const invalid=await candidate([[2,2],[3]],[2,3],{operator});
             const result=await executeRuntime({blob:invalid.blob,plan:runtimePlan(invalid.raw,invalid.bytes.length),rt,
@@ -151,6 +153,8 @@ test('pinned LiteRT CPU confirms float broadcast and mixed quantized MUL interfa
             {inputShapes:[[2,1],[1,3]],outputShape:[2,3],input:Float32Array,output:Float32Array,values:[[1,2],[10,20,30]],expected:[10,20,30,20,40,60]},
             {operator:'SUB',inputShapes:[[2,1],[1,3]],outputShape:[2,3],input:Float32Array,output:Float32Array,values:[[12,24],[2,3,4]],expected:[10,9,8,22,21,20]},
             {operator:'DIV',inputShapes:[[2,1],[1,3]],outputShape:[2,3],input:Float32Array,output:Float32Array,values:[[12,24],[2,3,4]],expected:[6,4,3,12,8,6]},
+            {operator:'MAXIMUM',inputShapes:[[2,1],[1,3]],outputShape:[2,3],input:Float32Array,output:Float32Array,values:[[12,24],[2,18,30]],expected:[12,18,30,24,24,30]},
+            {operator:'MINIMUM',inputShapes:[[2,1],[1,3]],outputShape:[2,3],input:Float32Array,output:Float32Array,values:[[12,24],[2,18,30]],expected:[2,12,12,2,18,24]},
             {inputShapes:[[2],[2]],outputShape:[2],input:Int16Array,output:Int8Array,type:schema.TensorType.INT8,values:[[16384,-16384],[16384,8192]],expected:[32,-16]},
             {inputShapes:[[2],[2]],outputShape:[2],input:Int16Array,output:Uint8Array,type:schema.TensorType.UINT8,values:[[16384,-16384],[16384,8192]],expected:[160,112]}
         ];
