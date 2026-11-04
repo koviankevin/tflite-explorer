@@ -112,6 +112,9 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
             node.attributes.push({ name: 'custom_options 資料範圍', type: 'string', value: `${bytes} bytes；保留原始資料，未展開內容。切圖時由本機檔案搬移。` });
         }
     }));
+    // FlatBuffer metadata has been decoded. Lazy tensor streams still have
+    // their original ranges and can refill the shared cache when accessed.
+    stream.clearCache();
     return { ...indexModel(model, (tensors, graphIndex) => {
         // Include even tensors not referenced by any operator or graph boundary.
         raw.subgraphs[graphIndex].tensors.forEach((tensor, index) => {
