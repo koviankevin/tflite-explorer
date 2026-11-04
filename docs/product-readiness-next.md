@@ -12,9 +12,17 @@
 
 Windows Edge 156.0.4314.58／Playwright 1.64.1 以乾淨來源 `640ca4fcbc2c218a5b432067f3239500df128410`、build `a1048b822d971bca` 完成八輪實體 1,349,965,216 bytes／21,005 OP 的既有驗收。該來源相對應用候選 `e748544` 只新增本頁紀錄，四項來源範圍指紋逐一相同。每輪整份編輯、切圖、組合、下載重開、權重與 custom options、Pattern 正負例及重複匯出雜湊均通過；16 次完整原檔指紋通過。下載 URL 自然釋放、40 個模型 Worker、16 個原檔驗證 Worker 與 15 個受觀察的自有程序均正常退出，沒有啟動推論 Worker。
 
-原門檻以 2,135 筆程序樹樣本及暖機後六輪重新判定通過。關閉後 RSS 斜率 +8,928,695 bytes／輪，末段漂移 +61,464,576 bytes，峰值增量 +725,319,680 bytes。第五、六輪關閉後約 898 MiB，第七、八輪回落至約 787、785 MiB。這次本機驗收以 manifest 核對後的原樣 HTML 啟動，其他資產使用 HTTP，範圍為該次 Edge 原生操作與記憶體。Chrome 的同候選實體大檔驗收、正式發布關卡仍待補。
+原門檻以 2,135 筆程序樹樣本及暖機後六輪重新判定通過。關閉後 RSS 斜率 +8,928,695 bytes／輪，末段漂移 +61,464,576 bytes，峰值增量 +725,319,680 bytes。第五、六輪關閉後約 898 MiB，第七、八輪回落至約 787、785 MiB。這次本機驗收以 manifest 核對後的原樣 HTML 啟動，其他資產使用 HTTP，範圍為該次 Edge 原生操作與記憶體。
 
 原始報告與獨立核對在 `build/qa/reshape-170/physical-edge/report.json` 和 `review.json`。報告 SHA-256 `b7c9b1c176688162ef3e269ba797ea822e636f6198ce8f3db32d679b2ade0dc8`，337 檔候選 manifest SHA-256 `da672ce229a815bfb6709ba5ca92e7e71eaea0bedcaac11de0e7348a9a30b27a`。獨立核對另完整串流計算實體合成原檔雜湊。
+
+### Chrome 實體大檔八輪與草稿 PR
+
+Windows Chrome 156.0.8078.80／Playwright 1.64.1 以乾淨來源 `54d7a73fe569852203417f4beaef68463a6f0e9a`、build `b49bd116ade78119` 完成同一個 1,349,965,216-byte／21,005 OP 規格的八輪。與 Edge 的四項來源範圍指紋相同。整份編輯、切圖、組合、下載重開、權重、custom options、Pattern 正負例、重複匯出及原檔指紋均通過。49 個下載 URL、40 個模型 Worker 和 16 個原檔驗證 Worker 均釋放，未啟動推論 Worker。原時限內正常關閉，13 個受觀察的程序均退出。
+
+整輪因記憶體超標保留失敗。以 2,121 筆程序樹樣本重新核對，暖機後六輪的關閉 RSS 斜率 +28,572,175 bytes／輪，門檻 16 MiB／輪。末段漂移 +143,065,088 bytes，門檻 128 MiB。峰值增量 +691,195,904 bytes，符合原門檻。附近原生快照顯示增量集中在同一個 renderer 的 private commit，其他程序及頁面 main heap／backing storage 沒有同量級變化。資料仍不足以辨識配置來源或判定 RESHAPE 引入回歸，應用也尚未因此調整。原始報告、來源複核及程序取樣摘要在 `build/qa/reshape-170/physical-chrome/`，報告 SHA-256 `2c3fda5bcd5d79370a9575440c8ddf931866e984ad05b11d5c5c572f93be5ece`。
+
+[草稿 PR #255](https://github.com/koviankevin/tflite-explorer/pull/255) 的實際受測 merge `9c49798fd21adc944f07e2dc1d157597d42651d1` 與候選的 tree `ecab7f5005bc0f01011a64298dd8922686fd776c` 相同。[Node 和公開建置](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322314) 的 1,082 項通過、35 項略過、零失敗及 337 個建置檔案已核對。[契約檢查](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322291) 的 79 項通過另以 artifact `13304766853` 的 provider digest 與原始報告核對。這是 PR 階段驗證，候選仍待 Chrome 記憶體對照及正式發布關卡。原始證據在 `build/qa/reshape-170/pr255/`。
 
 依使用者當時指定的範圍，[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 改善了 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識。Build `1353dd74a9b8b6b7` 的 336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。
 
