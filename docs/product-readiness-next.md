@@ -1,6 +1,119 @@
-# 商品等級後續工作（暫停，保留未完成項目）
+# 商品等級後續工作
 
-使用者要求暫停其他商品化工作。本次僅完成 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識改善：[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0)／build `1353dd74a9b8b6b7`，336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。完整商品化工作仍暫停，以下歷史證據與尚未完成項目保留。
+## TFLite 解析快取減量（本機候選）
+
+選定 `codex/tflite-metadata-cache` 的應用來源 `5ee8e46abe63792ee0fee0e751b0158f007e3a3b`、build `9ab03057f6124538`。TFLite metadata 解碼完成後、建立索引前釋放讀檔 page cache。Tensor initializer 保留原本的 File range，第一次讀取時重新填入所需頁。新增回歸先重現原快取仍被持有，修正後核對第一次與第二次讀取的 bytes、讀檔次數及解析統計。
+
+Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏覽器交替跑原候選與快取候選各四次。全部 32px 開檔、7,000 筆 Pattern、定位、模型 Worker 關閉及瀏覽器正常關閉均通過。開檔後 Worker backing storage 中位數由 15,490,500 降為 7,702,777 bytes，heap 容量與 backing storage 的加總由 129,732,036 降為 122,337,529 bytes，定位後加總由 141,614,545 降為 134,613,241 bytes。開檔中位數由 1,061 增至 1,120 ms。這些是有限次數的 isolate 檢查點與操作時間，完整程序樹 RSS 仍須實體大檔八輪。
+
+另測過減少 Netron port 暫存陣列與重用 FlatBuffer decoder 的組合，雖減少部分已用 heap，但加上快取修改後，開檔時 heap 容量與 backing storage 加總為 132,037,103 bytes，高於該組對照的 129,994,180 bytes。以較低的開檔量測與較小變更面，保留快取單項候選。原始報告在 `build/qa/reshape-170/browser-parse-cache-only-ab.json` 與 `browser-parse-cache-ab.json`，前者 SHA-256 為 `74e56a387021b050b2b5ff122a8f8b8faa2874cae92856124e5ab97b51f0a543`。
+
+最終候選的 81 項受影響測試通過。同一模型的索引、port／屬性呈現及子模型輸出 SHA-256 均與原候選一致，解析讀取量同為 7,919,008 bytes。
+
+### 快取候選的 Chrome 實體八輪
+
+以 Windows Chrome 156.0.8078.80／Playwright 1.64.1，乾淨來源 `c8ad592bf04e330000c41aa2477dde6fb6e255f3`、build `e94a8da9503fa888` 跑原八輪。來源相對上方快取候選只新增本頁紀錄。八輪的 24 份整份編輯、切圖、組合匯出檔與前兩個 Chrome 來源逐份同 SHA-256。實體原檔的 SHA-256、16 次完整原檔指紋、40 個模型 Worker、16 個原檔驗證 Worker、下載 URL 及 12 個受觀察的自有程序均已核對，未啟動推論 Worker。
+
+以 2,158 筆程序樹取樣重算原門檻，暖機後六輪的關閉 RSS 斜率 +1,736,938 bytes／輪、末段漂移 +14,966,784 bytes、峰值增量 +614,617,088 bytes，整輪通過。第五、六輪約 790 MiB，最後兩輪回落到 672、671 MiB。每輪載入後的模型 Worker backing storage 均為 7,705,403 bytes。原 RESHAPE 候選的 Chrome 記憶體失敗保留；這組依序量測確認快取減量與本次原門檻通過，無法從一次八輪分離 renderer 釋放時序的影響。
+
+原始報告與三組來源複核在 `build/qa/reshape-170/physical-chrome-cache/report.json` 和 `review.json`。報告 SHA-256 為 `23c2f3e2219d4eb42cacc207223a43aea62389e8f8605a9d21949608215f27cb`，337 檔 manifest SHA-256 為 `d533044e20ce6b6efce66c191e952417bf4ece03ed30206a03edeef3b0ed047a`。
+
+### 快取候選的 Edge 實體八輪
+
+以本機 Windows Edge 156.0.4314.58／Playwright 1.64.1、乾淨來源 `50ccd1c6db096e617d9a653f1bdabd424344a5d0`、build `6ec4b152f3131974` 重跑原八輪。與 Chrome 受測來源相比只新增驗收文件。合成 TFLite 為 1,349,965,216 bytes、21,005 OP。模型處理及程序樹量測使用本機資源。
+
+八輪功能均通過。24 份整份編輯、切圖及組合匯出與前一組 Edge、快取候選 Chrome 逐份同 SHA-256。16 次原檔指紋及自然下載釋放均通過，40 個模型 Worker、16 個原檔驗證 Worker 和 15 個受觀察程序均正常退出，未啟動推論 Worker。每輪載入後的模型 Worker backing storage 為 7,705,403 bytes，前一組 Edge 約 14.8 MiB。
+
+整輪保留為失敗。以 2,030 筆程序樹取樣重算原門檻，暖機後六輪的關閉 RSS 斜率為 +34.9 MiB／輪，超過 16 MiB／輪。末段漂移 +53.1 MiB 與峰值增量 +685.4 MiB 均在門檻內。第七、八輪關閉時約 903、902 MiB，增量集中在 renderer，配置來源待確認。
+
+原始報告與獨立複核為 `build/qa/reshape-170/physical-edge-cache/report.json` 和 `review.json`。報告 SHA-256 為 `22bc175174dd4923dd7f14c6518a095381a1cf3ce2af37bb8720d7f08fec743b`，337 檔 manifest SHA-256 為 `61a4ffb49f58feb6ad6101c830e0ca74d4645a3d68bb4ae53beba2d678cc83b7`。正式發布仍待通過關卡。
+
+### Edge renderer 延遲釋放短測
+
+以同一驗證過的快取建置，在本機 Windows Edge 156.0.4314.58（V8 15.6.12.10）各用一個隔離瀏覽器開啟、搜尋定位及關閉兩個合成檔。兩檔都只帶 1 MiB 權重，分別為 3,005 和 21,005 OP。兩組各取六次 MemoryInfra 詳細快照，未強制 GC，未匯出或推論。模型 Worker 於關檔時結束，兩組各 11 個受觀察的程序均退出。第一次就緒檢查受 Netron 的 `window.eval` 覆寫阻擋，改用現有 CDP 檢查後完成兩組，保留原始失敗。
+
+同一 renderer 在小模型關閉 26.887 至 27.490 秒之間下降 36.9 MiB RSS、39.4 MiB private commit。大模型在 26.689 至 27.286 秒之間下降 113.5 MiB RSS、115.0 MiB private commit，主頁 JS heap 同時下降約 2 MiB。大模型的前後 MemoryInfra private footprint 為 219.41、101.16 MiB。V8 主 heap、Blink GC、malloc、PartitionAlloc 的 size 各只改變約 3.0、6.3、2.6、6.9 MiB，這些大小有重疊。剩餘 Worker 的 V8 size、合成器 tile memory 和 Skia size 在兩個快照間維持原值。關檔後的快照已少了模型 Worker 的 isolate，這組快照沒有 V8 pool 專屬欄位。
+
+這次重現把大權重、匯出和推論從觸發條件排除，這組配置器快照無法指認大部分釋放的歸屬。此診斷不納入八輪門檻，原 Edge 結果仍是失敗。原始報告與獨立複核位於 `build/qa/reshape-170/edge-allocator-probe/`，完成報告 SHA-256 為 `efb27335043f0d4f70bc0b5f26f3d91b170fea14e16d130ab8ea1ab8daebc56b`。 [Chromium MemoryInfra](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/memory-infra/README.md)
+
+
+### Edge 虛擬記憶體區段對照
+
+沿用相同 Edge、建置和兩個合成檔，只查詢這次隔離測試擁有的 renderer 之區段中繼資料，核對 PID 與建立時間。大模型在關檔 26.234 至 26.887 秒間重現一次 114.8 MiB RSS 下降。跨越釋放點的兩個快照中，renderer 的 Windows PrivateUsage 減少 119.43 MiB，逐區段計算的私有提交量淨減 119.20 MiB。最大一組在單一 4 GiB 對齊且連續的保留區中，103.25 MiB 的讀寫頁面從已提交變回原區段的保留狀態。小模型的同類區段下降 27.00 MiB，私有提交量總降幅為 42.10 MiB。兩個模型 Worker 均在關檔時結束。 [Windows VirtualQueryEx](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
+
+另以大模型獨立重現，單一 4 GiB 保留區減少 101.75 MiB。關檔觀察完成後，在同一 renderer 建立並保留一百萬個純 JS 物件，主頁 V8 heap 使用量增加 30.52 MiB，增加最多的正是原先釋放的 4 GiB 保留區，私有提交量增加 46.75 MiB。這將主要降幅定位到 V8 heap 使用的虛擬位址範圍。頁面池或特定回收路徑仍需配置器事件才能確認。三組皆未強制 GC，模型 Worker 正常結束，觀察到的 11、10、11 個程序各組均清空。 [V8 pointer compression](https://v8.dev/blog/pointer-compression)
+
+原始區段、瀏覽器取樣與獨立複核保留在 `build/qa/reshape-170/edge-region-probe/`。雙模型複核 SHA-256 為 `b9b867bebecc870b670c93bbf4cd0bee47b7691bead85ea99dd62b7f3c0c20cc`，JS 對照複核為 `38c9a45966445201063226321905d07b518ca081da1ed0370939ce793bee4c79`。後續優先量測解析或索引的 JS 配置壓力，並保留原大模型八輪驗收標準。
+
+
+### 按需建立 Tensor 搜尋資料
+
+在 21,005 OP、8,836,512 bytes 的合成 TFLite 上，針對開檔配置做三組本機試作。單一鄰接改用共享表示時，Node 開檔 JS heap 使用中位數降低 5.95 MiB，但破壞既有 Set 的 `.add()`，原有誘導子圖負例失敗，保留於獨立分支 `d9e1a0b`。直接讀取短 Int32 向量的試作 `d92459b` 將 Node 解析中位數由 525 降至 427 ms，但開檔後的 heap 使用反增 6.05 MiB，沒有併入記憶體候選。
+
+保留的候選 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b` 在第一次進入 Tensors 搜尋才建立對應搜尋資料，並在同一模型內重用。實際連線 Set 和其他索引維持原 API。新增的回歸測試先重現開檔立即讀取 Tensor 搜尋 metadata，再驗證按需建立並重用。355 項受影響測試通過。各五次 Node 對照的開檔 JS heap 使用中位數由 133.49 降至 112.90 MiB，容量由 217.08 降至 215.76 MiB。候選完整進入 Tensors 後的使用中位數為 140.00 MiB。三個試作的搜尋／拓撲索引、顯示、實際子模型匯出 SHA-256 均與基準逐項相同，讀檔量同為 7,919,008 bytes。
+
+以同一份合成檔，在 Windows Edge 156.0.4314.58 與 Chrome 156.0.8078.80 各跑四次基準與四次候選，順序為 ABBA／ABBA。基準建置 `6ec4b152f3131974`，候選建置 `70a9f171f8d96766`，兩邊都以原 CSP 的驗證過的 HTML 和本機 HTTP 資源執行。全部通過實際選檔、32px、7,000 筆 Pattern、定位、首次 Tensors 列表、`#0` 搜尋定位及關閉模型 Worker。開檔後 Worker 的 JS heap 使用中位數在 Edge 由 75.34 降至 57.64 MiB，Chrome 由 74.66 降至 50.64 MiB。首次切到 Tensors 的中位數為 Edge 91→91 ms、Chrome 98→106 ms。開檔中位數為 Edge 919→978 ms、Chrome 1,026→860 ms。進入 Tensors 後 heap 容量中位數約增加 4 MiB，減量主要發生在尚未使用 Tensors 的開檔階段。
+
+原始報告位於 `build/qa/reshape-170/lazy-tensor-search/`，Edge 報告 SHA-256 為 `1993685ddd565d775ade924986838ddbb3c6bada82ea47254652d9a75613b35e`，Chrome 為 `876e6f7f3409f4f4a2d35889c210500f39a7903f954d53f61d823909bdf8d1df`。這是開檔與搜尋診斷。仍須以此候選完成原 1.25 GiB 的瀏覽器生命週期驗收，確認整個程序樹的關閉後 RSS；現有 Edge 八輪失敗繼續保留。
+
+
+### Tensor 搜尋減量候選的 Edge 實體八輪
+
+使用同一短測建置 `70a9f171f8d96766`、乾淨來源 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b`、tree `5a7c483a8b3c8b2880de3816205396c1d97b2bff`，在本機 Windows Edge 156.0.4314.58／Playwright 1.64.1 完成原八輪。合成原檔為 1,349,965,216 bytes、21,005 OP，完整原檔 SHA-256 已獨立重算。仍採原 CSP 的已驗證 HTML，其餘資源走本機 HTTP，模型在本機處理。關閉時限、自然下載 URL 釋放、記憶體政策與取樣方式維持原規則。
+
+八輪通過。以 2,037 筆程序樹取樣重算，暖機後六輪的關檔 RSS 斜率 +7.9 MiB／輪（門檻 16 MiB／輪），末段漂移 −73.4 MiB（門檻 128 MiB），峰值增量 +642.0 MiB（門檻 768 MiB）。末兩輪為 784.9、790.4 MiB。先前快取候選的 Edge 八輪 +34.9 MiB／輪失敗保留。這組前後測不足以分離 V8 延遲釋放時序的影響。此流程涵蓋 Layers／Pattern 路徑，首次使用 Tensors 的時間與行為由前一節的短測單獨核對。
+
+24 份整份編輯、切圖和組合模型匯出檔與前兩組 Edge 以及快取候選 Chrome 逐份同 SHA-256。16 次原檔指紋和所有下載 URL 釋放通過，40 個模型 Worker、16 個原檔驗證 Worker 正常結束，沒有啟動推論 Worker。瀏覽器在原時限正常退出，15 個受觀察程序全數退出。
+
+原始報告與複核在 `build/qa/reshape-170/physical-edge-lazy-tensor/report.json` 和 `review.json`。原始報告 SHA-256 為 `4346c292c45f2f9145d2846cf047c6ec888d1d0f58832192c5fbbd608af3f0e6`，337 檔 manifest SHA-256 為 `bfd520eea66d97e5c627606d22197718a8c135c9d1229141a80901dbb222995a`。相同候選的 Chrome 驗收見下節。
+
+
+### Tensor 搜尋減量候選的 Chrome 實體八輪
+
+以與 Edge 完全相同的 build `70a9f171f8d96766`、來源 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b` 和 337 檔 manifest，在本機 Windows Chrome 156.0.8078.80／Playwright 1.64.1 完成原八輪。完整重算 1,349,965,216 bytes 合成原檔的 SHA-256，與 Edge 相同。自然下載釋放、10 秒瀏覽器關閉、記憶體與取樣規則沿用既有政策。
+
+八輪通過。以 2,060 筆程序樹取樣重算，暖機後六輪關檔 RSS 斜率 +2.8 MiB／輪，門檻 16 MiB／輪；末段漂移 +17.8 MiB、峰值增量 +580.6 MiB，也各在原門檻內。八輪全部 24 份匯出檔與相同建置的 Edge、先前三組對照逐份同 SHA-256。16 次完整檔案指紋、所有下載 URL 釋放及 40 個模型 Worker、16 個原檔驗證 Worker 均核對通過，13 個受觀察程序正常退出，未啟動推論 Worker。先前候選的失敗仍保留。這組量測涵蓋 32px、選檔、Layers／Pattern、整份編輯、切圖和組合，Tensors 首次使用由兩端短測核對。
+
+原始報告與複核位於 `build/qa/reshape-170/physical-chrome-lazy-tensor/`，原始報告 SHA-256 為 `181fc663794ba142ca986b9f3aedc727fee75b6c2b6f8e97a498fc3277698fa1`。兩端同一建置的本機八輪均已通過，正式 GitHub 關卡另依 v1.7.1 的實際受測來源核對。
+
+
+## RESHAPE 靜態驗證候選（本機）
+
+本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
+
+本機原始收據在 `build/qa/reshape-170/`。LiteRT.js 2.6.0 的 CPU 測試核對合法匯出重開的輸出 bytes，並在原檔和重開檔重現非向量 int32 的輸出 shape 不符。對 21,005 OP 合成圖（64-byte 權重）的暖機後 14 輪交錯量測，靜態檢查的中位數由正式包的 59.2 ms 增至候選的 79.3 ms，較初版候選的 102.7 ms 降低。
+
+同一個乾淨候選的 Edge 156.0.4314.58 完成 1280×640／32px 的原生選檔、錯誤拒絕、逐 OP 報告、匯出重開與正常關閉。Chrome 156.0.8078.80 功能同樣通過，正常關閉超過原十秒門檻，整輪保留失敗。兩端均沒有啟動推論 Worker。Node 全套單次結果為 1,081 通過、35 略過、1 項既有診斷入口失敗，單獨補驗該入口通過。候選尚未發布，正式站根頁實際載入 v1.7.0／build `1353dd74a9b8b6b7`。
+
+### Edge 實體大檔八輪
+
+Windows Edge 156.0.4314.58／Playwright 1.64.1 以乾淨來源 `640ca4fcbc2c218a5b432067f3239500df128410`、build `a1048b822d971bca` 完成八輪實體 1,349,965,216 bytes／21,005 OP 的既有驗收。該來源相對應用候選 `e748544` 只新增本頁紀錄，四項來源範圍指紋逐一相同。每輪整份編輯、切圖、組合、下載重開、權重與 custom options、Pattern 正負例及重複匯出雜湊均通過；16 次完整原檔指紋通過。下載 URL 自然釋放、40 個模型 Worker、16 個原檔驗證 Worker 與 15 個受觀察的自有程序均正常退出，沒有啟動推論 Worker。
+
+原門檻以 2,135 筆程序樹樣本及暖機後六輪重新判定通過。關閉後 RSS 斜率 +8,928,695 bytes／輪，末段漂移 +61,464,576 bytes，峰值增量 +725,319,680 bytes。第五、六輪關閉後約 898 MiB，第七、八輪回落至約 787、785 MiB。這次本機驗收以 manifest 核對後的原樣 HTML 啟動，其他資產使用 HTTP，範圍為該次 Edge 原生操作與記憶體。
+
+原始報告與獨立核對在 `build/qa/reshape-170/physical-edge/report.json` 和 `review.json`。報告 SHA-256 `b7c9b1c176688162ef3e269ba797ea822e636f6198ce8f3db32d679b2ade0dc8`，337 檔候選 manifest SHA-256 `da672ce229a815bfb6709ba5ca92e7e71eaea0bedcaac11de0e7348a9a30b27a`。獨立核對另完整串流計算實體合成原檔雜湊。
+
+### Chrome 實體大檔八輪與草稿 PR
+
+Windows Chrome 156.0.8078.80／Playwright 1.64.1 以乾淨來源 `54d7a73fe569852203417f4beaef68463a6f0e9a`、build `b49bd116ade78119` 完成同一個 1,349,965,216-byte／21,005 OP 規格的八輪。與 Edge 的四項來源範圍指紋相同。整份編輯、切圖、組合、下載重開、權重、custom options、Pattern 正負例、重複匯出及原檔指紋均通過。49 個下載 URL、40 個模型 Worker 和 16 個原檔驗證 Worker 均釋放，未啟動推論 Worker。原時限內正常關閉，13 個受觀察的程序均退出。
+
+整輪因記憶體超標保留失敗。以 2,121 筆程序樹樣本重新核對，暖機後六輪的關閉 RSS 斜率 +28,572,175 bytes／輪，門檻 16 MiB／輪。末段漂移 +143,065,088 bytes，門檻 128 MiB。峰值增量 +691,195,904 bytes，符合原門檻。附近原生快照顯示增量集中在同一個 renderer 的 private commit，其他程序及頁面 main heap／backing storage 沒有同量級變化。資料仍不足以辨識配置來源或判定 RESHAPE 引入回歸，應用也尚未因此調整。原始報告、來源複核及程序取樣摘要在 `build/qa/reshape-170/physical-chrome/`，報告 SHA-256 `2c3fda5bcd5d79370a9575440c8ddf931866e984ad05b11d5c5c572f93be5ece`。
+
+[草稿 PR #255](https://github.com/koviankevin/tflite-explorer/pull/255) 的實際受測 merge `9c49798fd21adc944f07e2dc1d157597d42651d1` 與候選的 tree `ecab7f5005bc0f01011a64298dd8922686fd776c` 相同。[Node 和公開建置](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322314) 的 1,082 項通過、35 項略過、零失敗及 337 個建置檔案已核對。[契約檢查](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322291) 的 79 項通過另以 artifact `13304766853` 的 provider digest 與原始報告核對。這是 PR 階段驗證。原始證據在 `build/qa/reshape-170/pr255/`。
+
+### 正式版同機 Chrome 對照
+
+以 GitHub [v1.7.0 固定下載](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 的原 ZIP／manifest 雜湊、乾淨來源 `7009b1f7faebf7f50360106c3e25e5632230af48` 及 build `1353dd74a9b8b6b7`，在同一 Windows／Chrome 156.0.8078.80／Playwright 1.64.1 使用原流程對照。已核對兩端合成原檔的完整 SHA-256、指紋與設定。兩端八輪的 24 份整份編輯、切圖與組合匯出檔逐份同 SHA-256。
+
+正式版八輪及正常退出通過，共 2,128 筆取樣與 13 個受觀察的自有程序。關閉後 RSS 斜率 −15,783,643 bytes／輪，末段漂移 +23,797,760 bytes。第三、五、六輪也有相近量級的 renderer 增量，最後兩輪回落到約 680 MiB。候選版原有的斜率與漂移失敗保留。這組先後測證明正式版也會出現波動，但尚無足夠樣本判定 RESHAPE 是否改變發生頻率或釋放時間。
+
+原始報告與比較在 `build/qa/reshape-170/physical-chrome-reference/report.json` 和 `comparison.json`。正式版對照報告 SHA-256 為 `57e6c9ab3f4473bb9446739f4f4915968d1cfbc11b818528c500dd0d8c735f11`。候選仍待 Chrome 記憶體釐清及正式發布關卡。
+
+同一個正式包另以 Chrome 隔離 context 做兩次唯讀診斷，各使用 1 MiB 權重，只執行選檔、定位和關閉。3,005 OP 在 45.7 秒內沒有單次至少 100 MiB 的同一 renderer 下降。21,005 OP 在關閉後 27.722 秒，跨 677 ms 下降 120,147,968 bytes RSS 及 122,712,064 bytes private commit，頁面 main heap 僅下降約 1.8 MiB。兩端 Worker 與受觀察的自有程序均退出。這組證據將匯出從重現條件中排除，沒有用於八輪驗收的判定。
+
+兩次啟動記錄有 `--trace-gc-nvp`，CDP 回報 V8 15.6.75.27。Playwright 在 Windows 的這份日誌沒有收到 GC 或 pool 明細，無法確認配置歸屬。原始診斷在 `build/qa/reshape-170/physical-chrome-reference/renderer-probe/`，報告 SHA-256 為 `c8da87906660d8a8aaa717137f8c157ffc27e323fd52836e508c37620d83656f`。 [Chromium DEPS](https://github.com/chromium/chromium/blob/156.0.8078.80/DEPS) · [固定 V8 pool 原始碼](https://github.com/v8/v8/blob/c9b3cfcab30ace06c21f9b48a0f0a34805e81e9d/src/heap/memory-pool.cc)
+
+依使用者當時指定的範圍，[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 改善了 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識。Build `1353dd74a9b8b6b7` 的 336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。
 
 SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度漏檢及逐 OP 報告已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) [正式交付](transform-metadata-validation.md#v146-正式交付)。五份原始錯誤檔、239 項相關測試、十三組 CPU suite 情境及兩端十二份實際下載／四份下載後 CPU、pattern 正負例與 32px 保留[候選來源](results/transform-metadata-candidate.json)。Edge 原生通過，Chrome 功能通過但十秒正常關閉失敗；正式站另有獨立來源證據。本次 CI 首次八分鐘逾時與只補跑失敗驗證一次的結果分開保留。
 

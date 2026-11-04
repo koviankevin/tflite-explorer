@@ -49,6 +49,7 @@ export class RangeStream {
         return result;
     }
     read(length) { const bytes = this.peek(length); this.position += bytes.length; return bytes; }
+    clearCache() { this.storage.cache.clear(); }
     stream(length) {
         if (!Number.isSafeInteger(length) || length < 0 || this.position + length > this.length) throw new Error('Tensor 資料範圍無效。');
         const child = new RangeStream(this.readAt, length, this.offset + this.position, this.stats, this.storage);

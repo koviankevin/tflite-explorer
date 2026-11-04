@@ -6,6 +6,7 @@ import {checkGatherMetadata} from './tflite-gather-checks.js';
 import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {SPATIAL_OPERATORS,checkSpatialTransform} from './tflite-spatial-checks.js';
 import {STATIC_TRANSFORM_OPERATORS,checkStaticTransform} from './tflite-static-transform.js';
+import {checkReshapeMetadata} from './tflite-reshape-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
@@ -60,8 +61,27 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} GATHER · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
-        if(!['TRANSPOSE','RESHAPE','EXPAND_DIMS'].includes(name)&&!OPERAND_OPERATORS.has(name)){record.reason='此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。';continue;}
-        const id=op.inputs[1],fail=message=>{throw Error(`Subgraph #${graphId} · OP #${node} ${name} · tensor #${id}：${message}`);};
+        const id=op.inputs[1];
+        if(name==='RESHAPE'){
+            try{
+                const ins=Array.from(op.inputs,id=>g.tensors[id]),outs=Array.from(op.outputs,id=>g.tensors[id]);
+                let unreadReason;
+                const proof=checkReshapeMetadata(ins,outs,op.builtin_options||{},()=>{
+                    const result=values(id,[2]);
+                    if(!result)unreadReason=reasons.get(id);
+                    return result;
+                });
+                record.status=proof.status;
+                record.reason=unreadReason??proof.reason;
+                if(proof.status==='passed')checked++;else unchecked++;
+            }catch(error){
+                const operand=id>=0?` · shape tensor #${id}`:'';
+                throw Error(`Subgraph #${graphId} · OP #${node} RESHAPE${operand} · output tensor #${op.outputs[0]}：${error.message}`,{cause:error});
+            }
+            continue;
+        }
+        if(!['TRANSPOSE','EXPAND_DIMS'].includes(name)&&!OPERAND_OPERATORS.has(name)){record.reason='此 OP 尚無完整常數／輸出 shape 檢查規則；結構與已實作的 metadata 檢查另列。';continue;}
+        const fail=message=>{throw Error(`Subgraph #${graphId} · OP #${node} ${name} · tensor #${id}：${message}`);};
         if(OPERAND_OPERATORS.has(name)){
             const inTensors=Array.from(op.inputs,id=>g.tensors[id]),outTensors=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
             try{
@@ -87,11 +107,6 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         }else if(name==='EXPAND_DIMS'){
             if(v.length!==1||v[0]<BigInt(-a.length-1)||v[0]>BigInt(a.length))fail('axis 必須是 rank 範圍內的單一整數。');
             const axis=Number(v[0]<0n?v[0]+BigInt(a.length+1):v[0]);expected=[...a.slice(0,axis),1,...a.slice(axis)];
-        }else if(name==='RESHAPE'){
-            if(v.some(n=>n< -1n||n>2147483647n)||v.filter(n=>n===-1n).length>1)fail('shape 只能包含非負維度與最多一個 -1。');
-            if(v.includes(0n)){unchecked++;record.reason='含零維度的 RESHAPE 常數組合尚未驗證。';continue;}
-            const total=a.reduce((p,n)=>p*BigInt(n),1n),known=v.reduce((p,n)=>n<0n?p:p*n,1n);
-            if(v.includes(-1n)&&known&&total%known===0n)expected=v.map(n=>Number(n===-1n?total/known:n));else if(!v.includes(-1n)&&known===total)expected=v.map(Number);else fail('shape tensor 與 input 元素數不符。');
         }
         if(expected&&(expected.length!==out.length||expected.some((d,i)=>d!==out[i])))fail(`output tensor #${op.outputs[0]} shape 應為 [${expected.join(', ')}]。`);
         checked++;

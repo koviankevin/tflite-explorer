@@ -39,6 +39,24 @@ test('submodel preserves only needed weights, options, quantization and two boun
     assert.equal(reader.__offset(weightTable, 4), 0, 'external weights must not also have an empty inline data vector');
     assert.deepEqual(new Uint8Array(await result.blob.slice(Number(buffer.offset),Number(buffer.offset+buffer.size)).arrayBuffer()),weight);
 });
+test('parse releases the page cache and keeps the original tensor range readable on demand', async () => {
+    const weight = new Uint8Array(new Float32Array([2,3]).buffer);
+    const tensors = [tensor('input'), tensor('weight',1), tensor('sum'), tensor('out')];
+    const source = new Uint8Array(await new FlatbufferWriter().finish(model([add([0,1],2)], tensors,
+        [{ data:new Uint8Array(),offset:0n,size:0n },{ data:weight,offset:0n,size:0n }]),new Blob()).arrayBuffer());
+    const reads = [];
+    const index = await parseModel((offset,size)=>{
+        reads.push([offset,size]);
+        return source.subarray(offset,offset+size);
+    },source.length,metadata);
+    const parseReads = reads.length;
+    const initializer = index.graphs[0].tensors.get('1').initializer;
+    assert.deepEqual(initializer.values,weight);
+    assert.equal(reads.length,parseReads+1);
+    assert.deepEqual(initializer.values,weight);
+    assert.equal(reads.length,parseReads+1);
+    assert.equal(index.stats.reads,parseReads);
+});
 test('unknown union options and future schema fields remain inspectable but block export', async () => {
     const tensors=[tensor('input'),tensor('weight'),tensor('sum'),tensor('out')];
     const bytes = new Uint8Array(await new FlatbufferWriter().finish(model([add([0,1],2)],tensors,[{data:new Uint8Array(),offset:0n,size:0n}]),new Blob()).arrayBuffer());
