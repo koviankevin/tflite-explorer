@@ -123,9 +123,10 @@ try{
     report.tfliteEditingOnlyRequired=tfliteEditingOnlyRequired;if(tfliteEditingOnlyRequired)report.tfliteControlEdit=await tfliteControlEditFlow({page,read:readPage,base,directory:temporary,check});
     report.consolidatedEditorRequired=consolidatedEditorRequired;if(consolidatedEditorRequired){report.patternDelete=await patternDeleteFlow({page,read:readPage,base,directory:temporary,check});report.modelTabs=await modelTabsFlow({page,read:readPage,base,directory:temporary,check});}report.editRecoveryRequired=editRecoveryRequired;if(editRecoveryRequired)report.editRecovery=await editRecoveryFlow({page,read:readPage,base,directory:temporary,check});
     report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check,navigation,readability:report.graphReadabilityRequired});
-    report.addValidationRequired=manifest.files.some(file=>file.path==='src/tflite-add-checks.js');
+    const mulValidation=manifest.files.some(file=>file.path==='src/tflite-broadcast-checks.js');
+    report.addValidationRequired=mulValidation||manifest.files.some(file=>file.path==='src/tflite-add-checks.js');
     report.operatorValidationRequired=operatorValidationRequired(manifest.release.version);
-    if(report.operatorValidationRequired)report.operatorValidation=await operatorValidationFlow({page,read:readPage,base,directory:temporary,check,addValidation:report.addValidationRequired});
+    if(report.operatorValidationRequired)report.operatorValidation=await operatorValidationFlow({page,read:readPage,base,directory:temporary,check,addValidation:report.addValidationRequired,mulValidation});
     report.quantizationValidationRequired=quantizationValidationRequired(manifest.release.version);
     if(report.quantizationValidationRequired)report.quantizationValidation=await quantizationValidationFlow({page,read:readPage,base,directory:temporary,check});
     report.legacyShapeValidationRequired=legacyShapeValidationRequired(manifest.release.version);

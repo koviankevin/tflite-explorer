@@ -21,6 +21,7 @@ const matmulOnly=process.argv.includes('--matmul-only');
 const gatherOnly=process.argv.includes('--gather-only'),fcOnly=process.argv.includes('--fc-only'),spatialOnly=process.argv.includes('--spatial-only'),transformOnly=process.argv.includes('--transform-only');assert.ok([matmulOnly,gatherOnly,fcOnly,spatialOnly,transformOnly].filter(Boolean).length<=1);
 const source=gitSource();assert.equal(source.dirty,false);
 const manifest=await verifyArtifact(build,{publicOnly:true,requireClean:true,expectedCommit:source.commit}),directory=path.resolve(output);await mkdir(directory);
+const mulValidation=manifest.files.some(file=>file.path==='src/tflite-broadcast-checks.js');
 const server=createStaticServer(path.resolve(build));server.listen(0,'127.0.0.1');await once(server,'listening');const base=`http://127.0.0.1:${server.address().port}/`;
 const report={format:'model-lens-windows-operator-validation',status:'failed',channel,source,release:manifest.release,startedAt:new Date().toISOString(),checks:[],errors:[],workers:[],nativeProcessSnapshots:[],scope:'Public synthetic UI on authenticated original HTML fixture; native exit covers observed owned identities admitted before the flow and before close, not unobserved short-lived processes, HTTP document transport, physical RSS or a fix for historical native-close failures.'};
 if(matmulOnly)report.format='model-lens-windows-matmul-validation';
@@ -41,7 +42,7 @@ try{
     await context.route('**/*',async route=>{const r=route.request();if(new URL(r.url()).origin!==new URL(base).origin||r.method()!=='GET'){report.errors.push('Unexpected application network request');return route.abort();}if(!await doc.handle(route,base))return route.continue();});
     page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('worker',w=>{const row={url:w.url(),closed:false};report.workers.push(row);w.once('close',()=>{row.closed=true;});});
     await observeNative('before-flow');
-    report.flow=await (transformOnly?transformMetadataValidationFlow:spatialOnly?spatialMetadataValidationFlow:fcOnly?fullyConnectedValidationFlow:gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name),addValidation:manifest.files.some(file=>file.path==='src/tflite-add-checks.js')});report.functionalStatus='passed';
+    report.flow=await (transformOnly?transformMetadataValidationFlow:spatialOnly?spatialMetadataValidationFlow:fcOnly?fullyConnectedValidationFlow:gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name),addValidation:mulValidation||manifest.files.some(file=>file.path==='src/tflite-add-checks.js'),mulValidation});report.functionalStatus='passed';
     await observeNative('before-close');
     await context.close();context=null;closing=true;let timer;
     try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('normal browser.close exceeded10s')),10000);})]);}finally{clearTimeout(timer);}

@@ -7,7 +7,7 @@ import {operandFixture} from '../operand-fixture.mjs';
 import {physicalFixtureHeader} from '../physical-tflite-fixture.mjs';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 const t=(shape,type=0,values)=>({shape,type,...(values===undefined?{}:{values})});
-export async function operatorValidationFlow({page,read,base,directory,check,addValidation=false}){
+export async function operatorValidationFlow({page,read,base,directory,check,addValidation=false,mulValidation=false}){
     const report={cases:[],modelWorkers:0,automaticRuntimeWorkers:0};let downloads=0;
     const onDownload=()=>downloads++,runtimeWorkers=[];
     const onWorker=w=>{if(/tflite-runtime-worker/.test(w.url()))runtimeWorkers.push(w.url());};
@@ -47,8 +47,11 @@ export async function operatorValidationFlow({page,read,base,directory,check,add
             if(name==='Large'){
                 const add=record.operatorValidation.filter(operator=>operator.type==='ADD');
                 assert.deepEqual(add.map(operator=>operator.status),Array(2).fill(addValidation?'passed':'not-run'));
-                assert.equal(record.operatorSummary.checked,addValidation?21002:21000);
-                assert.equal(record.operatorSummary.unchecked,addValidation?4:6);
+                const mul=record.operatorValidation.filter(operator=>operator.type==='MUL');
+                assert.deepEqual(mul.map(operator=>operator.status),[mulValidation?'passed':'not-run']);
+                const checked=21000+(addValidation?2:0)+(mulValidation?1:0);
+                assert.equal(record.operatorSummary.checked,checked);
+                assert.equal(record.operatorSummary.unchecked,count-checked);
             }
             else assert.ok(record.operatorValidation.every(c=>c.status===expected));
             assert.ok(record.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
