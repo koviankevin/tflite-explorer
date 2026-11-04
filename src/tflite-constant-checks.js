@@ -9,7 +9,7 @@ import {STATIC_TRANSFORM_OPERATORS,checkStaticTransform} from './tflite-static-t
 import {checkReshapeMetadata} from './tflite-reshape-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
-    const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0,checked=0,unchecked=0;
+    const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0;
     const shape=staticTfliteShape;
     const values=(id,types=[2,4])=>{
         const skip=reason=>{reasons.set(id,reason);return null;};
@@ -40,7 +40,6 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
                 const ins=Array.from(op.inputs,id=>id<0?null:g.tensors[id]),outs=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
                 const proof=SPATIAL_OPERATORS.has(name)?checkSpatialTransform(name,ins,outs,options):STATIC_TRANSFORM_OPERATORS.has(name)?checkStaticTransform(name,ins,outs,options):(name==='FULLY_CONNECTED'?checkFullyConnectedMetadata:checkBatchMatmulMetadata)(ins,outs,options);
                 record.status=proof.status;record.reason=proof.reason;
-                if(proof.status==='passed')checked++;else unchecked++;
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
@@ -57,7 +56,6 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
                         record.reason='已核對 GATHER dtype 關係、rank／axis／batch_dims、output shape 與可讀 indices 範圍；未執行 kernel 或驗證數值等價。';
                     }
                 }
-                if(record.status==='passed')checked++;else unchecked++;
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} GATHER · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
@@ -73,7 +71,6 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
                 });
                 record.status=proof.status;
                 record.reason=unreadReason??proof.reason;
-                if(proof.status==='passed')checked++;else unchecked++;
             }catch(error){
                 const operand=id>=0?` · shape tensor #${id}`:'';
                 throw Error(`Subgraph #${graphId} · OP #${node} RESHAPE${operand} · output tensor #${op.outputs[0]}：${error.message}`,{cause:error});
@@ -88,15 +85,15 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
                 checkOperandMetadata(name,inTensors,outTensors,options);
                 const attempted=new Set(),proof=checkOperandValues(name,inTensors,outTensors,options,slot=>{const id=op.inputs[slot];attempted.add(id);return values(id,[2,4,7,9,6]);});
                 record.status=proof.status;record.reason=proof.reason;
-                if(proof.status==='passed')checked++;else{unchecked++;const missing=[...attempted].filter(id=>reasons.has(id));if(missing.length)record.reason=missing.map(id=>`tensor #${id}：${reasons.get(id)}`).join(' ');}
+                if(proof.status!=='passed'){const missing=[...attempted].filter(id=>reasons.has(id));if(missing.length)record.reason=missing.map(id=>`tensor #${id}：${reasons.get(id)}`).join(' ');}
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
         if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
         const a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
-        if(!a||!out){unchecked++;record.reason='input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
+        if(!a||!out){record.reason='input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
         const v=values(id);
-        if(!v){unchecked++;record.reason=reasons.get(id);continue;}
+        if(!v){record.reason=reasons.get(id);continue;}
         let expected;
         if(name==='TRANSPOSE'){
             const rank=BigInt(a.length);
@@ -109,8 +106,8 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             const axis=Number(v[0]<0n?v[0]+BigInt(a.length+1):v[0]);expected=[...a.slice(0,axis),1,...a.slice(axis)];
         }
         if(expected&&(expected.length!==out.length||expected.some((d,i)=>d!==out[i])))fail(`output tensor #${op.outputs[0]} shape 應為 [${expected.join(', ')}]。`);
-        checked++;
         record.status='passed';record.reason='已核對可讀常數及適用的靜態 shape／indices 範圍；不含 kernel 執行或數值語意。';
     }
-    return {graph:graphId,checked,unchecked,bytesRead,inspectedBytes,operators,scope:'檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER、PAD／SLICE／SPLIT 家族及 MEAN／SUM／REDUCE；最多檢視 4 MiB。SQUEEZE／CONCATENATION、卷積／pooling、BATCH_MATMUL／FULLY_CONNECTED 核對已實作的 dtype／rank／參數與靜態 output shape，不讀 payload；動態、scalar 常數條件、未支援 encoding 與 kernel 契約明列未檢查。逐 OP 列出適用規則，未知值、未支援規則、custom kernel 與數值等價仍未驗證。'};
+    const checked=operators.reduce((count,operator)=>count+Number(operator.status==='passed'),0);
+    return {graph:graphId,checked,unchecked:operators.length-checked,bytesRead,inspectedBytes,operators,scope:'檢查有靜態型別及可讀常數的 TRANSPOSE／RESHAPE／EXPAND_DIMS／GATHER、PAD／SLICE／SPLIT 家族及 MEAN／SUM／REDUCE；最多檢視 4 MiB。SQUEEZE／CONCATENATION、卷積／pooling、BATCH_MATMUL／FULLY_CONNECTED 核對已實作的 dtype／rank／參數與靜態 output shape，不讀 payload；動態、scalar 常數條件、未支援 encoding 與 kernel 契約明列未檢查。逐 OP 列出適用規則，未知值、未支援規則、custom kernel 與數值等價仍未驗證。'};
 }

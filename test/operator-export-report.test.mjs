@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {operandFixture} from './operand-fixture.mjs';
+import {detectionPostprocessFixture} from './detection-postprocess-fixture.mjs';
 import {editTfliteModel} from '../src/tflite-model-edit.js';
 import {parseModel} from '../src/model-engine.js';
 import {validateTfliteConstants} from '../src/tflite-constant-checks.js';
@@ -35,6 +36,27 @@ test('actual edit/export/reopen report lists checked and dynamic operators; no w
     }
 });
 
+test('mixed custom and RESHAPE export agrees with the subgraph coverage summary',async()=>{
+    const {blob,file}=detectionPostprocessFixture({unusedBytes:64,withReshape:true});
+    const bytes=new Uint8Array(await blob.arrayBuffer());
+    const parse=raw=>parseModel((o,n)=>raw.subarray(o,o+n),raw.length,metadata);
+    const index=await parse(bytes);
+    const result=editTfliteModel(index,file,[{graph:0}]);
+    const raw=new Uint8Array(await result.blob.arrayBuffer()),candidate=await parse(raw);
+    const validation=validateTfliteConstants(candidate.raw,0,(o,n)=>raw.subarray(o,o+n));
+    result.semanticValidation=[validation];result.roundTrip=true;
+    const built=createModelEditReport(index,file,result,candidate,{graph:0,node:0,mode:'replace'},{outputName:'mixed-edited.tflite'});
+    const report=JSON.parse(await built.blob.text());
+    assert.deepEqual(report.operatorValidation.map(({type,status})=>[type,status]),[
+        ['TFLite_Detection_PostProcess','not-run'],['RESHAPE','passed']
+    ]);
+    const summary=report.checks.find(c=>c.id==='constant-operands');
+    assert.equal(summary.status,'not-run');
+    assert.match(summary.detail,/1 個已檢查、1 個未能檢查/);
+    assert.equal(validation.checked,report.operatorSummary.checked);
+    assert.equal(validation.unchecked,report.operatorSummary.unchecked);
+});
+
 test('21,005-OP report survives repeated status attachment without body reads or duplicate verdicts',async()=>{
     // Same full OP/tensor structure as the physical gate; small public payload
     // isolates report assembly. The real 1.25 GiB gate remains required.
@@ -53,6 +75,9 @@ test('21,005-OP report survives repeated status attachment without body reads or
     }
     const document=JSON.parse(await report.blob.text());assert.equal(document.operatorValidation.length,21005);
     assert.equal(document.operatorSummary.checked,21000);assert.equal(document.operatorSummary.unchecked,5);
+    const aggregate=document.checks.find(c=>c.id==='constant-operands');
+    assert.equal(aggregate.status,'not-run');
+    assert.match(aggregate.detail,/21000 個已檢查、5 個未能檢查/);
     assert.equal(document.checks.filter(c=>c.id==='runtime-load').length,1);assert.equal(document.checks.filter(c=>c.id==='runtime-smoke').length,1);
     assert.equal(document.runtimeValidation.invoked,false);
     console.log(JSON.stringify({reportOperators:document.operatorValidation.length,reportBytes:report.blob.size,statusAttachments:3,reportBodyReads:0}));
