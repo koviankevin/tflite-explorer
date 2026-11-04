@@ -33,7 +33,11 @@ export async function addFlow({page,read,base,directory,check}) {
     let downloads=0;
     const onDownload=()=>downloads++;
     const onWorker=worker=>{
-        const record={url:worker.url(),closed:false};
+        const url=worker.url();
+        // Netron's renderer belongs to the page and closes with it. Model
+        // and inference Workers belong to the tabs exercised by this flow.
+        if(!/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(url))return;
+        const record={url,closed:false};
         workers.push(record);
         worker.once('close',()=>record.closed=true);
     };
