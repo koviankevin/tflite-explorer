@@ -170,7 +170,7 @@ export function indexModel(model, additionalTensors = () => {}) {
             }
         });
         next.forEach((targets, from) => { for (const to of targets) previous[to].add(from); });
-        const records = [];
+        const layers = [];
         graph.nodes.forEach((node, index) => {
             const parts = [];
             for (let side = 0; side < 2; side++) {
@@ -180,16 +180,27 @@ export function indexModel(model, additionalTensors = () => {}) {
                 }
             }
             const names = parts.join(' ');
-            records.push({ kind: 'layers', graph: graphIndex, index, id: node.identifier, label: node.name || node.type.name, operator: node.type.name, text: `${node.name} ${names} ${node.type.name} ${operatorKey(node.type.name)} ${node.identifier}`.toLowerCase() });
+            layers.push({ kind: 'layers', graph: graphIndex, index, id: node.identifier, label: node.name || node.type.name, operator: node.type.name, text: `${node.name} ${names} ${node.type.name} ${operatorKey(node.type.name)} ${node.identifier}`.toLowerCase() });
         });
-        for (const value of tensors.values()) {
-            const uses = consumers.get(value.identifier), producer = producers.get(value.identifier), names = [];
-            if (uses) for (const i of uses) names.push(graph.nodes[i].type.name);
-            if (producer !== undefined && !uses?.has(producer)) names.push(graph.nodes[producer].type.name);
-            const operators = names.join(' ');
-            records.push({ kind: 'tensors', graph: graphIndex, id: value.identifier, label: firstLine(value.name) || `Tensor #${value.identifier}`, dtype: value.type?.dataType, shape: value.type?.shape?.dimensions || [], operator: operators, text: `${value.name} ${operators} ${operatorKey(operators)}`.toLowerCase() });
-        }
-        const entry = { graph, tensors, producers, consumers, next, previous, records };
+        let tensorRecords;
+        const entry = {
+            graph, tensors, producers, consumers, next, previous, layerRecords: layers,
+            get tensorRecords() {
+                // Layers and Pattern exploration do not need the tensor
+                // search strings. Build them once when Tensors is searched.
+                if (tensorRecords) return tensorRecords;
+                const rows = [];
+                for (const value of tensors.values()) {
+                    const uses = consumers.get(value.identifier), producer = producers.get(value.identifier), names = [];
+                    if (uses) for (const i of uses) names.push(graph.nodes[i].type.name);
+                    if (producer !== undefined && !uses?.has(producer)) names.push(graph.nodes[producer].type.name);
+                    const operators = names.join(' ');
+                    rows.push({ kind: 'tensors', graph: graphIndex, id: value.identifier, label: firstLine(value.name) || `Tensor #${value.identifier}`, dtype: value.type?.dataType, shape: value.type?.shape?.dimensions || [], operator: operators, text: `${value.name} ${operators} ${operatorKey(operators)}`.toLowerCase() });
+                }
+                tensorRecords = rows;
+                return rows;
+            }
+        };
         operatorIndex(entry);
         return entry;
     });
@@ -200,7 +211,12 @@ export function search(index, kind, query, scope = 'all') {
     const q = query.trim().toLowerCase();
     const exact = /^#?\d+$/.test(q) ? q.replace(/^#/, '') : null;
     const key = operatorKey(q);
-    return index.graphs.flatMap((g, i) => scope !== 'all' && i !== Number(scope) ? [] : g.records.filter((record) => record.kind === kind && (!q || (exact !== null ? record.id === exact : record.text.includes(q) || (key && operatorKey(record.operator).includes(key))))));
+    if (kind !== 'layers' && kind !== 'tensors') return [];
+    return index.graphs.flatMap((g, i) => {
+        if (scope !== 'all' && i !== Number(scope)) return [];
+        const records = kind === 'layers' ? g.layerRecords : g.tensorRecords;
+        return records.filter((record) => !q || (exact !== null ? record.id === exact : record.text.includes(q) || (key && operatorKey(record.operator).includes(key))));
+    });
 }
 
 export async function findPatterns(index, operators, scope = 'all', cancelled = () => false) {

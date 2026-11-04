@@ -39,3 +39,17 @@ test('subgraph namespaces, scalar shapes and first-line display preserve exact l
     const index=indexModel({modules:graphs});assert.deepEqual(search(index,'tensors','#0').map(r=>[r.graph,r.label,r.shape]),[[0,'first\r',[]],[1,'第二',[1,2]]]);
     assert.deepEqual(search(index,'layers','#0','1').map(r=>r.operator),['custom.Op']);assert.equal(index.graphs[0].tensors.get('0'),a);assert.equal(index.graphs[1].tensors.get('0'),b);assert.equal(a.name,'first\r\nrest');
 });
+
+test('tensor search records are built on first tensor search and reused',()=>{
+    let reads=0;
+    const tensor={identifier:'0',name:'signal',get type(){reads++;return {dataType:'float32',shape:{dimensions:[1]}};}};
+    const op=node('0','Reshape',[argument([tensor])],[]);
+    const index=indexModel({modules:[{inputs:[argument([tensor])],outputs:[],nodes:[op]}]});
+    assert.equal(search(index,'layers','#0').length,1);
+    assert.equal(reads,0);
+    const [result]=search(index,'tensors','signal');
+    assert.equal(result.dtype,'float32');
+    assert.deepEqual(result.shape,[1]);
+    assert.equal(search(index,'tensors','#0')[0],result);
+    assert.equal(reads,2);
+});
