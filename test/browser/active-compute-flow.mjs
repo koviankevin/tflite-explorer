@@ -16,7 +16,25 @@ export async function activeComputeFlow({page,read,directory,check,preserveModel
     const until=async(fn,...args)=>{const end=Date.now()+45000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Active CPU DOM timeout: '+fn);await new Promise(r=>setTimeout(r,60));}};
     const choose=async(file,button='#open-model')=>{const next=page.waitForEvent('filechooser');await page.locator(button).click();await(await next).setFiles(file);};
     const ready=()=>until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false'&&document.querySelector('#layer-count').textContent!=='—');
-    const opened=async(file)=>{await choose(file);await ready();const n=report.runtimeWorkers.length;await page.locator('#run-mode').click();await until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('#run-interface p').length===2);assert.equal(report.runtimeWorkers.length,n);};
+    const opened=async file=>{
+        const filename=path.basename(file);
+        const existing=await read(()=>Array.from(document.querySelectorAll('[data-model-tab]'),e=>e.getAttribute('data-model-tab')));
+        await choose(file);
+        // After a temporary tab closes, the restored model can be fully
+        // ready while the next native file selection is still opening.
+        await until(({filename,existing})=>{
+            const active=document.querySelector('[data-model-tab][aria-selected="true"]');
+            return active&&!existing.includes(active.getAttribute('data-model-tab'))&&
+                document.querySelector('#file-name').textContent===filename;
+        },{filename,existing});
+        await ready();
+        const n=report.runtimeWorkers.length;
+        await page.locator('#run-mode').click();
+        await until(filename=>document.querySelector('#run-model-name').textContent===filename&&
+            document.querySelector('#run-workspace').getAttribute('aria-busy')==='false'&&
+            document.querySelectorAll('#run-interface p').length===2,filename);
+        assert.equal(report.runtimeWorkers.length,n);
+    };
     const close=async()=>{
         if(!preserveModelTabs){await page.locator('#close-model').click();await until(()=>document.querySelector('#model-tabs').hidden);return;}
         restoringOriginalTabs=true;
@@ -25,7 +43,13 @@ export async function activeComputeFlow({page,read,directory,check,preserveModel
     async function start(input){
         const n=report.runtimeWorkers.length;await page.locator('#edit-runtime-check').click();await until(()=>document.querySelector('#edit-runtime-dialog').open);
         if(input){await page.locator('#runtime-input-mode-0').selectOption('bin');await choose(input,'#runtime-input-file-0');}
-        await page.locator('#edit-runtime-run').click();assert.ok(report.runtimeWorkers.length<=n+1);return n;
+        await page.locator('#edit-runtime-run').click();
+        await until(()=>!document.querySelector('#edit-runtime-dialog').open||
+            !!document.querySelector('#edit-runtime-input-error').textContent);
+        const rejected=await read(()=>document.querySelector('#edit-runtime-input-error').textContent);
+        assert.equal(rejected,'','The runtime input dialog rejected the chosen file.');
+        assert.ok(report.runtimeWorkers.length<=n+1);
+        return n;
     }
     const invoked=()=>until(()=>document.querySelector('#run-workspace').getAttribute('aria-busy')==='true'&&document.querySelector('#run-progress').textContent.includes('使用指定測試輸入執行'));
     async function finished(status){
