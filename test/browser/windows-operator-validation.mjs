@@ -41,7 +41,7 @@ try{
     await context.route('**/*',async route=>{const r=route.request();if(new URL(r.url()).origin!==new URL(base).origin||r.method()!=='GET'){report.errors.push('Unexpected application network request');return route.abort();}if(!await doc.handle(route,base))return route.continue();});
     page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('worker',w=>{const row={url:w.url(),closed:false};report.workers.push(row);w.once('close',()=>{row.closed=true;});});
     await observeNative('before-flow');
-    report.flow=await (transformOnly?transformMetadataValidationFlow:spatialOnly?spatialMetadataValidationFlow:fcOnly?fullyConnectedValidationFlow:gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name)});report.functionalStatus='passed';
+    report.flow=await (transformOnly?transformMetadataValidationFlow:spatialOnly?spatialMetadataValidationFlow:fcOnly?fullyConnectedValidationFlow:gatherOnly?gatherValidationFlow:matmulOnly?batchMatmulValidationFlow:operatorValidationFlow)({page,read:desktopDOMReader(page),base,directory,check:name=>report.checks.push(name),addValidation:manifest.files.some(file=>file.path==='src/tflite-add-checks.js')});report.functionalStatus='passed';
     await observeNative('before-close');
     await context.close();context=null;closing=true;let timer;
     try{await Promise.race([browser.close(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('normal browser.close exceeded10s')),10000);})]);}finally{clearTimeout(timer);}
