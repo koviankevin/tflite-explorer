@@ -101,7 +101,7 @@ export async function addFlow({page,read,base,directory,check}) {
                 await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&
                     document.querySelector('#edit-message').textContent.includes('無法 broadcast'));
                 const reason=await page.locator('#edit-message').textContent();
-                assert.match(reason,/Subgraph #0.*OP #0 ADD.*inputs tensor \[0, 1\].*outputs tensor \[2\]/);
+                assert.match(reason,/Subgraph #0.*OP #0.*inputs \[0, 1\].*outputs \[2\].*ADD.*無法 broadcast/);
                 assert.equal(downloads,before);
                 await page.screenshot({path:path.join(directory,'invalid-32px.png')});
                 cases.push({kind,status:'rejected',reason,downloads:0});
