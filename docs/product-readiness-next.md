@@ -1,6 +1,14 @@
-# 商品等級後續工作（暫停，保留未完成項目）
+# 商品等級後續工作
 
-使用者要求暫停其他商品化工作。本次僅完成 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識改善：[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0)／build `1353dd74a9b8b6b7`，336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。完整商品化工作仍暫停，以下歷史證據與尚未完成項目保留。
+## RESHAPE 靜態驗證候選（本機）
+
+本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
+
+本機原始收據在 `build/qa/reshape-170/`。LiteRT.js 2.6.0 的 CPU 測試核對合法匯出重開的輸出 bytes，並在原檔和重開檔重現非向量 int32 的輸出 shape 不符。對 21,005 OP 合成圖（64-byte 權重）的暖機後 14 輪交錯量測，靜態檢查的中位數由正式包的 59.2 ms 增至候選的 79.3 ms，較初版候選的 102.7 ms 降低。實體大檔記憶體與瀏覽器生命週期仍須獨立驗收。
+
+同一個乾淨候選的 Edge 156.0.4314.58 完成 1280×640／32px 的原生選檔、錯誤拒絕、逐 OP 報告、匯出重開與正常關閉。Chrome 156.0.8078.80 功能同樣通過，正常關閉超過原十秒門檻，整輪保留失敗。兩端均沒有啟動推論 Worker。Node 全套單次結果為 1,081 通過、35 略過、1 項既有診斷入口失敗，單獨補驗該入口通過。候選尚未發布，正式站根頁實際載入 v1.7.0／build `1353dd74a9b8b6b7`。
+
+依使用者當時指定的範圍，[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 改善了 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識。Build `1353dd74a9b8b6b7` 的 336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。
 
 SQUEEZE／CONCATENATION 的動態 axis／rank／已知維度漏檢及逐 OP 報告已於 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6) [正式交付](transform-metadata-validation.md#v146-正式交付)。五份原始錯誤檔、239 項相關測試、十三組 CPU suite 情境及兩端十二份實際下載／四份下載後 CPU、pattern 正負例與 32px 保留[候選來源](results/transform-metadata-candidate.json)。Edge 原生通過，Chrome 功能通過但十秒正常關閉失敗；正式站另有獨立來源證據。本次 CI 首次八分鐘逾時與只補跑失敗驗證一次的結果分開保留。
 
