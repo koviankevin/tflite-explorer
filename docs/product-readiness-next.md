@@ -46,6 +46,17 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 原始區段、瀏覽器取樣與獨立複核保留在 `build/qa/reshape-170/edge-region-probe/`。雙模型複核 SHA-256 為 `b9b867bebecc870b670c93bbf4cd0bee47b7691bead85ea99dd62b7f3c0c20cc`，JS 對照複核為 `38c9a45966445201063226321905d07b518ca081da1ed0370939ce793bee4c79`。後續優先量測解析或索引的 JS 配置壓力，並保留原大模型八輪驗收標準。
 
 
+### 按需建立 Tensor 搜尋資料
+
+在 21,005 OP、8,836,512 bytes 的合成 TFLite 上，針對開檔配置做三組本機試作。單一鄰接改用共享表示時，Node 開檔 JS heap 使用中位數降低 5.95 MiB，但破壞既有 Set 的 `.add()`，原有誘導子圖負例失敗，保留於獨立分支 `d9e1a0b`。直接讀取短 Int32 向量的試作 `d92459b` 將 Node 解析中位數由 525 降至 427 ms，但開檔後的 heap 使用反增 6.05 MiB，沒有併入記憶體候選。
+
+保留的候選 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b` 在第一次進入 Tensors 搜尋才建立對應搜尋資料，並在同一模型內重用。實際連線 Set 和其他索引維持原 API。新增的回歸測試先重現開檔立即讀取 Tensor 搜尋 metadata，再驗證按需建立並重用。355 項受影響測試通過。各五次 Node 對照的開檔 JS heap 使用中位數由 133.49 降至 112.90 MiB，容量由 217.08 降至 215.76 MiB。候選完整進入 Tensors 後的使用中位數為 140.00 MiB。三個試作的搜尋／拓撲索引、顯示、實際子模型匯出 SHA-256 均與基準逐項相同，讀檔量同為 7,919,008 bytes。
+
+以同一份合成檔，在 Windows Edge 156.0.4314.58 與 Chrome 156.0.8078.80 各跑四次基準與四次候選，順序為 ABBA／ABBA。基準建置 `6ec4b152f3131974`，候選建置 `70a9f171f8d96766`，兩邊都以原 CSP 的驗證過的 HTML 和本機 HTTP 資源執行。全部通過實際選檔、32px、7,000 筆 Pattern、定位、首次 Tensors 列表、`#0` 搜尋定位及關閉模型 Worker。開檔後 Worker 的 JS heap 使用中位數在 Edge 由 75.34 降至 57.64 MiB，Chrome 由 74.66 降至 50.64 MiB。首次切到 Tensors 的中位數為 Edge 91→91 ms、Chrome 98→106 ms。開檔中位數為 Edge 919→978 ms、Chrome 1,026→860 ms。進入 Tensors 後 heap 容量中位數約增加 4 MiB，減量主要發生在尚未使用 Tensors 的開檔階段。
+
+原始報告位於 `build/qa/reshape-170/lazy-tensor-search/`，Edge 報告 SHA-256 為 `1993685ddd565d775ade924986838ddbb3c6bada82ea47254652d9a75613b35e`，Chrome 為 `876e6f7f3409f4f4a2d35889c210500f39a7903f954d53f61d823909bdf8d1df`。這是開檔與搜尋診斷。仍須以此候選完成原 1.25 GiB 的瀏覽器生命週期驗收，確認整個程序樹的關閉後 RSS；現有 Edge 八輪失敗繼續保留。
+
+
 ## RESHAPE 靜態驗證候選（本機）
 
 本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
