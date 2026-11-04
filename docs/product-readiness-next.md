@@ -8,7 +8,15 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 
 另測過減少 Netron port 暫存陣列與重用 FlatBuffer decoder 的組合，雖減少部分已用 heap，但加上快取修改後，開檔時 heap 容量與 backing storage 加總為 132,037,103 bytes，高於該組對照的 129,994,180 bytes。以較低的開檔量測與較小變更面，保留快取單項候選。原始報告在 `build/qa/reshape-170/browser-parse-cache-only-ab.json` 與 `browser-parse-cache-ab.json`，前者 SHA-256 為 `74e56a387021b050b2b5ff122a8f8b8faa2874cae92856124e5ab97b51f0a543`。
 
-最終候選的 81 項受影響測試通過。同一模型的索引、port／屬性呈現及子模型輸出 SHA-256 均與原候選一致，解析讀取量同為 7,919,008 bytes。候選仍在本機，正式站為 v1.7.0。
+最終候選的 81 項受影響測試通過。同一模型的索引、port／屬性呈現及子模型輸出 SHA-256 均與原候選一致，解析讀取量同為 7,919,008 bytes。
+
+### 快取候選的 Chrome 實體八輪
+
+以 Windows Chrome 156.0.8078.80／Playwright 1.64.1，乾淨來源 `c8ad592bf04e330000c41aa2477dde6fb6e255f3`、build `e94a8da9503fa888` 跑原八輪。來源相對上方快取候選只新增本頁紀錄。八輪的 24 份整份編輯、切圖、組合匯出檔與前兩個 Chrome 來源逐份同 SHA-256。實體原檔的 SHA-256、16 次完整原檔指紋、40 個模型 Worker、16 個原檔驗證 Worker、下載 URL 及 12 個受觀察的自有程序均已核對，未啟動推論 Worker。
+
+以 2,158 筆程序樹取樣重算原門檻，暖機後六輪的關閉 RSS 斜率 +1,736,938 bytes／輪、末段漂移 +14,966,784 bytes、峰值增量 +614,617,088 bytes，整輪通過。第五、六輪約 790 MiB，最後兩輪回落到 672、671 MiB。每輪載入後的模型 Worker backing storage 均為 7,705,403 bytes。原 RESHAPE 候選的 Chrome 記憶體失敗保留；這組依序量測確認快取減量與本次原門檻通過，無法從一次八輪分離 renderer 釋放時序的影響。
+
+原始報告與三組來源複核在 `build/qa/reshape-170/physical-chrome-cache/report.json` 和 `review.json`。報告 SHA-256 為 `23c2f3e2219d4eb42cacc207223a43aea62389e8f8605a9d21949608215f27cb`，337 檔 manifest SHA-256 為 `d533044e20ce6b6efce66c191e952417bf4ece03ed30206a03edeef3b0ed047a`。快取候選的 Edge 實體八輪及正式發布關卡仍待補。
 
 ## RESHAPE 靜態驗證候選（本機）
 
