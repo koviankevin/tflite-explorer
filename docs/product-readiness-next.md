@@ -1,5 +1,15 @@
 # 商品等級後續工作
 
+## TFLite 解析快取減量（本機候選）
+
+選定 `codex/tflite-metadata-cache` 的應用來源 `5ee8e46abe63792ee0fee0e751b0158f007e3a3b`、build `9ab03057f6124538`。TFLite metadata 解碼完成後、建立索引前釋放讀檔 page cache。Tensor initializer 保留原本的 File range，第一次讀取時重新填入所需頁。新增回歸先重現原快取仍被持有，修正後核對第一次與第二次讀取的 bytes、讀檔次數及解析統計。
+
+Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏覽器交替跑原候選與快取候選各四次。全部 32px 開檔、7,000 筆 Pattern、定位、模型 Worker 關閉及瀏覽器正常關閉均通過。開檔後 Worker backing storage 中位數由 15,490,500 降為 7,702,777 bytes，heap 容量與 backing storage 的加總由 129,732,036 降為 122,337,529 bytes，定位後加總由 141,614,545 降為 134,613,241 bytes。開檔中位數由 1,061 增至 1,120 ms。這些是有限次數的 isolate 檢查點與操作時間，完整程序樹 RSS 仍須實體大檔八輪。
+
+另測過減少 Netron port 暫存陣列與重用 FlatBuffer decoder 的組合，雖減少部分已用 heap，但加上快取修改後，開檔時 heap 容量與 backing storage 加總為 132,037,103 bytes，高於該組對照的 129,994,180 bytes。以較低的開檔量測與較小變更面，保留快取單項候選。原始報告在 `build/qa/reshape-170/browser-parse-cache-only-ab.json` 與 `browser-parse-cache-ab.json`，前者 SHA-256 為 `74e56a387021b050b2b5ff122a8f8b8faa2874cae92856124e5ab97b51f0a543`。
+
+最終候選的 81 項受影響測試通過。同一模型的索引、port／屬性呈現及子模型輸出 SHA-256 均與原候選一致，解析讀取量同為 7,919,008 bytes。候選仍在本機，正式站為 v1.7.0。
+
 ## RESHAPE 靜態驗證候選（本機）
 
 本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
