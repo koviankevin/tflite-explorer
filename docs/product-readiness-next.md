@@ -1,5 +1,19 @@
 # 商品等級後續工作
 
+## v1.7.2 正式交付
+
+[PR #258](https://github.com/koviankevin/tflite-explorer/pull/258) 修正 TFLite 整份模型匯出報告的彙總，從同一組逐 OP 結果計算已檢查與未檢查數量。混合 DetectionPostProcess／RESHAPE 的實際匯出重開各一個，21,005 OP 報告核對 21,000 個已檢查、5 個未檢查。Windows Chrome／Edge 1280×640、32px 的隔離候選操作和匯出已核對。
+
+主分支實體 1.25 GiB／21,005 OP 八輪通過原記憶體門檻，24 份匯出與 v1.7.1 正式及本機 Chrome／Edge 的同情境逐份同 SHA-256。核心效能的 89 個來源檔未變，沿用九筆正式量測。發布契約 79 項、六種網站切換與隔離網站 38 項操作均通過。[PR #259](https://github.com/koviankevin/tflite-explorer/pull/259) 綁定這四項已核對的正式關卡。
+
+最終來源 `f0a09087ef903866b4d3d2478830421886271d63`、build `0ac5b7a5ee7d3949`，全站 1,507 個 HTTPS 檔案、38 項正式操作及四份實際固定下載已核對。完整來源、deployment、檔案 SHA-256 及發布工作見[正式交付收據](results/operator-coverage-v1.7.2-published.json)。 [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41824752101)
+
+第一次正式站驗收完成 35 項，復原情境在示範模型分頁仍有效時就送出另一個模型的 4-byte 輸入。截圖顯示網站依當前模型要求 8 bytes，且第四個 Worker 未啟動。只補跑失敗驗收一次，原準備及部署保留。原始 artifact 及兩次工作 ID 仍收錄。測試等待特定模型分頁的修正另留候選。
+
+固定版本已核對 tag、來源和四份附件的 SHA-256。GitHub API 回報此 Release 的平台鎖定為 `immutable: false`，儲存庫的 Release immutability 也未啟用。 [GitHub Release 鎖定說明](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)
+
+下一項 ADD 已在合成檔重現：輸入 `[2,2]`／`[3]` 不能 broadcast，LiteRT CPU 在 invocation 前拒絕。可 broadcast 但宣告錯誤 output shape 的檔案則會執行，並因 runtime 輸出與宣告不符回報失敗。獨立本機候選 `d963fdd` 已通過 303 項相關測試。以候選公開包跑手動 CPU，合法模型匯出 bytes 與舊版相同且輸出值一致。21,005 個 ADD 的本機 Node 中位數，原版未驗證為 25.5 ms，初版驗證為 69.5 ms，省去 shape 複製後為 53.8 ms。此量測只涵蓋靜態驗證，候選仍待原生操作驗收與發布。 [TensorFlow Lite ADD kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/add.cc)
+
 ## TFLite 解析快取減量（本機候選）
 
 選定 `codex/tflite-metadata-cache` 的應用來源 `5ee8e46abe63792ee0fee0e751b0158f007e3a3b`、build `9ab03057f6124538`。TFLite metadata 解碼完成後、建立索引前釋放讀檔 page cache。Tensor initializer 保留原本的 File range，第一次讀取時重新填入所需頁。新增回歸先重現原快取仍被持有，修正後核對第一次與第二次讀取的 bytes、讀檔次數及解析統計。
