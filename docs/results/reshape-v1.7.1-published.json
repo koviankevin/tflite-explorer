@@ -1,0 +1,83 @@
+{
+  "format": "model-lens-reshape-memory-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-04T11:15:52.623Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.7.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "29efce7180861fc62ee683ee767bb389e092e610",
+      "tree": "54424ff571df21d3fc9f5ada6ad2af0e896d23a0",
+      "committedAt": "2026-11-04T18:58:21+08:00",
+      "dirty": false
+    },
+    "buildId": "f129a0bcda658472"
+  },
+  "run": {
+    "id": 41818233600,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41818233600",
+    "attempt": 2
+  },
+  "releaseId": 433817419,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.1",
+  "publishedAt": "2026-11-04T11:14:36Z",
+  "siteId": "08068b79657be775bfd828e5ec2b94a658c1603ac8a7a313f7b78f917278a9a3",
+  "siteManifestSHA256": "b9fa313b09d11064dec65b123b19307aefd56c702508c718bd506c3c01a01f92",
+  "coreFiles": 337,
+  "siteFiles": 1502,
+  "checks": 38,
+  "assets": [
+    {
+      "name": "model-lens-public-1.7.1-f129a0bcda658472.zip",
+      "bytes": 41350930,
+      "sha256": "09beaefd39678a385da4fd460ac515dcef19b84c996bb68a3c81f3df8c55eeb1"
+    },
+    {
+      "name": "model-lens-public-1.7.1-f129a0bcda658472.zip.sha256",
+      "bytes": 111,
+      "sha256": "202f76962c55c2639b7240ebbd722f10774009427bdf6fe7adc73465a4e016b4"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 213584,
+      "sha256": "36a7599f0a9852794b98458da22b0573194e38446aae79c2ddcd8d9b54a79d1f"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54534,
+      "sha256": "5859b9e4154fc35fbf11fb9f4aa8f2030e08ccd959e7e7d86cda27610b756e1b"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7544258715,
+    "controllerSource": "29efce7180861fc62ee683ee767bb389e092e610",
+    "runId": 41818233600,
+    "attempt": 1,
+    "jobId": 126534781603,
+    "siteId": "08068b79657be775bfd828e5ec2b94a658c1603ac8a7a313f7b78f917278a9a3",
+    "legacy": false
+  },
+  "archives": {
+    "live-release-verification": {
+      "id": 13315439819,
+      "digest": "sha256:ca655f7493bb045175b0f2648862481c6c8037bd1b2005d7bc4426886ba277a0",
+      "bytes": 552867
+    },
+    "published-release-verification": {
+      "id": 13316940294,
+      "digest": "sha256:1f3fb516dd1d9a2d9a3615fe8f2509f695f36c3bd21c1a14681106abd75eafed",
+      "bytes": 754
+    }
+  },
+  "prepareRun": 41817951692,
+  "sourcePR": 255,
+  "evidencePR": 256,
+  "releaseRetry": {
+    "oldJob": 126538067700,
+    "oldArtifact": 13315877746,
+    "newJob": 126538893342,
+    "cause": "HTTP 502 from GitHub Releases create API"
+  }
+}
