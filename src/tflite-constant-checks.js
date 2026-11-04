@@ -7,6 +7,7 @@ import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {SPATIAL_OPERATORS,checkSpatialTransform} from './tflite-spatial-checks.js';
 import {STATIC_TRANSFORM_OPERATORS,checkStaticTransform} from './tflite-static-transform.js';
 import {checkReshapeMetadata} from './tflite-reshape-checks.js';
+import {checkAddMetadata} from './tflite-add-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0;
@@ -35,10 +36,10 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
         const code=model.operator_codes[op.opcode_index],name=code.custom_code||schema.BuiltinOperator[Math.max(code.builtin_code,code.deprecated_builtin_code||0)];
         const record={graph:graphId,node,type:name,inputs:Array.from(op.inputs),outputs:Array.from(op.outputs),status:'not-run',reason:''};operators.push(record);
         if(code.custom_code){record.reason='custom kernel 的靜態語意尚未驗證；原始 options 與引用保留另列。';continue;}
-        if(name==='BATCH_MATMUL'||name==='FULLY_CONNECTED'||SPATIAL_OPERATORS.has(name)||STATIC_TRANSFORM_OPERATORS.has(name)){
+        if(name==='ADD'||name==='BATCH_MATMUL'||name==='FULLY_CONNECTED'||SPATIAL_OPERATORS.has(name)||STATIC_TRANSFORM_OPERATORS.has(name)){
             try{
                 const ins=Array.from(op.inputs,id=>id<0?null:g.tensors[id]),outs=Array.from(op.outputs,id=>g.tensors[id]),options=op.builtin_options||{};
-                const proof=SPATIAL_OPERATORS.has(name)?checkSpatialTransform(name,ins,outs,options):STATIC_TRANSFORM_OPERATORS.has(name)?checkStaticTransform(name,ins,outs,options):(name==='FULLY_CONNECTED'?checkFullyConnectedMetadata:checkBatchMatmulMetadata)(ins,outs,options);
+                const proof=name==='ADD'?checkAddMetadata(ins,outs):SPATIAL_OPERATORS.has(name)?checkSpatialTransform(name,ins,outs,options):STATIC_TRANSFORM_OPERATORS.has(name)?checkStaticTransform(name,ins,outs,options):(name==='FULLY_CONNECTED'?checkFullyConnectedMetadata:checkBatchMatmulMetadata)(ins,outs,options);
                 record.status=proof.status;record.reason=proof.reason;
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
