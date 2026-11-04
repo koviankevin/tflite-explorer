@@ -8,6 +8,7 @@ import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
 import {evaluateLifecycle,LIFECYCLE_POLICY,MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
 import {evaluateSiteBrowser} from './site-browser-policy.mjs';
+import {graphReadabilityRequired} from '../../test/browser/release-features.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const stable=value=>JSON.stringify(value,(_,v)=>v && !Array.isArray(v) && typeof v==='object'?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
@@ -60,11 +61,17 @@ export function sourceScope(kind,commit,reader){
     });
     return {kind,commit,fingerprint:hash(stable(files)),files};
 }
+function assertArtifact(artifact,name,kind){
+    if(artifact?.name!==name||artifact.expired!==false||!Number.isSafeInteger(artifact.id)||artifact.id<1||
+        !Number.isSafeInteger(artifact.size_in_bytes)||artifact.size_in_bytes<=0||artifact.size_in_bytes>4*1024**2||
+        !/^sha256:[a-f0-9]{64}$/.test(artifact.digest||''))throw Error(`${kind}: missing, stale or invalid artifact.`);
+}
+
 export function assertRun({run,jobs,artifact},kind,repository){
     const spec=GATES[kind];
     if(!spec || run?.status!=='completed'||run.conclusion!=='success'||run.event!=='workflow_dispatch'||run.head_branch!=='main'||run.head_repository?.full_name!==repository||run.path!==spec.workflow||!/^[a-f0-9]{40}$/.test(run.head_sha)||!Number.isSafeInteger(run.run_attempt)||run.run_attempt<1)throw Error(`${kind}: untrusted, incomplete or unsuccessful workflow.`);
     const matches=jobs.filter(job=>job.name===spec.job);if(matches.length!==1||matches[0].status!=='completed'||matches[0].conclusion!=='success')throw Error(`${kind}: required job did not succeed.`);
-    if(artifact?.name!==`${spec.artifact}-${run.head_sha}-${run.run_attempt}`||artifact.expired!==false||!Number.isSafeInteger(artifact.id)||!Number.isSafeInteger(artifact.size_in_bytes)||artifact.size_in_bytes<=0||artifact.size_in_bytes>4*1024**2||!/^sha256:[a-f0-9]{64}$/.test(artifact.digest||''))throw Error(`${kind}: missing, stale or invalid artifact.`);
+    assertArtifact(artifact,`${spec.artifact}-${run.head_sha}-${run.run_attempt}`,kind);
 }
 export function assertReport(report,kind,run,tree,policy){
     if(report?.releaseEvidenceEligible===false||report?.purpose==='readonly-native-memory-attribution')throw Error(`${kind}: diagnostic reports are not release evidence.`);
@@ -91,17 +98,57 @@ export function assertReport(report,kind,run,tree,policy){
         if(report.format!=='model-lens-release-contract'||report.version!==1||report.source?.commit!==run.head_sha||report.source.tree!==tree||report.source.dirty!==false||report.sourceUnchanged!==true||stable(report.tests)!==stable(RELEASE_CONTRACT_TESTS)||report.exitCode!==0||!Number.isInteger(report.counts?.tests)||report.counts.tests<1||report.counts.fail!==0||report.counts.skipped!==0||report.counts.cancelled!==0)throw Error('contract: incomplete or failed release tests.');
     }else throw Error('Unknown gate report.');
 }
-export function readArtifact(bytes,expectedDigest){
+const MODEL_CHOOSER_CHECK='native model chooser and native pattern JSON import/export';
+const TFLITE_REOPEN_CHECK='actual TFLite submodel download, native reopen, original pattern and worker cleanup';
+const DESKTOP_OPERATION_CHECKS=[
+    'per-OP static validation, multi-output SPLIT export/reopen, dynamic reasons, invalid SLICE rejection and 32px/21k-OP paged report without automatic interpreter',
+    'real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery',
+    'eight manual runtime IO lifecycle cycles, 24 CPU runs, native download/reopen/close, natural URL release and bounded observed process RSS'
+];
+
+export function assertSiteOperations(report,site,sourceFiles){
+    const require=(value,message)=>{if(!value)throw Error('Site operation evidence: '+message);};
+    const release=site.candidate,build=release.buildId,namespace=`versions/${build}/`;
+    const snapshot=site.snapshots.find(row=>row.currentBuild===build);
+    require(report?.format==='model-lens-production-smoke'&&report.version===1&&report.status==='passed'&&!report.error&&
+        report.target==='isolated-versioned-snapshot'&&Array.isArray(report.errors)&&report.errors.length===0,'incomplete or failed smoke report.');
+    require(report.driverSourceCommit===release.source.commit&&stable(report.siteRelease)===stable(release)&&
+        report.expectedBuild===build&&report.siteId===snapshot?.siteId&&report.coreBasePath===namespace,'wrong source, build or snapshot.');
+    const paths=new Set(sourceFiles.map(file=>file.path)),mul=paths.has('src/tflite-broadcast-checks.js');
+    const add=mul||paths.has('src/tflite-add-checks.js'),desktop=graphReadabilityRequired(release.version);
+    const checks=report.checks,required=[MODEL_CHOOSER_CHECK,TFLITE_REOPEN_CHECK,...(desktop?DESKTOP_OPERATION_CHECKS:[])];
+    require(Array.isArray(checks)&&checks.length>=(desktop?38:required.length)+Number(add)+Number(mul)&&checks.length<=256&&
+        checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
+        required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
+    for(const [operator,enabled,prefix]of [
+        ['add',add,'ADD invalid input broadcast'],
+        ['mul',mul,'MUL blocks incompatible broadcast']
+    ]){
+        if(enabled)require(report[operator+'ValidationRequired']===true&&report[operator+'Validation']?.status==='passed'&&
+            checks.some(value=>value.startsWith(prefix)),`missing ${operator.toUpperCase()} validation.`);
+    }
+    const workers=report.workers,cleanup=report.processCleanup;
+    require(Array.isArray(workers)&&workers.length>0&&workers.length<=1024&&workers.every(worker=>worker?.closed===true&&typeof worker.url==='string')&&
+        cleanup?.allReaped===true&&Array.isArray(cleanup.remaining)&&cleanup.remaining.length===0&&
+        Array.isArray(cleanup.identities)&&cleanup.identities.length>0,'retained browser process or Worker.');
+    const modelWorkers=workers.filter(worker=>/\/model-worker\.js(?:\?|$)/.test(worker.url));
+    require(modelWorkers.length>0&&modelWorkers.every(worker=>
+        worker.url.endsWith(`/${namespace}src/model-worker.js?v=${build}`)),'wrong model Worker namespace.');
+    return {checks:checks.length,buildId:build,siteId:snapshot.siteId};
+}
+
+export function readArtifact(bytes,expectedDigest,{operations=false}={}){
     if(!Buffer.isBuffer(bytes)||bytes.length>4*1024**2||`sha256:${hash(bytes)}`!==expectedDigest)throw Error('Artifact digest mismatch.');
     const python=process.env.PYTHON_BIN||(process.platform==='win32'?'python':'python3');
-    // No extraction and no execution of archive contents. Reject duplicates,
-    // traversal, directories, extra files and oversized inflated data before read.
-    const script="import sys,io,zipfile\nz=zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read()))\na=z.infolist()\nassert len(a)==1\nf=a[0]\nassert '/' not in f.filename and '\\\\' not in f.filename and f.filename.endswith('.json') and not f.is_dir() and 0<f.file_size<=4*1024*1024\nsys.stdout.buffer.write(z.read(f))";
+    // No extraction or execution. Check the complete bounded archive before
+    // reading the JSON entry from either supported archive format.
+    const script="import sys,io,zipfile\nz=zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read()))\na=z.infolist()\nif sys.argv[1]=='operations':\n assert sorted(f.filename for f in a)==['production-smoke.json','production-smoke.png']\n name='production-smoke.json'\nelse:\n assert len(a)==1\n name=a[0].filename\n assert '/' not in name and '\\\\' not in name and name.endswith('.json')\nassert all(not f.is_dir() and 0<f.file_size<=4*1024*1024 for f in a)\nassert z.testzip() is None\nsys.stdout.buffer.write(z.read(name))";
     let raw;
-    try{raw=execFileSync(python,['-I','-c',script],{input:bytes,maxBuffer:4*1024**2,timeout:10000,windowsHide:true,stdio:['pipe','pipe','pipe']});}
+    try{raw=execFileSync(python,['-I','-c',script,operations?'operations':'gate'],{input:bytes,maxBuffer:4*1024**2,timeout:10000,windowsHide:true,stdio:['pipe','pipe','pipe']});}
     catch{throw Error('Invalid release gate archive: entry count, path, inflated size or CRC.');}
     return {report:JSON.parse(raw),sha256:hash(raw)};
 }
+
 export function githubClient(){
     const gh=process.env.GH_BIN||'gh';
     const call=(route,binary=false)=>{
@@ -138,7 +185,21 @@ export async function verifyReleaseGates({directory='dist',evidence,api=githubCl
         if(targetScope.fingerprint!==testedScope.fingerprint){const previous=new Map(testedScope.files.map(f=>[f.path,stable(f)]));const changes=targetScope.files.filter(f=>previous.get(f.path)!==stable(f)).map(f=>f.path);throw Error(`${kind}: tested source differs; run this gate for the candidate. Changed: ${changes.slice(0,10).join(', ')}`);}
         const downloaded=readArtifact(await api.bytes(`repos/${repository}/actions/artifacts/${artifact.id}/zip`),artifact.digest);
         assertReport(downloaded.report,kind,run,reader.git(['rev-parse',`${run.head_sha}^{tree}`]),policy);
-        receipts.push({kind,runId,url:run.html_url,testedCommit:run.head_sha,artifactId:artifact.id,artifactDigest:artifact.digest,reportSHA256:downloaded.sha256,scopeFingerprint:targetScope.fingerprint,scopeFiles:targetScope.files,reused:run.head_sha!==commit});
+        const receipt={kind,runId,url:run.html_url,testedCommit:run.head_sha,artifactId:artifact.id,artifactDigest:artifact.digest,
+            reportSHA256:downloaded.sha256,scopeFingerprint:targetScope.fingerprint,scopeFiles:targetScope.files,reused:run.head_sha!==commit};
+        if(kind==='site'){
+            const name=`versioned-delivery-smoke-${run.head_sha}-${run.run_attempt}`;
+            const matches=artifactsResponse.artifacts.filter(item=>item.name===name);
+            if(matches.length!==1)throw Error('Site operation evidence: missing or ambiguous artifact.');
+            const [operationArtifact]=matches;
+            assertArtifact(operationArtifact,name,'Site operation evidence');
+            const raw=await api.bytes(`repos/${repository}/actions/artifacts/${operationArtifact.id}/zip`);
+            const operations=readArtifact(raw,operationArtifact.digest,{operations:true});
+            const summary=assertSiteOperations(operations.report,downloaded.report,testedScope.files);
+            receipt.operationEvidence={artifactId:operationArtifact.id,artifactDigest:operationArtifact.digest,
+                reportSHA256:operations.sha256,...summary};
+        }
+        receipts.push(receipt);
     }
     const endSource=gitSource();if(endSource.dirty||endSource.commit!==commit||endSource.tree!==source.tree)throw Error('Source changed during release verification.');
     return {preparedDirectory:rebuilt.directory,format:'model-lens-release-gates',version:1,status:'passed',verifiedAt:new Date().toISOString(),repository,release:manifest.release,reproducibleManifestSHA256:hash(stable(expected)),gates:receipts};

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {GATES,assertRun,assertReport,sourceScope,gitReader,readArtifact} from '../scripts/lib/release-gates.mjs';
+import {GATES,assertRun,assertReport,assertSiteOperations,sourceScope,gitReader,readArtifact} from '../scripts/lib/release-gates.mjs';
 import {RELEASE_CONTRACT_TESTS} from '../scripts/lib/release-test-plan.mjs';
 import {MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from './browser/lifecycle-policy.mjs';
 const repository='koviankevin/tflite-explorer',commit='a'.repeat(40),tree='b'.repeat(40);
@@ -84,4 +84,52 @@ test('artifact parser accepts only one bounded plain JSON entry and rejects path
     assert.equal(read(make('report.json')).report.status,'passed');
     for(const name of ['../report.json','folder\\report.json','report.js'])assert.throws(()=>read(make(name)));
     assert.throws(()=>read(make('report.json',true)));
+});
+
+test('site operations bind the report to the upgrade snapshot, source and required scenarios',()=>{
+    const buildId='1'.repeat(16),siteId='2'.repeat(64);
+    const release={version:'1.7.2',buildId,source:{commit,tree,dirty:false},distribution:'public',extension:null};
+    const site={candidate:release,snapshots:[{currentBuild:'3'.repeat(16)},{currentBuild:buildId,siteId},{currentBuild:'3'.repeat(16)}]};
+    const checks=[
+        'native model chooser and native pattern JSON import/export',
+        'actual TFLite submodel download, native reopen, original pattern and worker cleanup',
+        'per-OP static validation, multi-output SPLIT export/reopen, dynamic reasons, invalid SLICE rejection and 32px/21k-OP paged report without automatic interpreter',
+        'real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery',
+        'eight manual runtime IO lifecycle cycles, 24 CPU runs, native download/reopen/close, natural URL release and bounded observed process RSS',
+        ...Array.from({length:33},(_,i)=>'scenario '+i)
+    ];
+    const report={format:'model-lens-production-smoke',version:1,status:'passed',target:'isolated-versioned-snapshot',
+        expectedBuild:buildId,siteId,driverSourceCommit:commit,siteRelease:release,coreBasePath:'versions/'+buildId+'/',
+        checks,errors:[],workers:[{url:'http://127.0.0.1:4173/tflite-explorer/versions/'+buildId+'/src/model-worker.js?v='+buildId,closed:true}],
+        processCleanup:{allReaped:true,identities:[{pid:7}],remaining:[]}};
+    assert.equal(assertSiteOperations(report,site,[]).checks,38);
+    for(const mutate of [
+        r=>r.status='failed',r=>r.target='public-production',r=>r.siteId='4'.repeat(64),
+        r=>r.driverSourceCommit='5'.repeat(40),r=>r.siteRelease.source.tree='6'.repeat(40),
+        r=>r.expectedBuild='7'.repeat(16),r=>r.coreBasePath='versions/other/',
+        r=>r.checks.pop(),r=>r.checks[0]='missing native selection',r=>r.checks[1]=r.checks[0],
+        r=>r.errors.push('page error'),r=>r.workers[0].closed=false,r=>r.workers[0].url=r.workers[0].url.replace(buildId,'8'.repeat(16)),
+        r=>r.processCleanup.remaining.push({pid:7}),r=>r.processCleanup.allReaped=false
+    ]){
+        const broken=structuredClone(report);mutate(broken);
+        assert.throws(()=>assertSiteOperations(broken,site,[]),/Site operation evidence/);
+    }
+    const broadcast=[{path:'src/tflite-broadcast-checks.js'}];
+    assert.throws(()=>assertSiteOperations(report,site,broadcast),/Site operation evidence/);
+    const extended={...report,addValidationRequired:true,addValidation:{status:'passed'},mulValidationRequired:true,mulValidation:{status:'passed'},
+        checks:[...checks,'ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px',
+            'MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px']};
+    assert.equal(assertSiteOperations(extended,site,broadcast).checks,40);
+    assert.throws(()=>assertSiteOperations({...extended,mulValidation:{status:'failed'}},site,broadcast),/Site operation evidence/);
+});
+
+test('site operation archive has exactly the report and screenshot with bounded safe entries',()=>{
+    const python=process.env.PYTHON_BIN||(process.platform==='win32'?'python':'python3');
+    const make=(...names)=>execFileSync(python,['-I','-c',"import io,zipfile,sys\nb=io.BytesIO()\nwith zipfile.ZipFile(b,'w') as z:\n for name in sys.argv[1:]: z.writestr(name,'{}')\nsys.stdout.buffer.write(b.getvalue())",...names],{windowsHide:true});
+    const read=bytes=>readArtifact(bytes,'sha256:'+createHash('sha256').update(bytes).digest('hex'),{operations:true});
+    assert.deepEqual(read(make('production-smoke.png','production-smoke.json')).report,{});
+    for(const names of [['production-smoke.json'],['../production-smoke.json','production-smoke.png'],
+        ['production-smoke.json','production-smoke.png','extra.json'],['production-smoke.json','production-smoke.json']]){
+        assert.throws(()=>read(make(...names)),/Invalid release gate archive/);
+    }
 });
