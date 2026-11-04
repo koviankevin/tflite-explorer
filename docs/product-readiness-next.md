@@ -57,6 +57,17 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 原始報告位於 `build/qa/reshape-170/lazy-tensor-search/`，Edge 報告 SHA-256 為 `1993685ddd565d775ade924986838ddbb3c6bada82ea47254652d9a75613b35e`，Chrome 為 `876e6f7f3409f4f4a2d35889c210500f39a7903f954d53f61d823909bdf8d1df`。這是開檔與搜尋診斷。仍須以此候選完成原 1.25 GiB 的瀏覽器生命週期驗收，確認整個程序樹的關閉後 RSS；現有 Edge 八輪失敗繼續保留。
 
 
+### Tensor 搜尋減量候選的 Edge 實體八輪
+
+使用同一短測建置 `70a9f171f8d96766`、乾淨來源 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b`、tree `5a7c483a8b3c8b2880de3816205396c1d97b2bff`，在本機 Windows Edge 156.0.4314.58／Playwright 1.64.1 完成原八輪。合成原檔為 1,349,965,216 bytes、21,005 OP，完整原檔 SHA-256 已獨立重算。仍採原 CSP 的已驗證 HTML，其餘資源走本機 HTTP，模型在本機處理。關閉時限、自然下載 URL 釋放、記憶體政策與取樣方式維持原規則。
+
+八輪通過。以 2,037 筆程序樹取樣重算，暖機後六輪的關檔 RSS 斜率 +7.9 MiB／輪（門檻 16 MiB／輪），末段漂移 −73.4 MiB（門檻 128 MiB），峰值增量 +642.0 MiB（門檻 768 MiB）。末兩輪為 784.9、790.4 MiB。先前快取候選的 Edge 八輪 +34.9 MiB／輪失敗保留。這組前後測不足以分離 V8 延遲釋放時序的影響。此流程涵蓋 Layers／Pattern 路徑，首次使用 Tensors 的時間與行為由前一節的短測單獨核對。
+
+24 份整份編輯、切圖和組合模型匯出檔與前兩組 Edge 以及快取候選 Chrome 逐份同 SHA-256。16 次原檔指紋和所有下載 URL 釋放通過，40 個模型 Worker、16 個原檔驗證 Worker 正常結束，沒有啟動推論 Worker。瀏覽器在原時限正常退出，15 個受觀察程序全數退出。
+
+原始報告與複核在 `build/qa/reshape-170/physical-edge-lazy-tensor/report.json` 和 `review.json`。原始報告 SHA-256 為 `4346c292c45f2f9145d2846cf047c6ec888d1d0f58832192c5fbbd608af3f0e6`，337 檔 manifest SHA-256 為 `bfd520eea66d97e5c627606d22197718a8c135c9d1229141a80901dbb222995a`。相同候選的 Chrome 實體八輪及正式發布關卡仍待驗證。
+
+
 ## RESHAPE 靜態驗證候選（本機）
 
 本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
