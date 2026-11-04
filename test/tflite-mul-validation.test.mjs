@@ -112,8 +112,11 @@ for(const operator of ['SUB','DIV']){
             assert.equal(report.operatorSummary.checked,1);
             assert.ok(report.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
         }
-        for(const [options,reason]of [[{signature:[2,-1]},/動態或未知/],[{type:schema.TensorType.INT32},/dtype 或量化/]]){
-            const {raw}=await candidate([[2,1],[1,3]],[2,3],{...options,operator});
+        for(const [inputs,options,reason]of [
+            [[[2,2],[3]],{signature:[2,-1]},/動態或未知/],
+            [[[2,1],[1,3]],{type:schema.TensorType.INT32},/dtype 或量化/]
+        ]){
+            const {raw}=await candidate(inputs,[2,3],{...options,operator});
             const report=validateTfliteConstants(raw,0,noRead);
             assert.equal(report.operators[0].status,'not-run');
             assert.match(report.operators[0].reason,reason);
