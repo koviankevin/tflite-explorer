@@ -117,6 +117,7 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     const broadcast=[{path:'src/tflite-broadcast-checks.js'}];
     const oldChecker=()=>Buffer.from('export function checkBroadcastMetadata() {}');
     const newChecker=()=>Buffer.from("export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV']);");
+    const comparisonChecker=()=>Buffer.from("export const BROADCAST_OPERATORS = new Set(['ADD', 'MUL', 'SUB', 'DIV', 'MAXIMUM', 'MINIMUM']);");
     assert.throws(()=>assertSiteOperations(report,site,broadcast,oldChecker),/Site operation evidence/);
     const extended={...report,addValidationRequired:true,addValidation:{status:'passed'},mulValidationRequired:true,mulValidation:{status:'passed'},
         checks:[...checks,'ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px',
@@ -125,7 +126,7 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.throws(()=>assertSiteOperations({...extended,mulValidation:{status:'failed'}},site,broadcast,oldChecker),/Site operation evidence/);
     assert.throws(()=>assertSiteOperations(extended,site,broadcast,newChecker),/Site operation evidence/);
     const current=structuredClone(extended);
-    for(const op of ['SUB','DIV']){
+    for(const op of ['SUB','DIV','MAXIMUM','MINIMUM']){
         const key=op.toLowerCase()+'Validation';
         const layout={width:1280,height:640,left:260,right:1020,top:12,bottom:628,client:758,scroll:758};
         current[key+'Required']=true;
@@ -135,19 +136,26 @@ test('site operations bind the report to the upgrade snapshot, source and requir
             {kind:'dynamic',status:'passed',layout,reopenedOperators:3,outputSHA256:'2'.repeat(64),statuses:['not-run','passed','passed']}
         ]};
         current.checks.push(op+' invalid input broadcast rejected before download; float32 and dynamic '+op+' report and reopen at 32px');
+        if(op==='DIV'){
+            assert.equal(assertSiteOperations(current,site,broadcast,newChecker).checks,42);
+            assert.throws(()=>assertSiteOperations(current,site,broadcast,comparisonChecker),/Site operation evidence/);
+        }
     }
-    assert.equal(assertSiteOperations(current,site,broadcast,newChecker).checks,42);
+    assert.equal(assertSiteOperations(current,site,broadcast,comparisonChecker).checks,44);
     for(const mutate of [
         r=>delete r.subValidation, r=>r.divValidationRequired=false, r=>r.divValidation.cases.pop(),
         r=>r.subValidation.cases[0].downloads=1, r=>r.divValidation.cases[1].reopenedOperators=2,
         r=>r.subValidation.cases[1].outputSHA256='fake', r=>r.divValidation.cases[2].statuses[0]='passed',
         r=>r.divValidation.cases[1].layout.right=1282, r=>r.subValidation.workers.pop(),
-        r=>r.divValidation.workers[0]={...r.divValidation.workers[0],closed:false}
+        r=>r.divValidation.workers[0]={...r.divValidation.workers[0],closed:false},
+        r=>delete r.maximumValidation, r=>r.minimumValidation.cases[1].outputSHA256='fake'
     ]){
         const broken=structuredClone(current);
         mutate(broken);
-        assert.throws(()=>assertSiteOperations(broken,site,broadcast,newChecker),/Site operation evidence/);
+        assert.throws(()=>assertSiteOperations(broken,site,broadcast,comparisonChecker),/Site operation evidence/);
     }
+    assert.throws(()=>assertSiteOperations(current,site,broadcast,()=>Buffer.from('export const BROADCAST_OPERATORS = supported;')),
+        /Unrecognized TFLite broadcast validation declaration/);
 });
 
 test('site operation archive has exactly the report and screenshot with bounded safe entries',()=>{

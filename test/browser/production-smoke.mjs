@@ -1,5 +1,5 @@
 import {assertSharedTimeoutProof} from './shared-timeout-proof.mjs';
-import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired,graphFocusNavigationRequired,graphPointerNavigationRequired,graphReadabilityRequired} from './release-features.mjs';
+import {browserReleaseFeatures,extendedBroadcastOperators,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired,partialRuntimeIORequired,graphNavigationRequired,graphFocusNavigationRequired,graphPointerNavigationRequired,graphReadabilityRequired} from './release-features.mjs';
 import {runtimePartialIOFlow} from './runtime-partial-io-flow.mjs';
 import {operatorValidationFlow} from './operator-validation-flow.mjs';
 import {quantizationValidationFlow} from './quantization-validation-flow.mjs';
@@ -125,13 +125,12 @@ try{
     report.mlirKeyboardRequired=mlirKeyboardRequired;if(mlirKeyboardRequired)report.mlirKeyboard=await mlirKeyboardFlow({page,read:readPage,base,directory:temporary,check,navigation,readability:report.graphReadabilityRequired});
     const broadcastEntry=manifest.files.find(file=>file.path==='src/tflite-broadcast-checks.js');
     const mulValidation=Boolean(broadcastEntry);
-    let subDivValidation=false;
+    let extraBroadcastOperators=[];
     if(broadcastEntry){
         const {bytes}=await readStaticFile(base,coreBasePath+broadcastEntry.path,{maxBytes:broadcastEntry.bytes});
         assert.equal(bytes.length,broadcastEntry.bytes);
         assert.equal(sha256(bytes),broadcastEntry.sha256);
-        // Earlier candidate builds only have the MUL checker and no exported operator set.
-        subDivValidation=/\bexport const BROADCAST_OPERATORS\b/.test(bytes.toString('utf8'));
+        extraBroadcastOperators=extendedBroadcastOperators(bytes.toString('utf8'));
     }
     report.addValidationRequired=mulValidation||manifest.files.some(file=>file.path==='src/tflite-add-checks.js');
     report.operatorValidationRequired=operatorValidationRequired(manifest.release.version);
@@ -141,10 +140,11 @@ try{
     report.legacyShapeValidationRequired=legacyShapeValidationRequired(manifest.release.version);
     if(report.legacyShapeValidationRequired)report.legacyShapeValidation=await legacyShapeValidationFlow({page,read:readPage,base,directory:temporary,check});
     report.mulValidationRequired=mulValidation;
-    report.subValidationRequired=subDivValidation;
-    report.divValidationRequired=subDivValidation;
+    for(const operator of ['SUB','DIV','MAXIMUM','MINIMUM']){
+        report[operator.toLowerCase()+'ValidationRequired']=extraBroadcastOperators.includes(operator);
+    }
     let broadcastWorkers=0;
-    for(const operator of ['ADD','MUL','SUB','DIV']){
+    for(const operator of ['ADD','MUL',...extraBroadcastOperators]){
         const key=operator.toLowerCase()+'Validation';
         if(!report[key+'Required'])continue;
         const result=await broadcastFlow({page,read:readPage,base,directory:temporary,check,operator});

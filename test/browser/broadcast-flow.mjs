@@ -8,7 +8,8 @@ import {FlatbufferWriter} from '../../src/flatbuffer-writer.js';
 import {parseModel} from '../../src/model-engine.js';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
-const optionsByOperator={ADD:schema.AddOptions,MUL:schema.MulOptions,SUB:schema.SubOptions,DIV:schema.DivOptions};
+const optionsByOperator={ADD:schema.AddOptions,MUL:schema.MulOptions,SUB:schema.SubOptions,DIV:schema.DivOptions,
+    MAXIMUM:schema.MaximumMinimumOptions,MINIMUM:schema.MaximumMinimumOptions};
 
 export async function broadcastFixture(operator,kind) {
     const mixed=kind==='int8'||kind==='uint8';
@@ -18,7 +19,8 @@ export async function broadcastFixture(operator,kind) {
     });
     const graph=model.subgraphs[0],code=model.operator_codes[0],op=graph.operators[0];
     code.builtin_code=code.deprecated_builtin_code=schema.BuiltinOperator[operator];
-    op.builtin_options=Object.assign(new optionsByOperator[operator](),{fused_activation_function:0});
+    op.builtin_options=new optionsByOperator[operator]();
+    if(!['MAXIMUM','MINIMUM'].includes(operator))op.builtin_options.fused_activation_function=0;
     if(kind==='dynamic')graph.tensors[0].shape_signature=Int32Array.of(2,-1);
     const bias=new Uint8Array(mixed?4:12),view=new DataView(bias.buffer);
     if(mixed){

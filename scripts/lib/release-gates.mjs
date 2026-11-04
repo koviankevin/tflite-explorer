@@ -8,7 +8,7 @@ import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
 import {evaluateLifecycle,LIFECYCLE_POLICY,MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
 import {evaluateSiteBrowser} from './site-browser-policy.mjs';
-import {graphReadabilityRequired} from '../../test/browser/release-features.mjs';
+import {extendedBroadcastOperators,graphReadabilityRequired} from '../../test/browser/release-features.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const stable=value=>JSON.stringify(value,(_,v)=>v && !Array.isArray(v) && typeof v==='object'?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
@@ -138,10 +138,10 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
     const add=mul||paths.has('src/tflite-add-checks.js'),desktop=graphReadabilityRequired(release.version);
     // Use the same source capability as the browser driver, independently of the report's flags.
     if(mul)require(typeof readSource==='function','missing broadcast checker source.');
-    const subDiv=mul&&/\bexport const BROADCAST_OPERATORS\b/.test(readSource(BROADCAST_SOURCE).toString('utf8'));
+    const extraOperators=mul?extendedBroadcastOperators(readSource(BROADCAST_SOURCE).toString('utf8')):[];
     const workerSuffix=`/${namespace}src/model-worker.js?v=${build}`;
     const checks=report.checks,required=[MODEL_CHOOSER_CHECK,TFLITE_REOPEN_CHECK,...(desktop?DESKTOP_OPERATION_CHECKS:[])];
-    require(Array.isArray(checks)&&checks.length>=(desktop?38:required.length)+Number(add)+Number(mul)+2*Number(subDiv)&&checks.length<=256&&
+    require(Array.isArray(checks)&&checks.length>=(desktop?38:required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
     for(const [operator,enabled,prefix]of [
@@ -151,13 +151,11 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
         if(enabled)require(report[operator+'ValidationRequired']===true&&report[operator+'Validation']?.status==='passed'&&
             checks.some(value=>value.startsWith(prefix)),`missing ${operator.toUpperCase()} validation.`);
     }
-    if(subDiv){
-        for(const operator of ['SUB','DIV']){
-            const key=operator.toLowerCase()+'Validation';
-            const scenario=`${operator} invalid input broadcast rejected before download; float32 and dynamic ${operator} report and reopen at 32px`;
-            require(report[key+'Required']===true&&checks.includes(scenario)&&completeBroadcastFlow(report[key],operator,workerSuffix),
-                `incomplete ${operator} validation.`);
-        }
+    for(const operator of extraOperators){
+        const key=operator.toLowerCase()+'Validation';
+        const scenario=`${operator} invalid input broadcast rejected before download; float32 and dynamic ${operator} report and reopen at 32px`;
+        require(report[key+'Required']===true&&checks.includes(scenario)&&completeBroadcastFlow(report[key],operator,workerSuffix),
+            `incomplete ${operator} validation.`);
     }
     const workers=report.workers,cleanup=report.processCleanup;
     require(Array.isArray(workers)&&workers.length>0&&workers.length<=1024&&workers.every(worker=>worker?.closed===true&&typeof worker.url==='string')&&
