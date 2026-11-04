@@ -2,34 +2,55 @@ import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {runtimeFixture} from '../runtime-fixture.mjs';
+import {affineQuantization} from '../quantization-fixture.mjs';
+import {tflite as schema} from '../../vendor/netron/tflite-schema.js';
 import {FlatbufferWriter} from '../../src/flatbuffer-writer.js';
 import {parseModel} from '../../src/model-engine.js';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
-async function fixture(kind) {
+async function fixture(operator,kind) {
+    const mixed=kind==='int8'||kind==='uint8';
     const {model}=await runtimeFixture({
-        inputShapes:kind==='valid'?[[2,1],[1,3]]:[[2,2],[3]],
-        outputShape:[2,3]
+        inputShapes:mixed?[[2],[2]]:kind==='valid'?[[2,1],[1,3]]:[[2,2],[3]],
+        outputShape:mixed?[2]:[2,3]
     });
-    const graph=model.subgraphs[0];
+    const graph=model.subgraphs[0],code=model.operator_codes[0],op=graph.operators[0];
+    if(operator==='MUL'){
+        code.builtin_code=code.deprecated_builtin_code=schema.BuiltinOperator.MUL;
+        op.builtin_options=Object.assign(new schema.MulOptions(),{fused_activation_function:0});
+    }
     if(kind==='dynamic')graph.tensors[0].shape_signature=Int32Array.of(2,-1);
-    const bias=new Uint8Array(12),view=new DataView(bias.buffer);
-    [10,20,30].forEach((value,axis)=>view.setFloat32(4*axis,value,true));
+    const bias=new Uint8Array(mixed?4:12),view=new DataView(bias.buffer);
+    if(mixed){
+        code.version=4;
+        for(const tensor of graph.tensors.slice(0,2)){
+            tensor.type=schema.TensorType.INT16;
+            tensor.quantization=affineQuantization([1/32768]);
+        }
+        const output=graph.tensors[2];
+        output.type=kind==='int8'?schema.TensorType.INT8:schema.TensorType.UINT8;
+        output.quantization=affineQuantization([1/128]);
+        if(kind==='uint8')output.quantization.zero_point=BigInt64Array.of(128n);
+        view.setInt16(0,16384,true);
+        view.setInt16(2,8192,true);
+    }else{
+        [10,20,30].forEach((value,axis)=>view.setFloat32(4*axis,value,true));
+    }
     graph.tensors[1].buffer=model.buffers.length;
     graph.inputs=Int32Array.of(0);
     model.buffers.push({data:bias,offset:0n,size:0n});
     const output=graph.tensors[2];
     graph.tensors.push(Object.assign(Object.create(Object.getPrototypeOf(output)),output,{name:'d'}));
-    const add=graph.operators[0];
-    graph.operators.push(Object.assign(Object.create(Object.getPrototypeOf(add)),add,{
-        inputs:Int32Array.of(2,1),outputs:Int32Array.of(3)
+    graph.operators.push(Object.assign(Object.create(Object.getPrototypeOf(op)),op,{
+        inputs:Int32Array.of(mixed?0:2,1),outputs:Int32Array.of(3)
     }));
     graph.outputs=Int32Array.of(3);
     return new Uint8Array(await new FlatbufferWriter().finish(model,new Blob()).arrayBuffer());
 }
 
-export async function addFlow({page,read,base,directory,check}) {
+export async function broadcastFlow({page,read,base,directory,check,operator='ADD'}) {
     const cases=[],workers=[];
+    const kinds=operator==='ADD'?['invalid','valid','dynamic']:['invalid','valid','dynamic','int8','uint8'];
     let downloads=0;
     const onDownload=()=>downloads++;
     const onWorker=worker=>{
@@ -44,7 +65,7 @@ export async function addFlow({page,read,base,directory,check}) {
     const until=async(fn,...args)=>{
         const end=Date.now()+20000;
         while(!await read(fn,...args)){
-            assert.ok(Date.now()<end,'ADD UI timeout: '+fn);
+            assert.ok(Date.now()<end,operator+' UI timeout: '+fn);
             await new Promise(resolve=>setTimeout(resolve,60));
         }
     };
@@ -82,9 +103,11 @@ export async function addFlow({page,read,base,directory,check}) {
     try{
         await page.goto(base,{waitUntil:'domcontentloaded'});
         await until(()=>!document.querySelector('#open-model').disabled);
-        for(const kind of ['invalid','valid','dynamic']){
-            const source=path.join(directory,kind+'-source.tflite');
-            await writeFile(source,await fixture(kind),{flag:'wx'});
+        for(const kind of kinds){
+            const name=operator==='ADD'?kind:'mul-'+kind;
+            const mixed=kind==='int8'||kind==='uint8';
+            const source=path.join(directory,name+'-source.tflite');
+            await writeFile(source,await fixture(operator,kind),{flag:'wx'});
             await choose(source);
             await page.locator('#layers-tab').click();
             await page.locator('#query').fill('#1');
@@ -106,26 +129,41 @@ export async function addFlow({page,read,base,directory,check}) {
                 await until(()=>document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&
                     document.querySelector('#edit-message').textContent.includes('無法 broadcast'));
                 const reason=await page.locator('#edit-message').textContent();
-                assert.match(reason,/Subgraph #0.*OP #0.*inputs \[0, 1\].*outputs \[2\].*ADD.*無法 broadcast/);
+                assert.match(reason,/Subgraph #0.*OP #0.*inputs \[0, 1\].*outputs \[2\].*無法 broadcast/);
+                assert.ok(reason.includes(operator));
                 assert.equal(downloads,before);
-                await page.screenshot({path:path.join(directory,'invalid-32px.png')});
+                await page.screenshot({path:path.join(directory,name+'-32px.png')});
                 cases.push({kind,status:'rejected',reason,downloads:0});
                 await close(true);
                 continue;
             }
-            const output=await save('#edit-export',kind+'-edited.tflite');
+            const output=await save('#edit-export',name+'-edited.tflite');
             await until(()=>!document.querySelector('#edit-download-report').disabled);
-            const record=await save('#edit-download-report',kind+'.report.json');
+            const record=await save('#edit-download-report',name+'.report.json');
             const report=JSON.parse(await readFile(record,'utf8'));
-            const statuses=kind==='dynamic'?['not-run','passed','passed']:['passed','passed','passed'];
-            assert.deepEqual(report.operatorValidation.map(({type,status})=>[type,status]),statuses.map(status=>['ADD',status]));
-            assert.equal(report.operatorSummary.unchecked,kind==='dynamic'?1:0);
+            const statuses=mixed?Array(3).fill('not-run'):kind==='dynamic'?['not-run','passed','passed']:Array(3).fill('passed');
+            assert.deepEqual(report.operatorValidation.map(({type,status})=>[type,status]),statuses.map(status=>[operator,status]));
+            assert.equal(report.operatorSummary.unchecked,statuses.filter(status=>status==='not-run').length);
             assert.ok(report.checks.filter(c=>c.id.startsWith('runtime')).every(c=>c.status==='not-run'));
             const audit=await verifyExportFiles({report,source,output});
             assert.equal(audit.byteComparison.status,'passed');
             const bytes=new Uint8Array(await readFile(output)),model=await parseModel((o,n)=>bytes.subarray(o,o+n),bytes.length,metadata);
             assert.equal(model.raw.subgraphs[0].operators.length,3);
             if(kind==='dynamic')assert.deepEqual(Array.from(model.raw.subgraphs[0].tensors[0].shape_signature),[2,-1]);
+            if(mixed){
+                const graph=model.raw.subgraphs[0];
+                for(const op of graph.operators){
+                    const [left,right]=Array.from(op.inputs,id=>graph.tensors[id]);
+                    const output=graph.tensors[op.outputs[0]];
+                    for(const input of [left,right]){
+                        assert.equal(input.type,schema.TensorType.INT16);
+                        assert.deepEqual(Array.from(input.quantization.scale),[1/32768]);
+                    }
+                    assert.equal(output.type,kind==='int8'?schema.TensorType.INT8:schema.TensorType.UINT8);
+                    assert.deepEqual(Array.from(output.quantization.scale),[1/128]);
+                    assert.deepEqual(Array.from(output.quantization.zero_point),[kind==='int8'?0n:128n]);
+                }
+            }
             await page.locator('#edit-view-report').click();
             await until(()=>document.querySelector('#export-report-dialog').open);
             const layout=await read(()=>{
@@ -133,13 +171,13 @@ export async function addFlow({page,read,base,directory,check}) {
                 return {width:innerWidth,height:innerHeight,left:r.left,right:r.right,top:r.top,bottom:r.bottom,client:d.clientWidth,scroll:d.scrollWidth};
             });
             assert.ok(layout.left>=0&&layout.right<=layout.width+1&&layout.top>=0&&layout.bottom<=layout.height+1&&layout.scroll<=layout.client+1);
-            await page.screenshot({path:path.join(directory,kind+'-32px.png')});
+            await page.screenshot({path:path.join(directory,name+'-32px.png')});
             await page.locator('#close-export-report').click();
             await page.locator('#explore-mode').click();
             await choose(output);
             await page.locator('#layers-tab').click();
-            await page.locator('#query').fill('Add');
-            await until(()=>document.querySelector('#results').dataset.searchQuery==='Add'&&document.querySelector('#result-count').textContent==='3 筆結果');
+            await page.locator('#query').fill(operator);
+            await until(query=>document.querySelector('#results').dataset.searchQuery===query&&document.querySelector('#result-count').textContent==='3 筆結果',operator);
             cases.push({kind,status:'passed',statuses,layout,outputSHA256:audit.outputSHA256,reopenedOperators:3});
             while(await page.locator('#model-tabs [role="tab"]').count())await close();
         }
@@ -148,11 +186,11 @@ export async function addFlow({page,read,base,directory,check}) {
         while(workers.some(w=>!w.closed)&&Date.now()<deadline)await new Promise(r=>setTimeout(r,30));
         assert.ok(workers.length>0&&workers.every(w=>w.closed));
         assert.equal(workers.filter(w=>w.url.includes('/tflite-runtime-worker.js')).length,0);
-        assert.equal(downloads,4);
-        check('ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px');
+        assert.equal(downloads,2*(kinds.length-1));
+        check(operator==='MUL'?'MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px':'ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px');
         return {status:'passed',cases,workers,downloads,modelWorkers:workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length};
     }catch(error){
-        error.addValidation={status:'failed',cases,workers,downloads};
+        error[operator==='ADD'?'addValidation':'mulValidation']={status:'failed',cases,workers,downloads};
         throw error;
     }finally{
         page.off('worker',onWorker);
