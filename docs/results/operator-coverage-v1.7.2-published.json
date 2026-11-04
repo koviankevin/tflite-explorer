@@ -1,0 +1,90 @@
+{
+  "format": "model-lens-operator-coverage-delivery",
+  "status": "passed-formal-site-and-fixed-download-review",
+  "at": "2026-11-04T12:11:19.641Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.7.2",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "f0a09087ef903866b4d3d2478830421886271d63",
+      "tree": "c211e02db2d4aad44c1615ea1298401ebfa15729",
+      "committedAt": "2026-11-04T19:51:45+08:00",
+      "dirty": false
+    },
+    "buildId": "0ac5b7a5ee7d3949"
+  },
+  "run": {
+    "id": 41824752101,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/41824752101",
+    "attempt": 2
+  },
+  "releaseId": 433871437,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.2",
+  "publishedAt": "2026-11-04T12:10:43Z",
+  "siteId": "5fd298bb6ea4b494ae89eb30c22ef975365a2969dbfb61056110c23fc916d100",
+  "siteManifestSHA256": "d828b481ead7d0877935400210931f20faadb9c810d07d339e0c7a27db1c2cd7",
+  "coreFiles": 337,
+  "siteFiles": 1507,
+  "checks": 38,
+  "assets": [
+    {
+      "name": "model-lens-public-1.7.2-0ac5b7a5ee7d3949.zip",
+      "bytes": 41350748,
+      "sha256": "097051c411ade0848ba7e9463a3683eb4c242c940500fa0405bbbbcc9c2789aa"
+    },
+    {
+      "name": "model-lens-public-1.7.2-0ac5b7a5ee7d3949.zip.sha256",
+      "bytes": 111,
+      "sha256": "3cd701b963e6cd6acbc67b50a4529b925a9fab00c732f369c8324636ee644a93"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 213584,
+      "sha256": "401c41aef4e340b41972088be5d2d87d14f5a48d95d3ca088b356c4b22767be4"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54534,
+      "sha256": "31ecc9c98ff6261b8cd0243196bdcf4fdd0ee32a784eabb7200927e1bec45555"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7545229412,
+    "controllerSource": "f0a09087ef903866b4d3d2478830421886271d63",
+    "runId": 41824752101,
+    "attempt": 1,
+    "jobId": 126556965071,
+    "siteId": "5fd298bb6ea4b494ae89eb30c22ef975365a2969dbfb61056110c23fc916d100",
+    "legacy": false
+  },
+  "archives": {
+    "live-release-verification": {
+      "id": 13318419091,
+      "digest": "sha256:b957b7725d1243df698fb10e2334f82a36796995207de0601373d606aad3f682",
+      "bytes": 553204
+    },
+    "published-release-verification": {
+      "id": 13319931731,
+      "digest": "sha256:f50fc5ff772250c2329893c30170275ae70412ccdefc15da5b5d3d0e3a23e32b",
+      "bytes": 754
+    }
+  },
+  "prepareRun": 41824442986,
+  "sourcePR": 258,
+  "evidencePR": 259,
+  "verifyRetry": {
+    "originalDeployJob": 126556965071,
+    "originalVerifyJob": 126557061783,
+    "originalArtifact": 13319206718,
+    "newVerifyJob": 126560344831,
+    "originalArtifactDigest": "sha256:087c6ae836b4c32a1ea9d7c8de8f1025faef2899df7a3364fef9898ef46d993e",
+    "reason": "The recovery smoke driver selected a four-byte raw input while the previous demo tab was active. The UI correctly required eight bytes and did not start a fourth runtime Worker."
+  },
+  "githubReleaseProtection": {
+    "immutable": false,
+    "repositoryEnabled": false,
+    "enforcedByOwner": false
+  }
+}
