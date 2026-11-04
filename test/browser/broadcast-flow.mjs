@@ -8,17 +8,17 @@ import {FlatbufferWriter} from '../../src/flatbuffer-writer.js';
 import {parseModel} from '../../src/model-engine.js';
 import {verifyExportFiles} from '../../scripts/verify-export.mjs';
 
-async function fixture(operator,kind) {
+const optionsByOperator={ADD:schema.AddOptions,MUL:schema.MulOptions,SUB:schema.SubOptions,DIV:schema.DivOptions};
+
+export async function broadcastFixture(operator,kind) {
     const mixed=kind==='int8'||kind==='uint8';
     const {model}=await runtimeFixture({
         inputShapes:mixed?[[2],[2]]:kind==='valid'?[[2,1],[1,3]]:[[2,2],[3]],
         outputShape:mixed?[2]:[2,3]
     });
     const graph=model.subgraphs[0],code=model.operator_codes[0],op=graph.operators[0];
-    if(operator==='MUL'){
-        code.builtin_code=code.deprecated_builtin_code=schema.BuiltinOperator.MUL;
-        op.builtin_options=Object.assign(new schema.MulOptions(),{fused_activation_function:0});
-    }
+    code.builtin_code=code.deprecated_builtin_code=schema.BuiltinOperator[operator];
+    op.builtin_options=Object.assign(new optionsByOperator[operator](),{fused_activation_function:0});
     if(kind==='dynamic')graph.tensors[0].shape_signature=Int32Array.of(2,-1);
     const bias=new Uint8Array(mixed?4:12),view=new DataView(bias.buffer);
     if(mixed){
@@ -50,7 +50,7 @@ async function fixture(operator,kind) {
 
 export async function broadcastFlow({page,read,base,directory,check,operator='ADD'}) {
     const cases=[],workers=[];
-    const kinds=operator==='ADD'?['invalid','valid','dynamic']:['invalid','valid','dynamic','int8','uint8'];
+    const kinds=operator==='MUL'?['invalid','valid','dynamic','int8','uint8']:['invalid','valid','dynamic'];
     let downloads=0;
     const onDownload=()=>downloads++;
     const onWorker=worker=>{
@@ -101,13 +101,14 @@ export async function broadcastFlow({page,read,base,directory,check,operator='AD
     page.on('worker',onWorker);
     page.on('download',onDownload);
     try{
+        await page.setViewportSize({width:1280,height:640});
         await page.goto(base,{waitUntil:'domcontentloaded'});
         await until(()=>!document.querySelector('#open-model').disabled);
         for(const kind of kinds){
-            const name=operator==='ADD'?kind:'mul-'+kind;
+            const name=operator==='ADD'?kind:operator.toLowerCase()+'-'+kind;
             const mixed=kind==='int8'||kind==='uint8';
             const source=path.join(directory,name+'-source.tflite');
-            await writeFile(source,await fixture(operator,kind),{flag:'wx'});
+            await writeFile(source,await broadcastFixture(operator,kind),{flag:'wx'});
             await choose(source);
             await page.locator('#layers-tab').click();
             await page.locator('#query').fill('#1');
@@ -170,6 +171,8 @@ export async function broadcastFlow({page,read,base,directory,check,operator='AD
                 const d=document.querySelector('#export-report-dialog'),r=d.getBoundingClientRect();
                 return {width:innerWidth,height:innerHeight,left:r.left,right:r.right,top:r.top,bottom:r.bottom,client:d.clientWidth,scroll:d.scrollWidth};
             });
+            assert.equal(layout.width,1280);
+            assert.equal(layout.height,640);
             assert.ok(layout.left>=0&&layout.right<=layout.width+1&&layout.top>=0&&layout.bottom<=layout.height+1&&layout.scroll<=layout.client+1);
             await page.screenshot({path:path.join(directory,name+'-32px.png')});
             await page.locator('#close-export-report').click();
@@ -187,10 +190,10 @@ export async function broadcastFlow({page,read,base,directory,check,operator='AD
         assert.ok(workers.length>0&&workers.every(w=>w.closed));
         assert.equal(workers.filter(w=>w.url.includes('/tflite-runtime-worker.js')).length,0);
         assert.equal(downloads,2*(kinds.length-1));
-        check(operator==='MUL'?'MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px':'ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px');
+        check(operator==='MUL'?'MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px':`${operator} invalid input broadcast rejected before download; float32 and dynamic ${operator} report and reopen at 32px`);
         return {status:'passed',cases,workers,downloads,modelWorkers:workers.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length};
     }catch(error){
-        error[operator==='ADD'?'addValidation':'mulValidation']={status:'failed',cases,workers,downloads};
+        error.broadcastValidation={key:operator.toLowerCase()+'Validation',result:{status:'failed',cases,workers,downloads}};
         throw error;
     }finally{
         page.off('worker',onWorker);
