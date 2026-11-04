@@ -65,7 +65,16 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 
 24 份整份編輯、切圖和組合模型匯出檔與前兩組 Edge 以及快取候選 Chrome 逐份同 SHA-256。16 次原檔指紋和所有下載 URL 釋放通過，40 個模型 Worker、16 個原檔驗證 Worker 正常結束，沒有啟動推論 Worker。瀏覽器在原時限正常退出，15 個受觀察程序全數退出。
 
-原始報告與複核在 `build/qa/reshape-170/physical-edge-lazy-tensor/report.json` 和 `review.json`。原始報告 SHA-256 為 `4346c292c45f2f9145d2846cf047c6ec888d1d0f58832192c5fbbd608af3f0e6`，337 檔 manifest SHA-256 為 `bfd520eea66d97e5c627606d22197718a8c135c9d1229141a80901dbb222995a`。相同候選的 Chrome 實體八輪及正式發布關卡仍待驗證。
+原始報告與複核在 `build/qa/reshape-170/physical-edge-lazy-tensor/report.json` 和 `review.json`。原始報告 SHA-256 為 `4346c292c45f2f9145d2846cf047c6ec888d1d0f58832192c5fbbd608af3f0e6`，337 檔 manifest SHA-256 為 `bfd520eea66d97e5c627606d22197718a8c135c9d1229141a80901dbb222995a`。相同候選的 Chrome 驗收見下節。
+
+
+### Tensor 搜尋減量候選的 Chrome 實體八輪
+
+以與 Edge 完全相同的 build `70a9f171f8d96766`、來源 `f0d3d20ab4a1329a61589c0cc13200f4f6e2be0b` 和 337 檔 manifest，在本機 Windows Chrome 156.0.8078.80／Playwright 1.64.1 完成原八輪。完整重算 1,349,965,216 bytes 合成原檔的 SHA-256，與 Edge 相同。自然下載釋放、10 秒瀏覽器關閉、記憶體與取樣規則沿用既有政策。
+
+八輪通過。以 2,060 筆程序樹取樣重算，暖機後六輪關檔 RSS 斜率 +2.8 MiB／輪，門檻 16 MiB／輪；末段漂移 +17.8 MiB、峰值增量 +580.6 MiB，也各在原門檻內。八輪全部 24 份匯出檔與相同建置的 Edge、先前三組對照逐份同 SHA-256。16 次完整檔案指紋、所有下載 URL 釋放及 40 個模型 Worker、16 個原檔驗證 Worker 均核對通過，13 個受觀察程序正常退出，未啟動推論 Worker。先前候選的失敗仍保留。這組量測涵蓋 32px、選檔、Layers／Pattern、整份編輯、切圖和組合，Tensors 首次使用由兩端短測核對。
+
+原始報告與複核位於 `build/qa/reshape-170/physical-chrome-lazy-tensor/`，原始報告 SHA-256 為 `181fc663794ba142ca986b9f3aedc727fee75b6c2b6f8e97a498fc3277698fa1`。兩端同一建置的本機八輪均已通過，正式 GitHub 關卡另依 v1.7.1 的實際受測來源核對。
 
 
 ## RESHAPE 靜態驗證候選（本機）
