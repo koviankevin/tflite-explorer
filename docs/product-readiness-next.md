@@ -22,7 +22,19 @@ Windows Chrome 156.0.8078.80／Playwright 1.64.1 以乾淨來源 `54d7a73fe56985
 
 整輪因記憶體超標保留失敗。以 2,121 筆程序樹樣本重新核對，暖機後六輪的關閉 RSS 斜率 +28,572,175 bytes／輪，門檻 16 MiB／輪。末段漂移 +143,065,088 bytes，門檻 128 MiB。峰值增量 +691,195,904 bytes，符合原門檻。附近原生快照顯示增量集中在同一個 renderer 的 private commit，其他程序及頁面 main heap／backing storage 沒有同量級變化。資料仍不足以辨識配置來源或判定 RESHAPE 引入回歸，應用也尚未因此調整。原始報告、來源複核及程序取樣摘要在 `build/qa/reshape-170/physical-chrome/`，報告 SHA-256 `2c3fda5bcd5d79370a9575440c8ddf931866e984ad05b11d5c5c572f93be5ece`。
 
-[草稿 PR #255](https://github.com/koviankevin/tflite-explorer/pull/255) 的實際受測 merge `9c49798fd21adc944f07e2dc1d157597d42651d1` 與候選的 tree `ecab7f5005bc0f01011a64298dd8922686fd776c` 相同。[Node 和公開建置](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322314) 的 1,082 項通過、35 項略過、零失敗及 337 個建置檔案已核對。[契約檢查](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322291) 的 79 項通過另以 artifact `13304766853` 的 provider digest 與原始報告核對。這是 PR 階段驗證，候選仍待 Chrome 記憶體對照及正式發布關卡。原始證據在 `build/qa/reshape-170/pr255/`。
+[草稿 PR #255](https://github.com/koviankevin/tflite-explorer/pull/255) 的實際受測 merge `9c49798fd21adc944f07e2dc1d157597d42651d1` 與候選的 tree `ecab7f5005bc0f01011a64298dd8922686fd776c` 相同。[Node 和公開建置](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322314) 的 1,082 項通過、35 項略過、零失敗及 337 個建置檔案已核對。[契約檢查](https://github.com/koviankevin/tflite-explorer/actions/runs/41794322291) 的 79 項通過另以 artifact `13304766853` 的 provider digest 與原始報告核對。這是 PR 階段驗證。原始證據在 `build/qa/reshape-170/pr255/`。
+
+### 正式版同機 Chrome 對照
+
+以 GitHub [v1.7.0 固定下載](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 的原 ZIP／manifest 雜湊、乾淨來源 `7009b1f7faebf7f50360106c3e25e5632230af48` 及 build `1353dd74a9b8b6b7`，在同一 Windows／Chrome 156.0.8078.80／Playwright 1.64.1 使用原流程對照。已核對兩端合成原檔的完整 SHA-256、指紋與設定。兩端八輪的 24 份整份編輯、切圖與組合匯出檔逐份同 SHA-256。
+
+正式版八輪及正常退出通過，共 2,128 筆取樣與 13 個受觀察的自有程序。關閉後 RSS 斜率 −15,783,643 bytes／輪，末段漂移 +23,797,760 bytes。第三、五、六輪也有相近量級的 renderer 增量，最後兩輪回落到約 680 MiB。候選版原有的斜率與漂移失敗保留。這組先後測證明正式版也會出現波動，但尚無足夠樣本判定 RESHAPE 是否改變發生頻率或釋放時間。
+
+原始報告與比較在 `build/qa/reshape-170/physical-chrome-reference/report.json` 和 `comparison.json`。正式版對照報告 SHA-256 為 `57e6c9ab3f4473bb9446739f4f4915968d1cfbc11b818528c500dd0d8c735f11`。候選仍待 Chrome 記憶體釐清及正式發布關卡。
+
+同一個正式包另以 Chrome 隔離 context 做兩次唯讀診斷，各使用 1 MiB 權重，只執行選檔、定位和關閉。3,005 OP 在 45.7 秒內沒有單次至少 100 MiB 的同一 renderer 下降。21,005 OP 在關閉後 27.722 秒，跨 677 ms 下降 120,147,968 bytes RSS 及 122,712,064 bytes private commit，頁面 main heap 僅下降約 1.8 MiB。兩端 Worker 與受觀察的自有程序均退出。這組證據將匯出從重現條件中排除，沒有用於八輪驗收的判定。
+
+兩次啟動記錄有 `--trace-gc-nvp`，CDP 回報 V8 15.6.75.27。Playwright 在 Windows 的這份日誌沒有收到 GC 或 pool 明細，無法確認配置歸屬。原始診斷在 `build/qa/reshape-170/physical-chrome-reference/renderer-probe/`，報告 SHA-256 為 `c8da87906660d8a8aaa717137f8c157ffc27e323fd52836e508c37620d83656f`。 [Chromium DEPS](https://github.com/chromium/chromium/blob/156.0.8078.80/DEPS) · [固定 V8 pool 原始碼](https://github.com/v8/v8/blob/c9b3cfcab30ace06c21f9b48a0f0a34805e81e9d/src/heap/memory-pool.cc)
 
 依使用者當時指定的範圍，[v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0) 改善了 Pattern 設定／結果上下拖曳和 SVG／Canvas 連線辨識。Build `1353dd74a9b8b6b7` 的 336 核心檔、全站 1,498 檔、原有 38 項 HTTPS 操作與新增分隔／聚焦驗收、Chrome／Edge 32px、四份實際固定下載及權威 deployment 已核對，見[正式交付](graph-readability.md#v170-正式交付)。
 
