@@ -34,7 +34,16 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 
 同一 renderer 在小模型關閉 26.887 至 27.490 秒之間下降 36.9 MiB RSS、39.4 MiB private commit。大模型在 26.689 至 27.286 秒之間下降 113.5 MiB RSS、115.0 MiB private commit，主頁 JS heap 同時下降約 2 MiB。大模型的前後 MemoryInfra private footprint 為 219.41、101.16 MiB。V8 主 heap、Blink GC、malloc、PartitionAlloc 的 size 各只改變約 3.0、6.3、2.6、6.9 MiB，這些大小有重疊。剩餘 Worker 的 V8 size、合成器 tile memory 和 Skia size 在兩個快照間維持原值。關檔後的快照已少了模型 Worker 的 isolate，這組快照沒有 V8 pool 專屬欄位。
 
-這次重現把大權重、匯出和推論從觸發條件排除，現有快照仍無法指認大部分釋放來自哪個配置器。下一步需要直接比對同一 renderer 的虛擬記憶體區段，或取得同版本明確的配置器事件。此診斷不納入八輪門檻，原 Edge 結果仍是失敗。原始報告與獨立複核位於 `build/qa/reshape-170/edge-allocator-probe/`，完成報告 SHA-256 為 `efb27335043f0d4f70bc0b5f26f3d91b170fea14e16d130ab8ea1ab8daebc56b`。 [Chromium MemoryInfra](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/memory-infra/README.md)
+這次重現把大權重、匯出和推論從觸發條件排除，這組配置器快照無法指認大部分釋放的歸屬。此診斷不納入八輪門檻，原 Edge 結果仍是失敗。原始報告與獨立複核位於 `build/qa/reshape-170/edge-allocator-probe/`，完成報告 SHA-256 為 `efb27335043f0d4f70bc0b5f26f3d91b170fea14e16d130ab8ea1ab8daebc56b`。 [Chromium MemoryInfra](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/memory-infra/README.md)
+
+
+### Edge 虛擬記憶體區段對照
+
+沿用相同 Edge、建置和兩個合成檔，只查詢這次隔離測試擁有的 renderer 之區段中繼資料，核對 PID 與建立時間。大模型在關檔 26.234 至 26.887 秒間重現一次 114.8 MiB RSS 下降。跨越釋放點的兩個快照中，renderer 的 Windows PrivateUsage 減少 119.43 MiB，逐區段計算的私有提交量淨減 119.20 MiB。最大一組在單一 4 GiB 對齊且連續的保留區中，103.25 MiB 的讀寫頁面從已提交變回原區段的保留狀態。小模型的同類區段下降 27.00 MiB，私有提交量總降幅為 42.10 MiB。兩個模型 Worker 均在關檔時結束。 [Windows VirtualQueryEx](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
+
+另以大模型獨立重現，單一 4 GiB 保留區減少 101.75 MiB。關檔觀察完成後，在同一 renderer 建立並保留一百萬個純 JS 物件，主頁 V8 heap 使用量增加 30.52 MiB，增加最多的正是原先釋放的 4 GiB 保留區，私有提交量增加 46.75 MiB。這將主要降幅定位到 V8 heap 使用的虛擬位址範圍。頁面池或特定回收路徑仍需配置器事件才能確認。三組皆未強制 GC，模型 Worker 正常結束，觀察到的 11、10、11 個程序各組均清空。 [V8 pointer compression](https://v8.dev/blog/pointer-compression)
+
+原始區段、瀏覽器取樣與獨立複核保留在 `build/qa/reshape-170/edge-region-probe/`。雙模型複核 SHA-256 為 `b9b867bebecc870b670c93bbf4cd0bee47b7691bead85ea99dd62b7f3c0c20cc`，JS 對照複核為 `38c9a45966445201063226321905d07b518ca081da1ed0370939ce793bee4c79`。後續優先量測解析或索引的 JS 配置壓力，並保留原大模型八輪驗收標準。
 
 
 ## RESHAPE 靜態驗證候選（本機）
