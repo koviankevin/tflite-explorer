@@ -16,7 +16,17 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 
 以 2,158 筆程序樹取樣重算原門檻，暖機後六輪的關閉 RSS 斜率 +1,736,938 bytes／輪、末段漂移 +14,966,784 bytes、峰值增量 +614,617,088 bytes，整輪通過。第五、六輪約 790 MiB，最後兩輪回落到 672、671 MiB。每輪載入後的模型 Worker backing storage 均為 7,705,403 bytes。原 RESHAPE 候選的 Chrome 記憶體失敗保留；這組依序量測確認快取減量與本次原門檻通過，無法從一次八輪分離 renderer 釋放時序的影響。
 
-原始報告與三組來源複核在 `build/qa/reshape-170/physical-chrome-cache/report.json` 和 `review.json`。報告 SHA-256 為 `23c2f3e2219d4eb42cacc207223a43aea62389e8f8605a9d21949608215f27cb`，337 檔 manifest SHA-256 為 `d533044e20ce6b6efce66c191e952417bf4ece03ed30206a03edeef3b0ed047a`。快取候選的 Edge 實體八輪及正式發布關卡仍待補。
+原始報告與三組來源複核在 `build/qa/reshape-170/physical-chrome-cache/report.json` 和 `review.json`。報告 SHA-256 為 `23c2f3e2219d4eb42cacc207223a43aea62389e8f8605a9d21949608215f27cb`，337 檔 manifest SHA-256 為 `d533044e20ce6b6efce66c191e952417bf4ece03ed30206a03edeef3b0ed047a`。
+
+### 快取候選的 Edge 實體八輪
+
+以本機 Windows Edge 156.0.4314.58／Playwright 1.64.1、乾淨來源 `50ccd1c6db096e617d9a653f1bdabd424344a5d0`、build `6ec4b152f3131974` 重跑原八輪。與 Chrome 受測來源相比只新增驗收文件。合成 TFLite 為 1,349,965,216 bytes、21,005 OP。模型處理及程序樹量測使用本機資源。
+
+八輪功能均通過。24 份整份編輯、切圖及組合匯出與前一組 Edge、快取候選 Chrome 逐份同 SHA-256。16 次原檔指紋及自然下載釋放均通過，40 個模型 Worker、16 個原檔驗證 Worker 和 15 個受觀察程序均正常退出，未啟動推論 Worker。每輪載入後的模型 Worker backing storage 為 7,705,403 bytes，前一組 Edge 約 14.8 MiB。
+
+整輪保留為失敗。以 2,030 筆程序樹取樣重算原門檻，暖機後六輪的關閉 RSS 斜率為 +34.9 MiB／輪，超過 16 MiB／輪。末段漂移 +53.1 MiB 與峰值增量 +685.4 MiB 均在門檻內。第七、八輪關閉時約 903、902 MiB，增量集中在 renderer，配置來源待確認。
+
+原始報告與獨立複核為 `build/qa/reshape-170/physical-edge-cache/report.json` 和 `review.json`。報告 SHA-256 為 `22bc175174dd4923dd7f14c6518a095381a1cf3ce2af37bb8720d7f08fec743b`，337 檔 manifest SHA-256 為 `61a4ffb49f58feb6ad6101c830e0ca74d4645a3d68bb4ae53beba2d678cc83b7`。正式發布仍待通過關卡。
 
 ## RESHAPE 靜態驗證候選（本機）
 
