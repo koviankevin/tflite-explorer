@@ -28,6 +28,15 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 
 原始報告與獨立複核為 `build/qa/reshape-170/physical-edge-cache/report.json` 和 `review.json`。報告 SHA-256 為 `22bc175174dd4923dd7f14c6518a095381a1cf3ce2af37bb8720d7f08fec743b`，337 檔 manifest SHA-256 為 `61a4ffb49f58feb6ad6101c830e0ca74d4645a3d68bb4ae53beba2d678cc83b7`。正式發布仍待通過關卡。
 
+### Edge renderer 延遲釋放短測
+
+以同一驗證過的快取建置，在本機 Windows Edge 156.0.4314.58（V8 15.6.12.10）各用一個隔離瀏覽器開啟、搜尋定位及關閉兩個合成檔。兩檔都只帶 1 MiB 權重，分別為 3,005 和 21,005 OP。兩組各取六次 MemoryInfra 詳細快照，未強制 GC，未匯出或推論。模型 Worker 於關檔時結束，兩組各 11 個受觀察的程序均退出。第一次就緒檢查受 Netron 的 `window.eval` 覆寫阻擋，改用現有 CDP 檢查後完成兩組，保留原始失敗。
+
+同一 renderer 在小模型關閉 26.887 至 27.490 秒之間下降 36.9 MiB RSS、39.4 MiB private commit。大模型在 26.689 至 27.286 秒之間下降 113.5 MiB RSS、115.0 MiB private commit，主頁 JS heap 同時下降約 2 MiB。大模型的前後 MemoryInfra private footprint 為 219.41、101.16 MiB。V8 主 heap、Blink GC、malloc、PartitionAlloc 的 size 各只改變約 3.0、6.3、2.6、6.9 MiB，這些大小有重疊。剩餘 Worker 的 V8 size、合成器 tile memory 和 Skia size 在兩個快照間維持原值。關檔後的快照已少了模型 Worker 的 isolate，這組快照沒有 V8 pool 專屬欄位。
+
+這次重現把大權重、匯出和推論從觸發條件排除，現有快照仍無法指認大部分釋放來自哪個配置器。下一步需要直接比對同一 renderer 的虛擬記憶體區段，或取得同版本明確的配置器事件。此診斷不納入八輪門檻，原 Edge 結果仍是失敗。原始報告與獨立複核位於 `build/qa/reshape-170/edge-allocator-probe/`，完成報告 SHA-256 為 `efb27335043f0d4f70bc0b5f26f3d91b170fea14e16d130ab8ea1ab8daebc56b`。 [Chromium MemoryInfra](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/memory-infra/README.md)
+
+
 ## RESHAPE 靜態驗證候選（本機）
 
 本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
