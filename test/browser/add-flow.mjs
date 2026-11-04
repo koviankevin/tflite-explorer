@@ -67,7 +67,8 @@ export async function addFlow({page,read,base,directory,check}) {
         if(discard)page.once('dialog',dialog=>dialog.accept());
         const count=await page.locator('#model-tabs [role="tab"]').count();
         await page.locator('#explore-mode').click();
-        await page.locator('#close-model').click();
+        await ready();
+        await page.locator('.model-tab:has([data-model-tab][aria-selected="true"]) .close-model-tab').click();
         await until(n=>document.querySelectorAll('#model-tabs [role="tab"]').length===n,count-1);
         await ready();
     };
