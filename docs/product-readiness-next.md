@@ -77,6 +77,15 @@ Chrome 156.0.8078.80 以同一 8,836,512-byte、21,005 OP 合成圖及隔離瀏�
 原始報告與複核位於 `build/qa/reshape-170/physical-chrome-lazy-tensor/`，原始報告 SHA-256 為 `181fc663794ba142ca986b9f3aedc727fee75b6c2b6f8e97a498fc3277698fa1`。兩端同一建置的本機八輪均已通過，正式 GitHub 關卡另依 v1.7.1 的實際受測來源核對。
 
 
+### v1.7.1 正式交付
+
+[PR #255](https://github.com/koviankevin/tflite-explorer/pull/255) 合併後的 main `41e230d` 與受測 PR tree 一致。正式關卡的核心九筆、契約 79 項、實體大模型八輪與六個網站切換情境均通過。隔離站台另通過 38 項操作，GitHub 的 24 份匯出與本機 Chrome、Edge 逐份同 SHA-256。[PR #256](https://github.com/koviankevin/tflite-explorer/pull/256) 只綁定四個正式 run ID，重新核對其 gate scope 完全相同。
+
+最終來源 `29efce7180861fc62ee683ee767bb389e092e610`、build `f129a0bcda658472`，正式站 1,502 個 HTTPS 檔案、38 項正式操作及四份實際下載已核對。GitHub 第一次建立固定 Release 回傳 502，確認沒有產生 tag 或 Release 後，只補跑失敗工作一次。準備、部署及正式站驗收沿用第一次成功結果。失敗 artifact 保留，完整來源、deployment、附件 SHA-256 及兩次工作 ID 見[正式交付收據](results/reshape-v1.7.1-published.json)。 [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/41818233600)
+
+另以含 TFLite_Detection_PostProcess 與 RESHAPE 的同一合成模型，在 v1.7.0 與 v1.7.1 候選都重現既有報告摘要少計。逐 OP 正確列出一個未驗證、一個通過，常數運算元彙總卻顯示已檢查 1、未檢查 0。問題保留為後續修正，原始對照位於 `build/qa/reshape-170/main-171/report-summary-repro.json`。
+
+
 ## RESHAPE 靜態驗證候選（本機）
 
 本機分支 `codex/reshape-validation` 的應用來源為 `e748544feaa08a944ec2688d4675422366b733a2`，乾淨候選 build `8ec07f1e5b2445e4`，337 個檔案，manifest SHA-256 `882867b0a19f42212188b07fe3c6f3ae0793f835bbc06adfe93c67df9b17806b`。編輯與匯出共用 RESHAPE 形狀規則，支援 legacy scalar `new_shape=[0]`，核對 options fallback 並阻擋明確不符的 shape。動態輸入、shape 來源衝突、非向量 int32 與無法區分空或未提供的 options 明列未驗證。匯出保留原 options 與 shape tensor bytes，推論仍由使用者手動啟動。比對來源為 [TensorFlow Lite RESHAPE kernel](https://github.com/tensorflow/tensorflow/blob/v2.19.0/tensorflow/lite/kernels/reshape.cc)。
