@@ -1,5 +1,15 @@
 // Selection shared by the hosted drivers. Keep the historical preview cutoffs
 // explicit so immutable rollback releases retain their original capabilities.
+export function extendedBroadcastOperators(source){
+    const declaration=/\bexport const BROADCAST_OPERATORS\b/;
+    if(!declaration.test(source))return []; // Older MUL-only checker.
+    const match=/\bexport const BROADCAST_OPERATORS\s*=\s*new Set\(\[([^\]]*)\]\);/.exec(source);
+    if(!match)throw Error('Unrecognized TFLite broadcast validation declaration.');
+    const names=match[1].split(',').map(value=>/^(['"])([A-Z][A-Z0-9_]*)\1$/.exec(value.trim())?.[2]);
+    if(names.includes(undefined))throw Error('Invalid TFLite broadcast validation operator.');
+    return ['SUB','DIV','MAXIMUM','MINIMUM'].filter(name=>names.includes(name));
+}
+
 export function browserReleaseFeatures(version){
     if(typeof version!=='string'||version.length>128||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(version))throw Error('Browser acceptance requires valid release version metadata.');
     const match=version.match(/^0\.2\.0-preview\.(\d+)$/),generation=match?Number(match[1]):Infinity;
