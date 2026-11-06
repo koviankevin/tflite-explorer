@@ -19,6 +19,7 @@
 #import-preview.invalid{background:#fff3d7;color:#8b5f20}
 #import-file-name{font-size:11px;color:var(--muted);margin-left:10px;overflow-wrap:anywhere}
 .import-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+#capture-op-id-error{color:#9b2929;overflow-wrap:anywhere}
 .exact-option{display:flex;gap:6px;align-items:flex-start;font-size:10px;line-height:1.7;margin-top:10px;color:var(--muted)}
 .exact-option input{margin:3px 0 0}
 #pick-pattern[aria-pressed=true]{background:#dceee6;color:var(--accent);box-shadow:inset 0 0 0 1px #9bc6b5}

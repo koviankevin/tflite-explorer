@@ -10,9 +10,37 @@ export function layerLocation(entry,graph) {
     return Number.isInteger(graph) && graph>=0 && Number.isInteger(index) && index>=0?{graph,node:index}:null;
 }
 
+const selectionLimit = 32;
+
+export function parseTfliteOpIds(text, operatorCount) {
+    if (text.length > 4096) throw Error('OP ID 清單太長，請只貼上要選取的編號。');
+    const tokens = text.split(/[\s,，、]+/).filter(Boolean);
+    if (!tokens.length) throw Error('請至少輸入一個 OP ID，例如 10-13,16,18。');
+    if (!Number.isSafeInteger(operatorCount) || operatorCount < 1) throw Error('目前子圖沒有可選取的 OP。');
+    const ids = new Set();
+    for (const token of tokens) {
+        const match = /^#?([0-9]+)(?:-#?([0-9]+))?$/.exec(token);
+        const label = token.slice(0, 40);
+        if (!match) {
+            throw Error(`「${label}」不是有效的 OP ID 或範圍。請使用整數或起點-終點，例如 10-13,16,18。`);
+        }
+        const first = Number(match[1]);
+        const last = Number(match[2] ?? match[1]);
+        if (![first, last].every(id => Number.isSafeInteger(id) && id < operatorCount)) {
+            throw Error(`「${label}」不在目前子圖，OP ID 範圍是 #0 到 #${operatorCount - 1}。`);
+        }
+        if (first > last) throw Error(`範圍「${label}」寫反了，請將較小的 ID 放在前面。`);
+        for (let id = first; id <= last; id++) {
+            ids.add(id);
+            if (ids.size > selectionLimit) throw Error(`加入「${label}」會超過上限，一組選取最多 ${selectionLimit} 個不同的 OP ID。`);
+        }
+    }
+    return ids;
+}
+
 // Apply a multi-block selection atomically; a bulk add over the limit leaves
 // every existing selection intact. Keep Set identities for block-local views.
-export function updateLayerSelection(selections,locations,{toggle=false,limit=32,scopeForGraph}={}) {
+export function updateLayerSelection(selections,locations,{toggle=false,limit=selectionLimit,scopeForGraph}={}) {
     const changes=new Map();let count=[...selections.values()].reduce((n,s)=>n+s.size,0);
     for(const location of locations) {
         if(!location || !Number.isInteger(location.graph) || location.graph<0 || !Number.isInteger(location.node) || location.node<0)throw new Error('選取的 layer 位置無效。');

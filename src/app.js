@@ -25,7 +25,7 @@ import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
 import {workspaceSessionUI} from './workspace-session-ui.js';
 import {draftModelKey} from './workspace-drafts.js';
-import {layerLocation,updateLayerSelection} from './pattern-selection.js';
+import {layerLocation,parseTfliteOpIds,updateLayerSelection} from './pattern-selection.js';
 import {rectangleSelection} from './rectangle-selection.js';
 import {captureViewport,restoreViewport} from './svg-viewport.js';
 import { LORA_PATTERN } from './pattern-utils.js';
@@ -947,6 +947,8 @@ function refreshPickedNodes() {
         $('export-match').textContent=matched && whole ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
+    $('pick-op-ids').hidden = model?.sourceFormat !== 'tflite';
+    $('pick-op-ids').disabled = exportBusy || !model?.graphs[currentGraph]?.layers;
     $('edit-capture').disabled = $('save-capture').disabled;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
@@ -1125,6 +1127,49 @@ $('target').addEventListener('keydown', captureNodeEvent, true);
 $('pick-pattern').onclick = () => setPickingPattern(!pickingPattern);
 $('cancel-capture').onclick = () => setPickingPattern(false);
 $('clear-capture').onclick = () => { pickedNodes=new Set();pickedGraph=currentGraph;cfgSelections.clear();if($('capture-cfg').checked)cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes(); };
+let opIdCaptureScope;
+const opIdInput = $('capture-op-ids'), opIdDialog = $('capture-op-id-dialog');
+function showOpIdError(message = '') {
+    $('capture-op-id-error').textContent = message;
+    if (message) opIdInput.setAttribute('aria-invalid', 'true');
+    else opIdInput.removeAttribute('aria-invalid');
+}
+$('pick-op-ids').onclick = () => {
+    if (!pickingPattern || model?.sourceFormat !== 'tflite') return;
+    const graph = model.graphs[currentGraph];
+    opIdCaptureScope = {file, graph:currentGraph};
+    $('capture-op-id-scope').textContent = `目前子圖 ${currentGraph} · ${graph.name} · OP ID #0 到 #${graph.layers - 1}`;
+    opIdInput.value = pickedGraph === currentGraph ? [...pickedNodes].map(id => `#${id}`).join(', ') : '';
+    showOpIdError();
+    opIdDialog.showModal();
+    opIdInput.select();
+};
+$('cancel-op-ids').onclick = () => opIdDialog.close();
+opIdInput.oninput = () => showOpIdError();
+opIdDialog.addEventListener('close', () => { if (!opIdDialog.open) opIdCaptureScope = undefined; });
+$('capture-op-id-form').onsubmit = event => {
+    event.preventDefault();
+    if (!pickingPattern || model?.sourceFormat !== 'tflite' ||
+        opIdCaptureScope?.file !== file || opIdCaptureScope?.graph !== currentGraph) {
+        showOpIdError('模型或子圖已切換，請關閉後重新輸入 OP ID。');
+        return;
+    }
+    let ids;
+    try {
+        ids = parseTfliteOpIds(opIdInput.value, model.graphs[currentGraph].layers);
+    } catch (error) {
+        showOpIdError(error.message);
+        opIdInput.focus();
+        return;
+    }
+    pickedNodes = ids;
+    pickedGraph = currentGraph;
+    cfgSelections.clear();
+    if ($('capture-cfg').checked) cfgSelections.set(currentGraph, ids);
+    refreshPickedNodes();
+    opIdDialog.close();
+    status(`子圖 ${currentGraph} 已選取 ${ids.size} 個 OP。`);
+};
 function captureSelections() {return [...cfgSelections].filter(([,set])=>set.size).map(([graph,set])=>({graph,nodes:[...set]}));}
 function renderCaptureBlocks() {
     $('capture-blocks').hidden=!$('capture-cfg').checked;

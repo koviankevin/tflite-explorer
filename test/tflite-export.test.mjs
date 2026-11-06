@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { parseModel } from '../src/model-engine.js';
 import { exportTflite } from '../src/tflite-export.js';
+import { parseTfliteOpIds } from '../src/pattern-selection.js';
+import { captureGraphPattern } from '../src/subgraph-pattern.js';
 import { FlatbufferWriter, tableFields } from '../src/flatbuffer-writer.js';
 import { BinaryReader } from '../vendor/netron/flatbuffers.js';
 import { fixture } from './fixture.mjs';
@@ -77,11 +79,15 @@ test('unknown union options and future schema fields remain inspectable but bloc
 test('cuts create boundary inputs, discard unused weights, and leave source intact', async () => {
     const f=fixture(); const bytes=new Uint8Array(f.totalBytes);bytes.set(f.data);
     const index=await parse(bytes);
-    const result=exportTflite(index,1,[1,2],new Blob([bytes]));
+    const graph=index.graphs[1];
+    const picked=[...parseTfliteOpIds('#1-#2, 1',graph.graph.nodes.length)];
+    assert.deepEqual(captureGraphPattern(graph,picked),captureGraphPattern(graph,[1,2]));
+    const result=exportTflite(index,1,picked,new Blob([bytes]));
     const extracted=await parse(new Uint8Array(await result.blob.arrayBuffer()));
     assert.equal(result.inputs[0].sourceId,1);
     assert.equal(extracted.raw.buffers.length,1);
     assert.equal(extracted.raw.subgraphs.length,1);
+    assert.equal(extracted.raw.subgraphs[0].operators.length,2);
     assert.equal(index.raw.subgraphs.length,2);
     assert.equal(index.raw.subgraphs[1].operators.length,4);
     assert.throws(()=>exportTflite({},0,[0],new Blob()),/缺少 TFLite 原始模型資料/);
