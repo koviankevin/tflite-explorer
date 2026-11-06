@@ -1,0 +1,163 @@
+{
+  "format": "model-lens-operator-coverage-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-06T00:24:10.361Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.7.3",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "921817e58399e77202915800edac0381f3265922",
+      "tree": "3ab6c89d26fabe3f668d7f6e08da60bb612a2f88",
+      "committedAt": "2026-11-06T08:10:51+08:00",
+      "dirty": false
+    },
+    "buildId": "e3ac84289abbd648"
+  },
+  "run": {
+    "id": 42135270192,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/42135270192",
+    "attempt": 1
+  },
+  "releaseId": 435928765,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.3",
+  "publishedAt": "2026-11-06T00:23:08Z",
+  "siteId": "ffac30551657ea4459019358bed583ffb1ab0341ba24b18f4c9a3a1c2c4567b4",
+  "siteManifestSHA256": "042c65c15a4ee71e742dbeec066bba7042272f75026f61acf429391d215a4c88",
+  "coreFiles": 338,
+  "siteFiles": 1509,
+  "checks": 44,
+  "assets": [
+    {
+      "name": "model-lens-public-1.7.3-e3ac84289abbd648.zip",
+      "bytes": 41355058,
+      "sha256": "22a4cb9199ea4ed426b7bf3c968a2d26ccfa4d02121a5c64330f1e9d9eace20d"
+    },
+    {
+      "name": "model-lens-public-1.7.3-e3ac84289abbd648.zip.sha256",
+      "bytes": 111,
+      "sha256": "14df11f80b28577273e3eeff90dccf8ba83948d04ba72ad94fdce5b7d6e69d1d"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 214967,
+      "sha256": "c871d75b4f6d2a3557c4fbaeb5464f5b258e51767ae562c90a5c5a1c5a7ee90d"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54699,
+      "sha256": "6859581c7ae1fa632efd1fe78c803e4609a8e0b7c2a6e4d16d415a50375d16d5"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7588766566,
+    "controllerSource": "921817e58399e77202915800edac0381f3265922",
+    "runId": 42135270192,
+    "attempt": 1,
+    "jobId": 127622061933,
+    "siteId": "ffac30551657ea4459019358bed583ffb1ab0341ba24b18f4c9a3a1c2c4567b4",
+    "legacy": false
+  },
+  "archives": {
+    "live-release-verification": {
+      "id": 13464334730,
+      "digest": "sha256:e79bf98e1365f147c71f60119c24776f7d232306e58b22bffe417d8972893fcc",
+      "bytes": 554590
+    },
+    "published-release-verification": {
+      "id": 13466511196,
+      "digest": "sha256:4f52340e790cb2507b3fa38cd51598a14551e40a875be4a0980c81256cec1c45",
+      "bytes": 754
+    }
+  },
+  "prepareRun": 42134982929,
+  "sourcePR": 266,
+  "evidencePR": 267,
+  "gateRuns": [
+    {
+      "kind": "core",
+      "runId": 41815129305,
+      "scopeFingerprint": "efa89c01e520b383aa27fda0f56c13dc2e38b7679e463dda16d905d39f990e4a",
+      "reportSHA256": "e28900fbfcc7f5a0849c25559aa6fa5d80a524496ab0769af966d507c5f3eb5a"
+    },
+    {
+      "kind": "browser",
+      "runId": 42132640841,
+      "scopeFingerprint": "6cb29a7e0ba260668e87242141a76e8cb1da99903756e283b5131acc2de1ea65",
+      "reportSHA256": "d79c490977dbf7aa295f091f005c75222adb427594d8ed9a0758a42a3ad25cfe"
+    },
+    {
+      "kind": "contract",
+      "runId": 42132644730,
+      "scopeFingerprint": "15ebcb5a4d2eec539906356b340e7518b2e8fabc4108e7191ab47e98b9b61117",
+      "reportSHA256": "5187c712e8d7d8f875ae56ed45b8dbfb22c48e9331327580820ae9287799950a"
+    },
+    {
+      "kind": "site",
+      "runId": 42132692373,
+      "scopeFingerprint": "273f5a201506989574d615ae4017e2ac0cba7b441a90a4867c18bf0724fa83cd",
+      "reportSHA256": "6b8b38664d0a820859f7fed2a1a72e65df2a61826aa917de904a993d97449b04",
+      "operationEvidence": {
+        "artifactId": 13464712155,
+        "artifactDigest": "sha256:efeac53f42068684f5c1b80e336e4f400548fe8a0129945a8982328acfe5069f",
+        "reportSHA256": "98de2adbd9b7d4ce4bf978fc83ffbe8537ab9e655316b5b7ca5c0e73fc3d5097",
+        "checks": 44,
+        "buildId": "3490cc46bce1cfa8",
+        "siteId": "3c4982649e6317b2528ac98e2b27e54911bb8282c75b5accac46b71c61c8fcd1"
+      }
+    }
+  ],
+  "windows": [
+    {
+      "channel": "chrome",
+      "browser": "156.0.8078.80",
+      "build": "6b43a3f4513487e4",
+      "cases": 20,
+      "exports": [
+        "d895329a78ddb31e34b429a7a2a6a16c00d6a448a3add6cab0cda79f21460467",
+        "28c6531745b8228b2120d8cae11fe148d542087e3c9dadb78a966dcda03d3ad8",
+        "44a49115a799051f4bee5dd20a940117e8201c7c6e1ef83ddcb1eb86238891fb",
+        "0b4e6259b51697b95588e13af1651c78ba33185def27b7444a38f07c7d494a1f",
+        "e4ca6fafd937bc6d18935f0d405db687d32384708888ff06ce0f53a5803147af",
+        "8a1969be8b47584d7ac5db1e7bd7cf83e915be740c068990f0c145116eacbef2",
+        "dbea3a9a3480876e431fbc4b16d5ac8a7fef135dd28e8f927bd3e705fe72a990",
+        "a18fa9befeeac7c8a3d597a1e7ddf69c4b314b043d64943a966952039686d3f2",
+        "0dc6628617b58432012c90297c6b1d820462919c163199375092fbcc74bdbe2b",
+        "f0d51bdc6464c93db7326743c235205a19d6fab2104daac7a9db473074fe498b",
+        "069bf374241e4aa62217499686a50f6ab690d68dc7a3ffe08ec6c3a38702145f",
+        "f448c180c7e1e52a17427e565f712c5b0fd913c99922e17154ad618aae5ca475",
+        "1c74320239321a8b9e5c3f38996e874ad07ec9ae7593148d5e2d789077bc6a33",
+        "24843c272d38bbfefdfd94b2bea9747bf1c37802603907cddefcc53e878b4068"
+      ],
+      "workers": 54,
+      "processes": 8,
+      "reportSHA256": "c5bbfdb654724090e84c7226863dc52a1acf29f0ae7c3037a09637656a5d5570"
+    },
+    {
+      "channel": "msedge",
+      "browser": "156.0.4314.58",
+      "build": "6b43a3f4513487e4",
+      "cases": 20,
+      "exports": [
+        "d895329a78ddb31e34b429a7a2a6a16c00d6a448a3add6cab0cda79f21460467",
+        "28c6531745b8228b2120d8cae11fe148d542087e3c9dadb78a966dcda03d3ad8",
+        "44a49115a799051f4bee5dd20a940117e8201c7c6e1ef83ddcb1eb86238891fb",
+        "0b4e6259b51697b95588e13af1651c78ba33185def27b7444a38f07c7d494a1f",
+        "e4ca6fafd937bc6d18935f0d405db687d32384708888ff06ce0f53a5803147af",
+        "8a1969be8b47584d7ac5db1e7bd7cf83e915be740c068990f0c145116eacbef2",
+        "dbea3a9a3480876e431fbc4b16d5ac8a7fef135dd28e8f927bd3e705fe72a990",
+        "a18fa9befeeac7c8a3d597a1e7ddf69c4b314b043d64943a966952039686d3f2",
+        "0dc6628617b58432012c90297c6b1d820462919c163199375092fbcc74bdbe2b",
+        "f0d51bdc6464c93db7326743c235205a19d6fab2104daac7a9db473074fe498b",
+        "069bf374241e4aa62217499686a50f6ab690d68dc7a3ffe08ec6c3a38702145f",
+        "f448c180c7e1e52a17427e565f712c5b0fd913c99922e17154ad618aae5ca475",
+        "1c74320239321a8b9e5c3f38996e874ad07ec9ae7593148d5e2d789077bc6a33",
+        "24843c272d38bbfefdfd94b2bea9747bf1c37802603907cddefcc53e878b4068"
+      ],
+      "workers": 54,
+      "processes": 10,
+      "reportSHA256": "3515f5843b52a6aa78b9bdd03180c1430041959783595eddec6eeb4d8af67397"
+    }
+  ]
+}
