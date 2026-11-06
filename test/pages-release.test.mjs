@@ -91,3 +91,23 @@ test('delivery consumers verify trusted output hashes, complete ZIP members and 
         await writeFile(zip,Buffer.from('not a zip'));const bad={...expected,zip:await fileSHA256(zip)};await writeFile(zip+'.sha256',`${bad.zip}  ${zipName}\n`);await assert.rejects(validateDelivery(dir,bad));
     }finally{await rm(dir,{recursive:true,force:true});}
 });
+
+
+test('an explicit resumption can only finish the current deployed bundle through live verification',()=>{
+    const env={GITHUB_ACTIONS:'true',GITHUB_EVENT_NAME:'workflow_dispatch',GITHUB_REF:'refs/heads/main',
+        GITHUB_REPOSITORY:'koviankevin/tflite-explorer',GITHUB_SHA:'a'.repeat(40),PUBLISH_SITE:'true',RESUME_RUN_ID:'42222321984'};
+    assert.doesNotThrow(()=>checkDispatchContext(env));
+    for(const change of [{RESUME_RUN_ID:'../1'},{PUBLISH_SITE:'false'},{PROMOTE_VERSION:'1.8.0'}]){
+        assert.throws(()=>checkDispatchContext({...env,...change}),/Resumption/);
+    }
+    for(const change of [
+        w=>w.jobs.verify_live['timeout-minutes']=8,
+        w=>w.on.workflow_dispatch.inputs.resume_run_id.default='123',
+        w=>delete w.jobs.prepare.steps[4].if,
+        w=>delete w.jobs.prepare.steps[3].env.RESUME_RUN_ID,
+        w=>w.jobs.verify_live.if=w.jobs.release.if
+    ]){
+        const broken=structuredClone(workflow);change(broken);
+        assert.throws(()=>validatePagesWorkflow(broken));
+    }
+});

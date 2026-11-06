@@ -9,7 +9,7 @@ import {LEGACY_DELIVERY} from './release-baseline.mjs';
 export const PAGES_WORKFLOW='.github/workflows/verified-pages.yml';
 export const DEPLOY_JOB_NAME='Publish site ${{ needs.prepare.outputs.site_id }}';
 export const OFFICIAL_ACTIONS=Object.freeze({checkout:'actions/checkout@11d5960a326750d5838078e36cf38b85af677262',node:'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',upload:'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',download:'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093',deploy:'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e'});
-export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",verify_live:"${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",release:"${{ inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
+export const PAGES_CONDITIONS=Object.freeze({prepare:"${{ github.ref == 'refs/heads/main' && github.repository == 'koviankevin/tflite-explorer' }}",deploy:"${{ github.ref == 'refs/heads/main' && inputs.publish && inputs.resume_run_id == '' && needs.prepare.result == 'success' }}",verify_live:"${{ always() && !cancelled() && inputs.publish && needs.prepare.result == 'success' && (needs.deploy.result == 'success' || (inputs.resume_run_id != '' && needs.deploy.result == 'skipped')) }}",release:"${{ always() && !cancelled() && inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}"});
 const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 export async function readWorkflowInventory(directory='.github/workflows'){
     const names=(await readdir(directory)).filter(n=>/\.ya?ml$/i.test(n));
@@ -57,6 +57,9 @@ export function validatePagesWorkflow(w){
     }
     for(const [key,value] of Object.entries({EXPECTED_SITE_ID:'site_id',EXPECTED_SITE_MANIFEST_SHA:'site_manifest_sha'}))if(w.jobs.verify_live.steps[3].env?.[key]!==`\${{ needs.prepare.outputs.${value} }}`)throw Error('Live verification requires the prepared full-site identity.');
     if(w.jobs.verify_live.steps[3].env?.CORE_PROMOTION!=='${{ needs.prepare.outputs.promotion }}')throw Error('Historical core validation must use the trusted prepare mode.');
+    if(w.jobs.verify_live['timeout-minutes']<10)throw Error('Live browser verification needs time to finalize its report.');
+    const resume=w.on.workflow_dispatch.inputs.resume_run_id;
+    if(resume?.type!=='string'||resume.default!==''||p[3].env?.RESUME_RUN_ID!=='${{ inputs.resume_run_id }}'||p[4].if!=="${{ inputs.resume_run_id == '' }}")throw Error('Release resumption must be explicit and omit Pages upload.');
     const smoke=w.jobs.verify_live.steps;if(smoke[4].run!=='npm ci --ignore-scripts'||smoke[5].run!=='node scripts/install-browser.mjs'||smoke[6].run!=='node test/browser/production-smoke.mjs'||!equal(smoke[6].env,{EXPECTED_BUILD:'${{ needs.prepare.outputs.build_id }}',EXPECTED_SITE_ID:'${{ needs.prepare.outputs.site_id }}'}))throw Error('Live browser smoke cannot be omitted or use another build/site.');
     return true;
 }
@@ -65,6 +68,8 @@ export function assertPagesConfiguration(pages,environment,policies){
 }
 export function checkDispatchContext(env=process.env){
     if(env.GITHUB_ACTIONS!=='true'||env.GITHUB_EVENT_NAME!=='workflow_dispatch'||env.GITHUB_REF!=='refs/heads/main'||env.GITHUB_REPOSITORY!=='koviankevin/tflite-explorer'||!/^[a-f0-9]{40}$/.test(env.GITHUB_SHA||'')||!['true','false'].includes(env.PUBLISH_SITE))throw Error('Only a main-branch workflow_dispatch may prepare this release.');
+    const resume=env.RESUME_RUN_ID??'';
+    if(resume&&(!/^[1-9]\d{0,14}$/.test(resume)||env.PUBLISH_SITE!=='true'||env.PROMOTE_VERSION))throw Error('Resumption requires publish, the original run ID and no promotion.');
     const promotion=env.PROMOTE_VERSION??'';if(typeof promotion!=='string'||promotion!==''&&(promotion.length>128||!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(promotion)))throw Error('Promotion must name an exact immutable version.');
 }
 export function assertExpectedBuild(publish,expected,actual){if(publish==='true'&&(!/^[a-f0-9]{16}$/.test(expected||'')||expected!==actual))throw Error('Publish needs the exact build ID from a successful dry run.');}
