@@ -1,5 +1,15 @@
 # 商品等級後續工作
 
+## v1.9.0 正式交付
+
+[PR #273](https://github.com/koviankevin/tflite-explorer/pull/273) 可在繪圖前依 OP ID 直接匯出超過 32 個 OP。Chrome 與 Edge 各成功下載並重開 61 個 OP，報告中的原始編號一致。
+
+主分支 1.25 GiB／21,005 OP 生命週期驗收八輪通過。沿用來源相同的核心效能證據，83 項發布契約、6 項站台切換及 46 項隔離 Chromium 操作通過。 [發布證據 PR #276](https://github.com/koviankevin/tflite-explorer/pull/276)
+
+初次 Pages 部署停在 updating_pages 後逾時，重試沿用已取消的部署 ID。[PR #275](https://github.com/koviankevin/tflite-explorer/pull/275) 核對最後成功的正式站台後，以新提交重新部署。 [初次部署](https://github.com/koviankevin/tflite-explorer/actions/runs/42245166265)
+
+正式 build `70e828a8c10fc920`、1,511 個 HTTPS 檔案、46 項正式操作及四份固定下載已核對。 [正式交付收據](results/direct-op-id-export-v1.9.0-published.json) · [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/42248722462)
+
 ## v1.8.0 正式交付
 
 [PR #269](https://github.com/koviankevin/tflite-explorer/pull/269) 新增依 TFLite OP ID 清單與含首尾的範圍選取。無效輸入會顯示原因，保留既有選取。
