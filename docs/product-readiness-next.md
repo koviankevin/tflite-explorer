@@ -1,5 +1,15 @@
 # 商品等級後續工作
 
+## v1.7.3 正式交付
+
+[PR #266](https://github.com/koviankevin/tflite-explorer/pull/266) 補上 ADD、MUL、SUB、DIV、MAXIMUM、MINIMUM 的已知 dtype、broadcast 與輸出 shape 驗證。動態或尚未驗證的 dtype／量化條件在逐 OP 報告標為未檢查。
+
+Windows Chrome 156.0.8078.80 與 Edge 156.0.4314.58 在 1280×640、32px 下各完成 20 個公開合成案例。14 份輸出逐份 SHA-256 一致，各 54 個 Worker 與觀察到的瀏覽器程序皆正常退出。使用獨立暫存設定檔與已核對的本機 HTML。
+
+主分支實體 1.25 GiB／21,005 OP 八輪通過原政策，40 個模型 Worker 和 16 個原檔驗證 Worker 正常關閉。沿用來源相同的九筆核心效能量測，81 項發布契約、六項站台切換及 44 項隔離 Chromium 操作通過。 [發布證據 PR #267](https://github.com/koviankevin/tflite-explorer/pull/267)
+
+正式 build `e3ac84289abbd648`、1,509 個 HTTPS 檔案、44 項正式操作及四份固定下載已核對。 [正式交付收據](results/broadcast-validation-v1.7.3-published.json) · [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/42135270192)
+
 ## v1.7.2 正式交付
 
 [PR #258](https://github.com/koviankevin/tflite-explorer/pull/258) 修正 TFLite 整份模型匯出報告的彙總，從同一組逐 OP 結果計算已檢查與未檢查數量。混合 DetectionPostProcess／RESHAPE 的實際匯出重開各一個，21,005 OP 報告核對 21,000 個已檢查、5 個未檢查。Windows Chrome／Edge 1280×640、32px 的隔離候選操作和匯出已核對。
