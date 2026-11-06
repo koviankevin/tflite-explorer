@@ -1,0 +1,112 @@
+{
+  "format": "model-lens-operator-coverage-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-06T13:43:01.635Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.8.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "a50d0376e4f3497b59d6da3fe267de11b2746003",
+      "tree": "52d756a84ab37c6cc859f687bff5822a15f59359",
+      "committedAt": "2026-11-06T20:54:08+08:00",
+      "dirty": false
+    },
+    "buildId": "77cfc7b66fc6a495"
+  },
+  "run": {
+    "id": 42226477775,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/42226477775",
+    "attempt": 1
+  },
+  "releaseId": 436549368,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.8.0",
+  "publishedAt": "2026-11-06T13:42:08Z",
+  "siteId": "d0fc045cac31d8110eeace814978866734db292cfbef748ecac28f5aa11f007d",
+  "siteManifestSHA256": "2d39597a880bbf1e3307d43e852b8597ab777a06b8b63ea57931e3a1811a78d7",
+  "coreFiles": 338,
+  "siteFiles": 1510,
+  "checks": 45,
+  "assets": [
+    {
+      "name": "model-lens-public-1.8.0-77cfc7b66fc6a495.zip",
+      "bytes": 41360808,
+      "sha256": "80c31198e48fb185493df6173734905cae2428f955f92892cb28b5581edcf547"
+    },
+    {
+      "name": "model-lens-public-1.8.0-77cfc7b66fc6a495.zip.sha256",
+      "bytes": 111,
+      "sha256": "916792e15a84c99b87a2ce89c0de2f0349b1306cc0970b2a9683c7e3208c3986"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 214967,
+      "sha256": "fd4ba7053dfce5f3f3c10800f3ece8d3403c931010df04da65321249b78ec141"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54699,
+      "sha256": "c86a4c56a80af20d8f6bfebe0b635efba792c84bbdbfcd0accab9aa3d3160bb1"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7600748325,
+    "controllerSource": "a50d0376e4f3497b59d6da3fe267de11b2746003",
+    "runId": 42222321984,
+    "attempt": 1,
+    "jobId": 127907449187,
+    "siteId": "d0fc045cac31d8110eeace814978866734db292cfbef748ecac28f5aa11f007d",
+    "legacy": false
+  },
+  "archives": {
+    "live-release-verification": {
+      "id": 13506930643,
+      "digest": "sha256:82fce6caad013a662119ba8f0d5f967bd4c5f2506027b05f9d04f5d01cca6db8",
+      "bytes": 555768
+    },
+    "published-release-verification": {
+      "id": 13507130150,
+      "digest": "sha256:c32f08b57b80f0b4fb97184edca50baa3653b543a1d68839b200ba8f4275a5c6",
+      "bytes": 757
+    }
+  },
+  "prepareRun": 42221583936,
+  "resumePR": 271,
+  "sourcePR": 269,
+  "evidencePR": 270,
+  "gateRuns": [
+    {
+      "kind": "core",
+      "runId": 41815129305,
+      "scopeFingerprint": "efa89c01e520b383aa27fda0f56c13dc2e38b7679e463dda16d905d39f990e4a",
+      "reportSHA256": "e28900fbfcc7f5a0849c25559aa6fa5d80a524496ab0769af966d507c5f3eb5a"
+    },
+    {
+      "kind": "browser",
+      "runId": 42217607766,
+      "scopeFingerprint": "31b8a82523d857000dc97b64ed3bad7103b7f254579cc07eef8e19bd69c71988",
+      "reportSHA256": "13276c865840498393cb37a89bd66282a0bbc098e93d4d14a1bf2d4223fa14e1"
+    },
+    {
+      "kind": "contract",
+      "runId": 42217607157,
+      "scopeFingerprint": "9afc6b7dd6b698157b377b03d5152b9ee77a6106c93842aee19a7865e528850f",
+      "reportSHA256": "ef6803ac3c1e64702866f1667b107cfb1cd20226dac59dd4c351527fba932f84"
+    },
+    {
+      "kind": "site",
+      "runId": 42217850191,
+      "scopeFingerprint": "a6d351ce789d2f3567cb4d367f0bdb1ccafbabd6391e374ba770da8438366ad9",
+      "reportSHA256": "eb202b96f7c04dc5e6e67366378caefb9919dd4d2a1fba145f63f89d11a0da8b",
+      "operationEvidence": {
+        "artifactId": 13502322363,
+        "artifactDigest": "sha256:fa44c45cc5249f3c603adb05fe49790f95da73eda64c2469c7ad088f5123f78c",
+        "reportSHA256": "d8ce47da3a348129cfc19d5e1e62829169c6c2aba5b13ec1bcd384b02e3ebc3e",
+        "checks": 45,
+        "buildId": "564ab3b9bb03e4d5",
+        "siteId": "08b059296e4e675a81e51e2511e179ce51fb39c238e87f954b830395cf4a44eb"
+      }
+    }
+  ]
+}

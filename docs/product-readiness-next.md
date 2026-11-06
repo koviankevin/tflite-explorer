@@ -1,5 +1,15 @@
 # 商品等級後續工作
 
+## v1.8.0 正式交付
+
+[PR #269](https://github.com/koviankevin/tflite-explorer/pull/269) 新增依 TFLite OP ID 清單與含首尾的範圍選取。無效輸入會顯示原因，保留既有選取。
+
+主分支 1.25 GiB／21,005 OP 生命週期驗收八輪通過。沿用來源相同的核心效能證據，81 項發布契約、6 項站台切換及 45 項隔離 Chromium 操作通過。 [發布證據 PR #270](https://github.com/koviankevin/tflite-explorer/pull/270)
+
+正式站原部署已成功。前兩次 Chromium 皆完成，GitHub 工作在收尾時超過 8 分鐘。[PR #271](https://github.com/koviankevin/tflite-explorer/pull/271) 將上限改為 12 分鐘，接續驗收相同已上線產物後發布固定 Release。
+
+正式 build `77cfc7b66fc6a495`、1,510 個 HTTPS 檔案、45 項正式操作及四份固定下載已核對。 [正式交付收據](results/op-id-selection-v1.8.0-published.json) · [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/42226477775)
+
 ## v1.7.3 正式交付
 
 [PR #266](https://github.com/koviankevin/tflite-explorer/pull/266) 補上 ADD、MUL、SUB、DIV、MAXIMUM、MINIMUM 的已知 dtype、broadcast 與輸出 shape 驗證。動態或尚未驗證的 dtype／量化條件在逐 OP 報告標為未檢查。
