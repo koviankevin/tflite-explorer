@@ -85,3 +85,9 @@ export function opIdDirectExportRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=9;
 }
+
+export function earlyFileChooserRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor,patch]=version.split('.').map(Number);
+    return major>1||major===1&&(minor>9||minor===9&&patch>=1);
+}

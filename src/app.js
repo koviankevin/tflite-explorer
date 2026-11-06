@@ -97,7 +97,7 @@ host.message = async (message, alert, action) => {
     }
     notice(message); return 0;
 };
-const view = new View(host);
+const view = new View(host, {preloadModels:false});
 view.options.weights = false;
 view.options.mousewheel = 'zoom';
 view.error = async (error) => { notice(error.message || String(error)); view.show(null); };
@@ -281,7 +281,7 @@ function reset() {
     showPage({ items: [], total: 0, offset: 0 });
     status('準備就緒');
 }
-async function openFile(nextFile) {
+export async function openFile(nextFile) {
     try { await viewReady; modelFormat(nextFile.name); } catch (error) { diagnostics.record('open','error',error);notice(error.message); return; }
     if(tabs.busy){notice('請等待目前模型載入或切換完成。');return false;}
     return tabs.open(nextFile);
@@ -1270,8 +1270,6 @@ $('saved-pattern').onchange = () => {
 };
 refreshPatternLibrary();
 
-for (const id of ['open-model', 'welcome-open']) $(id).onclick = () => { $('model-file').value = ''; $('model-file').click(); };
-$('model-file').onchange = () => { if ($('model-file').files[0]) openFile($('model-file').files[0]); };
 async function openDemo(){const r=await fetch('./demo.tflite');if(!r.ok)throw new Error('無法讀取示範模型。');return openFile(new File([await r.blob()],'示範模型.tflite'));}
 $('open-demo').onclick=()=>openDemo().catch(report);
 async function openMLIRDemo(){const r=await fetch('./demo.mlir');if(!r.ok)throw new Error('無法讀取 MLIR 示範。');setKind('layers',false);return openFile(new File([await r.blob()],'示範分支.mlir'));}

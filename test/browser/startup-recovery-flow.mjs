@@ -3,10 +3,12 @@
 import assert from 'node:assert/strict';
 import {chromiumRuntimeDOMReader} from './runtime-module-cold-flow.mjs';
 import {sha256} from '../../scripts/lib/release-artifact.mjs';
+import {earlyFileChooserRequired} from './release-features.mjs';
 
-export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
+export async function startupRecoveryFlow({browser,base,coreBasePath,buildId,version,modelFile}){
     assert.equal(process.env.GITHUB_ACTIONS,'true');assert.equal(process.platform,'linux');
     const report={format:'model-lens-startup-recovery',version:1,status:'failed',earlyOpenRequired:true,guideReadinessRequired:true,cases:[],errors:[],workers:[],requests:[],downloads:0};
+    const earlyChooserRequired=earlyFileChooserRequired(version);
     const appURL=new URL(coreBasePath+'src/app.js?v='+buildId,base).href,zipURL=new URL(coreBasePath+'vendor/netron/zip.js?v='+buildId,base).href;
     for(const mode of ['entry-failure','dependency-failure','pending-recovery','early-open','guide-ready']){
         let context,page,read,release,observed;const held=new Promise(resolve=>{release=resolve;}),seen=new Promise(resolve=>{observed=resolve;});
@@ -27,21 +29,38 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             await page.goto(base,{waitUntil:'domcontentloaded'});
             let timer;try{await Promise.race([seen,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Startup fault request was not observed.')),30000);})]);}finally{clearTimeout(timer);}
             const panel=page.locator('#application-startup');
+            const until=async condition=>{
+                const deadline=Date.now()+30000;
+                while(!await read(condition)){
+                    assert.ok(Date.now()<deadline,'Startup state did not become ready.');
+                    await page.waitForTimeout(50);
+                }
+            };
             if(mode==='dependency-failure'){
+                await until(()=>typeof document.querySelector('#release-info-button').onclick==='function');
                 await page.locator('#release-info-button').click();await page.getByText(buildId,{exact:true}).waitFor();release();
             }
             if(delayed){
                 if(mode==='pending-recovery')await panel.locator('[id=application-startup-reload]').focus();
                 assert.equal(await panel.getAttribute('data-state'),'loading');assert.equal(await panel.isVisible(),true);assert.equal(await page.locator('#status').textContent(),'正在載入網站');
-                assert.equal(await page.locator('#open-model').isDisabled(),true);
-                if(mode!=='guide-ready')assert.equal(await read(()=>document.querySelector('#open-model').onclick===null),true);
-                else{await page.locator('#usage-guide-button').click();await page.locator('#guide-tab-explore').click();assert.equal(await page.locator('[data-guide-action=open]').isDisabled(),true);}
-                if(mode==='early-open'){
+                assert.equal(await page.locator('#open-model').isDisabled(),!earlyChooserRequired);
+                if(mode!=='guide-ready')assert.equal(await read(()=>typeof document.querySelector('#open-model').onclick==='function'),earlyChooserRequired);
+                else{await until(()=>typeof document.querySelector('#usage-guide-button').onclick==='function');await page.locator('#usage-guide-button').click();await page.locator('#guide-tab-explore').click();assert.equal(await page.locator('[data-guide-action=open]').isDisabled(),true);}
+                if(mode==='early-open'&&earlyChooserRequired){
+                    const chooser=page.waitForEvent('filechooser');
+                    await page.locator('#open-model').click();
+                    await (await chooser).setFiles(modelFile);
+                    assert.match(await panel.textContent(),/已選擇模型/);
+                    assert.equal(await page.locator('#layer-count').textContent(),'—');
+                    assert.equal(rows.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,0);
+                    earlyProof={selectedWhilePending:true,nativeChooser:true,modelDrawn:false};
+                }else if(mode==='early-open'){
                     earlyChooser=page.waitForEvent('filechooser');earlyChooser.catch(()=>{});
                     earlyClick=page.locator('#open-model').click().then(()=>{earlyClicked=true;});earlyClick.catch(()=>{});
                     await page.waitForTimeout(100);assert.equal(earlyClicked,false);
                 }
-                assert.equal(await page.locator('#model-file').inputValue(),'');release();
+                if(!earlyProof)assert.equal(await page.locator('#model-file').inputValue(),'');
+                release();
             }else{
                 await page.locator('#application-startup[data-state=failed]').waitFor();
                 assert.equal(await panel.getAttribute('role'),'alert');assert.equal(await page.locator('#status').textContent(),'網站啟動未完成');assert.equal(await page.locator('dialog[open]').count(),0);
@@ -58,13 +77,19 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
                 // shortcut handlers exist after the dependency failure.
                 await page.locator('#application-startup-reload').press('Enter');await navigation;
             }
-            const deadline=Date.now()+30000;while(!await read(()=>document.querySelector('#autosave-enabled').disabled===false&&document.querySelector('#application-startup').hidden)){assert.ok(Date.now()<deadline,'Application did not recover after native reload/releasing the held request.');await page.waitForTimeout(50);}
+            await until(()=>!document.querySelector('#autosave-enabled').disabled&&document.querySelector('#application-startup').hidden);
             assert.equal(await page.locator('#open-model').isDisabled(),false);assert.equal(await read(()=>typeof document.querySelector('#open-model').onclick),'function');
             if(mode==='guide-ready'){
                 await page.locator('[data-guide-action=open]:enabled').waitFor();assert.equal(await page.locator('#usage-guide').getAttribute('open'),'');assert.equal(await read(()=>document.activeElement===document.querySelector('#guide-tab-explore')),true);
                 guideProof={disabledWhileLoading:true,enabledWhenReady:true,dialogPreserved:true,focusPreserved:true};await page.keyboard.press('Escape');
             }
-            if(mode==='early-open'){
+            if(earlyProof?.selectedWhilePending){
+                await page.locator('#target[aria-busy="false"] .node').first().waitFor();
+                assert.equal(await page.locator('#layer-count').textContent(),'26');
+                earlyProof.modelDrawn=true;
+                await page.locator('#close-model').click();
+                await until(()=>document.querySelector('#layer-count').textContent==='—');
+            }else if(mode==='early-open'){
                 await earlyClick;const chooser=await earlyChooser,handle=chooser.element();
                 try{assert.equal(await read(()=>document.querySelector('#application-startup').hidden&&!document.querySelector('#open-model').disabled),true);await chooser.setFiles([]);}finally{await handle.dispose();}
                 assert.equal(await read(()=>document.querySelector('#model-file').files.length),0);
@@ -73,11 +98,13 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId}){
             assert.equal(await page.locator('#model-file').inputValue(),'');assert.equal(await read(()=>document.querySelector('.app-header').inert),false);
             assert.equal(await page.locator('#status').textContent(),'準備就緒');assert.equal(await page.locator('#model-tabs').isVisible(),false);assert.equal(await page.locator('#layer-count').textContent(),'—');
             if(mode==='pending-recovery')assert.equal(await read(()=>document.activeElement===document.querySelector('#open-model')),true);
-            assert.ok(!requests.some(r=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)|\/vendor\/litert\//.test(r.url)));
-            assert.equal(rows.filter(w=>/\/(?:model-worker|tflite-runtime-worker)\.js(?:\?|$)/.test(w.url)).length,0);
+            const openedEarly=earlyProof?.modelDrawn===true;
+            assert.ok(!requests.some(r=>/\/tflite-runtime-worker\.js(?:\?|$)|\/vendor\/litert\//.test(r.url)));
+            if(!openedEarly)assert.ok(!requests.some(r=>/\/model-worker\.js(?:\?|$)/.test(r.url)));
+            assert.equal(rows.filter(w=>/\/model-worker\.js(?:\?|$)/.test(w.url)).length,Number(openedEarly));
             assert.ok(await read(()=>document.documentElement.scrollWidth<=1280));
             await context.close();contextsClosed=true;assert.ok(rows.every(w=>w.closed));assert.deepEqual(errors,[]);
-            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:false,runtimeFetched:false,keyboardReload:!delayed,pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...(bounds?{failureBounds:bounds}:{}),...(earlyProof?{earlyOpen:earlyProof}:{}),...(guideProof?{guideReadiness:guideProof}:{})});
+            report.cases.push({mode,recovered:true,contextClosed:true,modelOpened:openedEarly,runtimeFetched:false,keyboardReload:!delayed,pendingFocusRestored:mode==='pending-recovery',workers:rows.length,...(bounds?{failureBounds:bounds}:{}),...(earlyProof?{earlyOpen:earlyProof}:{}),...(guideProof?{guideReadiness:guideProof}:{})});
         }catch(error){report.error=error.stack||String(error);throw Object.assign(error,{startupRecovery:report});}
         finally{release();if(context&&!contextsClosed)await context.close();report.workers.push(...rows);report.requests.push(...requests);report.errors.push(...errors);}
     }
