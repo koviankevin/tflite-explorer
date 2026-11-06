@@ -1,5 +1,17 @@
 # 商品等級後續工作
 
+## v1.9.1 正式交付
+
+[PR #278](https://github.com/koviankevin/tflite-explorer/pull/278) Chrome 與 Edge 空快取比較顯示選檔按鈕提早可用，從進站到出圖也縮短。驗收包含暫停啟動程式後選擇本機合成模型，恢復後自動出圖。
+
+在獨立 Chrome／Edge 以空快取、110 ms 網路延遲和同一份 26 OP 合成模型測試。按鈕可用中位數由 4.55 秒降至 1.18 秒。按鈕可用後停 1.2 秒再選檔，從進站到出圖由 7.75 秒降至 4.84 秒，選檔到出圖由 1.54 秒變為 2.37 秒。
+
+正式 HTTPS 站台另用 Chrome 空快取各量三次。按鈕可用中位數由 4.27 秒降至 1.39 秒，進站到出圖由 5.96 秒降至 5.56 秒。實際網路延遲隨測次波動。
+
+主分支 1.25 GiB／21,005 OP 生命週期驗收八輪通過。沿用來源相同的核心效能證據，83 項發布契約、6 項站台切換及 46 項隔離 Chromium 操作通過。 [發布證據 PR #281](https://github.com/koviankevin/tflite-explorer/pull/281)
+
+正式 build `d1836beeaa33c6a3`、1,511 個 HTTPS 檔案、46 項正式操作及四份固定下載已核對。 [正式交付收據](results/early-model-chooser-v1.9.1-published.json) · [發布流程](https://github.com/koviankevin/tflite-explorer/actions/runs/42258235972)
+
 ## v1.9.0 正式交付
 
 [PR #273](https://github.com/koviankevin/tflite-explorer/pull/273) 可在繪圖前依 OP ID 直接匯出超過 32 個 OP。Chrome 與 Edge 各成功下載並重開 61 個 OP，報告中的原始編號一致。

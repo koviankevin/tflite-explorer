@@ -1,0 +1,145 @@
+{
+  "format": "model-lens-operator-coverage-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-06T17:20:43.865Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.9.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "675e15160e1321d0645143be98f93b7bdfb581a0",
+      "tree": "1067c4e6db32a95d63a0070e6f81c35843e09f18",
+      "committedAt": "2026-11-07T01:01:13+08:00",
+      "dirty": false
+    },
+    "buildId": "d1836beeaa33c6a3"
+  },
+  "run": {
+    "id": 42258235972,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/42258235972",
+    "attempt": 1
+  },
+  "releaseId": 436784106,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.9.1",
+  "publishedAt": "2026-11-06T17:19:10Z",
+  "siteId": "372bf2142538aa1b7663648ff1b48e3a7acff3815ffbc7b22146dddc63761e7a",
+  "siteManifestSHA256": "098c300561c14945e35c437c53e7ef6a3d695904f0f8ba34730b57ed4ff19f1d",
+  "coreFiles": 338,
+  "siteFiles": 1511,
+  "checks": 46,
+  "assets": [
+    {
+      "name": "model-lens-public-1.9.1-d1836beeaa33c6a3.zip",
+      "bytes": 41363877,
+      "sha256": "d1e54d96ce5580480122fb08017e1e9aa36a40ac18a38a585c920307db678197"
+    },
+    {
+      "name": "model-lens-public-1.9.1-d1836beeaa33c6a3.zip.sha256",
+      "bytes": 111,
+      "sha256": "df3fd3a36612fa8efbd20b83966ff0d6b9b588a533184dc3f584dd976e010a28"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 215255,
+      "sha256": "3ac9a5de30e9b092d8c623668b27fc395b926a1a46d6ee1d5e8e92d08974be65"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 54700,
+      "sha256": "f530e8aaccaab556c75a3517618789eb1356cf33507ce111f0815deeea2256e3"
+    }
+  ],
+  "deployment": {
+    "deploymentId": 7605990178,
+    "controllerSource": "675e15160e1321d0645143be98f93b7bdfb581a0",
+    "runId": 42258235972,
+    "attempt": 1,
+    "jobId": 128031509957,
+    "siteId": "372bf2142538aa1b7663648ff1b48e3a7acff3815ffbc7b22146dddc63761e7a",
+    "legacy": false
+  },
+  "archives": {
+    "live-release-verification": {
+      "id": 13523913197,
+      "digest": "sha256:8c5c29cf079153d8439d641e79a8c9e5d70ae581b919d6bc0db4dc73801ec6da",
+      "bytes": 555214
+    },
+    "published-release-verification": {
+      "id": 13524018193,
+      "digest": "sha256:5f31b95db7ba8fd07321b14b4ee113496de59f1d4f53a22d807d109aec1541e1",
+      "bytes": 751
+    }
+  },
+  "prepareRun": 42257904194,
+  "sourcePR": 278,
+  "evidencePR": 281,
+  "startupBenchmark": {
+    "environment": "local Chrome and Edge, fresh contexts with cache disabled",
+    "fixtureOperators": 26,
+    "latencyMs": 110,
+    "downloadBytesPerSecond": 1250000,
+    "waitBeforeSelectionMs": 1200,
+    "samplesPerBuild": 6,
+    "old": {
+      "buttonMs": 4549,
+      "fileToGraphMs": 1535.5,
+      "navigationToGraphMs": 7754
+    },
+    "new": {
+      "buttonMs": 1178,
+      "fileToGraphMs": 2370,
+      "navigationToGraphMs": 4835
+    }
+  },
+  "liveStartupBenchmark": {
+    "environment": "public versioned HTTPS paths, local Chrome with cache disabled",
+    "fixtureOperators": 26,
+    "waitBeforeSelectionMs": 1200,
+    "samplesPerBuild": 3,
+    "old": {
+      "buttonMs": 4270,
+      "fileToGraphMs": 1207,
+      "navigationToGraphMs": 5955
+    },
+    "new": {
+      "buttonMs": 1391,
+      "fileToGraphMs": 2849,
+      "navigationToGraphMs": 5561
+    }
+  },
+  "gateRuns": [
+    {
+      "kind": "core",
+      "runId": 41815129305,
+      "scopeFingerprint": "efa89c01e520b383aa27fda0f56c13dc2e38b7679e463dda16d905d39f990e4a",
+      "reportSHA256": "e28900fbfcc7f5a0849c25559aa6fa5d80a524496ab0769af966d507c5f3eb5a"
+    },
+    {
+      "kind": "browser",
+      "runId": 42254315779,
+      "scopeFingerprint": "0d0b34ef819512ee99fbb6262f89316122de189a25f58b71732d6c65ac12fd15",
+      "reportSHA256": "7247c502fc13be016a05c7911e7f9e448b8ced1e326f10169a158baf8fa68d5d"
+    },
+    {
+      "kind": "contract",
+      "runId": 42256185948,
+      "scopeFingerprint": "a5a9bedc3aaf1526ba4493febb29dafd414c4bf9ce1339423b0dda9f3a97ab7f",
+      "reportSHA256": "210b9d635503fbaf2b4a38a640647a63c85b8e33872524205bd13a3be86112b0"
+    },
+    {
+      "kind": "site",
+      "runId": 42256210458,
+      "scopeFingerprint": "cfb11d24f3c441498022a91315792e542498a9559b5bd4a65b6f0bca23a00111",
+      "reportSHA256": "8ba45660ba9ac9ba51ee1bb180158202a08eb16d1de6a6c0d320cf412ff1d7f2",
+      "operationEvidence": {
+        "artifactId": 13522159361,
+        "artifactDigest": "sha256:77d9a4015a618560f1bfa8c1d22980378fe807e6331f4b4166524d2abb79ebe2",
+        "reportSHA256": "cc06805b3cac89088f41b6d0fb7e5e263a69cf735d97fa11644234dfe3bef18e",
+        "checks": 46,
+        "buildId": "61d93b788ce5b65d",
+        "siteId": "59b79403bae0b4ae3a45077285eb1ad4680173f8f23b6f33bbc431777af5ed2a"
+      }
+    }
+  ]
+}

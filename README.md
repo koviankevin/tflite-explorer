@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.9.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.9.0)，build `70e828a8c10fc920`。TFLite 支援依 OP ID 範圍直接匯出超過 32 個 OP，例如 `10-69,75`。338 個核心檔、全站 1,511 檔、46 項正式 HTTPS 操作及四份實際固定下載均已核對，見[正式交付收據](docs/results/direct-op-id-export-v1.9.0-published.json)。模型全程在本機處理，interpreter 由使用者手動啟動。
+目前對外版本為 [v1.9.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.9.1)，build `d1836beeaa33c6a3`。初次進站可在圖形介面初始化期間先選本機模型，載入後自動出圖。338 個核心檔、全站 1,511 檔、46 項正式 HTTPS 操作及四份實際固定下載均已核對，見[正式交付收據](docs/results/early-model-chooser-v1.9.1-published.json)。模型全程在本機處理，interpreter 由使用者手動啟動。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 
