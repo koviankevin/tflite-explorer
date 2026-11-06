@@ -24,7 +24,7 @@ export async function buildSite({output='dist',profile:profilePath}={}) {
             .replace('<title>Netron</title>','<title>模鏡｜TFLite・MLIR 模型探索</title>')
             .replace('Visualizer for neural network, deep learning and machine learning models.','在本機搜尋 TFLite、MLIR operations、SSA values 與連接模式。')
             .replace("script-src 'self'; frame-src 'none'","default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'")
-            .replace('<script type="text/javascript" src="index.js"></script>','<script type="module" src="src/bootstrap.js"></script>')
+            .replace('<script type="text/javascript" src="index.js"></script>','<script type="module" src="src/bootstrap.js"></script><link rel="modulepreload" href="src/app.js"><link rel="modulepreload" href="vendor/netron/zip.js">')
             .replaceAll('href="grapher.css"','href="vendor/netron/grapher.css"')
             .replaceAll('href="favicon.ico"','href="vendor/netron/favicon.ico"')
             .replaceAll('href="icon.png"','href="vendor/netron/icon.png"')

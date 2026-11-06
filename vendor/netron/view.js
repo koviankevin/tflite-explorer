@@ -10,7 +10,7 @@ const metrics = {};
 
 view.View = class {
 
-    constructor(host) {
+    constructor(host, { preloadModels = true } = {}) {
         this._host = host;
         this._defaultOptions = {
             weights: true,
@@ -28,7 +28,7 @@ view.View = class {
         this._sidebar = new view.Sidebar(this._host);
         this._find = null;
         this._modelFactoryService = new view.ModelFactoryService(this._host);
-        this._modelFactoryService.import();
+        if (preloadModels) this._modelFactoryService.import();
         this._worker = this._host.environment('serial') ? null : new view.Worker(this._host);
     }
 
