@@ -3,6 +3,7 @@ import { openModelFile } from './model-adapters.js';
 import { mlirDialects } from './mlir-dialect-registry.js';
 import { parseGraphPattern, prepareGraphPattern, captureGraphPattern, findSubgraphPatterns } from './subgraph-pattern.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
+import {parseTfliteOpIdRanges,tfliteExportOpIds} from './pattern-selection.js';
 import {foldPatternSnapshot} from './pattern-fold.js';
 import {preparePatternOverview,patternOverviewSnapshot} from './pattern-overview.js';
 import {createExportReport} from './export-report.js';
@@ -126,9 +127,12 @@ self.onmessage = async ({ data: { id, action, args } }) => {
         } else if (action === 'exportTflite') {
             if (!index?.capabilities?.tfliteExport) throw new Error('目前模型無法轉換或匯出 TFLite，請使用 MLIR 匯出。');
             const { exportTflite } = await import('./tflite-export.js');
-            const sourceIndex=index,sourceFile=file,result=await prepareExportResult(exportTflite(index,args.graph,args.nodes,file));
+            const sourceIndex=index,sourceFile=file;
+            const ranges=args.opIds===undefined?null:parseTfliteOpIdRanges(args.opIds,index.raw?.subgraphs[args.graph]?.operators.length);
+            const nodes=ranges?tfliteExportOpIds(ranges):args.nodes;
+            const result=await prepareExportResult(exportTflite(index,args.graph,nodes,file));
             if(index!==sourceIndex||file!==sourceFile){send(id,{cancelled:true});return;}
-            send(id,withReport(result,args));
+            send(id,withReport(result,ranges?{...args,nodes:tfliteExportOpIds(ranges)}:args));
         } else if (action === 'exportMLIR') {
             const { exportMLIR } = await import('./mlir-export.js');
             send(id, withReport(await exportMLIR(index, args.graph, args.nodes, {scope:args.scope,selections:args.selections,progress:stage=>postMessage({stage})}),args));

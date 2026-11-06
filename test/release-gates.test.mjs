@@ -148,6 +148,12 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.throws(()=>assertSiteOperations(rangedReport,rangedSite,broadcast,comparisonChecker),/Site operation evidence/);
     rangedReport.checks[44]='TFLite OP ID range selection, atomic input errors and native export reopen';
     assert.equal(assertSiteOperations(rangedReport,rangedSite,broadcast,comparisonChecker).checks,45);
+    const directRelease={...release,version:'1.9.0'};
+    const directSite={...site,candidate:directRelease};
+    const directReport={...rangedReport,siteRelease:directRelease,checks:[...rangedReport.checks,'unrelated scenario']};
+    assert.throws(()=>assertSiteOperations(directReport,directSite,broadcast,comparisonChecker),/Site operation evidence/);
+    directReport.checks[45]='TFLite OP ID direct export of 61 operators before drawing and native reopen';
+    assert.equal(assertSiteOperations(directReport,directSite,broadcast,comparisonChecker).checks,46);
 
     for(const mutate of [
         r=>delete r.subValidation, r=>r.divValidationRequired=false, r=>r.divValidation.cases.pop(),

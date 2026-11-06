@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {layerLocation,parseTfliteOpIds,updateLayerSelection,selectionRectangle,layersInRectangle} from '../src/pattern-selection.js';
+import {layerLocation,parseTfliteOpIdRanges,parseTfliteOpIds,tfliteExportOpIds,updateLayerSelection,selectionRectangle,layersInRectangle} from '../src/pattern-selection.js';
 import {parseMLIR} from '../src/mlir-engine.js';
 import {captureMLIRPattern,findMLIRPatterns,mlirMatchSnapshot} from '../src/mlir-pattern.js';
 import {exportPatterns,parsePatternFile} from '../src/pattern-library.js';
@@ -25,6 +25,11 @@ test('TFLite OP IDs accept pasted lists and validate the current subgraph withou
     assert.throws(()=>parseTfliteOpIds(ids+', #32',33),/最多 32 個/);
     assert.equal(parseTfliteOpIds('0-31, 1-31',32).size,32);
     assert.throws(()=>parseTfliteOpIds('0-1000000000',1000000001),/最多 32 個/);
+    const ranges=parseTfliteOpIdRanges('40-75,10-60,18,80',100);
+    assert.deepEqual([...tfliteExportOpIds(ranges)],[...Array.from({length:66},(_,i)=>i+10),80]);
+    assert.throws(()=>parseTfliteOpIdRanges('0-75,90-100',100),/不在目前子圖/);
+    const enormous=tfliteExportOpIds(parseTfliteOpIdRanges('0-1000000000',1000000001));
+    assert.equal(enormous.next().value,0);
     assert.throws(()=>parseTfliteOpIds('0',0),/沒有可選取/);
     assert.throws(()=>parseTfliteOpIds('0,'.repeat(2500),4),/清單太長/);
 });
