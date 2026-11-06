@@ -19,7 +19,11 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId,ver
                 const request=route.request(),url=request.url();requests.push({url,method:request.method()});
                 if(request.method()!=='GET'||!url.startsWith(base)){errors.push('Unexpected external/non-GET request.');await route.abort();return;}
                 const target=mode==='dependency-failure'||mode==='guide-ready'?zipURL:appURL;
-                if(url===target&&inject){inject=false;observed();if(mode!=='entry-failure')await held;if(!delayed){await route.abort('failed');return;}}
+                if(url===target&&inject){
+                    observed();
+                    if(mode!=='entry-failure')await held;
+                    if(!delayed){await route.abort('failed');return;}
+                }
                 await route.continue();
             });
             page=await context.newPage();page.setDefaultTimeout(30000);
@@ -72,6 +76,7 @@ export async function startupRecoveryFlow({browser,base,coreBasePath,buildId,ver
                     const bytes=await page.screenshot();assert.ok(bytes.length>0&&bytes.length<=512*1024);
                     report.failureScreenshot={mode,encoding:'base64',mime:'image/png',bytes:bytes.length,sha256:sha256(bytes),data:bytes.toString('base64')};
                 }
+                inject=false;
                 const navigation=page.waitForNavigation({waitUntil:'domcontentloaded'});
                 // This must remain usable even while partial application
                 // shortcut handlers exist after the dependency failure.
