@@ -4,6 +4,7 @@
     "publish": {"description": "Deploy after all gates (false prepares artifacts only)", "type": "boolean", "default": false},
     "expected_build_id": {"description": "Exact build ID from the successful preparation run", "type": "string", "default": ""},
     "expected_site_id": {"description": "Exact complete site ID from the successful preparation run", "type": "string", "default": ""},
+    "resume_run_id": {"description": "Finish the exact currently deployed build from this release run, without deploying again", "type": "string", "default": ""},
     "promote_version": {"description": "Optional immutable published version to restore; empty builds a new release", "type": "string", "default": ""}
   }}},
   "permissions": {"contents": "read"},
@@ -18,22 +19,22 @@
         {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false, "fetch-depth": 0}},
         {"uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020", "with": {"node-version": "22.23.3"}},
         {"name": "Install locked release tools without lifecycle scripts", "run": "npm ci --ignore-scripts"},
-        {"id": "prepare", "name": "Verify source, all gates and immutable delivery", "run": "node scripts/prepare-pages-release.mjs", "env": {"GH_TOKEN": "${{ github.token }}", "PUBLISH_SITE": "${{ inputs.publish }}", "EXPECTED_BUILD": "${{ inputs.expected_build_id }}", "EXPECTED_SITE_ID": "${{ inputs.expected_site_id }}", "PROMOTE_VERSION": "${{ inputs.promote_version }}"}},
-        {"name": "Upload only the verified Pages tar", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "github-pages", "path": "${{ steps.prepare.outputs.pages_tar }}", "if-no-files-found": "error", "retention-days": 7}},
+        {"id": "prepare", "name": "Verify source, all gates and immutable delivery", "run": "node scripts/prepare-pages-release.mjs", "env": {"GH_TOKEN": "${{ github.token }}", "PUBLISH_SITE": "${{ inputs.publish }}", "EXPECTED_BUILD": "${{ inputs.expected_build_id }}", "EXPECTED_SITE_ID": "${{ inputs.expected_site_id }}", "PROMOTE_VERSION": "${{ inputs.promote_version }}", "RESUME_RUN_ID": "${{ inputs.resume_run_id }}"}},
+        {"name": "Upload only the verified Pages tar", "if": "${{ inputs.resume_run_id == '' }}", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "github-pages", "path": "${{ steps.prepare.outputs.pages_tar }}", "if-no-files-found": "error", "retention-days": 7}},
         {"name": "Retain immutable ZIP and gate evidence", "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02", "with": {"name": "release-delivery", "path": "${{ steps.prepare.outputs.delivery_directory }}", "if-no-files-found": "error", "retention-days": 30}}
       ]
     },
     "deploy": {
       "name": "Publish site ${{ needs.prepare.outputs.site_id }}",
-      "if": "${{ github.ref == 'refs/heads/main' && inputs.publish && needs.prepare.result == 'success' }}",
+      "if": "${{ github.ref == 'refs/heads/main' && inputs.publish && inputs.resume_run_id == '' && needs.prepare.result == 'success' }}",
       "needs": ["prepare"], "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
       "permissions": {"contents": "read", "actions": "read", "pages": "write", "id-token": "write"},
       "environment": {"name": "github-pages", "url": "${{ steps.deployment.outputs.page_url }}"},
       "steps": [{"id": "deployment", "uses": "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e", "with": {"artifact_name": "github-pages"}}]
     },
     "verify_live": {
-      "if": "${{ inputs.publish && needs.prepare.result == 'success' && needs.deploy.result == 'success' }}",
-      "needs": ["prepare", "deploy"], "runs-on": "ubuntu-24.04", "timeout-minutes": 8,
+      "if": "${{ always() && !cancelled() && inputs.publish && needs.prepare.result == 'success' && (needs.deploy.result == 'success' || (inputs.resume_run_id != '' && needs.deploy.result == 'skipped')) }}",
+      "needs": ["prepare", "deploy"], "runs-on": "ubuntu-24.04", "timeout-minutes": 12,
       "permissions": {"contents": "read", "actions": "read"},
       "steps": [
         {"uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "with": {"ref": "${{ github.sha }}", "persist-credentials": false}},
@@ -47,7 +48,7 @@
       ]
     },
     "release": {
-      "if": "${{ inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}",
+      "if": "${{ always() && !cancelled() && inputs.publish && inputs.promote_version == '' && needs.prepare.result == 'success' && needs.verify_live.result == 'success' }}",
       "needs": ["prepare", "verify_live"], "runs-on": "ubuntu-24.04", "timeout-minutes": 8,
       "permissions": {"contents": "write", "actions": "read"},
       "steps": [
