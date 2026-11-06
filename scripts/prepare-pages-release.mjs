@@ -8,6 +8,7 @@ import {verifyReleaseGates} from './lib/release-gates.mjs';
 import {preparePublicSnapshot} from './lib/site-history.mjs';
 import {fetchPublishedDelivery} from './lib/release-history.mjs';
 import {readWorkflowInventory,validateWorkflowInventory,checkDispatchContext,assertExpectedBuild,assertExpectedSite,assertPagesConfiguration,assertVersionAvailable,validateDelivery,ghJSON,fileSHA256,immutableGateEvidence} from './lib/pages-release.mjs';
+import {readPagesPreparationBase} from './lib/pages-preparation-base.mjs';
 import {resumePagesRelease} from './lib/resume-pages-release.mjs';
 checkDispatchContext();
 await validateWorkflowInventory(await readWorkflowInventory());
@@ -35,7 +36,7 @@ async function prepareNewRelease(){
     }
     assertExpectedBuild(process.env.PUBLISH_SITE,process.env.EXPECTED_BUILD,manifest.release.buildId);
     const checked=await validateDelivery(delivery,expected,{allowBaselineHistory:promotion});assertVersionAvailable(manifest,checked.assets);
-    const snapshot=await preparePublicSnapshot({currentDirectory:preparedDirectory,outputDirectory:'build/pages-snapshot',historyDirectory:'build/pages-history'});
+    const snapshot=await preparePublicSnapshot({currentDirectory:preparedDirectory,outputDirectory:'build/pages-snapshot',historyDirectory:'build/pages-history',readDeployment:readPagesPreparationBase});
     assertExpectedSite(process.env.PUBLISH_SITE,process.env.EXPECTED_SITE_ID,snapshot.manifest.siteId);
     const siteManifestSHA=await fileSHA256(path.join(snapshot.directory,'site-manifest.json'));
     // Equivalent to the official Pages upload composite, with the nested upload
