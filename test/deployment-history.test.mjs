@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readDeployedSite,assertDeployedHistory} from '../scripts/lib/deployment-history.mjs';
+import {readPagesPreparationBase} from '../scripts/lib/pages-preparation-base.mjs';
 import {LEGACY_DEPLOYMENT,SITE_BASELINE} from '../scripts/lib/release-baseline.mjs';
 
 function fixture({legacy=false}={}){
@@ -35,4 +36,27 @@ test('a stale HTTP index is rejected even if it names the same active core versi
 
 test('later Release failure does not erase a successful deployed site identity',async()=>{
     const f=fixture();f.data.run.conclusion='failure';const result=await readDeployedSite(f.api);assert.equal(result.siteId,'1'.repeat(64));assert.equal(result.deploymentId,91);
+});
+
+
+test('preparation skips only confirmed failed attempts, then authenticates the actual live history',async()=>{
+    const previous=fixture(),failed=fixture(),source='b'.repeat(40);
+    const deployment={...failed.data.deployments[0],id:92,sha:source};
+    const status={...failed.data.statuses[0],state:'failure',log_url:'https://github.com/koviankevin/tflite-explorer/actions/runs/32/job/72'};
+    const job={...failed.data.job,id:72,run_id:32,head_sha:source,conclusion:'failure'};
+    const run={...failed.data.run,id:32,head_sha:source,conclusion:'failure'};
+    const api=async route=>{
+        if(route.endsWith('deployments?environment=github-pages&per_page=10'))return [deployment,...previous.data.deployments];
+        if(route.endsWith('/deployments/92/statuses?per_page=100'))return [status];
+        if(route.endsWith('/actions/jobs/72'))return job;
+        if(route.endsWith('/actions/runs/32/attempts/1'))return run;
+        return previous.api(route);
+    };
+    const recovered=await readPagesPreparationBase(api);
+    assert.equal(recovered.deploymentId,91);
+    assert.equal(assertDeployedHistory({liveSite:{siteId:'1'.repeat(64)}},recovered),true);
+    assert.throws(()=>assertDeployedHistory({liveSite:{siteId:'2'.repeat(64)}},recovered),/history/);
+    status.state='in_progress';await assert.rejects(readPagesPreparationBase(api),/still be changing/);
+    status.state='failure';job.conclusion='success';await assert.rejects(readPagesPreparationBase(api),/confirmed gated/);
+    job.conclusion='failure';run.path='other.yml';await assert.rejects(readPagesPreparationBase(api),/workflow source/);
 });
