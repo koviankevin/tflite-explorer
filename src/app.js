@@ -25,7 +25,7 @@ import {parseGraphPattern} from './subgraph-pattern.js';
 import {WORKSPACE_KEY,LEGACY_WORKSPACE_KEY,DRAFT_FIELDS,WORKSPACE_LIMIT,exportWorkspace,parseWorkspace,checkWorkspace,resultKey,sameResultKey} from './workspace.js';
 import {workspaceSessionUI} from './workspace-session-ui.js';
 import {draftModelKey} from './workspace-drafts.js';
-import {layerLocation,parseTfliteOpIds,updateLayerSelection} from './pattern-selection.js';
+import {layerLocation,parseTfliteOpIdRanges,parseTfliteOpIds,updateLayerSelection} from './pattern-selection.js';
 import {rectangleSelection} from './rectangle-selection.js';
 import {captureViewport,restoreViewport} from './svg-viewport.js';
 import { LORA_PATTERN } from './pattern-utils.js';
@@ -298,6 +298,7 @@ async function loadModelTab(nextFile,saved) {
         const summary = await rpc('open', { file });
         if (file !== thisFile) return;
         model = summary;
+        refreshOpIdAction();
         const editable=model.sourceFormat==='tflite';editWorkspace.enable(editable);
         runWorkspace.enable(editable);
         for(const id of ['edit-mode','compose-mode','compose-capture']){$(id).hidden=!editable;$(id).title=editable?(id==='compose-mode'?'將選取或目前匹配加入獨立組合草稿':'編輯實際 TFLite 模型'):'實際模型編輯僅支援 TFLite';}
@@ -439,6 +440,7 @@ async function changePage(offset) {
 }
 function setCurrentGraph(graph) {
     currentGraph = graph;
+    refreshOpIdAction();
     $('graph-select').value = String(graph);
     const option = $('scope').querySelector('option[value="current"]');
     if (option) option.textContent = `目前 subgraph（子圖 ${graph}）`;
@@ -947,8 +949,7 @@ function refreshPickedNodes() {
         $('export-match').textContent=matched && whole ? `匯出匹配所在 function（${matched.blocks} blocks）↓` : '匯出此匹配為局部 MLIR ↓';
     }
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
-    $('pick-op-ids').hidden = model?.sourceFormat !== 'tflite';
-    $('pick-op-ids').disabled = exportBusy || !model?.graphs[currentGraph]?.layers;
+    refreshOpIdAction();
     $('edit-capture').disabled = $('save-capture').disabled;
     $('edit-capture').textContent = '編輯選取 pattern';
     renderCaptureBlocks();
@@ -981,9 +982,9 @@ $('export-submodel').onclick = async () => {
     if(exportBusy)return;
     if(!$('capture-cfg').checked)return downloadSubmodel(currentGraph,[...pickedNodes]);
     const selections=captureSelections(),sourceFile=file;$('export-submodel').disabled=true;
-    try {if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes,selections);}catch(error){report(error);}finally{refreshPickedNodes();}
+    try {if(file===sourceFile && selections.length)await downloadSubmodel(selections[0].graph,selections[0].nodes,{selections});}catch(error){report(error);}finally{refreshPickedNodes();}
 };
-$('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path],selection.blocks?.map(b=>({graph:b.graph,nodes:[...b.path]}))); };
+$('export-match').onclick = () => { if (selection?.kind === 'patterns') downloadSubmodel(selection.graph, [...selection.path],{selections:selection.blocks?.map(b=>({graph:b.graph,nodes:[...b.path]}))}); };
 $('preview-submodel').onclick=async()=>{
     const source=file,targets=$('capture-cfg').checked?captureSelections():[{graph:currentGraph,nodes:[...pickedNodes]}];if(!model?.capabilities?.tfliteExport||!targets[0]?.nodes.length)return;
     try{const preview=await rpc('previewTfliteExport',targets[0]);if(file!==source)return;$('export-size-description').textContent=exportPreviewText(preview);$('export-size-dialog').showModal();}catch(error){if(file===source)report(error);}
@@ -992,18 +993,19 @@ $('close-export-size').onclick=()=>$('export-size-dialog').close();
 $('export-size-dialog').addEventListener('keydown',event=>event.stopPropagation());
 $('mlir-export-scope').onchange=refreshPickedNodes;
 function canExportSubmodel() { return Boolean(model?.capabilities?.tfliteExport || model?.capabilities?.mlirExport); }
-async function downloadSubmodel(graph, nodes, selections) {
+async function downloadSubmodel(graph, nodes, {selections,opIds}={}) {
     if (!canExportSubmodel() || exportBusy) return;
     const sourceFile = file,opener=document.activeElement;
     const mlir = model.capabilities.mlirExport;
     exportBusy = true;
+    refreshOpIdAction();
     exportedModels.clear();
     $('export-submodel').disabled = true;
     $('export-match').disabled = true;
     try {
         status(mlir ? '擷取局部 MLIR，保留原始型別、屬性與 SSA 連線…' : '建立 TFLite 子模型，保留所需權重與參數…');
         const outputName=`${sourceFile.name.replace(/\.[^.]+$/, '')}-submodel.${mlir ? 'mlir' : 'tflite'}`;
-        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, outputName, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {}) });
+        const result = await rpc(mlir ? 'exportMLIR' : 'exportTflite', { graph, nodes, outputName, ...(mlir ? {scope:$('mlir-export-scope').value,selections}: {opIds}) });
         if (file !== sourceFile) return;
         await host.export(outputName, result.blob);
         if(file!==sourceFile)return;
@@ -1134,8 +1136,15 @@ function showOpIdError(message = '') {
     if (message) opIdInput.setAttribute('aria-invalid', 'true');
     else opIdInput.removeAttribute('aria-invalid');
 }
+function refreshOpIdAction() {
+    $('pick-op-ids').hidden = model?.sourceFormat !== 'tflite';
+    $('pick-op-ids').disabled = exportBusy || !model?.graphs[currentGraph]?.layers ||
+        (!pickingPattern && !model?.capabilities?.tfliteExport);
+}
 $('pick-op-ids').onclick = () => {
-    if (!pickingPattern || model?.sourceFormat !== 'tflite') return;
+    if ($('pick-op-ids').disabled || model?.sourceFormat !== 'tflite') return;
+    $('apply-op-ids').disabled = !pickingPattern;
+    $('export-op-ids').disabled = !model.capabilities.tfliteExport;
     const graph = model.graphs[currentGraph];
     opIdCaptureScope = {file, graph:currentGraph};
     $('capture-op-id-scope').textContent = `目前子圖 ${currentGraph} · ${graph.name} · OP ID #0 到 #${graph.layers - 1}`;
@@ -1149,21 +1158,28 @@ opIdInput.oninput = () => showOpIdError();
 opIdDialog.addEventListener('close', () => { if (!opIdDialog.open) opIdCaptureScope = undefined; });
 $('capture-op-id-form').onsubmit = event => {
     event.preventDefault();
-    if (!pickingPattern || model?.sourceFormat !== 'tflite' ||
+    const direct = event.submitter === $('export-op-ids');
+    if (model?.sourceFormat !== 'tflite' || (!direct && !pickingPattern) ||
         opIdCaptureScope?.file !== file || opIdCaptureScope?.graph !== currentGraph) {
         showOpIdError('模型或子圖已切換，請關閉後重新輸入 OP ID。');
         return;
     }
+    const text = opIdInput.value, graph = currentGraph, count = model.graphs[graph].layers;
     let ids;
     try {
-        ids = parseTfliteOpIds(opIdInput.value, model.graphs[currentGraph].layers);
+        if (direct) parseTfliteOpIdRanges(text,count);
+        else ids = parseTfliteOpIds(text,count);
     } catch (error) {
         showOpIdError(error.message);
         opIdInput.focus();
         return;
     }
+    if (direct) {
+        opIdDialog.close();
+        return downloadSubmodel(graph, undefined, {opIds:text});
+    }
     pickedNodes = ids;
-    pickedGraph = currentGraph;
+    pickedGraph = graph;
     cfgSelections.clear();
     if ($('capture-cfg').checked) cfgSelections.set(currentGraph, ids);
     refreshPickedNodes();

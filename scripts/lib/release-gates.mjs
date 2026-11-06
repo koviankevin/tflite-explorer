@@ -8,7 +8,7 @@ import {RELEASE_CONTRACT_TESTS} from './release-test-plan.mjs';
 import {evaluatePerformanceRun} from './performance-policy.mjs';
 import {evaluateLifecycle,LIFECYCLE_POLICY,MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from '../../test/browser/lifecycle-policy.mjs';
 import {evaluateSiteBrowser} from './site-browser-policy.mjs';
-import {extendedBroadcastOperators,graphReadabilityRequired,opIdSelectionRequired,OP_ID_SELECTION_CHECK} from '../../test/browser/release-features.mjs';
+import {extendedBroadcastOperators,graphReadabilityRequired,opIdSelectionRequired,OP_ID_SELECTION_CHECK,opIdDirectExportRequired,OP_ID_DIRECT_EXPORT_CHECK} from '../../test/browser/release-features.mjs';
 
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const stable=value=>JSON.stringify(value,(_,v)=>v && !Array.isArray(v) && typeof v==='object'?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
@@ -141,8 +141,10 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
     const extraOperators=mul?extendedBroadcastOperators(readSource(BROADCAST_SOURCE).toString('utf8')):[];
     const workerSuffix=`/${namespace}src/model-worker.js?v=${build}`;
     const checks=report.checks,required=[MODEL_CHOOSER_CHECK,TFLITE_REOPEN_CHECK,...(desktop?DESKTOP_OPERATION_CHECKS:[])];
-    if(opIdSelectionRequired(release.version))required.push(OP_ID_SELECTION_CHECK);
-    require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIdSelectionRequired(release.version)):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
+    const opIds=opIdSelectionRequired(release.version),directOpIds=opIdDirectExportRequired(release.version);
+    if(opIds)required.push(OP_ID_SELECTION_CHECK);
+    if(directOpIds)required.push(OP_ID_DIRECT_EXPORT_CHECK);
+    require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
     for(const [operator,enabled,prefix]of [

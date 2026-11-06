@@ -12,13 +12,12 @@ export function layerLocation(entry,graph) {
 
 const selectionLimit = 32;
 
-export function parseTfliteOpIds(text, operatorCount) {
+export function parseTfliteOpIdRanges(text, operatorCount) {
     if (text.length > 4096) throw Error('OP ID 清單太長，請只貼上要選取的編號。');
     const tokens = text.split(/[\s,，、]+/).filter(Boolean);
     if (!tokens.length) throw Error('請至少輸入一個 OP ID，例如 10-13,16,18。');
     if (!Number.isSafeInteger(operatorCount) || operatorCount < 1) throw Error('目前子圖沒有可選取的 OP。');
-    const ids = new Set();
-    for (const token of tokens) {
+    return tokens.map(token => {
         const match = /^#?([0-9]+)(?:-#?([0-9]+))?$/.exec(token);
         const label = token.slice(0, 40);
         if (!match) {
@@ -30,12 +29,28 @@ export function parseTfliteOpIds(text, operatorCount) {
             throw Error(`「${label}」不在目前子圖，OP ID 範圍是 #0 到 #${operatorCount - 1}。`);
         }
         if (first > last) throw Error(`範圍「${label}」寫反了，請將較小的 ID 放在前面。`);
+        return {first, last, label};
+    });
+}
+
+export function parseTfliteOpIds(text, operatorCount) {
+    const ids = new Set();
+    for (const {first,last,label} of parseTfliteOpIdRanges(text,operatorCount)) {
         for (let id = first; id <= last; id++) {
             ids.add(id);
-            if (ids.size > selectionLimit) throw Error(`加入「${label}」會超過上限，一組選取最多 ${selectionLimit} 個不同的 OP ID。`);
+            if (ids.size > selectionLimit) throw Error(`加入「${label}」會超過上限。圖上選取最多 ${selectionLimit} 個 OP，請改用「直接匯出子模型」。`);
         }
     }
     return ids;
+}
+
+export function* tfliteExportOpIds(ranges) {
+    // Sorted ranges make overlapping input cost proportional to distinct IDs.
+    let previous = -1;
+    for (const {first,last} of [...ranges].sort((a,b)=>a.first-b.first)) {
+        for (let id = Math.max(first,previous+1); id <= last; id++) yield id;
+        previous = Math.max(previous,last);
+    }
 }
 
 // Apply a multi-block selection atomically; a bulk add over the limit leaves

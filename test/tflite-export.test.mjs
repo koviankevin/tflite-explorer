@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { parseModel } from '../src/model-engine.js';
 import { exportTflite } from '../src/tflite-export.js';
-import { parseTfliteOpIds } from '../src/pattern-selection.js';
+import { parseTfliteOpIds, parseTfliteOpIdRanges, tfliteExportOpIds } from '../src/pattern-selection.js';
 import { captureGraphPattern } from '../src/subgraph-pattern.js';
 import { FlatbufferWriter, tableFields } from '../src/flatbuffer-writer.js';
 import { BinaryReader } from '../vendor/netron/flatbuffers.js';
@@ -93,4 +93,20 @@ test('cuts create boundary inputs, discard unused weights, and leave source inta
     assert.throws(()=>exportTflite({},0,[0],new Blob()),/缺少 TFLite 原始模型資料/);
     index.raw.subgraphs[0].operators[0].builtin_options={then_subgraph_index:0};
     assert.throws(()=>exportTflite(index,0,[0],new Blob([bytes])),/控制流程/);
+});
+
+
+test('direct OP ID ranges export and reopen more than 32 distinct operators from one TFLite subgraph', async () => {
+    const f=fixture({repeats:20}),bytes=new Uint8Array(f.totalBytes);bytes.set(f.data);
+    const index=await parse(bytes),graph=index.raw.subgraphs[1];
+    const ranges=parseTfliteOpIdRanges('33-45,4-36,50',graph.operators.length);
+    const result=exportTflite(index,1,tfliteExportOpIds(ranges),new Blob([bytes]));
+    const reopened=await parse(new Uint8Array(await result.blob.arrayBuffer()));
+    const expected=[...Array.from({length:42},(_,i)=>i+4),50];
+    assert.equal(reopened.raw.subgraphs[0].operators.length,expected.length);
+    assert.deepEqual(result.provenance.operators.map(op=>op.source.node),expected);
+    assert.deepEqual(reopened.raw.subgraphs[0].operators.map(op=>op.opcode_index),expected.map(id=>graph.operators[id].opcode_index));
+    assert.deepEqual(result.inputs.map(t=>t.sourceId),[4,50]);
+    assert.deepEqual(result.outputs.map(t=>t.sourceId),[46,51]);
+    assert.equal(graph.operators.length,61);
 });

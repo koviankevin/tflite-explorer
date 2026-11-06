@@ -78,3 +78,10 @@ export function opIdSelectionRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=8;
 }
+
+export const OP_ID_DIRECT_EXPORT_CHECK='TFLite OP ID direct export of 61 operators before drawing and native reopen';
+export function opIdDirectExportRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=9;
+}
