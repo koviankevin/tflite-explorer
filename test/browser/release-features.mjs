@@ -71,3 +71,10 @@ export function graphReadabilityRequired(version){
     browserReleaseFeatures(version);const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=7;
 }
+
+export const OP_ID_SELECTION_CHECK='TFLite OP ID range selection, atomic input errors and native export reopen';
+export function opIdSelectionRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=8;
+}
