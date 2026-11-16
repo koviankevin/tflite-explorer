@@ -20,11 +20,11 @@ test('TFLite OP IDs accept pasted lists and validate the current subgraph withou
     assert.throws(()=>parseTfliteOpIds('0, 2-4',4),/2-4.*#0 到 #3/);
     assert.throws(()=>parseTfliteOpIds('0, 3-1',4),/3-1.*寫反/);
     assert.throws(()=>parseTfliteOpIds('99999999999999999999',4),/不在目前子圖/);
-    const ids=Array.from({length:32},(_,i)=>i).join(',');
-    assert.equal(parseTfliteOpIds(ids+', #0',33).size,32);
-    assert.throws(()=>parseTfliteOpIds(ids+', #32',33),/最多 32 個/);
-    assert.equal(parseTfliteOpIds('0-31, 1-31',32).size,32);
-    assert.throws(()=>parseTfliteOpIds('0-1000000000',1000000001),/最多 32 個/);
+    const ids=Array.from({length:256},(_,i)=>i).join(',');
+    assert.equal(parseTfliteOpIds(ids+', #0',257).size,256);
+    assert.throws(()=>parseTfliteOpIds(ids+', #256',257),/最多 256 個/);
+    assert.equal(parseTfliteOpIds('0-255, 1-255',256).size,256);
+    assert.throws(()=>parseTfliteOpIds('0-1000000000',1000000001),/最多 256 個/);
     const ranges=parseTfliteOpIdRanges('40-75,10-60,18,80',100);
     assert.deepEqual([...tfliteExportOpIds(ranges)],[...Array.from({length:66},(_,i)=>i+10),80]);
     assert.throws(()=>parseTfliteOpIdRanges('0-75,90-100',100),/不在目前子圖/);
@@ -53,13 +53,13 @@ for(const [name,source,count] of [['diamond',MLIR_CFG_DIAMOND,7],['loop',MLIR_CF
     for(const b of selections.filter(b=>b.graph!==first.graph))assert.equal(selected.get(b.graph).has(0),true,'toggling #0 must not affect other blocks');
 });
 
-test('bulk selection is atomic at 32 operators, deduplicates and can remove at the limit',()=>{
+test('bulk selection is atomic at 256 operators, deduplicates and can remove at the limit',()=>{
     const selected=new Map([[0,new Set([0])]]),originalSet=selected.get(0);
-    const all=Array.from({length:32},(_,node)=>({graph:1,node}));
+    const all=Array.from({length:256},(_,node)=>({graph:1,node}));
     assert.equal(updateLayerSelection(selected,all),false);
     assert.deepEqual([...selected],[[0,new Set([0])]]);
-    assert.ok(updateLayerSelection(selected,[...all.slice(0,31),all[0]]));
-    assert.equal([...selected.values()].reduce((n,s)=>n+s.size,0),32);
+    assert.ok(updateLayerSelection(selected,[...all.slice(0,255),all[0]]));
+    assert.equal([...selected.values()].reduce((n,s)=>n+s.size,0),256);
     assert.equal(selected.get(0),originalSet);
     assert.ok(updateLayerSelection(selected,[{graph:0,node:0}],{toggle:true}));
     assert.equal(originalSet.size,0);

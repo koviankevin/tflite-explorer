@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import { assertValidMLIR, validateMLIRText } from './mlir-validate.js';
 import { mlirArtifact } from './mlir-file.js';
 import { mlirProvenance } from './mlir-export-provenance.js';
@@ -29,7 +30,7 @@ export async function exportMLIR(index, graphIndex, nodeIndices, {progress=()=>{
     if(selections && (!Array.isArray(selections) || selections.some(s=>!s || !Array.isArray(s.nodes) || !s.nodes.length || s.nodes.some(n=>!Number.isInteger(n) || !graphs[s.graph]?.operations[n]) || functionFor(index,graphs[s.graph])!==functionFor(index,graphs[graphIndex]))))throw new Error('完整 function 匯出需選取同一個 function 的有效 layers。');
     const graph = graphs[graphIndex];
     if (!graph) throw new Error('找不到目前 MLIR scope。');
-    if (!Array.isArray(nodeIndices) || !nodeIndices.length || nodeIndices.length>32 || nodeIndices.some(i=>!Number.isInteger(i) || !graph.operations[i])) throw new Error('請選取 1～32 個同一 scope 的 layers。');
+    if (!Array.isArray(nodeIndices) || !nodeIndices.length || nodeIndices.length>PATTERN_LIMITS.operators || nodeIndices.some(i=>!Number.isInteger(i) || !graph.operations[i])) throw new Error(`請選取 1～${PATTERN_LIMITS.operators} 個同一 scope 的 layers。`);
     if(scope==='function' && !graph.cfgFunction) {
         const owner=index.mlir.ir.byOp.get(functionFor(index,graph));
         if(!owner)throw new Error('此 scope 不在 func.func 內，請選擇局部選取。');

@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import {assertValidMLIR,validateMLIRText} from './mlir-validate.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {buildDominance,opName} from './mlir-ir.js';
@@ -20,7 +21,7 @@ export async function exportMLIRSlice(index,selections,{progress=()=>{}}={}) {
         func=g.cfgFunction;
         for(const n of nodes)selected.add(g.operations[n]);
     }
-    if(selected.size>32)throw new Error('局部匯出最多選取 32 個 layers。');
+    if(selected.size>PATTERN_LIMITS.operators)throw new Error(`局部匯出最多選取 ${PATTERN_LIMITS.operators} 個 layers。`);
     const region=ir.byOp.get(func)?.op.regions?.[0],blocks=region?.blocks;
     if(!blocks?.length || func.regions.length!==1)throw new Error('局部匯出需要具有單一 body region 的 func.func。');
     const regionInfo=ir.byBlock.get(blocks[0]);

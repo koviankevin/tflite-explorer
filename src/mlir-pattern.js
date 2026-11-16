@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {typeSpelling} from './mlir-engine.js';
 import {validateMLIR} from './mlir-validate.js';
@@ -84,7 +85,7 @@ export function captureMLIRPattern(index,selections) {
         if(list.some(n=>!Number.isInteger(n) || !index.mlir.graphs[selected.graph].operations[n]))throw new Error('選取的 operator 無效。');
         if(requested.has(selected.graph))throw new Error('Block 選取不可重複。');requested.set(selected.graph,new Set(list));count+=list.length;
     }
-    if(!count || count>32 || requested.size>32)throw new Error('跨 block pattern 最多選取 32 個 operators、32 個 blocks。');
+    if(!count || count>PATTERN_LIMITS.operators || requested.size>PATTERN_LIMITS.blocks)throw new Error(`跨 block pattern 最多選取 ${PATTERN_LIMITS.operators} 個 operators、${PATTERN_LIMITS.blocks} 個 blocks。`);
     const project=projects(index).find(p=>[...requested.keys()].every(g=>p.graphs.includes(g)));
     if(!project)throw new Error('跨 block 圈選必須位於同一個 region；不能跨 function 或巢狀 region。');
     const actual=build(index,project),original=sourceEntry(index,project);

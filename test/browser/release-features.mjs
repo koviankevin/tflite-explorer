@@ -91,3 +91,9 @@ export function earlyFileChooserRequired(version){
     const [major,minor,patch]=version.split('.').map(Number);
     return major>1||major===1&&(minor>9||minor===9&&patch>=1);
 }
+
+export function expandedSelectionRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor,patch]=version.split('.').map(Number);
+    return major>1||major===1&&(minor>9||minor===9&&patch>=2);
+}

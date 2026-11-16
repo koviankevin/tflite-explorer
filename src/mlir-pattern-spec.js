@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import {operatorKey} from './pattern-utils.js';
 import {normalizeConditions} from './pattern-conditions.js';
 export const CFG_PATTERN_MODE='mlir-cfg';
@@ -9,7 +10,7 @@ export const nodeKey=node=>node.kind==='operator' ? `op:${operatorKey(node.type)
 // Portable, strict topology schema. No source labels, SSA names or model data.
 export function prepareMLIRPattern(structure) {
     if(structure?.mode!==CFG_PATTERN_MODE || !Array.isArray(structure.nodes) || !Array.isArray(structure.edges))throw new Error('缺少跨 block pattern 結構。');
-    if(!structure.nodes.length || structure.nodes.length>256 || structure.edges.length>512)throw new Error('跨 block pattern 最多 256 個結構節點、512 條連線。');
+    if(!structure.nodes.length || structure.nodes.length>PATTERN_LIMITS.cfgNodes || structure.edges.length>PATTERN_LIMITS.cfgEdges)throw new Error(`跨 block pattern 最多 ${PATTERN_LIMITS.cfgNodes} 個結構節點、${PATTERN_LIMITS.cfgEdges} 條連線。`);
     const aliases=new Map();
     const integer=n=>Number.isSafeInteger(n) && n>=0 && n<65536;
     const nodes=structure.nodes.map(n=>{
@@ -26,7 +27,7 @@ export function prepareMLIRPattern(structure) {
         } else {if(n.conditions!==undefined)throw new Error('條件只能指定在 operator。');if(!integer(n.slot))throw new Error('Block argument 編號無效。');node.slot=n.slot;}
         aliases.set(node.alias,node);return node;
     });
-    if(!nodes.some(n=>n.kind==='operator') || nodes.filter(n=>n.kind==='operator').length>32 || !nodes.some(n=>n.kind==='block') || nodes.filter(n=>n.kind==='block').length>32)throw new Error('跨 block pattern 需包含 1～32 個 operators、1～32 個 blocks。');
+    if(!nodes.some(n=>n.kind==='operator') || nodes.filter(n=>n.kind==='operator').length>PATTERN_LIMITS.operators || !nodes.some(n=>n.kind==='block') || nodes.filter(n=>n.kind==='block').length>PATTERN_LIMITS.blocks)throw new Error(`跨 block pattern 需包含 1～${PATTERN_LIMITS.operators} 個 operators、1～${PATTERN_LIMITS.blocks} 個 blocks。`);
     const seen=new Set(),parents=new Map(),edges=[];
     for(const e of structure.edges) {
         const a=aliases.get(e?.from),b=aliases.get(e?.to);

@@ -65,7 +65,7 @@ test('deleting arguments reindexes slots while preserving surviving routing alia
 });
 
 test('incomplete drafts remain repairable; limits reject additions atomically and do not mutate caller',()=>{
-    const pattern={mode:'mlir-cfg',induced:true,nodes:[{alias:'B',kind:'block',type:'block',arity:0},...Array.from({length:32},(_,i)=>({alias:`O${i}`,kind:'operator',type:'company.op',order:i}))],edges:Array.from({length:32},(_,i)=>({from:'B',to:`O${i}`,kind:'contains'}))};
+    const pattern={mode:'mlir-cfg',induced:true,nodes:[{alias:'B',kind:'block',type:'block',arity:0},...Array.from({length:256},(_,i)=>({alias:`O${i}`,kind:'operator',type:'company.op',order:i}))],edges:Array.from({length:256},(_,i)=>({from:'B',to:`O${i}`,kind:'contains'}))};
     const original=structuredClone(pattern);prepareMLIRPattern(pattern);
     assert.throws(()=>editMLIRPattern(pattern,{kind:'add-operator',block:'B'}),/最多/);assert.deepEqual(pattern,original);
     let empty=editMLIRPattern(pattern,{kind:'remove-node',alias:'B'});assert.equal(empty.nodes.length,0);assert.throws(()=>prepareMLIRPattern(empty));

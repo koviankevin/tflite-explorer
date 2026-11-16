@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 // Edits a query, never an MLIR model. Invalid intermediate topology is allowed;
 // prepareMLIRPattern remains the authority before saving or searching.
 export function editMLIRPattern(pattern,action) {
@@ -58,6 +59,6 @@ export function editMLIRPattern(pattern,action) {
         case 'set-induced': draft.induced=Boolean(action.value);break;
         default: throw Error('不支援的 pattern 編輯操作。');
     }
-    if(draft.nodes.length>256||draft.edges.length>512||draft.nodes.filter(n=>n.kind==='operator').length>32||draft.nodes.filter(n=>n.kind==='block').length>32)throw Error('Pattern 最多 32 個 operators、32 個 blocks、256 個結構節點及 512 條連線；已保留原草稿。');
+    if(draft.nodes.length>PATTERN_LIMITS.cfgNodes||draft.edges.length>PATTERN_LIMITS.cfgEdges||draft.nodes.filter(n=>n.kind==='operator').length>PATTERN_LIMITS.operators||draft.nodes.filter(n=>n.kind==='block').length>PATTERN_LIMITS.blocks)throw Error(`Pattern 最多 ${PATTERN_LIMITS.operators} 個 operators、${PATTERN_LIMITS.blocks} 個 blocks、${PATTERN_LIMITS.cfgNodes} 個結構節點及 ${PATTERN_LIMITS.cfgEdges} 條連線；已保留原草稿。`);
     return draft;
 }

@@ -20,6 +20,10 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 ## 圈選與修改模型
 
+選取容量及刪除 OP 後重接／型別推導的規劃見 [選取容量與刪除 OP](docs/selection-capacity.md)。
+
+圈選、單點、OP ID 套用、跨 block pattern 與局部 MLIR 匯出上限統一為 256 個原始 OP；pattern JSON 及工作階段可保存相同容量。跨 block 結構另限 256 blocks、4,096 結構節點與 8,192 條連線，一般 pattern 限 4,096 條連線；搜尋仍保留取消與工作量保護，複雜 pattern 可能只回傳部分結果並提示。實際模型編輯工作區仍限 64 個原始 OP，直接 OP ID 子模型匯出仍不受 256 個限制。
+
 選 pattern 時按住 **Alt＋拖曳**可平移模型，滾輪縮放；已有選取會保留。「編輯選取 pattern」把圈選轉成未儲存的 pattern 草稿，可增刪節點與連線；這項操作修改搜尋條件。已儲存的 pattern 可「刪除所選」並復原最近一次刪除，目前搜尋條件保留；若另一分頁已改成不同內容，先重新確認後才能刪除。
 
 「開啟模型」與「開啟匯出結果」各自建立網站內的模型分頁。切回原模型會重新讀取本機 File，恢復搜尋、選取、圖形位置及編輯命令／Undo／Redo；同時只啟用目前模型的 Worker，背景分頁不保留解析索引。每頁的 × 關閉該模型，頂端「關閉全部」釋放所有模型；有未匯出／未下載草稿的變更時會先提醒。分頁本身是目前網站記憶體內的狀態；本機編輯草稿可重新選原模型恢復，重要工作仍須下載工作階段或編輯草稿備份。
@@ -50,7 +54,7 @@ TFLite 編輯預設在背景核對完整原模型並自動保存命令／視角�
 
 圈選支援建立、儲存、搜尋及 JSON 匯入匯出 pattern。以完整 `dialect.op` 名稱比對，不自動將不同 dialect 的同名 operations 視為相同。圈選後或點選 pattern 匹配結果，可匯出局部 `.mlir`：保留 operations 原始文字、custom op 型別、properties、attributes、多輸出及內部 SSA 連線。範圍外的 SSA 值改為新的 function arguments；被外部使用或沒有使用者的結果成為 function outputs。檔案中的 type／attribute／location aliases 和 resources 原文一併保留，檔案可能包含未使用的 declarations／resources。匯出前會在本機 Worker 檢查來源與子圖的語法／SSA；失敗時顯示行、欄與原因，停止下載。此結構檢查不取代 LLVM 或內部 dialect verifier，完整範圍見 [驗證說明](docs/mlir-verification.md)。下載後可用「開啟模型」檢查。Pattern JSON 仍只儲存結構，不含完整 IR。
 
-MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block 的資料流擷取 1～32 個 operations，選到含 region 的 op 時保留其完整 region。多 block 局部匯出移除未選取的一般資料運算，補足外部 SSA 輸入、輸出、控制路徑與必要的迴圈運算；custom op 原文、型別、properties、attributes 保留。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly 與 bytecode 不保證可讀；不支援時回報位置，不猜測接線。延後讀取的權重保留原文，結構語法／SSA／dominance 檢查不包含其逐值語法、元素數量與 dialect 語意，介面會明示這個範圍。
+MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block 的資料流擷取 1～256 個 operations，選到含 region 的 op 時保留其完整 region。多 block 局部匯出移除未選取的一般資料運算，補足外部 SSA 輸入、輸出、控制路徑與必要的迴圈運算；custom op 原文、型別、properties、attributes 保留。支援 generic `cf.br`、`cf.cond_br`、`cf.switch`，匯出前在本機檢查 SSA、branch arguments、跨 block dominance 與 terminators，並重新解析及驗證生成結果。未知 branch／terminator 可透過 dialect adapter 擴充；無對應規則、獨立 region terminator 或需外部 symbol dependencies 時明確拒絕。匯出不轉換 TFLite、不跑推論；memory effects、完整 dialect verifier 和外部 runtime 仍由公司工具處理。任意 dialect 的 custom assembly 與 bytecode 不保證可讀；不支援時回報位置，不猜測接線。延後讀取的權重保留原文，結構語法／SSA／dominance 檢查不包含其逐值語法、元素數量與 dialect 語意，介面會明示這個範圍。
 
 局部 CFG 是新的 `@extracted` function：保留原有可達控制路徑並新增 entry block，裁掉未使用的 block arguments；迴圈內會變動的 SSA producer 不能凍結成輸入，會自動保留。條件輸出使用 `(valid: i1, value)`，並要求 caller 傳入同型別備援值；`valid=false` 時該值不代表已執行的輸出。多回傳出口另回傳原始出口編號。檔案註解列出輸入來源與結果位置，介面列出補入的運算。新版局部 MLIR 保留原始 pattern 結構對照，既有 pattern 可沿用，新增的 entry、輸出傳值與備援介面不參與原始結構比對；結果仍定位到實際存在的 layers。較早的局部檔案需從原模型重新匯出一次，原有 pattern JSON 不需修改。需要原始函式介面時使用完整 function。局部模式目前支援同一 function 直接 body 的選取、最多 4096 blocks／128 資料輸出，不推斷未註冊 op 的 memory effects。
 
@@ -58,17 +62,17 @@ MLIR 預設匯出局部選取，也可切換「完整 function」。同一 block
 
 搜尋後按「收合所有匹配」可在全模型圖中，將本次搜尋的每個不重疊匹配各自收為節點，包含所有搜尋分頁、functions／subgraphs；未匹配的 OP 保留。點任一節點或按 Enter 可單獨展開，其他匹配保持收合；總覽清單可定位、重新收合某一組或全部展開／收合。不同搜尋結果共用 OP 時，依搜尋順序保留第一個不衝突匹配，後續衝突結果明確標示「重疊，未另建節點」，仍可定位，避免複製 OP 或改變接線。SSA／tensor、分支出口及跨越收合節點的迴圈沿原值接回，functions／subgraphs 不交叉接線。總覽僅改變顯示，匯出仍使用目前匹配的原始選取；Canvas 總覽可直接圈選已展開的原始 OP。總覽先在 Worker 建立連線投影並規劃收合，不以原始 OP 數或匹配筆數阻擋。收合／展開後在 1,500 個節點以內沿用 Netron SVG；超過時自動切換 Canvas 虛擬總覽，背景建立全圖座標，依視窗查詢節點及連線，拖曳／縮放時只重畫可見範圍及少量預載邊界。兩端在畫面外但穿過視窗的連線也會保留；全圖縮小時省略文字，放大再顯示名稱，並以固定畫面線寬標出目前匹配。大型總覽使用分層概略排版，迴圈以強連通元件安排；不同 functions／subgraphs 分區。Canvas 只傳送名稱、型別、原始位置與連線，點 OP 才取得原始詳細資料，權重仍按需在本機讀取。
 
-虛擬總覽可拖曳平移、滾輪／＋− 縮放，按「全圖」或 Home 還原全圖；方向鍵平移，Enter 開啟選取節點。搜尋可直接定位畫面外的匹配，單組展開／全部展開後仍使用同樣視窗機制；字級及圖方向變更會重算座標。總覽下拉選單在結果超過 1,500 筆時列前 1,000 組獨立匹配及目前選取，其餘仍可透過分頁搜尋清單定位。詳情、pattern 儲存與模型匯出使用原始 OP。Canvas 總覽按「選取 pattern」可直接跨 blocks 框選，滑鼠拖曳加入相交的原始 OP、點選切換、Alt＋拖曳平移；縮放與平移後以反向座標轉換查詢空間索引。框選範圍限於實際畫布，不會加入視窗外預載節點、收合節點或控制標記；收合節點可在選取模式中點開再選。未完成的框選在 Escape、滾輪、重畫、捲動、失焦、縮放或 resize 時取消。選取跨 block 保留，最多 32 個原始 OP，須在同一 function／region 或 TFLite subgraph，超限／跨範圍時保留原選取並提示。可加入視窗內的 layers、從選取的 block 清單定位，或匯出所選子模型。儲存並搜尋後留在全模型總覽，字級和方向重畫仍保留原始選取；SVG 收合總覽請返回匹配圖再圈選。搜尋本身的 50,000 筆與工作量保護仍適用。虛擬繪圖降低畫面繪製負擔，但全圖索引與座標仍需要與節點／連線數成比例的記憶體，實際容量取決於瀏覽器和模型結構。
+虛擬總覽可拖曳平移、滾輪／＋− 縮放，按「全圖」或 Home 還原全圖；方向鍵平移，Enter 開啟選取節點。搜尋可直接定位畫面外的匹配，單組展開／全部展開後仍使用同樣視窗機制；字級及圖方向變更會重算座標。總覽下拉選單在結果超過 1,500 筆時列前 1,000 組獨立匹配及目前選取，其餘仍可透過分頁搜尋清單定位。詳情、pattern 儲存與模型匯出使用原始 OP。Canvas 總覽按「選取 pattern」可直接跨 blocks 框選，滑鼠拖曳加入相交的原始 OP、點選切換、Alt＋拖曳平移；縮放與平移後以反向座標轉換查詢空間索引。框選範圍限於實際畫布，不會加入視窗外預載節點、收合節點或控制標記；收合節點可在選取模式中點開再選。未完成的框選在 Escape、滾輪、重畫、捲動、失焦、縮放或 resize 時取消。選取跨 block 保留，最多 256 個原始 OP，須在同一 function／region 或 TFLite subgraph，超限／跨範圍時保留原選取並提示。可加入視窗內的 layers、從選取的 block 清單定位，或匯出所選子模型。儲存並搜尋後留在全模型總覽，字級和方向重畫仍保留原始選取；SVG 收合總覽請返回匹配圖再圈選。搜尋本身的 50,000 筆與工作量保護仍適用。虛擬繪圖降低畫面繪製負擔，但全圖索引與座標仍需要與節點／連線數成比例的記憶體，實際容量取決於瀏覽器和模型結構。
 
 點選搜尋結果後，可用圖上方「收合 pattern」將目前匹配收成一個節點；點節點或按 Enter／Space 重新展開。支援 TFLite 與 MLIR。收合僅改變顯示，搜尋結果、圈選來源及匯出仍使用原始 OP；需先展開才能圈選。MLIR 一併收起相關 block 標頭、內部 arguments、控制標記與必要 terminators，保留各個對外 SSA、分支出口及傳值。跨越 pattern 邊界的迴圈仍顯示去向與回跳；完全位於內部的迴圈在展開後查看。圖上以「外部 block」標示未展開的相鄰控制範圍，不會將省略的 OP 當成匹配內容。
 
-在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 32 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。
+在 MLIR 按「選取 pattern」，勾選「跨 block 保留選取」，再切換 blocks 點選 layers，或按「加入目前 block 全部 layers」。選取清單可跳回各 block 或移除；總計最多 256 個 operators。儲存後可搜尋分支、匯合及迴圈，包括 self-loop 和透過 block arguments 傳遞的 loop-carried SSA。
 
 點跨 block 結果會將相關 blocks 畫在同一張圖，以區塊框線區分範圍。藍色虛線顯示實際控制出口與迴圈回跳，實線顯示 SSA 和 block argument 傳值；出口與 argument 顯示節點是檢視用標記，不會寫入原始 IR 或匯出檔。點 block 按鈕直接在同圖定位並保留排版與縮放；「全部 blocks」重新縮放以檢視總覽。預設局部圖只含匹配 operators、必要 terminators、block arguments 與相關 blocks 之間的 successor；省略的資料來源標成邊界輸入，不會跨越省略 blocks 畫假連線。完整圖展開相關 blocks 的所有 operators，最多 1,500 operators、512 個控制出口。
 
-在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 32 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；MLIR 匯出範圍可選局部選取或完整 function。
+在總覽按「選取 pattern」即可直接點選不同 blocks 的原始 layers，不切換圖形；綠色表示本次選取，Enter／Space 也可加入或取消。block 標題、出口、argument 標記不能選入，儲存時自動擷取 block arguments、SSA 與控制流程。選取以原始 block／layer 編號記錄，不會混淆不同 blocks 的相同 layer 編號。可一次加入目前 block 可見 layers 或整張圖可見 layers，超過 256 個 operators 時整次加入不生效；選取清單支援同圖定位、移除單一 block 與全部清除。切換字級、圖方向與完整／局部圖會保留選取。儲存後仍可匯出／匯入 version 2 pattern JSON；MLIR 匯出範圍可選局部選取或完整 function。
 
-選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 32 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
+選取模式支援滑鼠左鍵拖曳框選，可從空白或 layer 上開始，往任一方向跨越多個 blocks；與選框有面積重疊的原始 layers 會加入現有選取，重複框選不會取消或重複加入。拖曳期間預覽命中節點及數量，放開後套用；超過 256 個 layers 時整次框選不生效。點選 layer 仍可單獨加入／取消，Alt＋左鍵拖曳保留平移；未啟用選取時沿用一般拖曳平移。Esc 可取消正在拖曳的選框；捲動、縮放、重畫或切換頁面時取消未完成的框選。手機觸控仍沿用原有點選及手勢。
 
 跨 block 模式在同一 region 內比對 operator 類型、相對順序、block membership、SSA operand／result ports、branch argument routing 與 successor 順序；不跨 function 或巢狀 region，也不比對模型名稱、block labels、SSA 名稱；未加條件時不比對型別 shape 或 attributes。「目前 subgraph」在此模式指其所在完整 region。未選取內容仍是外部邊界；若要限制一個 block 的完整內容，請選入需要的全部 operators。
 
@@ -152,7 +156,7 @@ TFLite 解析與搜尋在專用 worker 執行。自訂同步 range stream 使用
 
 檔案達 1 GiB，或模型超過 500 個 operators 時，預設只建立索引。點選結果才繪製一層鄰接範圍的局部圖（最多 100 個 operators）。Tensor 有大量 consumers 時先以最多 20 個相連 operators 為中心。完整圖可手動開啟；超過 1,500 個 operators 時會先顯示提示。
 
-單組 pattern 最多 32 個 operators，匹配結果最多 50,000 筆；達上限會提示縮小搜尋範圍。原始模型不寫入 localStorage／IndexedDB，不加入版本庫或部署包。
+單組 pattern 最多 256 個 operators，匹配結果最多 50,000 筆；達上限會提示縮小搜尋範圍。原始模型不寫入 localStorage／IndexedDB，不加入版本庫或部署包。
 
 連接結構預設使用選單，以三節點的 `Reshape → Transpose → Reshape` 開始：選擇 operator 建立節點，再以起點／終點選單連線，節點編號自動產生。分支／匯合範本一鍵帶入五個節點與五條連線；刪除 Add 節點時相關連線會一併移除，可建立兩個出口的模式。搜尋成功後編輯區收合，點「編輯結構」可重新展開。
 
@@ -169,7 +173,7 @@ Mul0 -> BMM0 -> BMM1 -> Add0
 
 這會要求兩條支線共用同一個 Mul0 和 Add0。Mul0／Add0 都是查詢別名，不是模型中的 layer 名稱或編號；匹配只依 operator 類型與連線。也能用 `m:Mul -> f:FullyConnected -> a:Add` 與 `m -> b0:BMM -> b1:BMM -> a` 明確指定別名及類型。介面顯示別名對應的實際類型，缺少該類型時會提示；不自動將 MatMul、BatchMatMul 和 custom operator 視為等價。拿掉兩條路徑末端的 Add0，就能搜尋具有 FC、BMM1 兩個出口的子圖。
 
-匹配依直接 tensor 連接，不限制輸入／輸出 port 順序，不要求出口是整個模型的 outputs，允許額外連線。這個進階文字語法不支援循環；跨 block 的 MLIR 分支、匯合與迴圈，可從同一 function／region 的圖上圈選建立控制流程 pattern。最多 16 條路徑、32 個節點、64 條連線。計算超過 2,000,000 次候選展開會回傳目前結果並明確提示不完整。內建分支／匯合示範僅重現指定連線結構，不代表特定演算法的語意或可執行性。
+匹配依直接 tensor 連接，不限制輸入／輸出 port 順序，不要求出口是整個模型的 outputs，允許額外連線。這個進階文字語法不支援循環；跨 block 的 MLIR 分支、匯合與迴圈，可從同一 function／region 的圖上圈選建立控制流程 pattern。最多 16 條路徑、256 個節點、4,096 條連線。計算超過 2,000,000 次候選展開會回傳目前結果並明確提示不完整。內建分支／匯合示範僅重現指定連線結構，不代表特定演算法的語意或可執行性。
 
 搜尋索引會快取 operator 類型和正規化結果。連通子圖搜尋從已匹配節點的相鄰候選擴展，避免每一層重新掃描未相連的整張圖。候選篩選及線性路徑搜尋也設有 2,000,000 次工作量上限；定期讓出 worker 以處理新查詢，達上限會標示結果不完整。
 

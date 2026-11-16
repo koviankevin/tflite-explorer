@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import { Host } from '../vendor/netron/browser.js';
 import { View, Attachment } from '../vendor/netron/view.js';
 import { hydrate } from './hydrate.js';
@@ -940,6 +941,7 @@ function refreshPickedNodes() {
     $('add-visible-layers').hidden=!renderedGraph?.combined;
     $('add-capture-block').textContent=renderedGraph?.combined?'加入此 block 可見 layers':'加入目前 block 全部 layers';
     $('capture-hint').textContent=virtualOverview?'Canvas 拖曳框選切換原始 OP（已選取消、未選加入），可跨 blocks；Alt＋拖曳平移，滾輪縮放，點選加入／取消。鍵盤 Tab 到節點，Enter／Space 切換；方向鍵平移，＋／－縮放。綠色為已選；收合節點點開後再選，控制標記不加入。':renderedGraph?.combined?`拖曳框選切換 layers（已選取消、未選加入），可跨 block；點選可加入／取消，Alt＋拖曳平移。${renderedGraph.compactSlice?'點連線可展開／收起，已選 layers 會保留。':''}綠色為已選取；控制標記不會存入 pattern。`:'拖曳框選切換 layers（已選取消、未選加入）；點選可加入／取消，Alt＋拖曳平移。';
+    $('capture-hint').textContent+=` 一次最多 ${PATTERN_LIMITS.operators} 個原始 OP；實際模型編輯工作區另限 64 個。`;
     $('add-visible-layers').textContent=virtualOverview?'加入視窗內 layers':'選取圖中全部 layers';
     const whole=$('mlir-export-scope').value==='function';
     $('capture-count').textContent = `已選取 ${count} 個 layers${across ? ` · ${[...cfgSelections.values()].filter(s=>s.size).length} 個 blocks` : ''}${cfg ? whole ? ` · MLIR 匯出保留 @${cfg.function} 的完整 ${cfg.blocks} 個 blocks` : ' · 局部匯出將補足必要的控制節點與迴圈運算' : ''}`;
@@ -1078,7 +1080,7 @@ function commitCanvasLayers(nodes,{toggle=false}={}) {
     const locations=nodes.map(node=>layerLocation({node,index:node.identifier},currentGraph)).filter(Boolean),across=$('capture-cfg').checked;
     const selections=across?cfgSelections:new Map([[pickedGraph,pickedNodes]]);
     try {
-        if(!updateLayerSelection(selections,locations,{toggle,scopeForGraph:g=>model.sourceFormat==='mlir'?renderedGraph.captureScopes.get(g):g})){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
+        if(!updateLayerSelection(selections,locations,{toggle,scopeForGraph:g=>model.sourceFormat==='mlir'?renderedGraph.captureScopes.get(g):g})){notice(`框選後會超過 ${PATTERN_LIMITS.operators} 個 layers；已保留原選取，請縮小選框。`);return;}
         if(locations.length){setCurrentGraph(locations[0].graph);if(across)syncCaptureGraph();else{pickedGraph=currentGraph;pickedNodes=selections.get(currentGraph);}}
         refreshPickedNodes();status(locations.length?`${toggle?'已切換':'已加入框選範圍內'} ${locations.length} 個原始 layers；跨 block 選取會保留，重複 layers 不重複加入。`:'範圍內沒有可選取的原始 OP；收合節點及控制標記未加入。');
     }catch(error){report(error);}
@@ -1089,13 +1091,13 @@ function syncCaptureGraph() {
 }
 function togglePickedNode(location) {
     if($('capture-cfg').checked) {
-        if(!updateLayerSelection(cfgSelections,[location],{toggle:true})){notice('一組 pattern 最多選取 32 個 layers。');return;}
+        if(!updateLayerSelection(cfgSelections,[location],{toggle:true})){notice(`一組 pattern 最多選取 ${PATTERN_LIMITS.operators} 個 layers。`);return;}
         if(renderedGraph?.combined){setCurrentGraph(location.graph);if(selection?.blocks)renderMatchBlocks(selection);}
         syncCaptureGraph();refreshPickedNodes();return;
     }
     const index=location.node;
     const count=$('capture-cfg').checked ? captureSelections().reduce((n,b)=>n+b.nodes.length,0) : pickedNodes.size;
-    if (!pickedNodes.has(index) && count >= 32) { notice('一組 pattern 最多選取 32 個 layers。'); return; }
+    if (!pickedNodes.has(index) && count >= PATTERN_LIMITS.operators) { notice(`一組 pattern 最多選取 ${PATTERN_LIMITS.operators} 個 layers。`); return; }
     if (pickedNodes.has(index)) pickedNodes.delete(index); else pickedNodes.add(index);
     refreshPickedNodes();
 }
@@ -1119,7 +1121,7 @@ const layerMarquee=rectangleSelection($('target'),{
     candidates:()=>renderedNodes.map(entry=>{const location=layerLocation(entry,currentGraph);return {element:entry.element,location,selected:!!location&&!!($('capture-cfg').checked?cfgSelections.get(location.graph):pickedNodes)?.has(location.node)};}).filter(c=>c.element && c.location),
     commit:locations=>{
         const across=$('capture-cfg').checked,selections=across?cfgSelections:new Map([[currentGraph,pickedNodes]]);
-        if(!updateLayerSelection(selections,locations,{toggle:true})){notice('框選後會超過 32 個 layers；已保留原選取，請縮小選框。');return;}
+        if(!updateLayerSelection(selections,locations,{toggle:true})){notice(`框選後會超過 ${PATTERN_LIMITS.operators} 個 layers；已保留原選取，請縮小選框。`);return;}
         if(across)syncCaptureGraph();refreshPickedNodes();
         status(locations.length?`已切換框選範圍內 ${locations.length} 個 layers；已選的取消，未選的加入。`:'框選範圍內沒有可選取的 layers。');
     }
@@ -1201,13 +1203,13 @@ $('capture-cfg').onchange=()=>{cfgSelections.clear();if($('capture-cfg').checked
 $('add-capture-block').onclick=()=>{
     if(renderedGraph?.combined){addVisibleLayers(currentGraph);return;}
     const total=captureSelections().reduce((n,b)=>n+b.nodes.length,0),layers=model?.graphs[currentGraph]?.layers || 0;
-    if(total+layers-pickedNodes.size>32){notice('加入整個 block 會超過 32 個 operators；請改為點選需要的 layers。');return;}
+    if(total+layers-pickedNodes.size>PATTERN_LIMITS.operators){notice(`加入整個 block 會超過 ${PATTERN_LIMITS.operators} 個 operators；請改為點選需要的 layers。`);return;}
     for(let n=0;n<layers;n++)pickedNodes.add(n);cfgSelections.set(currentGraph,pickedNodes);refreshPickedNodes();
 };
 function addVisibleLayers(graph) {
     if(virtualOverview){commitCanvasLayers(virtualOverview.visibleLayers().filter(node=>graph===undefined || node.sourceGraph===graph));return;}
     const locations=renderedNodes.map(entry=>layerLocation(entry,currentGraph)).filter(location=>location && (graph===undefined || location.graph===graph));
-    if(!updateLayerSelection(cfgSelections,locations)){notice('加入可見 layers 會超過 32 個 operators；請改為點選需要的 layers。');return;}
+    if(!updateLayerSelection(cfgSelections,locations)){notice(`加入可見 layers 會超過 ${PATTERN_LIMITS.operators} 個 operators；請改為點選需要的 layers。`);return;}
     syncCaptureGraph();refreshPickedNodes();
 }
 $('add-visible-layers').onclick=()=>addVisibleLayers();
@@ -1369,7 +1371,7 @@ $('graph-input-mode').onchange = () => {
     updateGraphInputMode();
 };
 $('lora-preset').onclick = () => { editorLibrary=patternLibrary.slice();loraPreset(); $('graph-induced').checked = false; $('saved-pattern').value = ''; $('graph-pattern').value = LORA_PATTERN; $('visual-pattern-editor').open = true; renderVisualPattern(); };
-$('add-graph-node').onclick = () => { if (graphNodes.length >= 32) { notice('一組子圖最多 32 個節點。'); return; } graphNodes.push({alias:`N${++graphNodeNumber}`,type:model?.operators[0] || 'Mul'}); renderVisualPattern(); };
+$('add-graph-node').onclick = () => { if (graphNodes.length >= PATTERN_LIMITS.operators) { notice(`一組子圖最多 ${PATTERN_LIMITS.operators} 個節點。`); return; } graphNodes.push({alias:`N${++graphNodeNumber}`,type:model?.operators[0] || 'Mul'}); renderVisualPattern(); };
 $('add-graph-edge').onclick = () => { if (graphNodes.length < 2) { notice('請先加入至少兩個節點。'); return; } if (graphEdges.length >= 64) { notice('一組子圖最多 64 條連線。'); return; } graphEdges.push({from:graphNodes[0].alias,to:graphNodes.at(-1).alias}); renderVisualPattern(); };
 $('graph-pattern').oninput = () => { conditionUI.render();$('pattern-decoded').textContent = '規則已變更，請按「尋找模式」重新解讀與搜尋。'; $('pattern-decoded').classList.remove('missing'); };
 $('previous-page').onclick = () => changePage(Math.max(0, page.offset - 100)).catch(report);
