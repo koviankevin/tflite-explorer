@@ -139,3 +139,9 @@ export function softmaxValidationRequired(version){
     const [major,minor,patch]=version.match(/^\d+\.\d+\.\d+/)[0].split('.').map(Number);
     return major>1||major===1&&(minor>12||minor===12&&patch>=4);
 }
+
+export function runtimeSupportRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor,patch]=version.match(/^\d+\.\d+\.\d+/)[0].split('.').map(Number);
+    return major>1||major===1&&(minor>12||minor===12&&patch>=5);
+}

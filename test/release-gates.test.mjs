@@ -10,6 +10,8 @@ import {VALUE_SHAPE_EXPECTATIONS} from './browser/value-shape-proof.mjs';
 import {VALUE_SHAPE_RUNTIME_CHECK} from './browser/value-shape-runtime-flow.mjs';
 import {RUNTIME_ENGINE,RUNTIME_INTERPRETER_ENGINE} from '../src/tflite-runtime-policy.js';
 import {SOFTMAX_EXPECTATIONS} from './browser/softmax-proof.mjs';
+import {RUNTIME_SUPPORT_EXPECTATIONS} from './browser/runtime-support-proof.mjs';
+import {RUNTIME_SUPPORT_CHECK} from './browser/runtime-support-flow.mjs';
 import {SOFTMAX_VALIDATION_CHECK} from './browser/softmax-validation-flow.mjs';
 const repository='koviankevin/tflite-explorer',commit='a'.repeat(40),tree='b'.repeat(40);
 function evidence(kind='browser'){
@@ -182,6 +184,9 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.equal(assertSiteOperations(valueReport,valueSite,broadcast,comparisonChecker).checks,53);
     const softmaxRelease={...release,version:'1.12.4'},softmaxSite={...site,candidate:softmaxRelease},softmaxReport={...valueReport,siteRelease:softmaxRelease,checks:[...valueReport.checks,SOFTMAX_VALIDATION_CHECK],softmaxValidation:{status:'passed',modelWorkers:16,runtimeWorkers:4,downloads:16,allWorkersClosed:true,cases:SOFTMAX_EXPECTATIONS.map(([name,modelSHA256,status,expected])=>({name,modelSHA256,status,...(status==='rejected'?{runtimeWorkers:0,downloads:0,preflight:'subgraph 0 OP #0 SOFTMAX invalid metadata',error:'Subgraph #0 OP #0 SOFTMAX invalid metadata'}:{operators:2,reopened:true,quantizationPreserved:true,byteComparison:'not-applicable',outputSHA256:'a'.repeat(64),automaticRuntime:false,...(expected?{inputsMatch:true,numericMatches:true,zipSHA256:'b'.repeat(64),expected,output:expected}:{})})}))}};
     assert.equal(assertSiteOperations(softmaxReport,softmaxSite,broadcast,comparisonChecker).checks,54);
+    const supportRelease={...release,version:'1.12.5'},supportSite={...site,candidate:supportRelease},supportReport={...softmaxReport,siteRelease:supportRelease,checks:[...softmaxReport.checks,RUNTIME_SUPPORT_CHECK],runtimeSupport:{status:'passed',modelWorkers:3,runtimeWorkers:3,downloads:2,allWorkersClosed:true,cases:RUNTIME_SUPPORT_EXPECTATIONS.map(([name,modelSHA256,status,axisHash])=>({name,modelSHA256,status,automaticRuntime:false,inputSHA256:['24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202',axisHash],...(status==='not-verified'?{ioAbsent:true,message:"本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'."}:{recordedStatus:status,compiled:true,invoked:status==='passed',inputsMatch:true,zipSHA256:'a'.repeat(64),...(status==='failed'?{outputSaved:false,message:'本機執行檢查：失敗。'}:{outputSHA256:'b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd',numericMatches:true,output:[1,4,2,5,3,6]})})}))}};
+    assert.equal(assertSiteOperations(supportReport,supportSite,broadcast,comparisonChecker).checks,55);
+    for(const change of [r=>delete r.runtimeSupport,r=>r.runtimeSupport.cases[0].status='failed',r=>r.runtimeSupport.cases[1].status='not-verified',r=>r.runtimeSupport.cases[1].invoked=true,r=>r.runtimeSupport.cases[2].output[0]=0,r=>r.runtimeSupport.modelWorkers--,r=>r.checks.pop()]){const broken=structuredClone(supportReport);change(broken);assert.throws(()=>assertSiteOperations(broken,supportSite,broadcast,comparisonChecker));}
     for(const change of [r=>delete r.softmaxValidation,r=>r.softmaxValidation.cases[0].downloads++,r=>r.softmaxValidation.cases[4].output=[0,0,0,0,0,0],r=>r.softmaxValidation.cases[8].status='passed',r=>r.softmaxValidation.modelWorkers--,r=>r.checks.pop()]){
         const broken=structuredClone(softmaxReport);change(broken);assert.throws(()=>assertSiteOperations(broken,softmaxSite,broadcast,comparisonChecker));
     }
