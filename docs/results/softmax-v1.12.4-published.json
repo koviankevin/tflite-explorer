@@ -1,0 +1,1049 @@
+{
+  "format": "model-lens-softmax-metadata-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-16T22:01:08.178Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.4",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "127d3ce78ad4cf47fb074e22ba897d24ee45a657",
+      "tree": "59a1bb553ea02fb8d7e941deebda58a7892d8d0d",
+      "committedAt": "2026-11-17T05:46:34+08:00",
+      "dirty": false
+    },
+    "buildId": "f8a2d9d3ac4f8501"
+  },
+  "prepareRun": 43963532742,
+  "run": {
+    "id": 43964049670,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43964049670",
+    "attempt": 1
+  },
+  "releaseId": 447670891,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4",
+  "publishedAt": "2026-11-16T21:59:51Z",
+  "tagSource": "127d3ce78ad4cf47fb074e22ba897d24ee45a657",
+  "latest": "v1.12.4",
+  "siteId": "3f463fd811ac5b36f2238a907676f477506522cdbd357ce7917f8a2a7b84182b",
+  "siteManifestSHA256": "c49d9efeb4c22b8b641c68f7c2d5261e345c2fe507ec5f1d427ba797e31877fb",
+  "coreFiles": 355,
+  "siteFiles": 1549,
+  "assets": [
+    {
+      "name": "model-lens-public-1.12.4-f8a2d9d3ac4f8501.zip",
+      "bytes": 45231753,
+      "sha256": "d935855999ab3e1b4c414601b039faf88a7c2744a858362a9db97a82b64a6203",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.4/model-lens-public-1.12.4-f8a2d9d3ac4f8501.zip"
+    },
+    {
+      "name": "model-lens-public-1.12.4-f8a2d9d3ac4f8501.zip.sha256",
+      "bytes": 112,
+      "sha256": "174cff3b106432fb6849a4708c8132ad6ca93577d8dcebd2d5e593ba4370a263",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.4/model-lens-public-1.12.4-f8a2d9d3ac4f8501.zip.sha256"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 230196,
+      "sha256": "7bc9e52dcf44710da738ba6eb3856b29af3d574f46694fbac575d51d1303fe49",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.4/release-gates.json"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 57644,
+      "sha256": "a86a81e816e84cef3d46e2ff3516f44d81d4e993005a77d13c1aaece21c5c5b1",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.4/release-manifest.json"
+    }
+  ],
+  "deployment": {
+    "id": 7837383749,
+    "source": "127d3ce78ad4cf47fb074e22ba897d24ee45a657",
+    "status": "success"
+  },
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 43959891843,
+      "reused": true
+    },
+    {
+      "kind": "browser",
+      "runId": 43959902520,
+      "reused": true
+    },
+    {
+      "kind": "contract",
+      "runId": 43959913007,
+      "reused": true
+    },
+    {
+      "kind": "site",
+      "runId": 43959924061,
+      "reused": true
+    }
+  ],
+  "mainGateReviews": {
+    "core": {
+      "status": "passed",
+      "run": 43959891843,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "tree": "c634a851e96e4d90983fefa2f98e0ea5a010bf25",
+      "artifactId": 14274725341,
+      "digest": "sha256:6439667d0b5b9e5e115af40f51f3887cbf7a1284578780fd4db71af69c86971c",
+      "reportSHA256": "cd80e053dc5bab2087e58c9a87f5ea4966f2bf9a3334347e2de47e67adb68e23",
+      "scopeFingerprint": "91d96cc4c3af3f66fc99da9b78d1b6512a9e8a76af82a9239c84a4c4d4ef39d7",
+      "scopeFiles": 93
+    },
+    "contract": {
+      "status": "passed",
+      "run": 43959913007,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "tree": "c634a851e96e4d90983fefa2f98e0ea5a010bf25",
+      "artifactId": 14273123997,
+      "digest": "sha256:4d68addf4546595815e9be3f866cf28741b59e3f0ba5a9ac59820b99565e8147",
+      "reportSHA256": "02f46d478f1fd08f3991f11dc71f5fef228abcdd4f7def75564935435081ed7b",
+      "scopeFingerprint": "674fbed5139f295f1aefbefa2e9a235add2c538849129b261fa6dd1385e7388b",
+      "scopeFiles": 759
+    },
+    "site": {
+      "status": "passed",
+      "run": 43959924061,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "tree": "c634a851e96e4d90983fefa2f98e0ea5a010bf25",
+      "artifactId": 14275250467,
+      "digest": "sha256:82fd7a40ad7103990ecfce908ed70985947b2ff880ec7a079aa574c400727c1a",
+      "reportSHA256": "4f79bacd7fc608112bcc1b0bc35fd5df24245924d3c7f260f85ebd380b9f3175",
+      "scopeFingerprint": "1d5bee9081d321dd0a79fa118bc320d3c5f414bbe0a004d5d8c225911ce6f545",
+      "scopeFiles": 442,
+      "operations": {
+        "checks": 54,
+        "buildId": "84887a25d20b31ec",
+        "siteId": "41e8889a20bce4b803809e095d44ae5acc47b28c8f508dddb20d6a68c3e437fa",
+        "artifactId": 14275120843,
+        "digest": "sha256:45a6ffebfeab5fd74ac201b1ea529f70ae097b1ac3c202e2526734fb2caf994c",
+        "reportSHA256": "236fd0b0f4fda91bb1b198907984e03e3a8c3751d73e56bab51ab67dfc352b00"
+      }
+    },
+    "browser": {
+      "status": "passed",
+      "run": 43959902520,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "tree": "c634a851e96e4d90983fefa2f98e0ea5a010bf25",
+      "artifactId": 14275236800,
+      "digest": "sha256:0fb89bd996a36a849dfb6a63a215435b1c4c8c3e53d8ce341d6aa5518e153b04",
+      "reportSHA256": "b06ebe5a9df5712c5f1c90b84b9bd75707d0aafbd953041680bf02f3662e0871",
+      "scopeFingerprint": "4146c871bc32242925e76ca1be37841391b9c26ad5c743f8f2add71d03f8d0ee",
+      "scopeFiles": 377,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 712235.8857142857,
+          "rssDriftBytes": 12595200,
+          "mainHeapDriftBytes": 691300,
+          "sampledPeakRssBytes": 1007112192,
+          "sampledPeakGrowthBytes": 494804992
+        }
+      }
+    }
+  },
+  "evidencePRReview": {
+    "status": "passed",
+    "pr": 306,
+    "head": "207394d9f2b43e2af7459e27be9587b5398864f4",
+    "base": "48f4d2f401953306c864c264213f718011db81f3",
+    "tree": "59a1bb553ea02fb8d7e941deebda58a7892d8d0d",
+    "runs": {
+      "node": {
+        "run": 43963060589,
+        "job": 133635262013,
+        "source": "207394d9f2b43e2af7459e27be9587b5398864f4",
+        "conclusion": "success",
+        "runtimeAndBuild": "not required by unchanged runtime scope"
+      },
+      "contract": {
+        "run": 43963060613,
+        "job": 133635262811,
+        "source": "207394d9f2b43e2af7459e27be9587b5398864f4",
+        "conclusion": "success",
+        "status": "not_required",
+        "artifactId": 14274223132,
+        "digest": "sha256:9a3c4ea25ae4d0749b8a8bb7dc824291941c8e444cf8e87bcdbf55ff085f6705",
+        "reportSHA256": "3a0332dd1ecc904e669e3dd9f7bd9bcc6b94d6bc72ed55e213f83fde22faae4d",
+        "scopeFingerprint": "674fbed5139f295f1aefbefa2e9a235add2c538849129b261fa6dd1385e7388b"
+      }
+    },
+    "testedMerge": "66fe19778712fa603f36ba086278dfbd6a109317"
+  },
+  "formal": {
+    "status": "passed",
+    "at": "2026-11-16T22:00:54.560Z",
+    "run": 43964049670,
+    "attempt": 1,
+    "artifactId": 14276215494,
+    "digest": "sha256:c3f25a1faa1752688eb1a7707cf7729834412ca07e4e1ed92ce154806e3e2b84",
+    "formalHTTP": {
+      "files": 1549,
+      "sha256": "24ec935b2960df3beb8bf93dc27bd4740efa9a0892c094fdbc078057f44746ab",
+      "retries": 0
+    },
+    "formalBrowser": {
+      "checks": 54,
+      "modelWorkers": 215,
+      "allWorkers": 307,
+      "allClosed": true,
+      "processesReaped": true,
+      "numericalCases": 4,
+      "softmax": {
+        "status": "passed",
+        "cases": [
+          {
+            "name": "SOFTMAX-bad-shape",
+            "modelSHA256": "647b3b0cabb2ba61ebbbb559f78719735f538f49da99059af3d5adb066cf564c",
+            "status": "rejected",
+            "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+            "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX output rank 必須與 input 相同。",
+            "runtimeWorkers": 0,
+            "downloads": 0
+          },
+          {
+            "name": "SOFTMAX-bad-dtype",
+            "modelSHA256": "021ca839908ab9a90f4ff24e3fdbcf10777a83e06f81a5a0f3b495b2c00df07a",
+            "status": "rejected",
+            "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+            "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+            "runtimeWorkers": 0,
+            "downloads": 0
+          },
+          {
+            "name": "LOG_SOFTMAX-bad-shape",
+            "modelSHA256": "3893cca49832062c08659f29c4147f3424bab9e246314c095014a61451a2b5e3",
+            "status": "rejected",
+            "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+            "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX output rank 必須與 input 相同。",
+            "runtimeWorkers": 0,
+            "downloads": 0
+          },
+          {
+            "name": "LOG_SOFTMAX-bad-dtype",
+            "modelSHA256": "77372d41e4307911f1eee312255b56b05237c617fbaa1c76444b12b813ac99f4",
+            "status": "rejected",
+            "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+            "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+            "runtimeWorkers": 0,
+            "downloads": 0
+          },
+          {
+            "name": "SOFTMAX-float",
+            "modelSHA256": "d255fdd1d71f94f0046ef9ed58def823d1d4fb9950c6c35d620d878c9acd29cd",
+            "status": "passed",
+            "automaticRuntime": false,
+            "output": [
+              0.09003056585788727,
+              0.2447284758090973,
+              0.6652408838272095,
+              0.09003056585788727,
+              0.2447284758090973,
+              0.6652408838272095
+            ],
+            "expected": [
+              0.09003057317038046,
+              0.24472847105479764,
+              0.6652409557748218,
+              0.09003057317038046,
+              0.24472847105479764,
+              0.6652409557748218
+            ],
+            "zipSHA256": "7a193a35ff8fe466f63419a58396be20c13ca3ca592f4db0e90b2770f96c963b",
+            "inputsMatch": true,
+            "numericMatches": true,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "fec065cc5ffe33ebc3dad07b78f107957562fb5c4410ce0991c8b834bd7d6233",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          },
+          {
+            "name": "LOG_SOFTMAX-float",
+            "modelSHA256": "07e4d7094ce190d4a6e5ac8c1695206971086baf369ca943b37ba7a31d516190",
+            "status": "passed",
+            "automaticRuntime": false,
+            "output": [
+              -2.4076058864593506,
+              -1.4076058864593506,
+              -0.40760594606399536,
+              -2.4076058864593506,
+              -1.4076058864593506,
+              -0.40760594606399536
+            ],
+            "expected": [
+              -2.4076059644443806,
+              -1.4076059644443804,
+              -0.4076059644443804,
+              -2.4076059644443806,
+              -1.4076059644443804,
+              -0.4076059644443804
+            ],
+            "zipSHA256": "6cc62ddfe693a21c9081b551088262438a58896a7b3e5c791df260afa74029ce",
+            "inputsMatch": true,
+            "numericMatches": true,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "92ec11bb1d7afd4ddc40a09a70e0600f7e480bb46aca3b06a939b7045901879c",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          },
+          {
+            "name": "SOFTMAX-beta-0",
+            "modelSHA256": "8694b78196ac37632f6edb908f6dc9d181ff292d918e22dcad7b5f62a6e5c4b6",
+            "status": "passed",
+            "automaticRuntime": false,
+            "output": [
+              0.3333333432674408,
+              0.3333333432674408,
+              0.3333333432674408,
+              0.3333333432674408,
+              0.3333333432674408,
+              0.3333333432674408
+            ],
+            "expected": [
+              0.3333333333333333,
+              0.3333333333333333,
+              0.3333333333333333,
+              0.3333333333333333,
+              0.3333333333333333,
+              0.3333333333333333
+            ],
+            "zipSHA256": "cb66d2406041e533693b0420fcf1d34c848fc6e281a8c848704632562e2c9f16",
+            "inputsMatch": true,
+            "numericMatches": true,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "7d9efc9ebb58b354de60a96a3c555a719f827a106e86f5ad8bbb42dcf9b2f47f",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          },
+          {
+            "name": "SOFTMAX-beta--1",
+            "modelSHA256": "5196e0aeb5be875a5a845fd121e71ee7022803b96dfb1839b3bde3e22faf5601",
+            "status": "passed",
+            "automaticRuntime": false,
+            "output": [
+              0.6652409434318542,
+              0.2447284609079361,
+              0.09003057330846786,
+              0.6652409434318542,
+              0.2447284609079361,
+              0.09003057330846786
+            ],
+            "expected": [
+              0.6652409557748218,
+              0.24472847105479764,
+              0.09003057317038046,
+              0.6652409557748218,
+              0.24472847105479764,
+              0.09003057317038046
+            ],
+            "zipSHA256": "23641a0a848443c25df273b952cbdf6d3130bb0463eafd51aa5a46bcbb83d7d1",
+            "inputsMatch": true,
+            "numericMatches": true,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "c271265ce719a15508dc4c2650d9aebd08c6cd6f37f2875becdda29c3028b694",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          },
+          {
+            "name": "SOFTMAX-3-to-7",
+            "modelSHA256": "311752a31711f8ccd55ef43c0655483c98a88f923fee5dfbe68b287ebecc0c98",
+            "status": "not-run",
+            "automaticRuntime": false,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "c9f37c002171a0c0c44c75a643720ae4f7f6f97f0cc141216076d574ef2ff4fc",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          },
+          {
+            "name": "SOFTMAX-9-to-7",
+            "modelSHA256": "fe01588601ca8709cc9af433c522e5cb327772ef6a7d19a8623f15b3fd27ae97",
+            "status": "not-run",
+            "automaticRuntime": false,
+            "byteComparison": "not-applicable",
+            "outputSHA256": "e0f18ccac1c88d989a282a67bb27c625ef02267ae9eff0bea98b78f734644189",
+            "operators": 2,
+            "reopened": true,
+            "quantizationPreserved": true
+          }
+        ],
+        "modelWorkers": 16,
+        "runtimeWorkers": 4,
+        "downloads": 16,
+        "allWorkersClosed": true
+      },
+      "sha256": "fcb59f359ba5adf29c27ddd8efd1a34f6a800536e1572aa20372b48bb69b979e"
+    },
+    "nativeWindows": {
+      "casesPerBrowser": 10,
+      "browsers": [
+        "chrome",
+        "msedge"
+      ],
+      "allWorkersClosed": true,
+      "sha256": "4fc04ab129f6e4ae92f28d4f72edbcbd2c95e6eabbdc882898a27a4f260198c1",
+      "workerCounts": [
+        {
+          "channel": "chrome",
+          "model": 16,
+          "runtime": 4,
+          "layout": 1,
+          "recovery": 1,
+          "allClosed": true
+        },
+        {
+          "channel": "msedge",
+          "model": 16,
+          "runtime": 4,
+          "layout": 1,
+          "recovery": 0,
+          "allClosed": true
+        }
+      ]
+    }
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "at": "2026-11-16T21:51:29.313Z",
+    "build": "f8a2d9d3ac4f8501",
+    "siteId": "3f463fd811ac5b36f2238a907676f477506522cdbd357ce7917f8a2a7b84182b",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/vendor/netron/worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/edit-recovery-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "SOFTMAX-bad-shape",
+              "modelSHA256": "647b3b0cabb2ba61ebbbb559f78719735f538f49da99059af3d5adb066cf564c",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX output rank 必須與 input 相同。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "SOFTMAX-bad-dtype",
+              "modelSHA256": "021ca839908ab9a90f4ff24e3fdbcf10777a83e06f81a5a0f3b495b2c00df07a",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "LOG_SOFTMAX-bad-shape",
+              "modelSHA256": "3893cca49832062c08659f29c4147f3424bab9e246314c095014a61451a2b5e3",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX output rank 必須與 input 相同。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "LOG_SOFTMAX-bad-dtype",
+              "modelSHA256": "77372d41e4307911f1eee312255b56b05237c617fbaa1c76444b12b813ac99f4",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "SOFTMAX-float",
+              "modelSHA256": "d255fdd1d71f94f0046ef9ed58def823d1d4fb9950c6c35d620d878c9acd29cd",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.09003056585788727,
+                0.2447284758090973,
+                0.6652408838272095,
+                0.09003056585788727,
+                0.2447284758090973,
+                0.6652408838272095
+              ],
+              "expected": [
+                0.09003057317038046,
+                0.24472847105479764,
+                0.6652409557748218,
+                0.09003057317038046,
+                0.24472847105479764,
+                0.6652409557748218
+              ],
+              "zipSHA256": "c7c1a393bc4502db84ea045bae8333746f3210b18f2de6f93643c862140d2e58",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "fec065cc5ffe33ebc3dad07b78f107957562fb5c4410ce0991c8b834bd7d6233",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "LOG_SOFTMAX-float",
+              "modelSHA256": "07e4d7094ce190d4a6e5ac8c1695206971086baf369ca943b37ba7a31d516190",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                -2.4076058864593506,
+                -1.4076058864593506,
+                -0.40760594606399536,
+                -2.4076058864593506,
+                -1.4076058864593506,
+                -0.40760594606399536
+              ],
+              "expected": [
+                -2.4076059644443806,
+                -1.4076059644443804,
+                -0.4076059644443804,
+                -2.4076059644443806,
+                -1.4076059644443804,
+                -0.4076059644443804
+              ],
+              "zipSHA256": "9e332d1648c76562dc0eff4272559818b117ed5eabbebb29568af89e9a7818f2",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "92ec11bb1d7afd4ddc40a09a70e0600f7e480bb46aca3b06a939b7045901879c",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-beta-0",
+              "modelSHA256": "8694b78196ac37632f6edb908f6dc9d181ff292d918e22dcad7b5f62a6e5c4b6",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408
+              ],
+              "expected": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ],
+              "zipSHA256": "25bf602fe1e424652194e27461a88ebee4854ab2356281c8d2f1e20735ddcbd9",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "7d9efc9ebb58b354de60a96a3c555a719f827a106e86f5ad8bbb42dcf9b2f47f",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-beta--1",
+              "modelSHA256": "5196e0aeb5be875a5a845fd121e71ee7022803b96dfb1839b3bde3e22faf5601",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.6652409434318542,
+                0.2447284609079361,
+                0.09003057330846786,
+                0.6652409434318542,
+                0.2447284609079361,
+                0.09003057330846786
+              ],
+              "expected": [
+                0.6652409557748218,
+                0.24472847105479764,
+                0.09003057317038046,
+                0.6652409557748218,
+                0.24472847105479764,
+                0.09003057317038046
+              ],
+              "zipSHA256": "763fe6ec2aa1ab884e147a031678da45f08b8a1def9af0c52be1c231750d6871",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "c271265ce719a15508dc4c2650d9aebd08c6cd6f37f2875becdda29c3028b694",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-3-to-7",
+              "modelSHA256": "311752a31711f8ccd55ef43c0655483c98a88f923fee5dfbe68b287ebecc0c98",
+              "status": "not-run",
+              "automaticRuntime": false,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "c9f37c002171a0c0c44c75a643720ae4f7f6f97f0cc141216076d574ef2ff4fc",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-9-to-7",
+              "modelSHA256": "fe01588601ca8709cc9af433c522e5cb327772ef6a7d19a8623f15b3fd27ae97",
+              "status": "not-run",
+              "automaticRuntime": false,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "e0f18ccac1c88d989a282a67bb27c625ef02267ae9eff0bea98b78f734644189",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            }
+          ],
+          "modelWorkers": 16,
+          "runtimeWorkers": 4,
+          "downloads": 16,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/vendor/netron/worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/tflite-runtime-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/f8a2d9d3ac4f8501/src/model-worker.js?v=f8a2d9d3ac4f8501",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "SOFTMAX-bad-shape",
+              "modelSHA256": "647b3b0cabb2ba61ebbbb559f78719735f538f49da99059af3d5adb066cf564c",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX output rank 必須與 input 相同。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "SOFTMAX-bad-dtype",
+              "modelSHA256": "021ca839908ab9a90f4ff24e3fdbcf10777a83e06f81a5a0f3b495b2c00df07a",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "LOG_SOFTMAX-bad-shape",
+              "modelSHA256": "3893cca49832062c08659f29c4147f3424bab9e246314c095014a61451a2b5e3",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX output rank 必須與 input 相同。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX output rank 必須與 input 相同。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "LOG_SOFTMAX-bad-dtype",
+              "modelSHA256": "77372d41e4307911f1eee312255b56b05237c617fbaa1c76444b12b813ac99f4",
+              "status": "rejected",
+              "preflight": "本機執行檢查：未能驗證。subgraph 0 · OP #0 LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。\n執行引擎：LiteRT.js 2.6.0 / CPU WASM",
+              "error": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0]／outputs [1]：LOG_SOFTMAX input／output dtype 不在已定義的浮點或量化型別範圍。",
+              "runtimeWorkers": 0,
+              "downloads": 0
+            },
+            {
+              "name": "SOFTMAX-float",
+              "modelSHA256": "d255fdd1d71f94f0046ef9ed58def823d1d4fb9950c6c35d620d878c9acd29cd",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.09003056585788727,
+                0.2447284758090973,
+                0.6652408838272095,
+                0.09003056585788727,
+                0.2447284758090973,
+                0.6652408838272095
+              ],
+              "expected": [
+                0.09003057317038046,
+                0.24472847105479764,
+                0.6652409557748218,
+                0.09003057317038046,
+                0.24472847105479764,
+                0.6652409557748218
+              ],
+              "zipSHA256": "68964c9b4683619eadb470648c06cafa91eca0770849f706b1abd920741f41bd",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "fec065cc5ffe33ebc3dad07b78f107957562fb5c4410ce0991c8b834bd7d6233",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "LOG_SOFTMAX-float",
+              "modelSHA256": "07e4d7094ce190d4a6e5ac8c1695206971086baf369ca943b37ba7a31d516190",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                -2.4076058864593506,
+                -1.4076058864593506,
+                -0.40760594606399536,
+                -2.4076058864593506,
+                -1.4076058864593506,
+                -0.40760594606399536
+              ],
+              "expected": [
+                -2.4076059644443806,
+                -1.4076059644443804,
+                -0.4076059644443804,
+                -2.4076059644443806,
+                -1.4076059644443804,
+                -0.4076059644443804
+              ],
+              "zipSHA256": "3b2740beaacefdf80bbba6969c4d9f488e0cdb8e375ccb4433ba1b9685cde85e",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "92ec11bb1d7afd4ddc40a09a70e0600f7e480bb46aca3b06a939b7045901879c",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-beta-0",
+              "modelSHA256": "8694b78196ac37632f6edb908f6dc9d181ff292d918e22dcad7b5f62a6e5c4b6",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408,
+                0.3333333432674408
+              ],
+              "expected": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ],
+              "zipSHA256": "f9c45098498d911a8ab29e9383ba3d073d9bba92ce29323ef22680473548a302",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "7d9efc9ebb58b354de60a96a3c555a719f827a106e86f5ad8bbb42dcf9b2f47f",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-beta--1",
+              "modelSHA256": "5196e0aeb5be875a5a845fd121e71ee7022803b96dfb1839b3bde3e22faf5601",
+              "status": "passed",
+              "automaticRuntime": false,
+              "output": [
+                0.6652409434318542,
+                0.2447284609079361,
+                0.09003057330846786,
+                0.6652409434318542,
+                0.2447284609079361,
+                0.09003057330846786
+              ],
+              "expected": [
+                0.6652409557748218,
+                0.24472847105479764,
+                0.09003057317038046,
+                0.6652409557748218,
+                0.24472847105479764,
+                0.09003057317038046
+              ],
+              "zipSHA256": "c72b96c44365723b6735383de0dd3076aa4bc2884898b3d98d73fb11b50ee41f",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "c271265ce719a15508dc4c2650d9aebd08c6cd6f37f2875becdda29c3028b694",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-3-to-7",
+              "modelSHA256": "311752a31711f8ccd55ef43c0655483c98a88f923fee5dfbe68b287ebecc0c98",
+              "status": "not-run",
+              "automaticRuntime": false,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "c9f37c002171a0c0c44c75a643720ae4f7f6f97f0cc141216076d574ef2ff4fc",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            },
+            {
+              "name": "SOFTMAX-9-to-7",
+              "modelSHA256": "fe01588601ca8709cc9af433c522e5cb327772ef6a7d19a8623f15b3fd27ae97",
+              "status": "not-run",
+              "automaticRuntime": false,
+              "byteComparison": "not-applicable",
+              "outputSHA256": "e0f18ccac1c88d989a282a67bb27c625ef02267ae9eff0bea98b78f734644189",
+              "operators": 2,
+              "reopened": true,
+              "quantizationPreserved": true
+            }
+          ],
+          "modelWorkers": 16,
+          "runtimeWorkers": 4,
+          "downloads": 16,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      }
+    ],
+    "files": [
+      {
+        "path": "index.html",
+        "sha256": "f759735c5c9e096b753c9be2edace868ced12e7a2fd16d2488a1f63433459820"
+      },
+      {
+        "path": "release.json",
+        "sha256": "ef9383e43613fa65be042f07f31c465fb2e1a33881c974dfa771bedc85243c80"
+      },
+      {
+        "path": "src/tflite-softmax-checks.js",
+        "sha256": "87d25fd1ea10ea72c42a72056b6d4f6b42c3fe579e913a0f1d2cb602ce9dc650"
+      },
+      {
+        "path": "src/tflite-runtime-policy.js",
+        "sha256": "71d7984803f487da3fb89ca04f735ea99f31d83604f7d8b5a9b8b198771a038c"
+      },
+      {
+        "path": "src/tflite-semantic-checks.js",
+        "sha256": "434e3afe39d46061e07fa9f7cd4aac841115ed19c0a509ed9e2101e464a2e42e"
+      },
+      {
+        "path": "src/tflite-constant-checks.js",
+        "sha256": "a361e7736d4c98c77129dfdad91900b5299e14b75120aa16709319fef374a6dc"
+      }
+    ]
+  },
+  "originalLiveArtifact": {
+    "file": "softmax-v1.12.4-live-verification.zip",
+    "sha256": "c3f25a1faa1752688eb1a7707cf7729834412ca07e4e1ed92ce154806e3e2b84",
+    "providerDigest": "sha256:c3f25a1faa1752688eb1a7707cf7729834412ca07e4e1ed92ce154806e3e2b84"
+  },
+  "physicalLifecycle": {
+    "status": "passed",
+    "bytes": 1349965216,
+    "operators": 21005,
+    "cycles": 8,
+    "samples": 1719,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 712235.8857142857,
+        "rssDriftBytes": 12595200,
+        "mainHeapDriftBytes": 691300,
+        "sampledPeakRssBytes": 1007112192,
+        "sampledPeakGrowthBytes": 494804992
+      }
+    },
+    "browserClosed": true,
+    "workersClosed": 57,
+    "processesReaped": true
+  },
+  "preservedFailedRuns": [
+    43924226459,
+    43945973931
+  ],
+  "limitations": [
+    "Finite Hosted Chromium physical lifecycle does not establish Windows RSS guarantees or prove every historical allocator root cause resolved.",
+    "Only documented synthetic Softmax/LogSoftmax numeric cases are validated; quantized/static pending scopes remain explicit.",
+    "Unknown kernels, versions, arbitrary model equivalence, private dialects and full human accessibility remain outside the verified scope."
+  ],
+  "scope": "GitHub formal site and fixed Release only; no Sites/GH Studio sync"
+}
