@@ -45,7 +45,7 @@ export function checkOperandMetadata(name,inputs,outputs,options={}){
 }
 
 // getValues returns null and a caller-owned reason for dynamic/unreadable data.
-export function checkOperandValues(name,inputs,outputs,options,getValues){
+export function checkOperandValues(name,inputs,outputs,options,getValues,{inferOnly=false}={}){
     if(!OPERAND_OPERATORS.has(name))return null;
     checkOperandMetadata(name,inputs,outputs,options);
     const data=inputs[name==='SPLIT'?1:0],fail=message=>{throw Error(message);};
@@ -77,8 +77,8 @@ export function checkOperandValues(name,inputs,outputs,options,getValues){
     }else{
         const result=stridedShape(a,v.get(1),v.get(2),v.get(3),options);if(result.reason)return pending(result.reason);shapes=[result.shape];
     }
-    for(const [i,expected]of shapes.entries())if(!same(dims(outputs[i]),expected))fail(`output ${i} shape 應為 [${expected.join(', ')}]。`);
-    return {status:'passed',reason:'已核對靜態參數、可讀常數與所有 output shape；不含 kernel 執行及數值語意。'};
+    if(!inferOnly)for(const [i,expected]of shapes.entries())if(!same(dims(outputs[i]),expected))fail(`output ${i} shape 應為 [${expected.join(', ')}]。`);
+    return {status:'passed',reason:'已核對靜態參數、可讀常數與所有 output shape；不含 kernel 執行及數值語意。',...(inferOnly?{shapes}:{})};
 }
 
 function stridedShape(input,begin,end,strides,options){

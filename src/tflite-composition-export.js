@@ -4,12 +4,13 @@ import {prepareTfliteModelEdit,validateTfliteModelGraph} from './tflite-model-ed
 import {compositionInterface,compositionOrder} from './model-composition-draft.js';
 import {planTfliteReferences,referencePlanSummary} from './tflite-reference-plan.js';
 export function exportComposition(index,file,state,changes,options={}){
+    const {shapePatches,...referenceOptions}=options;
     const iface=compositionInterface(state),ordered=compositionOrder(state);
     if(iface.missing.length)throw Error('組合模型仍需輸入：'+iface.missing.map(id=>state.values.get(id).name).join('、')+'。請保留輸入或改接來源。');
     if(!ordered.length||!iface.outputs.length)throw Error('組合模型需要至少一個 OP 和一個輸出。');
-    const plans=tfliteWorkspacePlans(index,state,changes);if(plans.length!==1)throw Error('組合模型需來自同一個 subgraph。');
+    const plans=tfliteWorkspacePlans(index,state,changes,{shapePatches});if(plans.length!==1)throw Error('組合模型需來自同一個 subgraph。');
     const prepared=prepareTfliteModelEdit(index,file,plans),sourceGraph=plans[0].graph,graph=prepared.model.subgraphs[sourceGraph],custom=graph.operators.some(op=>!!prepared.model.operator_codes[op.opcode_index].custom_code),used=new Set([...graph.inputs,...graph.outputs]);
-    const referencePlan=planTfliteReferences(prepared.model,sourceGraph,graph.operators.map((_,id)=>id),{...options,extraTensors:[...graph.inputs,...graph.outputs]}),retainedData=new Set(referencePlan.bufferDataIds);
+    const referencePlan=planTfliteReferences(prepared.model,sourceGraph,graph.operators.map((_,id)=>id),{...referenceOptions,extraTensors:[...graph.inputs,...graph.outputs]}),retainedData=new Set(referencePlan.bufferDataIds);
     for(const op of graph.operators)for(const id of [...op.inputs,...op.outputs,...op.intermediates||[]])if(id>=0)used.add(id);
     const explicit=new Set(used);for(const id of referencePlan.usedTensors)used.add(id);
     const produced=new Set(graph.operators.flatMap(op=>Array.from(op.outputs))),implicitInputs=referencePlan.implicitTensors.filter(id=>!explicit.has(id)&&!produced.has(id)&&!Number(prepared.model.buffers[graph.tensors[id].buffer]?.sourceRange?.size||prepared.model.buffers[graph.tensors[id].buffer]?.data?.length||0));

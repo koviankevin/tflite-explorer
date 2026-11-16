@@ -1,8 +1,8 @@
 # TFLite 模型編輯工作區
 
-## 刪除與重接預覽（本次變更）
+## 刪除、自動重接與 shape 推導（原始碼候選，尚未部署）
 
-編輯工作區選 OP →「刪除 OP」→ 預覽所有使用者與模型輸出 → 指定相容的上游 tensor，或改為模型 inputs／手動接線 → 確認套用。整組支援 Undo／Redo；v4 草稿保存替代對照。型別不相容時顯示 dtype、shape、量化等原因，不猜測下游 shape。參見 [選取容量與刪除 OP](selection-capacity.md)。
+編輯工作區選 OP →「刪除 OP」→ 自動建議資料輸入與下游 shape 差異 → 預覽所有使用者與模型輸出 → 確認後一次套用。也可指定相容的上游 tensor，或改為模型 inputs／手動接線。整組支援 Undo／Redo；含自動推導使用 v5 草稿，僅相容重接仍用 v4；舊 v1～v4 草稿可讀。Reshape／Transpose 讀本機實際常數，FC 等核對既有權重；動態 shape、custom 缺少規則或權重不合時保留草稿並顯示原因。匯出和草稿恢復重新計算 shape，不執行 interpreter。參見 [選取容量與刪除 OP](selection-capacity.md)。
 
 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)，新增[13 種 OP 靜態規則、逐 OP 報告與編輯區查看入口](operator-validation.md#v130-正式交付)；後續限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復指引；支援四種亂數與既有 v3 草稿；本次刪除重接另採 v4 草稿。編輯匯出只做靜態、結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄。
 

@@ -27,6 +27,7 @@ export function createModelEditReport(index,file,result,candidate,args,{outputNa
         parameterNames:[...Object.keys(args.options||{}),...Object.keys(args.options2||{})],fullIR:!!args.advanced,metadataChanges:result.metadataChanges||[],
         mappingScope:'只列修改目標；完整 IR 或 region 修改不推測一對一 OP 對照。未提供其他 OP 的逐筆位置映射。',interfaceScope:'各顯示 block／subgraph 的介面；不等同於所有 MLIR function 的 ABI。'};
     if(workspace){modification.workspaceChanges=result.workspaceChanges;modification.mappingScope='工作區列出草稿的新增、刪除與改線；來源標示首項範本，不推測整份模型逐 OP 的位置對照。';}
+    if(result.shapeInference)modification.shapeInference=result.shapeInference;
     if(result.composition){modification.action='compose';modification.mappingScope='組合結果列出每個匯入／新增 OP 的原始範本及輸出位置；輸入／輸出依目前接線重建。';}
     const provenance={mode:'model-edit',ranges:result.ranges,operators:result.composition?.mapping|| (target?[{source:{graph:args.graph,node:args.node},output:{graph:target.graph,node:target.node},role:args.mode==='replace'?'modified':'cloned'}]:[]),generated:[]};
     const quantizationValidation=candidate.raw?inspectTfliteQuantization(candidate.raw,result.changes?.map(c=>c.graph)||[args.graph]):undefined;

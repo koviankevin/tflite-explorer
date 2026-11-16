@@ -8,8 +8,9 @@
 
 ## 刪除後的型別與接線
 
-在編輯工作區選取 OP，按「刪除 OP」會先顯示處理連線的預覽。可選三種方式：
+在編輯工作區選取 OP，按「刪除 OP」會先顯示處理連線的預覽。可選四種方式：
 
+- 自動選擇資料輸入繞過刪除的 OP，沿下游推導 shape，預覽後一次套用（預設）。
 - 刪除並一次重接所有使用者，包括編輯範圍外的 OP 與模型 outputs。
 - 將仍使用的輸出改為模型 inputs，由呼叫端提供值。
 - 只刪除，保留斷線位置，稍後手動接線。
@@ -22,8 +23,14 @@
 
 預覽不讀權重，每頁最多 8 個輸出、每個輸出列最多 50 個候選，候選按可見頁計算。型別差異快取限制為 16 組來源型別、每組 64 個差異；關閉對話框清除 DOM 與草稿參照。Worker 以一次掃描統計整個 subgraph，不把所有使用者或整份模型傳到主執行緒。
 
-目前不會自動沿整個既有模型傳播刪除造成的 shape 變更。已支援的 shape 推導仍適用新增 builtin OP。不相容時可改接其他 tensor、提升為模型 inputs、取消刪除或手動修正。匯出保持本機靜態、結構與資料驗證，interpreter 仍由使用者另外啟動；通過驗證不代表數值等價。
+## 自動重接與下游 shape 推導（原始碼候選，尚未部署）
 
-### 後續可做
+刪除預設先找資料輸入：單輸出且有明確契約的 builtin OP 以 input 0 為資料端；ADD／MUL 等可交換運算在 input 0 是權重／常數時優先選另一個資料端。來源建議可在預覽中更換。仍檢查 dtype、量化、sparsity、同 subgraph、產生順序與循環；不插入 Cast、Reshape，也不猜測新的權重。Custom 或多輸出 OP 無法唯一決定時，可改用指定相容來源、模型 inputs 或手動模式。
 
-依已支援 OP 規則預覽下游 shape 變更與介面影響。Reshape／Transpose 的 tensor-valued shape／permutation 需讀取常數與驗證；Conv、FC 的權重、通道與 bias 不能只修改 tensor metadata。動態維度、控制流程與 custom OP 無規則時停止推導。必要的 Reshape、Cast、Quantize／Dequantize 應列為獨立建議操作，顯示參數和精度影響後確認。
+推導在模型 Worker 內進行，掃描受影響 subgraph，包括編輯範圍外的使用者；支援既有靜態 unary／broadcast／spatial 規則、FC、BATCH_MATMUL，以及真實常數參數的 Reshape、Transpose、ExpandDims、Pad、Slice、Split 和 reduction 等已實作規則。FC 會核對 weights input_size／bias，不會藉改 metadata 假裝修改權重。動態／未知 shape、量化 channel 不合、custom OP 缺少規則、改變控制流程子圖的呼叫介面或其他未支援情況，會顯示負責的 OP 和原因並保留草稿。
+
+預覽包含受影響 OP、tensor 數與前 100 筆 shape 差異；確認後套用全部變更，一次 Undo／Redo。保留編輯圖縮放和平移範圍，按「符合視窗」才重新取景。含自動推導命令的可攜／本機恢復草稿為 v5，舊 v1～v4 仍可讀；恢復和匯出時從原始 metadata、接線和實際常數重新計算，不信任匯入檔的 shape 提示。一般模型與組合草稿均可匯出並重開。
+
+為避免大模型推導占用過多資源，限制掃描 200,000 OP、受影響 50,000 OP、變更 100,000 tensor；每 500 OP 讓出 Worker 執行並檢查取消。shape 參數只讀本機檔案切片，單 tensor 64 KiB、累計 1 MiB，最多快取 128 個常數；不整檔載入權重。21,000 個尾端 OP 的合成模型已驗證全部 shape 更新與匯出重開，主執行緒只收到前 100 筆預覽及編輯範圍內的 shape 提示。
+
+匯出仍執行本機靜態、結構與資料驗證；interpreter 由使用者另行啟動。刪除 OP 會改變計算結果，靜態 shape 相容不表示數值等價或私有 kernel 語意通過。

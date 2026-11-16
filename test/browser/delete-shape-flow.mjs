@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {once} from 'node:events';
+import path from 'node:path';
+import {deleteInferenceFixture} from '../delete-inference-fixture.mjs';
+import {parseModel} from '../../src/model-engine.js';
+import {parseEditSession} from '../../src/model-edit-session.js';
+import {chooseEditDraft} from './edit-draft-chooser.mjs';
+export const DELETE_SHAPE_CHECK='Automatic OP bypass propagates branch/merge shapes, v5 draft and original/composed export; FC/custom inference failures preserve draft';
+export async function deleteShapeFlow({page,read,directory,check}){
+    const report={status:'failed',modelWorkers:0,runtimeWorkers:0,cases:[]},metadata=JSON.parse(await readFile(new URL('../../vendor/netron/tflite-metadata.json',import.meta.url),'utf8'));
+    const until=async(fn,...args)=>{const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Delete shape flow timeout: '+fn);await new Promise(r=>setTimeout(r,60));}};
+    const ready=()=>until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false');
+    const editReady=()=>until(()=>!document.querySelector('#edit-workspace').hidden&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);
+    const choose=async(file,button='#open-model')=>{const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);report.modelWorkers++;await ready();};
+    const close=async()=>{const worker=page.workers().find(w=>/\/model-worker\.js(?:\?|$)/.test(w.url()));assert.ok(worker);let timer;try{const closed=Promise.race([once(worker,'close'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Shape inference retained model worker.')),5000);})]);await page.locator('#close-model').click();await closed;}finally{clearTimeout(timer);}};
+    const download=async(selector,name)=>{const event=page.waitForEvent('download');await page.locator(selector).click();const d=await event;assert.equal(await d.failure(),null);const file=path.join(directory,name);await d.saveAs(file);await d.delete();return file;};
+    const parse=async file=>{const b=new Uint8Array(await readFile(file));return parseModel((o,n)=>b.subarray(o,o+n),b.length,metadata);};
+    const openEdit=async()=>{await page.locator('#layers-tab').click();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await ready();await page.locator('#edit-mode').click();await editReady();await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();};
+    const preview=async()=>{await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-confirm').disabled);assert.equal(await page.locator('#edit-delete-mode').inputValue(),'infer');};
+    const event=w=>{if(/\/tflite-runtime-worker\.js(?:\?|$)/.test(w.url()))report.runtimeWorkers++;};page.on('worker',event);
+    try{
+        const fixtures={};for(const kind of ['branch','reshape','fc','custom']){const f=await deleteInferenceFixture({kind}),file=path.join(directory,'shape-'+kind+'.tflite');await writeFile(file,f.bytes);fixtures[kind]={...f,file};}
+        await choose(fixtures.branch.file);await openEdit();await page.locator('#edit-font').selectOption('32');await editReady();await page.locator('#edit-zoom-in').click();await new Promise(r=>setTimeout(r,150));
+        const camera=()=>read(()=>({left:document.querySelector('#edit-viewport').scrollLeft,top:document.querySelector('#edit-viewport').scrollTop,transform:document.querySelector('#edit-world').style.transform})),before=await camera();
+        await preview();assert.match(await page.locator('#edit-delete-infer-status').textContent(),/更新 4 個 tensor/);await page.locator('#edit-delete-inference details summary').click();
+        assert.match(await page.locator('#edit-delete-infer-details').textContent(),/\[3, 2\] → \[2, 3\]/);
+        const layout=await read(()=>{const r=document.querySelector('#edit-delete-dialog').getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth};});assert.ok(layout.left>=0&&layout.right<=layout.width&&layout.top>=0&&layout.bottom<=layout.height&&layout.documentWidth<=layout.width);await page.screenshot({path:path.join(directory,'automatic-shape-preview.png')});
+        await page.locator('#edit-delete-confirm').click();await new Promise(r=>setTimeout(r,100));const after=await camera();assert.equal(after.transform,before.transform);assert.ok(Math.abs(after.left-before.left)<=1&&Math.abs(after.top-before.top)<=1,JSON.stringify({before,after}));
+        await page.locator('#edit-undo').click();assert.equal(await page.locator('.edit-node.removed').count(),0);await page.locator('#edit-redo').click();assert.equal(await page.locator('.edit-node.removed').count(),1);
+        const draft=await download('#save-edit-draft','shape-draft.json');assert.equal(parseEditSession(await readFile(draft,'utf8')).version,5);await close();await chooseEditDraft(page,draft);await until(()=>!document.querySelector('#choose-edit-draft-model').hidden);await choose(fixtures.branch.file,'#choose-edit-draft-model');await editReady();
+        const output=await download('#edit-export','shape-edited.tflite'),original=await parse(output);assert.equal(original.raw.subgraphs[0].operators.length,4);assert.deepEqual([...original.raw.subgraphs[0].tensors[original.raw.subgraphs[0].outputs[0]].shape],[2,3]);await close();await choose(output);await page.locator('#layers-tab').click();await page.locator('#query').fill('#0');await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');assert.match(await page.locator('.result-item').textContent(),/Relu/i);await page.locator('.result-item').click();await ready();await close();
+        report.cases.push({name:'branch',automatic:true,inferredTensors:4,draftVersion:5,reopenedOperators:4,outputShape:[2,3],cameraPreserved:true,undoRedo:true,search:1});
+        await choose(fixtures.reshape.file);await openEdit();await preview();await page.locator('#edit-delete-confirm').click();const reshape=await download('#edit-export','shape-reshape.tflite'),reshapeIndex=await parse(reshape),rg=reshapeIndex.raw.subgraphs[0];assert.deepEqual([...rg.tensors[rg.operators[0].outputs[0]].shape],[6,1]);await close();await choose(reshape);assert.equal(await page.locator('#layer-count').textContent(),'2');await close();report.cases.push({name:'reshape',constantParameters:true,transposeShape:[6,1],reopenedOperators:2});
+        for(const kind of ['fc','custom']){
+            await choose(fixtures[kind].file);await openEdit();await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-infer-status').textContent.includes('：')&&document.querySelector('#edit-delete-confirm').disabled);
+            const reason=await page.locator('#edit-delete-infer-status').textContent();assert.match(reason,kind==='fc'?/FULLY_CONNECTED.*weights input_size 2/:/company.opaque.*custom OP/);assert.equal(await page.locator('.edit-node.removed').count(),0);await page.locator('#edit-delete-cancel').click();await close();report.cases.push({name:kind,blocked:true,unchanged:true,reason});
+        }
+        await choose(fixtures.branch.file);await page.locator('#pick-pattern').click();await page.locator('#pick-op-ids').click();await page.locator('#capture-op-ids').fill('0-4');await page.locator('#apply-op-ids').click();await page.locator('#compose-capture').click();await editReady();await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();await preview();await page.locator('#edit-delete-confirm').click();
+        const composed=await download('#edit-export','shape-composed.tflite'),ci=await parse(composed),cg=ci.raw.subgraphs[0];assert.equal(cg.operators.length,4);assert.deepEqual([...cg.tensors[cg.outputs[0]].shape],[2,3]);await close();await choose(composed);assert.equal(await page.locator('#layer-count').textContent(),'4');await close();report.cases.push({name:'composition',automatic:true,reopenedOperators:4,outputShape:[2,3]});
+        assert.equal(report.runtimeWorkers,0);Object.assign(report,{status:'passed',layout});check(DELETE_SHAPE_CHECK);return report;
+    }finally{page.off('worker',event);}
+}

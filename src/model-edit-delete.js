@@ -1,14 +1,16 @@
 // Metadata-only deletion suggestions. A compatible bypass changes model
 // semantics; callers must preview it and explicitly apply one transaction.
 import {compositionInterface} from './model-composition-draft.js';
-export function deletionTypeReason(before,after){
+export function deletionTypeReason(before,after,{allowShape=false}={}){
     if(typeof before?.signature==='string'&&before.signature===after?.signature)return '';
     let a,b;try{a=JSON.parse(before.signature);b=JSON.parse(after.signature);}catch{return '缺少可比較的 tensor 型別。';}
     const labels={type:'dtype',shape:'shape',shape_signature:'動態 shape',quantization:'量化參數',sparsity:'sparsity'};
-    const differences=Object.keys(labels).filter(k=>JSON.stringify(a?.[k])!==JSON.stringify(b?.[k]));
+    if(allowShape&&[a,b].some(t=>!Array.isArray(t?.shape)||t.shape.some(d=>!Number.isInteger(d)||d<0)||t.shape_signature?.some(d=>d<0)))return '動態或未知 shape 無法自動推導。';
+    const differences=Object.keys(labels).filter(k=>!(allowShape&&['shape','shape_signature'].includes(k))&&JSON.stringify(a?.[k])!==JSON.stringify(b?.[k]));
+    if(!differences.length&&allowShape)return '';
     return differences.length?differences.map(k=>`${labels[k]} 不同${k==='shape'?`（${JSON.stringify(a[k])} → ${JSON.stringify(b[k])}）`:''}`).join('、'):'型別不同';
 }
-export function deletionPreview(state,nodeId,{position,wireReason}){
+export function deletionPreview(state,nodeId,{position,wireReason},{allowShape=false}={}){
     const node=state.nodes.find(n=>n.id===nodeId);
     if(state.format!=='tflite'||!node?.removable||node.removed)throw Error('請選取可刪除的 TFLite OP。');
     const candidates=[...state.values.values()].filter(v=>!v.optional&&!v.missing&&v.producer!==node.id);
@@ -25,11 +27,11 @@ export function deletionPreview(state,nodeId,{position,wireReason}){
         if(original.signature===v.signature)return '';
         if(!details)return '型別不相容。';
         if(!types.has(original.signature)){if(types.size>=16)types.delete(types.keys().next().value);types.set(original.signature,new Map());}const reasons=types.get(original.signature);
-        if(!reasons.has(v.signature)){if(reasons.size>=64)reasons.delete(reasons.keys().next().value);reasons.set(v.signature,deletionTypeReason(original,v));}return reasons.get(v.signature);
+        if(!reasons.has(v.signature)){if(reasons.size>=64)reasons.delete(reasons.keys().next().value);reasons.set(v.signature,deletionTypeReason(original,v,{allowShape}));}return reasons.get(v.signature);
     };
     return {node:node.id,name:node.name,outputs:node.outputs.map(port=>{
         const original=state.values.get(port.value),uses=usesByValue.get(port.value);
-        const choice=(id,details=true)=>{const v=byValue.get(id);if(!v)return null;let reason=sourceReason(original,v,details);if(!reason)for(const use of uses){reason=wireReason(state,use.node,use.slot,v.id);if(reason)break;}return {value:v.id,name:v.name,type:v.type,reason,preferred:preferredIds.has(v.id)};};
+        const choice=(id,details=true)=>{const v=byValue.get(id);if(!v)return null;let reason=sourceReason(original,v,details);if(!reason)for(const use of uses){reason=wireReason(state,use.node,use.slot,v.id,{allowShape});if(reason)break;}return {value:v.id,name:v.name,type:v.type,reason,preferred:preferredIds.has(v.id)};};
         return {value:port.value,name:original.name,type:original.type,uses,modelOutput:!!original.modelOutput||!!node.exposed,choice,
             get choices(){return candidates.map(v=>choice(v.id));},
             get suggested(){const options=preferred.map(v=>choice(v.id,false)).filter(v=>!v.reason);return options.length===1?options[0].value:'';}};

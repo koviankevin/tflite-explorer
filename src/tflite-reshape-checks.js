@@ -81,3 +81,4 @@ function resolveOptions(inputShape,options){
 export function inferReshapeOptions(input,options){
     return resolveOptions(staticTfliteShape(input),options);
 }
+export const inferReshapeOperand=(input,values)=>resolveShape(staticTfliteShape(input),Array.from(values,Number),'shape tensor');

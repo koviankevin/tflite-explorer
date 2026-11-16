@@ -1,0 +1,284 @@
+{
+  "format": "model-lens-deletion-shape-desktop",
+  "version": 1,
+  "recordedAt": "2026-11-16T08:28:54.547Z",
+  "release": "1.11.0",
+  "publication": "not-deployed",
+  "testedSource": {
+    "baseCommit": "4a2cc4a053080f29af377349834023659382cc1b",
+    "workingTree": true,
+    "blobs": {
+      "package-lock.json": "fdf7d36eb352f5f468204a661ad5d45d6a6b6e97",
+      "package.json": "e3ea52a3e06465e5bb7582293451f44ba969b25e",
+      "scripts/lib/release-gates.mjs": "f8e48c78aa9169d0d1a296c19e27c4697be434da",
+      "src/edit-recovery-store.js": "a01a911fb4be31b15c7bc9c6ee17292ca8de5e55",
+      "src/model-edit-delete-ui.js": "c50d29754a3a59e4af3ccfdf21ee54eadd1aad13",
+      "src/model-edit-delete.js": "d518ef93c29b113a8865a3b34ed3a6d98548b703",
+      "src/model-edit-draft.js": "4c1ec8d35b33be6062d7ef27766c9e8d85c713ab",
+      "src/model-edit-policy.js": "794cd44e969c6d88841bac07c3d86c9d9884b009",
+      "src/model-edit-report.js": "54f5c3e2d3707b7ec379c38579747d43b978af26",
+      "src/model-edit-session.js": "ce0c5b0e57a70f3c90f4bfa5e20fb28453b7fe58",
+      "src/model-edit-workspace-ui.js": "8296abae3cf1605d608dfbf71686026e2105e217",
+      "src/model-edit-workspace.js": "84f281b0d29acc7b2d05210b9775d348f6d507d8",
+      "src/model-worker.js": "7b0d13b7eb6f33873d83120d3f18e613356a868c",
+      "src/shell.html": "eaadb398eed7cbbfc7196057c9eecb364e3e6fde",
+      "src/tflite-composition-export.js": "5c39e1005601c80af08e5efe1a7a38cba4c7b664",
+      "src/tflite-delete-inference.js": "98e3166c329e3c4e539cf2f80bfcad97629f4bd4",
+      "src/tflite-model-edit.js": "5fca0a0daa53aa3b572db44394f5724c8a0f686b",
+      "src/tflite-operand-checks.js": "a573646d120d36afc1a3d07c6078fbdf3bc80044",
+      "src/tflite-reshape-checks.js": "5eeccd333fdbdd3598a1feeda6d7edbfb512ed66",
+      "src/tflite-workspace-plan.js": "f03830cea4d1d2371d2bf0483a2e1aa403dc5055",
+      "test/browser-release-features.test.mjs": "904ce78e71bfbf4e52e7574f65ed65aa492d3a07",
+      "test/browser/delete-reconnect-flow.mjs": "838a16d1365689dbc1ee59e8de166d66fa984db4",
+      "test/browser/delete-shape-flow.mjs": "ae2bec6f314d731dabe4ed2260509d5337cce9e6",
+      "test/browser/production-smoke.mjs": "7fa98dd28f09ac2207bfd4a1fd4d7e8ee7efb7d0",
+      "test/browser/release-features.mjs": "13ff7a4542fea4304da12776577d43ad3648fe24",
+      "test/browser/windows-delete-shape.mjs": "a10c8d16a4ee3d4259e6388c90e11d422f4fc96d",
+      "test/delete-inference-fixture.mjs": "d31a76b3d2f8cd07511c408c56007a8ba3242f8d",
+      "test/delete-shape-inference.test.mjs": "c4ffc607bb362e98391c9691a531c15d5feb55ad",
+      "test/release-gates.test.mjs": "4f07e76bf22bd5152d4c737f80e48d2bf262cf78"
+    }
+  },
+  "artifact": {
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.11.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "4a2cc4a053080f29af377349834023659382cc1b",
+        "tree": "0e6601233221576d6dbc898f4feeec6499f354dc",
+        "committedAt": "2026-11-16T14:10:30+08:00",
+        "dirty": true
+      },
+      "buildId": "57fdec44f33c1be3"
+    },
+    "manifestSHA256": "49619bb53f666a0179c080b290a22318c825839ab8b95119f8f1480991e741f1",
+    "files": 342
+  },
+  "targeted": {
+    "tests": 168,
+    "passed": 168,
+    "failed": 0,
+    "skipped": 0,
+    "logSHA256": "f3a0f38fbf573a92de6fbfd7a263f4a743bc49e3baf44a393814198d0d86fa97"
+  },
+  "browser": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 9,
+          "runtimeWorkers": 0,
+          "cases": [
+            {
+              "name": "branch",
+              "automatic": true,
+              "inferredTensors": 4,
+              "draftVersion": 5,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ],
+              "cameraPreserved": true,
+              "undoRedo": true,
+              "search": 1
+            },
+            {
+              "name": "reshape",
+              "constantParameters": true,
+              "transposeShape": [
+                6,
+                1
+              ],
+              "reopenedOperators": 2
+            },
+            {
+              "name": "fc",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 FULLY_CONNECTED · inputs [0, 3]：FC input 元素數／最後一維與 weights input_size 2 不相容；不會修改權重。"
+            },
+            {
+              "name": "custom",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 company.opaque · inputs [0]：custom OP 未提供 shape 規則，無法根據改變的輸入可靠推導。"
+            },
+            {
+              "name": "composition",
+              "automatic": true,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ]
+            }
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 9,
+          "runtimeWorkers": 0,
+          "cases": [
+            {
+              "name": "branch",
+              "automatic": true,
+              "inferredTensors": 4,
+              "draftVersion": 5,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ],
+              "cameraPreserved": true,
+              "undoRedo": true,
+              "search": 1
+            },
+            {
+              "name": "reshape",
+              "constantParameters": true,
+              "transposeShape": [
+                6,
+                1
+              ],
+              "reopenedOperators": 2
+            },
+            {
+              "name": "fc",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 FULLY_CONNECTED · inputs [0, 3]：FC input 元素數／最後一維與 weights input_size 2 不相容；不會修改權重。"
+            },
+            {
+              "name": "custom",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 company.opaque · inputs [0]：custom OP 未提供 shape 規則，無法根據改變的輸入可靠推導。"
+            },
+            {
+              "name": "composition",
+              "automatic": true,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ]
+            }
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      }
+    ]
+  },
+  "compatibleDeletion": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 7,
+          "automaticRuntimeWorkers": 0,
+          "cancelPreserves": true,
+          "modelOutputReplaced": true,
+          "draftVersion": 4,
+          "undoRedo": true,
+          "reopenedOperators": 2,
+          "customOptionsPreserved": true,
+          "weightsPreserved": true,
+          "customSearch": 1,
+          "incompatibleRejected": true,
+          "boundaryInputs": [
+            1,
+            2,
+            7,
+            8
+          ],
+          "boundaryReopenedOperators": 2,
+          "compositionOutputBypass": true,
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 7,
+          "automaticRuntimeWorkers": 0,
+          "cancelPreserves": true,
+          "modelOutputReplaced": true,
+          "draftVersion": 4,
+          "undoRedo": true,
+          "reopenedOperators": 2,
+          "customOptionsPreserved": true,
+          "weightsPreserved": true,
+          "customSearch": 1,
+          "incompatibleRejected": true,
+          "boundaryInputs": [
+            1,
+            2,
+            7,
+            8
+          ],
+          "boundaryReopenedOperators": 2,
+          "compositionOutputBypass": true,
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      }
+    ]
+  },
+  "runtimeExecuted": false,
+  "models": "public synthetic fixtures only"
+}

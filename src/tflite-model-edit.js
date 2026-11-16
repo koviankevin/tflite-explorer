@@ -57,9 +57,18 @@ export function prepareTfliteModelEdit(index,file,plans) {
     };
     for(const plan of plans){
         if(!plan||typeof plan!=='object')throw Error('模型修改格式無效。');
-        for(const key of Object.keys(plan))if(!['graph','operators','tensors','inputs','outputs','updateSignatures'].includes(key))throw Error('未知的模型修改欄位：'+key);
+        for(const key of Object.keys(plan))if(!['graph','operators','tensors','tensorShapes','inputs','outputs','updateSignatures'].includes(key))throw Error('未知的模型修改欄位：'+key);
         const original=index.raw.subgraphs[plan.graph];if(!Number.isInteger(plan.graph)||!original||changed.has(plan.graph))throw Error('Subgraph 不存在或重複修改。');changed.add(plan.graph);
         const tensors=original.tensors.slice();
+        const updatedShapes=new Set();
+        if(plan.tensorShapes!==undefined&&(!Array.isArray(plan.tensorShapes)||plan.tensorShapes.length>100000))throw Error('推導的 tensor shape 清單過大。');
+        for(const patch of plan.tensorShapes||[]){
+            const t=original.tensors[patch?.tensor],b=model.buffers[t?.buffer];
+            if(!t||!Number.isInteger(patch.tensor)||updatedShapes.has(patch.tensor)||!Array.isArray(patch.shape)||patch.shape.length>128||patch.shape.some(d=>!Number.isInteger(d)||d<0||d>2147483647)||Object.keys(patch).some(k=>!['tensor','shape'].includes(k)))throw Error('推導的 tensor shape 格式無效。');
+            if(original.inputs.includes(patch.tensor)||t.is_variable||t.external_buffer||t.sparsity||t.shape_signature?.some(d=>d<0)||t.buffer&&Number(b?.size||b?.data?.length||0))throw Error('不會修改輸入、權重、變數、外部、稀疏或動態 tensor shape。');
+            if(t.quantization?.scale?.length>1&&patch.shape[t.quantization.quantized_dimension]!==t.quantization.scale.length)throw Error('新 shape 與 per-axis 量化不符。');
+            tensors[patch.tensor]={...t,shape:Int32Array.from(patch.shape),shape_signature:t.shape_signature?.length?Int32Array.from(patch.shape):t.shape_signature,has_rank:true};updatedShapes.add(patch.tensor);
+        }
         if(plan.tensors!==undefined&&(!Array.isArray(plan.tensors)||plan.tensors.length>1024))throw Error('單次最多新增 1024 個 result tensors。');
         for(const fresh of plan.tensors||[]){if(!fresh||typeof fresh!=='object'||Object.keys(fresh).some(key=>!['like','name','data','shape'].includes(key)))throw Error('新 tensor 修改欄位無效。');const source=original.tensors[fresh.like];if(!Number.isInteger(fresh.like)||!source||typeof fresh.name!=='string'||fresh.name.length>256)throw Error('新 tensor 需要有效的參考 tensor 與名稱。');let buffer=0;if(fresh.data!==undefined){if(!(fresh.data instanceof Uint8Array)||fresh.data.length>16*1024**2)throw Error('新權重資料無效或超過 16 MiB。');if(fresh.data.length!==randomTensorInfo(source,{seed:1,min:0,max:0}).bytes)throw Error('新權重資料長度與 dtype／shape 不符。');buffer=model.buffers.length;model.buffers.push({data:fresh.data,offset:0n,size:0n});}let shape=source.shape,shape_signature=source.shape_signature;if(fresh.shape!==undefined){if(fresh.data!==undefined||!Array.isArray(fresh.shape)||fresh.shape.length>128||fresh.shape.some(d=>!Number.isInteger(d)||d<0||d>2147483647))throw Error('新輸出 tensor shape 無效。');shape=Int32Array.from(fresh.shape);if(shape_signature?.length)shape_signature=Int32Array.from(shape);if(source.quantization?.scale?.length>1&&shape[source.quantization.quantized_dimension]!==source.quantization.scale.length)throw Error('新 shape 與 per-axis 量化不符。');}tensors.push({...source,shape,shape_signature,...(fresh.shape?{has_rank:true}:{}),name:fresh.name,buffer,external_buffer:0,is_variable:false,sparsity:null});}
         if(plan.operators!==undefined&&!Array.isArray(plan.operators))throw Error('OP 修改必須是清單。');
@@ -74,7 +83,7 @@ export function prepareTfliteModelEdit(index,file,plans) {
             if(entry.options2!==undefined)op.builtin_options_2=optionsPatch(source.builtin_options_2,entry.options2);
             if(entry.builtin){const {info,options}=builtinSettings(entry.builtin.code,entry.builtin.settings),version=entry.builtin.version;if(!Number.isInteger(version)||version<1||version>100)throw Error('OP version 無效。');let id=model.operator_codes.findIndex(c=>c.builtin_code===info.code&&c.version===version&&!c.custom_code);if(id<0){id=model.operator_codes.length;model.operator_codes.push({builtin_code:info.code,deprecated_builtin_code:Math.min(info.code,127),custom_code:null,version});}Object.assign(op,{opcode_index:id,builtin_options:null,builtin_options_2:null,custom_options:null,large_custom_options_offset:0n,large_custom_options_size:0n,mutating_variable_inputs:[],intermediates:[],customOptionsInline:false,customOptionsDeferred:false,customOptionsRange:null});op[info.group]=options;}
             const code=model.operator_codes[op.opcode_index];
-            if(!code.custom_code&&(entry.builtin||entry.options||entry.options2||entry.inputs||entry.outputs))try{
+            if(!code.custom_code&&(entry.builtin||entry.options||entry.options2||entry.inputs||entry.outputs||[...op.inputs,...op.outputs].some(id=>updatedShapes.has(id))))try{
                 checkBuiltinPorts(Math.max(code.builtin_code,code.deprecated_builtin_code||0),Array.from(op.inputs,id=>id<0?null:tensors[id]),Array.from(op.outputs,id=>tensors[id]),op.builtin_options||op.builtin_options_2);
             }catch(error){throw Error(`Subgraph #${plan.graph} · OP #${position}（來源 OP #${entry.template}）· inputs [${Array.from(op.inputs).join(', ')}]／outputs [${Array.from(op.outputs).join(', ')}]：${error.message}`,{cause:error});}
             return op;

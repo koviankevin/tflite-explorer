@@ -159,6 +159,17 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.equal(assertSiteOperations(expandedReport,expandedSite,broadcast,comparisonChecker).checks,47);
     const deleteRelease={...release,version:'1.10.0'},deleteSite={...site,candidate:deleteRelease},deleteReport={...expandedReport,siteRelease:deleteRelease,checks:[...expandedReport.checks,'Deletion preview reconnects consumers and model outputs; v4 draft, undo/redo, export/reopen preserve custom options and weights'],deleteReconnect:{status:'passed',modelWorkers:7,automaticRuntimeWorkers:0,cancelPreserves:true,modelOutputReplaced:true,draftVersion:4,undoRedo:true,reopenedOperators:2,customOptionsPreserved:true,weightsPreserved:true,customSearch:1,incompatibleRejected:true,compositionOutputBypass:true,boundaryReopenedOperators:2,boundaryInputs:[1,2,7,8]}};
     assert.equal(assertSiteOperations(deleteReport,deleteSite,broadcast,comparisonChecker).checks,48);
+    const shapeRelease={...release,version:'1.11.0'},shapeSite={...site,candidate:shapeRelease},shapeReport={...deleteReport,siteRelease:shapeRelease,checks:[...deleteReport.checks,'Automatic OP bypass propagates branch/merge shapes, v5 draft and original/composed export; FC/custom inference failures preserve draft'],deleteShape:{status:'passed',modelWorkers:9,runtimeWorkers:0,layout:{left:100,right:1180,top:10,bottom:630,width:1280,height:640,documentWidth:1280},cases:[
+        {name:'branch',automatic:true,inferredTensors:4,draftVersion:5,reopenedOperators:4,outputShape:[2,3],cameraPreserved:true,undoRedo:true,search:1},
+        {name:'reshape',constantParameters:true,transposeShape:[6,1],reopenedOperators:2},
+        {name:'fc',blocked:true,unchanged:true,reason:'FC incompatible weights'},
+        {name:'custom',blocked:true,unchanged:true,reason:'custom rule missing'},
+        {name:'composition',automatic:true,reopenedOperators:4,outputShape:[2,3]}
+    ]}};
+    assert.equal(assertSiteOperations(shapeReport,shapeSite,broadcast,comparisonChecker).checks,49);
+    for(const change of [r=>delete r.deleteShape,r=>r.deleteShape.runtimeWorkers=1,r=>r.deleteShape.modelWorkers=8,r=>r.deleteShape.cases[0].draftVersion=4,r=>r.deleteShape.cases[0].cameraPreserved=false,r=>r.deleteShape.cases[2].blocked=false,r=>r.deleteShape.layout.right=1281,r=>r.deleteShape.cases.pop(),r=>r.checks.pop()]){
+        const broken=structuredClone(shapeReport);change(broken);assert.throws(()=>assertSiteOperations(broken,shapeSite,broadcast,comparisonChecker),/Site operation evidence/);
+    }
     for(const change of [r=>delete r.deleteReconnect,r=>r.deleteReconnect.automaticRuntimeWorkers=1,r=>r.deleteReconnect.draftVersion=3,r=>r.deleteReconnect.customOptionsPreserved=false,r=>r.deleteReconnect.boundaryInputs.pop()]){
         const broken=structuredClone(deleteReport);change(broken);assert.throws(()=>assertSiteOperations(broken,deleteSite,broadcast,comparisonChecker),/Site operation evidence/);
     }

@@ -103,3 +103,9 @@ export function deleteReconnectRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=10;
 }
+
+export function deleteShapeRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=11;
+}

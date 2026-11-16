@@ -88,9 +88,10 @@ export async function exportEditWorkspace(index,file,snapshot,commands,{updateSi
     if(!changes.length)throw Error('草稿沒有變更。');if(issues.length)throw Error(issues.slice(0,8).map(i=>`${i.node} input ${i.slot}: ${i.message}`).join('\n'));
     const active=state.nodes.filter(n=>!n.removed),value=id=>{const v=state.values.get(id);if(!v)throw Error('找不到接線來源。');return v;};
     if(!index.mlir){
-        if(snapshot.composition){const {exportComposition}=await import('./tflite-composition-export.js');return exportComposition(index,file,state,changes);}
+        let inference=null;if(state.nodes.some(n=>n.removed&&n.autoShape)){progress('重新核對自動重接與下游 shape 推導…');const {inferDeletedGraph}=await import('./tflite-delete-inference.js');inference=await inferDeletedGraph(index,state,async(o,n)=>new Uint8Array(await file.slice(o,o+n).arrayBuffer()),{verifyLocal:true});}
+        if(snapshot.composition){const {exportComposition}=await import('./tflite-composition-export.js');const result=exportComposition(index,file,state,changes,{shapePatches:inference?.shapePatches});return {...result,...(inference?{shapeInference:inference.summary}:{})};}
         const {editTfliteModel}=await import('./tflite-model-edit.js'),{tfliteWorkspacePlans}=await import('./tflite-workspace-plan.js');
-        const result=editTfliteModel(index,file,tfliteWorkspacePlans(index,state,changes,{updateSignatures}));return {...result,workspaceChanges:changes,workspaceScope:snapshot.selected};
+        const result=editTfliteModel(index,file,tfliteWorkspacePlans(index,state,changes,{updateSignatures,shapePatches:inference?.shapePatches}));return {...result,workspaceChanges:changes,workspaceScope:snapshot.selected,...(inference?{shapeInference:inference.summary}:{})};
     }
     const {editMLIRModel}=await import('./mlir-model-edit.js'),edits=[];
     for(const node of state.nodes){
