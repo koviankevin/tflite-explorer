@@ -16,7 +16,7 @@ let generation = 0;
 let file;
 let identity;
 let editInProgress=false;
-let editWorkspace=null,editWorkspaceSerial=0;
+let editWorkspace=null,editWorkspaceSerial=0,deleteInferJob=0;
 let editIdentity=null,editDraftJob=0;
 async function draftFingerprint(sourceFile,job){
     if(editIdentity?.file===sourceFile)return editIdentity.value;
@@ -54,6 +54,16 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const sourceIndex=index,sourceFile=file,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js');
             if(index!==sourceIndex||file!==sourceFile)throw Error('模型已切換，請重新開啟編輯工作區。');
             const snapshot=editWorkspaceSnapshot(index,args);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editDeleteInferCancel'){
+            if(editWorkspace?.token===args.token)deleteInferJob++;send(id,true);
+        } else if(action==='editDeleteInfer'){
+            const session=editWorkspace;
+            if(!session||args.token!==session.token||session.index!==index||session.file!==file)throw Error('編輯工作區已過期。');
+            if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
+            const job=++deleteInferJob,{previewDeleteInference}=await import('./tflite-delete-inference.js'),reader=new FileReaderSync();
+            if(editWorkspace!==session)throw Error('工作區已切換。');
+            const result=await previewDeleteInference(index,session.snapshot,args.commands,args.node,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(session.file.slice(o,o+n))),{source:args.source,cancelled:()=>job!==deleteInferJob||editWorkspace!==session||index!==session.index||file!==session.file});
+            if(job!==deleteInferJob||editWorkspace!==session)throw Error('推導已取消或工作區已切換。');send(id,result);
         } else if(action==='editDeleteImpact'){
             const session=editWorkspace;
             if(!session||args.token!==session.token||session.index!==index||session.file!==file)throw Error('編輯工作區已過期。');

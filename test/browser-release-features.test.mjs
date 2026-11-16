@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
-import {partialRuntimeIORequired} from './browser/release-features.mjs';
+import {partialRuntimeIORequired,deleteShapeRequired} from './browser/release-features.mjs';
 import {graphReadabilityRequired} from './browser/release-features.mjs';
 
 test('panel and connection checks apply to v1.7 and future formal releases without breaking immutable older builds',()=>{
@@ -22,6 +22,12 @@ test('legacy shape checks skip exact older immutable releases and remain require
     for(const v of [null,'candidate','v1.4.1'])assert.throws(()=>legacyShapeValidationRequired(v));
 });
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
+
+test('automatic deletion shape propagation is required from v1.11 while immutable older releases remain usable',()=>{
+    for(const v of ['1.9.1','1.10.0','0.2.0-preview.34'])assert.equal(deleteShapeRequired(v),false);
+    for(const v of ['1.11.0','1.12.0','2.0.0'])assert.equal(deleteShapeRequired(v),true);
+    assert.throws(()=>deleteShapeRequired('v1.11.0'));
+});
 
 test('quantization browser coverage skips only exact immutable pre-feature releases',()=>{
     for(const version of ['0.2.0-preview.7','0.2.0-preview.34','1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','1.3.0','1.3.1'])assert.equal(quantizationValidationRequired(version),false,version);

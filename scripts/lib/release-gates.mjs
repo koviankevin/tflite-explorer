@@ -1,3 +1,5 @@
+import {deleteShapeRequired} from '../../test/browser/release-features.mjs';
+import {DELETE_SHAPE_CHECK} from '../../test/browser/delete-shape-flow.mjs';
 import {createHash} from 'node:crypto';
 import {expandedSelectionRequired} from '../../test/browser/release-features.mjs';
 import {EXPANDED_SELECTION_CHECK} from '../../test/browser/expanded-selection-flow.mjs';
@@ -158,6 +160,15 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
     if(deleteReconnectRequired(release.version)){
         required.push(DELETE_RECONNECT_CHECK);const proof=report.deleteReconnect;
         require(proof?.status==='passed'&&proof.modelWorkers===7&&proof.automaticRuntimeWorkers===0&&proof.cancelPreserves===true&&proof.modelOutputReplaced===true&&proof.draftVersion===4&&proof.undoRedo===true&&proof.reopenedOperators===2&&proof.customOptionsPreserved===true&&proof.weightsPreserved===true&&proof.customSearch===1&&proof.incompatibleRejected===true&&proof.boundaryReopenedOperators===2&&proof.compositionOutputBypass===true&&JSON.stringify(proof.boundaryInputs)==='[1,2,7,8]','missing deletion reconnect proof.');
+    }
+    if(deleteShapeRequired(release.version)){
+        required.push(DELETE_SHAPE_CHECK);const proof=report.deleteShape;
+        require(proof?.status==='passed'&&proof.modelWorkers===9&&proof.runtimeWorkers===0&&proof.cases?.length===5&&
+            proof.cases[0].name==='branch'&&proof.cases[0].automatic===true&&proof.cases[0].inferredTensors===4&&proof.cases[0].draftVersion===5&&proof.cases[0].cameraPreserved===true&&proof.cases[0].undoRedo===true&&proof.cases[0].search===1&&proof.cases[0].reopenedOperators===4&&JSON.stringify(proof.cases[0].outputShape)==='[2,3]'&&
+            proof.cases[1].name==='reshape'&&proof.cases[1].constantParameters===true&&proof.cases[1].reopenedOperators===2&&JSON.stringify(proof.cases[1].transposeShape)==='[6,1]'&&
+            ['fc','custom'].every((name,i)=>proof.cases[i+2].name===name&&proof.cases[i+2].blocked===true&&proof.cases[i+2].unchanged===true&&typeof proof.cases[i+2].reason==='string'&&proof.cases[i+2].reason.length>0)&&
+            proof.cases[4].name==='composition'&&proof.cases[4].automatic===true&&proof.cases[4].reopenedOperators===4&&JSON.stringify(proof.cases[4].outputShape)==='[2,3]'&&
+            proof.layout?.left>=0&&proof.layout.right<=proof.layout.width&&proof.layout.top>=0&&proof.layout.bottom<=proof.layout.height&&proof.layout.documentWidth<=proof.layout.width,'missing deletion shape inference proof.');
     }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&

@@ -11,6 +11,7 @@ export const DELETE_RECONNECT_CHECK='Deletion preview reconnects consumers and m
 export async function deleteReconnectFlow({page,read,directory,check}){
     const report={status:'failed',modelWorkers:0,automaticRuntimeWorkers:0};
     const until=async(fn,...args)=>{const end=Date.now()+30000;while(!await read(fn,...args)){if(Date.now()>end)throw Error('Deletion preview timeout: '+fn);await new Promise(r=>setTimeout(r,60));}};
+    const manual=async()=>{if(await page.locator('#edit-delete-mode option[value=infer]').count())await page.locator('#edit-delete-mode').selectOption('reconnect');};
     const ready=()=>until(()=>document.querySelector('#model-tabs').getAttribute('aria-busy')!=='true'&&document.querySelector('#loading-card').hidden&&document.querySelector('#target').getAttribute('aria-busy')==='false');
     const editReady=()=>until(()=>!document.querySelector('#edit-workspace').hidden&&document.querySelector('#edit-workspace').getAttribute('aria-busy')==='false'&&document.querySelectorAll('[data-edit-node]').length>0);
     const choose=async(file,button='#open-model')=>{const event=page.waitForEvent('filechooser');await page.locator(button).click();await(await event).setFiles(file);report.modelWorkers++;await ready();};
@@ -21,14 +22,14 @@ export async function deleteReconnectFlow({page,read,directory,check}){
         const f=await compositionFixture({custom:true}),file=path.join(directory,'delete-source.tflite');await writeFile(file,f.bytes);
         await choose(file);await page.locator('#edit-mode').click();await editReady();await page.locator('#edit-font').selectOption('32');await editReady();
         await page.locator('[data-edit-node="op:0:0"] .edit-node-title').click();
-        await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
+        await page.locator('#edit-delete').click();await manual();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
         assert.equal(await page.locator('#edit-delete-confirm').isDisabled(),true,'two compatible ADD operands must require a choice');
         await page.locator('#edit-delete-cancel').click();assert.equal(await page.locator('.edit-node.removed').count(),0);
-        await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
+        await page.locator('#edit-delete').click();await manual();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
         await page.locator('[data-delete-replacement="t:0:2"]').selectOption('t:0:0');await page.locator('#edit-delete-confirm').click();
         assert.equal(await page.locator('[data-edit-node="op:0:2"] [data-edit-input][data-edit-slot="0"]').textContent(),'接入 1 · '+f.model.subgraphs[0].tensors[0].name);
         await page.locator('#edit-undo').click();assert.equal(await page.locator('.edit-node.removed').count(),0);await page.locator('#edit-redo').click();assert.equal(await page.locator('.edit-node.removed').count(),1);
-        await page.locator('[data-edit-node="op:0:2"] .edit-node-title').click();await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
+        await page.locator('[data-edit-node="op:0:2"] .edit-node-title').click();await page.locator('#edit-delete').click();await manual();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
         assert.match(await page.locator('#edit-delete-outputs').textContent(),/1 個模型輸出/);
         await page.locator('[data-delete-replacement="t:0:4"]').selectOption('t:0:3');
         const bounds=await read(()=>{const d=document.querySelector('#edit-delete-dialog'),r=d.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth};});
@@ -44,13 +45,13 @@ export async function deleteReconnectFlow({page,read,directory,check}){
         await close();await choose(output);assert.equal(await page.locator('#layer-count').textContent(),'2');await page.locator('#layers-tab').click();await page.locator('#query').fill('company.copy_me');await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await ready();await close();
         const incompatible=await customFixture({external:true}),incompatibleFile=path.join(directory,'delete-incompatible.tflite');await writeFile(incompatibleFile,incompatible.bytes);await choose(incompatibleFile);
         await page.locator('#query').fill('InternalSplitFoo');await until(()=>document.querySelector('#result-count').textContent==='1 筆結果');await page.locator('.result-item').click();await ready();await page.locator('#edit-mode').click();await editReady();
-        await page.locator('[data-edit-node="op:0:1"] .edit-node-title').click();await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
+        await page.locator('[data-edit-node="op:0:1"] .edit-node-title').click();await page.locator('#edit-delete').click();await manual();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
         assert.equal(await page.locator('#edit-delete-confirm').isDisabled(),true);assert.match(await page.locator('#edit-delete-outputs').textContent(),/dtype 不同/);
         await page.locator('#edit-delete-mode').selectOption('boundary');await page.locator('#edit-delete-confirm').click();
         const boundary=await download('#edit-export','delete-boundary.tflite'),boundaryBytes=new Uint8Array(await readFile(boundary)),boundaryIndex=await parseModel((o,n)=>boundaryBytes.subarray(o,o+n),boundaryBytes.length,metadata);
         assert.deepEqual([...boundaryIndex.raw.subgraphs[0].inputs],[1,2,7,8]);await close();await choose(boundary);assert.equal(await page.locator('#layer-count').textContent(),'2');await close();
         await choose(file);await page.locator('#pick-pattern').click();await page.locator('#pick-op-ids').click();await page.locator('#capture-op-ids').fill('0-2');await page.locator('#apply-op-ids').click();await page.locator('#compose-capture').click();await editReady();
-        await page.locator('[data-edit-node="op:0:2"] .edit-node-title').click();await page.locator('#edit-delete').click();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
+        await page.locator('[data-edit-node="op:0:2"] .edit-node-title').click();await page.locator('#edit-delete').click();await manual();await until(()=>document.querySelector('#edit-delete-dialog').open&&!document.querySelector('#edit-delete-error').textContent);
         await page.locator('[data-delete-replacement="t:0:4"]').selectOption('t:0:0');await page.locator('#edit-delete-confirm').click();
         const composed=await download('#edit-export','delete-composed.tflite'),compositionBytes=new Uint8Array(await readFile(composed)),compositionIndex=await parseModel((o,n)=>compositionBytes.subarray(o,o+n),compositionBytes.length,metadata);
         assert.equal(compositionIndex.raw.subgraphs[0].operators.length,2);assert.deepEqual([...compositionIndex.raw.subgraphs[0].outputs],[0]);await close();await choose(composed);assert.equal(await page.locator('#layer-count').textContent(),'2');await close();

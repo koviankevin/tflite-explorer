@@ -5,23 +5,23 @@ import {builtinInfo,builtinSettings,randomTensorInfo} from './tflite-new-ops.js'
 import {randomOptions,randomAlgorithm} from './tensor-random.js';
 import {inferTfliteOutputs} from './tflite-shape-inference.js';
 import {compositionCommand,compositionOrder,compositionWireReason,compositionInterface} from './model-composition-draft.js';
-import {deletionPreview} from './model-edit-delete.js';
+import {deletionPreview,deletionTypeReason} from './model-edit-delete.js';
 const copy=value=>structuredClone(value);
-export const editDeletePreview=(state,node)=>deletionPreview(state,node,{position:editPosition,wireReason:editWireReason});
+export const editDeletePreview=(state,node,options)=>deletionPreview(state,node,{position:editPosition,wireReason:editWireReason},options);
 export function editPosition(state,node){
     if(state.composition)return state.nodes.indexOf(node)*4+2;
     if(!node.fresh)return node.source.node*4+2;
     const peers=state.nodes.filter(n=>n.fresh&&!n.removed&&n.anchor.graph===node.anchor.graph&&n.anchor.node===node.anchor.node&&n.anchor.side===node.anchor.side),i=peers.indexOf(node);
     return node.anchor.node*4+(node.anchor.side==='after'?2:0)+2*(i+1)/(peers.length+1);
 }
-export function editWireReason(state,target,slot,valueId){
+export function editWireReason(state,target,slot,valueId,{allowShape=false}={}){
     const node=state.nodes.find(n=>n.id===target),value=state.values.get(valueId),old=node?.inputs[slot];
     if(!node||node.removed||!Number.isInteger(slot)||slot<0||!old||!value)return '找不到輸入端或來源輸出端。';
     if(value.missing)return '此輸入尚未接線，請接入來源或產生權重 tensor。';
     const producer=state.nodes.find(n=>n.id===value.producer);
     if(producer?.removed&&!state.composition&&!(state.format==='tflite'&&producer.boundary&&!producer.fresh))return '來源 OP 已刪除，請改選有效來源。';
     if(value.optional&&!old.optional)return '這個輸入端不能留空。';
-    if(old.signature!==null&&value.signature!==old.signature)return 'dtype、shape、量化或型別不同，不能直接接線。';
+    if(old.signature!==null&&value.signature!==old.signature&&!(allowShape&&state.format==='tflite'&&!deletionTypeReason(old,value,{allowShape:true})))return 'dtype、shape、量化或型別不同，不能直接接線。';
     if(state.format==='tflite'&&value.graph!==node.source.graph)return 'TFLite 只能在同一個 subgraph 內接線。';
     if(state.composition){const reason=compositionWireReason(state,node.id,valueId);if(reason)return reason;}
     if(state.format==='mlir'&&!node.visibleRegions.includes(value.region))return '此 SSA 值不在目標 OP 可見的 region／function。';
@@ -80,8 +80,9 @@ function mutate(state,command){
         const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;delete node.inference;
         node.inputs=node.inputs.map((p,i)=>({...copy(base.inputs[i]),value:p.value}));
         node.outputs.forEach((port,i)=>{const original=state.values.get(base.outputs[i].value),name=state.format==='mlir'?`${state.prefix}${node.serial}_${original.group}${original.grouped||original.number?`#${original.number}`:''}`:`${original.name||'result'}_edit_${node.serial}_${i}`.slice(0,256);state.values.set(port.value,{...copy(original),id:port.value,name,producer:node.id,fresh:true,modelOutput:false});port.type=original.type;});
-    }else if(command.kind==='delete-reconnect'){
-        const preview=editDeletePreview(state,node.id);
+    }else if(command.kind==='delete-reconnect'||command.kind==='delete-infer'){
+        const infer=command.kind==='delete-infer',preview=editDeletePreview(state,node.id,{allowShape:infer});
+        if(infer&&(command.algorithm!=='tflite-static-v1'||!Array.isArray(command.localShapes)||command.localShapes.length>EDIT_LIMITS.ports))throw Error('Shape 推導草稿格式無效。');
         if(!Array.isArray(command.replacements)||command.replacements.length>node.outputs.length||command.replacements.some(r=>!r||typeof r.from!=='string'||typeof r.value!=='string'||Object.keys(r).some(k=>!['from','value'].includes(k)))||new Set(command.replacements.map(r=>r.from)).size!==command.replacements.length)throw Error('刪除重接的輸出對照無效。');
         for(const r of command.replacements){const output=preview.outputs.find(p=>p.value===r.from),choice=output?.choice(r.value);if(!choice||choice.reason)throw Error(choice?.reason||'找不到相容的替代 tensor。');}
         const mapping=new Map(command.replacements.map(r=>[r.from,r.value])),beforeOutputs=state.composition?compositionInterface(state).outputs:[];node.reconnectWires=[];node.reconnectInterface=[];
@@ -89,6 +90,14 @@ function mutate(state,command){
         if(state.composition&&state.nodes.filter(n=>!n.removed).length===1)throw Error('組合草稿需保留至少一個 OP；請先加入其他片段或改用原模型編輯。');
         for(const target of state.nodes)if(!target.removed&&target.id!==node.id)target.inputs.forEach((p,slot)=>{if(mapping.has(p.value)){const value=mapping.get(p.value);node.reconnectWires.push({node:target.id,slot,before:p.value,after:value});p.value=value;}});
         node.removed=true;node.boundary=false;node.reconnect=copy(command.replacements);
+        if(infer){node.autoShape=true;node.reconnectShapes=[];
+            const seen=new Set();for(const patch of command.localShapes){const v=state.values.get(patch?.value);if(!v||v.graph!==node.source.graph||v.optional||seen.has(v.id)||!Array.isArray(patch.shape)||patch.shape.length>128||patch.shape.some(d=>!Number.isInteger(d)||d<0||d>2147483647))throw Error('Shape 推導的 tensor 或維度無效。');seen.add(v.id);
+                const metadata=JSON.parse(v.signature);if(metadata.shape_signature?.some(d=>d<0)||metadata.sparsity||v.generated||['權重／常數','模型輸入','變數'].includes(v.kind)&&!v.producer&&!v.fresh)throw Error('不會自動修改輸入、權重、稀疏或動態 tensor shape。');
+                const before={signature:v.signature,type:v.type,inferredShape:v.inferredShape,deleteInferred:v.deleteInferred};metadata.shape=[...patch.shape];if(metadata.shape_signature?.length)metadata.shape_signature=[...patch.shape];v.signature=JSON.stringify(metadata);v.type=`${v.type.split('[')[0].trim()} [${patch.shape.join(', ')}]`;v.deleteInferred=true;if(v.fresh)v.inferredShape=[...patch.shape];node.reconnectShapes.push({value:v.id,before,after:v.signature});
+            }
+            for(const target of state.nodes)if(!target.removed)for(const p of target.inputs){const v=state.values.get(p.value);if(v&&!v.optional){p.signature=v.signature;p.type=v.type;}}
+            for(const target of state.nodes)for(const p of target.outputs)p.type=state.values.get(p.value)?.type;
+        }
         if(state.composition){
             const outputs=new Set(beforeOutputs.map(id=>mapping.get(id)||id)),pool=new Set([...state.nodes.flatMap(n=>n.outputs.map(p=>p.value)),...beforeOutputs,...outputs]);
             for(const id of pool){const previous=state.interface.outputs.get(id),enabled=outputs.has(id);if(previous!==enabled){node.reconnectInterface.push({value:id,previous,enabled});state.interface.outputs.set(id,enabled);}}
@@ -100,7 +109,9 @@ function mutate(state,command){
     }else if(command.kind==='restore'){
         for(const r of node.reconnectWires||[]){const p=state.nodes.find(n=>n.id===r.node)?.inputs[r.slot];if(p?.value===r.after)p.value=r.before;}
         for(const r of node.reconnectInterface||[])if(state.interface.outputs.get(r.value)===r.enabled){if(r.previous===undefined)state.interface.outputs.delete(r.value);else state.interface.outputs.set(r.value,r.previous);}
-        delete node.reconnect;delete node.reconnectWires;delete node.reconnectInterface;node.removed=false;node.boundary=false;
+        for(const r of node.reconnectShapes||[]){const v=state.values.get(r.value);if(v?.signature===r.after)Object.assign(v,r.before);}
+        if(node.autoShape)for(const target of state.nodes){for(const p of target.inputs){const v=state.values.get(p.value);if(v&&!v.optional){p.signature=v.signature;p.type=v.type;}}for(const p of target.outputs)p.type=state.values.get(p.value)?.type;}
+        delete node.autoShape;delete node.reconnectShapes;delete node.reconnect;delete node.reconnectWires;delete node.reconnectInterface;node.removed=false;node.boundary=false;
     }
     else if(command.kind==='expose'){
         if(state.format!=='tflite'||!node.fresh||node.removed)throw Error('只有新增的 TFLite OP 可在此加入模型 outputs。');
