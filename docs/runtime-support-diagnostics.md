@@ -31,3 +31,13 @@ v1.12.5 起正式 HTTPS 必須保留原 54 項並加入本組第 55 項；缺少
 [候選摘要](results/runtime-support-candidate.json)與[原始合成證據](results/runtime-support-candidate-evidence.zip)保留實際模型／BIN／IO、截圖、red／green、診斷對照及來源。封存 57 檔、562,706 bytes，SHA-256 `70c380f059acca752bd845c68b0471157762dad4bf5e1ad39c75f7f30fd88432`。受測為 dirty build `ac4f4f0d0a22e4cd`，355 核心檔；來源檔 hash 與建置 manifest 已比對，仍不是乾淨 PR／main 或正式發布證據。
 
 接下來完成必要 PR、來源相同的關卡、固定產物準備、正式站與固定 Release 核對。整體商品等級目標、Windows 大檔適用性及其他 OP 規則仍維持原範圍。
+
+## 乾淨主分支關卡已核對，尚未發布
+
+PR #308 的實際受測 tree 與合併來源 `1716885e40849c2206c2a2ab66082906f4e84560` 相同；完整 Node 為 1,199 項通過、35 項既有環境條件略過。83 項發布契約及九筆 PR 核心效能樣本通過。新主分支的核心相依範圍仍為同一組 93 檔，沿用並重新認證主分支 [43959891843](https://github.com/koviankevin/tflite-explorer/actions/runs/43959891843) 的有效證據。
+
+乾淨 build `de01ad978fc50ef0`、355 核心檔已重建並核對[完整四關卡收據](results/runtime-support-v1.12.5-main-gates.json)。新來源的 [大檔八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/43970625515)、[契約](https://github.com/koviankevin/tflite-explorer/actions/runs/43970635278)及 [55 項站台操作](https://github.com/koviankevin/tflite-explorer/actions/runs/43970648605)均完成原始 artifact digest、ZIP CRC、報告來源、依賴 fingerprint 及必要案例核對。
+
+實體 1,349,965,216-byte／21,005 OP 八輪於 2026-11-16 22:30:40.471Z 至 22:47:07.440Z 完成，1,978 筆觀察：RSS 漂移 127,811,584 B（121.89 MiB），低於原 128 MiB 上限；斜率 1,181,520.46 B／輪，peak growth 518,684,672 B，main heap 漂移 241,280 B。保留接近門檻的實際數字，不宣稱所有環境有同樣餘量。57 個觀察到的 Worker 終止、六個程序身分正常退出。
+
+完整、局部及組合共 24 份匯出 SHA-256 與前次 metadata 來源的成功八輪完全相同，權重、opaque custom options 及重開 pattern 皆通過。此大檔關卡沒有執行模型推論；它不代表 1 GiB Interpreter 或 Windows 大檔 RSS 已驗收。接下來仍待固定產物 prepare／publish、正式 HTTPS 與固定 Release 核對，目前正式版維持 v1.12.4。
