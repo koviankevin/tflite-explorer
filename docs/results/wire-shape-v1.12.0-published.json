@@ -1,0 +1,530 @@
+{
+  "format": "model-lens-shape-editing-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-16T13:22:35.548Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.0",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "4e2c843620a836d0c4a07b702f93af5d7945e3b3",
+      "tree": "3a9b4b3f4571f81d1028d3481dd8c5df396b7d2d",
+      "committedAt": "2026-11-16T20:19:56+08:00",
+      "dirty": false
+    },
+    "buildId": "4d00355bac02d654"
+  },
+  "prepareRun": 43866665280,
+  "run": {
+    "id": 43873263991,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43873263991",
+    "attempt": 1
+  },
+  "releaseId": 447068801,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.0",
+  "publishedAt": "2026-11-16T13:20:22Z",
+  "tagSource": "4e2c843620a836d0c4a07b702f93af5d7945e3b3",
+  "latest": "v1.12.0",
+  "siteId": "94a4d7e8138d63f296a4fcef9ac98d721c4369c6f61bafda45742427436cde3e",
+  "siteManifestSHA256": "9b8171abe8bef88b7d4154b2e04e5e39c5e7ff1a943f737a93e0a4878b3beeda",
+  "coreFiles": 343,
+  "siteFiles": 1516,
+  "checks": 50,
+  "assets": [
+    {
+      "name": "model-lens-public-1.12.0-4d00355bac02d654.zip",
+      "bytes": 41427833,
+      "sha256": "daece72bfce10c46c42bc06996fdfa055cf7284a301aedb90fe05580a051bff3",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.0/model-lens-public-1.12.0-4d00355bac02d654.zip"
+    },
+    {
+      "name": "model-lens-public-1.12.0-4d00355bac02d654.zip.sha256",
+      "bytes": 112,
+      "sha256": "81ef15220fe142425ac17bc5bef258e5206d14203646e78c95c811e29e8aa514",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.0/model-lens-public-1.12.0-4d00355bac02d654.zip.sha256"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 219939,
+      "sha256": "6d94645f8c81415e822270cb64539013d431e52ef66be0fa435b6ac22eb09073",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.0/release-gates.json"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 55504,
+      "sha256": "4534c4a20dc2ccd729c9a23d10d9edcadfe4add00a41391747e34a35152a1612",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.0/release-manifest.json"
+    }
+  ],
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 43863672032,
+      "reused": true
+    },
+    {
+      "kind": "browser",
+      "runId": 43863677857,
+      "reused": true
+    },
+    {
+      "kind": "contract",
+      "runId": 43865274309,
+      "reused": true
+    },
+    {
+      "kind": "site",
+      "runId": 43865279221,
+      "reused": true
+    }
+  ],
+  "deployment": {
+    "id": 7824920636,
+    "source": "4e2c843620a836d0c4a07b702f93af5d7945e3b3",
+    "status": "success"
+  },
+  "archives": [
+    {
+      "id": 14230255661,
+      "name": "published-release-verification",
+      "digest": "sha256:2a3d69d5cb9cfb9ebda66f5c5e90ef3653aeb6a96df2c191980a1358a2fbf52f",
+      "bytes": 761
+    },
+    {
+      "id": 14229915465,
+      "name": "live-release-verification",
+      "digest": "sha256:df6b4c8c27224d0783b052cae8c9bd97ea5fd36e5cae5635573a0b57159f70fd",
+      "bytes": 561463
+    },
+    {
+      "id": 14228807433,
+      "name": "release-delivery",
+      "digest": "sha256:c66c3578c081019ea0e8c299eda7f51c0be79f1e924c22f438b0c3cd15b0d754",
+      "bytes": 7254760
+    },
+    {
+      "id": 14227919143,
+      "name": "github-pages",
+      "digest": "sha256:624ca0247108180409fa0b01a3ccd959ba9e52ef359c1a51727a881ae50f7275",
+      "bytes": 29288452
+    }
+  ],
+  "formalHTTP": {
+    "status": "passed",
+    "files": 1516,
+    "httpRetries": 0,
+    "reportSHA256": "9050b5ab716afb2e9c82da4ed711c4868b4602bc7906d0d078b4015132a98d3f"
+  },
+  "formalBrowser": {
+    "status": "passed",
+    "checks": [
+      "version dialog works during delayed graph initialization at the repository subpath",
+      "public demo, 32px graph, exact layer search and location",
+      "font changes during real SVG layout keep operator and argument text inside measured32px frames",
+      "native model chooser and native pattern JSON import/export",
+      "actual TFLite submodel download, native reopen, original pattern and worker cleanup",
+      "TFLite OP ID range selection, atomic input errors and native export reopen",
+      "TFLite OP ID direct export of 61 operators before drawing and native reopen",
+      "Above-32 TFLite marquee and cross-block MLIR selection, pattern JSON search and submodel reopen",
+      "Deletion preview reconnects consumers and model outputs; v4 draft, undo/redo, export/reopen preserve custom options and weights",
+      "Automatic OP bypass propagates branch/merge shapes, v5 draft and original/composed export; FC/custom inference failures preserve draft",
+      "Shape-mismatched native drag/click wiring requires confirmation; cancel, v6 draft, branch export/reopen and dtype/FC/custom rejection",
+      "keyboard native open, Ctrl F, result location, 32px and roving search tabs with labelled results",
+      "selected pattern opens an unsaved editable query; adding/removing query nodes and edges preserves model, camera and selection",
+      "modal focus and shortcut isolation preserve selection; keyboard adds layers and saves a searchable pattern",
+      "keyboard native pattern import, saved selection, search and exact JSON export",
+      "direct local export reopen closes the previous worker, preserves the pattern and consumes the one-shot result",
+      "keyboard child-model download, Ctrl O native reopen, original pattern match and worker closure",
+      "branch-join-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "maximum 256-node CFG query builds only 12 connection rows; paging, append-to-last-page and removal remain bounded",
+      "loop-custom: direct selected CFG edit, successor negative/repair, 32px 1366/1280 laptop layout, saved pattern, MLIR download/direct reopen and worker closure",
+      "actual TFLite OP add/parameter edit/delete, real custom bytes, invalid wiring and cancelled candidate, direct reopen and worker closure",
+      "independent graph editor native wiring/drag, automatic tensor, preview undo/redo, 32px laptop layout, verified TFLite export/reopen and pattern",
+      "portable edit native save/import, original full-byte fingerprint, three-OP selection, builtin catalog, deterministic random weight and actual TFLite export/reopen",
+      "32px transformed native wiring, portable draft continuation and full TFLite IF/WHILE branch/custom export/reopen preserve exact ports, control targets and payloads",
+      "32px transformed native wiring, portable draft continuation and full TFLite WHILE body/custom export/reopen preserve exact ports, control targets and payloads",
+      "MLIR retains exploration/search while all actual-model edit entries and legacy MLIR edit drafts are rejected",
+      "saved pattern delete/undo preserves the query and unrelated items, synchronizes tabs and retains a peer replacement without overwriting it",
+      "deleting the final pattern stays empty after reload; the laptop delete action remains visible and removed entries do not reappear",
+      "local model tabs preserve source selection, zoom and edit undo/redo across exported-child switches, guard inactive drafts, fit laptop and release inactive workers",
+      "committed local edit draft survives an owned browser SIGKILL; fresh browser rejects wrong weights and restores original wiring, 32px view and redo",
+      "native shared IndexedDB recovery conflict/fork preserves both edits; verified TFLite export reopens and deleting the saved branch never resurrects it",
+      "MLIR validation modal: keyboard-only export blocks undefined SSA before download; Tab, Ctrl F, Escape, dismissal focus and selection remain local",
+      "diamond: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "diamond: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "loop: native Canvas capsule expansion restores focus; visible bounded node controls select across blocks at 32px and preserve selection through font, pan and zoom",
+      "loop: keyboard Canvas selection saves/searches and downloads a CFG pattern; local MLIR download/reopen preserves SSA and both original patterns exactly once",
+      "per-OP static validation, multi-output SPLIT export/reopen, dynamic reasons, invalid SLICE rejection and 32px/21k-OP paged report without automatic interpreter",
+      "affine quantization metadata, blocked rewires, preserved cuts, unknown codecs and bounded report pages at32px",
+      "legacy concrete shapes block invalid FC and verify unchanged RESHAPE constants, exports and reopen at32px",
+      "ADD invalid input broadcast rejected before download; float32 and dynamic ADD report and reopen at 32px",
+      "MUL blocks incompatible broadcast and preserves float, dynamic and mixed quantized outputs after export and reopen at 32px",
+      "SUB invalid input broadcast rejected before download; float32 and dynamic SUB report and reopen at 32px",
+      "DIV invalid input broadcast rejected before download; float32 and dynamic DIV report and reopen at 32px",
+      "MAXIMUM invalid input broadcast rejected before download; float32 and dynamic MAXIMUM report and reopen at 32px",
+      "MINIMUM invalid input broadcast rejected before download; float32 and dynamic MINIMUM report and reopen at 32px",
+      "manual CPU failure preserves readable inputs in partial IO ZIP with missing padded output; complete IO remains v1 at32px",
+      "optional LiteRT CPU raw inputs/outputs, no automatic inference, kernel failure, custom/signature exclusion, cancellation and 32px laptop layout",
+      "real WHILE kernel: responsive UI and native cancellation, actual30s timeout, closed Workers and finite CPU/IO recovery",
+      "in-app guide, F1/manual tabs/focus, preserved editing state, safe model navigation, explicit inference and laptop layout",
+      "eight manual runtime IO lifecycle cycles, 24 CPU runs, native download/reopen/close, natural URL release and bounded observed process RSS"
+    ],
+    "modelWorkers": 179,
+    "allWorkersClosed": true,
+    "processCleanup": {
+      "identities": [
+        {
+          "pid": 2956,
+          "startTicks": "9959"
+        },
+        {
+          "pid": 2958,
+          "startTicks": "9990"
+        },
+        {
+          "pid": 2959,
+          "startTicks": "9990"
+        },
+        {
+          "pid": 2974,
+          "startTicks": "10300"
+        },
+        {
+          "pid": 2986,
+          "startTicks": "10300"
+        },
+        {
+          "pid": 3010,
+          "startTicks": "10306"
+        }
+      ],
+      "remaining": [],
+      "allReaped": true,
+      "observations": 1
+    },
+    "wireShape": {
+      "status": "passed",
+      "modelWorkers": 6,
+      "runtimeWorkers": 0,
+      "cancelPreserves": true,
+      "drag": true,
+      "click": true,
+      "draftVersion": 6,
+      "reopenedOperators": 5,
+      "cameraPreserved": true,
+      "blocked": [
+        "fc",
+        "custom",
+        "dtype"
+      ],
+      "layout": {
+        "left": 293,
+        "right": 1073,
+        "top": 185.03125,
+        "bottom": 582.953125,
+        "width": 1366,
+        "height": 768,
+        "documentWidth": 1366
+      }
+    },
+    "deleteShape": {
+      "status": "passed",
+      "modelWorkers": 9,
+      "runtimeWorkers": 0,
+      "cases": [
+        {
+          "name": "branch",
+          "automatic": true,
+          "inferredTensors": 4,
+          "draftVersion": 5,
+          "reopenedOperators": 4,
+          "outputShape": [
+            2,
+            3
+          ],
+          "cameraPreserved": true,
+          "undoRedo": true,
+          "search": 1
+        },
+        {
+          "name": "reshape",
+          "constantParameters": true,
+          "transposeShape": [
+            6,
+            1
+          ],
+          "reopenedOperators": 2
+        },
+        {
+          "name": "fc",
+          "blocked": true,
+          "unchanged": true,
+          "reason": "Subgraph #0 · op:0:1 FULLY_CONNECTED · inputs [0, 3]：FC input 元素數／最後一維與 weights input_size 2 不相容；不會修改權重。"
+        },
+        {
+          "name": "custom",
+          "blocked": true,
+          "unchanged": true,
+          "reason": "Subgraph #0 · op:0:1 company.opaque · inputs [0]：custom OP 未提供 shape 規則，無法根據改變的輸入可靠推導。"
+        },
+        {
+          "name": "composition",
+          "automatic": true,
+          "reopenedOperators": 4,
+          "outputShape": [
+            2,
+            3
+          ]
+        }
+      ],
+      "layout": {
+        "left": 293,
+        "right": 1073,
+        "top": 24,
+        "bottom": 744,
+        "width": 1366,
+        "height": 768,
+        "documentWidth": 1366
+      }
+    },
+    "reportSHA256": "e09cce02ae7f54766f040f9a2c971385989427a01d8d8f3c99f9fe304b22b599"
+  },
+  "independentHTTP": {
+    "status": "passed",
+    "at": "2026-11-16T13:13:28.415Z",
+    "siteId": "94a4d7e8138d63f296a4fcef9ac98d721c4369c6f61bafda45742427436cde3e",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.12.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "4e2c843620a836d0c4a07b702f93af5d7945e3b3",
+        "tree": "3a9b4b3f4571f81d1028d3481dd8c5df396b7d2d",
+        "committedAt": "2026-11-16T20:19:56+08:00",
+        "dirty": false
+      },
+      "buildId": "4d00355bac02d654"
+    },
+    "files": 1516,
+    "checks": [
+      {
+        "path": "/",
+        "sha256": "efd40c95a791531aae3982f44d1b5df3e367e4330fa2913cfcb9246036b8f637"
+      },
+      {
+        "path": "index.html",
+        "sha256": "efd40c95a791531aae3982f44d1b5df3e367e4330fa2913cfcb9246036b8f637"
+      },
+      {
+        "path": "versions/4d00355bac02d654/release.json",
+        "sha256": "307c16f808f956d3ed10a80b046b72e802d95312140a8036310f80fcb08e2511"
+      },
+      {
+        "path": "versions/4d00355bac02d654/src/model-edit-wire-ui.js",
+        "sha256": "44ad5d7e9e8381611ac0ab4c912eaae94beab33c6792d938b7cd1ce53b5a6ddc"
+      },
+      {
+        "path": "versions/4d00355bac02d654/src/tflite-delete-inference.js",
+        "sha256": "ed1dcf8d82ddb71ad47a99eede5ca13bc4d4a8a6cd1326ff6df0778c238ad270"
+      }
+    ]
+  },
+  "windowsFormal": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 6,
+          "runtimeWorkers": 0,
+          "cancelPreserves": true,
+          "drag": true,
+          "click": true,
+          "draftVersion": 6,
+          "reopenedOperators": 5,
+          "cameraPreserved": true,
+          "blocked": [
+            "fc",
+            "custom",
+            "dtype"
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 121.03125,
+            "bottom": 518.953125,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "deletion": {
+          "status": "passed",
+          "modelWorkers": 9,
+          "runtimeWorkers": 0,
+          "cases": [
+            {
+              "name": "branch",
+              "automatic": true,
+              "inferredTensors": 4,
+              "draftVersion": 5,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ],
+              "cameraPreserved": true,
+              "undoRedo": true,
+              "search": 1
+            },
+            {
+              "name": "reshape",
+              "constantParameters": true,
+              "transposeShape": [
+                6,
+                1
+              ],
+              "reopenedOperators": 2
+            },
+            {
+              "name": "fc",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 FULLY_CONNECTED · inputs [0, 3]：FC input 元素數／最後一維與 weights input_size 2 不相容；不會修改權重。"
+            },
+            {
+              "name": "custom",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 company.opaque · inputs [0]：custom OP 未提供 shape 規則，無法根據改變的輸入可靠推導。"
+            },
+            {
+              "name": "composition",
+              "automatic": true,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ]
+            }
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 6,
+          "runtimeWorkers": 0,
+          "cancelPreserves": true,
+          "drag": true,
+          "click": true,
+          "draftVersion": 6,
+          "reopenedOperators": 5,
+          "cameraPreserved": true,
+          "blocked": [
+            "fc",
+            "custom",
+            "dtype"
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 121.03125,
+            "bottom": 518.953125,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "deletion": {
+          "status": "passed",
+          "modelWorkers": 9,
+          "runtimeWorkers": 0,
+          "cases": [
+            {
+              "name": "branch",
+              "automatic": true,
+              "inferredTensors": 4,
+              "draftVersion": 5,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ],
+              "cameraPreserved": true,
+              "undoRedo": true,
+              "search": 1
+            },
+            {
+              "name": "reshape",
+              "constantParameters": true,
+              "transposeShape": [
+                6,
+                1
+              ],
+              "reopenedOperators": 2
+            },
+            {
+              "name": "fc",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 FULLY_CONNECTED · inputs [0, 3]：FC input 元素數／最後一維與 weights input_size 2 不相容；不會修改權重。"
+            },
+            {
+              "name": "custom",
+              "blocked": true,
+              "unchanged": true,
+              "reason": "Subgraph #0 · op:0:1 company.opaque · inputs [0]：custom OP 未提供 shape 規則，無法根據改變的輸入可靠推導。"
+            },
+            {
+              "name": "composition",
+              "automatic": true,
+              "reopenedOperators": 4,
+              "outputShape": [
+                2,
+                3
+              ]
+            }
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      }
+    ]
+  },
+  "sourcePRs": [
+    283,
+    284,
+    285,
+    286,
+    287,
+    288
+  ],
+  "scope": "public synthetic models only; no Sites/GH Studio synchronization"
+}
