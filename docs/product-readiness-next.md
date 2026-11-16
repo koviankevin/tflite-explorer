@@ -10,6 +10,8 @@ PR #300 已合併，主分支網站 54 項與契約通過；實體大檔八輪�
 
 已完成[鄰接索引減量候選](adjacency-index-allocation.md)：111 項選測、Chrome／Edge 八案及匯出一致性通過，PR #302／#303 已合併，Node 搜尋有時間成本。新來源的核心、契約、54 項站台驗收通過，但原政策實體八輪仍以 RSS drift 134.28 MiB 超過 128 MiB 失敗。1,888 樣本及 24 份匯出雜湊另經獨立 Python 核對，功能／清理皆完成。小權重 Worker heap 改善沒有解決完整資源阻擋；下一步量測解析配置，不重跑失敗來源、不部署。
 
+另已完成[TFLite metadata 配置候選](tflite-metadata-allocation.md)：私有 reader 的小型 Int32 views 使用互不重疊的有界配置區，108 項精選案例及 Chrome／Edge 兩組共 16 案通過。實際 pattern／完整編輯／組合流程的 24 份輸出一致，Worker capacity 有升有降，沒有宣稱 RSS 修復；尚待必要 PR 與新來源原政策關卡，正式版本不變。
+
 ## 2026-11-17 公開品質核對
 
 目前正式版本以 [README 的對外版本](../README.md)為準。本次以發布來源 `8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e`、正式站 manifest 與 GitHub Latest 核對：公開版為 **v1.12.3／build `c2e081e752506baa`**。完整來源、四項關卡、53 項正式操作、1,538 檔及四份實際下載見[收據](results/value-shape-v1.12.3-published.json)。值相依 TRANSPOSE／EXPAND_DIMS／RESHAPE 的已知數值錯誤已[正式修正](runtime-value-shape.md#v1123-正式交付)，正式 Chrome／Edge 各八例數值與 IO 核對通過。文件提交不改變已發布來源或固定附件，整體商品等級目標仍有下列未完成項目。
