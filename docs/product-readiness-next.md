@@ -8,7 +8,7 @@ PR #300 已合併，主分支網站 54 項與契約通過；實體大檔八輪�
 
 限定的一次診斷已[核對完成](softmax-validation.md#唯讀診斷實際結果)：2,033 樣本、209 詳細觀察，七輪約 124 MiB 的 renderer anonymous 延後下降，GPU／主頁 JS heap 大致平穩；仍未辨識物件／allocator。獨立 Python 重算及相同 24 份匯出雜湊通過，但診斷明確不可作發布證據。下一步量測並縮小實際解析／索引配置；原八輪失敗及正式 v1.12.3 保持。
 
-已完成[鄰接索引減量候選](adjacency-index-allocation.md)：延遲的逐列 Set 在完整 pattern 搜尋仍被全部建立，現改以精簡連線索引及快取列視圖讀取；111 項選測、Chrome／Edge 八案及匯出一致性通過，Worker used heap 與部分 capacity 降低，Node 搜尋有時間成本。尚待必要 PR 與新來源原政策大檔驗收，不宣稱原 RSS 失敗已解決。
+已完成[鄰接索引減量候選](adjacency-index-allocation.md)：111 項選測、Chrome／Edge 八案及匯出一致性通過，PR #302／#303 已合併，Node 搜尋有時間成本。新來源的核心、契約、54 項站台驗收通過，但原政策實體八輪仍以 RSS drift 134.28 MiB 超過 128 MiB 失敗。1,888 樣本及 24 份匯出雜湊另經獨立 Python 核對，功能／清理皆完成。小權重 Worker heap 改善沒有解決完整資源阻擋；下一步量測解析配置，不重跑失敗來源、不部署。
 
 ## 2026-11-17 公開品質核對
 
