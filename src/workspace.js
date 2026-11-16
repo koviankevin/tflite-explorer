@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import {reusablePattern} from './pattern-library.js';
 import {normalizeConditions} from './pattern-conditions.js';
 export const WORKSPACE_KEY='model-lens.workspace.v2';
@@ -26,7 +27,7 @@ export function cleanWorkspace(value) {
     if(!text(s.captureName,80) || !text(s.patternName,80) || !text(s.patternText,16384) || !['visual','text'].includes(s.patternMode))fail();
     if(!unique(s.overviewExpanded,49999,50000) || !Array.isArray(s.expanded) || s.expanded.length>512 || s.expanded.some(k=>!text(k,512)) || new Set(s.expanded).size!==s.expanded.length)fail();
     if(!Array.isArray(s.pages) || s.pages.length>512 || s.pages.some(p=>!Array.isArray(p) || p.length!==2 || !s.expanded.includes(p[0]) || !integer(p[1])))fail();
-    if(!Array.isArray(s.selections) || s.selections.length>32 || new Set(s.selections.map(b=>b?.graph)).size!==s.selections.length || s.selections.some(b=>!integer(b.graph) || !unique(b.nodes,10000000,32)) || s.selections.reduce((n,b)=>n+b.nodes.length,0)>32)fail();
+    if(!Array.isArray(s.selections) || s.selections.length>PATTERN_LIMITS.blocks || new Set(s.selections.map(b=>b?.graph)).size!==s.selections.length || s.selections.some(b=>!integer(b.graph) || !unique(b.nodes,10000000,PATTERN_LIMITS.operators)) || s.selections.reduce((n,b)=>n+b.nodes.length,0)>PATTERN_LIMITS.operators)fail();
     if(!s.across && (s.selections.length>1 || s.selections.some(b=>b.graph!==s.graph)))fail();
     if(s.camera!==null) {
         const c=s.camera;if(!c || !['svg','canvas'].includes(c.kind) || !number(c.zoom) || c.zoom<.00001 || c.zoom>100)fail();
@@ -46,7 +47,7 @@ export function cleanWorkspace(value) {
 }
 export const DRAFT_FIELDS=['condition-node','condition-kind','condition-side','condition-port','condition-attribute-name','condition-value'];
 export function cleanDraftEditor(e) {
-    if(!e || !Array.isArray(e.nodes) || e.nodes.length>32 || e.nodes.some(n=>!text(n.alias,80) || !text(n.type,256)) || !Array.isArray(e.edges) || e.edges.length>64 || e.edges.some(v=>!text(v.from,80) || !text(v.to,80)) || !integer(e.nextNode) || typeof e.induced!=='boolean' || typeof e.visualOpen!=='boolean' || !Array.isArray(e.conditions) || e.conditions.length>64 || e.conditions.some(r=>!Array.isArray(r) || r.length!==2 || !text(r[0],80)) || !e.fields || DRAFT_FIELDS.some(k=>!text(e.fields[k],2048)))fail();
+    if(!e || !Array.isArray(e.nodes) || e.nodes.length>PATTERN_LIMITS.operators || e.nodes.some(n=>!text(n.alias,80) || !text(n.type,256)) || !Array.isArray(e.edges) || e.edges.length>PATTERN_LIMITS.edges || e.edges.some(v=>!text(v.from,80) || !text(v.to,80)) || !integer(e.nextNode) || typeof e.induced!=='boolean' || typeof e.visualOpen!=='boolean' || !Array.isArray(e.conditions) || e.conditions.length>PATTERN_LIMITS.operators || e.conditions.some(r=>!Array.isArray(r) || r.length!==2 || !text(r[0],80)) || !e.fields || DRAFT_FIELDS.some(k=>!text(e.fields[k],2048)))fail();
     if(!['shape','dtype','attribute'].includes(e.fields['condition-kind']) || !['input','output'].includes(e.fields['condition-side']) || (e.cfg!==null && e.cfg?.mode!=='mlir-cfg') || new Set(e.conditions.map(r=>r[0])).size!==e.conditions.length)fail();
     // Incomplete visual graphs/text are drafts, never prepared as executable
     // patterns. Only known fields survive; conditions and CFGs remain validated.

@@ -4,6 +4,13 @@ import {workspaceIdentity,exportWorkspace,parseWorkspace,checkWorkspace,WORKSPAC
 const pattern={name:'test',nodes:[{alias:'N1',type:'Reshape',conditions:[{kind:'dtype',side:'output',port:0,value:'float32'}]},{alias:'N2',type:'Transpose'}],edges:[{from:'N1',to:'N2'}],induced:true};
 const identity={name:'same.tflite',bytes:100,sourceFormat:'tflite',signature:'a'.repeat(64)};
 const base=()=>({format:'model-lens-workspace',version:1,identity,state:{kind:'patterns',query:'',scope:'all',graph:0,view:'result',activeIndex:0,resultKey:'match',pattern,patternText:'N1:Reshape -> N2:Transpose',patternMode:'visual',patternName:'test',font:'32',direction:'horizontal',sidebarWidth:500,exportScope:'slice',full:false,collapsed:false,picking:true,across:false,captureName:'selection',selections:[{graph:0,nodes:[0,1]}],overviewExpanded:[1,5],sliceDetails:false,expanded:['a>b'],pages:[['a>b',3]],camera:{kind:'svg',zoom:.5,scrollLeft:12,scrollTop:34,candidates:[{id:'0',x:200,y:100}],page:null}}});
+test('256 selected operators survive workspace roundtrip; 257 is rejected without altering the source',()=>{
+    const value=base();value.state.selections[0].nodes=Array.from({length:256},(_,i)=>i);
+    const restored=parseWorkspace(exportWorkspace(value));assert.deepEqual(restored,value);
+    checkWorkspace(restored,identity,[{layers:256}]);
+    value.state.selections[0].nodes.push(256);assert.throws(()=>exportWorkspace(value),/上限/);
+    assert.equal(restored.state.selections[0].nodes.length,256);
+});
 test('overview projection identity is stable when detailed edges are omitted, but distinct matches differ',()=>{
     const item={kind:'patterns',graph:0,id:'N1 #0',path:[0,1],connections:[[0,1]]};
     assert.equal(sameResultKey(resultKey({...item,connections:[]}),item),true);

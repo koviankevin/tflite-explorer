@@ -154,6 +154,12 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.throws(()=>assertSiteOperations(directReport,directSite,broadcast,comparisonChecker),/Site operation evidence/);
     directReport.checks[45]='TFLite OP ID direct export of 61 operators before drawing and native reopen';
     assert.equal(assertSiteOperations(directReport,directSite,broadcast,comparisonChecker).checks,46);
+    const expandedRelease={...release,version:'1.9.2'},expandedSite={...site,candidate:expandedRelease};
+    const expandedReport={...directReport,siteRelease:expandedRelease,checks:[...directReport.checks,'Above-32 TFLite marquee and cross-block MLIR selection, pattern JSON search and submodel reopen'],expandedSelection:{status:'passed',modelWorkers:4,cases:[{format:'tflite',marquee:33,selected:66,patternNodes:66,reopened:66,matches:1},{format:'mlir',selected:68,blocks:3,patternOperators:68,matches:1,validSSA:true}]}};
+    assert.equal(assertSiteOperations(expandedReport,expandedSite,broadcast,comparisonChecker).checks,47);
+    for(const change of [r=>delete r.expandedSelection,r=>r.expandedSelection.cases[0].marquee=32,r=>r.expandedSelection.cases[1].validSSA=false,r=>r.expandedSelection.cases[1].matches=2]){
+        const broken=structuredClone(expandedReport);change(broken);assert.throws(()=>assertSiteOperations(broken,expandedSite,broadcast,comparisonChecker),/Site operation evidence/);
+    }
 
     for(const mutate of [
         r=>delete r.subValidation, r=>r.divValidationRequired=false, r=>r.divValidation.cases.pop(),

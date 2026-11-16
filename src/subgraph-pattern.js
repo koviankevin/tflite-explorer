@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 import {normalizeConditions,conditionMatcher} from './pattern-conditions.js';
 export { LORA_PATTERN } from './pattern-utils.js';
@@ -40,7 +41,7 @@ export function parseGraphPattern(text, available = []) {
 
 export function prepareGraphPattern(nodeList, edgeList, paths = null) {
     if (!Array.isArray(nodeList) || !nodeList.length || !Array.isArray(edgeList)) throw new Error('請先加入 operator 節點與連線。');
-    if (nodeList.length > 32 || edgeList.length > 64) throw new Error('一組子圖最多 32 個節點、64 條連線。');
+    if (nodeList.length > PATTERN_LIMITS.operators || edgeList.length > PATTERN_LIMITS.edges) throw new Error(`一組子圖最多 ${PATTERN_LIMITS.operators} 個節點、${PATTERN_LIMITS.edges} 條連線。`);
     const nodes = new Map();
     for (const node of nodeList) {
         if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(node.alias) || !operatorKey(node.type)) throw new Error('節點定義無效。');
@@ -53,7 +54,7 @@ export function prepareGraphPattern(nodeList, edgeList, paths = null) {
         if (!nodes.has(edge.from) || !nodes.has(edge.to) || edge.from === edge.to) throw new Error('連線起點或終點無效。');
         edges.set(`${edge.from}:${edge.to}`, { from: edge.from, to: edge.to });
     }
-    if (nodes.size > 32 || edges.size > 64) throw new Error('一組子圖最多 32 個節點、64 條連線。');
+    if (nodes.size > PATTERN_LIMITS.operators || edges.size > PATTERN_LIMITS.edges) throw new Error(`一組子圖最多 ${PATTERN_LIMITS.operators} 個節點、${PATTERN_LIMITS.edges} 條連線。`);
     const incoming = new Map([...nodes.keys()].map((alias) => [alias, []]));
     const outgoing = new Map([...nodes.keys()].map((alias) => [alias, []]));
     for (const { from, to } of edges.values()) { incoming.get(to).push(from); outgoing.get(from).push(to); }
@@ -77,7 +78,7 @@ export function prepareGraphPattern(nodeList, edgeList, paths = null) {
 export function captureGraphPattern(entry, selected) {
     const indexes = [...new Set(selected)].sort((a, b) => a - b);
     if (indexes.length < 2) throw new Error('請至少選取兩個相連的 layers。');
-    if (indexes.length > 32) throw new Error('一組 pattern 最多選取 32 個 layers。');
+    if (indexes.length > PATTERN_LIMITS.operators) throw new Error(`一組 pattern 最多選取 ${PATTERN_LIMITS.operators} 個 layers。`);
     if (indexes.some((n) => !Number.isInteger(n) || !entry.graph.nodes[n])) throw new Error('選取的 layer 不在目前 subgraph。');
     const aliases = new Map(indexes.map((n, i) => [n, `N${i + 1}`]));
     const nodes = indexes.map((n) => ({ alias: aliases.get(n), type: entry.graph.nodes[n].type.name }));

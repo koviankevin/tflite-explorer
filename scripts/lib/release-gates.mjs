@@ -1,4 +1,6 @@
 import {createHash} from 'node:crypto';
+import {expandedSelectionRequired} from '../../test/browser/release-features.mjs';
+import {EXPANDED_SELECTION_CHECK} from '../../test/browser/expanded-selection-flow.mjs';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {readFile,mkdir,mkdtemp} from 'node:fs/promises';
@@ -144,6 +146,13 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
     const opIds=opIdSelectionRequired(release.version),directOpIds=opIdDirectExportRequired(release.version);
     if(opIds)required.push(OP_ID_SELECTION_CHECK);
     if(directOpIds)required.push(OP_ID_DIRECT_EXPORT_CHECK);
+    if(expandedSelectionRequired(release.version)){
+        required.push(EXPANDED_SELECTION_CHECK);
+        const proof=report.expandedSelection;
+        require(proof?.status==='passed'&&proof.modelWorkers===4&&proof.cases?.length===2&&
+            proof.cases[0].format==='tflite'&&proof.cases[0].marquee>32&&proof.cases[0].selected===66&&proof.cases[0].patternNodes===66&&proof.cases[0].reopened===66&&proof.cases[0].matches===1&&
+            proof.cases[1].format==='mlir'&&proof.cases[1].selected===68&&proof.cases[1].blocks===3&&proof.cases[1].patternOperators===68&&proof.cases[1].matches===1&&proof.cases[1].validSSA===true,'missing expanded selection proof.');
+    }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');

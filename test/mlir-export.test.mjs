@@ -100,8 +100,8 @@ test('complete selected return and no-output custom ops produce reopenable funct
 
 test('unsafe selections report concrete errors rather than downloading incomplete MLIR', async () => {
     const index=await parse(MLIR_BRANCH);
-    await assert.rejects(exportMLIR(index,0,[]),/1～32/);
-    await assert.rejects(exportMLIR(index,0,[99]),/1～32/);
+    await assert.rejects(exportMLIR(index,0,[]),/1～256/);
+    await assert.rejects(exportMLIR(index,0,[99]),/1～256/);
     await assert.rejects(exportMLIR(index,9,[0]),/scope/);
     await assert.rejects(exportMLIR({capabilities:{}},0,[0]),/不支援/);
     const scopes=await parse(MLIR_SCOPES);

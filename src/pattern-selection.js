@@ -1,3 +1,4 @@
+import {PATTERN_LIMITS} from './pattern-limits.js';
 // Resolve display nodes back to original operators. Diagram-only headers,
 // successor routes and block arguments never become captured operations.
 export function layerLocation(entry,graph) {
@@ -10,7 +11,7 @@ export function layerLocation(entry,graph) {
     return Number.isInteger(graph) && graph>=0 && Number.isInteger(index) && index>=0?{graph,node:index}:null;
 }
 
-const selectionLimit = 32;
+const selectionLimit = PATTERN_LIMITS.operators;
 
 export function parseTfliteOpIdRanges(text, operatorCount) {
     if (text.length > 4096) throw Error('OP ID 清單太長，請只貼上要選取的編號。');
