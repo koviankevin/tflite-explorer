@@ -2,6 +2,16 @@
 
 本項是未發布的 v1.12.4 候選；目前正式站及固定下載仍是 README 記載的 v1.12.3。接續 OP 靜態驗證與報告，模型維持在本機處理，開檔、編輯及匯出不會自動執行 interpreter。
 
+## 主分支大檔關卡失敗，尚未發布
+
+[PR #300](https://github.com/koviankevin/tflite-explorer/pull/300) 的完整 Node 為 1,175 項通過、35 項既有環境略過；實際受測 tree 與合併來源相同。主分支契約及網站 54 項通過；核心效能 91 檔相依未變，可沿用既有成功證據。這些成功不取代失敗的大檔關卡。
+
+原 [43924226459](https://github.com/koviankevin/tflite-explorer/actions/runs/43924226459) 完成八輪全部匯出／重開、權重、custom options、pattern 與恢復指紋，57 個 Worker、六個觀察到的程序正常關閉。但原政策重判為 `closed-rss-drift`：斜率 1,504,753.37 bytes／輪在 16 MiB／輪內，漂移 143,175,680 bytes 超過 134,217,728-byte 上限，main heap 漂移 235,548 bytes。第 2 輪總 RSS 為 599.72 MiB，第 3～8 輪為 729.88～737.61 MiB；仍不判定為無持續累積或原生 leak 已定位。
+
+[原始失敗摘要](results/softmax-physical-gate-failure.json)保留 provider SHA-256、八輪及與先前已核對來源的比較；原 ZIP／日誌／完整 metadata 保存在本機。舊成功來源也有約 130 MiB 的高低平台，但不是同機交錯測試，不能由此排除回歸。過去同版本 Chromium 的[獨立 pool 歸還證據](renderer-release-minimization.md#已觀察到同一-renderer-的-pool-歸還)是本次假說的參考，不回推為這輪根因。
+
+已事先限定一次 [43928071416](https://github.com/koviankevin/tflite-explorer/actions/runs/43928071416) 唯讀 native 歸屬診斷，保留原八輪／RSS／timer 規則，補充 owned PID 的 anonymous／file／shared RSS、主頁 heap／backing／DOM。診斷不可作發布證據；不以它的成功覆蓋原失敗、不重跑失敗關卡碰綠燈、不調高上限、不強制 GC，也未啟動部署。下一步依實際分類縮小可驗證的應用配置問題；商品等級目標維持未完成。
+
 ## 問題與修正
 
 修正前，兩個 OP 的錯誤 output shape 和 float32→int32 宣告可通過編輯準備與序列化檢查。六項最小回歸測試先以 `Missing expected exception` 重現；共用規則現在同時用於編輯計畫、匯出後的實際 FlatBuffer 和手動執行前檢查。
