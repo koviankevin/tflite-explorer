@@ -6,6 +6,8 @@
 
 PR #300 已合併，主分支網站 54 項與契約通過；實體大檔八輪完成所有功能，RSS 漂移 136.54 MiB 超過原 128 MiB 上限，整輪維持失敗，未部署。原始證據、逐輪與舊成功來源比較及一次唯讀 native 診斷入口見[失敗及下一步](softmax-validation.md#主分支大檔關卡失敗尚未發布)。此項是目前發布阻擋，沒有放寬門檻或重跑碰綠燈。
 
+限定的一次診斷已[核對完成](softmax-validation.md#唯讀診斷實際結果)：2,033 樣本、209 詳細觀察，七輪約 124 MiB 的 renderer anonymous 延後下降，GPU／主頁 JS heap 大致平穩；仍未辨識物件／allocator。獨立 Python 重算及相同 24 份匯出雜湊通過，但診斷明確不可作發布證據。下一步量測並縮小實際解析／索引配置；原八輪失敗及正式 v1.12.3 保持。
+
 ## 2026-11-17 公開品質核對
 
 目前正式版本以 [README 的對外版本](../README.md)為準。本次以發布來源 `8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e`、正式站 manifest 與 GitHub Latest 核對：公開版為 **v1.12.3／build `c2e081e752506baa`**。完整來源、四項關卡、53 項正式操作、1,538 檔及四份實際下載見[收據](results/value-shape-v1.12.3-published.json)。值相依 TRANSPOSE／EXPAND_DIMS／RESHAPE 的已知數值錯誤已[正式修正](runtime-value-shape.md#v1123-正式交付)，正式 Chrome／Edge 各八例數值與 IO 核對通過。文件提交不改變已發布來源或固定附件，整體商品等級目標仍有下列未完成項目。

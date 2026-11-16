@@ -271,8 +271,11 @@
     "run": 43928071416,
     "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43928071416",
     "source": "ba294cc56d870f135628bda7c9de0766d5611fe9",
-    "status": "running",
-    "releaseEvidenceEligible": false
+    "status": "completed",
+    "releaseEvidenceEligible": false,
+    "conclusion": "success",
+    "reportSHA256": "fb56ebdcb29ef00008bf008ab9469f8344b9976832d9d5121a337c14414e3e11",
+    "summary": "softmax-native-attribution.json"
   },
   "limitations": [
     "Separate hosted runs cannot prove a code regression or identify native ownership.",
