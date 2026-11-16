@@ -1,0 +1,286 @@
+{
+  "format": "model-lens-softmax-physical-gate-failure",
+  "status": "failed-required-gate-not-published",
+  "at": "2026-11-16T18:26:51.432Z",
+  "original": {
+    "run": 43924226459,
+    "source": {
+      "commit": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+      "tree": "b609396356e0941c0a855ee300f9f8c45d537825",
+      "committedAt": "2026-11-17T01:59:22+08:00",
+      "dirty": false
+    },
+    "build": "525f716810e77bf6",
+    "chromium": "156.0.8078.4",
+    "playwright": "1.64.1",
+    "samples": 1878,
+    "evaluation": {
+      "status": "failed",
+      "issues": [
+        "closed-rss-drift"
+      ],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 1504753.3714285714,
+        "rssDriftBytes": 143175680,
+        "mainHeapDriftBytes": 235548,
+        "sampledPeakRssBytes": 1100468224,
+        "sampledPeakGrowthBytes": 584503296
+      }
+    },
+    "cycles": [
+      {
+        "cycle": 1,
+        "closedRssBytes": 748572672,
+        "closedMainHeapBytes": 6016904,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 2,
+        "closedRssBytes": 628850688,
+        "closedMainHeapBytes": 6218740,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 3,
+        "closedRssBytes": 765329408,
+        "closedMainHeapBytes": 6206096,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 4,
+        "closedRssBytes": 765755392,
+        "closedMainHeapBytes": 6305944,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 5,
+        "closedRssBytes": 767664128,
+        "closedMainHeapBytes": 6334948,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 6,
+        "closedRssBytes": 773439488,
+        "closedMainHeapBytes": 6378464,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 7,
+        "closedRssBytes": 770224128,
+        "closedMainHeapBytes": 6454288,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 8,
+        "closedRssBytes": 772026368,
+        "closedMainHeapBytes": 6489884,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      }
+    ],
+    "closedWorkers": 57,
+    "allWorkersClosed": true,
+    "browserClosed": true,
+    "reapedProcesses": 6,
+    "allProcessesReaped": true,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43924226459",
+    "artifact": {
+      "id": 14257785297,
+      "bytes": 29113,
+      "digest": "sha256:762507a3515cd1b78da0f8df0e4fbd554b07b0321e51f2ef758e66d2e04326b2",
+      "reportSHA256": "0ee54c9fa5afac0b4dd45f395854b5aa92fe476ebb14e75c578314a7b55b5a5b"
+    },
+    "policy": {
+      "version": 3,
+      "cycles": 8,
+      "warmupCycles": 2,
+      "sampleIntervalMs": 500,
+      "urlReleaseTimeoutMs": 80000,
+      "settleSamples": 5,
+      "maxReadBytes": 1048576,
+      "realmReadBytes": 16777216,
+      "browserPeakGrowthBytes": 805306368,
+      "closedRssDriftBytes": 134217728,
+      "closedRssSlopeBytesPerCycle": 16777216,
+      "closedMainHeapDriftBytes": 33554432,
+      "modelWorkerUsedBytes": 536870912,
+      "modelWorkerBackingBytes": 536870912
+    }
+  },
+  "previousVerified": {
+    "run": 43907918186,
+    "source": {
+      "commit": "ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7",
+      "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+      "committedAt": "2026-11-17T00:26:45+08:00",
+      "dirty": false
+    },
+    "build": "ed956cf7fb7b97a9",
+    "chromium": "156.0.8078.4",
+    "playwright": "1.64.1",
+    "samples": 1881,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 2180944.4571428574,
+        "rssDriftBytes": 13049856,
+        "mainHeapDriftBytes": 160980,
+        "sampledPeakRssBytes": 1085108224,
+        "sampledPeakGrowthBytes": 575131648
+      }
+    },
+    "cycles": [
+      {
+        "cycle": 1,
+        "closedRssBytes": 611418112,
+        "closedMainHeapBytes": 6016220,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 2,
+        "closedRssBytes": 748994560,
+        "closedMainHeapBytes": 6259480,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 3,
+        "closedRssBytes": 751513600,
+        "closedMainHeapBytes": 6191848,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 4,
+        "closedRssBytes": 620519424,
+        "closedMainHeapBytes": 6289836,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 5,
+        "closedRssBytes": 756670464,
+        "closedMainHeapBytes": 6372736,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 6,
+        "closedRssBytes": 762044416,
+        "closedMainHeapBytes": 6415980,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 7,
+        "closedRssBytes": 625242112,
+        "closedMainHeapBytes": 6443804,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      },
+      {
+        "cycle": 8,
+        "closedRssBytes": 762871808,
+        "closedMainHeapBytes": 6420460,
+        "liveModelWorkers": 0,
+        "activeBlobUrls": 0,
+        "weightVerified": true,
+        "optionsVerified": true,
+        "modelEditComplete": true,
+        "compositionComplete": true
+      }
+    ],
+    "closedWorkers": 57,
+    "allWorkersClosed": true,
+    "browserClosed": true,
+    "reapedProcesses": 6,
+    "allProcessesReaped": true
+  },
+  "diagnostic": {
+    "run": 43928071416,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43928071416",
+    "source": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+    "status": "completed",
+    "releaseEvidenceEligible": false,
+    "conclusion": "success",
+    "reportSHA256": "fb56ebdcb29ef00008bf008ab9469f8344b9976832d9d5121a337c14414e3e11",
+    "summary": "softmax-native-attribution.json"
+  },
+  "limitations": [
+    "Separate hosted runs cannot prove a code regression or identify native ownership.",
+    "All original RSS and timing thresholds remain unchanged. No failed release gate rerun and no deployment.",
+    "Original raw metadata, logs and identities stay in owned local evidence; this summary omits paths and PIDs.",
+    "Overall product goal remains active; official website and fixed Release remain v1.12.3."
+  ]
+}

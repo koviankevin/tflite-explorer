@@ -1,0 +1,503 @@
+{
+  "format": "model-lens-softmax-native-attribution",
+  "status": "readonly-observation-not-release-evidence",
+  "at": "2026-11-16T18:46:12.522Z",
+  "releaseEvidenceEligible": false,
+  "source": {
+    "commit": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+    "tree": "b609396356e0941c0a855ee300f9f8c45d537825",
+    "committedAt": "2026-11-17T01:59:22+08:00",
+    "dirty": false
+  },
+  "build": "525f716810e77bf6",
+  "evaluation": {
+    "status": "passed",
+    "issues": [],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": -9549765.485714287,
+      "rssDriftBytes": 11096064,
+      "mainHeapDriftBytes": 180420,
+      "sampledPeakRssBytes": 1091588096,
+      "sampledPeakGrowthBytes": 580796416
+    }
+  },
+  "observations": 2033,
+  "completeObservations": 2033,
+  "exitedObservations": 0,
+  "reusedObservations": 0,
+  "details": 209,
+  "settleObservations": 40,
+  "sequentialDifferenceObservedSamples": 2033,
+  "maxSequentialRssDifferenceBytes": 129744896,
+  "cycles": [
+    {
+      "cycle": 1,
+      "originalRssBytes": 610516992,
+      "originalMainHeapUsedBytes": 6015920,
+      "mainHeapTotalBytes": 8458240,
+      "mainBackingBytes": 1319615,
+      "mainEmbedderBytes": 11081888,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 121417728,
+          "anonymousBytes": 19009536,
+          "fileBytes": 101867520,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 194891776,
+          "anonymousBytes": 27594752,
+          "fileBytes": 167063552,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 69771264,
+          "anonymousBytes": 15032320,
+          "fileBytes": 49696768,
+          "sharedBytes": 5042176
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 224436224,
+          "anonymousBytes": 94494720,
+          "fileBytes": 124317696,
+          "sharedBytes": 5623808
+        }
+      }
+    },
+    {
+      "cycle": 2,
+      "originalRssBytes": 628518912,
+      "originalMainHeapUsedBytes": 6272920,
+      "mainHeapTotalBytes": 8458240,
+      "mainBackingBytes": 1315701,
+      "mainEmbedderBytes": 11057304,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 130338816,
+          "anonymousBytes": 27930624,
+          "fileBytes": 101867520,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 194965504,
+          "anonymousBytes": 27594752,
+          "fileBytes": 167137280,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 69734400,
+          "anonymousBytes": 14995456,
+          "fileBytes": 49696768,
+          "sharedBytes": 5042176
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 233480192,
+          "anonymousBytes": 103538688,
+          "fileBytes": 124317696,
+          "sharedBytes": 5623808
+        }
+      }
+    },
+    {
+      "cycle": 3,
+      "originalRssBytes": 632008704,
+      "originalMainHeapUsedBytes": 6257096,
+      "mainHeapTotalBytes": 8720384,
+      "mainBackingBytes": 1314474,
+      "mainEmbedderBytes": 10848472,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 130682880,
+          "anonymousBytes": 28209152,
+          "fileBytes": 101933056,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195244032,
+          "anonymousBytes": 27873280,
+          "fileBytes": 167137280,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 70021120,
+          "anonymousBytes": 15020032,
+          "fileBytes": 49696768,
+          "sharedBytes": 5304320
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 236060672,
+          "anonymousBytes": 105758720,
+          "fileBytes": 124416000,
+          "sharedBytes": 5885952
+        }
+      }
+    },
+    {
+      "cycle": 4,
+      "originalRssBytes": 764784640,
+      "originalMainHeapUsedBytes": 6302412,
+      "mainHeapTotalBytes": 8458240,
+      "mainBackingBytes": 1314858,
+      "mainEmbedderBytes": 11149888,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 131186688,
+          "anonymousBytes": 28712960,
+          "fileBytes": 101933056,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195293184,
+          "anonymousBytes": 27922432,
+          "fileBytes": 167137280,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 70041600,
+          "anonymousBytes": 15040512,
+          "fileBytes": 49696768,
+          "sharedBytes": 5304320
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 368263168,
+          "anonymousBytes": 237961216,
+          "fileBytes": 124416000,
+          "sharedBytes": 5885952
+        }
+      }
+    },
+    {
+      "cycle": 5,
+      "originalRssBytes": 637726720,
+      "originalMainHeapUsedBytes": 6387044,
+      "mainHeapTotalBytes": 8458240,
+      "mainBackingBytes": 1315242,
+      "mainEmbedderBytes": 11005592,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 132018176,
+          "anonymousBytes": 29544448,
+          "fileBytes": 101933056,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195477504,
+          "anonymousBytes": 28106752,
+          "fileBytes": 167137280,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 69763072,
+          "anonymousBytes": 15024128,
+          "fileBytes": 49696768,
+          "sharedBytes": 5042176
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 240467968,
+          "anonymousBytes": 110428160,
+          "fileBytes": 124416000,
+          "sharedBytes": 5623808
+        }
+      }
+    },
+    {
+      "cycle": 6,
+      "originalRssBytes": 636305408,
+      "originalMainHeapUsedBytes": 6425720,
+      "mainHeapTotalBytes": 8982528,
+      "mainBackingBytes": 1315626,
+      "mainEmbedderBytes": 10928992,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 131174400,
+          "anonymousBytes": 28700672,
+          "fileBytes": 101933056,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195399680,
+          "anonymousBytes": 27807744,
+          "fileBytes": 167358464,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 69742592,
+          "anonymousBytes": 15003648,
+          "fileBytes": 49696768,
+          "sharedBytes": 5042176
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 239988736,
+          "anonymousBytes": 109899776,
+          "fileBytes": 124465152,
+          "sharedBytes": 5623808
+        }
+      }
+    },
+    {
+      "cycle": 7,
+      "originalRssBytes": 641167360,
+      "originalMainHeapUsedBytes": 6453340,
+      "mainHeapTotalBytes": 8720384,
+      "mainBackingBytes": 1316010,
+      "mainEmbedderBytes": 11063584,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 131919872,
+          "anonymousBytes": 29446144,
+          "fileBytes": 101933056,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195534848,
+          "anonymousBytes": 27942912,
+          "fileBytes": 167358464,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 70283264,
+          "anonymousBytes": 15020032,
+          "fileBytes": 49696768,
+          "sharedBytes": 5566464
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 243429376,
+          "anonymousBytes": 112816128,
+          "fileBytes": 124465152,
+          "sharedBytes": 6148096
+        }
+      }
+    },
+    {
+      "cycle": 8,
+      "originalRssBytes": 639614976,
+      "originalMainHeapUsedBytes": 6484284,
+      "mainHeapTotalBytes": 8720384,
+      "mainBackingBytes": 1316394,
+      "mainEmbedderBytes": 11081160,
+      "native": {
+        "browser": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 130777088,
+          "anonymousBytes": 28237824,
+          "fileBytes": 101998592,
+          "sharedBytes": 540672
+        },
+        "unknown": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 195481600,
+          "anonymousBytes": 27889664,
+          "fileBytes": 167358464,
+          "sharedBytes": 233472
+        },
+        "GPU": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 69832704,
+          "anonymousBytes": 15028224,
+          "fileBytes": 49762304,
+          "sharedBytes": 5042176
+        },
+        "renderer": {
+          "samples": 5,
+          "complete": true,
+          "rssBytes": 243523584,
+          "anonymousBytes": 113303552,
+          "fileBytes": 124596224,
+          "sharedBytes": 5623808
+        }
+      }
+    }
+  ],
+  "releasePairs": 977,
+  "largeRendererAnonymousDrops": [
+    {
+      "cycle": 1,
+      "beforeMs": 89450,
+      "afterMs": 89950,
+      "rendererAnonymousDeltaBytes": -130199552,
+      "rendererRssDeltaBytes": -130199552,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -130199552,
+      "mainHeapUsedDeltaBytes": 944,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 2,
+      "beforeMs": 213437,
+      "afterMs": 213936,
+      "rendererAnonymousDeltaBytes": -130174976,
+      "rendererRssDeltaBytes": -130174976,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -130174976,
+      "mainHeapUsedDeltaBytes": 1880,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 3,
+      "beforeMs": 339791,
+      "afterMs": 340297,
+      "rendererAnonymousDeltaBytes": -129896448,
+      "rendererRssDeltaBytes": -129896448,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -129896448,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 5,
+      "beforeMs": 589389,
+      "afterMs": 589889,
+      "rendererAnonymousDeltaBytes": -129748992,
+      "rendererRssDeltaBytes": -129748992,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -129748992,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 6,
+      "beforeMs": 713217,
+      "afterMs": 713722,
+      "rendererAnonymousDeltaBytes": -130289664,
+      "rendererRssDeltaBytes": -130289664,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -4489216,
+      "mainHeapUsedDeltaBytes": 1088,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 7,
+      "beforeMs": 837869,
+      "afterMs": 838370,
+      "rendererAnonymousDeltaBytes": -129859584,
+      "rendererRssDeltaBytes": -129859584,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": -129859584,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    },
+    {
+      "cycle": 8,
+      "beforeMs": 961829,
+      "afterMs": 962334,
+      "rendererAnonymousDeltaBytes": -129744896,
+      "rendererRssDeltaBytes": -129744896,
+      "rendererFileDeltaBytes": 0,
+      "rendererSharedDeltaBytes": 0,
+      "gateRssDeltaBytes": 0,
+      "mainHeapUsedDeltaBytes": 1360,
+      "mainHeapTotalDeltaBytes": 0
+    }
+  ],
+  "workersClosed": 57,
+  "allWorkersClosed": true,
+  "browserClosed": true,
+  "allProcessesReaped": true,
+  "limitations": "Native observations follow rather than replace original RSS anchors. Categories and correlations do not prove allocation ownership, a fix or release qualification. No PID, path or private logs in this output.",
+  "sameEightExportsAsOriginalFailure": true,
+  "provider": {
+    "run": 43928071416,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43928071416",
+    "source": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+    "conclusion": "success",
+    "artifact": {
+      "id": 14258875862,
+      "bytes": 173258,
+      "digest": "sha256:47f3ea2cdcd8357bea1798742b0369613d5816b911af808a769d43170e0aa062",
+      "reportSHA256": "fb56ebdcb29ef00008bf008ab9469f8344b9976832d9d5121a337c14414e3e11"
+    },
+    "releaseEvidenceEligible": false
+  },
+  "independent": {
+    "status": "passed-independent-numeric-cross-check",
+    "source": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+    "reportSHA256": "fb56ebdcb29ef00008bf008ab9469f8344b9976832d9d5121a337c14414e3e11",
+    "observations": 2033,
+    "details": 209,
+    "cycles": 8,
+    "settle": 40,
+    "largeDrops": 7,
+    "releaseEvidenceEligible": false
+  },
+  "rawEvidenceRetainedLocally": true,
+  "localEvidenceArchive": {
+    "files": 15,
+    "bytes": 400873,
+    "sha256": "700cae3033e5d16a24f6d165251b582e387365feedef046b1a306cf60a46b430",
+    "privacy": "Local archive only. No model or weight files; raw process identities and paths are not published."
+  },
+  "interpretation": [
+    "Seven release-phase steps show about 124 MiB renderer anonymous decreases; main heap capacity and renderer file/shared categories do not move at those steps.",
+    "Cycle 4 keeps a higher renderer-anonymous platform at the five original settle observations. Other process categories and main JS heap/backing remain comparatively stable.",
+    "This supports deferred renderer native retention in this run. No allocator/object ownership proof for the original failed gate, and no source-regression claim across independent hosted runs.",
+    "A diagnostic pass is explicitly rejected as release evidence; failed required gate 43924226459 remains failed."
+  ],
+  "goalComplete": false,
+  "published": "v1.12.3 unchanged; v1.12.4 not published"
+}

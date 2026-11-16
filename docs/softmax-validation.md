@@ -2,6 +2,39 @@
 
 本項是未發布的 v1.12.4 候選；目前正式站及固定下載仍是 README 記載的 v1.12.3。接續 OP 靜態驗證與報告，模型維持在本機處理，開檔、編輯及匯出不會自動執行 interpreter。
 
+## 主分支大檔關卡失敗，尚未發布
+
+[PR #300](https://github.com/koviankevin/tflite-explorer/pull/300) 的完整 Node 為 1,175 項通過、35 項既有環境略過；實際受測 tree 與合併來源相同。主分支契約及網站 54 項通過；核心效能 91 檔相依未變，可沿用既有成功證據。這些成功不取代失敗的大檔關卡。
+
+原 [43924226459](https://github.com/koviankevin/tflite-explorer/actions/runs/43924226459) 完成八輪全部匯出／重開、權重、custom options、pattern 與恢復指紋，57 個 Worker、六個觀察到的程序正常關閉。但原政策重判為 `closed-rss-drift`：斜率 1,504,753.37 bytes／輪在 16 MiB／輪內，漂移 143,175,680 bytes 超過 134,217,728-byte 上限，main heap 漂移 235,548 bytes。第 2 輪總 RSS 為 599.72 MiB，第 3～8 輪為 729.88～737.61 MiB；仍不判定為無持續累積或原生 leak 已定位。
+
+[原始失敗摘要](results/softmax-physical-gate-failure.json)保留 provider SHA-256、八輪及與先前已核對來源的比較；原 ZIP／日誌／完整 metadata 保存在本機。舊成功來源也有約 130 MiB 的高低平台，但不是同機交錯測試，不能由此排除回歸。過去同版本 Chromium 的[獨立 pool 歸還證據](renderer-release-minimization.md#已觀察到同一-renderer-的-pool-歸還)是本次假說的參考，不回推為這輪根因。
+
+已事先限定一次 [43928071416](https://github.com/koviankevin/tflite-explorer/actions/runs/43928071416) 唯讀 native 歸屬診斷，保留原八輪／RSS／timer 規則，補充 owned PID 的 anonymous／file／shared RSS、主頁 heap／backing／DOM。診斷不可作發布證據；不以它的成功覆蓋原失敗、不重跑失敗關卡碰綠燈、不調高上限、不強制 GC，也未啟動部署。下一步依實際分類縮小可驗證的應用配置問題；商品等級目標維持未完成。
+
+### 唯讀診斷實際結果
+
+該次診斷已完成，原八輪政策重判通過，但用途仍是觀察而非發布。來源與失敗關卡相同，八輪共 24 份完整／局部／組合匯出 SHA-256 與原失敗逐份一致，57 個 Worker、六個觀察到的程序均正常結束。共 2,033 個完整 RSS／native 樣本、209 筆詳細資料及原五次 settle 共 40 筆，沒有退出／PID 重用缺口。原 ZIP 的 provider SHA-256、CRC、來源及全部樣本對應均核對；另一份 Python 讀取器獨立重算數值。
+
+| 輪次 | 原關閉 RSS（MiB） | Renderer anonymous（MiB） | GPU anonymous（MiB） | 主頁 heap total（MiB） |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 582.23 | 90.12 | 14.34 | 8.07 |
+| 2 | 599.40 | 98.74 | 14.30 | 8.07 |
+| 3 | 602.73 | 100.86 | 14.32 | 8.32 |
+| 4 | 729.36 | 226.94 | 14.34 | 8.07 |
+| 5 | 608.18 | 105.31 | 14.33 | 8.07 |
+| 6 | 606.83 | 104.81 | 14.31 | 8.57 |
+| 7 | 611.46 | 107.59 | 14.32 | 8.32 |
+| 8 | 609.98 | 108.05 | 14.33 | 8.32 |
+
+表中的 native 分類是依原五次 settle 點另外觀察的中位數，不與原 RSS 混算。七輪 release phase 觀察到約 124 MiB 的 renderer anonymous 下降，對應的 renderer file／shared 與主頁 heap total 沒有同級變化；第 4 輪 settle 仍處於高平台。GPU 與主頁 backing 約 1.25 MiB 大致平穩。這支持 renderer 原生記憶體延後保留的方向，尚不能辨識具體物件／allocator，或從新診斷回推原失敗根因。
+
+原 RSS 與 native status 並非同時讀取，最大差值 129,744,896 bytes 照實保留；第 6／8 輪的 native 大幅下降，沒有在相鄰原 RSS 點形成等量步階，不作扣除或對齊修正。新讀取器先用先前已封存的 1,720 樣本真實資料驗證，再以八種來源／樣本／重複／缺漏篡改拒絕案例及獨立 Python 重算核對，沒有依本輪數值調整門檻。
+
+[公開數值摘要](results/softmax-native-attribution.json)保留來源、provider 雜湊、分類與釋放步階；原始資料、讀取器及原關卡失敗共 15 檔封存在本機，400,873 bytes，SHA-256 `700cae3033e5d16a24f6d165251b582e387365feedef046b1a306cf60a46b430`。原始 PID／路徑與本機日誌不公開上傳。發布判定器實際拒絕這份已通過的診斷報告；原必要關卡維持失敗，正式站與固定 Release 仍為 v1.12.3。
+
+後續先量測目前解析／索引的實際配置成本，再用同一份 21,005 OP 結構與完整搜尋／匯出指紋比較候選。只有可證明的應用減量才進入新來源的原政策驗收，不改 pool、GC、settle、基準或 RSS 上限。
+
 ## 問題與修正
 
 修正前，兩個 OP 的錯誤 output shape 和 float32→int32 宣告可通過編輯準備與序列化檢查。六項最小回歸測試先以 `Missing expected exception` 重現；共用規則現在同時用於編輯計畫、匯出後的實際 FlatBuffer 和手動執行前檢查。
