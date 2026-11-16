@@ -1,5 +1,6 @@
 import {editMLIRPattern} from './mlir-pattern-edit.js';
 import {prepareMLIRPattern} from './mlir-pattern-spec.js';
+import {revealPatternEditor} from './reveal-pattern-editor.js';
 
 export function mlirPatternEditor({root,getPattern,getTypes,change,error}) {
     const doc=root.ownerDocument;
@@ -66,5 +67,5 @@ export function mlirPatternEditor({root,getPattern,getTypes,change,error}) {
         root.replaceChildren(summary,body);body.scrollTop=scroll;
         if(key){const target=[...root.querySelectorAll('[data-cfg-key]')].find(n=>n.dataset.cfgKey===key&&!n.disabled);(target||root.querySelector('[data-cfg-key]'))?.focus({preventScroll:true});}
     }
-    return {render,focus(){root.open=true;root.querySelector('input[list]')?.focus();}};
+    return {render,focus(){revealPatternEditor(root,'input[list]');}};
 }

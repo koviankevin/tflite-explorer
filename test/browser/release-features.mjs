@@ -115,3 +115,9 @@ export function wireShapeRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=12;
 }
+
+export function searchPatternRevealRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor,patch]=version.split('.').map(Number);
+    return major>1||major===1&&(minor>12||minor===12&&patch>=1);
+}

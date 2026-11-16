@@ -10,7 +10,7 @@ export const GUIDE_TOPICS=Object.freeze([
     ],actions:['open','demo','mlir-demo','explore']},
     {id:'pattern',label:'Pattern 與切圖',heading:'圈選原本的結構，再找其他匹配',steps:[
         ['先選 OP','在探索圖按「選取 pattern」，拖曳框選多個 OP。再次框到已選 OP 會取消選取；Alt＋拖曳平移、滾輪縮放，選取會保留。'],
-        ['保存或調整搜尋結構','「儲存並搜尋」建立 pattern；「編輯選取 pattern」修改搜尋條件。這些操作不修改實際模型。MLIR 可在同一 function／region 跨 block 選取，保留分支、匯合與迴圈。'],
+        ['保存或調整搜尋結構','「儲存並搜尋」建立 pattern；「編輯搜尋 pattern」修改搜尋條件。這些操作不修改實際模型。MLIR 可在同一 function／region 跨 block 選取，保留分支、匯合與迴圈。'],
         ['切出局部模型','按「匯出 TFLite 子模型」或「匯出局部 MLIR」，網站補齊必要介面。按「開啟匯出結果」建立新模型分頁，原模型保留。'],
         ['移轉 pattern','Pattern 清單的匯出／匯入使用 JSON；它記錄搜尋結構，不是 TFLite／MLIR 模型，也不包含模型權重。']
     ],actions:['explore','open']},

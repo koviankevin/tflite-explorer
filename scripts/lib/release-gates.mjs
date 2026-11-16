@@ -1,3 +1,5 @@
+import {searchPatternRevealRequired} from '../../test/browser/release-features.mjs';
+import {SEARCH_PATTERN_REVEAL_CHECK} from '../../test/browser/search-pattern-reveal-flow.mjs';
 import {wireShapeRequired} from '../../test/browser/release-features.mjs';
 import {WIRE_SHAPE_CHECK} from '../../test/browser/wire-shape-flow.mjs';
 import {deleteShapeRequired} from '../../test/browser/release-features.mjs';
@@ -176,6 +178,11 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
         required.push(WIRE_SHAPE_CHECK);const proof=report.wireShape;
         require(proof?.status==='passed'&&proof.modelWorkers===6&&proof.runtimeWorkers===0&&proof.drag===true&&proof.click===true&&proof.cancelPreserves===true&&proof.draftVersion===6&&proof.reopenedOperators===5&&proof.cameraPreserved===true&&JSON.stringify(proof.blocked)==='["fc","custom","dtype"]'&&
             proof.layout?.left>=0&&proof.layout.right<=proof.layout.width&&proof.layout.top>=0&&proof.layout.bottom<=proof.layout.height&&proof.layout.documentWidth<=proof.layout.width,'missing wire shape inference proof.');
+    }
+    if(searchPatternRevealRequired(release.version)){
+        required.push(SEARCH_PATTERN_REVEAL_CHECK);const proof=report.searchPatternReveal;
+        require(proof?.status==='passed'&&proof.modelWorkers===3&&proof.downloads===0&&proof.cases?.length===3&&
+            ['from-layers','compressed-settings','cross-block'].every((name,i)=>{const c=proof.cases[i],l=c?.layout;return c?.name===name&&c.opened===true&&c.focused===true&&c.visible===true&&c.modelUnchanged===true&&c.notSaved===true&&c.noAutomaticSearch===true&&c.matches===1&&l?.top>=l.paneTop&&l.bottom<=l.paneBottom&&l.left>=l.paneLeft&&l.right<=l.paneRight&&l.documentWidth<=l.viewportWidth;}),'missing search pattern reveal proof.');
     }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
