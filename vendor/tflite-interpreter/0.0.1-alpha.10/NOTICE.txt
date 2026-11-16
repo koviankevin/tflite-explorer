@@ -1,0 +1,13 @@
+TFLite Interpreter WASM from @tensorflow/tfjs-tflite 0.0.1-alpha.10
+Copyright 2021 Google LLC. Apache-2.0.
+Official package: https://registry.npmjs.org/@tensorflow/tfjs-tflite/-/tfjs-tflite-0.0.1-alpha.10.tgz
+Package gitHead: cc8d9d72d2244b50a7f5127900404709595e65fd
+
+Model Lens changes: precompiled 116 fixed embind factories into ordinary JS
+functions and replaced the unused legacy global lookup with globalThis.
+No browser eval/Function constructor is used. The official WASM is unchanged.
+Reproduce with scripts/lib/interpreter-bindings.mjs and its checked-in table.
+Only the low-level single-threaded Interpreter is included; TFJS Tensor
+conversion, dequantization and the task-library client are not included.
+The Emscripten license is preserved separately; the supplemental license
+reference tag is not a claim about the package compiler version.

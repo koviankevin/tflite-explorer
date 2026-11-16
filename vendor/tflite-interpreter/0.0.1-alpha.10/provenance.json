@@ -1,0 +1,45 @@
+{
+  "name": "@tensorflow/tfjs-tflite",
+  "version": "0.0.1-alpha.10",
+  "gitHead": "cc8d9d72d2244b50a7f5127900404709595e65fd",
+  "license": "Apache-2.0",
+  "source": "https://registry.npmjs.org/@tensorflow/tfjs-tflite/-/tfjs-tflite-0.0.1-alpha.10.tgz",
+  "integrity": "sha512-/qmqsRBTg+XCWgNomJ/gdZIKFMpGiTEAwMhqk/7cOZEp/fTV69GuknOoSQjloYGWasQIDIriQO3bpi6T4PTEnA==",
+  "bytes": 7753592,
+  "sha256": "ce63551608097a5ecb0f0128fc64c53c15843a851fcd17f83e66e1908a628d71",
+  "files": [
+    {
+      "path": "tflite_web_api_cc.js",
+      "bytes": 168505,
+      "sha256": "93382e34412461c3bb7dd012e093b29a46e85d0410dec80a2899508bbfb671e5"
+    },
+    {
+      "path": "tflite_web_api_cc.wasm",
+      "bytes": 3592067,
+      "sha256": "f1eb42f96ae91e5ef34e2f833f011373ca1c40fdc9d4062ec21eb07b886ea54f"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "LICENSE-Emscripten.txt",
+      "bytes": 5093,
+      "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+    },
+    {
+      "path": "NOTICE.txt",
+      "bytes": 855,
+      "sha256": "7ebfee83b42d07913ac0c96050727a7b6394862234f3a00d51ab21b3087b7b8a"
+    }
+  ],
+  "upstreamJS_SHA256": "08e963fcde11dc041feeac97ff711b3a157614edc98ff8bfa309557189b7368d",
+  "bindingFactories": 116,
+  "bindingsSHA256": "6c0b6a305f72670e369dea6abadc4198ed3b13cdc3628259d9d548b8be06e3af",
+  "modifications": "Ahead-of-time embind JS only; unchanged official compatibility WASM",
+  "licenseSources": [
+    "https://raw.githubusercontent.com/tensorflow/tfjs/cc8d9d72d2244b50a7f5127900404709595e65fd/LICENSE",
+    "https://raw.githubusercontent.com/emscripten-core/emscripten/3.1.17/LICENSE"
+  ]
+}

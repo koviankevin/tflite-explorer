@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {runtimeClient} from '../src/tflite-runtime-client.js';
-import {runtimeModuleCache,RUNTIME_MODULE_ASSET} from '../src/runtime-module.js';
+import {runtimeModuleCache,RUNTIME_MODULE_ASSET,INTERPRETER_MODULE_ASSET} from '../src/runtime-module.js';
 import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -13,6 +13,14 @@ const tick=()=>new Promise(resolve=>setImmediate(resolve));
 function worker(){return {messages:[],terminated:0,postMessage(value){this.messages.push(value);},terminate(){this.terminated++;}};}
 const bytes=new Uint8Array(await readFile(new URL(RUNTIME_MODULE_ASSET.path,new URL('../src/runtime-module.js',import.meta.url))));
 const assetURL='https://runtime.invalid/litert_wasm_compat_internal.wasm',response=()=>new Response(bytes,{headers:{'content-type':'application/wasm'}});
+
+test('standard Interpreter code cache is independently pinned, lazy, shared and receives the selected execution plan',async()=>{
+    const bytes=await readFile(new URL(INTERPRETER_MODULE_ASSET.path,new URL('../src/runtime-module.js',import.meta.url)));let fetched=0,compiled=0;
+    const cache=runtimeModuleCache({asset:INTERPRETER_MODULE_ASSET,assetURL:'https://runtime.invalid/tflite_web_api_cc.wasm',fetcher:async()=>{fetched++;return new Response(bytes,{headers:{'content-type':'application/wasm'}});},compile:async b=>{compiled++;assert.equal(b.length,INTERPRETER_MODULE_ASSET.bytes);return WebAssembly.compile(b);}});
+    assert.equal(fetched,0);const a=cache(),b=cache();assert.equal(await a,await b);assert.equal(fetched,1);assert.equal(compiled,1);
+    const w=worker(),plan={eligible:true,runtimeBackend:'interpreter'},client=runtimeClient({createWorker:()=>w,prepareModule:async p=>{assert.equal(p,plan);return cache();}});
+    const pending=client.check(new Blob(['synthetic']),plan);await tick();w.onmessage({data:{result:{status:'passed'}}});assert.equal((await pending).status,'passed');assert.equal(w.terminated,1);assert.equal(fetched,1);
+});
 
 test('manual executions receive the prepared stateless module in separate owned Workers',async t=>{
     const workers=[];let preparations=0;const client=runtimeClient({prepareModule:async()=>{preparations++;return module;},createWorker:()=>{const w=worker();workers.push(w);return w;}});t.after(()=>client.cancel());

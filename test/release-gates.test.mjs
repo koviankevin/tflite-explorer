@@ -6,6 +6,9 @@ import {createHash} from 'node:crypto';
 import {GATES,assertRun,assertReport,assertSiteOperations,sourceScope,gitReader,readArtifact} from '../scripts/lib/release-gates.mjs';
 import {RELEASE_CONTRACT_TESTS} from '../scripts/lib/release-test-plan.mjs';
 import {MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from './browser/lifecycle-policy.mjs';
+import {VALUE_SHAPE_EXPECTATIONS} from './browser/value-shape-proof.mjs';
+import {VALUE_SHAPE_RUNTIME_CHECK} from './browser/value-shape-runtime-flow.mjs';
+import {RUNTIME_ENGINE,RUNTIME_INTERPRETER_ENGINE} from '../src/tflite-runtime-policy.js';
 const repository='koviankevin/tflite-explorer',commit='a'.repeat(40),tree='b'.repeat(40);
 function evidence(kind='browser'){
     const spec=GATES[kind];return {run:{id:123,status:'completed',conclusion:'success',event:'workflow_dispatch',head_branch:'main',head_repository:{full_name:repository},path:spec.workflow,head_sha:commit,run_attempt:1},jobs:[{name:spec.job,status:'completed',conclusion:'success'}],artifact:{id:456,name:`${spec.artifact}-${commit}-1`,expired:false,size_in_bytes:100,digest:'sha256:'+'c'.repeat(64)}};
@@ -173,6 +176,11 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.equal(assertSiteOperations(revealReport,revealSite,broadcast,comparisonChecker).checks,51);
     const axisRelease={...release,version:'1.12.2'},axisSite={...site,candidate:axisRelease},axisReport={...revealReport,siteRelease:axisRelease,checks:[...revealReport.checks,'TRANSPOSE/EXPAND_DIMS reject invalid axis metadata before download; valid int64, signed and dynamic parameters export/reopen at 32px'],axisTransform:{status:'passed',modelWorkers:9,runtimeWorkers:0,cases:[...['transpose-matrix','expand-float','expand-count'].map(name=>({name,status:'rejected',reason:'Subgraph #0 OP #0 invalid axis metadata',downloads:0})),...['transpose-signed','expand-int64','expand-dynamic'].map((name,i)=>({name,status:i===2?'not-run':'passed',operators:2,reopened:true,byteComparison:true,automaticRuntime:false}))]}};
     assert.equal(assertSiteOperations(axisReport,axisSite,broadcast,comparisonChecker).checks,52);
+    const valueRelease={...release,version:'1.12.3'},valueSite={...site,candidate:valueRelease},valueReport={...axisReport,siteRelease:valueRelease,checks:[...axisReport.checks,VALUE_SHAPE_RUNTIME_CHECK],valueShapeRuntime:{status:'passed',modelWorkers:8,runtimeWorkers:8,downloads:8,cases:VALUE_SHAPE_EXPECTATIONS.map(([name,modelSHA256,output,outputShape,interpreter])=>({name,modelSHA256,expected:output,output,outputShape,engine:interpreter?RUNTIME_INTERPRETER_ENGINE:RUNTIME_ENGINE,status:'passed',inputsMatch:true,numericMatches:true,automaticRuntime:false,zipSHA256:'a'.repeat(64)}))}};
+    assert.equal(assertSiteOperations(valueReport,valueSite,broadcast,comparisonChecker).checks,53);
+    for(const change of [r=>delete r.valueShapeRuntime,r=>r.valueShapeRuntime.cases[0].output=[0,4,2,5,3,6],r=>r.valueShapeRuntime.cases[0].engine=RUNTIME_ENGINE,r=>r.valueShapeRuntime.downloads--,r=>r.checks.pop()]){
+        const broken=structuredClone(valueReport);change(broken);assert.throws(()=>assertSiteOperations(broken,valueSite,broadcast,comparisonChecker));
+    }
     for(const change of [r=>delete r.axisTransform,r=>r.axisTransform.runtimeWorkers=1,r=>r.axisTransform.modelWorkers=8,r=>r.axisTransform.cases[0].downloads=1,r=>r.axisTransform.cases[1].status='passed',r=>r.axisTransform.cases[3].byteComparison=false,r=>r.axisTransform.cases[4].reopened=false,r=>r.axisTransform.cases[5].status='passed',r=>r.checks.pop()]){
         const broken=structuredClone(axisReport);change(broken);assert.throws(()=>assertSiteOperations(broken,axisSite,broadcast,comparisonChecker),/Site operation evidence/);
     }

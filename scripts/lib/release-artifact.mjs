@@ -73,6 +73,15 @@ export async function verifyArtifact(directory,{publicOnly=false,expectedCommit,
         const provenance=JSON.parse(await readFile(path.join(directory,base+'provenance.json'),'utf8')),entry=provenance.files?.find(f=>f.path==='litert_wasm_compat_internal.wasm'),bytes=await readFile(path.join(directory,base+'litert_wasm_compat_internal.wasm'));
         if(!entry||bytes.length!==entry.bytes||sha256(bytes)!==entry.sha256||!bytes.subarray(0,8).equals(Buffer.from([0,97,115,109,1,0,0,0])))throw Error('部署的 LiteRT WASM 與固定來源不符。');
     }
+    if(actual.includes('src/tflite-interpreter-runtime.js')){
+        const base='vendor/tflite-interpreter/0.0.1-alpha.10/',required=['tflite_web_api_cc.js','tflite_web_api_cc.wasm','provenance.json','LICENSE','LICENSE-Emscripten.txt','NOTICE.txt'];
+        if(required.some(n=>!actual.includes(base+n)))throw Error('部署缺少標準 Interpreter、載入器或授權。');
+        const provenance=JSON.parse(await readFile(path.join(directory,base+'provenance.json'),'utf8'));
+        for(const name of required.filter(n=>n!=='provenance.json')){
+            const entry=provenance.files?.find(f=>f.path===name),bytes=await readFile(path.join(directory,base+name));
+            if(!entry||bytes.length!==entry.bytes||sha256(bytes)!==entry.sha256)throw Error('部署的標準 Interpreter 與固定來源不符。');
+        }
+    }
     if(JSON.stringify(JSON.parse(await readFile(path.join(directory,'release.json'),'utf8')))!==JSON.stringify(release))throw new Error('版本資訊與部署清單不符。');
     return manifest;
 }

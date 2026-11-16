@@ -1,0 +1,928 @@
+[
+  [
+    "body",
+    "return function InternalError() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function BindingError() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function UnboundTypeError() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function MessageLite() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function Category() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function BertNLClassifierOptionsCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function modelLensBindingFunction() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$BertNLClassifierOptionsCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor BertNLClassifierOptionsCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function vector$Category$() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$vector$Category$() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor vector<Category> called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function tflite$$task$$text$$BertQuestionAnswererBase() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function BertQuestionAnswerer() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrBertQuestionAnswerer() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrBertQuestionAnswerer$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrBertQuestionAnswerer.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function QaAnswer() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function Pos() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function vector$QaAnswer$() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$vector$QaAnswer$() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor vector<QaAnswer> called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function ImageClassifier() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrImageClassifier() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageClassifier$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageClassifier.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function StatusOrClassificationResult() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function ClassificationResultCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrClassificationResult$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrClassificationResult.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$ClassificationResultCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor ClassificationResultCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function ImageClassifierOptionsCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$ImageClassifierOptionsCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor ImageClassifierOptionsCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function ImageSegmenter() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrImageSegmenter() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageSegmenter$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageSegmenter.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function StatusOrSegmentationResult() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function ImageSegmenterOptionsCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$ImageSegmenterOptionsCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor ImageSegmenterOptionsCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function SegmentationResultCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrSegmentationResult$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrSegmentationResult.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$SegmentationResultCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor SegmentationResultCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function NLClassifier() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function BertNLClassifier() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrNLClassifier() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrNLClassifier$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrNLClassifier.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function ObjectDetector() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrObjectDetector() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrObjectDetector$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrObjectDetector.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function StatusOrDetectionResult() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function DetectionResultCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrDetectionResult$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrDetectionResult.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$DetectionResultCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor DetectionResultCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function ObjectDetectorOptionsCppProto() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$ObjectDetectorOptionsCppProto() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor ObjectDetectorOptionsCppProto called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function TFLiteWebModelRunner() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function StatusOrTFLiteWebModelRunner() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrTFLiteWebModelRunner$value() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrTFLiteWebModelRunner.value called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function TFLiteWebModelRunnerTensorInfo() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "body",
+    "return function vector$ProfileItem$() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunner$GetProfilingResults() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunner.GetProfilingResults called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$vector$ProfileItem$() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor vector<ProfileItem> called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "body",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$() {\n    \"use strict\";    return body.apply(this, arguments);\n};\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunner$GetInputs() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunner.GetInputs called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunner$GetOutputs() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunner.GetOutputs called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function constructor$vector$TFLiteWebModelRunnerTensorInfo$() {\nif (arguments.length !== 0) {\nthrowBindingError('function constructor vector<TFLiteWebModelRunnerTensorInfo> called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar rv = invoker(fn);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$Category$$push_back(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<Category>.push_back called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // Category\ninvoker(fn, thisWired, arg0Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$QaAnswer$$push_back(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<QaAnswer>.push_back called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // QaAnswer\ninvoker(fn, thisWired, arg0Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$$push_back(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<TFLiteWebModelRunnerTensorInfo>.push_back called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // TFLiteWebModelRunnerTensorInfo\ninvoker(fn, thisWired, arg0Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrBertQuestionAnswerer$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrBertQuestionAnswerer.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageClassifier$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageClassifier.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrClassificationResult$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrClassificationResult.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageSegmenter$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageSegmenter.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrSegmentationResult$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrSegmentationResult.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrNLClassifier$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrNLClassifier.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrObjectDetector$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrObjectDetector.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrDetectionResult$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrDetectionResult.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunner$Infer() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunner.Infer called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrTFLiteWebModelRunner$ok() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrTFLiteWebModelRunner.ok called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$Category$$resize(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<Category>.resize called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // Category\ninvoker(fn, thisWired, arg0Wired, arg1Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function vector$Category$$size() {\nif (arguments.length !== 0) {\nthrowBindingError('function vector<Category>.size called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$Category$$set(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<Category>.set called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // Category\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function BertQuestionAnswerer$CreateFromBuffer(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function BertQuestionAnswerer.CreateFromBuffer called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // unsigned long\nvar rv = invoker(fn, arg0Wired, arg1Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$QaAnswer$$resize(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<QaAnswer>.resize called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // QaAnswer\ninvoker(fn, thisWired, arg0Wired, arg1Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function vector$QaAnswer$$size() {\nif (arguments.length !== 0) {\nthrowBindingError('function vector<QaAnswer>.size called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$QaAnswer$$set(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<QaAnswer>.set called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // QaAnswer\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ImageClassifier$Classify(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ImageClassifier.Classify called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // int\nvar arg2Wired = argType2.toWireType(null, arg2); // int\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired, arg2Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ImageClassifier$CreateFromOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ImageClassifier.CreateFromOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar destructors = [];\nvar arg0Wired = argType0.toWireType(destructors, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(destructors, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(destructors, arg2); // ImageClassifierOptionsCppProto\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\nrunDestructors(destructors);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ImageSegmenter$Segment(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ImageSegmenter.Segment called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // int\nvar arg2Wired = argType2.toWireType(null, arg2); // int\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired, arg2Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ImageSegmenter$CreateFromOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ImageSegmenter.CreateFromOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar destructors = [];\nvar arg0Wired = argType0.toWireType(destructors, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(destructors, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(destructors, arg2); // ImageSegmenterOptionsCppProto\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\nrunDestructors(destructors);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function BertNLClassifier$CreateFromOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function BertNLClassifier.CreateFromOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar destructors = [];\nvar arg0Wired = argType0.toWireType(destructors, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(destructors, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(destructors, arg2); // BertNLClassifierOptionsCppProto\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\nrunDestructors(destructors);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ObjectDetector$Detect(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ObjectDetector.Detect called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // int\nvar arg2Wired = argType2.toWireType(null, arg2); // int\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired, arg2Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "return function ObjectDetector$CreateFromOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function ObjectDetector.CreateFromOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar destructors = [];\nvar arg0Wired = argType0.toWireType(destructors, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(destructors, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(destructors, arg2); // ObjectDetectorOptionsCppProto\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\nrunDestructors(destructors);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "arg2Wired_dtor",
+    "return function TFLiteWebModelRunner$CreateFromBufferAndOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function TFLiteWebModelRunner.CreateFromBufferAndOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(null, arg2); // TFLiteWebModelRunnerOptions\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\narg2Wired_dtor(arg2Wired); // TFLiteWebModelRunnerOptions\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function vector$ProfileItem$$size() {\nif (arguments.length !== 0) {\nthrowBindingError('function vector<ProfileItem>.size called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$$resize(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<TFLiteWebModelRunnerTensorInfo>.resize called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // TFLiteWebModelRunnerTensorInfo\ninvoker(fn, thisWired, arg0Wired, arg1Wired);\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$$size() {\nif (arguments.length !== 0) {\nthrowBindingError('function vector<TFLiteWebModelRunnerTensorInfo>.size called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$$set(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<TFLiteWebModelRunnerTensorInfo>.set called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // TFLiteWebModelRunnerTensorInfo\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "arg0Wired_dtor",
+    "arg1Wired_dtor",
+    "return function tflite$$task$$text$$BertQuestionAnswererBase$Answer(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function tflite::task::text::BertQuestionAnswererBase.Answer called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // std::string\nvar arg1Wired = argType1.toWireType(null, arg1); // std::string\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\narg0Wired_dtor(arg0Wired); // std::string\narg1Wired_dtor(arg1Wired); // std::string\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "return function BertQuestionAnswerer$Answer(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function BertQuestionAnswerer.Answer called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar destructors = [];\nvar thisWired = classParam.toWireType(destructors, this);\nvar arg0Wired = argType0.toWireType(destructors, arg0); // std::string\nvar arg1Wired = argType1.toWireType(destructors, arg1); // std::string\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\nrunDestructors(destructors);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrBertQuestionAnswerer$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrBertQuestionAnswerer.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageClassifier$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageClassifier.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrClassificationResult$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrClassificationResult.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrImageSegmenter$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrImageSegmenter.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrSegmentationResult$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrSegmentationResult.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "arg0Wired_dtor",
+    "return function NLClassifier$Classify(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function NLClassifier.Classify called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // std::string\nvar rv = invoker(fn, thisWired, arg0Wired);\narg0Wired_dtor(arg0Wired); // std::string\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrNLClassifier$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrNLClassifier.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "argType2",
+    "arg2Wired_dtor",
+    "return function NLClassifier$CreateFromBufferAndOptions(arg0, arg1, arg2) {\nif (arguments.length !== 3) {\nthrowBindingError('function NLClassifier.CreateFromBufferAndOptions called with ' + arguments.length + ' arguments, expected 3 args!');\n}\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // unsigned long\nvar arg2Wired = argType2.toWireType(null, arg2); // NLClassifierOptions\nvar rv = invoker(fn, arg0Wired, arg1Wired, arg2Wired);\narg2Wired_dtor(arg2Wired); // NLClassifierOptions\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrObjectDetector$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrObjectDetector.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrDetectionResult$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrDetectionResult.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunner$GetProfilingSummary() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunner.GetProfilingSummary called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function StatusOrTFLiteWebModelRunner$errorMessage() {\nif (arguments.length !== 0) {\nthrowBindingError('function StatusOrTFLiteWebModelRunner.errorMessage called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "arg0Wired_dtor",
+    "return function vector$ProfileItem$$push_back(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<ProfileItem>.push_back called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // ProfileItem\ninvoker(fn, thisWired, arg0Wired);\narg0Wired_dtor(arg0Wired); // ProfileItem\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "arg1Wired_dtor",
+    "return function vector$ProfileItem$$resize(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<ProfileItem>.resize called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // ProfileItem\ninvoker(fn, thisWired, arg0Wired, arg1Wired);\narg1Wired_dtor(arg1Wired); // ProfileItem\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "argType1",
+    "arg1Wired_dtor",
+    "return function vector$ProfileItem$$set(arg0, arg1) {\nif (arguments.length !== 2) {\nthrowBindingError('function vector<ProfileItem>.set called with ' + arguments.length + ' arguments, expected 2 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar arg1Wired = argType1.toWireType(null, arg1); // ProfileItem\nvar rv = invoker(fn, thisWired, arg0Wired, arg1Wired);\narg1Wired_dtor(arg1Wired); // ProfileItem\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function MessageLite$initFromJsProto(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function MessageLite.initFromJsProto called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // emscripten::val\nvar rv = invoker(fn, thisWired, arg0Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function MessageLite$toArrayBuffer() {\nif (arguments.length !== 0) {\nthrowBindingError('function MessageLite.toArrayBuffer called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$Category$$get(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<Category>.get called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar rv = invoker(fn, thisWired, arg0Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$QaAnswer$$get(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<QaAnswer>.get called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar rv = invoker(fn, thisWired, arg0Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "return function TFLiteWebModelRunnerTensorInfo$data() {\nif (arguments.length !== 0) {\nthrowBindingError('function TFLiteWebModelRunnerTensorInfo.data called with ' + arguments.length + ' arguments, expected 0 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar rv = invoker(fn, thisWired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$ProfileItem$$get(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<ProfileItem>.get called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar rv = invoker(fn, thisWired, arg0Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ],
+  [
+    "throwBindingError",
+    "invoker",
+    "fn",
+    "runDestructors",
+    "retType",
+    "classParam",
+    "argType0",
+    "return function vector$TFLiteWebModelRunnerTensorInfo$$get(arg0) {\nif (arguments.length !== 1) {\nthrowBindingError('function vector<TFLiteWebModelRunnerTensorInfo>.get called with ' + arguments.length + ' arguments, expected 1 args!');\n}\nvar thisWired = classParam.toWireType(null, this);\nvar arg0Wired = argType0.toWireType(null, arg0); // unsigned long\nvar rv = invoker(fn, thisWired, arg0Wired);\nvar ret = retType.fromWireType(rv);\nreturn ret;\n}\n"
+  ]
+]
