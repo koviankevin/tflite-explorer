@@ -97,3 +97,9 @@ export function expandedSelectionRequired(version){
     const [major,minor,patch]=version.split('.').map(Number);
     return major>1||major===1&&(minor>9||minor===9&&patch>=2);
 }
+
+export function deleteReconnectRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=10;
+}

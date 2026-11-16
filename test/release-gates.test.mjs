@@ -157,6 +157,11 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     const expandedRelease={...release,version:'1.9.2'},expandedSite={...site,candidate:expandedRelease};
     const expandedReport={...directReport,siteRelease:expandedRelease,checks:[...directReport.checks,'Above-32 TFLite marquee and cross-block MLIR selection, pattern JSON search and submodel reopen'],expandedSelection:{status:'passed',modelWorkers:4,cases:[{format:'tflite',marquee:33,selected:66,patternNodes:66,reopened:66,matches:1},{format:'mlir',selected:68,blocks:3,patternOperators:68,matches:1,validSSA:true}]}};
     assert.equal(assertSiteOperations(expandedReport,expandedSite,broadcast,comparisonChecker).checks,47);
+    const deleteRelease={...release,version:'1.10.0'},deleteSite={...site,candidate:deleteRelease},deleteReport={...expandedReport,siteRelease:deleteRelease,checks:[...expandedReport.checks,'Deletion preview reconnects consumers and model outputs; v4 draft, undo/redo, export/reopen preserve custom options and weights'],deleteReconnect:{status:'passed',modelWorkers:7,automaticRuntimeWorkers:0,cancelPreserves:true,modelOutputReplaced:true,draftVersion:4,undoRedo:true,reopenedOperators:2,customOptionsPreserved:true,weightsPreserved:true,customSearch:1,incompatibleRejected:true,compositionOutputBypass:true,boundaryReopenedOperators:2,boundaryInputs:[1,2,7,8]}};
+    assert.equal(assertSiteOperations(deleteReport,deleteSite,broadcast,comparisonChecker).checks,48);
+    for(const change of [r=>delete r.deleteReconnect,r=>r.deleteReconnect.automaticRuntimeWorkers=1,r=>r.deleteReconnect.draftVersion=3,r=>r.deleteReconnect.customOptionsPreserved=false,r=>r.deleteReconnect.boundaryInputs.pop()]){
+        const broken=structuredClone(deleteReport);change(broken);assert.throws(()=>assertSiteOperations(broken,deleteSite,broadcast,comparisonChecker),/Site operation evidence/);
+    }
     for(const change of [r=>delete r.expandedSelection,r=>r.expandedSelection.cases[0].marquee=32,r=>r.expandedSelection.cases[1].validSSA=false,r=>r.expandedSelection.cases[1].matches=2]){
         const broken=structuredClone(expandedReport);change(broken);assert.throws(()=>assertSiteOperations(broken,expandedSite,broadcast,comparisonChecker),/Site operation evidence/);
     }

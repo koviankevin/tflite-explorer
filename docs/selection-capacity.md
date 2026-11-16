@@ -8,13 +8,22 @@
 
 ## 刪除後的型別與接線
 
-目前工作區刪除 OP 後會標示失效來源，要求重新接線；可明確將仍需使用的輸出改為模型 inputs。接線會檢查 dtype、shape、shape_signature、quantization、sparsity、同一 subgraph 與產生順序。已支援的輸出 shape 推導主要適用新增 builtin OP；目前不會自動沿整個既有模型傳播刪除造成的型別變更。
+在編輯工作區選取 OP，按「刪除 OP」會先顯示處理連線的預覽。可選三種方式：
 
-建議另做「刪除並重接」預覽，依以下順序處理，此文件不代表已實作。
+- 刪除並一次重接所有使用者，包括編輯範圍外的 OP 與模型 outputs。
+- 將仍使用的輸出改為模型 inputs，由呼叫端提供值。
+- 只刪除，保留斷線位置，稍後手動接線。
 
-1. 列出被刪 OP 每個輸出 tensor 的全部使用者，以及模型 outputs／signature 是否受影響。
-2. 建議原 OP 輸入或其他上游 tensor 作為替代來源。dtype、shape、量化、sparsity 與執行順序相容時，可一次重接多個使用者，但仍由使用者確認，因為移除相容的 ReLU／Add 也會改變模型數值。
-3. 不相容時明示差異，例如 `float32[1,128] → float32[1,32,4]`、dtype 或 per-axis quantization。提供手動接線、將切口提升為模型 inputs、取消刪除等選擇。
-4. 使用明確的已支援 OP 規則，依拓撲順序預覽下游 shape 變更與新增／變動的模型介面。Reshape／Transpose 的 tensor-valued shape／permutation 需讀取常數與驗證；Conv、FC 的權重、通道與 bias 不能僅修改 tensor metadata。動態維度、控制流程與 custom OP 無規則時停止推導，交由使用者或 dialect／runtime adapter 提供資訊。
-5. 若需要插入 Reshape、Cast 或 Quantize／Dequantize，將它列為獨立的建議操作並預覽參數。Cast／重新量化可能改變精度，Reshape 只在元素數等條件符合時才可能使用，不能為通過檢查而自動塞入。
-6. 一次確認／Undo／Redo 整組刪除與重接；匯出前做結構、tensor、builtin、資料範圍與介面驗證。Interpreter 繼續獨立、手動執行，檢查可執行性也不等於數值等價。
+每個輸出列出使用端總數、前 12 個使用端、模型輸出與 signatures。候選來源包含編輯範圍內已知的同 subgraph 上游 tensor，可用名稱／編號／型別搜尋。原輸入只有一個相容候選時才預選；多個相容候選需手動決定。相容性檢查包含 dtype、shape、shape_signature、quantization、sparsity、同一 subgraph 與產生順序。候選顯示具體差異，不自行插入 Cast、Reshape 或推測權重。
+
+一次確認對應一個可復原／重做的草稿命令，恢復 OP 也能還原該次接線。多次刪除的替代值會逐段解析，模型輸出即使接到相同 tensor 仍保留原輸出欄位數量。組合草稿會維持刪除前的輸出選擇並套用替代對照，不會把新出現的末端 OP 全部加為輸出；可改接模型輸入或已產生的常數，但組合草稿仍需保留至少一個 OP。介面變更時，含 signatures 的模型需明確勾選同步更新；維持相同欄位數時保留 signature 輸出名稱。Signature 引用子圖 outputs 之外 tensor 的特殊介面會明確阻擋自動重接，需先調整來源 signature。
+
+含刪除重接命令的可攜／本機恢復草稿使用 version 4；既有 v1～v3 仍可讀，舊網站會明確拒絕 v4。草稿只存命令與來源指紋，不包含模型或權重。來源型別、權重和 custom options 原樣保留。Custom OP 宣告 ports 的重接不等於驗證私有 kernel 或 opaque options 內的語意。
+
+預覽不讀權重，每頁最多 8 個輸出、每個輸出列最多 50 個候選，候選按可見頁計算。型別差異快取限制為 16 組來源型別、每組 64 個差異；關閉對話框清除 DOM 與草稿參照。Worker 以一次掃描統計整個 subgraph，不把所有使用者或整份模型傳到主執行緒。
+
+目前不會自動沿整個既有模型傳播刪除造成的 shape 變更。已支援的 shape 推導仍適用新增 builtin OP。不相容時可改接其他 tensor、提升為模型 inputs、取消刪除或手動修正。匯出保持本機靜態、結構與資料驗證，interpreter 仍由使用者另外啟動；通過驗證不代表數值等價。
+
+### 後續可做
+
+依已支援 OP 規則預覽下游 shape 變更與介面影響。Reshape／Transpose 的 tensor-valued shape／permutation 需讀取常數與驗證；Conv、FC 的權重、通道與 bias 不能只修改 tensor metadata。動態維度、控制流程與 custom OP 無規則時停止推導。必要的 Reshape、Cast、Quantize／Dequantize 應列為獨立建議操作，顯示參數和精度影響後確認。

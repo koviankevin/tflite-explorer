@@ -1,6 +1,10 @@
 # TFLite 模型編輯工作區
 
-目前正式交付為 [v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)，新增[13 種 OP 靜態規則、逐 OP 報告與編輯區查看入口](operator-validation.md#v130-正式交付)；後續限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復指引；支援四種亂數與 v3 草稿。編輯匯出只做靜態、結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄。
+## 刪除與重接預覽（本次變更）
+
+編輯工作區選 OP →「刪除 OP」→ 預覽所有使用者與模型輸出 → 指定相容的上游 tensor，或改為模型 inputs／手動接線 → 確認套用。整組支援 Undo／Redo；v4 草稿保存替代對照。型別不相容時顯示 dtype、shape、量化等原因，不猜測下游 shape。參見 [選取容量與刪除 OP](selection-capacity.md)。
+
+[v1.3.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.3.0)，新增[13 種 OP 靜態規則、逐 OP 報告與編輯區查看入口](operator-validation.md#v130-正式交付)；後續限制見[已知問題](known-issues.md)。站內「說明」或 F1 提供編輯、接線、const、預覽、匯出及草稿恢復指引；支援四種亂數與既有 v3 草稿；本次刪除重接另採 v4 草稿。編輯匯出只做靜態、結構與資料驗證，手動執行仍在獨立工作區。下方 preview 版本與驗收數字保留為歷史紀錄。
 
 ## 已發布 preview.15：模型分頁、pattern 刪除與編輯入口
 

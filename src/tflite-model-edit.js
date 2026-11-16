@@ -89,6 +89,9 @@ export function prepareTfliteModelEdit(index,file,plans) {
             const next={...signature};
             for(const key of ['inputs','outputs']){
                 if(graph[key].length===original[key].length&&graph[key].every((id,i)=>id===original[key][i]))continue;
+                if(key==='outputs'&&graph.outputs.length===original.outputs.length&&signature.outputs.every(m=>original.outputs.includes(m.tensor_index))){
+                    next.outputs=signature.outputs.map(m=>({...m,tensor_index:graph.outputs[original.outputs.indexOf(m.tensor_index)]}));continue;
+                }
                 const old=new Map(signature[key].map(m=>[m.tensor_index,m.name])),used=new Set();
                 next[key]=Array.from(graph[key],tensor_index=>{
                     let name=old.get(tensor_index)||`tensor_${tensor_index}`,suffix=1;const base=name;
