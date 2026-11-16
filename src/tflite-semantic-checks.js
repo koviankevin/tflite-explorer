@@ -10,6 +10,7 @@ import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {checkStaticTransform} from './tflite-static-transform.js';
 import {BROADCAST_OPERATORS,checkBroadcastMetadata} from './tflite-broadcast-checks.js';
 import {checkAxisTransformMetadata} from './tflite-axis-transform-checks.js';
+import {checkSoftmaxMetadata} from './tflite-softmax-checks.js';
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
     const fail=message=>{throw Error(`${name} ${message}`);};
     checkSpatialTransform(name,inputs,outputs,options);
@@ -25,4 +26,5 @@ export function checkOperatorMetadata(name,inputs,outputs,options={}){
     checkAxisTransformMetadata(name,inputs,outputs);
     if(BROADCAST_OPERATORS.has(name))checkBroadcastMetadata(name,inputs,outputs);
     if(name==='GATHER')checkGatherMetadata(inputs,outputs,options);
+    checkSoftmaxMetadata(name,inputs,outputs,options);
 }

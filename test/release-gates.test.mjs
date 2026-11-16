@@ -9,6 +9,8 @@ import {MODEL_EDIT_LIFECYCLE_POLICY,MODEL_COMPOSITION_LIFECYCLE_POLICY} from './
 import {VALUE_SHAPE_EXPECTATIONS} from './browser/value-shape-proof.mjs';
 import {VALUE_SHAPE_RUNTIME_CHECK} from './browser/value-shape-runtime-flow.mjs';
 import {RUNTIME_ENGINE,RUNTIME_INTERPRETER_ENGINE} from '../src/tflite-runtime-policy.js';
+import {SOFTMAX_EXPECTATIONS} from './browser/softmax-proof.mjs';
+import {SOFTMAX_VALIDATION_CHECK} from './browser/softmax-validation-flow.mjs';
 const repository='koviankevin/tflite-explorer',commit='a'.repeat(40),tree='b'.repeat(40);
 function evidence(kind='browser'){
     const spec=GATES[kind];return {run:{id:123,status:'completed',conclusion:'success',event:'workflow_dispatch',head_branch:'main',head_repository:{full_name:repository},path:spec.workflow,head_sha:commit,run_attempt:1},jobs:[{name:spec.job,status:'completed',conclusion:'success'}],artifact:{id:456,name:`${spec.artifact}-${commit}-1`,expired:false,size_in_bytes:100,digest:'sha256:'+'c'.repeat(64)}};
@@ -178,6 +180,11 @@ test('site operations bind the report to the upgrade snapshot, source and requir
     assert.equal(assertSiteOperations(axisReport,axisSite,broadcast,comparisonChecker).checks,52);
     const valueRelease={...release,version:'1.12.3'},valueSite={...site,candidate:valueRelease},valueReport={...axisReport,siteRelease:valueRelease,checks:[...axisReport.checks,VALUE_SHAPE_RUNTIME_CHECK],valueShapeRuntime:{status:'passed',modelWorkers:8,runtimeWorkers:8,downloads:8,cases:VALUE_SHAPE_EXPECTATIONS.map(([name,modelSHA256,output,outputShape,interpreter])=>({name,modelSHA256,expected:output,output,outputShape,engine:interpreter?RUNTIME_INTERPRETER_ENGINE:RUNTIME_ENGINE,status:'passed',inputsMatch:true,numericMatches:true,automaticRuntime:false,zipSHA256:'a'.repeat(64)}))}};
     assert.equal(assertSiteOperations(valueReport,valueSite,broadcast,comparisonChecker).checks,53);
+    const softmaxRelease={...release,version:'1.12.4'},softmaxSite={...site,candidate:softmaxRelease},softmaxReport={...valueReport,siteRelease:softmaxRelease,checks:[...valueReport.checks,SOFTMAX_VALIDATION_CHECK],softmaxValidation:{status:'passed',modelWorkers:16,runtimeWorkers:4,downloads:16,allWorkersClosed:true,cases:SOFTMAX_EXPECTATIONS.map(([name,modelSHA256,status,expected])=>({name,modelSHA256,status,...(status==='rejected'?{runtimeWorkers:0,downloads:0,preflight:'subgraph 0 OP #0 SOFTMAX invalid metadata',error:'Subgraph #0 OP #0 SOFTMAX invalid metadata'}:{operators:2,reopened:true,quantizationPreserved:true,byteComparison:'not-applicable',outputSHA256:'a'.repeat(64),automaticRuntime:false,...(expected?{inputsMatch:true,numericMatches:true,zipSHA256:'b'.repeat(64),expected,output:expected}:{})})}))}};
+    assert.equal(assertSiteOperations(softmaxReport,softmaxSite,broadcast,comparisonChecker).checks,54);
+    for(const change of [r=>delete r.softmaxValidation,r=>r.softmaxValidation.cases[0].downloads++,r=>r.softmaxValidation.cases[4].output=[0,0,0,0,0,0],r=>r.softmaxValidation.cases[8].status='passed',r=>r.softmaxValidation.modelWorkers--,r=>r.checks.pop()]){
+        const broken=structuredClone(softmaxReport);change(broken);assert.throws(()=>assertSiteOperations(broken,softmaxSite,broadcast,comparisonChecker));
+    }
     for(const change of [r=>delete r.valueShapeRuntime,r=>r.valueShapeRuntime.cases[0].output=[0,4,2,5,3,6],r=>r.valueShapeRuntime.cases[0].engine=RUNTIME_ENGINE,r=>r.valueShapeRuntime.downloads--,r=>r.checks.pop()]){
         const broken=structuredClone(valueReport);change(broken);assert.throws(()=>assertSiteOperations(broken,valueSite,broadcast,comparisonChecker));
     }

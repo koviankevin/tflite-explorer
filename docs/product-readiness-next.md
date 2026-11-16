@@ -1,5 +1,9 @@
 # 商品等級後續工作
 
+## 未發布候選：Softmax／LogSoftmax
+
+[本輪修正及驗證範圍](softmax-validation.md)補上已重現的 output shape／dtype 漏擋，並在手動執行前攔下原生 Interpreter 也可能錯誤接受的 float32→int32 宣告。已完成獨立原生對照、實際 CPU WASM、兩引擎 32px 匯出重開及報告驗收；正式站與固定 Release 尚未發布此候選。下列目前正式版本保持不變。
+
 ## 2026-11-17 公開品質核對
 
 目前正式版本以 [README 的對外版本](../README.md)為準。本次以發布來源 `8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e`、正式站 manifest 與 GitHub Latest 核對：公開版為 **v1.12.3／build `c2e081e752506baa`**。完整來源、四項關卡、53 項正式操作、1,538 檔及四份實際下載見[收據](results/value-shape-v1.12.3-published.json)。值相依 TRANSPOSE／EXPAND_DIMS／RESHAPE 的已知數值錯誤已[正式修正](runtime-value-shape.md#v1123-正式交付)，正式 Chrome／Edge 各八例數值與 IO 核對通過。文件提交不改變已發布來源或固定附件，整體商品等級目標仍有下列未完成項目。

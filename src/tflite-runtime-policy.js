@@ -1,6 +1,7 @@
 // Estimates are admission checks, not a hard cap on native kernel scratch memory.
 // Large-file exploration/export does not read or instantiate the WASM runtime.
 import {runtimeDiagnosticContext,runtimeLocationSummary} from './tflite-runtime-diagnostics.js';
+import {SOFTMAX_OPERATOR_CODES,checkSoftmaxMetadata} from './tflite-softmax-checks.js';
 export const RUNTIME_LIMITS=Object.freeze({modelBytes:128*1024**2,estimatedBytes:512*1024**2,ioBytes:16*1024**2,timeoutMs:30000});
 export const RUNTIME_ENGINE='LiteRT.js 2.6.0 / CPU WASM';
 export const RUNTIME_INTERPRETER_ENGINE='TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)';
@@ -26,6 +27,8 @@ export function runtimePlan(model,bytes){
             const code=builtin(model.operator_codes[op.opcode_index]),prefix=`subgraph ${graphIndex} · OP #${opIndex}`;
             if(code===22&&op.inputs.length<2&&op.builtin_options?.new_shape===undefined)return skip(`${prefix} RESHAPE 缺少 shape tensor 或 new_shape；無法配置 tensors。若為舊示範檔，請重新開啟新版示範模型。`);
             if(code===39&&op.inputs.length!==2)return skip(`${prefix} TRANSPOSE 需要資料與 permutation 兩個 inputs；目前缺少必要參數，無法配置 tensors。`);
+            const softmax=!model.operator_codes[op.opcode_index]?.custom_code&&SOFTMAX_OPERATOR_CODES.get(code);
+            if(softmax)try{checkSoftmaxMetadata(softmax,Array.from(op.inputs,id=>g.tensors[id]),Array.from(op.outputs,id=>g.tensors[id]),op.builtin_options||{});}catch(error){return skip(`${prefix} ${error.message}`);}
             // CompiledModel's external output buffers can become stale when a
             // transform resizes its result during Invoke. Use the actual
             // Interpreter, reading its refreshed outputs, without rewriting

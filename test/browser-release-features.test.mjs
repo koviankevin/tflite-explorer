@@ -1,5 +1,6 @@
 import {searchPatternRevealRequired} from './browser/release-features.mjs';
 import {axisTransformValidationRequired} from './browser/release-features.mjs';
+import {softmaxValidationRequired} from './browser/release-features.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
@@ -24,6 +25,11 @@ test('legacy shape checks skip exact older immutable releases and remain require
     for(const v of [null,'candidate','v1.4.1'])assert.throws(()=>legacyShapeValidationRequired(v));
 });
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
+test('Softmax metadata and manual numerical checks remain required from v1.12.4 including suffixed versions',()=>{
+    for(const v of ['0.2.0-preview.34','1.12.0','1.12.3'])assert.equal(softmaxValidationRequired(v),false);
+    for(const v of ['1.12.4','1.12.4-rc.1','1.12.4+company.1','1.13.0','2.0.0'])assert.equal(softmaxValidationRequired(v),true);
+    for(const v of [null,'','v1.12.4','1.12'])assert.throws(()=>softmaxValidationRequired(v));
+});
 test('axis metadata checks remain required after v1.12.2 while exact older builds stay usable',()=>{
     for(const v of ['0.2.0-preview.34','1.7.3','1.12.1'])assert.equal(axisTransformValidationRequired(v),false);
     for(const v of ['1.12.2','1.12.3','1.13.0','2.0.0','1.12.2+company.1','1.12.2-rc.1'])assert.equal(axisTransformValidationRequired(v),true);
