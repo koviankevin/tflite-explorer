@@ -9,8 +9,9 @@ import {checkGatherMetadata} from './tflite-gather-checks.js';
 import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {checkStaticTransform} from './tflite-static-transform.js';
 import {BROADCAST_OPERATORS,checkBroadcastMetadata} from './tflite-broadcast-checks.js';
+import {checkAxisTransformMetadata} from './tflite-axis-transform-checks.js';
 export function checkOperatorMetadata(name,inputs,outputs,options={}){
-    const fail=message=>{throw Error(`${name} ${message}`);},out=outputs[0];
+    const fail=message=>{throw Error(`${name} ${message}`);};
     checkSpatialTransform(name,inputs,outputs,options);
     checkStaticTransform(name,inputs,outputs,options);
     checkOperandMetadata(name,inputs,outputs,options);
@@ -21,8 +22,7 @@ export function checkOperatorMetadata(name,inputs,outputs,options={}){
     if(name==='FULLY_CONNECTED')checkFullyConnectedMetadata(inputs,outputs,options);
     if(name==='BATCH_MATMUL')checkBatchMatmulMetadata(inputs,outputs,options);
     if(name==='RESHAPE')checkReshapeMetadata(inputs,outputs,options);
-    if(['TRANSPOSE','EXPAND_DIMS'].includes(name)&&inputs[0]&&out&&inputs[0].type!==out.type)fail('input／output dtype 必須相同。');
-    if(name==='TRANSPOSE'&&inputs[1]&&inputs[1].type!==2)fail('permutation tensor 必須是 int32。');
+    checkAxisTransformMetadata(name,inputs,outputs);
     if(BROADCAST_OPERATORS.has(name))checkBroadcastMetadata(name,inputs,outputs);
     if(name==='GATHER')checkGatherMetadata(inputs,outputs,options);
 }

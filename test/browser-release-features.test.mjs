@@ -1,4 +1,5 @@
 import {searchPatternRevealRequired} from './browser/release-features.mjs';
+import {axisTransformValidationRequired} from './browser/release-features.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
@@ -23,6 +24,11 @@ test('legacy shape checks skip exact older immutable releases and remain require
     for(const v of [null,'candidate','v1.4.1'])assert.throws(()=>legacyShapeValidationRequired(v));
 });
 const all={demoRuntime:true,inputCleanup:true,workspaceStorage:true,desktopRuntimeRSS:true};
+test('axis metadata checks remain required after v1.12.2 while exact older builds stay usable',()=>{
+    for(const v of ['0.2.0-preview.34','1.7.3','1.12.1'])assert.equal(axisTransformValidationRequired(v),false);
+    for(const v of ['1.12.2','1.12.3','1.13.0','2.0.0','1.12.2+company.1','1.12.2-rc.1'])assert.equal(axisTransformValidationRequired(v),true);
+    for(const v of [null,'1.12','v1.12.2'])assert.throws(()=>axisTransformValidationRequired(v));
+});
 
 test('automatic deletion shape propagation is required from v1.11 while immutable older releases remain usable',()=>{
     for(const v of ['1.9.1','1.10.0','0.2.0-preview.34'])assert.equal(deleteShapeRequired(v),false);
