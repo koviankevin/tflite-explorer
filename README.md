@@ -10,7 +10,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 [開啟模鏡網站](https://koviankevin.github.io/tflite-explorer/)
 
-目前對外版本為 [v1.12.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.0)，build `4d00355bac02d654`。圈選／pattern 上限提高至 256 OP；刪除 OP 可自動重接並推導下游 shape，接線 shape 不同時先預覽確認，支援草稿與匯出重開。343 個核心檔、全站 1,516 檔、50 項正式 HTTPS 操作及四份實際固定下載均已核對，Chrome／Edge 正式站新功能補驗亦通過，見[正式交付收據](docs/results/wire-shape-v1.12.0-published.json)。模型全程在本機處理，interpreter 由使用者手動啟動。
+目前對外版本為 [v1.12.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1)，build `384ad8c520e4ae49`。圈選後按「編輯搜尋 pattern」會切至 Pattern 分頁，自動展開、定位並聚焦到對應編輯器；一般 TFLite 與跨 block MLIR 都可使用。344 個核心檔、全站 1,522 檔、51 項正式 HTTPS 操作及四份實際固定下載均已核對；Chrome／Edge 另通過 Layers 入口、最小高度設定區及跨 block 編輯器補驗，見[正式交付收據](docs/results/search-pattern-reveal-v1.12.1-published.json)與[筆電畫面](docs/results/search-pattern-reveal-v1.12.1-live-edge.png)。模型全程在本機處理，interpreter 由使用者手動啟動；256 OP 選取、刪除重接及 shape 推導的前版交付見 [v1.12.0 收據](docs/results/wire-shape-v1.12.0-published.json)。
 
 [固定版本部署包](https://github.com/koviankevin/tflite-explorer/releases) 提供已建置 ZIP、SHA-256、逐檔 manifest 與發布憑證。公開版原樣部署可使用該 ZIP；帶公司 dialect 時保留內部 profile／adapter，固定核心版本後重新建置，依 [內網更新流程](docs/intranet-release.md) 驗收並切換完整版本目錄。版本／build 以 ZIP 的 release.json 或網站右上「版本」為準。實際編輯僅支援 TFLite；模型分頁、pattern 刪除／復原、可攜編輯草稿與 32px 筆電版面的歷史交付見 [編輯恢復驗收](docs/edit-recovery.md)。自 preview.17 起加入可見 Canvas 鍵盤焦點與 MLIR 檢查對話框返回焦點，preview.18／build `88b1b6ae59c5fd17` 的歷史驗收涵蓋正式站 1,318 檔、29 項 Chromium 操作與 Firefox／WebKit 各十三項；包含 32px 筆電版面、pattern、TFLite／MLIR 匯出重開，見 [桌面修正與正式交付](docs/desktop-fixes.md)。preview.17 歷史見 [MLIR／Canvas 驗收](docs/mlir-keyboard.md)；前次實際回退／恢復紀錄另見 [切換驗收與限制](docs/production-transition-verification.md)。
 

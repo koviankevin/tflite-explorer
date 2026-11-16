@@ -1,0 +1,408 @@
+{
+  "format": "model-lens-search-pattern-reveal-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-16T14:10:23.280Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.1",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "19fdbbf053cf1795bdc827841191d6f629189af6",
+      "tree": "04c86e9e22094fbaff1b3f4fdd69bfa57f7c12e3",
+      "committedAt": "2026-11-16T21:41:05+08:00",
+      "dirty": false
+    },
+    "buildId": "384ad8c520e4ae49"
+  },
+  "prepareRun": 43880627631,
+  "run": {
+    "id": 43880999082,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43880999082",
+    "attempt": 1
+  },
+  "releaseId": 447126543,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1",
+  "publishedAt": "2026-11-16T14:09:09Z",
+  "tagSource": "19fdbbf053cf1795bdc827841191d6f629189af6",
+  "latest": "v1.12.1",
+  "siteId": "b6df1379546c8555d8d039dcbef1427acd54a7cdfd111245e8f24bd0d212e256",
+  "siteManifestSHA256": "a9189104f6e4960397fba252293bef119369e1f38296e8158073565254b374eb",
+  "coreFiles": 344,
+  "siteFiles": 1522,
+  "assets": [
+    {
+      "name": "model-lens-public-1.12.1-384ad8c520e4ae49.zip",
+      "bytes": 41428826,
+      "sha256": "b8fe02649607416c79a1e6e53448841834b207903d1f4353dbf55098b80bb845",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.1/model-lens-public-1.12.1-384ad8c520e4ae49.zip"
+    },
+    {
+      "name": "model-lens-public-1.12.1-384ad8c520e4ae49.zip.sha256",
+      "bytes": 112,
+      "sha256": "cc06c6cf0c822feed9fe093a71f2410b9909758fe550c60bf5c3a2cfa25e7174",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.1/model-lens-public-1.12.1-384ad8c520e4ae49.zip.sha256"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 220797,
+      "sha256": "b4d4d7d17317a0d27bcc844776c3587cf5bdbc299888f6fc1e0074d260323c71",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.1/release-gates.json"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 55666,
+      "sha256": "34163945948be114f0c4e7cf4bb1b4894246ce45b5ac9fb2371d8c0ff03f2697",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.1/release-manifest.json"
+    }
+  ],
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 43863672032,
+      "reused": true
+    },
+    {
+      "kind": "browser",
+      "runId": 43877777751,
+      "reused": true
+    },
+    {
+      "kind": "contract",
+      "runId": 43877782670,
+      "reused": true
+    },
+    {
+      "kind": "site",
+      "runId": 43877787292,
+      "reused": true
+    }
+  ],
+  "deployment": {
+    "id": 7826038995,
+    "source": "19fdbbf053cf1795bdc827841191d6f629189af6",
+    "status": "success"
+  },
+  "archives": [
+    {
+      "id": 14233880451,
+      "name": "live-release-verification",
+      "digest": "sha256:6d62dc5c840fcc3a51498418ccc2dd994a6d21dfb268c02fa7bc6c7b74f69393",
+      "bytes": 561922
+    },
+    {
+      "id": 14233132878,
+      "name": "published-release-verification",
+      "digest": "sha256:ec6a3e5a0b4a7ff7436bccb23766143b42b76404e26d488ef9b3f3da94d6d5f5",
+      "bytes": 758
+    },
+    {
+      "id": 14233090846,
+      "name": "github-pages",
+      "digest": "sha256:cb05165f0a38b564372e1a21bd1aa86508aef91fa2ff8be3da0a9e6b24330fe8",
+      "bytes": 29290182
+    },
+    {
+      "id": 14230989212,
+      "name": "release-delivery",
+      "digest": "sha256:b25e9f1cc1f289cb8f36990cd01d09a6eee7f2105e24d064b0d2bb4db3fc125d",
+      "bytes": 7255302
+    }
+  ],
+  "formalHTTP": {
+    "status": "passed",
+    "files": 1522,
+    "httpRetries": 0,
+    "reportSHA256": "f7b12a65f911255fcab3b1470cc5a2b53fd5e5d22df7fb82d6d733603d959161"
+  },
+  "formalBrowser": {
+    "status": "passed",
+    "checks": 51,
+    "modelWorkers": 182,
+    "allWorkersClosed": true,
+    "processesReaped": true,
+    "searchPatternReveal": {
+      "status": "passed",
+      "modelWorkers": 3,
+      "downloads": 0,
+      "cases": [
+        {
+          "name": "from-layers",
+          "opened": true,
+          "focused": true,
+          "visible": true,
+          "modelUnchanged": true,
+          "notSaved": true,
+          "noAutomaticSearch": true,
+          "matches": 1,
+          "layout": {
+            "top": 280.59375,
+            "bottom": 312.59375,
+            "left": 44,
+            "right": 304.40625,
+            "paneTop": 204,
+            "paneBottom": 447,
+            "paneLeft": 0,
+            "paneRight": 343,
+            "viewportWidth": 1366,
+            "documentWidth": 1366
+          }
+        },
+        {
+          "name": "compressed-settings",
+          "opened": true,
+          "focused": true,
+          "visible": true,
+          "modelUnchanged": true,
+          "notSaved": true,
+          "noAutomaticSearch": true,
+          "matches": 1,
+          "layout": {
+            "top": 234.59375,
+            "bottom": 266.59375,
+            "left": 44,
+            "right": 304.40625,
+            "paneTop": 204,
+            "paneBottom": 268,
+            "paneLeft": 0,
+            "paneRight": 343,
+            "viewportWidth": 1366,
+            "documentWidth": 1366
+          }
+        },
+        {
+          "name": "cross-block",
+          "opened": true,
+          "focused": true,
+          "visible": true,
+          "modelUnchanged": true,
+          "notSaved": true,
+          "noAutomaticSearch": true,
+          "matches": 1,
+          "layout": {
+            "top": 251.171875,
+            "bottom": 283.171875,
+            "left": 27,
+            "right": 316,
+            "paneTop": 220,
+            "paneBottom": 284,
+            "paneLeft": 0,
+            "paneRight": 343,
+            "viewportWidth": 1366,
+            "documentWidth": 1366
+          }
+        }
+      ]
+    }
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 3,
+          "downloads": 0,
+          "cases": [
+            {
+              "name": "from-layers",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 307.59375,
+                "bottom": 342.59375,
+                "left": 44,
+                "right": 303.09375,
+                "paneTop": 230,
+                "paneBottom": 362,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            },
+            {
+              "name": "compressed-settings",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 257.59375,
+                "bottom": 292.59375,
+                "left": 44,
+                "right": 303.09375,
+                "paneTop": 230,
+                "paneBottom": 294,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            },
+            {
+              "name": "cross-block",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 258.171875,
+                "bottom": 293.171875,
+                "left": 27,
+                "right": 316,
+                "paneTop": 230,
+                "paneBottom": 294,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            }
+          ]
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 3,
+          "downloads": 0,
+          "cases": [
+            {
+              "name": "from-layers",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 307.59375,
+                "bottom": 342.59375,
+                "left": 44,
+                "right": 303.09375,
+                "paneTop": 230,
+                "paneBottom": 362,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            },
+            {
+              "name": "compressed-settings",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 257.59375,
+                "bottom": 292.59375,
+                "left": 44,
+                "right": 303.09375,
+                "paneTop": 230,
+                "paneBottom": 294,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            },
+            {
+              "name": "cross-block",
+              "opened": true,
+              "focused": true,
+              "visible": true,
+              "modelUnchanged": true,
+              "notSaved": true,
+              "noAutomaticSearch": true,
+              "matches": 1,
+              "layout": {
+                "top": 258.171875,
+                "bottom": 293.171875,
+                "left": 27,
+                "right": 316,
+                "paneTop": 230,
+                "paneBottom": 294,
+                "paneLeft": 0,
+                "paneRight": 343,
+                "viewportWidth": 1280,
+                "documentWidth": 1280
+              }
+            }
+          ]
+        },
+        "closed": true
+      }
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 640
+    },
+    "independentProfiles": true,
+    "syntheticModelsOnly": true,
+    "screenshot": "search-pattern-reveal-v1.12.1-live-edge.png"
+  },
+  "independentHTTP": {
+    "status": "passed",
+    "at": "2026-11-16T14:01:15.289Z",
+    "siteId": "b6df1379546c8555d8d039dcbef1427acd54a7cdfd111245e8f24bd0d212e256",
+    "build": "384ad8c520e4ae49",
+    "siteFiles": 1522,
+    "checks": [
+      {
+        "path": "/",
+        "bytes": 94148,
+        "sha256": "0b64d0a4536f2485dd8630da5b2ff2f721080c3e315fa92939ecdf407c30d3d7",
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "path": "index.html",
+        "bytes": 94148,
+        "sha256": "0b64d0a4536f2485dd8630da5b2ff2f721080c3e315fa92939ecdf407c30d3d7",
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "path": "versions/384ad8c520e4ae49/release.json",
+        "bytes": 330,
+        "sha256": "65d857d15151b174488d8df1c96f6a1d0f9da7c7d4c6a5427a70c96a93d18877",
+        "contentType": "application/json; charset=utf-8"
+      },
+      {
+        "path": "versions/384ad8c520e4ae49/src/reveal-pattern-editor.js",
+        "bytes": 507,
+        "sha256": "66ac29b534e17c73c325457930b1860c3b3bd09c0c1e0c6564f31acd4cb5b739",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "versions/384ad8c520e4ae49/src/app.js",
+        "bytes": 132253,
+        "sha256": "e0cafaecc4f853495ab0c6e7984e536372d567c79805badc383b47d31bd4090a",
+        "contentType": "application/javascript; charset=utf-8"
+      }
+    ]
+  },
+  "scope": "GitHub formal site and fixed Release only; no Sites or GH Studio sync"
+}
