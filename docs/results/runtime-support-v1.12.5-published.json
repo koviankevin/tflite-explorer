@@ -1,0 +1,622 @@
+{
+  "format": "model-lens-runtime-support-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-16T23:10:29.737Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.5",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "6f88bce7e59d02c045a06c88127f0891836d9b73",
+      "tree": "efe7244580ad4272f3e20d88c7d3221a16211fbb",
+      "committedAt": "2026-11-17T06:53:31+08:00",
+      "dirty": false
+    },
+    "buildId": "4f77b6421b63d044"
+  },
+  "prepareRun": 43974352792,
+  "run": {
+    "id": 43974804184,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43974804184",
+    "attempt": 1
+  },
+  "releaseId": 447726160,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.5",
+  "publishedAt": "2026-11-16T23:06:47Z",
+  "tagSource": "6f88bce7e59d02c045a06c88127f0891836d9b73",
+  "latest": "v1.12.5",
+  "siteId": "f84593e8e340fb75b495d01dd225ee1cf750fb8e65aa0144453b37c33bd04384",
+  "siteManifestSHA256": "9bd082bcdf8fceab1208f587d49598ba068897cf22d080752022f7dc9806fa36",
+  "coreFiles": 355,
+  "siteFiles": 1559,
+  "assets": [
+    {
+      "name": "model-lens-public-1.12.5-4f77b6421b63d044.zip",
+      "bytes": 45232892,
+      "sha256": "e7574d98a035b578b8112830ff995dbfb6b4a59462925425966a8d68edb4cd8a",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.5/model-lens-public-1.12.5-4f77b6421b63d044.zip"
+    },
+    {
+      "name": "model-lens-public-1.12.5-4f77b6421b63d044.zip.sha256",
+      "bytes": 112,
+      "sha256": "134381144cb6ec814d277e64763bb0899a9677c368a2ab69c271564a5c2ba222",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.5/model-lens-public-1.12.5-4f77b6421b63d044.zip.sha256"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 231484,
+      "sha256": "4283ef122a87c2d83fb0c34ea34460eb8f4d451b6d1aee9c6be1cd2d7b400a45",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.5/release-gates.json"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 57644,
+      "sha256": "8cb3ef716031c9320984f2523f194be659888a268f2a5eefdd6b1aa15a942f58",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.5/release-manifest.json"
+    }
+  ],
+  "deployment": {
+    "id": 7838757827,
+    "source": "6f88bce7e59d02c045a06c88127f0891836d9b73",
+    "status": "success"
+  },
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 43959891843,
+      "reused": true
+    },
+    {
+      "kind": "browser",
+      "runId": 43970625515,
+      "reused": true
+    },
+    {
+      "kind": "contract",
+      "runId": 43970635278,
+      "reused": true
+    },
+    {
+      "kind": "site",
+      "runId": 43970648605,
+      "reused": true
+    }
+  ],
+  "mainGateReviews": {
+    "core": {
+      "status": "passed",
+      "run": 43959891843,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "tree": "c634a851e96e4d90983fefa2f98e0ea5a010bf25",
+      "targetSource": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "reused": true,
+      "artifactId": 14274725341,
+      "digest": "sha256:6439667d0b5b9e5e115af40f51f3887cbf7a1284578780fd4db71af69c86971c",
+      "reportSHA256": "cd80e053dc5bab2087e58c9a87f5ea4966f2bf9a3334347e2de47e67adb68e23",
+      "scopeFingerprint": "91d96cc4c3af3f66fc99da9b78d1b6512a9e8a76af82a9239c84a4c4d4ef39d7",
+      "scopeFiles": 93
+    },
+    "contract": {
+      "status": "passed",
+      "run": 43970635278,
+      "source": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "tree": "901bbd4ebf9d35b98e2494c0071439aaeb687a8f",
+      "targetSource": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "reused": false,
+      "artifactId": 14276769650,
+      "digest": "sha256:b7058bdba1ead8c04859d14adecdba45f66bdef9fca9da9a3c50739e82ca9913",
+      "reportSHA256": "c2ca63d38115a48b32ea34d1aac88d1e8530fe7f55880c88278f4997c964e212",
+      "scopeFingerprint": "e5eabe22f60a29e15c2c12bc6bef801c343243d44b9df2be659a2faeaba8b82b",
+      "scopeFiles": 765
+    },
+    "site": {
+      "status": "passed",
+      "run": 43970648605,
+      "source": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "tree": "901bbd4ebf9d35b98e2494c0071439aaeb687a8f",
+      "targetSource": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "reused": false,
+      "artifactId": 14278946694,
+      "digest": "sha256:8355c419c384cf00585314f391582de799e9cf4220b58d79fde2fa9b803d3188",
+      "reportSHA256": "3aa36b8bdeea857abfcb3062c486c3ab9645b1893d0539b4fd0300eff249e761",
+      "scopeFingerprint": "cccd960486307d9002d052ea7c8df928b2badebeb6d91aa3a400a9360a9f448d",
+      "scopeFiles": 445,
+      "operations": {
+        "checks": 55,
+        "buildId": "de01ad978fc50ef0",
+        "siteId": "4b5e31446c204389b3c5d03141bfdee4648177f631061777102e7d0fa1ae898a",
+        "artifactId": 14278049313,
+        "digest": "sha256:eec6fb7840393294182a246087fe5ffcae301ff1da98e8bb9082eaa2bf1a5d22",
+        "reportSHA256": "3e9f01e00eb50ffec1298fc44463eeb9a5132aaad23ead5cfe046c8662827a66"
+      }
+    },
+    "browser": {
+      "status": "passed",
+      "run": 43970625515,
+      "source": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "tree": "901bbd4ebf9d35b98e2494c0071439aaeb687a8f",
+      "targetSource": "1716885e40849c2206c2a2ab66082906f4e84560",
+      "reused": false,
+      "artifactId": 14280565374,
+      "digest": "sha256:3b68bc77923f0916d575e172653551a944f35041cdcd12973ef5a220e1103b5d",
+      "reportSHA256": "0ea6875c3928ab89abfb85f89ff76a86ddaacbc46c81d9f5344299017c6c6af7",
+      "scopeFingerprint": "27e6bb096e63e39b3fb39f55f74a1d56d20c66e55e9ff39d4a1c26794b8cd40f",
+      "scopeFiles": 377,
+      "evaluation": {
+        "status": "passed",
+        "issues": [],
+        "summary": {
+          "measuredCycles": 6,
+          "rssSlopeBytesPerCycle": 1181520.4571428571,
+          "rssDriftBytes": 127811584,
+          "mainHeapDriftBytes": 241280,
+          "sampledPeakRssBytes": 1029967872,
+          "sampledPeakGrowthBytes": 518684672
+        }
+      }
+    }
+  },
+  "featurePRReview": {
+    "status": "passed",
+    "pr": 308,
+    "head": "5583dbf61a0ca8f5e17bc468c69384b459abcc0e",
+    "base": "564e5e34470afa8ad58f4f03ee68448a6e1ec926",
+    "tree": "901bbd4ebf9d35b98e2494c0071439aaeb687a8f",
+    "runs": {
+      "node": {
+        "run": 43969704594,
+        "job": 133658315841,
+        "triggerHead": "5583dbf61a0ca8f5e17bc468c69384b459abcc0e",
+        "status": "success",
+        "counts": {
+          "tests": 1234,
+          "pass": 1199,
+          "fail": 0,
+          "skipped": 35,
+          "cancelled": 0
+        },
+        "build": {
+          "directory": "/home/runner/work/tflite-explorer/tflite-explorer/dist",
+          "release": {
+            "schemaVersion": 1,
+            "version": "1.12.5",
+            "distribution": "public",
+            "extension": null,
+            "source": {
+              "commit": "d57f83edf4533721b55f6e153570351c027fa7d7",
+              "tree": "901bbd4ebf9d35b98e2494c0071439aaeb687a8f",
+              "committedAt": "2026-11-17T06:24:06+08:00",
+              "dirty": false
+            },
+            "buildId": "517266caa332a2ba"
+          },
+          "previous": null,
+          "files": 355
+        }
+      },
+      "contract": {
+        "run": 43969704560,
+        "job": 133658315493,
+        "triggerHead": "5583dbf61a0ca8f5e17bc468c69384b459abcc0e",
+        "status": "success",
+        "testedMerge": "d57f83edf4533721b55f6e153570351c027fa7d7",
+        "artifactId": 14277488555,
+        "digest": "sha256:ffe36400e79df64295c78e495e0ce7dee8cc3a4501a6989ba0768420c64a3240",
+        "reportSHA256": "2c630742ef89299c2ea206ceedcecec74e562d88a3ccaea7a4296da70180ecf8",
+        "counts": {
+          "tests": 83,
+          "pass": 83,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0
+        }
+      },
+      "core": {
+        "run": 43969704634,
+        "job": 133658316019,
+        "triggerHead": "5583dbf61a0ca8f5e17bc468c69384b459abcc0e",
+        "status": "success",
+        "testedMerge": "d57f83edf4533721b55f6e153570351c027fa7d7",
+        "artifactId": 14278376051,
+        "digest": "sha256:98f78ac3533207f7ec0a10ad20c9998091b7e577e137b41e5557cd4ffa00454d",
+        "reportSHA256": "7997878c668173e987815accd17291f9faebb75c9d0e1d25ed510e08e6e8112f",
+        "samples": 9
+      }
+    },
+    "testedMerge": "d57f83edf4533721b55f6e153570351c027fa7d7",
+    "nativeCandidateSourceFilesVerified": 15,
+    "reusableMainCore": {
+      "run": 43959891843,
+      "source": "48f4d2f401953306c864c264213f718011db81f3",
+      "fingerprint": "91d96cc4c3af3f66fc99da9b78d1b6512a9e8a76af82a9239c84a4c4d4ef39d7",
+      "files": 93
+    }
+  },
+  "formal": {
+    "status": "passed",
+    "at": "2026-11-16T23:10:01.578Z",
+    "run": 43974804184,
+    "attempt": 1,
+    "artifactId": 14280802752,
+    "digest": "sha256:118c575f9a28ab198ed140fc356f19c26ddc028d74fffdada3da4885ea20f462",
+    "formalHTTP": {
+      "files": 1559,
+      "sha256": "ca0172592db3184e558c89979ee3fdf099a093657282a3f98229636215adccaa",
+      "retries": 0
+    },
+    "formalBrowser": {
+      "checks": 55,
+      "modelWorkers": 218,
+      "allWorkers": 313,
+      "allClosed": true,
+      "processesReaped": true,
+      "runtimeSupport": {
+        "status": "passed",
+        "cases": [
+          {
+            "name": "missing-version",
+            "modelSHA256": "2035802838cf28a314da90f9e66778685f294eea588317fff71e492dc835a507",
+            "inputSHA256": [
+              "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+              "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+            ],
+            "status": "not-verified",
+            "message": "本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999；請改用支援此 OP／版本的 runtime 驗證。失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請依原始診斷檢查模型、tensor 參數及 runtime 支援。\n原始 runtime 錯誤：INVALID_ARGUMENT: Can't initialize model\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'. An older version of this builtin might be supported. Are you using an old TFLite binary with a newer model?\nERROR: Registration failed.",
+            "automaticRuntime": false,
+            "ioAbsent": true
+          },
+          {
+            "name": "invalid-permutation",
+            "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+            "inputSHA256": [
+              "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+              "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+            ],
+            "status": "failed",
+            "message": "本機執行檢查：失敗。指定輸入執行失敗。需依此 runtime／輸入的診斷確認原因。\n原始 runtime 錯誤：TFLite Interpreter invocation failed.\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nruntime 回報 TRANSPOSE node #0；來源候選：Subgraph #0 · OP #0 · inputs [0, 1]／outputs [2]。\n執行記錄部分保存：1 個 tensor 未能保存；可取得的資料已保留。outputs #0：runtime 未提供此 tensor 的資料；保留介面 metadata。；詳見 IO ZIP 的 manifest.json。\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/kernels/transpose.cc Transpose op permutations array is out of bounds.\nERROR: Node number 0 (TRANSPOSE) failed to invoke.",
+            "automaticRuntime": false,
+            "zipSHA256": "4bbe2c8513c3b69a6a35a4199f9ae65c926935093e3899d2eed0fe0a8ee33111",
+            "recordedStatus": "failed",
+            "compiled": true,
+            "invoked": false,
+            "inputsMatch": true,
+            "outputSaved": false
+          },
+          {
+            "name": "supported-control",
+            "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+            "inputSHA256": [
+              "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+              "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+            ],
+            "status": "passed",
+            "message": "本機執行檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "automaticRuntime": false,
+            "zipSHA256": "d90355824bb3f128e6fa0fa0a156f5dd0339b0b1348af113f2418d7c059cc1a3",
+            "recordedStatus": "passed",
+            "compiled": true,
+            "invoked": true,
+            "inputsMatch": true,
+            "outputSaved": true,
+            "outputSHA256": "b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd",
+            "output": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "numericMatches": true
+          }
+        ],
+        "modelWorkers": 3,
+        "runtimeWorkers": 3,
+        "downloads": 2,
+        "allWorkersClosed": true
+      },
+      "retainedSoftmax": "passed",
+      "retainedValueShape": "passed",
+      "sha256": "eb5f4312eadaf71ef5ff50ccf11539e65d95a6e7fe7ada221c7cbab1e84cd030"
+    },
+    "nativeWindows": {
+      "casesPerBrowser": 3,
+      "browsers": [
+        "chrome",
+        "msedge"
+      ],
+      "allWorkersClosed": true,
+      "workerCounts": [
+        {
+          "channel": "chrome",
+          "model": 3,
+          "runtime": 3,
+          "layout": 1,
+          "recovery": 0,
+          "allClosed": true
+        },
+        {
+          "channel": "msedge",
+          "model": 3,
+          "runtime": 3,
+          "layout": 1,
+          "recovery": 0,
+          "allClosed": true
+        }
+      ],
+      "sha256": "5d6a8d260eceaa2e923572d61dd18169aadae4d6a7d6fa9db177294f8430cb46"
+    }
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "at": "2026-11-16T22:59:34.958Z",
+    "build": "4f77b6421b63d044",
+    "siteId": "f84593e8e340fb75b495d01dd225ee1cf750fb8e65aa0144453b37c33bd04384",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/vendor/netron/worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "missing-version",
+              "modelSHA256": "2035802838cf28a314da90f9e66778685f294eea588317fff71e492dc835a507",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "not-verified",
+              "message": "本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999；請改用支援此 OP／版本的 runtime 驗證。失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請依原始診斷檢查模型、tensor 參數及 runtime 支援。\n原始 runtime 錯誤：INVALID_ARGUMENT: Can't initialize model\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'. An older version of this builtin might be supported. Are you using an old TFLite binary with a newer model?\nERROR: Registration failed.",
+              "automaticRuntime": false,
+              "ioAbsent": true
+            },
+            {
+              "name": "invalid-permutation",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+              ],
+              "status": "failed",
+              "message": "本機執行檢查：失敗。指定輸入執行失敗。需依此 runtime／輸入的診斷確認原因。\n原始 runtime 錯誤：TFLite Interpreter invocation failed.\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nruntime 回報 TRANSPOSE node #0；來源候選：Subgraph #0 · OP #0 · inputs [0, 1]／outputs [2]。\n執行記錄部分保存：1 個 tensor 未能保存；可取得的資料已保留。outputs #0：runtime 未提供此 tensor 的資料；保留介面 metadata。；詳見 IO ZIP 的 manifest.json。\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/kernels/transpose.cc Transpose op permutations array is out of bounds.\nERROR: Node number 0 (TRANSPOSE) failed to invoke.",
+              "automaticRuntime": false,
+              "zipSHA256": "82c98b74274e26c1e8ae38ffa8eb2de9c012cc2e1503677cdf27dc9b035fe08f",
+              "recordedStatus": "failed",
+              "compiled": true,
+              "invoked": false,
+              "inputsMatch": true,
+              "outputSaved": false
+            },
+            {
+              "name": "supported-control",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "passed",
+              "message": "本機執行檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+              "automaticRuntime": false,
+              "zipSHA256": "b6047c0718bbea5b5a6ed71990346b90276462ad82350133b4cbc7e3b8c3cbd9",
+              "recordedStatus": "passed",
+              "compiled": true,
+              "invoked": true,
+              "inputsMatch": true,
+              "outputSaved": true,
+              "outputSHA256": "b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd",
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "numericMatches": true
+            }
+          ],
+          "modelWorkers": 3,
+          "runtimeWorkers": 3,
+          "downloads": 2,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/vendor/netron/worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/model-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/4f77b6421b63d044/src/tflite-runtime-worker.js?v=4f77b6421b63d044",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "missing-version",
+              "modelSHA256": "2035802838cf28a314da90f9e66778685f294eea588317fff71e492dc835a507",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "not-verified",
+              "message": "本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999；請改用支援此 OP／版本的 runtime 驗證。失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請依原始診斷檢查模型、tensor 參數及 runtime 支援。\n原始 runtime 錯誤：INVALID_ARGUMENT: Can't initialize model\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'. An older version of this builtin might be supported. Are you using an old TFLite binary with a newer model?\nERROR: Registration failed.",
+              "automaticRuntime": false,
+              "ioAbsent": true
+            },
+            {
+              "name": "invalid-permutation",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+              ],
+              "status": "failed",
+              "message": "本機執行檢查：失敗。指定輸入執行失敗。需依此 runtime／輸入的診斷確認原因。\n原始 runtime 錯誤：TFLite Interpreter invocation failed.\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nruntime 回報 TRANSPOSE node #0；來源候選：Subgraph #0 · OP #0 · inputs [0, 1]／outputs [2]。\n執行記錄部分保存：1 個 tensor 未能保存；可取得的資料已保留。outputs #0：runtime 未提供此 tensor 的資料；保留介面 metadata。；詳見 IO ZIP 的 manifest.json。\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/kernels/transpose.cc Transpose op permutations array is out of bounds.\nERROR: Node number 0 (TRANSPOSE) failed to invoke.",
+              "automaticRuntime": false,
+              "zipSHA256": "874c5403d923bbcec07530b1958555b20566edc807b48d3f5ea5e56b7e8a2a8b",
+              "recordedStatus": "failed",
+              "compiled": true,
+              "invoked": false,
+              "inputsMatch": true,
+              "outputSaved": false
+            },
+            {
+              "name": "supported-control",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "passed",
+              "message": "本機執行檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+              "automaticRuntime": false,
+              "zipSHA256": "be714721cb0488d13971db864bd6753aba20b422436c830699e1d01370529e17",
+              "recordedStatus": "passed",
+              "compiled": true,
+              "invoked": true,
+              "inputsMatch": true,
+              "outputSaved": true,
+              "outputSHA256": "b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd",
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "numericMatches": true
+            }
+          ],
+          "modelWorkers": 3,
+          "runtimeWorkers": 3,
+          "downloads": 2,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      }
+    ],
+    "files": [
+      {
+        "path": "index.html",
+        "sha256": "949679c9ce201dae5edab6c77e8415bd0c0a5ef20380f9fd2fe98fdda57460d4"
+      },
+      {
+        "path": "release.json",
+        "sha256": "0ca8d6a8d2a796b20d2bc6ee8f83cf5311c960caf4c95482e9a808484a300658"
+      },
+      {
+        "path": "src/tflite-runtime-diagnostics.js",
+        "sha256": "5e9d09d2dea9fddfb6ebf69ee4d4d9db6bb4a2ac5f35bf8b5542357f930ac7db"
+      },
+      {
+        "path": "src/tflite-runtime-execute.js",
+        "sha256": "4480a5070f17d8850835dde92e74df9a79f06a0c7d1fce55b66a04d7de297510"
+      },
+      {
+        "path": "src/tflite-interpreter-runtime.js",
+        "sha256": "cf8d70d1202b985007d584fc8e01c7dc8ace7a27e4a00d6422828c4bd8ea1d44"
+      },
+      {
+        "path": "src/tflite-runtime-policy.js",
+        "sha256": "424e57b46d911e6675b4d225943693afa746b4082991e8da620282a9a1528cbc"
+      }
+    ]
+  },
+  "originalLiveArtifact": {
+    "file": "runtime-support-v1.12.5-live-verification.zip",
+    "sha256": "118c575f9a28ab198ed140fc356f19c26ddc028d74fffdada3da4885ea20f462",
+    "providerDigest": "sha256:118c575f9a28ab198ed140fc356f19c26ddc028d74fffdada3da4885ea20f462"
+  },
+  "physicalLifecycle": {
+    "status": "passed",
+    "bytes": 1349965216,
+    "operators": 21005,
+    "cycles": 8,
+    "samples": 1978,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 1181520.4571428571,
+        "rssDriftBytes": 127811584,
+        "mainHeapDriftBytes": 241280,
+        "sampledPeakRssBytes": 1029967872,
+        "sampledPeakGrowthBytes": 518684672
+      }
+    },
+    "browserClosed": true,
+    "workersClosed": 57,
+    "processesReaped": true
+  },
+  "candidateEvidence": "runtime-support-candidate.json",
+  "limitations": [
+    "Explicit bounded compile-time builtin/version registration messages are classified not-verified; this does not certify model legality or arbitrary kernels.",
+    "Finite Hosted physical acceptance does not establish Windows large-model RSS or every historical allocator root cause.",
+    "Native functional acceptance has SDK close/observed Worker evidence, not OS-process-reap or hours-long measurements.",
+    "Remaining OP coverage, environmental recovery and full human accessibility retain the original product-goal scope."
+  ],
+  "scope": "GitHub formal site and fixed Release only; no Sites/GH Studio sync"
+}

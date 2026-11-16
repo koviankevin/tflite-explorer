@@ -4,7 +4,7 @@
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-17 的最新 [v1.12.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4)，build `f8a2d9d3ac4f8501`：Softmax／LogSoftmax shape／dtype 檢查及報告已交付，並減少 TFLite 鄰接索引與小型 Int32 metadata 配置。355 個核心檔、全站 1,549 檔、54 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各 10 個 32px 情境通過。1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 12,595,200 B；前兩次失敗原樣保留。見[正式交付收據](results/softmax-v1.12.4-published.json)及[檢查範圍](softmax-validation.md#v1124-正式交付)。模型全程本機處理，interpreter 仍由使用者手動啟動；不將有限測試擴大為任意 kernel、所有模型精度或 Windows 大檔保證。 完整商品等級目標仍保留既有未完成項目，下方歷史來源與限制不改寫。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-17 最新交付為 [v1.12.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.5)，build `4f77b6421b63d044`。明確缺少 builtin OP／版本時顯示「未能驗證」並保留原始診斷，真正的 tensor／輸入錯誤維持「失敗」。355 個核心檔、全站 1,559 檔、55 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各三個 32px 情境通過。新來源的 1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 127,811,584 B。見[正式交付收據](results/runtime-support-v1.12.5-published.json)及[分類範圍](runtime-support-diagnostics.md#v1125-正式交付)。模型全程本機處理，interpreter 由使用者手動啟動；runtime 不支援的結果仍需其他工具驗證。 下方歷史來源及整體目標的未完成項目保留。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 
