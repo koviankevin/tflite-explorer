@@ -3,6 +3,7 @@ import { BinaryReader } from '../vendor/netron/flatbuffers.js';
 import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
+import {installTfliteMetadataArrays} from './tflite-metadata-arrays.js';
 import { lazyAdjacency, nextNodes, previousNodes } from './lazy-adjacency.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
@@ -38,6 +39,7 @@ export async function parseModel(readAt, length, metadata, progress = () => {}) 
     const reader = BinaryReader.open(stream);
     if (!reader || reader.identifier !== 'TFL3') throw new Error('請選擇有效的 TFLite（TFL3）模型。');
     reader._size = 64 * 1024;
+    installTfliteMetadataArrays(reader);
     // Keep read-only inspection available for newer schemas, but never export
     // data whose unknown fields/options would be silently dropped by our writer.
     let exportUnsupportedReason = '';

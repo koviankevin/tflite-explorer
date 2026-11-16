@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/model-engine.js'
       - 'src/lazy-adjacency.js'
+      - 'src/tflite-metadata-arrays.js'
       - 'src/range-stream.js'
       - 'src/subgraph-pattern.js'
       - 'src/pattern-utils.js'

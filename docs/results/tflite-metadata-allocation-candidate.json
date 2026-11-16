@@ -1,0 +1,493 @@
+{
+  "format": "model-lens-tflite-metadata-allocation-candidate",
+  "schemaVersion": 1,
+  "status": "unpublished-source-candidate",
+  "at": "2026-11-16T21:15:47.613Z",
+  "releaseEvidenceEligible": false,
+  "source": {
+    "base": "4e3ec5e319befebb48910f0ec6d0a6ecce09580a",
+    "build": "4dac4316b054dec8",
+    "sourceFiles": [
+      {
+        "path": "src/tflite-metadata-arrays.js",
+        "bytes": 1493,
+        "canonicalSHA256": "507fbebf9248f1b2a673e0a695421927b85012e644a3b109d681399e35e63c7c"
+      },
+      {
+        "path": "src/model-engine.js",
+        "bytes": 18478,
+        "canonicalSHA256": "5f1bac352033f99b8808c59fcced8ce9d8a506096f3e2582534eedb90bff5a79"
+      },
+      {
+        "path": ".github/workflows/performance.yml",
+        "bytes": 1970,
+        "canonicalSHA256": "fc7ce0c85c87bbe451d7e1efd4fb163d2486682b6b24b841078255fb5296d874"
+      },
+      {
+        "path": "test/tflite-metadata-arrays.test.mjs",
+        "bytes": 6412,
+        "canonicalSHA256": "f9c0de25774fe57a41f1ba0a05bc4c1b32116d71911b160342cc657412052ab7"
+      }
+    ],
+    "additionalTest": "Real model DTO has plain metadata values and no arena views; product source unchanged from measured build4dac4316b054dec8.",
+    "dirty": true,
+    "coreFiles": 355
+  },
+  "scope": {
+    "type": "Int32 metadata vectors only",
+    "pageBytes": 65536,
+    "maxVectorBytes": 16384,
+    "maxArenaBytes": 8388608,
+    "weightsAndUint8CustomOptionsUnchanged": true,
+    "perReaderIsolation": true,
+    "rawBackingBufferOwnershipChanged": true,
+    "publicGraphDTOContainsNoArenaViews": true
+  },
+  "regression": {
+    "before": "Actual real-parser fixture used747 buffers for747 Int32 views and failed bounded-storage assertion.",
+    "after": "Distinct native views, bounded blocks, all generated-schema values and mutation/clone semantics match."
+  },
+  "tests": {
+    "uniqueTargetedCases": 108,
+    "passed": 108,
+    "failed": 0,
+    "skipped": 0,
+    "coverage": "41 parser/edit/export cases plus66 semantic/real-WASM cases and one added DTO boundary case; six metadata cases rerun including five overlapping cases.",
+    "requiredPRChecks": "pending"
+  },
+  "node": {
+    "status": "actual-source-Node-not-physical-resource-acceptance",
+    "order": [
+      "A",
+      "C",
+      "C",
+      "A",
+      "A",
+      "C"
+    ],
+    "forcedGC": false,
+    "fixtureSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+    "fingerprint": "4c5377e61b59ff797f4dce17a3079a1300dee314a1cfe5633462db84b77e58f2",
+    "rawMetadataSHA256": "09e1fcb6bf757f26784f99dfdc8d714a6ba71e0117a6bd9b8424e6a802996c60",
+    "exports": [
+      {
+        "operators": 3,
+        "sha256": "66b979299e7d18d4a1a33fa5698e7619ac26c60843241baf61915e5d45cb6c76"
+      },
+      {
+        "operators": 21005,
+        "sha256": "25d883b54b298e0555918e32babea59388a6b9e00b382bdbbfa68e3249fab94b"
+      }
+    ],
+    "groups": {
+      "A": {
+        "build": {
+          "schemaVersion": 1,
+          "version": "1.12.4",
+          "distribution": "public",
+          "extension": null,
+          "source": {
+            "commit": "2c4273be98a513b6a95135539b2a76d77dc28d74",
+            "tree": "8fb2da109e8334380c9f28a33bf8b8252a742d05",
+            "committedAt": "2026-11-17T04:03:21+08:00",
+            "dirty": false
+          },
+          "buildId": "bbd58bb177d33768"
+        },
+        "parseMs": 393.1825,
+        "linearMs": 40.288400000000024,
+        "graphMs": 110.14789999999994,
+        "stages": {
+          "indexed": {
+            "heapUsed": 136486976,
+            "heapTotal": 226357248,
+            "rss": 247193600,
+            "maximumRss": 247193600
+          },
+          "first-local-view": {
+            "heapUsed": 137855864,
+            "heapTotal": 226725888,
+            "rss": 247603200,
+            "maximumRss": 247603200
+          },
+          "pattern-search": {
+            "heapUsed": 110462656,
+            "heapTotal": 226095104,
+            "rss": 262221824,
+            "maximumRss": 262971392
+          },
+          "graph-pattern-search": {
+            "heapUsed": 156726336,
+            "heapTotal": 237273088,
+            "rss": 306089984,
+            "maximumRss": 308473856
+          }
+        }
+      },
+      "C": {
+        "build": {
+          "schemaVersion": 1,
+          "version": "1.12.4",
+          "distribution": "public",
+          "extension": null,
+          "source": {
+            "commit": "4e3ec5e319befebb48910f0ec6d0a6ecce09580a",
+            "tree": "d4d90e6e3ba6da3f432300ed03282e578d8977e4",
+            "committedAt": "2026-11-17T04:44:29+08:00",
+            "dirty": true
+          },
+          "buildId": "4dac4316b054dec8"
+        },
+        "parseMs": 358.8557,
+        "linearMs": 42.90530000000001,
+        "graphMs": 137.74670000000003,
+        "stages": {
+          "indexed": {
+            "heapUsed": 93177568,
+            "heapTotal": 221818880,
+            "rss": 229654528,
+            "maximumRss": 231714816
+          },
+          "first-local-view": {
+            "heapUsed": 94542896,
+            "heapTotal": 222187520,
+            "rss": 230166528,
+            "maximumRss": 231714816
+          },
+          "pattern-search": {
+            "heapUsed": 115375400,
+            "heapTotal": 222187520,
+            "rss": 233123840,
+            "maximumRss": 234651648
+          },
+          "graph-pattern-search": {
+            "heapUsed": 145533008,
+            "heapTotal": 226787328,
+            "rss": 277032960,
+            "maximumRss": 277032960
+          }
+        }
+      }
+    }
+  },
+  "nativeInitial": {
+    "status": "native-Worker-checkpoints-not-physical-RSS-acceptance",
+    "order": [
+      "A",
+      "C",
+      "C",
+      "A"
+    ],
+    "fixtureSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+    "modelBytes": 8836512,
+    "operators": 21005,
+    "forcedGC": false,
+    "candidateBuild": {
+      "schemaVersion": 1,
+      "version": "1.12.4",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "4e3ec5e319befebb48910f0ec6d0a6ecce09580a",
+        "tree": "d4d90e6e3ba6da3f432300ed03282e578d8977e4",
+        "committedAt": "2026-11-17T04:44:29+08:00",
+        "dirty": true
+      },
+      "buildId": "4dac4316b054dec8"
+    },
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "closed": true,
+        "exportsIdentical": true,
+        "allWorkersClosed": true,
+        "groups": {
+          "A": {
+            "openMs": 1585.9086499999999,
+            "stages": {
+              "indexed": {
+                "usedSize": 58535736,
+                "totalSize": 110499840,
+                "backingStorageSize": 8115908
+              },
+              "first-local-view": {
+                "usedSize": 59244502,
+                "totalSize": 110499840,
+                "backingStorageSize": 8115908
+              },
+              "pattern-view": {
+                "usedSize": 63164800,
+                "totalSize": 121749504,
+                "backingStorageSize": 8115908
+              }
+            }
+          },
+          "C": {
+            "openMs": 1036.5923499999994,
+            "stages": {
+              "indexed": {
+                "usedSize": 64060818,
+                "totalSize": 117338112,
+                "backingStorageSize": 8096053
+              },
+              "first-local-view": {
+                "usedSize": 64745666,
+                "totalSize": 117338112,
+                "backingStorageSize": 8096053
+              },
+              "pattern-view": {
+                "usedSize": 57667132,
+                "totalSize": 113885184,
+                "backingStorageSize": 8096053
+              }
+            }
+          }
+        }
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "closed": true,
+        "exportsIdentical": true,
+        "allWorkersClosed": true,
+        "groups": {
+          "A": {
+            "openMs": 1573.9240499999996,
+            "stages": {
+              "indexed": {
+                "usedSize": 50515066,
+                "totalSize": 108249088,
+                "backingStorageSize": 8157918
+              },
+              "first-local-view": {
+                "usedSize": 51201786,
+                "totalSize": 108249088,
+                "backingStorageSize": 8157918
+              },
+              "pattern-view": {
+                "usedSize": 70545118,
+                "totalSize": 122667008,
+                "backingStorageSize": 8157918
+              }
+            }
+          },
+          "C": {
+            "openMs": 1080.4065500000015,
+            "stages": {
+              "indexed": {
+                "usedSize": 64300754,
+                "totalSize": 116551680,
+                "backingStorageSize": 8114683
+              },
+              "first-local-view": {
+                "usedSize": 65030138,
+                "totalSize": 116551680,
+                "backingStorageSize": 8114683
+              },
+              "pattern-view": {
+                "usedSize": 48537180,
+                "totalSize": 113754112,
+                "backingStorageSize": 8114683
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "nativeLifecycle": {
+    "status": "native-lifecycle-stages-with-small-weights-not-RSS-acceptance",
+    "order": [
+      "A",
+      "C",
+      "C",
+      "A"
+    ],
+    "fixture": {
+      "bytes": 8836512,
+      "operators": 21005,
+      "weightBytes": 1048576,
+      "sha256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+      "fingerprint": "7a61b30724c23fbb64a6b57f8925d229de2c5ef6acc548a006bbe0c43f6108a8"
+    },
+    "forcedGC": false,
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "closed": true,
+        "allWorkersClosed": true,
+        "fullAndCompositionExportsIdentical": true,
+        "groups": {
+          "A": {
+            "stages": {
+              "source": {
+                "usedSize": 68412416,
+                "totalSize": 120438784,
+                "backingStorageSize": 8160501
+              },
+              "edited-model": {
+                "usedSize": 55658878,
+                "totalSize": 109428736,
+                "backingStorageSize": 8160980
+              },
+              "reopen": {
+                "usedSize": 23366808,
+                "totalSize": 33464320,
+                "backingStorageSize": 4652006
+              },
+              "composition-source": {
+                "usedSize": 73349782,
+                "totalSize": 116664320,
+                "backingStorageSize": 8318378
+              },
+              "composition-reopen": {
+                "usedSize": 20227544,
+                "totalSize": 34658304,
+                "backingStorageSize": 4654727
+              }
+            },
+            "maxObservedCapacity": 121880576
+          },
+          "C": {
+            "stages": {
+              "source": {
+                "usedSize": 52906368,
+                "totalSize": 112967680,
+                "backingStorageSize": 8098635
+              },
+              "edited-model": {
+                "usedSize": 68796878,
+                "totalSize": 117469184,
+                "backingStorageSize": 8099086
+              },
+              "reopen": {
+                "usedSize": 14778674,
+                "totalSize": 29560832,
+                "backingStorageSize": 4549692
+              },
+              "composition-source": {
+                "usedSize": 63782596,
+                "totalSize": 114149376,
+                "backingStorageSize": 8293772
+              },
+              "composition-reopen": {
+                "usedSize": 14860562,
+                "totalSize": 29822976,
+                "backingStorageSize": 4552341
+              }
+            },
+            "maxObservedCapacity": 117993472
+          }
+        }
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "closed": true,
+        "allWorkersClosed": true,
+        "fullAndCompositionExportsIdentical": true,
+        "groups": {
+          "A": {
+            "stages": {
+              "source": {
+                "usedSize": 67094642,
+                "totalSize": 118079488,
+                "backingStorageSize": 8160501
+              },
+              "edited-model": {
+                "usedSize": 55687760,
+                "totalSize": 109297664,
+                "backingStorageSize": 8160980
+              },
+              "reopen": {
+                "usedSize": 23384262,
+                "totalSize": 33464320,
+                "backingStorageSize": 4652006
+              },
+              "composition-source": {
+                "usedSize": 58321170,
+                "totalSize": 115359744,
+                "backingStorageSize": 8318378
+              },
+              "composition-reopen": {
+                "usedSize": 20237628,
+                "totalSize": 34658304,
+                "backingStorageSize": 4654727
+              }
+            },
+            "maxObservedCapacity": 118996992
+          },
+          "C": {
+            "stages": {
+              "source": {
+                "usedSize": 52678056,
+                "totalSize": 113754112,
+                "backingStorageSize": 8098635
+              },
+              "edited-model": {
+                "usedSize": 69497640,
+                "totalSize": 117075968,
+                "backingStorageSize": 8136346
+              },
+              "reopen": {
+                "usedSize": 14720956,
+                "totalSize": 29822976,
+                "backingStorageSize": 4549692
+              },
+              "composition-source": {
+                "usedSize": 61333762,
+                "totalSize": 114673664,
+                "backingStorageSize": 8293772
+              },
+              "composition-reopen": {
+                "usedSize": 14877230,
+                "totalSize": 29429760,
+                "backingStorageSize": 4552341
+              }
+            },
+            "maxObservedCapacity": 117813248
+          }
+        }
+      }
+    ]
+  },
+  "nativeCases": {
+    "initial": 8,
+    "lifecycle": 8,
+    "lifecycleExportFiles": 24,
+    "allExportsEqualBaseline": true,
+    "allObservedWorkersClosed": true,
+    "browserCloseReturned": true,
+    "OSProcessReapNotMeasured": true
+  },
+  "localAudit": {
+    "name": "metadata-arena-source-evidence.zip",
+    "bytes": 2199950,
+    "sha256": "4f46566ff5ae2c0f1b88e7b30f30ce9c6b4d1685f5a2e5f4670524503597bfe3",
+    "files": 94,
+    "status": "verified-local-only-not-release-evidence"
+  },
+  "failedPriorSources": [
+    {
+      "run": 43924226459,
+      "source": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+      "status": "failed",
+      "notRerun": true
+    },
+    {
+      "run": 43945973931,
+      "source": "2c4273be98a513b6a95135539b2a76d77dc28d74",
+      "status": "failed",
+      "notRerun": true
+    }
+  ],
+  "limits": [
+    "Small8.8MB/21005OP/1MiB-weight fixtures only, not physical RSS acceptance.",
+    "Node RSS lower, native Worker checkpoints vary: indexed/edited phases can increase while pattern/reopen phases decrease.",
+    "Native lifecycle flow uses same UI mutations with small-weight size/hash assertions; one script import failure happened before browser launch and was preserved.",
+    "No forced GC, profiler retrieval, worker lifetime, pool, timer or fixed-policy changes.",
+    "Original8cycle policy on new source, site/fixed Release and formal verification remain required."
+  ]
+}
