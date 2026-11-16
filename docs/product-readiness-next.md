@@ -1,10 +1,14 @@
 # 商品等級後續工作
 
+## v1.12.5 已交付
+
+[v1.12.5](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.5)，build `4f77b6421b63d044`。明確缺少 builtin OP／版本時顯示「未能驗證」並保留原始診斷，真正的 tensor／輸入錯誤維持「失敗」。355 個核心檔、全站 1,559 檔、55 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各三個 32px 情境通過。新來源的 1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 127,811,584 B。見[正式交付收據](results/runtime-support-v1.12.5-published.json)及[分類範圍](runtime-support-diagnostics.md#v1125-正式交付)。模型全程本機處理，interpreter 由使用者手動啟動；runtime 不支援的結果仍需其他工具驗證。 OP 靜態規則後續覆蓋、Windows 大檔適用性、環境復原與真人無障礙仍維持既有範圍。下方各輪候選／交付保留當時時間點，不覆蓋本節最新版本。
+
 ## v1.12.4 已交付
 
 [v1.12.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4)，build `f8a2d9d3ac4f8501`：Softmax／LogSoftmax shape／dtype 檢查及報告已交付，並減少 TFLite 鄰接索引與小型 Int32 metadata 配置。355 個核心檔、全站 1,549 檔、54 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各 10 個 32px 情境通過。1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 12,595,200 B；前兩次失敗原樣保留。見[正式交付收據](results/softmax-v1.12.4-published.json)及[檢查範圍](softmax-validation.md#v1124-正式交付)。模型全程本機處理，interpreter 仍由使用者手動啟動；不將有限測試擴大為任意 kernel、所有模型精度或 Windows 大檔保證。 OP 規則的後續覆蓋、Windows 大檔版本適用性、未註冊 kernel 分類、環境復原與真人無障礙仍依下表範圍接續。
 
-接續的[runtime 支援分類候選](runtime-support-diagnostics.md)已用真正 Interpreter 重現並修正缺少 builtin 版本被誤標失敗的問題；96 項選測及 Chrome／Edge 各三案通過，真正輸入錯誤仍保留失敗。PR #308 的完整 Node 為 1,199 項通過、35 項既有條件略過；受測／合併 tree 相同。乾淨主分支四項關卡與 55 項站台驗收已[核對](results/runtime-support-v1.12.5-main-gates.json)，八輪 RSS 漂移 121.89 MiB／上限 128 MiB，保留實際餘量及 Windows 適用性界線。仍待固定準備、發布與正式下載驗證，不改寫 v1.12.4。
+明確缺少 builtin OP／版本的 [runtime 支援分類](runtime-support-diagnostics.md#v1125-正式交付)已於 v1.12.5 正式交付；96 項選測、Chrome／Edge 原生三案、55 項正式操作及固定下載證據分別保留。
 
 以下保留本輪未發布時的候選、失敗及先前正式版核對時間點，不覆蓋本節最新交付。
 
@@ -28,7 +32,7 @@ PR #300 已合併，主分支網站 54 項與契約通過；實體大檔八輪�
 | --- | --- | --- |
 | 1 | OP 靜態驗證的覆蓋與報告 | 目前逐 OP 報告能區分已檢查／未檢查，並有 [broadcast](results/broadcast-validation-v1.7.3-published.json)、[shape 推導](results/wire-shape-v1.12.0-published.json)及 [axis metadata](axis-transform-validation.md#v1122-正式交付)等增量。後續規則應先重現具體漏擋或誤擋，再補相同入口的序列化正負例；不把所有未支援 kernel 都列成通過。一般匯出不自動執行 interpreter。 |
 | 2 | Windows 大模型的版本適用性與間歇性關閉 | Windows 實體八輪有各自的原始成功／失敗及 [Chrome 雲端統計等待證據](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)。1.12.3 的小型 UI／數值成功不能代替整個 Windows 大檔測試；Hosted 大檔關卡也不能代替 Windows。只在有新的配置／釋放假說或受影響來源變更時補測，不重跑碰綠燈，也不改 OneDrive／防毒或正常退出門檻。 |
-| 3 | 不支援 kernel 的診斷分類 | 標準 Interpreter 對未註冊的 opcode／version 可能回傳通用 INVALID_ARGUMENT，畫面顯示載入失敗，原始缺少 kernel 的原因仍保留。後續可讓這種情況更直接標為 runtime 未能驗證；目前沒有 Invoke 或錯誤通過。 |
+| 已交付 | 明確缺少 builtin／version 的診斷分類 | [v1.12.5](runtime-support-diagnostics.md#v1125-正式交付)已修正通用 INVALID_ARGUMENT 掩蓋註冊錯誤的分類；保留原始日誌，真正的 metadata／輸入錯誤仍失敗。只涵蓋已確認的 bounded compile-time 訊息，通用錯誤不擅自宣告 runtime 缺少 kernel。 |
 | 4 | 保存與復原的環境保證 | 已有草稿恢復、衝突、容量失敗及備份流程；OS 斷電、實體磁碟耗盡與任意格式升降級尚未驗證。後續需限定實際故障與格式，不能從一般重載或 SIGKILL 擴大宣稱。見[公開驗收範圍](public-acceptance.md)。 |
 | 5 | 新手操作與完整無障礙驗收 | 既有鍵盤／焦點與筆電操作有自動證據，1.12.1 另修正搜尋 pattern 編輯器的展開及定位。完整真人新手流程與螢幕閱讀器驗收仍缺，不能以合成點擊流程取代。 |
 | 明列範圍 | 私有 dialect、custom kernel、外部 MLIR resource、任意模型數值等價 | 私有工具由使用者在內網接入；未知引用保守保留，沒有規則或外部驗證時明示未檢查。這些不阻擋已約定的公開版交付，也不能標成已支援。 |
