@@ -1,4 +1,6 @@
-import {searchPatternRevealRequired,valueShapeRuntimeRequired} from '../../test/browser/release-features.mjs';
+import {searchPatternRevealRequired,valueShapeRuntimeRequired,softmaxValidationRequired} from '../../test/browser/release-features.mjs';
+import {SOFTMAX_VALIDATION_CHECK} from '../../test/browser/softmax-validation-flow.mjs';
+import {assertSoftmaxProof} from '../../test/browser/softmax-proof.mjs';
 import {VALUE_SHAPE_RUNTIME_CHECK} from '../../test/browser/value-shape-runtime-flow.mjs';
 import {assertValueShapeProof} from '../../test/browser/value-shape-proof.mjs';
 import {axisTransformValidationRequired} from '../../test/browser/release-features.mjs';
@@ -195,6 +197,7 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
             ['transpose-signed','expand-int64','expand-dynamic'].every((name,i)=>{const c=proof.cases[i+3];return c?.name===name&&c.status===(i===2?'not-run':'passed')&&c.operators===2&&c.reopened===true&&c.byteComparison===true&&c.automaticRuntime===false;}),'missing axis transform metadata proof.');
     }
     if(valueShapeRuntimeRequired(release.version)){required.push(VALUE_SHAPE_RUNTIME_CHECK);assertValueShapeProof(report.valueShapeRuntime);}
+    if(softmaxValidationRequired(release.version)){required.push(SOFTMAX_VALIDATION_CHECK);assertSoftmaxProof(report.softmaxValidation);}
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
