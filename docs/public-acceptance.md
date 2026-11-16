@@ -2,7 +2,7 @@
 
 依使用者 2026-10-29 的指示，本輪交付以外網公開版為範圍；內網版本、私有 dialect、公司 compiler／runtime 由使用者自行修改與驗收。公開版的結果不宣稱公司環境已相容。
 
-固定版本為 [v1.4.6](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.4.6)，[正式站](https://koviankevin.github.io/tflite-explorer/) build `6d032862ea5b71d5`，來源 `dd896a29820b367e01f8e4ed0c34cc66a7b49646`；329 核心檔、全站 1,485 檔、38 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[本版正式交付](transform-metadata-validation.md#v146-正式交付)。外網更新不會自動更新公司內網站台。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的固定版本為 [v1.12.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1)，[正式站](https://koviankevin.github.io/tflite-explorer/) build `384ad8c520e4ae49`，來源 `19fdbbf053cf1795bdc827841191d6f629189af6`；344 核心檔、全站 1,522 檔、51 項正式 HTTPS 操作、四份實際固定下載與權威 deployment 已核對，見[交付收據](results/search-pattern-reveal-v1.12.1-published.json)。Chrome／Edge 各三項編輯搜尋 pattern 導覽補驗通過；下表其他能力保留各自受測版本與範圍，不換標成全部在這兩個瀏覽器重測。外網更新不會自動更新公司內網站台。
 
 ## 本輪瀏覽器驗收範圍
 

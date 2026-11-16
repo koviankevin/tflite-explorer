@@ -1,6 +1,8 @@
 # 公開版已知問題與限制
 
-目前固定版本為 [v1.7.0](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.7.0)／build `1353dd74a9b8b6b7`。[Pattern 上下拖曳與連線聚焦](graph-readability.md#v170-正式交付)已交付，保留 v1.6.1 的 WASD／滑鼠視角修正。本頁其他功能界線與驗收缺口保留；歷史 Windows Chrome 關閉、防毒注入與選檔時序問題不因本次有限案例改列已修復。內網及私有 dialect 依使用者指示自行處理。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的公開版本為 [v1.12.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1)／build `384ad8c520e4ae49`，正式站與固定附件皆符合[交付收據](results/search-pattern-reveal-v1.12.1-published.json)。本頁各輪測試保留原受測版本；較晚成功不把 Windows Chrome 間歇性關閉、防毒注入或歷史選檔時序問題改列已修復。內網及私有 dialect 依使用者指示自行處理。
+
+公開品質的剩餘工作與證據界線見[目前缺口](product-readiness-next.md#2026-11-16-公開品質核對)。下方未支援的 kernel／dialect、動態資料、外部 resource 和未知 custom 引用是明列的功能範圍，不代表網站已承諾支援，也不應從其他模型的成功推論為已驗證。
 
 v1.6.0 的首輪正式驗收在有限 CPU 恢復案例未切換到測試檔，4-byte 輸入被原示範模型的 8-byte 規格拒絕；30 秒終止 Worker 本身已成功。只補跑失敗驗收一次，未重跑成功部署，原始失敗、完整附件備份及雜湊保留於[交付收據](results/navigation-focus-v1.6.0-published.json)。模型切換時序仍是驗收可靠性的已知風險，尚未宣稱根因永久修復。
 
