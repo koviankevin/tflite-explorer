@@ -18,6 +18,10 @@ export async function expandedSelectionFlow({page,read,directory,check}){
     const f=fixture({graphCount:1,repeats:22}),bytes=new Uint8Array(f.totalBytes);bytes.set(f.data);
     const source=path.join(directory,'expanded-selection.tflite');await writeFile(source,bytes);
     await choose(source);assert.equal(await page.locator('#layer-count').textContent(),'67');
+    // The integrated driver previously chose 32px. Capacity is exercised at
+    // a fixed font so the native marquee actually contains more than 32 OPs.
+    // Separate font, deletion and wiring flows retain their 32px scenarios.
+    await page.locator('#graph-font-size').selectOption('14');await ready();
     await page.locator('#pick-pattern').click();await page.locator('#keyboard-graph').click();await page.keyboard.press('Home');
     await new Promise(r=>setTimeout(r,250));
     const target=await page.locator('#target').boundingBox();
