@@ -1,0 +1,714 @@
+{
+  "format": "model-lens-value-dependent-runtime-diagnostic",
+  "status": "raw-output-mismatch-unresolved",
+  "at": "2026-11-16T15:06:56.163Z",
+  "source": "6a2c67bd5b93777ebb8a43d950f4db19cc1d04a9",
+  "engine": "LiteRT.js 2.6.0 / CPU WASM",
+  "syntheticModelsOnly": true,
+  "websiteExecutionBypassed": true,
+  "ioArchiveBypassed": true,
+  "observations": [
+    {
+      "name": "TRANSPOSE-input",
+      "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+      "expected": [
+        1,
+        4,
+        2,
+        5,
+        3,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "b",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            4.817664120348721e-42,
+            4.819065418813046e-42,
+            4.820466717277371e-42,
+            4.8218680157416955e-42,
+            0,
+            6.445972935894159e-44
+          ],
+          "hex": "6e0d00006f0d0000700d0000710d0000000000002e000000"
+        }
+      ],
+      "matches": false
+    },
+    {
+      "name": "TRANSPOSE-constant",
+      "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+      "expected": [
+        1,
+        4,
+        2,
+        5,
+        3,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            1,
+            4,
+            2,
+            5,
+            3,
+            6
+          ],
+          "hex": "0000803f00008040000000400000a040000040400000c040"
+        }
+      ],
+      "matches": true
+    },
+    {
+      "name": "EXPAND_DIMS-input",
+      "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "b",
+          "shape": [],
+          "dtype": "int32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            2,
+            1,
+            3
+          ],
+          "dtype": "float32",
+          "values": [
+            1.1217450258858734e-39,
+            0,
+            2.1019476964872256e-44,
+            1.3038689846972412e-39,
+            1.3038689846972412e-39,
+            1.3038801950849558e-39
+          ],
+          "hex": "f8360c00000000000f000000a8320e00a8320e00b0320e00"
+        }
+      ],
+      "matches": false
+    },
+    {
+      "name": "EXPAND_DIMS-constant",
+      "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            2,
+            1,
+            3
+          ],
+          "dtype": "float32",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "hex": "0000803f0000004000004040000080400000a0400000c040"
+        }
+      ],
+      "matches": true
+    },
+    {
+      "name": "RESHAPE-input",
+      "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "b",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            1.121475976580723e-39,
+            1.121475976580723e-39,
+            2.802596928649634e-45,
+            0,
+            0,
+            0
+          ],
+          "hex": "38360c0038360c0002000000000000000000000000000000"
+        }
+      ],
+      "matches": false
+    },
+    {
+      "name": "RESHAPE-constant",
+      "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "hex": "0000803f0000004000004040000080400000a0400000c040"
+        }
+      ],
+      "matches": true
+    },
+    {
+      "name": "GATHER-integer-input-control",
+      "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+      "expected": [
+        3,
+        1
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "b",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            3,
+            1
+          ],
+          "hex": "000040400000803f"
+        }
+      ],
+      "matches": true
+    },
+    {
+      "name": "ADD-integer-input-control",
+      "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+      "expected": [
+        11,
+        22
+      ],
+      "inputs": [
+        {
+          "name": "a",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        },
+        {
+          "name": "b",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2
+        ],
+        [
+          10,
+          20
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            2
+          ],
+          "dtype": "int32",
+          "values": [
+            11,
+            22
+          ],
+          "hex": "0b00000016000000"
+        }
+      ],
+      "matches": true
+    }
+  ],
+  "repeatedSameInputControl": [
+    {
+      "axisInput": true,
+      "inputDetails": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "name": "b",
+          "shape": [
+            2
+          ],
+          "dtype": "int32"
+        }
+      ],
+      "outputDetails": [
+        {
+          "name": "c",
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            4.817664120348721e-42,
+            4.819065418813046e-42,
+            4.820466717277371e-42,
+            4.8218680157416955e-42,
+            0,
+            6.445972935894159e-44
+          ]
+        }
+      ],
+      "sameInputsSecondRun": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1.401298464324817e-45
+          ]
+        }
+      ]
+    },
+    {
+      "axisInput": false,
+      "inputDetails": [
+        {
+          "name": "a",
+          "shape": [
+            2,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "outputDetails": [
+        {
+          "name": "c",
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "inputsBefore": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "inputsAfter": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      ],
+      "outputs": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            1,
+            4,
+            2,
+            5,
+            3,
+            6
+          ]
+        }
+      ],
+      "sameInputsSecondRun": [
+        {
+          "shape": [
+            3,
+            2
+          ],
+          "dtype": "float32",
+          "values": [
+            1,
+            4,
+            2,
+            5,
+            3,
+            6
+          ]
+        }
+      ]
+    }
+  ],
+  "rawReportSHA256": "da3624ec12e8011688c921027ad447fe95fb9b75e5b3f4cb29cc1eb2f3289422",
+  "conclusion": "All three input-dependent shape cases mismatched. Constant-parameter and dynamic integer GATHER/ADD controls matched. This narrows the hypothesis to value-dependent shape execution/binding; it does not establish a complete root cause or a fix.",
+  "officialCompatibilityReference": "https://developers.google.com/edge/litert/web/get_started",
+  "scope": "Standalone bounded diagnostic only. No runtime, model, timeout or memory-policy changes."
+}
