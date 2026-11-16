@@ -2,3 +2,6 @@
 /docs/results/*.json text eol=lf
 # Preserve exact bytes authenticated by the upstream npm provenance.
 /vendor/litert/** -text
+/vendor/tflite-interpreter/** -text
+/scripts/data/interpreter-upstream.js -text
+/scripts/data/interpreter-binding-factories.json text eol=lf

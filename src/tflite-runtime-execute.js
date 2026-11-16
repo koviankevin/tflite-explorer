@@ -4,10 +4,11 @@ import {runtimeArchive} from './tflite-runtime-archive.js';
 import {runtimeFailureLocations} from './tflite-runtime-diagnostics.js';
 const scope='主 subgraph 的載入／CPU 配置及一組指定輸入；不代表數值精度、等價性、全部 signatures 或分支覆蓋。';
 export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>({mode:'zero'})),progress=()=>{},diagnostics=()=>[],transferableIO=false,ioBuffer=null}){
-    if(!plan?.eligible||blob.size!==plan.modelBytes||blob.size>RUNTIME_LIMITS.modelBytes)return runtimeSkipped(plan?.reason||'模型與執行檢查資料不符。');
+    if(!plan?.eligible||blob.size!==plan.modelBytes||blob.size>RUNTIME_LIMITS.modelBytes)return runtimeSkipped(plan?.reason||'模型與執行檢查資料不符。',plan?.engine);
     let stage='inputs',model=null,environment=null,ins=[],outs=[],compiled=false,invoked=false,modelSHA256=null,inputDetails=[],outputDetails=[];
     const started=performance.now();
-    const record=(status,reason)=>{const lines=diagnostics().slice(-12).map(s=>String(s).slice(0,512));return {schemaVersion:1,engine:RUNTIME_ENGINE,status,stage,reason,compiled,invoked,modelSHA256,elapsedMs:Math.round(performance.now()-started),scope,diagnostics:lines,...(status==='failed'?{failureKind:/allocate|allocation/i.test(reason)?'tensor-allocation':'runtime',failureLocations:runtimeFailureLocations(lines,plan.diagnosticContext)}:{})};};
+    const engine=rt?.engine||RUNTIME_ENGINE;
+    const record=(status,reason)=>{const lines=diagnostics().slice(-12).map(s=>String(s).slice(0,512));return {schemaVersion:1,engine,status,stage,reason,compiled,invoked,modelSHA256,elapsedMs:Math.round(performance.now()-started),scope,diagnostics:lines,...(status==='failed'?{failureKind:/allocate|allocation/i.test(reason)?'tensor-allocation':'runtime',failureLocations:runtimeFailureLocations(lines,plan.diagnosticContext)}:{})};};
     const capture=(status,reason)=>{
         const result=record(status,reason);
         if(ins.length||invoked)try{
@@ -25,7 +26,8 @@ export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>(
     };
     try{
         validateRuntimeInputs(plan.inputs,specs);
-        stage='compile';progress('LiteRT：載入模型及配置 CPU tensors…');
+        if(plan.runtimeBackend==='interpreter'&&rt?.backend!=='interpreter')throw Error('值相依 shape 必須使用標準 Interpreter；拒絕使用已知可能回傳錯誤數值的 CompiledModel。');
+        stage='compile';progress('本機 runtime：載入模型及配置 CPU tensors…');
         const bytes=new Uint8Array(await blob.arrayBuffer());
         if(globalThis.crypto?.subtle)modelSHA256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
         environment=await rt.Environment.create({webGpuDevice:null});
@@ -34,7 +36,7 @@ export async function executeRuntime({blob,plan,rt,specs=plan?.inputs?.map(()=>(
         const matches=(actual,expected)=>actual.length===expected.length&&actual.every((v,i)=>v.dtype===expected[i].dtype&&JSON.stringify(Array.from(v.shape))===JSON.stringify(expected[i].shape));
         if(!matches(inputDetails,plan.inputs)||!matches(outputDetails,plan.outputs))return capture('failed','runtime 推導的輸入／輸出 shape 或 dtype 與匯出模型宣告不符；請修正 output tensor。');
         stage='inputs';for(let i=0;i<inputDetails.length;i++){const t=inputDetails[i];ins.push(new rt.Tensor(await runtimeInput({...t,shape:Array.from(t.shape)},specs[i]),t.shape,t.dtype,environment));}
-        stage='invoke';progress('LiteRT：使用指定測試輸入執行；不驗證精度…');
+        stage='invoke';progress('本機 runtime：使用指定測試輸入執行；不驗證精度…');
         const values=await model.run(ins);outs=Array.isArray(values)?values:Object.values(values);invoked=true;
         if(!matches(outs.map(t=>({dtype:t.dtype,shape:t.shape})),plan.outputs))return capture('failed','執行後輸出 shape 或 dtype 與模型宣告不符。');
         stage='complete';return capture('passed','已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。');

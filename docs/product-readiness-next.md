@@ -6,7 +6,7 @@
 
 | 優先 | 剩餘工作或界線 | 現有證據與下一個有效動作 |
 | --- | --- | --- |
-| 1 | 值相依 shape 的 runtime 數值異常 | [八個獨立 API 對照](results/value-dependent-runtime-diagnostic.json)中，TRANSPOSE／EXPAND_DIMS／RESHAPE 的參數作模型輸入時輸出不符；常數參數與整數輸入控制正確。先在真實瀏覽器核對相同輸入，再定位 runtime／output binding 或提出可驗證的執行方案；目前沒有數值修復，不以靜態檢查或重跑當作通過。 |
+| 1 | 值相依 shape 的 runtime 數值異常 | 已在 Chrome／Edge 重現；原生標準 Interpreter 16 例正確、CompiledModel 重現三種錯誤。[候選修正](runtime-value-shape.md)以固定標準 Interpreter 執行這些模型，原 SHA 的八例在 Chrome／Edge 數值與 BIN 全部正確。尚待 PR、來源綁定關卡與正式交付，不把本機成功當作網站已修好。 |
 | 2 | OP 靜態驗證的覆蓋與報告 | 目前逐 OP 報告能區分已檢查／未檢查，並有 [broadcast](results/broadcast-validation-v1.7.3-published.json)、[shape 推導](results/wire-shape-v1.12.0-published.json)及 [axis metadata](axis-transform-validation.md#v1122-正式交付)等增量。後續規則應先重現具體漏擋或誤擋，再補相同入口的序列化正負例；不把所有未支援 kernel 都列成通過。一般匯出不自動執行 interpreter。 |
 | 3 | Windows 大模型的版本適用性與間歇性關閉 | Windows 實體八輪有各自的原始成功／失敗及 [Chrome 雲端統計等待證據](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)。1.12.2 的小型 UI 成功不能代替整個 Windows 大檔測試；Hosted 大檔關卡也不能代替 Windows。只在有新的配置／釋放假說或受影響來源變更時補測，不重跑碰綠燈，也不改 OneDrive／防毒或正常退出門檻。 |
 | 4 | 保存與復原的環境保證 | 已有草稿恢復、衝突、容量失敗及備份流程；OS 斷電、實體磁碟耗盡與任意格式升降級尚未驗證。後續需限定實際故障與格式，不能從一般重載或 SIGKILL 擴大宣稱。見[公開驗收範圍](public-acceptance.md)。 |

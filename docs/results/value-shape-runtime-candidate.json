@@ -1,0 +1,2252 @@
+{
+  "format": "model-lens-value-shape-candidate",
+  "status": "local-numerical-fix-verified-not-published",
+  "at": "2026-11-16T16:18:21.481Z",
+  "candidateVersion": "1.12.3",
+  "publicVersionStill": "1.12.2",
+  "publicBuild": "e1e4e662d7c4ab0f",
+  "syntheticModelsOnly": true,
+  "sourceBase": "bb0a4c031ef86a6b4fce7d41d97ae3eb836cd017",
+  "oldBrowser": {
+    "status": "numerical-mismatch-reproduced",
+    "reportSHA256": "ebc7c5357e105080bd061d220050ab8156fda6b91c2a761a9907784e5c5d3726",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "cases": [
+          {
+            "name": "TRANSPOSE-input",
+            "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+            "expected": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/core/subgraph.cc:2710 (tensor->allocation_type == kTfLiteArenaRw || tensor->allocation_type == kTfLiteArenaRwPersistent || tensor->allocation_type == kTfLiteCustom || tensor->allocation_type == kTfLiteNonCpu) was not true.\nERROR: [compiled_model.cc:2140] Failed to set custom allocation for output tensor  (index 2): 1\nERROR: [litert_compiled_model.cc:164] Failed to register output tensor buffer: Failed to set custom allocation for output",
+            "zipSHA256": "2f7b78b0f6253ced25adb928a96151a6f9ae01ae22ed3d85de556d6a86502d77",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "TRANSPOSE-constant",
+            "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+            "expected": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "94876ef2b460447cb3d738c93a304201261245249ffe840302b7969e7fa77e75",
+            "inputsMatch": true,
+            "output": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "outputHex": "0000803f00008040000000400000a040000040400000c040",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "EXPAND_DIMS-input",
+            "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/core/subgraph.cc:2710 (tensor->allocation_type == kTfLiteArenaRw || tensor->allocation_type == kTfLiteArenaRwPersistent || tensor->allocation_type == kTfLiteCustom || tensor->allocation_type == kTfLiteNonCpu) was not true.\nERROR: [compiled_model.cc:2140] Failed to set custom allocation for output tensor  (index 2): 1\nERROR: [litert_compiled_model.cc:164] Failed to register output tensor buffer: Failed to set custom allocation for output",
+            "zipSHA256": "3d024a7f7889d2995deb2a87c403efcf4767b6ef74d73dfcfba482d0a1412f85",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              2,
+              1,
+              3
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "EXPAND_DIMS-constant",
+            "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6108, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63e8, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "9b8a070210477b68881084db56b3dd24067a38d75bf5964173c732ad9b2178f4",
+            "inputsMatch": true,
+            "output": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "outputHex": "0000803f0000004000004040000080400000a0400000c040",
+            "outputShape": [
+              2,
+              1,
+              3
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "RESHAPE-input",
+            "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "cdc233c5e946f750d20573f67279891890fd2ab989b899f4a36b0a782b58d508",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "RESHAPE-constant",
+            "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "e66c49c3425a9726f472a3fc2d042e03f0963d8ccbd9c3e84f113a72cc2a2bcd",
+            "inputsMatch": true,
+            "output": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "outputHex": "0000803f0000004000004040000080400000a0400000c040",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "GATHER-integer-input-control",
+            "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+            "expected": [
+              3,
+              1
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd60f0, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63d0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "bd6b7c086d6f6412afc807b6bb2f520ace2d0ae983db09e3d2ecc654371b3999",
+            "inputsMatch": true,
+            "output": [
+              3,
+              1
+            ],
+            "outputHex": "000040400000803f",
+            "outputShape": [
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "ADD-integer-input-control",
+            "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+            "expected": [
+              11,
+              22
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd60f0, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63d0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "8882d58be189692dca5c4ddbde1207ec79ef47f7d40035ed7357f6dfd2193c1d",
+            "inputsMatch": true,
+            "output": [
+              11,
+              22
+            ],
+            "outputHex": "0b00000016000000",
+            "outputShape": [
+              2
+            ],
+            "numericMatches": true
+          }
+        ],
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "cases": [
+          {
+            "name": "TRANSPOSE-input",
+            "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+            "expected": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/core/subgraph.cc:2710 (tensor->allocation_type == kTfLiteArenaRw || tensor->allocation_type == kTfLiteArenaRwPersistent || tensor->allocation_type == kTfLiteCustom || tensor->allocation_type == kTfLiteNonCpu) was not true.\nERROR: [compiled_model.cc:2140] Failed to set custom allocation for output tensor  (index 2): 1\nERROR: [litert_compiled_model.cc:164] Failed to register output tensor buffer: Failed to set custom allocation for output",
+            "zipSHA256": "172e359f17465926c48cffde338dad0bb2c94d01fc2f0e9bab467b9d818bc59d",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "TRANSPOSE-constant",
+            "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+            "expected": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "2949199813bbd899f582a0941150c8cd0df87f26759e27d94c6004feb03d2ecc",
+            "inputsMatch": true,
+            "output": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "outputHex": "0000803f00008040000000400000a040000040400000c040",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "EXPAND_DIMS-input",
+            "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/core/subgraph.cc:2710 (tensor->allocation_type == kTfLiteArenaRw || tensor->allocation_type == kTfLiteArenaRwPersistent || tensor->allocation_type == kTfLiteCustom || tensor->allocation_type == kTfLiteNonCpu) was not true.\nERROR: [compiled_model.cc:2140] Failed to set custom allocation for output tensor  (index 2): 1\nERROR: [litert_compiled_model.cc:164] Failed to register output tensor buffer: Failed to set custom allocation for output",
+            "zipSHA256": "21f1b7abf24a4ff2e098b470f88a1b072363b224f630307531610578c3fc611e",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              2,
+              1,
+              3
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "EXPAND_DIMS-constant",
+            "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6108, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63e8, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "63f5077afeb56c6fd6ae320b1fafc15871d52f440293e3fda09f3b7c0912f36d",
+            "inputsMatch": true,
+            "output": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "outputHex": "0000803f0000004000004040000080400000a0400000c040",
+            "outputShape": [
+              2,
+              1,
+              3
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "RESHAPE-input",
+            "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "54967e5068176034041842eeb5dceb6b84e7486eeefff12fca38dc252f17b9d5",
+            "inputsMatch": true,
+            "output": [
+              1.2361918740642098e-39,
+              1.2402836655800383e-39,
+              2.6680722760744517e-42,
+              1.0369608636003646e-43,
+              1.2364048714307872e-39,
+              -896264832
+            ],
+            "outputHex": "00760d0068810d00700700004a00000098760d00aaaf55ce",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": false
+          },
+          {
+            "name": "RESHAPE-constant",
+            "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+            "expected": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd6110, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63f0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "447688134273c2376bc324805855804e25ebcd1ca20992d8bc3d0f7eaa02b2c1",
+            "inputsMatch": true,
+            "output": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "outputHex": "0000803f0000004000004040000080400000a0400000c040",
+            "outputShape": [
+              3,
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "GATHER-integer-input-control",
+            "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+            "expected": [
+              3,
+              1
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd60f0, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63d0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "82c6280c38a2baf457df46fb1c577e9d9eceed15d6de8c05adc981455f2d6c00",
+            "inputsMatch": true,
+            "output": [
+              3,
+              1
+            ],
+            "outputHex": "000040400000803f",
+            "outputShape": [
+              2
+            ],
+            "numericMatches": true
+          },
+          {
+            "name": "ADD-integer-input-control",
+            "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+            "expected": [
+              11,
+              22
+            ],
+            "status": "passed",
+            "text": "LiteRT 本機檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5248, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd5c38, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [environment.cc:36] Creating LiteRT environment with options\nWARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorNotFound.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd60f0, name=GPU WebGPU\nINFO: [gpu_registry.cc:121] Statically linked GPU accelerator registered.\nINFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xd63d0, name=CpuAccelerator\nINFO: [cpu_registry.cc:73] XNNPACK CPU accelerator registered.\nINFO: [compiled_model.cc:966] Flatbuffer model initialized directly from incoming litert model.\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+            "zipSHA256": "0b9ab1b250bb81513d4a741683f739640dfa50a43b58b7bbbbb48dcc3e0ccd60",
+            "inputsMatch": true,
+            "output": [
+              11,
+              22
+            ],
+            "outputHex": "0b00000016000000",
+            "outputShape": [
+              2
+            ],
+            "numericMatches": true
+          }
+        ],
+        "closed": true
+      }
+    ]
+  },
+  "nativeInterpreter": {
+    "engine": "ai-edge-litert 2.3.0 Interpreter",
+    "status": "passed",
+    "reportSHA256": "fa73c8ee7a90b70b7ef01c18c3ce7765aa6947acc32634a9f87b019b0ac0b1c0",
+    "results": [
+      {
+        "name": "TRANSPOSE-input",
+        "resolver": "without-delegates",
+        "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              1,
+              0
+            ],
+            "sha256": "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "hex": "0000803f00008040000000400000a040000040400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "TRANSPOSE-constant",
+        "resolver": "without-delegates",
+        "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "hex": "0000803f00008040000000400000a040000040400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "EXPAND_DIMS-input",
+        "resolver": "without-delegates",
+        "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [],
+            "values": 1,
+            "sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2,
+              1,
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "EXPAND_DIMS-constant",
+        "resolver": "without-delegates",
+        "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2,
+              1,
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "RESHAPE-input",
+        "resolver": "without-delegates",
+        "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              3,
+              2
+            ],
+            "sha256": "7c039a3f7e41f389a828a440c8011656b0b6c0f3da1cca834adb1be3428ca80d"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "RESHAPE-constant",
+        "resolver": "without-delegates",
+        "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "GATHER-integer-input-control",
+        "resolver": "without-delegates",
+        "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+        "expected": [
+          3,
+          1
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3
+            ],
+            "sha256": "8e628779e6a74ee0b36991c10158f63cafec7d340ad4e075592502c8708524dd"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              2,
+              0
+            ],
+            "sha256": "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2
+            ],
+            "values": [
+              3,
+              1
+            ],
+            "hex": "000040400000803f"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "ADD-integer-input-control",
+        "resolver": "without-delegates",
+        "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+        "expected": [
+          11,
+          22
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              1,
+              2
+            ],
+            "sha256": "34fb5c825de7ca4aea6e712f19d439c1da0c92c37b423936c5f618545ca4fa1f"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              10,
+              20
+            ],
+            "sha256": "0d9330506fd1d6da3fbc3a5b83eb6dd05f86bdad7ce710c0fae1d68955f03fb4"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              11,
+              22
+            ],
+            "hex": "0b00000016000000"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "TRANSPOSE-input",
+        "resolver": "default",
+        "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              1,
+              0
+            ],
+            "sha256": "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "hex": "0000803f00008040000000400000a040000040400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "TRANSPOSE-constant",
+        "resolver": "default",
+        "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ],
+            "hex": "0000803f00008040000000400000a040000040400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "EXPAND_DIMS-input",
+        "resolver": "default",
+        "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [],
+            "values": 1,
+            "sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2,
+              1,
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "EXPAND_DIMS-constant",
+        "resolver": "default",
+        "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2,
+              1,
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "RESHAPE-input",
+        "resolver": "default",
+        "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              3,
+              2
+            ],
+            "sha256": "7c039a3f7e41f389a828a440c8011656b0b6c0f3da1cca834adb1be3428ca80d"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "RESHAPE-constant",
+        "resolver": "default",
+        "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              2,
+              3
+            ],
+            "values": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ],
+            "sha256": "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              3,
+              2
+            ],
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "hex": "0000803f0000004000004040000080400000a0400000c040"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "GATHER-integer-input-control",
+        "resolver": "default",
+        "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+        "expected": [
+          3,
+          1
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "float32",
+            "shape": [
+              3
+            ],
+            "values": [
+              1,
+              2,
+              3
+            ],
+            "sha256": "8e628779e6a74ee0b36991c10158f63cafec7d340ad4e075592502c8708524dd"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              2,
+              0
+            ],
+            "sha256": "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "float32",
+            "shape": [
+              2
+            ],
+            "values": [
+              3,
+              1
+            ],
+            "hex": "000040400000803f"
+          }
+        ],
+        "matches": true
+      },
+      {
+        "name": "ADD-integer-input-control",
+        "resolver": "default",
+        "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+        "expected": [
+          11,
+          22
+        ],
+        "inputs": [
+          {
+            "index": 0,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              1,
+              2
+            ],
+            "sha256": "34fb5c825de7ca4aea6e712f19d439c1da0c92c37b423936c5f618545ca4fa1f"
+          },
+          {
+            "index": 1,
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              10,
+              20
+            ],
+            "sha256": "0d9330506fd1d6da3fbc3a5b83eb6dd05f86bdad7ce710c0fae1d68955f03fb4"
+          }
+        ],
+        "outputs": [
+          {
+            "dtype": "int32",
+            "shape": [
+              2
+            ],
+            "values": [
+              11,
+              22
+            ],
+            "hex": "0b00000016000000"
+          }
+        ],
+        "matches": true
+      }
+    ]
+  },
+  "nativeCompiled": {
+    "engine": "ai-edge-litert 2.3.0 CompiledModel",
+    "reportSHA256": "c0c9a9399309eab1221cb03e8fa56eca55dc1c3ead7e5376b663f1fab5fe5a30",
+    "results": [
+      {
+        "name": "TRANSPOSE-input",
+        "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "output": [
+          9.642892449807868e-39,
+          1.01938942163681e-38,
+          1.0653050677681091e-38,
+          1.010204610852393e-38,
+          1.0193901222860422e-38,
+          9.367380356140037e-39
+        ],
+        "matches": false
+      },
+      {
+        "name": "TRANSPOSE-constant",
+        "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "output": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "matches": true
+      },
+      {
+        "name": "EXPAND_DIMS-input",
+        "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          -7.007984504506726e+34,
+          4.5906537691281007e-41,
+          0,
+          0,
+          1.4153114489680652e-43,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "name": "EXPAND_DIMS-constant",
+        "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "matches": true
+      },
+      {
+        "name": "RESHAPE-input",
+        "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          -7.007984504506726e+34,
+          4.5906537691281007e-41,
+          0,
+          0,
+          1.4153114489680652e-43,
+          0
+        ],
+        "matches": false
+      },
+      {
+        "name": "RESHAPE-constant",
+        "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "matches": true
+      },
+      {
+        "name": "GATHER-integer-input-control",
+        "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+        "expected": [
+          3,
+          1
+        ],
+        "output": [
+          3,
+          1
+        ],
+        "matches": true
+      },
+      {
+        "name": "ADD-integer-input-control",
+        "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+        "expected": [
+          11,
+          22
+        ],
+        "output": [
+          11,
+          22
+        ],
+        "matches": true
+      }
+    ]
+  },
+  "candidateBrowsers": {
+    "reportSHA256": "bb2bedc0800f4ff8ad7f369d1c878958f70c3812836936be57745519056c26d4",
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "workers": [
+          {
+            "url": "http://127.0.0.1:11723/vendor/netron/worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "TRANSPOSE-input",
+              "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+              "zipSHA256": "818e015c661a94b9f965b41b5d52f42d2b015369d135aa44acbff7987cbfbfa8",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "TRANSPOSE-constant",
+              "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+              "zipSHA256": "20f5fbaa9841e598e9f911df576112629171f9f738bc69557e68fbd918a31a69",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-input",
+              "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+              "zipSHA256": "ea23cdebc921bdac6faf100ae195d80ba628f9f554b35ebfa41658aa12d64589",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-constant",
+              "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+              "zipSHA256": "5679a5a4aaeeb907a9918c21a3b258f75bcc40bc2c8f5dfb280ad49faedd23a3",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-input",
+              "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+              "zipSHA256": "898fbba44eef3d9bcca40f3de87bd53faa718a791a0cb3d47f6b209afecdb41a",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-constant",
+              "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+              "zipSHA256": "fba0d3a62aec1c0ccacca5a97d96b7604723fade52c28578b0d4aa3d2cdc3eee",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "GATHER-integer-input-control",
+              "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+              "zipSHA256": "9713da462ae6a1eec8091b8cf51027740f43ce773321f5d02d8902b1af9f12d2",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                3,
+                1
+              ],
+              "output": [
+                3,
+                1
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "ADD-integer-input-control",
+              "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+              "zipSHA256": "473229cfbf96d833f103d5791714e25821bb7d21427ab353dc236f6e25f09596",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                11,
+                22
+              ],
+              "output": [
+                11,
+                22
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 8,
+          "runtimeWorkers": 8,
+          "downloads": 8
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "workers": [
+          {
+            "url": "http://127.0.0.1:11723/vendor/netron/worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/model-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:11723/src/tflite-runtime-worker.js?v=80d0ff744a4b4035",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "TRANSPOSE-input",
+              "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+              "zipSHA256": "46e801109095f89d6a6d59fa41635d0027d6379a7100f3a874fb582c3dcf8682",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "TRANSPOSE-constant",
+              "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+              "zipSHA256": "b173cff0448decaee22bd7bd013b86e22d3e6f441b6a236730b63c6b3b6abf4f",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-input",
+              "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+              "zipSHA256": "e807c915c78adcf6af1d043af0181ed477089dbf0f91f3a021de9037abb0825f",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-constant",
+              "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+              "zipSHA256": "2698b7e8a7fc74cb39587dbbb078630386a2189d500f0eb8d0d0723d32800368",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-input",
+              "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+              "zipSHA256": "ab12e2ca4e8c77b424b333115e8b01ac4e6b78f9e12c25527ed8f2fac867c285",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-constant",
+              "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+              "zipSHA256": "068d66d55301c7739914dbb2aa28b2c8ac9cc30941ba9400cabb86dc2b975003",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "GATHER-integer-input-control",
+              "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+              "zipSHA256": "b2b009d39f65fe1c16355e2dcfca99d150c64f50c6eb20ba7573fc8453c81695",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                3,
+                1
+              ],
+              "output": [
+                3,
+                1
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "ADD-integer-input-control",
+              "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+              "zipSHA256": "ec0ee16f4eb32188bf8fda3fd9b0c23db80fb7847bbba08b4902ca528fe3c834",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                11,
+                22
+              ],
+              "output": [
+                11,
+                22
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 8,
+          "runtimeWorkers": 8,
+          "downloads": 8
+        },
+        "closed": true
+      }
+    ]
+  },
+  "reference": {
+    "toolLockSHA256": "aac0cf2861aba0effa81973a174fae7c3f851261edd7b67ad37a4b027c694927",
+    "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.3.5",
+    "provenance": {
+      "name": "@tensorflow/tfjs-tflite",
+      "version": "0.0.1-alpha.10",
+      "gitHead": "cc8d9d72d2244b50a7f5127900404709595e65fd",
+      "license": "Apache-2.0",
+      "source": "https://registry.npmjs.org/@tensorflow/tfjs-tflite/-/tfjs-tflite-0.0.1-alpha.10.tgz",
+      "integrity": "sha512-/qmqsRBTg+XCWgNomJ/gdZIKFMpGiTEAwMhqk/7cOZEp/fTV69GuknOoSQjloYGWasQIDIriQO3bpi6T4PTEnA==",
+      "bytes": 7753592,
+      "sha256": "ce63551608097a5ecb0f0128fc64c53c15843a851fcd17f83e66e1908a628d71",
+      "files": [
+        {
+          "path": "tflite_web_api_cc.js",
+          "bytes": 168505,
+          "sha256": "93382e34412461c3bb7dd012e093b29a46e85d0410dec80a2899508bbfb671e5"
+        },
+        {
+          "path": "tflite_web_api_cc.wasm",
+          "bytes": 3592067,
+          "sha256": "f1eb42f96ae91e5ef34e2f833f011373ca1c40fdc9d4062ec21eb07b886ea54f"
+        },
+        {
+          "path": "LICENSE",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "path": "LICENSE-Emscripten.txt",
+          "bytes": 5093,
+          "sha256": "620a78084fc7ca97c0b5dea9abf891f3ffcadfdbf305276f099c9c4e12fc1d86"
+        },
+        {
+          "path": "NOTICE.txt",
+          "bytes": 855,
+          "sha256": "7ebfee83b42d07913ac0c96050727a7b6394862234f3a00d51ab21b3087b7b8a"
+        }
+      ],
+      "upstreamJS_SHA256": "08e963fcde11dc041feeac97ff711b3a157614edc98ff8bfa309557189b7368d",
+      "bindingFactories": 116,
+      "bindingsSHA256": "6c0b6a305f72670e369dea6abadc4198ed3b13cdc3628259d9d548b8be06e3af",
+      "modifications": "Ahead-of-time embind JS only; unchanged official compatibility WASM",
+      "licenseSources": [
+        "https://raw.githubusercontent.com/tensorflow/tfjs/cc8d9d72d2244b50a7f5127900404709595e65fd/LICENSE",
+        "https://raw.githubusercontent.com/emscripten-core/emscripten/3.1.17/LICENSE"
+      ]
+    }
+  },
+  "checks": {
+    "runtimeNode": 105,
+    "latestGateAndCacheNode": 27,
+    "overlapNotAdded": true,
+    "originalModelHashesUnchanged": true,
+    "csp": "unchanged; no unsafe-eval"
+  },
+  "pending": [
+    "PR required checks",
+    "main source-bound release gates",
+    "formal site and immutable Release delivery"
+  ],
+  "scope": "GitHub only; no Sites/GH Studio sync"
+}

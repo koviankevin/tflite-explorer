@@ -1,6 +1,6 @@
 # TFLite 手動執行檢查
 
-目前固定公開版為 [preview.30](https://github.com/koviankevin/tflite-explorer/releases/tag/v0.2.0-preview.30)／build `f3ff13b75b83ee57`。頂端「說明」或 F1 的「執行與 IO」介紹目前分頁模型、raw BIN、亂數規則和 IO 保存；前往執行區只讀介面，不啟動推論。原有 19 種執行／分佈情境、實際 CPU／IO、取消與固定下載通過，見 [正式交付](usage-guide.md#preview30-正式交付)。
+目前固定公開版以 [README](../README.md)為準。值相依 shape 的數值異常、獨立 Interpreter 對照與尚未發布的候選修正見[執行輸出](runtime-value-shape.md)。頂端「說明」或 F1 的「執行與 IO」介紹目前分頁模型、raw BIN、亂數規則和 IO 保存；前往執行區只讀介面，不啟動推論。下方 preview 紀錄屬當時版本，不代表目前正式版本。
 
 開檔、編輯、一般匯出不會載入 interpreter，也不會自動推論。開啟「執行模型」只讀取介面，設定各個 input 後，再按「以這組輸入執行一次」才啟動 LiteRT.js 2.6.0 CPU WASM。編輯／組合結果或局部模型需先匯出 TFLite 並開啟到新模型分頁；執行區不接收草稿，見[工作區流程](model-runtime-workspace.md)與[資料規則](tensor-random-distributions.md)。
 

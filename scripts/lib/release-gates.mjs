@@ -1,4 +1,6 @@
-import {searchPatternRevealRequired} from '../../test/browser/release-features.mjs';
+import {searchPatternRevealRequired,valueShapeRuntimeRequired} from '../../test/browser/release-features.mjs';
+import {VALUE_SHAPE_RUNTIME_CHECK} from '../../test/browser/value-shape-runtime-flow.mjs';
+import {assertValueShapeProof} from '../../test/browser/value-shape-proof.mjs';
 import {axisTransformValidationRequired} from '../../test/browser/release-features.mjs';
 import {AXIS_TRANSFORM_CHECK} from '../../test/browser/axis-transform-flow.mjs';
 import {SEARCH_PATTERN_REVEAL_CHECK} from '../../test/browser/search-pattern-reveal-flow.mjs';
@@ -192,6 +194,7 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
             ['transpose-matrix','expand-float','expand-count'].every((name,i)=>{const c=proof.cases[i];return c?.name===name&&c.status==='rejected'&&c.downloads===0&&typeof c.reason==='string'&&c.reason.length>0;})&&
             ['transpose-signed','expand-int64','expand-dynamic'].every((name,i)=>{const c=proof.cases[i+3];return c?.name===name&&c.status===(i===2?'not-run':'passed')&&c.operators===2&&c.reopened===true&&c.byteComparison===true&&c.automaticRuntime===false;}),'missing axis transform metadata proof.');
     }
+    if(valueShapeRuntimeRequired(release.version)){required.push(VALUE_SHAPE_RUNTIME_CHECK);assertValueShapeProof(report.valueShapeRuntime);}
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');
