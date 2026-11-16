@@ -30,9 +30,9 @@
   },
   "coreManifestSHA256": "aa58407492f5306cd1c832842fa2e41db6375e9d5a467dc13117649aa0c83e11",
   "node": {
-    "tests": 51,
+    "tests": 104,
     "passed": true,
-    "reportSHA256": "2bd3c76a96f22cae95cee8535ee5ee513eea086cade0c3ab7525c3fa596a7616"
+    "reportSHA256": "afd5b0f1d7092f6da35ba753abea630b52608aeb492823dd26895f7db531787a"
   },
   "gateSelection": {
     "tests": 28,
@@ -166,5 +166,12 @@
   "syntheticModelsOnly": true,
   "nativeReportSHA256": "c0c2a9d87094139c5db1a0e20ca420965b41387435c232ad41611fad08ebc57a",
   "screenshot": "axis-transform-candidate-edge.png",
-  "scope": "Metadata validation only; no automatic interpreter, source model mutation or deployment"
+  "scope": "Metadata validation only; no automatic interpreter, source model mutation or deployment",
+  "prFailure": {
+    "run": 43887108184,
+    "conclusion": "failure",
+    "reason": "Existing EXPAND_DIMS dtype test expected not-run instead of new metadata rejection",
+    "originalLogSHA256": "df6a905d2047828a93819b0fef454e3bba044728969b9909051d73e1da5b2e09",
+    "correction": "Preserve dtype isolation assertion and require rejection before payload reads; no application change"
+  }
 }

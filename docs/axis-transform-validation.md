@@ -19,7 +19,9 @@ EXPAND_DIMS 的 axis 可是 scalar、`[1]` 或 `[1,1]`；不誤套 TRANSPOSE 的
 
 ## 本機候選證據
 
-51 項相關 Node 測試與 28 項瀏覽器選測／發布證據判定測試通過。包含實際序列化正負例、讀取前拒絕、動態未檢查、複製匯出重開、原始參數 bytes、固定 LiteRT.js 2.6.0 CPU 的失敗與輸出數值對照。
+104 項相關 Node 測試與 28 項瀏覽器選測／發布證據判定測試通過。包含實際序列化正負例、讀取前拒絕、動態未檢查、複製匯出重開、原始參數 bytes、固定 LiteRT.js 2.6.0 CPU 的失敗與輸出數值對照。
+
+首次 [PR 全套 Node](https://github.com/koviankevin/tflite-explorer/actions/runs/43887108184)有一項舊測試失敗：BOOL／int16 EXPAND_DIMS axis 原預期只列未檢查，與新的明確 dtype 拒絕不同。測試更新為要求讀取前拒絕，仍保留 PAD 共用讀取器不得擴大其他 OP dtype 的原目的；新增測試未刪除，原失敗日誌保留。其餘相同應用的 Chrome／Edge 操作證據沿用。
 
 獨立 Windows Chrome／Edge 在 1280×640、32px 各完成六個原生操作情境：三個錯誤零下載；合法負軸、int64 scalar axis 及動態 axis 各複製匯出、下載報告、bytes 比對並重新開啟。各九個模型 Worker 關閉，零個自動 runtime Worker。[候選收據](results/axis-transform-candidate.json)綁定來源檔、受測建置、報告與截圖。這些小型候選證據不代替主分支實體大檔、正式站或固定 Release 驗證。
 
@@ -27,4 +29,4 @@ EXPAND_DIMS 的 axis 可是 scalar、`[1]` 或 `[1,1]`；不誤套 TRANSPOSE 的
 
 固定 CPU WASM 的 XNNPACK 路徑能執行常數二維 permutation，並得到預期數值；不能把它說成此 runtime 必定拒絕。本次 metadata 拒絕依一般 TRANSPOSE kernel 的一維契約，不因 delegate 特例擴大可攜匯出契約。EXPAND_DIMS 的非整數 axis 與多元素 axis 則在這次 CPU 實際配置失敗，原始 `invoke` 階段與訊息保留。
 
-另一次有界診斷中，將 TRANSPOSE permutation 改成模型輸入後，合法一維及二維參數兩例都回報執行成功，但擷取輸出不符合預期 `[1,4,2,5,3,6]`。[診斷收據](results/axis-transform-runtime-diagnostic.json)保留合成模型 SHA、原始輸出及來源；尚未確認是 runtime、動態參數介面還是 IO 擷取造成，不能稱為已修復或可靠數值結果。本次不更改 runtime 或用這兩例證明數值正確；後續應以輸入／原始 tensor 讀取對照縮小原因。
+另一次有界診斷中，將 TRANSPOSE permutation 改成模型輸入後，合法一維及二維參數兩例都回報執行成功，但擷取輸出不符合預期 `[1,4,2,5,3,6]`。[診斷收據](results/axis-transform-runtime-diagnostic.json)保留合成模型 SHA、原始輸出及來源。接續繞過網站 execute／IO archive，直接呼叫固定 LiteRT API：執行前後讀回兩個輸入都正確，動態 permutation 的原始輸出仍不符；同程序的常數 permutation 對照則正確。這排除了「必須經過網站 IO ZIP 才發生」的解釋，仍未定位 runtime／動態介面或合成來源的所有原因，不能稱為已修復或可靠數值結果。本次不更改 runtime 或用這些動態案例證明數值正確。

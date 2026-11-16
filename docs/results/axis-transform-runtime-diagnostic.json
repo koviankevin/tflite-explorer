@@ -223,5 +223,149 @@
     }
   ],
   "rawDiagnosticSHA256": "c66bc8658e22e58a93e6a767b56ddbd4a88e2c31b79f7505148b30272d472b9f",
-  "scope": "Bounded standalone diagnostic; no runtime fix or numerical correctness claim"
+  "scope": "Bounded standalone diagnostic; no runtime fix or numerical correctness claim",
+  "directApiControl": {
+    "sourceCommit": "e914b1819f55db055a0d3cc5353b975e929c8fdf",
+    "websiteExecuteBypassed": true,
+    "archiveBypassed": true,
+    "report": [
+      {
+        "axisInput": true,
+        "inputDetails": [
+          {
+            "name": "a",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "float32"
+          },
+          {
+            "name": "b",
+            "shape": [
+              2
+            ],
+            "dtype": "int32"
+          }
+        ],
+        "outputDetails": [
+          {
+            "name": "c",
+            "shape": [
+              3,
+              2
+            ],
+            "dtype": "float32"
+          }
+        ],
+        "inputsBefore": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "inputsAfter": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "outputs": [
+          {
+            "shape": [
+              3,
+              2
+            ],
+            "dtype": "float32",
+            "values": [
+              4.817664120348721e-42,
+              4.819065418813046e-42,
+              4.820466717277371e-42,
+              4.8218680157416955e-42,
+              0,
+              6.445972935894159e-44
+            ]
+          }
+        ]
+      },
+      {
+        "axisInput": false,
+        "inputDetails": [
+          {
+            "name": "a",
+            "shape": [
+              2,
+              3
+            ],
+            "dtype": "float32"
+          }
+        ],
+        "outputDetails": [
+          {
+            "name": "c",
+            "shape": [
+              3,
+              2
+            ],
+            "dtype": "float32"
+          }
+        ],
+        "inputsBefore": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        ],
+        "inputsAfter": [
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        ],
+        "outputs": [
+          {
+            "shape": [
+              3,
+              2
+            ],
+            "dtype": "float32",
+            "values": [
+              1,
+              4,
+              2,
+              5,
+              3,
+              6
+            ]
+          }
+        ]
+      }
+    ],
+    "rawReportSHA256": "25efa8c959c7c56c7f2e7da826493484e1fb671b5a1a8ce156fd217c5fc00f7e",
+    "conclusion": "Dynamic-parameter raw output still mismatches; inputs before/after and constant-parameter control are correct. Root cause unresolved."
+  }
 }

@@ -14,7 +14,7 @@
 
 必要瀏覽器維持 Chrome／Edge、最小筆電畫面；Firefox／Safari／手機不另排必要驗收。歷史啟動逾時、防毒注入及 Chrome 關閉失敗仍保留，沒有證據時不做推測性應用修正。已通過且來源適用的關卡沿用；不用重新發布成功的 1.12.1。
 
-接續 OP 驗證已取得 [TRANSPOSE／EXPAND_DIMS 的 v1.12.2 本機候選](axis-transform-validation.md)：共用 metadata 規則與序列化負例、51 項相關 Node、28 項選測／證據判定測試及 Chrome／Edge 各六個原生情境通過。尚待 PR／主分支必要關卡及正式交付。另記錄動態 TRANSPOSE 擷取值不符預期的獨立診斷，仍需定位原因；不以 metadata 候選通過冒充已修復。
+接續 OP 驗證已取得 [TRANSPOSE／EXPAND_DIMS 的 v1.12.2 本機候選](axis-transform-validation.md)：共用 metadata 規則與序列化負例、104 項相關 Node、28 項選測／證據判定測試及 Chrome／Edge 各六個原生情境通過。尚待 PR／主分支必要關卡及正式交付。另記錄動態 TRANSPOSE 擷取值不符預期的獨立診斷，仍需定位原因；不以 metadata 候選通過冒充已修復。
 
 下方為各輪當時的候選與交付紀錄。「未發布／目前版本／下一項」均屬該輪時間點，不覆蓋上方本次核對或 README；歷史 RSS、退出及其他失敗不因後續成功而改寫。
 
