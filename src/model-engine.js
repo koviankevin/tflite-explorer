@@ -3,6 +3,7 @@ import { BinaryReader } from '../vendor/netron/flatbuffers.js';
 import { ModelFactory, Value, Tensor } from '../vendor/netron/tflite.js';
 import { tflite as schema } from '../vendor/netron/tflite-schema.js';
 import { RangeStream } from './range-stream.js';
+import { lazyAdjacency, nextNodes, previousNodes } from './lazy-adjacency.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 export { operatorKey } from './pattern-utils.js';
 const indexableValue = (value) => value && typeof value === 'object' && value.identifier !== undefined;
@@ -154,22 +155,19 @@ export function indexModel(model, additionalTensors = () => {}) {
             visit(node.inputs, index, false); visit(node.outputs, index, true);
         });
         additionalTensors(tensors, graphIndex);
-        const next = graph.nodes.map(() => new Set());
-        const previous = graph.nodes.map(() => new Set());
         // Walk every output, including duplicate definitions in inspectable
         // source graphs; the last-producer map is not an adjacency substitute.
-        graph.nodes.forEach((node, from) => {
+        const topology=lazyAdjacency(graph.nodes,(node,add)=>{
             for (const argument of node.outputs) {
                 const values = argument.value;
                 if (!Array.isArray(values)) continue;
                 for (const value of values) {
                     if (!indexableValue(value)) continue;
                     const targets = consumers.get(value.identifier);
-                    if (targets) for (const to of targets) next[from].add(to);
+                    if (targets) for (const to of targets) add(to);
                 }
             }
         });
-        next.forEach((targets, from) => { for (const to of targets) previous[to].add(from); });
         const layers = [];
         graph.nodes.forEach((node, index) => {
             const parts = [];
@@ -184,7 +182,10 @@ export function indexModel(model, additionalTensors = () => {}) {
         });
         let tensorRecords;
         const entry = {
-            graph, tensors, producers, consumers, next, previous, layerRecords: layers,
+            graph, tensors, producers, consumers,
+            get next(){return topology.next;},set next(value){topology.next=value;},
+            get previous(){return topology.previous;},set previous(value){topology.previous=value;},
+            layerRecords: layers,
             get tensorRecords() {
                 // Layers and Pattern exploration do not need the tensor
                 // search strings. Build them once when Tensors is searched.
@@ -201,6 +202,7 @@ export function indexModel(model, additionalTensors = () => {}) {
                 return rows;
             }
         };
+        Object.defineProperties(entry,{nextNodes:{value:topology.nextNodes},previousNodes:{value:topology.previousNodes}});
         operatorIndex(entry);
         return entry;
     });
@@ -228,7 +230,7 @@ export async function findPatterns(index, operators, scope = 'all', cancelled = 
     let yieldAt = 0;
     for (let g = 0; g < index.graphs.length; g++) {
         if (scope !== 'all' && g !== Number(scope)) continue;
-        const { graph, next } = index.graphs[g];
+        const entry=index.graphs[g],{graph}=entry;
         const { keys, byType } = operatorIndex(index.graphs[g]);
         if (pattern.length > graph.nodes.length || pattern.some((type) => !byType.has(type))) continue;
         const stack = [];
@@ -244,7 +246,7 @@ export async function findPatterns(index, operators, scope = 'all', cancelled = 
                 results.push({ kind: 'patterns', graph: g, path, label: path.map((n) => graph.nodes[n].type.name).join(' → '), id: path.map((n) => graph.nodes[n].identifier).join(' → ') });
                 if (results.length === limit) return { items: results, truncated: true };
             } else {
-                for (const n of [...next[path.at(-1)]].reverse()) {
+                for (const n of [...nextNodes(entry,path.at(-1))].reverse()) {
                     if (++steps > 2000000) return { items: results, truncated: true, searchLimited: true };
                     if (steps % 2000 === 0) {
                         if (performance.now() >= yieldAt) { await new Promise((resolve) => setTimeout(resolve, 0)); yieldAt = performance.now() + 8; }
@@ -263,7 +265,7 @@ export function selectNodes(entry, selected, hops = 1, maximum = 100) {
     let frontier = [...selected];
     for (let depth = 0; depth < hops && result.size < maximum; depth++) {
         const next = [];
-        for (const node of frontier) for (const neighbor of [...entry.next[node], ...entry.previous[node]]) {
+        for (const node of frontier) for (const neighbor of [...nextNodes(entry,node), ...previousNodes(entry,node)]) {
             if (!result.has(neighbor) && result.size < maximum) { result.add(neighbor); next.push(neighbor); }
         }
         frontier = next;

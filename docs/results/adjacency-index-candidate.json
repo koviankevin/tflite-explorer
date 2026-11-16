@@ -1,0 +1,354 @@
+{
+  "format": "model-lens-adjacency-allocation-candidate",
+  "schemaVersion": 1,
+  "status": "local-candidate-not-published",
+  "at": "2026-11-16T19:53:34.677Z",
+  "releaseEvidenceEligible": false,
+  "source": {
+    "base": "9a50af498ddef928d31a8c8b3fc95c213f8c9f6a",
+    "files": [
+      {
+        "path": "src/model-engine.js",
+        "canonicalSHA256": "7e9cdd570ed78e7a999c0a563405e6401f47f2128faba1f23f227ed00637f0e1"
+      },
+      {
+        "path": "src/subgraph-pattern.js",
+        "canonicalSHA256": "3147180f6c8dcd042aae40283ce817910b599e620e5e7be58c70a5c593b8494f"
+      },
+      {
+        "path": "src/mlir-pattern.js",
+        "canonicalSHA256": "b126cf07d15d1ba4637c71dd4000264197e6329e10b5c67120af6b66fc6b71b2"
+      },
+      {
+        "path": "src/lazy-adjacency.js",
+        "canonicalSHA256": "68205f53d203590b3e7dccbf0e8055b83238a2b5bd6bc7c2d3675ecf8e8dd132"
+      },
+      {
+        "path": "test/model-index.test.mjs",
+        "canonicalSHA256": "83fc9ae5e7709dedab42d99f2c68d972d717e261d05e0ee6583227fbe4ab72d7"
+      },
+      {
+        "path": "test/lazy-adjacency.test.mjs",
+        "canonicalSHA256": "c3c3f30729456cc6cc8987332b6144c0a678ae1f15c0b8968f0118c7f648c645"
+      }
+    ],
+    "candidateBuild": "c85a2e4b7ea72960",
+    "dirty": true
+  },
+  "fixture": {
+    "bytes": 8836512,
+    "operators": 21005,
+    "weightsBytes": 1048576,
+    "sha256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083"
+  },
+  "parity": {
+    "fingerprint": "4c5377e61b59ff797f4dce17a3079a1300dee314a1cfe5633462db84b77e58f2",
+    "linearMatches": 7000,
+    "graphMatches": 7000,
+    "fullRecordsAndTopologyIdentical": true,
+    "browserCases": 8,
+    "allExportsIdentical": true,
+    "allObservedWorkersClosed": true,
+    "browserCloseReturned": true,
+    "processReapNotMeasured": true
+  },
+  "tests": {
+    "targeted": 111,
+    "passed": 111,
+    "failed": 0,
+    "skipped": 0,
+    "randomTopologySamples": 200
+  },
+  "node": {
+    "status": "diagnostic-not-physical-rss-acceptance",
+    "order": [
+      "A",
+      "D",
+      "D",
+      "A",
+      "A",
+      "D"
+    ],
+    "forcedGC": false,
+    "fixtureSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+    "fingerprint": "4c5377e61b59ff797f4dce17a3079a1300dee314a1cfe5633462db84b77e58f2",
+    "groups": {
+      "A": {
+        "build": {
+          "schemaVersion": 1,
+          "version": "1.12.4",
+          "distribution": "public",
+          "extension": null,
+          "source": {
+            "commit": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+            "tree": "b609396356e0941c0a855ee300f9f8c45d537825",
+            "committedAt": "2026-11-17T01:59:22+08:00",
+            "dirty": false
+          },
+          "buildId": "525f716810e77bf6"
+        },
+        "parseMs": 401.1708,
+        "linearMs": 40.325000000000045,
+        "graphMs": 98.76370000000009,
+        "stages": {
+          "indexed": {
+            "heapUsed": 144073368,
+            "heapTotal": 227184640,
+            "rss": 245825536,
+            "maximumRss": 245825536
+          },
+          "first-local-view": {
+            "heapUsed": 145436032,
+            "heapTotal": 227553280,
+            "rss": 246231040,
+            "maximumRss": 246231040
+          },
+          "pattern-search": {
+            "heapUsed": 116703064,
+            "heapTotal": 227061760,
+            "rss": 265486336,
+            "maximumRss": 265486336
+          },
+          "graph-pattern-search": {
+            "heapUsed": 156109744,
+            "heapTotal": 241385472,
+            "rss": 319180800,
+            "maximumRss": 319180800
+          }
+        }
+      },
+      "D": {
+        "build": {
+          "schemaVersion": 1,
+          "version": "1.12.4",
+          "distribution": "public",
+          "extension": null,
+          "source": {
+            "commit": "9a50af498ddef928d31a8c8b3fc95c213f8c9f6a",
+            "tree": "6d882c65e7cf6255237c9a4c49eba7f07c64bb46",
+            "committedAt": "2026-11-17T02:53:35+08:00",
+            "dirty": true
+          },
+          "buildId": "c85a2e4b7ea72960"
+        },
+        "parseMs": 370.0895,
+        "linearMs": 46.07140000000004,
+        "graphMs": 134.05809999999997,
+        "stages": {
+          "indexed": {
+            "heapUsed": 136216392,
+            "heapTotal": 227405824,
+            "rss": 246923264,
+            "maximumRss": 246923264
+          },
+          "first-local-view": {
+            "heapUsed": 137585280,
+            "heapTotal": 227774464,
+            "rss": 247328768,
+            "maximumRss": 247328768
+          },
+          "pattern-search": {
+            "heapUsed": 110639096,
+            "heapTotal": 227667968,
+            "rss": 259158016,
+            "maximumRss": 260308992
+          },
+          "graph-pattern-search": {
+            "heapUsed": 153212624,
+            "heapTotal": 237273088,
+            "rss": 312385536,
+            "maximumRss": 316129280
+          }
+        }
+      }
+    },
+    "files": [
+      {
+        "label": "A",
+        "iteration": 0,
+        "sha256": "723f246bc137baa98ad5399fec4767b36adbcffe0a65dda6b2698d3e9bf45d56"
+      },
+      {
+        "label": "D",
+        "iteration": 1,
+        "sha256": "75caf9ef856d11f2c6169efe36d271dac0229263c40c672a3451e05c2956cc70"
+      },
+      {
+        "label": "D",
+        "iteration": 2,
+        "sha256": "95db2aea8bca6cc89811cb3db73d4c9032e494d8a4a5f3174f003faeff1db1ed"
+      },
+      {
+        "label": "A",
+        "iteration": 3,
+        "sha256": "e14991f33da64331fa54d602802b783da7a048b6e5bca6433dde2774aa2222e8"
+      },
+      {
+        "label": "A",
+        "iteration": 4,
+        "sha256": "0d9a0da47b18801564a4cacac83282f59e5c78a93f73021e4126f52148ec0540"
+      },
+      {
+        "label": "D",
+        "iteration": 5,
+        "sha256": "d4d1faa3b8dae85e79f0a6d5fcbaef97269f75276fd103799615552166a6f669"
+      }
+    ]
+  },
+  "browser": {
+    "status": "measured-worker-heaps-not-physical-rss-gate",
+    "order": [
+      "A",
+      "C",
+      "C",
+      "A"
+    ],
+    "fixtureSHA256": "de2a8ca218865523c3004a4b924cc092dff32c57bc15e51dddcb29662ffbb083",
+    "modelBytes": 8836512,
+    "operators": 21005,
+    "forcedGC": false,
+    "candidateBuild": {
+      "schemaVersion": 1,
+      "version": "1.12.4",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "9a50af498ddef928d31a8c8b3fc95c213f8c9f6a",
+        "tree": "6d882c65e7cf6255237c9a4c49eba7f07c64bb46",
+        "committedAt": "2026-11-17T02:53:35+08:00",
+        "dirty": true
+      },
+      "buildId": "c85a2e4b7ea72960"
+    },
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "closed": true,
+        "exportsIdentical": true,
+        "allWorkersClosed": true,
+        "groups": {
+          "A": {
+            "openMs": 1604.0054000000005,
+            "stages": {
+              "indexed": {
+                "usedSize": 67787522,
+                "totalSize": 113930240,
+                "backingStorageSize": 7711799
+              },
+              "first-local-view": {
+                "usedSize": 68518700,
+                "totalSize": 113930240,
+                "backingStorageSize": 7711799
+              },
+              "pattern-view": {
+                "usedSize": 69299484,
+                "totalSize": 122404864,
+                "backingStorageSize": 7711799
+              }
+            }
+          },
+          "C": {
+            "openMs": 1031.1716999999994,
+            "stages": {
+              "indexed": {
+                "usedSize": 57824244,
+                "totalSize": 111286272,
+                "backingStorageSize": 8157918
+              },
+              "first-local-view": {
+                "usedSize": 58543466,
+                "totalSize": 111286272,
+                "backingStorageSize": 8157918
+              },
+              "pattern-view": {
+                "usedSize": 67548160,
+                "totalSize": 118734848,
+                "backingStorageSize": 8157918
+              }
+            }
+          }
+        }
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "closed": true,
+        "exportsIdentical": true,
+        "allWorkersClosed": true,
+        "groups": {
+          "A": {
+            "openMs": 1650.767750000001,
+            "stages": {
+              "indexed": {
+                "usedSize": 60386262,
+                "totalSize": 110368768,
+                "backingStorageSize": 7711799
+              },
+              "first-local-view": {
+                "usedSize": 61103064,
+                "totalSize": 110368768,
+                "backingStorageSize": 7711799
+              },
+              "pattern-view": {
+                "usedSize": 71041624,
+                "totalSize": 121618432,
+                "backingStorageSize": 7711799
+              }
+            }
+          },
+          "C": {
+            "openMs": 1035.681200000001,
+            "stages": {
+              "indexed": {
+                "usedSize": 50683082,
+                "totalSize": 108249088,
+                "backingStorageSize": 8157918
+              },
+              "first-local-view": {
+                "usedSize": 51386792,
+                "totalSize": 108249088,
+                "backingStorageSize": 8157918
+              },
+              "pattern-view": {
+                "usedSize": 69651338,
+                "totalSize": 119652352,
+                "backingStorageSize": 8157918
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "localAudit": {
+    "name": "adjacency-allocation-evidence.zip",
+    "bytes": 189084,
+    "sha256": "1430cbfba14e3130929967aba25da163b37496fd654971379213940c99171d74",
+    "files": 89,
+    "status": "verified-local-only-no-release-evidence"
+  },
+  "originalFailure": {
+    "run": 43924226459,
+    "status": "failed",
+    "reason": "closed-rss-drift",
+    "unchanged": true
+  },
+  "limits": [
+    "Structure-only fixture with 1 MiB weights, not 1.25 GiB physical resource acceptance.",
+    "No forced GC, profiler retrieval, RSS subtraction, policy/timer/pool changes or automatic inference.",
+    "Fresh processes/contexts and natural GC influence values; timing and heap checkpoints are not general guarantees.",
+    "Node linear and induced graph search medians are slower for the final candidate; report the time/memory tradeoff.",
+    "PR and normal-policy new-source gates remain required before publication."
+  ],
+  "rejectedExperiments": [
+    {
+      "kind": "whole-vector-lazy-getter",
+      "reason": "First local view materialized both whole-model Set vectors."
+    },
+    {
+      "kind": "uncached-read-views",
+      "reason": "Per-read objects/functions made searches two to three times slower and raised measured memory."
+    }
+  ]
+}

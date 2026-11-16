@@ -1,4 +1,5 @@
 import {PATTERN_LIMITS} from './pattern-limits.js';
+import {nextNodes} from './lazy-adjacency.js';
 import {operationSemantics} from './mlir-dialects.js';
 import {typeSpelling} from './mlir-engine.js';
 import {validateMLIR} from './mlir-validate.js';
@@ -185,7 +186,7 @@ export function mlirMatchSnapshot(index,item,options={}) {
         return {...combinedMLIRSnapshot(index,item,build(index,project),options),sliceView:!!original};
     }
     const selected=new Set(block.path),entry=index.graphs[block.graph];
-    const connections=block.path.flatMap(from=>[...entry.next[from]].filter(to=>selected.has(to)).map(to=>[from,to]));
+    const connections=block.path.flatMap(from=>[...nextNodes(entry,from)].filter(to=>selected.has(to)).map(to=>[from,to]));
     return selectionSnapshot(index,{...item,graph:block.graph,path:block.path,connections},options);
 }
 
