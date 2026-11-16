@@ -9,7 +9,7 @@ import {staticTfliteShape} from './tflite-static-shape.js';
 import {checkOperandValues,OPERAND_OPERATORS} from './tflite-operand-checks.js';
 import {checkFullyConnectedMetadata} from './tflite-fully-connected-checks.js';
 import {checkBatchMatmulMetadata} from './tflite-matmul-checks.js';
-import {replayEditDraft,editDeletePreview} from './model-edit-draft.js';
+import {replayEditDraft,editDeletePreview,editWireInferenceReason} from './model-edit-draft.js';
 
 export const DELETE_INFERENCE_ALGORITHM='tflite-static-v1';
 const same=(a,b)=>Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((n,i)=>n===b[i]);
@@ -58,10 +58,10 @@ function inferOperation(name,inputs,outputs,options,constant){
 
 export async function inferDeletedGraph(index,state,readAt,{verifyLocal=false,cancelled=()=>false}={}){
     if(cancelled())throw Error('已取消 shape 推導。');
-    const graphs=new Set(state.nodes.filter(n=>n.removed&&n.autoShape).map(n=>n.source.graph)),shapePatches=[],localShapes=[],rows=[];
+    const inferenceNodes=state.nodes.filter(n=>n.removed&&n.autoShape||n.autoWireShape),graphs=new Set(inferenceNodes.map(n=>n.source.graph)),shapePatches=[],localShapes=[],rows=[];
     if([...graphs].some(g=>index.raw.subgraphs[g].operators.length>200000))throw Error('模型超過本次 200,000 個 OP 的推導掃描上限。');
     let work=0,affected=0,changedTensors=0,readBytes=0,inspectedBytes=0;
-    const plans=tfliteWorkspacePlans(index,state,state.nodes.filter(n=>n.removed&&n.autoShape).map(n=>({node:n.id})),{metadataOnly:true});
+    const plans=tfliteWorkspacePlans(index,state,inferenceNodes.map(n=>({node:n.id})),{metadataOnly:true});
     for(const plan of plans){
         if(!graphs.has(plan.graph))continue;
         const raw=index.raw.subgraphs[plan.graph],tensors=raw.tensors.slice(),originalCount=tensors.length,ids=new Map(plan.valueIds),byNode=new Map(state.nodes.map(n=>[n.id,n]));
@@ -121,4 +121,12 @@ export async function previewDeleteInference(index,snapshot,commands,nodeId,read
     const candidate=replayEditDraft(snapshot,[...commands,command]),inference=await inferDeletedGraph(index,candidate,readAt,{cancelled});command.localShapes=inference.localShapes;
     const choices=preview.outputs[0].choices.filter(c=>!c.reason).sort((a,b)=>Number(b.preferred)-Number(a.preferred)).slice(0,50);if(!choices.some(c=>c.value===value))choices.push(choice);
     return {status:'ready',command,source:{value,name:state.values.get(value).name,type:state.values.get(value).type},choices,summary:inference.summary};
+}
+
+export async function previewWireInference(index,snapshot,commands,nodeId,slot,value,readAt,{cancelled}={}){
+    if(index.exportUnsupportedReason)throw Error(index.exportUnsupportedReason);
+    const state=replayEditDraft(snapshot,commands),reason=editWireInferenceReason(state,nodeId,slot,value);if(reason)throw Error(reason);
+    const node=state.nodes.find(n=>n.id===nodeId),old=state.values.get(node.inputs[slot].value),source=state.values.get(value),command={kind:'wire-infer',node:nodeId,slot,value,algorithm:DELETE_INFERENCE_ALGORITHM,localShapes:[]};
+    const candidate=replayEditDraft(snapshot,[...commands,command]),inference=await inferDeletedGraph(index,candidate,readAt,{cancelled});command.localShapes=inference.localShapes;
+    return {status:'ready',command,source:{value,name:source.name,type:source.type},target:{node:nodeId,name:node.name,slot,before:old.type,after:source.type},summary:inference.summary};
 }

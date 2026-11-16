@@ -1,0 +1,126 @@
+{
+  "format": "model-lens-wire-shape-desktop",
+  "version": 1,
+  "recordedAt": "2026-11-16T11:58:51.211Z",
+  "release": "1.12.0",
+  "publication": "not-deployed",
+  "testedSource": {
+    "baseCommit": "2506eb632930a89df128fb16c4c54490fd7f0e63",
+    "workingTree": true,
+    "blobs": {
+      "package-lock.json": "1ba13aea6af31afd1bddad89320813e699cca451",
+      "package.json": "14a279de7547dda46b13ac75f60a30be308c40f8",
+      "scripts/lib/release-gates.mjs": "cf372402135d44fa886bcf9896b4dfa4a2aba312",
+      "src/edit-recovery-store.js": "8c4c866d15db2172959a63958cb1c123cd78e74b",
+      "src/model-edit-draft.js": "ef60ac3e8d5ebc923209e9034c9e380b1a4eae78",
+      "src/model-edit-policy.js": "587f5a3d2391f072a1ab48a11b3c61746fbb981b",
+      "src/model-edit-session.js": "4f973902c4aa1cc6f5c780750375d60e7a44b8fc",
+      "src/model-edit-wire-ui.js": "549baaf09db6a4e94bf63de2923f379b7a9b74d0",
+      "src/model-edit-workspace-ui.js": "5086cb4ee573ca88066c913aa4908e576ab86463",
+      "src/model-edit-workspace.css": "5c61ae523798480533bf35b727a5ee1a1c50a5c9",
+      "src/model-edit-workspace.js": "21644fd16196d2b6682a3acc1e6c0309d379cf7d",
+      "src/model-worker.js": "fc37a7117f08e3a3779b540c8b32ee0cb8375e33",
+      "src/shell.html": "0af352e540765baf89d41cff9d7c2b56944d9394",
+      "src/tflite-delete-inference.js": "b1cef979c80597ddce21633e50506c2038224788",
+      "test/browser/production-smoke.mjs": "407acd53fa6abcbdfd9e782cd249661ddb2d86da",
+      "test/browser/release-features.mjs": "54f723533e37d2803f04412e3011fd80be97210c",
+      "test/browser/windows-wire-shape.mjs": "51c560aff5afdd231a149842e0720423abd9e277",
+      "test/browser/wire-shape-flow.mjs": "0f80bde2210bc62df86c4c059f259aa3b196610c",
+      "test/release-gates.test.mjs": "733c3162425d5070247fbe423bedc2107480c4f0",
+      "test/wire-shape-inference.test.mjs": "52f737d1ab33994240d6b35d1397a95907b626ab"
+    }
+  },
+  "artifact": {
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.12.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "2506eb632930a89df128fb16c4c54490fd7f0e63",
+        "tree": "a3f5e4e808336014d42c3e1584354397592bd027",
+        "committedAt": "2026-11-16T16:34:33+08:00",
+        "dirty": true
+      },
+      "buildId": "3c136f80fc167d4b"
+    },
+    "manifestSHA256": "cc7b39fc94289aa410c12802c5b68f2520e642d70a31dc56eb6ce20b23df29f6",
+    "files": 343
+  },
+  "targeted": {
+    "tests": 171,
+    "passed": 171,
+    "failed": 0,
+    "skipped": 0,
+    "logSHA256": "db0a34e7c620a8814eb1387a10f088330057c71e4469bbda5cf8f2e86f4a3b76"
+  },
+  "browser": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 6,
+          "runtimeWorkers": 0,
+          "cancelPreserves": true,
+          "drag": true,
+          "click": true,
+          "draftVersion": 6,
+          "reopenedOperators": 5,
+          "cameraPreserved": true,
+          "blocked": [
+            "fc",
+            "custom",
+            "dtype"
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 121.03125,
+            "bottom": 518.953125,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 6,
+          "runtimeWorkers": 0,
+          "cancelPreserves": true,
+          "drag": true,
+          "click": true,
+          "draftVersion": 6,
+          "reopenedOperators": 5,
+          "cameraPreserved": true,
+          "blocked": [
+            "fc",
+            "custom",
+            "dtype"
+          ],
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 121.03125,
+            "bottom": 518.953125,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      }
+    ]
+  },
+  "runtimeExecuted": false,
+  "models": "public synthetic fixtures only"
+}

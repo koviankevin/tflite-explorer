@@ -29,6 +29,21 @@ export function editWireReason(state,target,slot,valueId,{allowShape=false}={}){
     if(node.ordered&&value.graph===node.source.graph&&Number.isFinite(order)&&order>=editPosition(state,node))return '來源必須先於目標 OP 產生，不能建立同一 block 內的回圈。';
     return '';
 }
+export function editWireInferenceReason(state,target,slot,valueId){
+    const node=state.nodes.find(n=>n.id===target),value=state.values.get(valueId),port=node?.inputs[slot];
+    if(state.format!=='tflite'||!port||!value)return '找不到可推導的 TFLite 接線。';
+    const type=deletionTypeReason(port,value,{allowShape:true});
+    return type||editWireReason(state,target,slot,valueId,{allowShape:true});
+}
+function applyShapeHints(state,node,command,remember=false){
+    if(command.algorithm!=='tflite-static-v1'||!Array.isArray(command.localShapes)||command.localShapes.length>EDIT_LIMITS.ports)throw Error('Shape 推導草稿格式無效。');
+    const seen=new Set();for(const patch of command.localShapes){const v=state.values.get(patch?.value);if(!v||v.graph!==node.source.graph||v.optional||seen.has(v.id)||!Array.isArray(patch.shape)||patch.shape.length>128||patch.shape.some(d=>!Number.isInteger(d)||d<0||d>2147483647))throw Error('Shape 推導的 tensor 或維度無效。');seen.add(v.id);
+        const metadata=JSON.parse(v.signature);if(metadata.shape_signature?.some(d=>d<0)||metadata.sparsity||v.generated||['權重／常數','模型輸入','變數'].includes(v.kind)&&!v.producer&&!v.fresh)throw Error('不會自動修改輸入、權重、稀疏或動態 tensor shape。');
+        const before={signature:v.signature,type:v.type,inferredShape:v.inferredShape,deleteInferred:v.deleteInferred};metadata.shape=[...patch.shape];if(metadata.shape_signature?.length)metadata.shape_signature=[...patch.shape];v.signature=JSON.stringify(metadata);v.type=`${v.type.split('[')[0].trim()} [${patch.shape.join(', ')}]`;v.deleteInferred=true;if(v.fresh)v.inferredShape=[...patch.shape];if(remember)node.reconnectShapes.push({value:v.id,before,after:v.signature});
+    }
+    for(const target of state.nodes)if(!target.removed)for(const p of target.inputs){const v=state.values.get(p.value);if(v&&!v.optional){p.signature=v.signature;p.type=v.type;}}
+    for(const target of state.nodes)for(const p of target.outputs)p.type=state.values.get(p.value)?.type;
+}
 export function editTemplateReason(state,target,template){
     const node=state.nodes.find(n=>n.id===target),base=state.nodes.find(n=>n.id===template);
     if(!node?.fresh||node.removed||!base||base.fresh||!base.cloneable)return '請選擇新增 OP 與有效的原始範本。';
@@ -42,9 +57,10 @@ function mutate(state,command){
     if(compositionCommand(state,command))return;
     const node=state.nodes.find(n=>n.id===command.node);
     if(!node)throw Error('找不到要修改的 OP。');
-    if(command.kind==='wire'){
-        const reason=editWireReason(state,node.id,command.slot,command.value);if(reason)throw Error(reason);
+    if(command.kind==='wire'||command.kind==='wire-infer'){
+        const infer=command.kind==='wire-infer',reason=infer?editWireInferenceReason(state,node.id,command.slot,command.value):editWireReason(state,node.id,command.slot,command.value);if(reason)throw Error(reason);
         node.inputs[command.slot].value=command.value;
+        if(infer){node.autoWireShape=true;applyShapeHints(state,node,command);}
     }else if(command.kind==='clone'){
         if(node.removed||!node.cloneable||!['before','after'].includes(command.side))throw Error('此 OP 不能從基礎編輯器複製新增。');
         if(state.nodes.length>=EDIT_LIMITS.nodes)throw Error('編輯範圍最多 96 個 OP，請先匯出並重新開啟。');
@@ -90,14 +106,7 @@ function mutate(state,command){
         if(state.composition&&state.nodes.filter(n=>!n.removed).length===1)throw Error('組合草稿需保留至少一個 OP；請先加入其他片段或改用原模型編輯。');
         for(const target of state.nodes)if(!target.removed&&target.id!==node.id)target.inputs.forEach((p,slot)=>{if(mapping.has(p.value)){const value=mapping.get(p.value);node.reconnectWires.push({node:target.id,slot,before:p.value,after:value});p.value=value;}});
         node.removed=true;node.boundary=false;node.reconnect=copy(command.replacements);
-        if(infer){node.autoShape=true;node.reconnectShapes=[];
-            const seen=new Set();for(const patch of command.localShapes){const v=state.values.get(patch?.value);if(!v||v.graph!==node.source.graph||v.optional||seen.has(v.id)||!Array.isArray(patch.shape)||patch.shape.length>128||patch.shape.some(d=>!Number.isInteger(d)||d<0||d>2147483647))throw Error('Shape 推導的 tensor 或維度無效。');seen.add(v.id);
-                const metadata=JSON.parse(v.signature);if(metadata.shape_signature?.some(d=>d<0)||metadata.sparsity||v.generated||['權重／常數','模型輸入','變數'].includes(v.kind)&&!v.producer&&!v.fresh)throw Error('不會自動修改輸入、權重、稀疏或動態 tensor shape。');
-                const before={signature:v.signature,type:v.type,inferredShape:v.inferredShape,deleteInferred:v.deleteInferred};metadata.shape=[...patch.shape];if(metadata.shape_signature?.length)metadata.shape_signature=[...patch.shape];v.signature=JSON.stringify(metadata);v.type=`${v.type.split('[')[0].trim()} [${patch.shape.join(', ')}]`;v.deleteInferred=true;if(v.fresh)v.inferredShape=[...patch.shape];node.reconnectShapes.push({value:v.id,before,after:v.signature});
-            }
-            for(const target of state.nodes)if(!target.removed)for(const p of target.inputs){const v=state.values.get(p.value);if(v&&!v.optional){p.signature=v.signature;p.type=v.type;}}
-            for(const target of state.nodes)for(const p of target.outputs)p.type=state.values.get(p.value)?.type;
-        }
+        if(infer){node.autoShape=true;node.reconnectShapes=[];applyShapeHints(state,node,command,true);}
         if(state.composition){
             const outputs=new Set(beforeOutputs.map(id=>mapping.get(id)||id)),pool=new Set([...state.nodes.flatMap(n=>n.outputs.map(p=>p.value)),...beforeOutputs,...outputs]);
             for(const id of pool){const previous=state.interface.outputs.get(id),enabled=outputs.has(id);if(previous!==enabled){node.reconnectInterface.push({value:id,previous,enabled});state.interface.outputs.set(id,enabled);}}

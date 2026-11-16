@@ -1,5 +1,5 @@
 export const TFLITE_EDIT_MESSAGE='實際模型編輯僅支援 TFLite；MLIR 可探索、搜尋、建立 pattern 與匯出局部模型。';
-export const MODEL_EDIT_ACTIONS=new Set(['editWorkspaceOpen','editWorkspaceExtend','editWorkspaceExport','editBuiltinCatalog','editDraftSave','editDraftRestore','modelEditTargets','modelEditInfo','modelEditValues','modelEditText','editModelOperation','editDeleteImpact','editDeleteInfer','editDeleteInferCancel']);
+export const MODEL_EDIT_ACTIONS=new Set(['editWorkspaceOpen','editWorkspaceExtend','editWorkspaceExport','editBuiltinCatalog','editDraftSave','editDraftRestore','modelEditTargets','modelEditInfo','modelEditValues','modelEditText','editModelOperation','editDeleteImpact','editDeleteInfer','editDeleteInferCancel','editWireInfer']);
 export const supportsModelEditing=format=>format==='tflite';
 // Check before dynamic imports, file fingerprinting, or any session mutation.
 export function assertModelEditAction(index,action,args){

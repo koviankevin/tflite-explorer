@@ -8,9 +8,9 @@ const valueId=v=>typeof v==='string'&&/^(?:t:\d+:-?\d+|m:\d+:\d+:\d+|a:\d+:\d+|n
 const keys=(v,list)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).every(k=>list.includes(k));
 function command(v){
     if(!id(v?.node))fail();
-    const fields={wire:['kind','node','slot','value'],clone:['kind','node','side'],template:['kind','node','template'],builtin:['kind','node','code','version','settings','inputCount','outputLike','inferOutputs'],random:['kind','node','slot','like','seed','distribution','min','max','mean','std','probability'],remove:['kind','node','boundary'],'delete-reconnect':['kind','node','replacements'],'delete-infer':['kind','node','algorithm','replacements','localShapes'],restore:['kind','node'],expose:['kind','node','enabled'],import:['kind','node','nodes','label'],interface:['kind','node','value','side','enabled']};
+    const fields={wire:['kind','node','slot','value'],'wire-infer':['kind','node','slot','value','algorithm','localShapes'],clone:['kind','node','side'],template:['kind','node','template'],builtin:['kind','node','code','version','settings','inputCount','outputLike','inferOutputs'],random:['kind','node','slot','like','seed','distribution','min','max','mean','std','probability'],remove:['kind','node','boundary'],'delete-reconnect':['kind','node','replacements'],'delete-infer':['kind','node','algorithm','replacements','localShapes'],restore:['kind','node'],expose:['kind','node','enabled'],import:['kind','node','nodes','label'],interface:['kind','node','value','side','enabled']};
     if(!Object.hasOwn(fields,v.kind)||!keys(v,fields[v.kind]))fail();
-    if(v.kind==='wire'&&(!integer(v.slot,1023)||!valueId(v.value))||v.kind==='clone'&&!['before','after'].includes(v.side)||v.kind==='template'&&!id(v.template)||v.kind==='remove'&&typeof v.boundary!=='boolean'||v.kind==='expose'&&typeof v.enabled!=='boolean')fail();
+    if(['wire','wire-infer'].includes(v.kind)&&(!integer(v.slot,1023)||!valueId(v.value))||v.kind==='clone'&&!['before','after'].includes(v.side)||v.kind==='template'&&!id(v.template)||v.kind==='remove'&&typeof v.boundary!=='boolean'||v.kind==='expose'&&typeof v.enabled!=='boolean')fail();
     if(v.kind==='builtin'&&(!integer(v.code,10000)||!integer(v.version,100)||v.version<1||!integer(v.inputCount,32)||!Array.isArray(v.outputLike)||v.outputLike.length>32||v.outputLike.some(x=>!valueId(x))||!v.settings||typeof v.settings!=='object'||Array.isArray(v.settings)||JSON.stringify(v.settings).length>16384))fail();
     if(v.kind==='builtin'&&v.inferOutputs!==undefined&&typeof v.inferOutputs!=='boolean')fail();
     if(v.kind==='random'){
@@ -20,11 +20,11 @@ function command(v){
     if(v.kind==='import'&&(!Array.isArray(v.nodes)||!v.nodes.length||v.nodes.length>32||v.nodes.some(n=>typeof n!=='string'||!/^op:\d+:\d+$/.test(n)||!id(n))||v.node!==v.nodes[0]||typeof v.label!=='string'||v.label.length>80))fail();
     if(v.kind==='interface'&&(!valueId(v.value)||!['inputs','outputs'].includes(v.side)||typeof v.enabled!=='boolean'))fail();
     if(['delete-reconnect','delete-infer'].includes(v.kind)&&(!Array.isArray(v.replacements)||v.replacements.length>1024||v.replacements.some(r=>!keys(r,['from','value'])||!valueId(r.from)||!valueId(r.value))||new Set(v.replacements.map(r=>r.from)).size!==v.replacements.length))fail();
-    if(v.kind==='delete-infer'&&(v.algorithm!=='tflite-static-v1'||!Array.isArray(v.localShapes)||v.localShapes.length>EDIT_LIMITS.ports||new Set(v.localShapes.map(p=>p?.value)).size!==v.localShapes.length||v.localShapes.some(p=>!keys(p,['value','shape'])||!valueId(p.value)||!Array.isArray(p.shape)||p.shape.length>128||p.shape.some(d=>!integer(d,2147483647)))))fail();
+    if(['delete-infer','wire-infer'].includes(v.kind)&&(v.algorithm!=='tflite-static-v1'||!Array.isArray(v.localShapes)||v.localShapes.length>EDIT_LIMITS.ports||new Set(v.localShapes.map(p=>p?.value)).size!==v.localShapes.length||v.localShapes.some(p=>!keys(p,['value','shape'])||!valueId(p.value)||!Array.isArray(p.shape)||p.shape.length>128||p.shape.some(d=>!integer(d,2147483647)))))fail();
     return {...v};
 }
 export function cleanEditSession(v){
-    if(!keys(v,['format','version','source','scope','history','view','options'])||v.format!=='model-lens-edit-draft'||![1,2,3,4,5].includes(v.version))fail();
+    if(!keys(v,['format','version','source','scope','history','view','options'])||v.format!=='model-lens-edit-draft'||![1,2,3,4,5,6].includes(v.version))fail();
     const s=v.source,p=v.scope,h=v.history,w=v.view,o=v.options;
     if(!keys(s,['name','bytes','format','algorithm','fingerprint'])||typeof s.name!=='string'||s.name.length>1024||!integer(s.bytes,Number.MAX_SAFE_INTEGER)||!['tflite','mlir'].includes(s.format)||s.algorithm!=='sha256-chunks-v1'||!/^[a-f0-9]{64}$/.test(s.fingerprint))fail();
     if(!keys(p,['nodes','selected','signature','composition'])||!Array.isArray(p.nodes)||!p.nodes.length||p.nodes.length>EDIT_LIMITS.originals||p.nodes.some(n=>!keys(n,['graph','node'])||!integer(n.graph)||!integer(n.node))||new Set(p.nodes.map(n=>`${n.graph}:${n.node}`)).size!==p.nodes.length||!Array.isArray(p.selected)||p.selected.length>64||p.selected.some(n=>!id(n)||!p.nodes.some(t=>n===`op:${t.graph}:${t.node}`))||!/^[a-f0-9]{64}$/.test(p.signature))fail();
@@ -36,6 +36,7 @@ export function cleanEditSession(v){
     if(!p.composition&&[...result.history.commands,...result.history.redo].some(c=>['import','interface'].includes(c.kind)))fail();
     if(v.version<3&&[...result.history.commands,...result.history.redo].some(c=>c.kind==='random'&&c.distribution!==undefined))fail();
     if(v.version<4&&[...result.history.commands,...result.history.redo].some(c=>c.kind==='delete-reconnect'))fail();
+    if(v.version<6&&[...result.history.commands,...result.history.redo].some(c=>c.kind==='wire-infer'))fail();
     if(v.version<5&&[...result.history.commands,...result.history.redo].some(c=>c.kind==='delete-infer'))fail();
     if(new TextEncoder().encode(JSON.stringify(result)).length>EDIT_DRAFT_LIMIT)fail();return result;
 }
@@ -48,7 +49,7 @@ export async function editScopeSignature(snapshot){const {format,prefix,nodes,va
 export async function createEditSession(file,snapshot,{history,view,options},fingerprint){
     const draft=modelEditDraft(snapshot,history.commands,history.redo);
     if(view.selected!==null&&!draft.state.nodes.some(n=>n.id===view.selected))throw Error('草稿選取的 OP 不存在。');
-    const commands=[...history.commands,...history.redo],version=commands.some(c=>c.kind==='delete-infer')?5:commands.some(c=>c.kind==='delete-reconnect')?4:commands.some(c=>c.kind==='random'&&c.distribution!==undefined)?3:snapshot.composition?2:1;
+    const commands=[...history.commands,...history.redo],version=commands.some(c=>c.kind==='wire-infer')?6:commands.some(c=>c.kind==='delete-infer')?5:commands.some(c=>c.kind==='delete-reconnect')?4:commands.some(c=>c.kind==='random'&&c.distribution!==undefined)?3:snapshot.composition?2:1;
     return cleanEditSession({format:'model-lens-edit-draft',version,source:{name:file.name,bytes:file.size,format:snapshot.format,algorithm:'sha256-chunks-v1',fingerprint},scope:{nodes:snapshot.nodes.map(n=>n.source),selected:snapshot.selected,signature:await editScopeSignature(snapshot),...(snapshot.composition?{composition:true}:{})},history,view,options});
 }
 export async function restoreEditSession(index,file,document,fingerprint){
@@ -57,6 +58,6 @@ export async function restoreEditSession(index,file,document,fingerprint){
     const {editWorkspaceSnapshot}=await import('./model-edit-workspace.js'),snapshot=editWorkspaceSnapshot(index,{targets:saved.scope.nodes,includeNeighbours:false,composition:saved.scope.composition===true});snapshot.selected=saved.scope.selected;
     if(await editScopeSignature(snapshot)!==saved.scope.signature)throw Error('編輯範圍的解析方式或 dialect 版本不同，未套用變更。');
     const draft=modelEditDraft(snapshot,saved.history.commands,saved.history.redo);if(saved.view.selected!==null&&!draft.state.nodes.some(n=>n.id===saved.view.selected))throw Error('草稿選取的 OP 不存在。');
-    if(draft.state.nodes.some(n=>n.removed&&n.autoShape)){const {inferDeletedGraph}=await import('./tflite-delete-inference.js');await inferDeletedGraph(index,draft.state,async(o,n)=>new Uint8Array(await file.slice(o,o+n).arrayBuffer()),{verifyLocal:true});}
+    if(draft.state.nodes.some(n=>n.removed&&n.autoShape||n.autoWireShape)){const {inferDeletedGraph}=await import('./tflite-delete-inference.js');await inferDeletedGraph(index,draft.state,async(o,n)=>new Uint8Array(await file.slice(o,o+n).arrayBuffer()),{verifyLocal:true});}
     return {snapshot,saved};
 }

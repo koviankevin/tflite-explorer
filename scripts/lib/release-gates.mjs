@@ -1,3 +1,5 @@
+import {wireShapeRequired} from '../../test/browser/release-features.mjs';
+import {WIRE_SHAPE_CHECK} from '../../test/browser/wire-shape-flow.mjs';
 import {deleteShapeRequired} from '../../test/browser/release-features.mjs';
 import {DELETE_SHAPE_CHECK} from '../../test/browser/delete-shape-flow.mjs';
 import {createHash} from 'node:crypto';
@@ -169,6 +171,11 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
             ['fc','custom'].every((name,i)=>proof.cases[i+2].name===name&&proof.cases[i+2].blocked===true&&proof.cases[i+2].unchanged===true&&typeof proof.cases[i+2].reason==='string'&&proof.cases[i+2].reason.length>0)&&
             proof.cases[4].name==='composition'&&proof.cases[4].automatic===true&&proof.cases[4].reopenedOperators===4&&JSON.stringify(proof.cases[4].outputShape)==='[2,3]'&&
             proof.layout?.left>=0&&proof.layout.right<=proof.layout.width&&proof.layout.top>=0&&proof.layout.bottom<=proof.layout.height&&proof.layout.documentWidth<=proof.layout.width,'missing deletion shape inference proof.');
+    }
+    if(wireShapeRequired(release.version)){
+        required.push(WIRE_SHAPE_CHECK);const proof=report.wireShape;
+        require(proof?.status==='passed'&&proof.modelWorkers===6&&proof.runtimeWorkers===0&&proof.drag===true&&proof.click===true&&proof.cancelPreserves===true&&proof.draftVersion===6&&proof.reopenedOperators===5&&proof.cameraPreserved===true&&JSON.stringify(proof.blocked)==='["fc","custom","dtype"]'&&
+            proof.layout?.left>=0&&proof.layout.right<=proof.layout.width&&proof.layout.top>=0&&proof.layout.bottom<=proof.layout.height&&proof.layout.documentWidth<=proof.layout.width,'missing wire shape inference proof.');
     }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
