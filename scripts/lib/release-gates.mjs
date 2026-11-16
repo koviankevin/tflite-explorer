@@ -1,4 +1,6 @@
 import {searchPatternRevealRequired} from '../../test/browser/release-features.mjs';
+import {axisTransformValidationRequired} from '../../test/browser/release-features.mjs';
+import {AXIS_TRANSFORM_CHECK} from '../../test/browser/axis-transform-flow.mjs';
 import {SEARCH_PATTERN_REVEAL_CHECK} from '../../test/browser/search-pattern-reveal-flow.mjs';
 import {wireShapeRequired} from '../../test/browser/release-features.mjs';
 import {WIRE_SHAPE_CHECK} from '../../test/browser/wire-shape-flow.mjs';
@@ -183,6 +185,12 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
         required.push(SEARCH_PATTERN_REVEAL_CHECK);const proof=report.searchPatternReveal;
         require(proof?.status==='passed'&&proof.modelWorkers===3&&proof.downloads===0&&proof.cases?.length===3&&
             ['from-layers','compressed-settings','cross-block'].every((name,i)=>{const c=proof.cases[i],l=c?.layout;return c?.name===name&&c.opened===true&&c.focused===true&&c.visible===true&&c.modelUnchanged===true&&c.notSaved===true&&c.noAutomaticSearch===true&&c.matches===1&&l?.top>=l.paneTop&&l.bottom<=l.paneBottom&&l.left>=l.paneLeft&&l.right<=l.paneRight&&l.documentWidth<=l.viewportWidth;}),'missing search pattern reveal proof.');
+    }
+    if(axisTransformValidationRequired(release.version)){
+        required.push(AXIS_TRANSFORM_CHECK);const proof=report.axisTransform;
+        require(proof?.status==='passed'&&proof.modelWorkers===9&&proof.runtimeWorkers===0&&proof.cases?.length===6&&
+            ['transpose-matrix','expand-float','expand-count'].every((name,i)=>{const c=proof.cases[i];return c?.name===name&&c.status==='rejected'&&c.downloads===0&&typeof c.reason==='string'&&c.reason.length>0;})&&
+            ['transpose-signed','expand-int64','expand-dynamic'].every((name,i)=>{const c=proof.cases[i+3];return c?.name===name&&c.status===(i===2?'not-run':'passed')&&c.operators===2&&c.reopened===true&&c.byteComparison===true&&c.automaticRuntime===false;}),'missing axis transform metadata proof.');
     }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&

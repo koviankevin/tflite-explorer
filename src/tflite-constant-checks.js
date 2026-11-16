@@ -8,6 +8,7 @@ import {SPATIAL_OPERATORS,checkSpatialTransform} from './tflite-spatial-checks.j
 import {STATIC_TRANSFORM_OPERATORS,checkStaticTransform} from './tflite-static-transform.js';
 import {checkReshapeMetadata} from './tflite-reshape-checks.js';
 import {BROADCAST_OPERATORS,checkBroadcastMetadata} from './tflite-broadcast-checks.js';
+import {checkAxisTransformMetadata} from './tflite-axis-transform-checks.js';
 // Bounded reads of actual serialized candidate bytes, never all weights.
 export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}={}){
     const g=model.subgraphs[graphId],produced=new Set(g.operators.flatMap(o=>Array.from(o.outputs))),inputs=new Set(g.inputs),cache=new Map(),reasons=new Map(),operators=[];let bytesRead=0,inspectedBytes=0;
@@ -91,7 +92,7 @@ export function validateTfliteConstants(model,graphId,readAt,{budget=4*1024**2}=
             }catch(error){throw Error(`Subgraph #${graphId} · OP #${node} ${name} · inputs tensor [${record.inputs.join(', ')}]／outputs tensor [${record.outputs.join(', ')}]：${error.message}`,{cause:error});}
             continue;
         }
-        if(name==='TRANSPOSE'&&g.tensors[id]&&g.tensors[id].type!==2)fail('permutation tensor 必須是 int32。');
+        try{checkAxisTransformMetadata(name,Array.from(op.inputs,id=>g.tensors[id]),Array.from(op.outputs,id=>g.tensors[id]));}catch(error){fail(error.message);}
         const a=shape(g.tensors[op.inputs[0]]),out=shape(g.tensors[op.outputs[0]]);
         if(!a||!out){record.reason='input／output 是動態或未知 shape，未推測實際尺寸。';continue;}
         const v=values(id);

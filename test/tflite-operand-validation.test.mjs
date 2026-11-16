@@ -119,6 +119,10 @@ test('PAD integer encodings must not make unrelated operand dtypes look verified
             assert.throws(()=>validateTfliteConstants(c.model,0,()=>assert.fail('Invalid GATHER dtype must precede reads.')),/GATHER.*indices dtype/);
             continue;
         }
+        if(name==='EXPAND_DIMS'){
+            assert.throws(()=>validateTfliteConstants(c.model,0,()=>assert.fail('Invalid EXPAND_DIMS dtype must precede reads.')),/EXPAND_DIMS.*axis.*int32.*int64/);
+            continue;
+        }
         const proof=validateTfliteConstants(c.model,0,c.read);
         assert.equal(proof.checked,0,`${name}: unsupported dtype must not pass because PAD can read it`);
         assert.equal(proof.operators[0].status,'not-run');

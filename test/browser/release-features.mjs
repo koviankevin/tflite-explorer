@@ -121,3 +121,9 @@ export function searchPatternRevealRequired(version){
     const [major,minor,patch]=version.split('.').map(Number);
     return major>1||major===1&&(minor>12||minor===12&&patch>=1);
 }
+
+export function axisTransformValidationRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor,patch]=version.match(/^\d+\.\d+\.\d+/)[0].split('.').map(Number);
+    return major>1||major===1&&(minor>12||minor===12&&patch>=2);
+}

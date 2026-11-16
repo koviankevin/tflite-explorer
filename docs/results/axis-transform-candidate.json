@@ -1,0 +1,177 @@
+{
+  "format": "model-lens-axis-transform-candidate",
+  "at": "2026-11-16T14:32:43.692Z",
+  "publication": "not-deployed",
+  "sourceBase": "ee8bc4c8da728e14ce49c559c4e8203ebb5a742e",
+  "workingTree": true,
+  "appBlobs": {
+    "src/tflite-axis-transform-checks.js": "aecc6bea6391fb3b8c11b83c9994f6e2450f12e4",
+    "src/tflite-semantic-checks.js": "5121936278d48831c6a1b015124215fe79910a7b",
+    "src/tflite-constant-checks.js": "af3dd53122d3ae887354cc06ba9ec9df5f690459"
+  },
+  "builtFiles": {
+    "src/tflite-axis-transform-checks.js": "0d15f92003b07c9bc3ea8d4204f4700dedfdf32fa86b4e28c13173c89f23cd38",
+    "src/tflite-semantic-checks.js": "a3f0f11a8e165d9d7c8bedc1922dc35495db4a00982e680dfbdf5301d68351e8",
+    "src/tflite-constant-checks.js": "b62a0907bc8aad7c19698b2e309ff842cc2f60596bd911dc8543e5a37e73d793"
+  },
+  "sourceTransformation": "canonical LF and build-specific module query stamping",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.2",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "ee8bc4c8da728e14ce49c559c4e8203ebb5a742e",
+      "tree": "7cf20324bd022ff02e6ab2469e249540c29e69d2",
+      "committedAt": "2026-11-16T22:17:31+08:00",
+      "dirty": true
+    },
+    "buildId": "b7500661fcfb95c2"
+  },
+  "coreManifestSHA256": "aa58407492f5306cd1c832842fa2e41db6375e9d5a467dc13117649aa0c83e11",
+  "node": {
+    "tests": 104,
+    "passed": true,
+    "reportSHA256": "afd5b0f1d7092f6da35ba753abea630b52608aeb492823dd26895f7db531787a"
+  },
+  "gateSelection": {
+    "tests": 28,
+    "passed": true,
+    "reportSHA256": "5e178b02ef69c626535b0a093ce8e2effeab11b8f17c2c21793cd34c025a17d1"
+  },
+  "red": {
+    "tests": 5,
+    "failures": 5,
+    "reportSHA256": "e26e0681a37a50ccfe8066d7ea34ff894b43e7ca704dcbba85f7516a5b64a839"
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "transpose-matrix",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：TRANSPOSE permutation tensor 必須是一維向量。",
+              "downloads": 0
+            },
+            {
+              "name": "expand-float",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：EXPAND_DIMS axis tensor 必須是 int32 或 int64。",
+              "downloads": 0
+            },
+            {
+              "name": "expand-count",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：EXPAND_DIMS axis tensor 必須只有 1 個元素。",
+              "downloads": 0
+            },
+            {
+              "name": "transpose-signed",
+              "status": "passed",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            },
+            {
+              "name": "expand-int64",
+              "status": "passed",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            },
+            {
+              "name": "expand-dynamic",
+              "status": "not-run",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 9,
+          "runtimeWorkers": 0
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "transpose-matrix",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：TRANSPOSE permutation tensor 必須是一維向量。",
+              "downloads": 0
+            },
+            {
+              "name": "expand-float",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：EXPAND_DIMS axis tensor 必須是 int32 或 int64。",
+              "downloads": 0
+            },
+            {
+              "name": "expand-count",
+              "status": "rejected",
+              "reason": "Subgraph #0 · OP #0（來源 OP #0）· inputs [0, 1]／outputs [2]：EXPAND_DIMS axis tensor 必須只有 1 個元素。",
+              "downloads": 0
+            },
+            {
+              "name": "transpose-signed",
+              "status": "passed",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            },
+            {
+              "name": "expand-int64",
+              "status": "passed",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            },
+            {
+              "name": "expand-dynamic",
+              "status": "not-run",
+              "operators": 2,
+              "reopened": true,
+              "byteComparison": true,
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 9,
+          "runtimeWorkers": 0
+        },
+        "closed": true
+      }
+    ]
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 640
+  },
+  "syntheticModelsOnly": true,
+  "nativeReportSHA256": "c0c2a9d87094139c5db1a0e20ca420965b41387435c232ad41611fad08ebc57a",
+  "screenshot": "axis-transform-candidate-edge.png",
+  "scope": "Metadata validation only; no automatic interpreter, source model mutation or deployment",
+  "prFailure": {
+    "run": 43887108184,
+    "conclusion": "failure",
+    "reason": "Existing EXPAND_DIMS dtype test expected not-run instead of new metadata rejection",
+    "originalLogSHA256": "df6a905d2047828a93819b0fef454e3bba044728969b9909051d73e1da5b2e09",
+    "correction": "Preserve dtype isolation assertion and require rejection before payload reads; no application change"
+  }
+}
