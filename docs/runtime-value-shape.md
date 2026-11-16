@@ -26,6 +26,14 @@ Interpreter 使用官方 `@tensorflow/tfjs-tflite@0.0.1-alpha.10` 的 compatibil
 
 標準 Interpreter 是另一個固定版本，並不保證支援所有新 kernel／operator version。其公開 IO binding 僅接受 float32、int32、uint8、bool、int16、int8、float64、uint32；值相依模型的其他 IO dtype 先標未能驗證，不能退回已知有問題的 CompiledModel。內部常數 int64 axis 與既有模型路徑不因此改寫。未知 shape_signature、custom kernel、超額模型等既有未驗證界線保留。
 
-此修正只針對已重現的三種值相依 transform 與對照，不代表任意 kernel 組合、所有控制流程路徑、數值精度或與編輯前模型等價都已驗證。正式站、固定 Release 與完整來源綁定主分支關卡仍待完成；正式版本以 README 為準。
+此修正只針對已重現的三種值相依 transform 與對照，不代表任意 kernel 組合、所有控制流程路徑、數值精度或與編輯前模型等價都已驗證。正式站與固定 Release 仍待完成；正式版本以 README 為準。
+
+## 主分支關卡
+
+[PR #297](https://github.com/koviankevin/tflite-explorer/pull/297) 已合併至 `ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7`，完整 tree 與 PR 實際受測 merge tree 相同。Node 1,157 項通過、35 項既有環境略過、零失敗；沒有重跑相同內容。
+
+四項 main 手動關卡的官方 artifact digest、ZIP CRC、原始報告、政策及來源 fingerprint 都已核對，乾淨來源重建與逐檔 manifest 相同，見[完整收據](results/value-shape-v1.12.3-main-gates.json)：九筆核心效能、83 項發布契約、53 項隔離網站操作及 1,349,965,216 bytes／21,005 OP 實體 TFLite 的八輪生命周期全部通過。六輪正式量測的 RSS slope 為 2,180,944.46 bytes／cycle、drift 為 13,049,856 bytes；保留原上限與不強制 GC 的規則，瀏覽器正常關閉，觀察到的程序全部回收。這是該 Hosted 大模型流程的量測，不能延伸成 Windows 或標準 Interpreter 任意模型的 RSS 保證。
+
+網站報告包含八個已知模型的實際數值 proof；全部 285 個觀察到的 Workers 關閉，瀏覽器程序清理完成。這些結果提供待發布版本的來源證據，不表示正式網站已切換。標準 Interpreter 缺少較新 kernel 時，可能顯示載入失敗及通用 INVALID_ARGUMENT，原始缺少 opcode／version 的診斷仍保留；後續可再改善其分類，沒有 Invoke 或錯誤的通過結果。
 
 參考來源：[官方 npm 套件](https://www.npmjs.com/package/@tensorflow/tfjs-tflite)、[TFLite runner 型別](https://github.com/tensorflow/tfjs/blob/cc8d9d72d2244b50a7f5127900404709595e65fd/tfjs-tflite/src/tflite_model.ts)、[CompiledModel 原始碼](https://github.com/google-ai-edge/LiteRT/blob/b53c5cb860ff58cc918e9e7aa73c9b192dc9cb5f/litert/runtime/compiled_model.cc)、[Emscripten DYNAMIC_EXECUTION／EMBIND_AOT](https://emscripten.org/docs/tools_reference/settings_reference.html#dynamic-execution)。
