@@ -1,0 +1,1156 @@
+{
+  "format": "model-lens-value-shape-delivery",
+  "status": "passed-formal-site-and-immutable-download-review",
+  "at": "2026-11-16T17:15:08.549Z",
+  "release": {
+    "schemaVersion": 1,
+    "version": "1.12.3",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e",
+      "tree": "8d2deb2bb6954a9e5c126ee3324b2e3d0eb28684",
+      "committedAt": "2026-11-17T00:54:04+08:00",
+      "dirty": false
+    },
+    "buildId": "c2e081e752506baa"
+  },
+  "prepareRun": 43912744136,
+  "run": {
+    "id": 43913435017,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43913435017",
+    "attempt": 1
+  },
+  "releaseId": 447343499,
+  "releaseURL": "https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.3",
+  "publishedAt": "2026-11-16T17:09:44Z",
+  "tagSource": "8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e",
+  "latest": "v1.12.3",
+  "siteId": "1d92908c6356a284450bce5bafd7e9ecac8b2ff98ecd23f4c3a5a4ea283626ec",
+  "siteManifestSHA256": "e129e43799d2aae4290b724e8038612b9ae0ce8eee34f3fb4417187885791e60",
+  "coreFiles": 352,
+  "siteFiles": 1538,
+  "assets": [
+    {
+      "name": "model-lens-public-1.12.3-c2e081e752506baa.zip",
+      "bytes": 45220173,
+      "sha256": "426c996e73ca624fc39b1017e9c365b1d096b65c91e24c4c5b0af1840f80a44e",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.3/model-lens-public-1.12.3-c2e081e752506baa.zip"
+    },
+    {
+      "name": "model-lens-public-1.12.3-c2e081e752506baa.zip.sha256",
+      "bytes": 112,
+      "sha256": "3c6a070b6fe39c1e13c93e8a9a5d6e166ed6b409c4b4299ada15289929510eaa",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.3/model-lens-public-1.12.3-c2e081e752506baa.zip.sha256"
+    },
+    {
+      "name": "release-gates.json",
+      "bytes": 227341,
+      "sha256": "553846f963399f73080d261c313a40473d6449d492ee4a5e7a800726e603c0d6",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.3/release-gates.json"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 57161,
+      "sha256": "5d8ce1d7db8e69fd2021088acb802d394850d0be4186237a2d53ae33ae039a28",
+      "url": "https://github.com/koviankevin/tflite-explorer/releases/download/v1.12.3/release-manifest.json"
+    }
+  ],
+  "deployment": {
+    "id": 7830648277,
+    "source": "8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e",
+    "status": "success"
+  },
+  "gates": [
+    {
+      "kind": "core",
+      "runId": 43907901097,
+      "reused": true
+    },
+    {
+      "kind": "browser",
+      "runId": 43907918186,
+      "reused": true
+    },
+    {
+      "kind": "contract",
+      "runId": 43907952937,
+      "reused": true
+    },
+    {
+      "kind": "site",
+      "runId": 43907970968,
+      "reused": true
+    }
+  ],
+  "mainGateReviews": {
+    "core": {
+      "status": "passed",
+      "run": 43907901097,
+      "source": "ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7",
+      "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+      "artifactId": 14245933437,
+      "digest": "sha256:7d8cd566ffa0ad4973632360b88eb0fe68b6824eae21bd90587d247992b6c3d6",
+      "reportSHA256": "f8651a9434db647053dd1515e860e16d3bd8b2cf6857f419c05a25fbc1f42304",
+      "scopeFingerprint": "6100b41adc14447e5884aca30734a3960a09b488f6023649129a2f1d250d340d",
+      "scopeFiles": 91
+    },
+    "contract": {
+      "status": "passed",
+      "run": 43907952937,
+      "source": "ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7",
+      "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+      "artifactId": 14245968960,
+      "digest": "sha256:45e16100421500a4cfcdc4d1e2549968efbadde6f433144238e57c3a20da5abc",
+      "reportSHA256": "f7a16c1f57d0dbcc6e7056314f81d7c4b06ae5adf1bd9cea8b1de6da2fa81c8c",
+      "scopeFingerprint": "189cc81c97475914f5b50bf7ecb7ba7e975a118730a002181f51bdb30e971bdf",
+      "scopeFiles": 748
+    },
+    "site": {
+      "status": "passed",
+      "run": 43907970968,
+      "source": "ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7",
+      "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+      "artifactId": 14246732491,
+      "digest": "sha256:95193fab52fdee6a8c23f0eda89eaec680f540eb6567ed035de781f076ba2548",
+      "reportSHA256": "054db14cf0b1eb4e5106f8b421e25d31cadddaec13bf8812d4c4e269cc740723",
+      "scopeFingerprint": "f921f5c474f45564cd4a823b55bca15f7c6672656f9a8026c3e24a9b503d4078",
+      "scopeFiles": 437,
+      "operations": {
+        "checks": 53,
+        "buildId": "ed956cf7fb7b97a9",
+        "siteId": "d52fbdfa6f24ea0c5842fd1343326f8a22d13653a8da5438a60d0d871340f11b",
+        "artifactId": 14247136744,
+        "digest": "sha256:987ed8150775b47b2e6a88eebcb9e227fb52bc5c0a61703aa0b81e02bb8f2a27",
+        "reportSHA256": "f1e64155097d651ce781addea0e1b98420cea85e4a375b6b5988369d73e1f1a5"
+      }
+    },
+    "browser": {
+      "status": "passed",
+      "run": 43907918186,
+      "source": "ff6dbf3b3691d5fcd33da24d8d9b6f32fed603b7",
+      "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+      "artifactId": 14246918627,
+      "digest": "sha256:9083676c8a5dbd37f63b3e9320b2acd930ee1bc4c041faf45916aafa01bbbb42",
+      "reportSHA256": "44b9ccb4380ca5e2ae774c42ae069927dbb38af8ff729be77d601d46a388daa1",
+      "scopeFingerprint": "311e5822787d4c78bcd42ff894c77af3c347ce25ed2dd4cd2c750f9b9ce86ad1",
+      "scopeFiles": 374
+    }
+  },
+  "prNodeVerification": {
+    "status": "passed",
+    "run": 43906872771,
+    "url": "https://github.com/koviankevin/tflite-explorer/actions/runs/43906872771",
+    "head": "29f23fbf9e14d7b7e1997e0148a88164ca6808e6",
+    "actualTestedMergeCommit": "2a6372dda14d2f9e9af460c93a6c952c0ae01201",
+    "tree": "e9b9abcdf8249ccb4bfbf7bd253c364ce122d02b",
+    "counts": {
+      "tests": 1192,
+      "pass": 1157,
+      "fail": 0,
+      "skipped": 35,
+      "cancelled": 0
+    },
+    "sourceEquivalent": true
+  },
+  "evidencePRReview": {
+    "status": "passed",
+    "pr": 298,
+    "head": "8d9029d52fdeae83c41476e023b9958c18e372cb",
+    "contractStatus": "not_required",
+    "contractFingerprint": "189cc81c97475914f5b50bf7ecb7ba7e975a118730a002181f51bdb30e971bdf",
+    "artifactId": 14248276840,
+    "digest": "sha256:f3ba9a6b4a9e962007e717926ca1518b8ff1c57cc88d8e18219a818aa2ab874c",
+    "reportSHA256": "9718fd0f88f595a0bc5e2d163d086a3b33cc3793e9df76a5c175f62bef1ad563",
+    "fullNodeAndBuild": "not required; original successful source-equivalent results retained"
+  },
+  "formal": {
+    "status": "passed",
+    "at": "2026-11-16T17:12:13.331Z",
+    "run": 43913435017,
+    "attempt": 1,
+    "artifactId": 14248898937,
+    "digest": "sha256:060dc0556b2a14556e2c02ceb8b3975149d24b5954591e17de022234173a26b9",
+    "formalHTTP": {
+      "files": 1538,
+      "sha256": "15077d0a82a730875889d46e7214eb6426d812ca75924092a370555e60da5e25",
+      "retries": 0
+    },
+    "formalBrowser": {
+      "checks": 53,
+      "modelWorkers": 199,
+      "allWorkers": 287,
+      "allClosed": true,
+      "processesReaped": true,
+      "numericalCases": 8,
+      "sha256": "3723b178e51ca3fa58c501e2a9202c030f5bf109805f1226c976726290edf21f"
+    },
+    "nativeWindows": {
+      "casesPerBrowser": 8,
+      "browsers": [
+        "chrome",
+        "msedge"
+      ],
+      "allWorkersClosed": true,
+      "wasmDownloadsPerBrowser": 2,
+      "chromeReusedAfterReaderCorrection": true,
+      "sha256": "0fc352043f11c88cedc19f93801e03e4facc8262a8b99134e8313591946a1087"
+    }
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "at": "2026-11-16T17:06:12.970Z",
+    "build": "c2e081e752506baa",
+    "siteId": "1d92908c6356a284450bce5bafd7e9ecac8b2ff98ecd23f4c3a5a4ea283626ec",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/netron/worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          }
+        ],
+        "errors": [],
+        "assets": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/tflite-interpreter/0.0.1-alpha.10/tflite_web_api_cc.wasm",
+            "method": "GET"
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+            "method": "GET"
+          }
+        ],
+        "blockedEnvironment": [
+          {
+            "origin": "https://gc.kis.v2.scr.kaspersky-labs.com",
+            "method": "GET",
+            "type": "script"
+          },
+          {
+            "origin": "https://gc.kis.v2.scr.kaspersky-labs.com",
+            "method": "GET",
+            "type": "stylesheet"
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "TRANSPOSE-input",
+              "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+              "zipSHA256": "aef6eb3000c0f71e79a628a39752038317ffd409eb872186080556df0190c28b",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "TRANSPOSE-constant",
+              "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+              "zipSHA256": "b090f748171e548b5732730a575d2c95120d871994907c3e7f80efbb6b4f7b96",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-input",
+              "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+              "zipSHA256": "2db6c0bf3947838a6866d1691baf05eecba4c9539b2121229d61f7c95fff8224",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-constant",
+              "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+              "zipSHA256": "6ff55881b9cd54408941892bc6e987c3615bcb24b236c8405ef99da5007ca885",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-input",
+              "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+              "zipSHA256": "ac491ea60ae8cb5608fcb2c04869ad1f45c0f6c7c25495c5717f6fe90af37faa",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-constant",
+              "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+              "zipSHA256": "23db697d81304d173ab15ae0a717641fe416dbf19a6d2de7c592e187aaa2936f",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "GATHER-integer-input-control",
+              "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+              "zipSHA256": "437ddc16eb40b158d21ff155ab2abda472ce1a175df10bdd880bca53a2b4ee9e",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                3,
+                1
+              ],
+              "output": [
+                3,
+                1
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "ADD-integer-input-control",
+              "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+              "zipSHA256": "568e35b93d7b80b845fc4c3bfbd0c21b83613078c247baa12f1688e8d92c042c",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                11,
+                22
+              ],
+              "output": [
+                11,
+                22
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 8,
+          "runtimeWorkers": 8,
+          "downloads": 8
+        },
+        "closed": true,
+        "reused": {
+          "file": "build/qa/value-shape-1123-live-desktop/report.json",
+          "sha256": "b7b47db36906a678ea1ca3bdea586d31aff6b6bf1007f2c54bc5eb13821f716c",
+          "originalOverallStatus": "failed",
+          "reason": "All eight actual Chrome numerical/IO/cache/closure checks passed; only the outer known-environment resource-type assertion rejected the blocked AV stylesheet. Revalidated preserved report and all downloaded ZIP hashes without rerunning Chrome."
+        }
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "workers": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/netron/worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/model-worker.js?v=c2e081e752506baa",
+            "closed": true
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/src/tflite-runtime-worker.js?v=c2e081e752506baa",
+            "closed": true
+          }
+        ],
+        "errors": [],
+        "assets": [
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/tflite-interpreter/0.0.1-alpha.10/tflite_web_api_cc.wasm",
+            "method": "GET"
+          },
+          {
+            "url": "https://koviankevin.github.io/tflite-explorer/versions/c2e081e752506baa/vendor/litert/2.6.0/litert_wasm_compat_internal.wasm",
+            "method": "GET"
+          }
+        ],
+        "blockedEnvironment": [
+          {
+            "origin": "https://me.kis.v2.scr.kaspersky-labs.com",
+            "method": "GET",
+            "type": "script"
+          },
+          {
+            "origin": "https://me.kis.v2.scr.kaspersky-labs.com",
+            "method": "GET",
+            "type": "stylesheet"
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "TRANSPOSE-input",
+              "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+              "zipSHA256": "bc0617e90322b3869b1adac72667d57ec013d20770d31319ddbbbaaaa8487a27",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "TRANSPOSE-constant",
+              "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+              "zipSHA256": "cfaaa22449dc6744f62cec7360874002d2e089a8351d85c53ee77055269642a7",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-input",
+              "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+              "zipSHA256": "66b06073f0cc2953afc14335f0f2c9e459b8501ff0a84bcdf966a1726c4a20f4",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "EXPAND_DIMS-constant",
+              "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+              "zipSHA256": "fae445a62ae9e7117c5c6ce10503a0d378b41197df47d489342ac617e7500e42",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                2,
+                1,
+                3
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-input",
+              "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+              "zipSHA256": "beca0b3da75545caefd1e603fe4060dcba25329389d542afa20c54ca25b5dce4",
+              "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "RESHAPE-constant",
+              "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+              "zipSHA256": "55d54a9307ea62c2e8a2ef0e12858bbd4166f884bd5762a904dd360c4f2e6197",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "output": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "outputShape": [
+                3,
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "GATHER-integer-input-control",
+              "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+              "zipSHA256": "167634e9149592ce1897d5f5bcf0893fb57455a220822c6cad680b7774bbba70",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                3,
+                1
+              ],
+              "output": [
+                3,
+                1
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            },
+            {
+              "name": "ADD-integer-input-control",
+              "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+              "zipSHA256": "748ec762248d8b70c5e7118b33bed45fb2d4fd34a6aff8bf91aa95182c790aff",
+              "engine": "LiteRT.js 2.6.0 / CPU WASM",
+              "status": "passed",
+              "inputsMatch": true,
+              "numericMatches": true,
+              "expected": [
+                11,
+                22
+              ],
+              "output": [
+                11,
+                22
+              ],
+              "outputShape": [
+                2
+              ],
+              "automaticRuntime": false
+            }
+          ],
+          "modelWorkers": 8,
+          "runtimeWorkers": 8,
+          "downloads": 8
+        },
+        "closed": true
+      }
+    ],
+    "syntheticModelsOnly": true,
+    "viewport": {
+      "width": 1280,
+      "height": 640
+    },
+    "fontSize": 32
+  },
+  "nativeOriginal": {
+    "file": "value-shape-v1.12.3-native-initial.json",
+    "sha256": "b7b47db36906a678ea1ca3bdea586d31aff6b6bf1007f2c54bc5eb13821f716c",
+    "status": "preserved-original-environment-resource-type-failure",
+    "explanation": "Eight actual Chrome numeric/IO scenarios passed, with both code-cache downloads and all 17 Workers closed. The outer checker rejected the blocked AV stylesheet. Corrected the metadata reader, revalidated original ZIP hashes, reused Chrome and separately completed Edge; no application or CSP changes."
+  },
+  "originalLiveArtifact": {
+    "file": "value-shape-v1.12.3-live-verification.zip",
+    "sha256": "060dc0556b2a14556e2c02ceb8b3975149d24b5954591e17de022234173a26b9",
+    "providerDigest": "sha256:060dc0556b2a14556e2c02ceb8b3975149d24b5954591e17de022234173a26b9"
+  },
+  "physicalLifecycle": {
+    "status": "passed",
+    "bytes": 1349965216,
+    "operators": 21005,
+    "cycles": 8,
+    "evaluation": {
+      "status": "passed",
+      "issues": [],
+      "summary": {
+        "measuredCycles": 6,
+        "rssSlopeBytesPerCycle": 2180944.4571428574,
+        "rssDriftBytes": 13049856,
+        "mainHeapDriftBytes": 160980,
+        "sampledPeakRssBytes": 1085108224,
+        "sampledPeakGrowthBytes": 575131648
+      }
+    },
+    "browserClosed": true,
+    "processesReaped": true
+  },
+  "numericalScope": {
+    "status": "passed",
+    "cases": [
+      {
+        "name": "TRANSPOSE-input",
+        "modelSHA256": "39a925781e302a0305208c7c8ee29c69184edc4efc872a7a13260793957ba3ba",
+        "zipSHA256": "946e17fd5c807cc72f9fcd13a048d1a52e0a7f6a69723061a0b6eb2718f2bfaf",
+        "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "output": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "outputShape": [
+          3,
+          2
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "TRANSPOSE-constant",
+        "modelSHA256": "c99def9a4ffb55499bedfcb402fb1d62d5879074a4ecbb052b3c9677cec227a3",
+        "zipSHA256": "f18f20df1019e24cec37cdea81a289da5102aece916bbc5484235083ab25b916",
+        "engine": "LiteRT.js 2.6.0 / CPU WASM",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "output": [
+          1,
+          4,
+          2,
+          5,
+          3,
+          6
+        ],
+        "outputShape": [
+          3,
+          2
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "EXPAND_DIMS-input",
+        "modelSHA256": "d893f4e3e905180668291841b28583767c579f1c88dbc63419e08beb9258e603",
+        "zipSHA256": "9c62ceab9186f77cdf763e90e0ae30abc95808c3d8f475ea6c1958ae63e1d660",
+        "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "outputShape": [
+          2,
+          1,
+          3
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "EXPAND_DIMS-constant",
+        "modelSHA256": "b43e3da21000435f15c694967a26025412934174fd901a3ad2b189b89f49d0b7",
+        "zipSHA256": "eaa923e3a3ecb21dc43e46c70ba7e5b0202b5137d43dafea5f6294a9f694a335",
+        "engine": "LiteRT.js 2.6.0 / CPU WASM",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "outputShape": [
+          2,
+          1,
+          3
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "RESHAPE-input",
+        "modelSHA256": "54102148da445460369f73afee102772a1874edb3e5a221225b0882d243ff76b",
+        "zipSHA256": "8b0c821036664964ba1089e97eef0f641352cf0e23e7b5ff9cc14105d0d283d5",
+        "engine": "TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "outputShape": [
+          3,
+          2
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "RESHAPE-constant",
+        "modelSHA256": "cde597890ec340cb9d7e0b27ddf54a1e90d289c8df80a9439493a6b431afae71",
+        "zipSHA256": "741ba6af4c7648fcde8f46eb8d09a828d09ce41036895a5fe6a634656899d6c5",
+        "engine": "LiteRT.js 2.6.0 / CPU WASM",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "outputShape": [
+          3,
+          2
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "GATHER-integer-input-control",
+        "modelSHA256": "374697f6d4b29a7fd50bd5b925e49e8fb27406868865151c5b398303055ae22d",
+        "zipSHA256": "eb1829d53fb3afe97ee375382be9a716448f1e3a0e9ba558552dcad90373027f",
+        "engine": "LiteRT.js 2.6.0 / CPU WASM",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          3,
+          1
+        ],
+        "output": [
+          3,
+          1
+        ],
+        "outputShape": [
+          2
+        ],
+        "automaticRuntime": false
+      },
+      {
+        "name": "ADD-integer-input-control",
+        "modelSHA256": "7273f0d9d3e6376c3f2c400e65bc9655109ed665fe2e7da600d0c19cef01834b",
+        "zipSHA256": "da835853b59139ccb8351c7f680d4d57c5be15fbe5ece80a03b52fbeff68a009",
+        "engine": "LiteRT.js 2.6.0 / CPU WASM",
+        "status": "passed",
+        "inputsMatch": true,
+        "numericMatches": true,
+        "expected": [
+          11,
+          22
+        ],
+        "output": [
+          11,
+          22
+        ],
+        "outputShape": [
+          2
+        ],
+        "automaticRuntime": false
+      }
+    ],
+    "modelWorkers": 8,
+    "runtimeWorkers": 8,
+    "downloads": 8
+  },
+  "limitations": [
+    "Only the eight known synthetic numerical cases are validated; no arbitrary-model equivalence or precision claim.",
+    "Newer kernel versions and unsupported standard-Interpreter IO dtypes may remain unavailable.",
+    "Unregistered opcode/version may show a generic compile failure while the raw unsupported-kernel diagnosis is preserved.",
+    "Hosted physical lifecycle does not establish Windows RSS guarantees."
+  ],
+  "scope": "GitHub formal site and fixed Release only; no Sites/GH Studio sync",
+  "nativeIO": {
+    "file": "value-shape-v1.12.3-native-io.zip",
+    "bytes": 19044,
+    "sha256": "7a1b2aa3a05a458be74c828b71a6956910af490d1691de39d99185c70fda0351",
+    "archives": 16
+  }
+}

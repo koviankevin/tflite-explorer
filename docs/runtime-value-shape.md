@@ -8,9 +8,9 @@ v1.12.2 的 LiteRT.js 2.6.0 CompiledModel 在三個合成模型中回報執行�
 
 官方 CompiledModel 註冊外部 output allocation，原始碼另對 constant output 複製；非 constant 的 shape 參數可使 kernel 在 Invoke 時重新配置 output。這與失效 output buffer 的假說一致，但尚無該預編譯二進位的內部指標追蹤，不能宣稱已修好上游 C++。原始失敗及獨立對照見[候選證據](results/value-shape-runtime-candidate.json)。
 
-## 候選實作，尚未正式發布
+## v1.12.3 實作
 
-1.12.3 候選在所有 subgraphs 檢查上述三個 OP 的 shape 參數。模型 input、producer 結果、variable 或沒有固定 buffer 的參數使用標準 TFLite Interpreter；常數參數與其他模型保留既有 CompiledModel。這項選擇只影響使用者手動執行，不影響讀取、搜尋、編輯或一般匯出。
+1.12.3 在所有 subgraphs 檢查上述三個 OP 的 shape 參數。模型 input、producer 結果、variable 或沒有固定 buffer 的參數使用標準 TFLite Interpreter；常數參數與其他模型保留既有 CompiledModel。這項選擇只影響使用者手動執行，不影響讀取、搜尋、編輯或一般匯出。
 
 Interpreter 使用官方 `@tensorflow/tfjs-tflite@0.0.1-alpha.10` 的 compatibility WASM，沒有 TFJS Tensor 轉換或 dequantization。原始 WASM 位元組保持不變；載入器的 116 個 embind factories 預先產生為固定 JS 函式，移除舊 global lookup fallback。`scripts/lib/interpreter-bindings.mjs`、`scripts/data/` 及重建測試可重現載入器。缺少預先產生的 binding 明確失敗，不退回字串執行或錯誤 backend。Apache／Emscripten 授權、npm integrity、來源 revision、修改說明及每檔 SHA 保留於 `vendor/tflite-interpreter/0.0.1-alpha.10/`。
 
@@ -26,7 +26,7 @@ Interpreter 使用官方 `@tensorflow/tfjs-tflite@0.0.1-alpha.10` 的 compatibil
 
 標準 Interpreter 是另一個固定版本，並不保證支援所有新 kernel／operator version。其公開 IO binding 僅接受 float32、int32、uint8、bool、int16、int8、float64、uint32；值相依模型的其他 IO dtype 先標未能驗證，不能退回已知有問題的 CompiledModel。內部常數 int64 axis 與既有模型路徑不因此改寫。未知 shape_signature、custom kernel、超額模型等既有未驗證界線保留。
 
-此修正只針對已重現的三種值相依 transform 與對照，不代表任意 kernel 組合、所有控制流程路徑、數值精度或與編輯前模型等價都已驗證。正式站與固定 Release 仍待完成；正式版本以 README 為準。
+此修正只針對已重現的三種值相依 transform 與對照，不代表任意 kernel 組合、所有控制流程路徑、數值精度或與編輯前模型等價都已驗證。正式站與固定 Release 已完成下方核對；目前版本以 README 為準。
 
 ## 主分支關卡
 
@@ -37,3 +37,13 @@ Interpreter 使用官方 `@tensorflow/tfjs-tflite@0.0.1-alpha.10` 的 compatibil
 網站報告包含八個已知模型的實際數值 proof；全部 285 個觀察到的 Workers 關閉，瀏覽器程序清理完成。這些結果提供待發布版本的來源證據，不表示正式網站已切換。標準 Interpreter 缺少較新 kernel 時，可能顯示載入失敗及通用 INVALID_ARGUMENT，原始缺少 opcode／version 的診斷仍保留；後續可再改善其分類，沒有 Invoke 或錯誤的通過結果。
 
 參考來源：[官方 npm 套件](https://www.npmjs.com/package/@tensorflow/tfjs-tflite)、[TFLite runner 型別](https://github.com/tensorflow/tfjs/blob/cc8d9d72d2244b50a7f5127900404709595e65fd/tfjs-tflite/src/tflite_model.ts)、[CompiledModel 原始碼](https://github.com/google-ai-edge/LiteRT/blob/b53c5cb860ff58cc918e9e7aa73c9b192dc9cb5f/litert/runtime/compiled_model.cc)、[Emscripten DYNAMIC_EXECUTION／EMBIND_AOT](https://emscripten.org/docs/tools_reference/settings_reference.html#dynamic-execution)。
+
+## v1.12.3 正式交付
+
+正式版 [v1.12.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.3)／build `c2e081e752506baa` 已於台灣時間 2026-11-17 01:09:44 發布。來源為 `8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e`；[發布工作流程](https://github.com/koviankevin/tflite-explorer/actions/runs/43913435017) 四個 jobs 首次全部成功。準備與發布使用同一完整 site ID，既有成功部署未重跑。完整[交付收據](results/value-shape-v1.12.3-published.json)保留來源、tag、Latest、deployment、四個實際下載及雜湊。
+
+正式站 1,538 個 HTTPS 檔案逐檔核對、零 HTTP 重試；53 項原生操作及八個固定數值案例通過，199 個 model Workers、全部 287 個觀察到的 Workers 關閉，觀察到的瀏覽器程序全部退出。原始官方 artifact [保留下載](results/value-shape-v1.12.3-live-verification.zip)。固定 ZIP 為 45,220,173 bytes，與準備階段相同，CRC、352 個核心檔案、metadata、四份下載及 tag／Latest 已核對。
+
+正式 Windows Chrome／Edge 在 1280×640、32px，各完成八例實際選檔、手動執行及 IO 下載，數值與原始 BIN 正確。每個瀏覽器 17 個 Workers 全部關閉；兩種公開 WASM 各下載一次，在同頁後續執行共用固定 code Module。[實際 16 份 IO ZIP](results/value-shape-v1.12.3-native-io.zip)及[Edge 畫面](results/value-shape-v1.12.3-live-edge.png)保留。
+
+Chrome 的八例數值、IO、code cache 與關閉紀錄已通過，但外層環境判定曾拒絕被阻擋的防毒 stylesheet。[原始失敗報告](results/value-shape-v1.12.3-native-initial.json)與全部下載保留；修正僅辨識環境資源類型的讀取器後，重新核對原檔雜湊並沿用 Chrome，再補完 Edge。應用程式與 CSP 沒有更動。這些小型合成數值測試不能代替 Windows 大模型 RSS 驗收；商品等級的剩餘事項仍列在[後續工作](product-readiness-next.md)。
