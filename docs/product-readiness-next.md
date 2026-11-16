@@ -10,7 +10,7 @@ PR #300 已合併，主分支網站 54 項與契約通過；實體大檔八輪�
 
 已完成[鄰接索引減量候選](adjacency-index-allocation.md)：111 項選測、Chrome／Edge 八案及匯出一致性通過，PR #302／#303 已合併，Node 搜尋有時間成本。新來源的核心、契約、54 項站台驗收通過，但原政策實體八輪仍以 RSS drift 134.28 MiB 超過 128 MiB 失敗。1,888 樣本及 24 份匯出雜湊另經獨立 Python 核對，功能／清理皆完成。小權重 Worker heap 改善沒有解決完整資源阻擋；下一步量測解析配置，不重跑失敗來源、不部署。
 
-另已完成[TFLite metadata 配置候選](tflite-metadata-allocation.md)：私有 reader 的小型 Int32 views 使用互不重疊的有界配置區，108 項精選案例及 Chrome／Edge 兩組共 16 案通過。實際 pattern／完整編輯／組合流程的 24 份輸出一致，Worker capacity 有升有降，沒有宣稱 RSS 修復；尚待必要 PR 與新來源原政策關卡，正式版本不變。
+另已完成[TFLite metadata 配置候選](tflite-metadata-allocation.md)：私有 reader 的小型 Int32 views 使用互不重疊的有界配置區，108 項精選案例及 Chrome／Edge 兩組共 16 案通過。實際 pattern／完整編輯／組合流程的 24 份輸出一致，Worker capacity 有升有降。PR #305 與合併來源核對後，新來源的四項原政策關卡亦通過：大檔八輪 RSS 漂移 12,595,200 B，57 個 Worker 終止、六個程序正常退出，54 項站台操作及 83 項契約核對完成，見[收據](results/metadata-arena-v1.12.4-main-gates.json)。仍待準備、發布及正式站／固定 Release 驗證，不改寫前兩次失敗或擴大為所有環境的 RSS 保證；正式版本不變。
 
 ## 2026-11-17 公開品質核對
 
