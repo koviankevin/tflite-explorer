@@ -109,3 +109,9 @@ export function deleteShapeRequired(version){
     const [major,minor]=version.split('.').map(Number);
     return major>1||major===1&&minor>=11;
 }
+
+export function wireShapeRequired(version){
+    browserReleaseFeatures(version);
+    const [major,minor]=version.split('.').map(Number);
+    return major>1||major===1&&minor>=12;
+}

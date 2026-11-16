@@ -25,6 +25,8 @@
 
 ## 自動重接與下游 shape 推導（原始碼候選，尚未部署）
 
+同樣的推導也可由編輯圖接線觸發：把來源輸出拖到目標輸入，shape 不同時先顯示確認與尺寸差異，確認後一次套用；dtype／量化差異和無法推導的情況明確拒絕。此類命令使用 v6 草稿，僅刪除推導仍可使用 v5。見 [接線差異確認](model-edit-workspace.md)。
+
 刪除預設先找資料輸入：單輸出且有明確契約的 builtin OP 以 input 0 為資料端；ADD／MUL 等可交換運算在 input 0 是權重／常數時優先選另一個資料端。來源建議可在預覽中更換。仍檢查 dtype、量化、sparsity、同 subgraph、產生順序與循環；不插入 Cast、Reshape，也不猜測新的權重。Custom 或多輸出 OP 無法唯一決定時，可改用指定相容來源、模型 inputs 或手動模式。
 
 推導在模型 Worker 內進行，掃描受影響 subgraph，包括編輯範圍外的使用者；支援既有靜態 unary／broadcast／spatial 規則、FC、BATCH_MATMUL，以及真實常數參數的 Reshape、Transpose、ExpandDims、Pad、Slice、Split 和 reduction 等已實作規則。FC 會核對 weights input_size／bias，不會藉改 metadata 假裝修改權重。動態／未知 shape、量化 channel 不合、custom OP 缺少規則、改變控制流程子圖的呼叫介面或其他未支援情況，會顯示負責的 OP 和原因並保留草稿。

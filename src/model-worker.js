@@ -56,13 +56,14 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const snapshot=editWorkspaceSnapshot(index,args);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
         } else if(action==='editDeleteInferCancel'){
             if(editWorkspace?.token===args.token)deleteInferJob++;send(id,true);
-        } else if(action==='editDeleteInfer'){
+        } else if(action==='editDeleteInfer'||action==='editWireInfer'){
             const session=editWorkspace;
             if(!session||args.token!==session.token||session.index!==index||session.file!==file)throw Error('編輯工作區已過期。');
             if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
-            const job=++deleteInferJob,{previewDeleteInference}=await import('./tflite-delete-inference.js'),reader=new FileReaderSync();
+            const job=++deleteInferJob,{previewDeleteInference,previewWireInference}=await import('./tflite-delete-inference.js'),reader=new FileReaderSync();
             if(editWorkspace!==session)throw Error('工作區已切換。');
-            const result=await previewDeleteInference(index,session.snapshot,args.commands,args.node,(o,n)=>new Uint8Array(reader.readAsArrayBuffer(session.file.slice(o,o+n))),{source:args.source,cancelled:()=>job!==deleteInferJob||editWorkspace!==session||index!==session.index||file!==session.file});
+            const read=(o,n)=>new Uint8Array(reader.readAsArrayBuffer(session.file.slice(o,o+n))),options={source:args.source,cancelled:()=>job!==deleteInferJob||editWorkspace!==session||index!==session.index||file!==session.file};
+            const result=action==='editWireInfer'?await previewWireInference(index,session.snapshot,args.commands,args.node,args.slot,args.value,read,options):await previewDeleteInference(index,session.snapshot,args.commands,args.node,read,options);
             if(job!==deleteInferJob||editWorkspace!==session)throw Error('推導已取消或工作區已切換。');send(id,result);
         } else if(action==='editDeleteImpact'){
             const session=editWorkspace;

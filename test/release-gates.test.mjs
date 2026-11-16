@@ -167,6 +167,11 @@ test('site operations bind the report to the upgrade snapshot, source and requir
         {name:'composition',automatic:true,reopenedOperators:4,outputShape:[2,3]}
     ]}};
     assert.equal(assertSiteOperations(shapeReport,shapeSite,broadcast,comparisonChecker).checks,49);
+    const wireRelease={...release,version:'1.12.0'},wireSite={...site,candidate:wireRelease},wireReport={...shapeReport,siteRelease:wireRelease,checks:[...shapeReport.checks,'Shape-mismatched native drag/click wiring requires confirmation; cancel, v6 draft, branch export/reopen and dtype/FC/custom rejection'],wireShape:{status:'passed',modelWorkers:6,runtimeWorkers:0,drag:true,click:true,cancelPreserves:true,draftVersion:6,reopenedOperators:5,cameraPreserved:true,blocked:['fc','custom','dtype'],layout:{left:100,right:1180,top:10,bottom:630,width:1280,height:640,documentWidth:1280}}};
+    assert.equal(assertSiteOperations(wireReport,wireSite,broadcast,comparisonChecker).checks,50);
+    for(const change of [r=>delete r.wireShape,r=>r.wireShape.runtimeWorkers=1,r=>r.wireShape.draftVersion=5,r=>r.wireShape.cancelPreserves=false,r=>r.wireShape.drag=false,r=>r.wireShape.blocked.pop(),r=>r.wireShape.layout.bottom=641,r=>r.checks.pop()]){
+        const broken=structuredClone(wireReport);change(broken);assert.throws(()=>assertSiteOperations(broken,wireSite,broadcast,comparisonChecker),/Site operation evidence/);
+    }
     for(const change of [r=>delete r.deleteShape,r=>r.deleteShape.runtimeWorkers=1,r=>r.deleteShape.modelWorkers=8,r=>r.deleteShape.cases[0].draftVersion=4,r=>r.deleteShape.cases[0].cameraPreserved=false,r=>r.deleteShape.cases[2].blocked=false,r=>r.deleteShape.layout.right=1281,r=>r.deleteShape.cases.pop(),r=>r.checks.pop()]){
         const broken=structuredClone(shapeReport);change(broken);assert.throws(()=>assertSiteOperations(broken,shapeSite,broadcast,comparisonChecker),/Site operation evidence/);
     }
