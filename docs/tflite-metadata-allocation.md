@@ -53,3 +53,11 @@ Chrome 157.0.8103.51／Edge 157.0.4341.60、1280×640／32px 各兩組 ABBA：�
 [固定欄位數值摘要](results/tflite-metadata-allocation-candidate.json)記錄個別來源 SHA、各階段、完整指紋及原始封存校驗。94 檔原始本機稽核封存為 2,199,950 bytes，SHA-256 `4f46566ff5ae2c0f1b88e7b30f30ce9c6b4d1685f5a2e5f4670524503597bfe3`；沒有把 raw logs／模型上傳成發布證據。
 
 本候選有實際配置與正確性證據，但仍未證明修好完整 RSS 漂移。接下來需必要 PR 檢查、受測／合併來源核對及新來源的原政策關卡；全部通過前不 prepare／publish。原有兩個實體失敗、正式 v1.12.3 與安全規則保持。
+
+## 新來源四項關卡已核對，尚未發布
+
+PR #305 的實際受測 merge tree 與合併後 `48f4d2f401953306c864c264213f718011db81f3` 相同；必要 Node 為 1,190 項通過、35 項依既有環境條件略過，83 項發布契約及九筆核心效能樣本通過。乾淨來源 build `84887a25d20b31ec` 共 355 核心檔，已重新建置並核對[四關卡收據](results/metadata-arena-v1.12.4-main-gates.json)的 provider digest、原始報告、source scope 與產物。
+
+新來源的 [實體八輪](https://github.com/koviankevin/tflite-explorer/actions/runs/43959902520)在原政策下通過。實際 1,349,965,216 bytes／21,005 OP 檔案由非零權重逐塊寫入、fsync 並完整 SHA-256 回讀；八輪於 2026-11-16 21:25:55.666Z 至 21:40:09.091Z 執行。關閉後 RSS 漂移 12,595,200 B、斜率 712,235.89 B／輪，峰值成長 494,804,992 B，main heap 漂移 691,300 B，均符合原門檻。完整編輯、局部子模型、組合草稿及重開搜尋通過，57 個觀察到的 Worker 終止、六個程序身分正常退出。
+
+核心、83 項契約及 54 項站台操作亦通過。這是一次新來源的有限 Hosted Chromium 驗收，不代表所有 Windows 版本、數小時負載或任意模型已通過，也不單憑一次成功證明歷史 RSS 的全部根因已解。原兩個失敗及診斷保持原狀；接下來仍須固定來源的 prepare／publish、正式 HTTPS 與固定 Release 核對，正式版本目前仍為 v1.12.3。
