@@ -1,4 +1,5 @@
 import {PATTERN_LIMITS} from './pattern-limits.js';
+import {nextNodes,previousNodes} from './lazy-adjacency.js';
 import { operatorKey, operatorIndex } from './pattern-utils.js';
 import {normalizeConditions,conditionMatcher} from './pattern-conditions.js';
 export { LORA_PATTERN } from './pattern-utils.js';
@@ -82,7 +83,7 @@ export function captureGraphPattern(entry, selected) {
     if (indexes.some((n) => !Number.isInteger(n) || !entry.graph.nodes[n])) throw new Error('選取的 layer 不在目前 subgraph。');
     const aliases = new Map(indexes.map((n, i) => [n, `N${i + 1}`]));
     const nodes = indexes.map((n) => ({ alias: aliases.get(n), type: entry.graph.nodes[n].type.name }));
-    const edges = indexes.flatMap((from) => [...entry.next[from]].filter((to) => aliases.has(to)).map((to) => ({ from: aliases.get(from), to: aliases.get(to) })));
+    const edges = indexes.flatMap((from) => [...nextNodes(entry,from)].filter((to) => aliases.has(to)).map((to) => ({ from: aliases.get(from), to: aliases.get(to) })));
     prepareGraphPattern(nodes, edges);
     return { nodes, edges, induced: true };
 }
@@ -107,7 +108,7 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
             if (mapping.size === spec.nodes.length) {
                 if (spec.induced) {
                     for (const from of spec.nodes) for (const to of spec.nodes) {
-                        if (entry.next[mapping.get(from.alias)].has(mapping.get(to.alias)) !== spec.outgoing.get(from.alias).includes(to.alias)) return;
+                        if (nextNodes(entry,mapping.get(from.alias)).has(mapping.get(to.alias)) !== spec.outgoing.get(from.alias).includes(to.alias)) return;
                     }
                 }
                 const path = spec.nodes.map((node) => mapping.get(node.alias));
@@ -127,8 +128,8 @@ export async function findSubgraphPatterns(index, spec, scope = 'all', cancelled
             for (const node of spec.nodes) {
                 if (mapping.has(node.alias)) continue;
                 const constraints = [];
-                for (const from of spec.incoming.get(node.alias)) if (mapping.has(from)) constraints.push(entry.next[mapping.get(from)]);
-                for (const to of spec.outgoing.get(node.alias)) if (mapping.has(to)) constraints.push(entry.previous[mapping.get(to)]);
+                for (const from of spec.incoming.get(node.alias)) if (mapping.has(from)) constraints.push(nextNodes(entry,mapping.get(from)));
+                for (const to of spec.outgoing.get(node.alias)) if (mapping.has(to)) constraints.push(previousNodes(entry,mapping.get(to)));
                 // A connected pattern can always grow from its mapped frontier.
                 // Scanning all nodes for a disconnected alias at every depth
                 // makes even a simple chain quadratic in the model size.
