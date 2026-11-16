@@ -4,7 +4,7 @@
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的固定版本為 [v1.12.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1)，build `384ad8c520e4ae49`：344 核心檔、全站 1,522 檔、51 項正式 HTTPS 操作及四份實際固定下載均符合[交付收據](results/search-pattern-reveal-v1.12.1-published.json)。Chrome／Edge 各三項搜尋 pattern 編輯器導覽補驗通過；四項來源綁定關卡、正式站與固定 Release 完成不等於所有商品化條件完成。[目前缺口](product-readiness-next.md#2026-11-16-公開品質核對)區分後續工作、環境問題及刻意保留的支援邊界；以下歷史紀錄仍保持原版本、失敗及量測範圍。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的固定版本為 [v1.12.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.2)，build `e1e4e662d7c4ab0f`：345 核心檔、全站 1,529 檔、52 項正式 HTTPS 操作及四份實際固定下載均符合[交付收據](results/axis-transform-v1.12.2-published.json)。Chrome／Edge 各六項 metadata 檢查及匯出重開補驗通過；四項來源綁定關卡、正式站與固定 Release 完成不等於所有商品化條件完成。[目前缺口](product-readiness-next.md#2026-11-16-公開品質核對)區分後續工作、環境問題及刻意保留的支援邊界；以下歷史紀錄仍保持原版本、失敗及量測範圍。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 

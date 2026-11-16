@@ -1,10 +1,10 @@
 # 公開版已知問題與限制
 
-目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的公開版本為 [v1.12.1](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.1)／build `384ad8c520e4ae49`，正式站與固定附件皆符合[交付收據](results/search-pattern-reveal-v1.12.1-published.json)。本頁各輪測試保留原受測版本；較晚成功不把 Windows Chrome 間歇性關閉、防毒注入或歷史選檔時序問題改列已修復。內網及私有 dialect 依使用者指示自行處理。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的公開版本為 [v1.12.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.2)／build `e1e4e662d7c4ab0f`，正式站與固定附件皆符合[交付收據](results/axis-transform-v1.12.2-published.json)。本頁各輪測試保留原受測版本；較晚成功不把 Windows Chrome 間歇性關閉、防毒注入、歷史選檔時序或新取得的 runtime 數值異常改列已修復。內網及私有 dialect 依使用者指示自行處理。
 
 公開品質的剩餘工作與證據界線見[目前缺口](product-readiness-next.md#2026-11-16-公開品質核對)。下方未支援的 kernel／dialect、動態資料、外部 resource 和未知 custom 引用是明列的功能範圍，不代表網站已承諾支援，也不應從其他模型的成功推論為已驗證。
 
-**新取得的動態參數診斷仍待查**：獨立合成 TRANSPOSE 以 permutation 作模型輸入時，固定 CPU WASM 回報成功，但擷取輸出不符預期；合法一維與二維參數都觀察到。原因尚未定位，不能用此結果宣稱數值可靠。[原始數值收據](results/axis-transform-runtime-diagnostic.json)及[metadata 候選與界線](axis-transform-validation.md)保留來源；metadata 修正不代表 runtime 問題已修復。
+**值相依 shape 的 runtime 數值仍待查**：獨立合成 TRANSPOSE／EXPAND_DIMS／RESHAPE 將 shape 參數作模型輸入時，固定 CPU WASM 回報成功，但直接讀取的原始輸出不符預期。常數參數、GATHER int32 indices 輸入及整數 ADD 對照皆正確；重跑同一動態 TRANSPOSE 兩次仍不符。這些[數值對照](results/value-dependent-runtime-diagnostic.json)與[早期 TRANSPOSE 診斷](results/axis-transform-runtime-diagnostic.json)保留來源，尚未定位完整根因，不能宣稱這些輸出可靠。參數 metadata 修正不代表 runtime 數值問題已修復，完整界線見[驗證說明](axis-transform-validation.md)。
 
 v1.6.0 的首輪正式驗收在有限 CPU 恢復案例未切換到測試檔，4-byte 輸入被原示範模型的 8-byte 規格拒絕；30 秒終止 Worker 本身已成功。只補跑失敗驗收一次，未重跑成功部署，原始失敗、完整附件備份及雜湊保留於[交付收據](results/navigation-focus-v1.6.0-published.json)。模型切換時序仍是驗收可靠性的已知風險，尚未宣稱根因永久修復。
 
