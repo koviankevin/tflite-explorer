@@ -1,0 +1,162 @@
+{
+  "format": "model-lens-adjacency-physical-gate-failure",
+  "status": "failed-required-gate-not-published",
+  "at": "2026-11-16T20:30:56.134Z",
+  "releaseEvidenceEligible": false,
+  "run": 43945973931,
+  "source": {
+    "commit": "2c4273be98a513b6a95135539b2a76d77dc28d74",
+    "tree": "8fb2da109e8334380c9f28a33bf8b8252a742d05",
+    "committedAt": "2026-11-17T04:03:21+08:00",
+    "dirty": false
+  },
+  "build": "bbd58bb177d33768",
+  "chromium": "156.0.8078.4",
+  "node": "v22.23.3",
+  "artifact": {
+    "id": 14267285386,
+    "bytes": 29378,
+    "digest": "sha256:327968aedb13793bb03f5d2219c16b227b13c2ce0a8cf8bcc7945b02a00a0e9f",
+    "reportSHA256": "20f5aa9266d010563fb6f86cf138fac48d7f648d9f30ca8179b0ccc1324fd5dd"
+  },
+  "samples": 1888,
+  "policy": {
+    "version": 3,
+    "cycles": 8,
+    "warmupCycles": 2,
+    "sampleIntervalMs": 500,
+    "urlReleaseTimeoutMs": 80000,
+    "settleSamples": 5,
+    "maxReadBytes": 1048576,
+    "realmReadBytes": 16777216,
+    "browserPeakGrowthBytes": 805306368,
+    "closedRssDriftBytes": 134217728,
+    "closedRssSlopeBytesPerCycle": 16777216,
+    "closedMainHeapDriftBytes": 33554432,
+    "modelWorkerUsedBytes": 536870912,
+    "modelWorkerBackingBytes": 536870912
+  },
+  "evaluation": {
+    "status": "failed",
+    "issues": [
+      "closed-rss-drift"
+    ],
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 9480484.57142857,
+      "rssDriftBytes": 140804096,
+      "mainHeapDriftBytes": 235404,
+      "sampledPeakRssBytes": 1084637184,
+      "sampledPeakGrowthBytes": 567701504
+    }
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "rss": 617115648,
+      "mainHeap": 6019736,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 2,
+      "rss": 631115776,
+      "mainHeap": 6222200,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 3,
+      "rss": 633745408,
+      "mainHeap": 6260808,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 4,
+      "rss": 770134016,
+      "mainHeap": 6306912,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 5,
+      "rss": 767885312,
+      "mainHeap": 6337400,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 6,
+      "rss": 771919872,
+      "mainHeap": 6435568,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 7,
+      "rss": 640802816,
+      "mainHeap": 6457604,
+      "workers": 0,
+      "urls": 0
+    },
+    {
+      "cycle": 8,
+      "rss": 776900608,
+      "mainHeap": 6490400,
+      "workers": 0,
+      "urls": 0
+    }
+  ],
+  "exportParity": {
+    "priorFailedSource": "ba294cc56d870f135628bda7c9de0766d5611fe9",
+    "priorRun": 43924226459,
+    "fullPartialAndCompositionHashesIdentical": 24,
+    "allWeightAndCustomOptionsChecks": true,
+    "allRoundTripsAndPatternChecks": true
+  },
+  "cleanup": {
+    "workersClosed": 57,
+    "observedProcessesReaped": 6,
+    "allReaped": true,
+    "browserClosed": true
+  },
+  "independentReview": {
+    "implementation": "Python standard library; independently recomputed archive hash/CRC, original report SHA, fixed OLS slope, drift medians, peak and 24 exports",
+    "status": "independently-confirmed-failed-gate",
+    "run": 43945973931,
+    "archiveSHA256": "327968aedb13793bb03f5d2219c16b227b13c2ce0a8cf8bcc7945b02a00a0e9f",
+    "reportSHA256": "20f5aa9266d010563fb6f86cf138fac48d7f648d9f30ca8179b0ccc1324fd5dd",
+    "samples": 1888,
+    "summary": {
+      "measuredCycles": 6,
+      "rssSlopeBytesPerCycle": 9480484.57142857,
+      "rssDriftBytes": 140804096,
+      "mainHeapDriftBytes": 235404,
+      "sampledPeakRssBytes": 1084637184,
+      "sampledPeakGrowthBytes": 567701504
+    },
+    "identicalExportHashes": 24,
+    "workersClosed": 57,
+    "ownedProcessesReaped": 6,
+    "releaseEvidenceEligible": false
+  },
+  "publication": {
+    "unchangedFormalVersion": "1.12.3",
+    "prepareStarted": false,
+    "publishStarted": false,
+    "oldAndNewFailedRunsNotRerun": true
+  },
+  "limitations": [
+    "Small-fixture Worker heap reductions did not prove full physical RSS acceptance.",
+    "All eight functional cycles completed; only closed-rss-drift fails the unchanged 128 MiB rule.",
+    "Different hosted processes and natural GC prevent treating numeric differences against prior run as a controlled causal comparison."
+  ],
+  "localAudit": {
+    "name": "adjacency-main-failure-evidence.zip",
+    "bytes": 80590,
+    "sha256": "1afd7c07df3b8a783aa7309acfb374b39292f1706e7aeba66811de37e722329d",
+    "files": 9,
+    "status": "verified-local-only-failure-audit"
+  }
+}
