@@ -1,0 +1,143 @@
+{
+  "format": "model-lens-deletion-preview-desktop",
+  "version": 1,
+  "recordedAt": "2026-11-16T06:06:51.769Z",
+  "release": "1.10.0",
+  "publication": "not-deployed",
+  "testedSource": {
+    "baseCommit": "0a379295b5111c80854354df9e7df757ac515ec7",
+    "workingTree": true,
+    "blobs": {
+      "package-lock.json": "24fc0aa23cf2cc6f354627dbf60ef49347d6cccd",
+      "package.json": "3b8c2d69121de6ad54e0d678f49b55c5f9e8dd77",
+      "scripts/lib/release-gates.mjs": "0b0512f3e157cfa8c5e75cc8fc4a6788538b5555",
+      "src/edit-recovery-store.js": "55cb858a8209a461ac41a62868f8e1c345de00ef",
+      "src/model-composition-draft.js": "98f5692085ed979fe3a980ce1efa0fb1780822b7",
+      "src/model-edit-draft.js": "df529b9744d8df2620753beb79fc295c9bd7eb1d",
+      "src/model-edit-session.js": "f95fe7182d7bcd8f43f520c626344008e2b274db",
+      "src/model-edit-workspace-ui.js": "7a90160b0e84de4dbee5410cd5824621c4cfe021",
+      "src/model-edit-workspace.css": "773b8de232983142096535642ee86bcbc6150dbb",
+      "src/model-worker.js": "75c6772c004b4ba61598adc5cb51747d33ebf647",
+      "src/shell.html": "9074f35c01affe59a6729b2b916fa3df586deb44",
+      "src/tflite-model-edit.js": "d6f559aec38137614c8905af5cf903aa583f4c73",
+      "src/tflite-workspace-plan.js": "ee672decd28f196b3575f16d6cc827cc7520a093",
+      "test/browser/production-smoke.mjs": "7e388a0060fa2385188992706e60b805fc052b99",
+      "test/browser/release-features.mjs": "9e05aaad7083144fd2ebee2e102dbe6b65d40fe1",
+      "test/release-gates.test.mjs": "a33d7574f0cf07107f522fa8b4ffb7bec24181a0",
+      "src/model-edit-delete-ui.js": "952fad915733d57937a3f4658c5d8df19157df67",
+      "src/model-edit-delete.js": "06603165f2801d0ce42647f6839c0b23954365f8",
+      "test/browser/delete-reconnect-flow.mjs": "5c6c4a6162237db61cc2962cdccb4b38bdd24d74",
+      "test/browser/windows-delete-reconnect.mjs": "de4a08911edf2296d3beee5d1c0770e0fb654235",
+      "test/model-edit-delete.test.mjs": "1a87293ea074bb4a2092f13da9791342d6484791"
+    }
+  },
+  "artifact": {
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.10.0",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "0a379295b5111c80854354df9e7df757ac515ec7",
+        "tree": "50715237fa3b4815c7bf573271bbb78ef72e780e",
+        "committedAt": "2026-11-16T11:42:57+08:00",
+        "dirty": true
+      },
+      "buildId": "1b9f880c258aaaef"
+    },
+    "manifestSHA256": "fc0987563ad09d42c8f7ab313c8a542582245a64fe64df81b519dd6f27794c41",
+    "files": 341
+  },
+  "targeted": {
+    "tests": 65,
+    "passed": 65,
+    "failed": 0,
+    "skipped": 0,
+    "logSHA256": "bc73b15bb7aaf8651d5ec74033c9d8c1b485ff009b1ff75d6f27a17cbaa1fe35"
+  },
+  "browser": {
+    "status": "passed",
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 7,
+          "automaticRuntimeWorkers": 0,
+          "cancelPreserves": true,
+          "modelOutputReplaced": true,
+          "draftVersion": 4,
+          "undoRedo": true,
+          "reopenedOperators": 2,
+          "customOptionsPreserved": true,
+          "weightsPreserved": true,
+          "customSearch": 1,
+          "incompatibleRejected": true,
+          "boundaryInputs": [
+            1,
+            2,
+            7,
+            8
+          ],
+          "boundaryReopenedOperators": 2,
+          "compositionOutputBypass": true,
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "result": {
+          "status": "passed",
+          "modelWorkers": 7,
+          "automaticRuntimeWorkers": 0,
+          "cancelPreserves": true,
+          "modelOutputReplaced": true,
+          "draftVersion": 4,
+          "undoRedo": true,
+          "reopenedOperators": 2,
+          "customOptionsPreserved": true,
+          "weightsPreserved": true,
+          "customSearch": 1,
+          "incompatibleRejected": true,
+          "boundaryInputs": [
+            1,
+            2,
+            7,
+            8
+          ],
+          "boundaryReopenedOperators": 2,
+          "compositionOutputBypass": true,
+          "layout": {
+            "left": 250,
+            "right": 1030,
+            "top": 24,
+            "bottom": 616,
+            "width": 1280,
+            "height": 640,
+            "documentWidth": 1280
+          }
+        },
+        "closed": true
+      }
+    ]
+  },
+  "limitations": [
+    "Public synthetic fixtures only; no company models or private kernels.",
+    "No automatic downstream shape propagation or inserted Cast/Reshape.",
+    "Static export and data preservation do not establish numerical equivalence.",
+    "No interpreter executed. Production Pages/Release delivery remains pending."
+  ]
+}

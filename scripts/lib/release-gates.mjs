@@ -1,6 +1,8 @@
 import {createHash} from 'node:crypto';
 import {expandedSelectionRequired} from '../../test/browser/release-features.mjs';
 import {EXPANDED_SELECTION_CHECK} from '../../test/browser/expanded-selection-flow.mjs';
+import {deleteReconnectRequired} from '../../test/browser/release-features.mjs';
+import {DELETE_RECONNECT_CHECK} from '../../test/browser/delete-reconnect-flow.mjs';
 import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {readFile,mkdir,mkdtemp} from 'node:fs/promises';
@@ -152,6 +154,10 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
         require(proof?.status==='passed'&&proof.modelWorkers===4&&proof.cases?.length===2&&
             proof.cases[0].format==='tflite'&&proof.cases[0].marquee>32&&proof.cases[0].selected===66&&proof.cases[0].patternNodes===66&&proof.cases[0].reopened===66&&proof.cases[0].matches===1&&
             proof.cases[1].format==='mlir'&&proof.cases[1].selected===68&&proof.cases[1].blocks===3&&proof.cases[1].patternOperators===68&&proof.cases[1].matches===1&&proof.cases[1].validSSA===true,'missing expanded selection proof.');
+    }
+    if(deleteReconnectRequired(release.version)){
+        required.push(DELETE_RECONNECT_CHECK);const proof=report.deleteReconnect;
+        require(proof?.status==='passed'&&proof.modelWorkers===7&&proof.automaticRuntimeWorkers===0&&proof.cancelPreserves===true&&proof.modelOutputReplaced===true&&proof.draftVersion===4&&proof.undoRedo===true&&proof.reopenedOperators===2&&proof.customOptionsPreserved===true&&proof.weightsPreserved===true&&proof.customSearch===1&&proof.incompatibleRejected===true&&proof.boundaryReopenedOperators===2&&proof.compositionOutputBypass===true&&JSON.stringify(proof.boundaryInputs)==='[1,2,7,8]','missing deletion reconnect proof.');
     }
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&

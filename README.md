@@ -20,7 +20,7 @@ GH Studio 工具曾統一以 **v1.0.0** 重整版本命名，保留既有功能�
 
 ## 圈選與修改模型
 
-選取容量及刪除 OP 後重接／型別推導的規劃見 [選取容量與刪除 OP](docs/selection-capacity.md)。
+選取容量、刪除 OP 後重接預覽及型別推導的後續規劃見 [選取容量與刪除 OP](docs/selection-capacity.md)。
 
 圈選、單點、OP ID 套用、跨 block pattern 與局部 MLIR 匯出上限統一為 256 個原始 OP；pattern JSON 及工作階段可保存相同容量。跨 block 結構另限 256 blocks、4,096 結構節點與 8,192 條連線，一般 pattern 限 4,096 條連線；搜尋仍保留取消與工作量保護，複雜 pattern 可能只回傳部分結果並提示。實際模型編輯工作區仍限 64 個原始 OP，直接 OP ID 子模型匯出仍不受 256 個限制。
 

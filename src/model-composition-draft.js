@@ -31,10 +31,12 @@ export function compositionWireReason(state,target,valueId){
     return '';
 }
 export function compositionInterface(state){
-    const active=state.nodes.filter(n=>!n.removed),producers=new Set(active.map(n=>n.id)),used=new Set(active.flatMap(n=>n.inputs.map(p=>p.value))),defined=new Set(active.flatMap(n=>n.outputs.map(p=>p.value)));
+    const active=state.nodes.filter(n=>!n.removed),producers=new Set(active.map(n=>n.id)),removed=new Set(state.nodes.filter(n=>n.removed).map(n=>n.id)),visible=id=>{const v=state.values.get(id);return v&&!v.optional&&!v.missing&&!removed.has(v.producer);};
+    const explicit=[...state.interface.outputs].filter(([id,enabled])=>enabled&&visible(id)).map(([id])=>id),used=new Set([...active.flatMap(n=>n.inputs.map(p=>p.value)),...explicit]),defined=new Set(active.flatMap(n=>n.outputs.map(p=>p.value)));
     const required=[...used].filter(id=>{const v=state.values.get(id);return v&&!v.optional&&!v.missing&&!v.generated&&!producers.has(v.producer)&&v.kind!=='權重／常數';});
     const available=[...new Set([...required,...state.interface.inputs.keys()])].filter(id=>{const v=state.values.get(id);return v&&!v.optional&&!v.missing&&!v.fresh&&!v.generated&&!producers.has(v.producer);});
     const inputs=available.filter(id=>state.interface.inputs.get(id)??required.includes(id));
-    const outputs=[...defined].filter(id=>state.interface.outputs.get(id)??(!used.has(id)||state.values.get(id).modelOutput||active.some(n=>n.exposed&&n.outputs.some(p=>p.value===id))));
-    return {inputs,outputs,availableInputs:available,availableOutputs:[...defined],required,missing:required.filter(id=>!inputs.includes(id))};
+    const availableOutputs=[...new Set([...defined,...state.interface.outputs.keys()])].filter(visible);
+    const outputs=availableOutputs.filter(id=>state.interface.outputs.get(id)??(!used.has(id)||state.values.get(id).modelOutput||active.some(n=>n.exposed&&n.outputs.some(p=>p.value===id))));
+    return {inputs,outputs,availableInputs:available,availableOutputs,required,missing:required.filter(id=>!inputs.includes(id))};
 }

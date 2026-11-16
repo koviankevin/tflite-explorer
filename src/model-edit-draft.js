@@ -4,8 +4,10 @@ export const EDIT_LIMITS=Object.freeze({nodes:96,commands:128,originals:64,ports
 import {builtinInfo,builtinSettings,randomTensorInfo} from './tflite-new-ops.js';
 import {randomOptions,randomAlgorithm} from './tensor-random.js';
 import {inferTfliteOutputs} from './tflite-shape-inference.js';
-import {compositionCommand,compositionOrder,compositionWireReason} from './model-composition-draft.js';
+import {compositionCommand,compositionOrder,compositionWireReason,compositionInterface} from './model-composition-draft.js';
+import {deletionPreview} from './model-edit-delete.js';
 const copy=value=>structuredClone(value);
+export const editDeletePreview=(state,node)=>deletionPreview(state,node,{position:editPosition,wireReason:editWireReason});
 export function editPosition(state,node){
     if(state.composition)return state.nodes.indexOf(node)*4+2;
     if(!node.fresh)return node.source.node*4+2;
@@ -78,10 +80,28 @@ function mutate(state,command){
         const base=state.nodes.find(n=>n.id===command.template);node.name=base.name;node.source=copy(base.source);delete node.builtin;delete node.inference;
         node.inputs=node.inputs.map((p,i)=>({...copy(base.inputs[i]),value:p.value}));
         node.outputs.forEach((port,i)=>{const original=state.values.get(base.outputs[i].value),name=state.format==='mlir'?`${state.prefix}${node.serial}_${original.group}${original.grouped||original.number?`#${original.number}`:''}`:`${original.name||'result'}_edit_${node.serial}_${i}`.slice(0,256);state.values.set(port.value,{...copy(original),id:port.value,name,producer:node.id,fresh:true,modelOutput:false});port.type=original.type;});
+    }else if(command.kind==='delete-reconnect'){
+        const preview=editDeletePreview(state,node.id);
+        if(!Array.isArray(command.replacements)||command.replacements.length>node.outputs.length||command.replacements.some(r=>!r||typeof r.from!=='string'||typeof r.value!=='string'||Object.keys(r).some(k=>!['from','value'].includes(k)))||new Set(command.replacements.map(r=>r.from)).size!==command.replacements.length)throw Error('刪除重接的輸出對照無效。');
+        for(const r of command.replacements){const output=preview.outputs.find(p=>p.value===r.from),choice=output?.choice(r.value);if(!choice||choice.reason)throw Error(choice?.reason||'找不到相容的替代 tensor。');}
+        const mapping=new Map(command.replacements.map(r=>[r.from,r.value])),beforeOutputs=state.composition?compositionInterface(state).outputs:[];node.reconnectWires=[];node.reconnectInterface=[];
+        if(preview.outputs.some(p=>(p.modelOutput||beforeOutputs.includes(p.value))&&!mapping.has(p.value)))throw Error('模型輸出必須指定替代 tensor；若要保留原輸出值，請改為模型 inputs。');
+        if(state.composition&&state.nodes.filter(n=>!n.removed).length===1)throw Error('組合草稿需保留至少一個 OP；請先加入其他片段或改用原模型編輯。');
+        for(const target of state.nodes)if(!target.removed&&target.id!==node.id)target.inputs.forEach((p,slot)=>{if(mapping.has(p.value)){const value=mapping.get(p.value);node.reconnectWires.push({node:target.id,slot,before:p.value,after:value});p.value=value;}});
+        node.removed=true;node.boundary=false;node.reconnect=copy(command.replacements);
+        if(state.composition){
+            const outputs=new Set(beforeOutputs.map(id=>mapping.get(id)||id)),pool=new Set([...state.nodes.flatMap(n=>n.outputs.map(p=>p.value)),...beforeOutputs,...outputs]);
+            for(const id of pool){const previous=state.interface.outputs.get(id),enabled=outputs.has(id);if(previous!==enabled){node.reconnectInterface.push({value:id,previous,enabled});state.interface.outputs.set(id,enabled);}}
+        }
     }else if(command.kind==='remove'){
         if(!node.removable)throw Error('此 OP 擁有控制流程或 region；請使用進階 IR 表單調整。');
+        if(node.reconnect)throw Error('此 OP 已刪除並重接，請先復原或恢復 OP，再修改刪除方式。');
         node.removed=true;node.boundary=state.format==='tflite'&&!node.fresh&&command.boundary===true;
-    }else if(command.kind==='restore'){node.removed=false;node.boundary=false;}
+    }else if(command.kind==='restore'){
+        for(const r of node.reconnectWires||[]){const p=state.nodes.find(n=>n.id===r.node)?.inputs[r.slot];if(p?.value===r.after)p.value=r.before;}
+        for(const r of node.reconnectInterface||[])if(state.interface.outputs.get(r.value)===r.enabled){if(r.previous===undefined)state.interface.outputs.delete(r.value);else state.interface.outputs.set(r.value,r.previous);}
+        delete node.reconnect;delete node.reconnectWires;delete node.reconnectInterface;node.removed=false;node.boundary=false;
+    }
     else if(command.kind==='expose'){
         if(state.format!=='tflite'||!node.fresh||node.removed)throw Error('只有新增的 TFLite OP 可在此加入模型 outputs。');
         node.exposed=command.enabled===true;
@@ -110,9 +130,9 @@ export function editChanges(snapshot,state){
     const originals=new Map(snapshot.nodes.map(n=>[n.id,n])),changes=[];
     for(const node of state.nodes){
         if(state.composition&&!node.fresh&&!node.removed){changes.push({kind:'add',node:node.id,name:node.name,inputs:node.inputs.map(p=>state.values.get(p.value)?.name||''),outputs:node.outputs.map(p=>state.values.get(p.value)?.name||''),imported:true});}
-        if(node.fresh){if(!node.removed)changes.push({kind:'add',node:node.id,name:node.name,inputs:node.inputs.map(p=>state.values.get(p.value).name),outputs:node.outputs.map(p=>state.values.get(p.value).name),parameters:node.inputs.flatMap((p,slot)=>{const v=state.values.get(p.value);return v.generated?[{slot,name:v.name,...v.generated}]:[];}),exposed:node.exposed});continue;}
+        if(node.fresh){if(!node.removed)changes.push({kind:'add',node:node.id,name:node.name,inputs:node.inputs.map(p=>state.values.get(p.value).name),outputs:node.outputs.map(p=>state.values.get(p.value).name),parameters:node.inputs.flatMap((p,slot)=>{const v=state.values.get(p.value);return v.generated?[{slot,name:v.name,...v.generated}]:[];}),exposed:node.exposed});else if(node.exposed&&node.reconnect)changes.push({kind:'remove',node:node.id,name:node.name,boundary:false,replacements:node.reconnect.map(r=>({from:state.values.get(r.from).name,to:state.values.get(r.value).name}))});continue;}
         const old=originals.get(node.id);
-        if(node.removed){changes.push({kind:'remove',node:node.id,name:node.name,boundary:node.boundary});continue;}
+        if(node.removed){changes.push({kind:'remove',node:node.id,name:node.name,boundary:node.boundary,...(node.reconnect?{replacements:node.reconnect.map(r=>({from:state.values.get(r.from).name,to:state.values.get(r.value).name}))}:{})});continue;}
         node.inputs.forEach((port,slot)=>{if(port.value!==old.inputs[slot].value)changes.push({kind:'wire',node:node.id,name:node.name,slot,before:state.values.get(old.inputs[slot].value)?.name,after:state.values.get(port.value)?.name});});
     }
     return changes;

@@ -54,6 +54,13 @@ self.onmessage = async ({ data: { id, action, args } }) => {
             const sourceIndex=index,sourceFile=file,{editWorkspaceSnapshot}=await import('./model-edit-workspace.js');
             if(index!==sourceIndex||file!==sourceFile)throw Error('模型已切換，請重新開啟編輯工作區。');
             const snapshot=editWorkspaceSnapshot(index,args);editWorkspace={index,file,snapshot,token:++editWorkspaceSerial};send(id,{...snapshot,token:editWorkspace.token});
+        } else if(action==='editDeleteImpact'){
+            const session=editWorkspace;
+            if(!session||args.token!==session.token||session.index!==index||session.file!==file)throw Error('編輯工作區已過期。');
+            if(JSON.stringify(args.commands).length>1024*1024)throw Error('編輯草稿超過 1 MiB。');
+            const {replayEditDraft}=await import('./model-edit-draft.js'),{deletionImpact}=await import('./model-edit-delete.js');
+            if(editWorkspace!==session||index!==session.index||file!==session.file)throw Error('工作區已切換，請重試。');
+            send(id,deletionImpact(index,replayEditDraft(session.snapshot,args.commands),args.node));
         } else if(action==='editBuiltinCatalog'){
             if(!index?.raw)throw Error('OP 選單適用於 TFLite 模型。');
             const {builtinCatalog}=await import('./tflite-new-ops.js'),response=await fetch(new URL('../vendor/netron/tflite-metadata.json',import.meta.url));if(!response.ok)throw Error('無法載入 OP 定義。');send(id,builtinCatalog(await response.json()));
