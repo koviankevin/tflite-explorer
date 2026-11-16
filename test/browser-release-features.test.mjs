@@ -1,11 +1,18 @@
 import {searchPatternRevealRequired} from './browser/release-features.mjs';
 import {axisTransformValidationRequired} from './browser/release-features.mjs';
 import {softmaxValidationRequired} from './browser/release-features.mjs';
+import {runtimeSupportRequired} from './browser/release-features.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
 import {partialRuntimeIORequired,deleteShapeRequired} from './browser/release-features.mjs';
 import {graphReadabilityRequired} from './browser/release-features.mjs';
+
+test('runtime support classification is mandatory from v1.12.5 and preserves prior Softmax coverage',()=>{
+    for(const version of ['0.2.0-preview.34','1.0.0','1.12.3','1.12.4'])assert.equal(runtimeSupportRequired(version),false);
+    for(const version of ['1.12.5','1.12.6','1.13.0','2.0.0','1.12.5+verified.1']){assert.equal(runtimeSupportRequired(version),true);assert.equal(softmaxValidationRequired(version),true);}
+    for(const version of [null,'','v1.12.5'])assert.throws(()=>runtimeSupportRequired(version));
+});
 
 test('panel and connection checks apply to v1.7 and future formal releases without breaking immutable older builds',()=>{
     for(const v of ['1.0.0','1.6.1','0.2.0-preview.34'])assert.equal(graphReadabilityRequired(v),false);

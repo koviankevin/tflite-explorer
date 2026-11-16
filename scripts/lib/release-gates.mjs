@@ -1,4 +1,6 @@
-import {searchPatternRevealRequired,valueShapeRuntimeRequired,softmaxValidationRequired} from '../../test/browser/release-features.mjs';
+import {searchPatternRevealRequired,valueShapeRuntimeRequired,softmaxValidationRequired,runtimeSupportRequired} from '../../test/browser/release-features.mjs';
+import {RUNTIME_SUPPORT_CHECK} from '../../test/browser/runtime-support-flow.mjs';
+import {assertRuntimeSupportProof} from '../../test/browser/runtime-support-proof.mjs';
 import {SOFTMAX_VALIDATION_CHECK} from '../../test/browser/softmax-validation-flow.mjs';
 import {assertSoftmaxProof} from '../../test/browser/softmax-proof.mjs';
 import {VALUE_SHAPE_RUNTIME_CHECK} from '../../test/browser/value-shape-runtime-flow.mjs';
@@ -198,6 +200,7 @@ export function assertSiteOperations(report,site,sourceFiles,readSource){
     }
     if(valueShapeRuntimeRequired(release.version)){required.push(VALUE_SHAPE_RUNTIME_CHECK);assertValueShapeProof(report.valueShapeRuntime);}
     if(softmaxValidationRequired(release.version)){required.push(SOFTMAX_VALIDATION_CHECK);assertSoftmaxProof(report.softmaxValidation);}
+    if(runtimeSupportRequired(release.version)){required.push(RUNTIME_SUPPORT_CHECK);assertRuntimeSupportProof(report.runtimeSupport);}
     require(Array.isArray(checks)&&checks.length>=(desktop?38+Number(opIds)+Number(directOpIds):required.length)+Number(add)+Number(mul)+extraOperators.length&&checks.length<=256&&
         checks.every(value=>typeof value==='string'&&value.length>0&&value.length<=512)&&new Set(checks).size===checks.length&&
         required.every(value=>checks.includes(value)),'missing or duplicate browser scenarios.');

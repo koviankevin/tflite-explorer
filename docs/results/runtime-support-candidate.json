@@ -1,0 +1,356 @@
+{
+  "format": "model-lens-runtime-support-candidate",
+  "schemaVersion": 1,
+  "status": "unpublished-source-candidate",
+  "releaseEvidenceEligible": false,
+  "at": "2026-11-16T22:22:52.586Z",
+  "candidate": {
+    "schemaVersion": 1,
+    "version": "1.12.5",
+    "distribution": "public",
+    "extension": null,
+    "source": {
+      "commit": "564e5e34470afa8ad58f4f03ee68448a6e1ec926",
+      "tree": "80e65c533a2d9bb1de2016f8ab6af1787b5b8981",
+      "committedAt": "2026-11-17T06:03:30+08:00",
+      "dirty": true
+    },
+    "buildId": "ac4f4f0d0a22e4cd"
+  },
+  "coreFiles": 355,
+  "sourceFiles": [
+    {
+      "path": "src/tflite-runtime-diagnostics.js",
+      "canonicalSHA256": "58a19094a540b14a622e8d2344e177c5d30f67dfbd5f1cda2dfa725f4efc5e63",
+      "builtSHA256": "4edfc5eef1d1ddfdaa5a98aa16f0ac870b96a5e580fe167bcd3f0962de65fa3c",
+      "buildImportStampVerified": true
+    },
+    {
+      "path": "src/tflite-runtime-execute.js",
+      "canonicalSHA256": "e631c85fc78d5020a6d4a0fbf1162c8cd1894785afea7ca46e60c2157548b082",
+      "builtSHA256": "d368c0751259318a8c016471f095abdd47190ebf1d2196b235eb8f52c1fec20f",
+      "buildImportStampVerified": true
+    },
+    {
+      "path": "package.json",
+      "canonicalSHA256": "5570f181fa000c4a2e742706ce7507719c0958cd005575d0bf6375944c62b68a"
+    },
+    {
+      "path": "package-lock.json",
+      "canonicalSHA256": "80c1e984886cbe10af32363b79670796179bc9142da2ced13b369891c3fa6655"
+    },
+    {
+      "path": "test/tflite-runtime-support.test.mjs",
+      "canonicalSHA256": "6602d90dd89691c147313d28d864303e7a59ee1f8223c4249d0c209aef6814ce"
+    },
+    {
+      "path": "test/runtime-support-fixture.mjs",
+      "canonicalSHA256": "b5da96a2f2f6ce641817f70db13924be137d2971d2806b10842a1ba9943f7fa4"
+    },
+    {
+      "path": "test/runtime-support-proof.test.mjs",
+      "canonicalSHA256": "665631324fd47f3adb2cb00307f02806e73c967b980dbc30363f43f2b8ddf2a5"
+    },
+    {
+      "path": "test/browser/runtime-support-flow.mjs",
+      "canonicalSHA256": "d32b8c91fea42e8e0010ee78a34b03985e1ac2abc287216bb31c8ba425f18fba"
+    },
+    {
+      "path": "test/browser/runtime-support-proof.mjs",
+      "canonicalSHA256": "24c3f46591d0b5d5b6bf6f22359fceb53818bc291fee12d2b6716a70330886e0"
+    },
+    {
+      "path": "test/browser/windows-runtime-support.mjs",
+      "canonicalSHA256": "8b45dd445754ccbde6bbb0cb7787dbdd2de50c692676f048cb764cb7b53fa7fe"
+    },
+    {
+      "path": "test/browser/release-features.mjs",
+      "canonicalSHA256": "2626561c5b38bd4b1cb9d10b9e33c7a302702ee277ac9007b9e0a5d40d0368dc"
+    },
+    {
+      "path": "test/browser/production-smoke.mjs",
+      "canonicalSHA256": "df61c9e7fdc0c18a158958ad69b2fb5a2c3b49e9ae701afb3afaf31bb917c8b7"
+    },
+    {
+      "path": "test/browser-release-features.test.mjs",
+      "canonicalSHA256": "4f59da5c144a105faeeea5c5ccf3fb0e00e87a6a7be50905a731876c1492ebe4"
+    },
+    {
+      "path": "test/release-gates.test.mjs",
+      "canonicalSHA256": "dc53ea49f6435b58c64c23b27195568b6af4c572d7e23cf4559b70a45a4ca36d"
+    },
+    {
+      "path": "scripts/lib/release-gates.mjs",
+      "canonicalSHA256": "b04f12cc026f449c1afb1cac934fbf234ddce31b250a5ad6deb7f5e61e3e86b5"
+    }
+  ],
+  "red": {
+    "file": "test/tflite-runtime-support.test.mjs",
+    "result": "real AOT TRANSPOSE version999 classified failed instead of not-verified",
+    "log": "red.log"
+  },
+  "diagnosis": {
+    "confirmed": "classification checked only the generic thrown reason, ignoring explicit native registration diagnostics",
+    "probe": "classification-probe.json",
+    "otherHypotheses": [
+      "Lost diagnostics rejected: original four lines survived",
+      "Generic error alone is insufficient: genuine metadata/input failures must stay failed"
+    ]
+  },
+  "targeted": {
+    "tests": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0,
+    "log": "targeted-final.log"
+  },
+  "nativeWindows": {
+    "status": "passed",
+    "at": "2026-11-16T22:18:45.649Z",
+    "release": {
+      "schemaVersion": 1,
+      "version": "1.12.5",
+      "distribution": "public",
+      "extension": null,
+      "source": {
+        "commit": "564e5e34470afa8ad58f4f03ee68448a6e1ec926",
+        "tree": "80e65c533a2d9bb1de2016f8ab6af1787b5b8981",
+        "committedAt": "2026-11-17T06:03:30+08:00",
+        "dirty": true
+      },
+      "buildId": "ac4f4f0d0a22e4cd"
+    },
+    "coreFiles": 355,
+    "browsers": [
+      {
+        "channel": "chrome",
+        "version": "157.0.8103.51",
+        "errors": [],
+        "workers": [
+          {
+            "url": "http://127.0.0.1:9861/vendor/netron/worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "missing-version",
+              "modelSHA256": "2035802838cf28a314da90f9e66778685f294eea588317fff71e492dc835a507",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "not-verified",
+              "message": "本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999；請改用支援此 OP／版本的 runtime 驗證。失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請依原始診斷檢查模型、tensor 參數及 runtime 支援。\n原始 runtime 錯誤：INVALID_ARGUMENT: Can't initialize model\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'. An older version of this builtin might be supported. Are you using an old TFLite binary with a newer model?\nERROR: Registration failed.",
+              "automaticRuntime": false,
+              "ioAbsent": true
+            },
+            {
+              "name": "invalid-permutation",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+              ],
+              "status": "failed",
+              "message": "本機執行檢查：失敗。指定輸入執行失敗。需依此 runtime／輸入的診斷確認原因。\n原始 runtime 錯誤：TFLite Interpreter invocation failed.\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nruntime 回報 TRANSPOSE node #0；來源候選：Subgraph #0 · OP #0 · inputs [0, 1]／outputs [2]。\n執行記錄部分保存：1 個 tensor 未能保存；可取得的資料已保留。outputs #0：runtime 未提供此 tensor 的資料；保留介面 metadata。；詳見 IO ZIP 的 manifest.json。\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/kernels/transpose.cc Transpose op permutations array is out of bounds.\nERROR: Node number 0 (TRANSPOSE) failed to invoke.",
+              "automaticRuntime": false,
+              "zipSHA256": "f4643bedba6f6511e2a2bff5f3ab3746e949562d63eb57387dc431cddcd185bc",
+              "recordedStatus": "failed",
+              "compiled": true,
+              "invoked": false,
+              "inputsMatch": true,
+              "outputSaved": false
+            },
+            {
+              "name": "supported-control",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "passed",
+              "message": "本機執行檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+              "automaticRuntime": false,
+              "zipSHA256": "0ce35c8e7c7bd2b88bf8b4604ebbbe192a63c8f00ab21deced2a746e321c3f7a",
+              "recordedStatus": "passed",
+              "compiled": true,
+              "invoked": true,
+              "inputsMatch": true,
+              "outputSaved": true,
+              "outputSHA256": "b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd",
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "numericMatches": true
+            }
+          ],
+          "modelWorkers": 3,
+          "runtimeWorkers": 3,
+          "downloads": 2,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      },
+      {
+        "channel": "msedge",
+        "version": "157.0.4341.60",
+        "errors": [],
+        "workers": [
+          {
+            "url": "http://127.0.0.1:9861/vendor/netron/worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/model-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          },
+          {
+            "url": "http://127.0.0.1:9861/src/tflite-runtime-worker.js?v=ac4f4f0d0a22e4cd",
+            "closed": true
+          }
+        ],
+        "result": {
+          "status": "passed",
+          "cases": [
+            {
+              "name": "missing-version",
+              "modelSHA256": "2035802838cf28a314da90f9e66778685f294eea588317fff71e492dc835a507",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "not-verified",
+              "message": "本機執行檢查：未能驗證。runtime 未註冊 TRANSPOSE version 999；請改用支援此 OP／版本的 runtime 驗證。失敗發生在套用測試輸入之前，切換零值／亂數無法修復此階段；請依原始診斷檢查模型、tensor 參數及 runtime 支援。\n原始 runtime 錯誤：INVALID_ARGUMENT: Can't initialize model\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nERROR: Didn't find op for builtin opcode 'TRANSPOSE' version '999'. An older version of this builtin might be supported. Are you using an old TFLite binary with a newer model?\nERROR: Registration failed.",
+              "automaticRuntime": false,
+              "ioAbsent": true
+            },
+            {
+              "name": "invalid-permutation",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+              ],
+              "status": "failed",
+              "message": "本機執行檢查：失敗。指定輸入執行失敗。需依此 runtime／輸入的診斷確認原因。\n原始 runtime 錯誤：TFLite Interpreter invocation failed.\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nruntime 回報 TRANSPOSE node #0；來源候選：Subgraph #0 · OP #0 · inputs [0, 1]／outputs [2]。\n執行記錄部分保存：1 個 tensor 未能保存；可取得的資料已保留。outputs #0：runtime 未提供此 tensor 的資料；保留介面 metadata。；詳見 IO ZIP 的 manifest.json。\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.\nERROR: third_party/tensorflow/lite/kernels/transpose.cc Transpose op permutations array is out of bounds.\nERROR: Node number 0 (TRANSPOSE) failed to invoke.",
+              "automaticRuntime": false,
+              "zipSHA256": "532a7f105012ee49b814bbac5cdc165006174493ec232d2e468ee2b0077ad352",
+              "recordedStatus": "failed",
+              "compiled": true,
+              "invoked": false,
+              "inputsMatch": true,
+              "outputSaved": false
+            },
+            {
+              "name": "supported-control",
+              "modelSHA256": "b115ff3feb71cfc1f8586d92d4e6e554cb8c07294a730ff2e04d1218ea76ca84",
+              "inputSHA256": [
+                "24ae2dfe8df57c1b80e54cef3d90ac3b417fd98973345a5f616bbc9a75dcc202",
+                "7c9fa136d4413fa6173637e883b6998d32e1d675f88cddff9dcbcf331820f4b8"
+              ],
+              "status": "passed",
+              "message": "本機執行檢查：通過。已載入、配置並以指定輸入執行一次；精度與其他分支仍需測試。\n執行引擎：TFLite Interpreter · tfjs-tflite 0.0.1-alpha.10 / CPU WASM (AOT)\nINFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+              "automaticRuntime": false,
+              "zipSHA256": "8ab9b1dcdd30f66da173e2737e06e30de76093141ee4ce3ad565275bc5d5c928",
+              "recordedStatus": "passed",
+              "compiled": true,
+              "invoked": true,
+              "inputsMatch": true,
+              "outputSaved": true,
+              "outputSHA256": "b05183b256a48062521a4beb24c91079d1b94dfdef9ca4edcb76d28f69ee7fcd",
+              "output": [
+                1,
+                4,
+                2,
+                5,
+                3,
+                6
+              ],
+              "numericMatches": true
+            }
+          ],
+          "modelWorkers": 3,
+          "runtimeWorkers": 3,
+          "downloads": 2,
+          "allWorkersClosed": true
+        },
+        "closed": true
+      }
+    ]
+  },
+  "initialFixtureExpectation": {
+    "file": "initial-io-fixture-expectation.json",
+    "explanation": "Repeated axes invoked in the pinned Interpreter; application output-shape integrity still failed. Separate regression retained. Use out-of-range axis2 for the intended native-Invoke-error control."
+  },
+  "sourceArtifactCheck": {
+    "initialMismatch": "Direct source-to-manifest hashes differ because buildSite stamps relative JS imports with buildId.",
+    "verification": "Actual built bytes match manifest; removal of this exact build import stamp equals canonical source for both changed app modules. No app change or native rerun."
+  },
+  "releaseSelection": {
+    "requiredFrom": "1.12.5",
+    "retainedChecks": 54,
+    "newCheck": 1,
+    "totalChecks": 55
+  },
+  "archive": {
+    "name": "runtime-support-source-evidence.zip",
+    "bytes": 562706,
+    "sha256": "70c380f059acca752bd845c68b0471157762dad4bf5e1ad39c75f7f30fd88432",
+    "files": 57,
+    "status": "preserved-local-source-candidate-not-clean-main-release-evidence"
+  },
+  "limitations": [
+    "Candidate was tested from a dirty local build; clean PR/main and formal release verification remain required.",
+    "Only explicit captured builtin-version registration diagnostics during compile receive unsupported-kernel classification. Unknown generic errors stay failed.",
+    "Finite Windows32px functional acceptance is not OS-process-reap, large-model RSS or hours-long evidence.",
+    "Private dialects/custom kernels remain internal and no runtime runs automatically on open/edit/export."
+  ]
+}

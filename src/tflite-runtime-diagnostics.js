@@ -1,4 +1,16 @@
 import {tflite as schema} from '../vendor/netron/tflite-schema.js';
+// Generic INVALID_ARGUMENT also covers malformed models. Only the explicit
+// registration diagnostic proves that this runtime lacks the requested kernel.
+// Compile-only matching prevents earlier logs from relabeling an Invoke error.
+export function runtimeUnsupportedKernel(diagnostics,stage){
+    if(stage!=='compile')return null;
+    for(const raw of diagnostics.slice(-12)){
+        const diagnostic=String(raw).slice(0,512).trim();
+        const match=diagnostic.match(/^(?:ERROR:\s*)?Didn't find op for builtin opcode '([A-Z][A-Z0-9_]{0,127})' version '([0-9]{1,10})'(?:[. ]|$)/);
+        if(match)return {kernel:match[1],version:Number(match[2]),diagnostic};
+    }
+    return null;
+}
 // Bounded metadata travels with the already admitted runtime plan, never model
 // weights. Node numbers in native logs may be local to any subgraph or delegate.
 export function runtimeDiagnosticContext(model){
