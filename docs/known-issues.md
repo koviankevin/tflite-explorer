@@ -1,10 +1,10 @@
 # 公開版已知問題與限制
 
-目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-16 核對的公開版本為 [v1.12.2](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.2)／build `e1e4e662d7c4ab0f`，正式站與固定附件皆符合[交付收據](results/axis-transform-v1.12.2-published.json)。本頁各輪測試保留原受測版本；較晚成功不把 Windows Chrome 間歇性關閉、防毒注入、歷史選檔時序或新取得的 runtime 數值異常改列已修復。內網及私有 dialect 依使用者指示自行處理。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-17 核對的公開版本為 [v1.12.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.3)／build `c2e081e752506baa`，正式站與固定附件皆符合[交付收據](results/value-shape-v1.12.3-published.json)。本頁各輪測試保留原受測版本；較晚成功不把 Windows Chrome 間歇性關閉、防毒注入或歷史選檔時序改列已修復。內網及私有 dialect 依使用者指示自行處理。
 
-公開品質的剩餘工作與證據界線見[目前缺口](product-readiness-next.md#2026-11-16-公開品質核對)。下方未支援的 kernel／dialect、動態資料、外部 resource 和未知 custom 引用是明列的功能範圍，不代表網站已承諾支援，也不應從其他模型的成功推論為已驗證。
+公開品質的剩餘工作與證據界線見[目前缺口](product-readiness-next.md#2026-11-17-公開品質核對)。下方未支援的 kernel／dialect、動態資料、外部 resource 和未知 custom 引用是明列的功能範圍，不代表網站已承諾支援，也不應從其他模型的成功推論為已驗證。
 
-**值相依 shape 的 runtime 數值仍待查**：獨立合成 TRANSPOSE／EXPAND_DIMS／RESHAPE 將 shape 參數作模型輸入時，固定 CPU WASM 回報成功，但直接讀取的原始輸出不符預期。常數參數、GATHER int32 indices 輸入及整數 ADD 對照皆正確；重跑同一動態 TRANSPOSE 兩次仍不符。這些[數值對照](results/value-dependent-runtime-diagnostic.json)與[早期 TRANSPOSE 診斷](results/axis-transform-runtime-diagnostic.json)保留來源，尚未定位完整根因，不能宣稱這些輸出可靠。參數 metadata 修正不代表 runtime 數值問題已修復，完整界線見[驗證說明](axis-transform-validation.md)。
+**值相依 shape 的已知數值修正已交付**：早期 CompiledModel 的三種錯誤保留在[數值對照](results/value-dependent-runtime-diagnostic.json)與[TRANSPOSE 診斷](results/axis-transform-runtime-diagnostic.json)。v1.12.3 使用標準 Interpreter 執行這些模型並重新取得 output，正式 Chrome／Edge 各八例的原始 BIN、實際數值與下載 ZIP 已核對。這不是上游 CompiledModel 的內部修復，也不保證任意模型精度；較新 kernel／額外 IO dtype 仍可能未支援。缺少 opcode／version 時可能顯示通用載入失敗，但原始 runtime 診斷保留，見[正式交付與界線](runtime-value-shape.md#v1123-正式交付)。
 
 v1.6.0 的首輪正式驗收在有限 CPU 恢復案例未切換到測試檔，4-byte 輸入被原示範模型的 8-byte 規格拒絕；30 秒終止 Worker 本身已成功。只補跑失敗驗收一次，未重跑成功部署，原始失敗、完整附件備份及雜湊保留於[交付收據](results/navigation-focus-v1.6.0-published.json)。模型切換時序仍是驗收可靠性的已知風險，尚未宣稱根因永久修復。
 

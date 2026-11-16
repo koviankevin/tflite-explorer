@@ -1,19 +1,19 @@
 # 商品等級後續工作
 
-## 2026-11-16 公開品質核對
+## 2026-11-17 公開品質核對
 
-目前正式版本以 [README 的對外版本](../README.md)為準。本次以主分支／發布來源 `6a2c67bd5b93777ebb8a43d950f4db19cc1d04a9`、正式站 manifest 與 GitHub Latest 核對：公開版為 **v1.12.2／build `e1e4e662d7c4ab0f`**。完整來源、四項關卡、52 項正式操作、1,529 檔及四份實際下載見[收據](results/axis-transform-v1.12.2-published.json)。文件提交不改變已發布來源或固定附件。
+目前正式版本以 [README 的對外版本](../README.md)為準。本次以發布來源 `8b248afb8cdce8fdf2f5c89850ad533f6b8b7c4e`、正式站 manifest 與 GitHub Latest 核對：公開版為 **v1.12.3／build `c2e081e752506baa`**。完整來源、四項關卡、53 項正式操作、1,538 檔及四份實際下載見[收據](results/value-shape-v1.12.3-published.json)。值相依 TRANSPOSE／EXPAND_DIMS／RESHAPE 的已知數值錯誤已[正式修正](runtime-value-shape.md#v1123-正式交付)，正式 Chrome／Edge 各八例數值與 IO 核對通過。文件提交不改變已發布來源或固定附件，整體商品等級目標仍有下列未完成項目。
 
 | 優先 | 剩餘工作或界線 | 現有證據與下一個有效動作 |
 | --- | --- | --- |
-| 1 | 值相依 shape 的 runtime 數值異常 | 已在 Chrome／Edge 重現；原生標準 Interpreter 16 例正確、CompiledModel 重現三種錯誤。[候選修正](runtime-value-shape.md)以固定標準 Interpreter 執行這些模型，原 SHA 的八例在 Chrome／Edge 數值與 BIN 全部正確。尚待 PR、來源綁定關卡與正式交付，不把本機成功當作網站已修好。 |
-| 2 | OP 靜態驗證的覆蓋與報告 | 目前逐 OP 報告能區分已檢查／未檢查，並有 [broadcast](results/broadcast-validation-v1.7.3-published.json)、[shape 推導](results/wire-shape-v1.12.0-published.json)及 [axis metadata](axis-transform-validation.md#v1122-正式交付)等增量。後續規則應先重現具體漏擋或誤擋，再補相同入口的序列化正負例；不把所有未支援 kernel 都列成通過。一般匯出不自動執行 interpreter。 |
-| 3 | Windows 大模型的版本適用性與間歇性關閉 | Windows 實體八輪有各自的原始成功／失敗及 [Chrome 雲端統計等待證據](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)。1.12.2 的小型 UI 成功不能代替整個 Windows 大檔測試；Hosted 大檔關卡也不能代替 Windows。只在有新的配置／釋放假說或受影響來源變更時補測，不重跑碰綠燈，也不改 OneDrive／防毒或正常退出門檻。 |
+| 1 | OP 靜態驗證的覆蓋與報告 | 目前逐 OP 報告能區分已檢查／未檢查，並有 [broadcast](results/broadcast-validation-v1.7.3-published.json)、[shape 推導](results/wire-shape-v1.12.0-published.json)及 [axis metadata](axis-transform-validation.md#v1122-正式交付)等增量。後續規則應先重現具體漏擋或誤擋，再補相同入口的序列化正負例；不把所有未支援 kernel 都列成通過。一般匯出不自動執行 interpreter。 |
+| 2 | Windows 大模型的版本適用性與間歇性關閉 | Windows 實體八輪有各自的原始成功／失敗及 [Chrome 雲端統計等待證據](windows-large-model.md#已定位的-chrome-雲端資料夾統計阻塞)。1.12.3 的小型 UI／數值成功不能代替整個 Windows 大檔測試；Hosted 大檔關卡也不能代替 Windows。只在有新的配置／釋放假說或受影響來源變更時補測，不重跑碰綠燈，也不改 OneDrive／防毒或正常退出門檻。 |
+| 3 | 不支援 kernel 的診斷分類 | 標準 Interpreter 對未註冊的 opcode／version 可能回傳通用 INVALID_ARGUMENT，畫面顯示載入失敗，原始缺少 kernel 的原因仍保留。後續可讓這種情況更直接標為 runtime 未能驗證；目前沒有 Invoke 或錯誤通過。 |
 | 4 | 保存與復原的環境保證 | 已有草稿恢復、衝突、容量失敗及備份流程；OS 斷電、實體磁碟耗盡與任意格式升降級尚未驗證。後續需限定實際故障與格式，不能從一般重載或 SIGKILL 擴大宣稱。見[公開驗收範圍](public-acceptance.md)。 |
 | 5 | 新手操作與完整無障礙驗收 | 既有鍵盤／焦點與筆電操作有自動證據，1.12.1 另修正搜尋 pattern 編輯器的展開及定位。完整真人新手流程與螢幕閱讀器驗收仍缺，不能以合成點擊流程取代。 |
 | 明列範圍 | 私有 dialect、custom kernel、外部 MLIR resource、任意模型數值等價 | 私有工具由使用者在內網接入；未知引用保守保留，沒有規則或外部驗證時明示未檢查。這些不阻擋已約定的公開版交付，也不能標成已支援。 |
 
-必要瀏覽器維持 Chrome／Edge、最小筆電畫面；Firefox／Safari／手機不另排必要驗收。歷史啟動逾時、防毒注入及 Chrome 關閉失敗仍保留，沒有證據時不做推測性應用修正。已通過且來源適用的關卡沿用；不用重新發布成功的 1.12.2。
+必要瀏覽器維持 Chrome／Edge、最小筆電畫面；Firefox／Safari／手機不另排必要驗收。歷史啟動逾時、防毒注入及 Chrome 關閉失敗仍保留，沒有證據時不做推測性應用修正。已通過且來源適用的關卡沿用；不用重新發布成功的 1.12.3。
 
 接續 OP 驗證已在 [v1.12.2](axis-transform-validation.md#v1122-正式交付)正式交付：共用 metadata 規則與序列化負例、104 項相關 Node、28 項選測／證據判定測試及 Chrome／Edge 各六個原生情境通過。PR 受測 tree 與合併後相同；完整 Node 1,150 項通過、35 項依既有環境條件略過。主分支大檔、正式 HTTPS 與四份固定下載均完成核對，首次 HTTP 失敗與只補驗一次的紀錄保留。另記錄值相依 shape 的 runtime 數值異常，仍需定位原因；不以 metadata 修正通過冒充數值問題已修復。
 

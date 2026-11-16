@@ -1,8 +1,8 @@
 # TFLite 手動執行檢查
 
-目前固定公開版以 [README](../README.md)為準。值相依 shape 的數值異常、獨立 Interpreter 對照與尚未發布的候選修正見[執行輸出](runtime-value-shape.md)。頂端「說明」或 F1 的「執行與 IO」介紹目前分頁模型、raw BIN、亂數規則和 IO 保存；前往執行區只讀介面，不啟動推論。下方 preview 紀錄屬當時版本，不代表目前正式版本。
+目前固定公開版以 [README](../README.md)為準。值相依 shape 的數值異常、獨立 Interpreter 對照與 v1.12.3 正式修正見[執行輸出](runtime-value-shape.md)。頂端「說明」或 F1 的「執行與 IO」介紹目前分頁模型、raw BIN、亂數規則和 IO 保存；前往執行區只讀介面，不啟動推論。下方 preview 紀錄屬當時版本，不代表目前正式版本。
 
-開檔、編輯、一般匯出不會載入 interpreter，也不會自動推論。開啟「執行模型」只讀取介面，設定各個 input 後，再按「以這組輸入執行一次」才啟動 LiteRT.js 2.6.0 CPU WASM。編輯／組合結果或局部模型需先匯出 TFLite 並開啟到新模型分頁；執行區不接收草稿，見[工作區流程](model-runtime-workspace.md)與[資料規則](tensor-random-distributions.md)。
+開檔、編輯、一般匯出不會載入 interpreter，也不會自動推論。開啟「執行模型」只讀取介面，設定各個 input 後，再按「以這組輸入執行一次」才啟動本機 CPU WASM。值相依 TRANSPOSE／EXPAND_DIMS／RESHAPE 使用固定標準 Interpreter，其他模型保留 LiteRT.js 2.6.0；實際 engine 記錄於結果與 IO manifest。編輯／組合結果或局部模型需先匯出 TFLite 並開啟到新模型分頁；執行區不接收草稿，見[工作區流程](model-runtime-workspace.md)與[資料規則](tensor-random-distributions.md)。
 
 每個 input 分別選零值、帶 seed／範圍的亂數或 raw `.bin`。面板顯示名稱、shape、dtype、所需 bytes；多輸入需逐項對應。raw 資料採 little-endian，byte 數須完全一致，沒有自動 dtype 轉換。boolean 限 0／1；量化資料使用原始整數值。零值指儲存值 0，不推測各 channel 的數學零點。索引、mask、token IDs 等有語意限制的輸入需由使用者提供有效資料，亂數不保證合法。
 
