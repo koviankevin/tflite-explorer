@@ -65,3 +65,7 @@ Node 24.22.1 的六個新程序依事先固定的 A、候選、候選、A、A、
 真實八輪的 source Worker heap capacity 中位數約 127.12 MB，前次約 127.25 MB；edited-model 約 122.06 MB，前次約 120.22 MB。兩輪不是同一程序的受控比較，但已足以否定「小權重結構的 capacity 改善證明完整資源問題已修好」。本候選沒有解決發布阻擋，不重跑任一失敗來源，也不拿站台／功能成功取代 RSS 失敗。
 
 正式網站及固定 Release 保持 v1.12.3，未開始 prepare／publish。下一步是量測解析階段剩餘的實際配置，保留此失敗及先前的 allocator 診斷；不再無修改地執行大檔關卡。
+
+## v1.12.4 正式交付
+
+新 metadata 來源與 Softmax 檢查現已一併正式交付，見[完整收據](results/softmax-v1.12.4-published.json)。原來源的兩次 RSS 失敗保留；新來源依原政策通過八輪，仍不擴大為所有 Windows／長時間資源保證。正式 HTTPS、Chrome／Edge 與四份固定下載核對完成，未重跑成功部署。

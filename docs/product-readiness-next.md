@@ -1,5 +1,11 @@
 # 商品等級後續工作
 
+## v1.12.4 已交付
+
+[v1.12.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4)，build `f8a2d9d3ac4f8501`：Softmax／LogSoftmax shape／dtype 檢查及報告已交付，並減少 TFLite 鄰接索引與小型 Int32 metadata 配置。355 個核心檔、全站 1,549 檔、54 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各 10 個 32px 情境通過。1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 12,595,200 B；前兩次失敗原樣保留。見[正式交付收據](results/softmax-v1.12.4-published.json)及[檢查範圍](softmax-validation.md#v1124-正式交付)。模型全程本機處理，interpreter 仍由使用者手動啟動；不將有限測試擴大為任意 kernel、所有模型精度或 Windows 大檔保證。 OP 規則的後續覆蓋、Windows 大檔版本適用性、未註冊 kernel 分類、環境復原與真人無障礙仍依下表範圍接續。
+
+以下保留本輪未發布時的候選、失敗及先前正式版核對時間點，不覆蓋本節最新交付。
+
 ## 未發布候選：Softmax／LogSoftmax
 
 [本輪修正及驗證範圍](softmax-validation.md)補上已重現的 output shape／dtype 漏擋，並在手動執行前攔下原生 Interpreter 也可能錯誤接受的 float32→int32 宣告。已完成獨立原生對照、實際 CPU WASM、兩引擎 32px 匯出重開及報告驗收；正式站與固定 Release 尚未發布此候選。下列目前正式版本保持不變。

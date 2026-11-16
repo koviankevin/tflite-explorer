@@ -4,7 +4,7 @@
 
 2026-10-30 使用者要求先完成一版，後續再逐步改善；接著同意完成五項優先工作：編輯合法性與定位、草稿／pattern 保存韌性、Windows Chrome／Edge 實測、custom 子模型大小預覽及大型 MLIR dense 計數。這五項已在 [v1.1.0 正式交付](model-safety.md#正式發布)，其餘廣泛商品化項目仍列後續，不擴大本輪關卡。
 
-目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-17 核對的固定版本為 [v1.12.3](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.3)，build `c2e081e752506baa`：352 核心檔、全站 1,538 檔、53 項正式 HTTPS 操作及四份實際固定下載均符合[交付收據](results/value-shape-v1.12.3-published.json)。Chrome／Edge 各八例的原始 BIN、實際數值與 IO 下載通過；四項來源綁定關卡、正式站與固定 Release 完成不等於所有商品化條件完成。[目前缺口](product-readiness-next.md#2026-11-17-公開品質核對)區分後續工作、環境問題及刻意保留的支援邊界；以下歷史紀錄仍保持原版本、失敗及量測範圍。
+目前正式版本以 [README 的對外版本](../README.md)為準。2026-11-17 的最新 [v1.12.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4)，build `f8a2d9d3ac4f8501`：Softmax／LogSoftmax shape／dtype 檢查及報告已交付，並減少 TFLite 鄰接索引與小型 Int32 metadata 配置。355 個核心檔、全站 1,549 檔、54 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各 10 個 32px 情境通過。1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 12,595,200 B；前兩次失敗原樣保留。見[正式交付收據](results/softmax-v1.12.4-published.json)及[檢查範圍](softmax-validation.md#v1124-正式交付)。模型全程本機處理，interpreter 仍由使用者手動啟動；不將有限測試擴大為任意 kernel、所有模型精度或 Windows 大檔保證。 完整商品等級目標仍保留既有未完成項目，下方歷史來源與限制不改寫。
 
 完整自動流程在 Hosted Linux Chromium；另經明確允許，在已安裝 Windows Chrome／Edge 的獨立 context 完成候選及正式站 native 選檔、32px、編輯／匯出重開、實際 quota 拒絕／備份／重試與儲存清除恢復。Firefox／Safari／WebKit 為選做；有限案例不代表 OS 斷電、實體磁碟耗盡、固定硬體 SLA、數小時負載或任意 dialect／kernel 已完成。歷史 v1.0.1 的連線重試及穩定版驗收仍保留。
 

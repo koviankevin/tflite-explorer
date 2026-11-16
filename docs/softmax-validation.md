@@ -1,6 +1,6 @@
 # Softmax／LogSoftmax 檢查
 
-本項是未發布的 v1.12.4 候選；目前正式站及固定下載仍是 README 記載的 v1.12.3。接續 OP 靜態驗證與報告，模型維持在本機處理，開檔、編輯及匯出不會自動執行 interpreter。
+本項已於 v1.12.4 正式交付，完整來源與固定下載見文末收據。下方保留原候選與失敗時的狀態。接續 OP 靜態驗證與報告，模型維持在本機處理，開檔、編輯及匯出不會自動執行 interpreter。
 
 ## 主分支大檔關卡失敗，尚未發布
 
@@ -68,3 +68,9 @@ Windows Chrome／Edge 獨立暫存環境、1280×640、32px 各 10 個情境通�
 新發布的正式 HTTPS 關卡必須保留原 53 項並加入本組第 54 項，核對固定模型 SHA、實際數值、零下載負例、合法混合型別未檢查狀態、匯出重開與 Worker 清理。候選本機驗收不代替主分支必要關卡、正式部署及固定 Release 核對；完成前不宣告已交付。
 
 原始負例、原生環境版本與 30 筆結果、實際模型／BIN、第一次瀏覽器失敗、後續兩引擎全部輸出及獨立複核保留於[候選原始證據](results/softmax-validation-candidate-evidence.zip)（126 檔、1,776,751 bytes，SHA-256 `32792246004eb75948b76edaf07c8a34e0f842957909c1bd87803d445fb2926f`）。其中應用 build 為 `98181abbabdb4817` 的本機未提交候選，不能換標為正式版本或乾淨來源關卡。
+
+## v1.12.4 正式交付
+
+[v1.12.4](https://github.com/koviankevin/tflite-explorer/releases/tag/v1.12.4)，build `f8a2d9d3ac4f8501`：Softmax／LogSoftmax shape／dtype 檢查及報告已交付，並減少 TFLite 鄰接索引與小型 Int32 metadata 配置。355 個核心檔、全站 1,549 檔、54 項正式 HTTPS 操作及四份實際固定下載均核對；Chrome／Edge 各 10 個 32px 情境通過。1.25 GiB／21,005 OP 八輪依原政策通過，RSS 漂移 12,595,200 B；前兩次失敗原樣保留。見[正式交付收據](results/softmax-v1.12.4-published.json)及[檢查範圍](softmax-validation.md#v1124-正式交付)。模型全程本機處理，interpreter 仍由使用者手動啟動；不將有限測試擴大為任意 kernel、所有模型精度或 Windows 大檔保證。
+
+正式 Native 兩端各有 16 個模型、四個手動 runtime 及一個 layout Worker，Chrome 另觀察到一個自動保存 recovery Worker；全部關閉。總數不同來自既有背景保存排程，未修改應用、重跑成功案例或忽略未關閉 Worker；依實際種類與來源 URL 核對。
