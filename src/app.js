@@ -9,6 +9,7 @@ import {resizeInFrame} from './resize-in-frame.js';
 import { modelFormat } from './model-formats.js';
 import {explorerResize} from './explorer-resize.js';
 import {searchSplit} from './search-split.js';
+import {revealPatternEditor} from './reveal-pattern-editor.js';
 import {svgConnectionFocus} from './connection-focus.js';
 import {initReleaseInfo} from './release-info.js';
 import {initUsageGuide} from './usage-guide-ui.js';
@@ -953,7 +954,7 @@ function refreshPickedNodes() {
     $('save-capture').disabled = !model || count < (across ? 1 : 2);
     refreshOpIdAction();
     $('edit-capture').disabled = $('save-capture').disabled;
-    $('edit-capture').textContent = '編輯選取 pattern';
+    $('edit-capture').textContent = '編輯搜尋 pattern';
     renderCaptureBlocks();
     $('export-submodel').disabled = exportBusy || !canExportSubmodel() || !count;
     $('preview-submodel').hidden=!model?.capabilities?.tfliteExport;
@@ -1238,7 +1239,7 @@ $('edit-capture').onclick = async () => {
         applyPattern(pattern);editorLibrary=base;$('saved-pattern').value='';updatePatternExport();
         setPickingPattern(false);
         if(cfgPattern)cfgEditor.focus();
-        else {$('visual-pattern-editor').open=true;$('graph-node-rows').querySelector('select').focus();}
+        else revealPatternEditor($('visual-pattern-editor'),'#graph-node-rows select');
         status('已將圈選結果載入結構編輯器；可調整 pattern 節點及連線，按「尋找模式」套用。原模型保持唯讀。');
     } catch(error) { if(file===sourceFile)report(error); }
     finally { refreshPickedNodes(); }

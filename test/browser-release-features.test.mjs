@@ -1,3 +1,4 @@
+import {searchPatternRevealRequired} from './browser/release-features.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserReleaseFeatures,fontReflowRequired,operatorValidationRequired,quantizationValidationRequired,legacyShapeValidationRequired} from './browser/release-features.mjs';
@@ -70,4 +71,10 @@ test('per-OP validation is required for new releases without breaking exact immu
     for(const v of ['1.0.0','1.0.1','1.1.0','1.2.0','1.2.1','0.2.0-preview.34'])assert.equal(operatorValidationRequired(v),false,v);
     for(const v of ['1.3.0','1.4.2','1.4.3','1.4.4','1.4.5','1.4.6','2.0.0','1.2.1+repacked.1','0.2.0-preview.35','0.2.0-preview.01'])assert.equal(operatorValidationRequired(v),true,v);
     for(const v of [undefined,null,'','v1.3.0','1.3.0/../x'])assert.throws(()=>operatorValidationRequired(v));
+});
+
+test('search editor reveal stays required after v1.12.1 without breaking immutable rollback builds',()=>{
+    for(const v of ['0.2.0-preview.34','1.9.1','1.12.0'])assert.equal(searchPatternRevealRequired(v),false);
+    for(const v of ['1.12.1','1.12.2','1.13.0','2.0.0'])assert.equal(searchPatternRevealRequired(v),true);
+    for(const v of [null,'v1.12.1','1.12'])assert.throws(()=>searchPatternRevealRequired(v));
 });
